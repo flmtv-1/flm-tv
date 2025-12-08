@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FLM TV - 24/7 Live Stream</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .banner {
+      text-align: center;
+      background: #222;
+      padding: 20px;
+    }
+    .banner img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+    }
+    .player {
+      width: 100%;
+      max-width: 960px;
+      margin: 30px auto;
+    }
+    .player video, .player iframe {
+      width: 100%;
+      height: 540px;
+      border-radius: 12px;
+      background: black;
+    }
+    .description {
+      max-width: 960px;
+      margin: 20px auto;
+      font-size: 18px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="banner" id="liveBanner">
+    <!-- Banner image goes here -->
+  </div>
+
+  <div class="player" id="livePlayer">
+    <!-- Video player injected here -->
+  </div>
+
+  <div class="description" id="liveDesc">
+    <!-- Stream description goes here -->
+  </div>
+
+  <script>
+    // 🧠 Load from localStorage (or switch to JSON later)
+    const streamUrl = localStorage.getItem('flm_live_url');
+    const streamDesc = localStorage.getItem('flm_live_desc');
+    const streamBanner = localStorage.getItem('flm_live_banner');
+
+    if (streamBanner) {
+      document.getElementById('liveBanner').innerHTML = `<img src="/assets/${streamBanner}" alt="Live Banner">`;
+    }
+
+    if (streamUrl) {
+      const isIframe = streamUrl.includes("youtube") || streamUrl.includes("twitch");
+      document.getElementById('livePlayer').innerHTML = isIframe
+        ? `<iframe src="${streamUrl}" frameborder="0" allowfullscreen></iframe>`
+        : `<video controls autoplay><source src="${streamUrl}" type="application/x-mpegURL">Your browser does not support the video tag.</video>`;
+    } else {
+      document.getElementById('livePlayer').innerHTML = `<p style="text-align:center">❌ No live stream URL set.</p>`;
+    }
+
+    document.getElementById('liveDesc').innerText = streamDesc || '';
+  </script>
+
+</body>
+</html>

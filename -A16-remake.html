@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLM TV</title>
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="flm-viewer/assets/styles.css">
+
+  <!-- 🌐 Favicon and Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="flm-viewer/assets/logos/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="flm-viewer/assets/logos/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="flm-viewer/assets/logos/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="flm-viewer/assets/logos/favicon/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="flm-viewer/assets/logos/favicon/android-chrome-512x512.png">
+  <link rel="icon" type="image/x-icon" href="flm-viewer/assets/logos/favicon/favicon.ico">
+  <link rel="manifest" href="flm-viewer/assets/logos/favicon/site.webmanifest">
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+  <style>
+    /* CSS Reset & Variables */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #e50914; /* Netflix Red */
+      --primary-dark: #b8070f;
+      --bg: #141414; /* Dark background */
+      --bg-light: #1f1f1f;
+      --text: #ffffff;
+      --text-gray: #b3b3b3;
+      --card-bg: #282828;
+      --border-color: #333;
+      --panel-width: 350px;
+    }
+
+    /* Base body and layout styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 2rem;
+      overflow-x: hidden;
+      transition: padding-right 0.3s ease-in-out;
+    }
+
+    /* Class to apply when a panel is open */
+    body.panel-active {
+      padding-right: var(--panel-width);
+      overflow-y: hidden; /* Prevent vertical scroll when panel is open */
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      flex-wrap: wrap; /* Allow wrapping on small screens */
+    }
+
+    .header .logo-container {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .header .logo-text {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Navigation Buttons and Search Bar */
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-left: auto; /* Push buttons to the right */
+    }
+
+    .header-search-bar {
+      background-color: var(--bg-light);
+      border-radius: 9999px; /* Rounded pill shape */
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      max-width: 250px;
+    }
+
+    .header-search-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .header-search-input::placeholder {
+      color: var(--text-gray);
+    }
+
+    .nav-button {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .nav-button:hover {
+      color: var(--primary);
+    }
+
+    .sign-in-button {
+      background-color: var(--primary);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+
+    .sign-in-button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      height: 450px;
+      overflow: hidden;
+      background-image: url('flm-viewer/assets/images/Zaina-TV-Show-Poster.jpg.png');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 100%);
+    }
+  </style>
+<style>
+/* ---------------- Hero Banner ---------------- */
+.hero-image-wrapper {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+}
+
+.hero-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0) 100%);
+}
+
+.hero-banner {
+  position: relative;
+  height: 450px;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  color: #fff;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 600px;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.play-button {
+  background-color: var(--primary);
+  color: var(--text);
+  padding: 0.75rem 2rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+.play-button:hover {
+  background-color: var(--primary-dark);
+}
+/* --- END Hero Banner --- */
+
+
+/* ---------------- Floating Buttons ---------------- */
+.floating-button-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 2000;
+  transition: right 0.3s ease-in-out;
+}
+body.panel-active .floating-button-container {
+  right: calc(2rem + var(--panel-width));
+}
+
+.floating-button {
+  width: 60px;
+  height: 60px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  padding: 0;
+}
+.floating-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+}
+.floating-button svg {
+  color: var(--text);
+  font-size: 1.75rem;
+  width: 32px;
+  height: 32px;
+}
+
+/* Zaina AI Floating Button */
+#floatingZainaAiButton {
+  background-color: var(--bg-light);
+  border: 2px solid var(--primary);
+  overflow: hidden;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border-radius: 50%;
+}
+#floatingZainaAiButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+/* --- END Floating Buttons --- */
+
+
+/* ---------------- Categories ---------------- */
+.category-links {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  overflow-x: auto;
+  align-items: center;
+}
+.category-links::-webkit-scrollbar {
+  display: none;
+}
+.category-link {
+  font-size: 1rem;
+  color: var(--text-gray);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.3s;
+  text-decoration: none;
+}
+.category-link:hover {
+  color: var(--primary);
+}
+/* --- END Categories --- */
+
+
+/* ---------------- Carousels ---------------- */
+.movie-carousel-section {
+  margin-top: 2rem;
+}
+.carousel-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.movie-card-carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scroll-behavior: smooth;
+}
+.movie-card-carousel::-webkit-scrollbar {
+  display: none;
+}
+.movie-card {
+  flex: 0 0 150px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  position: relative;
+  background-color: var(--card-bg);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.movie-card:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+.movie-poster {
+  width: 100%;
+  height: 225px;
+  object-fit: cover;
+  border-bottom: 2px solid var(--primary);
+}
+.movie-title {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* --- END Carousels --- */
+
+
+/* ---------------- Modal ---------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+.modal-content {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: var(--text-gray);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.modal-close:hover {
+  color: var(--primary);
+}
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.modal-form-group {
+  margin-bottom: 1rem;
+}
+.modal-input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  color: var(--text);
+}
+.modal-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.modal-button-primary {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary);
+  color: var(--text);
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.modal-button-primary:hover {
+  background-color: var(--primary-dark);
+}
+.modal-text-link {
+  color: var(--text-gray);
+  font-size: 0.875rem;
+  text-align: center;
+  display: block;
+  margin-top: 1rem;
+}
+.modal-text-link:hover {
+  text-decoration: underline;
+}
+/* --- END Modal --- */
+
+
+/* ---------------- Side Panel / Chat ---------------- */
+.side-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: var(--panel-width);
+  height: 100%;
+  background-color: var(--bg-light);
+  box-shadow: -4px 0 10px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(var(--panel-width));
+  z-index: 2500;
+  display: flex;
+  flex-direction: column;
+}
+.side-panel.open {
+  transform: translateX(0);
+}
+
+#chatPanel {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 2500;
+}
+.chat-header {
+  background-color: #282828;
+  padding: 1rem;
+  border-bottom: 1px solid #333;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chat-messages {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #1a1a1a;
+}
+.message {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+}
+.message.sent {
+  justify-content: flex-end;
+}
+.message.received {
+  justify-content: flex-start;
+}
+.message-bubble {
+  max-width: 80%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 1rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+.message.sent .message-bubble {
+  background-color: #e50914;
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+}
+.message.received .message-bubble {
+  background-color: #333;
+  color: white;
+  border-bottom-left-radius: 0.25rem;
+}
+.message-sender {
+  font-size: 0.75em;
+  color: #b3b3b3;
+  margin-bottom: 0.25rem;
+  padding-left: 0.5rem;
+}
+.message.sent .message-sender {
+  text-align: right;
+  padding-right: 0.5rem;
+  padding-left: 0;
+}
+.chat-input-area {
+  background-color: #282828;
+  padding: 1rem;
+  border-top: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+.chat-input {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border-radius: 1.5rem;
+  border: 1px solid #444;
+  background-color: #333;
+  color: white;
+  outline: none;
+  font-size: 1em;
+  resize: none;
+  min-height: 40px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+.chat-input::placeholder {
+  color: #b3b3b3;
+}
+.chat-btn {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+.chat-btn:hover {
+  background-color: #b8070f;
+}
+
+/* Emoji Picker */
+.emoji-picker {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background-color: #282828;
+  border-radius: 8px;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.4);
+  padding: 1rem;
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+.emoji-picker span {
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 4px;
+  transition: background-color 0.1s ease;
+}
+.emoji-picker span:hover {
+  background-color: #3e3e3e;
+}
+/* --- END Chatbox --- */
+</style>
+
+<!-- Ensure carousel arrows are positioned correctly -->
+<style>
+  .movie-carousel-section {
+    position: relative;
+    margin-top: 2rem;
+  }
+  .flm-nav.left { left: 4px !important; }
+  .flm-nav.right { right: 4px !important; }
+</style>
+
+<!-- ✅ Tailwind should be linked, not pasted inline -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.17/dist/tailwind.min.css" rel="stylesheet">
+
+</head>
+<body class="">
+  <!-- Floating Button Container -->
+  <div class="floating-button-container">
+    <!-- Zaina AI Floating Button -->
+    <button class="floating-button" id="floatingZainaAiButton">
+      <img alt="Zaina AI" class="w-full h-full object-cover rounded-full" 
+           src="flm-viewer/assets/images/zaina_ai_avatar.jpg">
+    </button>
+
+    <!-- Floating Chat Button -->
+    <button class="floating-button" id="floatingChatButton">
+      <svg class="lucide lucide-message-square" fill="none" height="32" stroke="currentColor" 
+           stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+           viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Header -->
+  <header class="header container">
+    <div class="logo-container">
+      <img alt="FLM Logo" class="h-10 rounded-md" src="flm-viewer/assets/logos/flm-logo.png">
+      <span class="logo-text ml-2">FLM TV</span>
+    </div>
+
+    <div class="nav-buttons">
+      <div class="header-search-bar">
+        <input class="header-search-input" id="headerSearchInput" placeholder="Search..." type="text">
+      </div>
+      <button class="nav-button" id="bellButton">
+        <i class="fas fa-bell"></i>
+      </button>
+      <button class="sign-in-button" id="authButton">Sign In</button>
+    </div>
+  </header>
+  <!-- Hero Banner -->
+
+<!-- 🎬 Hero Banner -->
+<section class="hero-banner" id="hero-banner">
+  <div class="hero-image-wrapper">
+    <img id="hero-banner-image" 
+         src="flm-viewer/assets/films/Zaina-TV-Show-Poster.jpg.png" 
+         alt="Hero Banner">
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <h1 id="hero-title">Loading title...</h1>
+    <p id="hero-description">Loading description...</p>
+    <a class="play-button" href="#" id="playButton">Play</a>
+  </div>
+</section>
+
+<!-- 📂 Categories Row -->
+<section class="categories-row">
+  <h2>Browse Categories</h2>
+  <div id="categories-scroll" class="categories-scroll">
+    <!-- Categories will load here -->
+  </div>
+</section>
+
+<!-- 📦 Main Content Container -->
+<main class="container">
+  <!-- Movie Carousel Sections will be injected here -->
+</main>
+
+<!-- 🔑 Login Modal -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-content">
+    <span class="modal-close" id="closeLoginModal">×</span>
+    <h2 class="modal-title">Log In</h2>
+    <form>
+      <div class="modal-form-group">
+        <input class="modal-input" id="email" type="email" 
+               placeholder="Email Address" required>
+      </div>
+      <div class="modal-form-group relative">
+        <input class="modal-input" id="password" type="password" 
+               placeholder="Password" required>
+      </div>
+      <a class="text-xs text-gray-500 hover:underline block text-right mb-4" href="#">Forgot Password?</a>
+      <button class="modal-button-primary mb-4" id="loginBtn" type="button">Log In</button>
+    </form>
+    <div class="text-center text-sm mb-4">
+      Not a member? <a class="text-red-500 hover:underline" href="#">Sign Up</a>
+    </div>
+    <hr class="border-gray-700 my-4">
+    <button class="w-full py-2 px-4 bg-gray-700 text-white rounded-md hover:bg-gray-600 transition-colors duration-200" type="button">
+      <i class="fas fa-crown text-yellow-400 mr-2"></i> Try Paid Membership
+    </button>
+  </div>
+</div>
+
+<!-- 🤖 Zaina AI Side Panel -->
+<div class="side-panel" id="zainaAiPanel">
+  <div class="chat-header">
+    <img alt="Zaina AI" class="w-10 h-10 rounded-full" src="flm-viewer/assets/images/zaina_ai_avatar.jpg">
+    <span class="panel-title">Zaina J AI</span>
+    <button class="panel-close" id="closeZainaAiPanel">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="panel-content p-4">
+    <h3 class="text-lg font-semibold mb-2">Search film info, trailers, actors...</h3>
+    <div class="flex items-center gap-2 mb-4">
+      <input class="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-red-500" 
+             id="aiSearchInput" 
+             type="text" 
+             placeholder="Search film...">
+      <button class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors" id="aiSearchButton">Search</button>
+    </div>
+    <h3 class="text-lg font-semibold mb-2 text-green-500">AI Assistant</h3>
+    <p class="text-sm mb-4 text-gray-400">
+      Hello! I'm Zaina, your personal AI assistant. I can help you find information about movies, series, actors, and more. Just type your query above.
+    </p>
+    <p class="text-sm font-semibold mb-2">Example queries:</p>
+    <ul class="list-disc list-inside text-sm text-gray-400">
+      <li>"Tell me about the movie Inception."</li>
+      <li>"Who is the director of Oppenheimer?"</li>
+      <li>"Show me movies starring Tom Hanks."</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 💬 Chat Side Panel -->
+<div class="side-panel" id="chatPanel">
+  <div class="chat-header">
+    <span>Live Chat</span>
+    <button class="text-white text-xl px-2 py-1 rounded-full hover:bg-gray-700" id="closeChatPanel">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="message received">
+      <div class="message-bubble">Welcome to the chat!</div>
+    </div>
+    <div class="message sent">
+      <div class="message-bubble">Hello there!</div>
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <textarea class="chat-input" id="chatInput" placeholder="Type your message..."></textarea>
+    <button class="chat-btn" id="emojiBtn">😀</button>
+    <button class="chat-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+    <div class="emoji-picker" id="emojiPicker">
+      <!-- Emojis will be dynamically generated here -->
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('FLM TV is ready.');
+  });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('FLM TV is ready.');
+    
+    // --- JELLYFIN CONFIGURATION ---
+    // START OF JELLYFIN CODE INSERTION
+    // IMPORTANT: This is your public Jellyfin URL via DuckDNS.
+    // Using HTTP (port 8096) as default.
+    // If you have configured HTTPS on your Jellyfin/NAS, use 'https://' and port 8920 (default HTTPS).
+    // END OF JELLYFIN CODE INSERTION
+
+    // --- Example calls to populate your carousels ---
+    loadMoviesIntoCarousel(
+        '.movie-carousel-section:nth-of-type(1) .movie-card-carousel', 
+        '.movie-carousel-section:nth-of-type(1) .carousel-title',     
+        {
+            SortBy: 'DateCreated', 
+            SortOrder: 'Descending',
+            IncludeItemTypes: 'Movie',
+            Recursive: 'true',
+            Fields: 'PrimaryImageAspectRatio,Overview',
+            Limit: '10'
+        }
+    );
+
+    loadMoviesIntoCarousel(
+        '.movie-carousel-section:nth-of-type(2) .movie-card-carousel', 
+        '.movie-carousel-section:nth-of-type(2) .carousel-title',     
+        {
+            SortBy: 'DateAdded', 
+            SortOrder: 'Descending',
+            IncludeItemTypes: 'Movie',
+            Recursive: 'true',
+            Fields: 'PrimaryImageAspectRatio,Overview',
+            Limit: '10'
+        }
+    );
+
+    // --- Authentication and Modal Logic ---
+    let isLoggedIn = false;
+    const authButton = document.getElementById('authButton');
+    const loginModal = document.getElementById('loginModal');
+    const closeLoginModalBtn = document.getElementById('closeLoginModal');
+    const loginBtn = document.getElementById('loginBtn');
+    const headerSearchInput = document.getElementById('headerSearchInput');
+
+    function showModal() {
+        loginModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideModal() {
+        loginModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    authButton.addEventListener('click', () => {
+        if (isLoggedIn) {
+            isLoggedIn = false;
+            authButton.textContent = 'Sign In';
+            console.log('User logged out.');
+        } else {
+            showModal();
+        }
+    });
+
+    loginBtn.addEventListener('click', () => {
+        isLoggedIn = true;
+        authButton.textContent = 'Sign Out';
+        hideModal();
+        console.log('User logged in.');
+    });
+
+    closeLoginModalBtn.addEventListener('click', hideModal);
+
+    loginModal.addEventListener('click', (event) => {
+        if (event.target === loginModal) {
+            hideModal();
+        }
+    });
+
+    // --- Side Panel Logic for Zaina AI and Chat ---
+    const floatingZainaAiButton = document.getElementById('floatingZainaAiButton');
+    const floatingChatButton = document.getElementById('floatingChatButton');
+    const zainaAiPanel = document.getElementById('zainaAiPanel');
+    const chatPanel = document.getElementById('chatPanel');
+    const closeZainaAiPanelBtn = document.getElementById('closeZainaAiPanel');
+    const closeChatPanelBtn = document.getElementById('closeChatPanel');
+    
+    function closePanel(panel) {
+        panel.classList.remove('open');
+        if (!zainaAiPanel.classList.contains('open') && !chatPanel.classList.contains('open')) {
+            document.body.classList.remove('panel-active');
+        }
+    }
+
+    function togglePanel(panel) {
+        const body = document.body;
+        
+        if (panel.classList.contains('open')) {
+            closePanel(panel);
+            console.log('Panel closed.');
+        } else {
+            if (panel === zainaAiPanel && chatPanel.classList.contains('open')) {
+                closePanel(chatPanel);
+            } else if (panel === chatPanel && zainaAiPanel.classList.contains('open')) {
+                closePanel(zainaAiPanel);
+            }
+            panel.classList.add('open');
+            body.classList.add('panel-active');
+            console.log('Panel opened.');
+        }
+    }
+    
+    floatingZainaAiButton.addEventListener('click', () => {
+        togglePanel(zainaAiPanel);
+        console.log('Zaina AI button clicked.');
+    });
+
+    floatingChatButton.addEventListener('click', () => {
+        togglePanel(chatPanel);
+        console.log('Chat button clicked.');
+    });
+
+    closeZainaAiPanelBtn.addEventListener('click', () => {
+        closePanel(zainaAiPanel);
+        console.log('Zaina AI panel closed.');
+    });
+    
+    closeChatPanelBtn.addEventListener('click', () => {
+        closePanel(chatPanel);
+        console.log('Chat panel closed.');
+    });
+
+    // --- Header Search Bar ---
+    headerSearchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            console.log(`Searching for: ${headerSearchInput.value}`);
+        }
+    });
+
+    // --- Other Interactive Elements ---
+    const categoryLinks = document.querySelectorAll('.category-link');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log(`Category "${e.target.textContent}" clicked.`);
+        });
+    });
+
+    const movieCards = document.querySelectorAll('.movie-card');
+    movieCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const movieTitle = card.querySelector('.movie-title').textContent;
+            console.log(`Movie card "${movieTitle}" clicked.`);
+        });
+    });
+
+    const playButton = document.getElementById('playButton');
+    playButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Hero banner "Play" button clicked.');
+    });
+
+    const bellButton = document.getElementById('bellButton');
+    bellButton.addEventListener('click', () => {
+        console.log('Notifications button clicked.');
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Chatbox logic ready.');
+
+    // --- Chatbox Script Logic ---
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    const emojiBtn = document.getElementById('emojiBtn');
+    const emojiPicker = document.getElementById('emojiPicker');
+
+    const emojis = [
+        '😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚',
+        '😋','😛','😜','🤪','😝','🤗','🤭','🤫','🤔','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😔','😪',
+        '🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟',
+        '🙁','😮','😯','😲','😳','🥺','😦','😧','😨','😩','😫','😤','😠','😡','🤬','😈','👿','💀','👻','💩',
+        '🤡','👹','👺','👽','👾','🤖','👋','🤚','🖐️','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👉','👆',
+        '🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾',
+        '🦿','🦵','🦶','👂','👃','🧠','🦷','🦴','👀','👁️','👅','👄','💋','🩸','🦠','❤','🧡','💛','💚','💙',
+        '💜','🤎','🖤','🤍','💔','❣','💕','💞','💓','💗','💖','💘','💝','💢','💣','💥','💫','💬','🗨️','🗯️',
+        '💭','💤','💯','🔥','💧','💨','🎶','🎵','🗣️'
+    ];
+
+    // Populate emoji picker
+    emojis.forEach(emoji => {
+        const span = document.createElement('span');
+        span.textContent = emoji;
+        span.addEventListener('click', () => insertEmoji(emoji));
+        emojiPicker.appendChild(span);
+    });
+
+    function addMessage(sender, text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+
+        const messageBubble = document.createElement('div');
+        messageBubble.classList.add('message-bubble');
+        messageBubble.textContent = text;
+
+        messageDiv.appendChild(messageBubble);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
+    }
+
+    function sendMessage() {
+        const messageText = chatInput.value.trim();
+        if (messageText !== '') {
+            addMessage('sent', messageText);
+            chatInput.value = '';
+            chatInput.style.height = 'auto'; // Reset height
+        }
+    }
+
+    function insertEmoji(emoji) {
+        chatInput.value += emoji;
+        emojiPicker.style.display = 'none';
+        chatInput.focus();
+    }
+
+    // Toggle emoji picker
+    emojiBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        emojiPicker.style.display = emojiPicker.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+            emojiPicker.style.display = 'none';
+        }
+    });
+
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Zaina avatar/logo update logic ready.');
+
+    const CANDIDATES = [
+        "assets/images/zaina_ai_avatar.jpg",
+        "assets/images/zaina-ai-avatar2.png"
+    ];
+    const LOGO_SRC = "assets/logos/your-logo-file.png";
+
+    const zainaSelectors = [
+        '#floatingZainaAiButton img',
+        '#lumaToggleBtnFloating img',
+        '#fabAIToggleBtn img',
+        '#searchBarAIToggleBtn img',
+        '#playerAIToggleBtn img',
+        '#lumaPanel .luma-header img',
+        '#zainaAvatar',
+        'img[alt*="Zaina" i]'
+    ];
+    const logoSelectors = [
+        'header .logo img',
+        'img[alt*="logo" i]',
+        'img[src*="assets/logos/"]'
+    ];
+
+    function setWithFallback(img) {
+        let i = 0;
+        function tryNext() {
+            if (i >= CANDIDATES.length) return;
+            const src = CANDIDATES[i++];
+            img.removeAttribute('srcset');
+            img.onerror = tryNext;
+            img.src = src;
+        }
+        tryNext();
+    }
+
+    function setLogo(img) {
+        img.removeAttribute('srcset');
+        img.src = LOGO_SRC;
+    }
+
+    function updateAll() {
+        zainaSelectors.forEach(sel =>
+            document.querySelectorAll(sel).forEach(setWithFallback)
+        );
+        logoSelectors.forEach(sel =>
+            document.querySelectorAll(sel).forEach(setLogo)
+        );
+    }
+
+    updateAll();
+    new MutationObserver(updateAll).observe(document.documentElement, { childList: true, subtree: true });
+
+    console.log(
+        "Zaina imgs:",
+        document.querySelectorAll(zainaSelectors.join(',')).length,
+        "Logo imgs:",
+        document.querySelectorAll(logoSelectors.join(',')).length
+    );
+});
+</script>
+
+<section class="continue-watching">
+  <h2>⏯ Continue Watching</h2>
+  <div id="continue-watching-grid" class="movie-grid">
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/curse-of-the-demon.jpg" alt="Curse of the Demon">
+      <figcaption>Curse of the Demon</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/curse-of-the-demon-alt.jpg" alt="Curse of the Demon (Alt)">
+      <figcaption>Curse of the Demon</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/time-to-kill.jpg" alt="Time to Kill">
+      <figcaption>Time to Kill</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/shadow-attacks-02.jpg" alt="Episode 02 - The Shadow Attacks">
+      <figcaption>02 The Shadow Attacks</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/mysterious-pilot-01.jpg" alt="Episode 01 - The Mysterious Pilot">
+      <figcaption>01 Mysterious Pilot</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/ghost-riders-01.jpg" alt="Episode 01 - The Ghost Riders">
+      <figcaption>01 The Ghost Riders</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/bloodsport.jpg" alt="Bloodsport">
+      <figcaption>Bloodsport</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/terror-quiet-afternoon.jpg" alt="Terror on a Quiet Afternoon">
+      <figcaption>Terror on a Quiet Afternoon</figcaption>
+    </figure>
+
+    <figure class="movie-card">
+      <img src="assets/images/movies/dead-heat.jpg" alt="Dead Heat">
+      <figcaption>Dead Heat</figcaption>
+    </figure>
+
+  </div>
+</section>
+
+<!-- 🌙 FLM Viewer Footer (Homepage Only) -->
+<!-- 🛸 Alien Walker (Daily Limit 4) -->
+<img alt="Alien Walk" id="alienGreeting" src="./-A15_files/alien-flm-sign.png" style="position: absolute; top: 100px; left: -150px; width: 100px; opacity: 1; display: none; transition: left 6s linear, opacity 1s ease-out; z-index: 9999;">
+<script>
+(function () {
+  const alien = document.getElementById("alienGreeting");
+  const now = new Date();
+  const today = now.toISOString().split("T")[0];
+  const greetData = JSON.parse(localStorage.getItem("greetData") || "{}");
+  const fadeOutDelay = 10000;
+
+  if (greetData.date !== today) {
+    greetData.date = today;
+    greetData.count = 0;
+  }
+
+  if (greetData.count < 3 && alien) {
+    alien.style.display = "block";
+    setTimeout(() => alien.style.left = "50vw", 300);
+    setTimeout(() => alien.style.opacity = "0", fadeOutDelay);
+    setTimeout(() => alien.remove(), fadeOutDelay + 2000);
+    greetData.count++;
+    localStorage.setItem("greetData", JSON.stringify(greetData));
+  }
+})();
+</script>
+<script>
+// 🔴 START FLM JELLYFIN MODULE (no DOM changes)
+(function(){
+  // You can override at runtime with: window.FLM_JF_CONFIG = { url:'http://IP:PORT', key:'APIKEY' }
+  const DEF = { url: 'http://192.168.1.28:8096', key: '807c4d78a3b2468792243d8be7bbf62f' };
+  const CFG = Object.assign({}, DEF, (window.FLM_JF_CONFIG || {}));
+
+  async function jf(path, params = {}){
+    const url = new URL(CFG.url + path);
+    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+    const res = await fetch(url, { headers: { 'X-Emby-Token': CFG.key, 'Accept':'application/json' } });
+    if(!res.ok) throw new Error('Jellyfin HTTP ' + res.status);
+    return res.json();
+  }
+
+  function posterUrl(it, h=360){
+    const tag = it && it.ImageTags && it.ImageTags.Primary; if(!tag) return '';
+    const u = new URL(`${CFG.url}/Items/${it.Id}/Images/Primary`);
+    u.searchParams.set('maxHeight', h); u.searchParams.set('quality', 90);
+    u.searchParams.set('tag', tag); u.searchParams.set('api_key', CFG.key);
+    return u.toString();
+  }
+
+  function backdropUrl(it, w=1600, h=700){
+    const tag = (it && it.BackdropImageTags && it.BackdropImageTags[0]); if(!tag) return '';
+    const u = new URL(`${CFG.url}/Items/${it.Id}/Images/Backdrop`);
+    u.searchParams.set('maxWidth', w); u.searchParams.set('maxHeight', h);
+    u.searchParams.set('quality', 90); u.searchParams.set('tag', tag);
+    u.searchParams.set('api_key', CFG.key);
+    return u.toString();
+  }
+
+  async function latest({limit=20, types='Movie,Series', sortBy='DateAdded'}={}){
+    const data = await jf('/Items', {
+      IncludeItemTypes: types, Recursive:'true',
+      SortBy: sortBy, SortOrder:'Descending',
+      Limit: String(limit),
+      Fields: 'ImageTags,BackdropImageTags,Overview,OfficialRating,Genres'
+    });
+    return data.Items || [];
+  }
+
+  async function getItem(id){
+    return jf(`/Items/${id}`, { Fields: 'ImageTags,BackdropImageTags,Overview,OfficialRating,Genres' });
+  }
+
+  // export (namespaced so it won't touch your DOM or other code)
+  window.FLM = window.FLM || {};
+  window.FLM.JF = { cfg: CFG, jf, latest, getItem, posterUrl, backdropUrl };
+})();
+// 🟢 END FLM JELLYFIN MODULE (no DOM changes)
+</script>
+
+<!-- 🎥 Hero Banner Slideshow (rotates through Jellyfin latest) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.FLM?.JF) {
+    FLM.JF.latest({ limit: 6, types: 'Movie,Series', sortBy: 'DateAdded' })
+      .then(items => {
+        if (!items?.length) return;
+
+        let index = 0;
+        const bannerImg = document.getElementById('hero-banner-image');
+        const titleEl = document.getElementById('hero-title');
+        const descEl = document.getElementById('hero-description');
+        const playBtn = document.getElementById('playButton');
+
+        function showItem(i) {
+          const featured = items[i];
+          if (!featured) return;
+
+          const backdrop = FLM.JF.backdropUrl(featured) || FLM.JF.posterUrl(featured);
+          bannerImg.src = backdrop || 'assets/images/ZainaShowTheaterBanner.jpg';
+          titleEl.textContent = featured.Name || 'Untitled';
+          descEl.textContent = featured.Overview || 'No description available.';
+          playBtn.href = `${FLM.JF.cfg.url}/web/index.html#!/details?id=${featured.Id}`;
+        }
+
+        // Initial slide
+        showItem(index);
+
+        // Cycle every 10 seconds
+        setInterval(() => {
+          index = (index + 1) % items.length;
+          showItem(index);
+        }, 10000);
+      })
+      .catch(err => console.warn('Hero slideshow failed:', err));
+  }
+});
+</script>
+
+<!-- 🔴 FLM A2: Latest Releases Injector -->
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const headings = Array.from(document.querySelectorAll('h2,h3'));
+    const latestHead = headings.find(h =>
+      /\blatest releases\b/i.test(h.textContent) ||
+      /\bnew releases\b/i.test(h.textContent)
+    );
+    if (!latestHead) return;
+
+    const section = latestHead.closest('.movie-carousel-section') || latestHead.parentElement;
+    let rail = section?.querySelector('.movie-card-carousel') ||
+               document.getElementById('latest-releases-grid') ||
+               section?.nextElementSibling;
+
+    if (!rail || !window.FLM?.JF) return;
+
+    const items = await FLM.JF.latest({ limit: 24, types: 'Movie,Series', sortBy: 'DateAdded' });
+    rail.innerHTML = items.map(it => {
+      const img = FLM.JF.posterUrl(it) || '';
+      const name = it.Name || '';
+      const href = `${FLM.JF.cfg.url}/web/index.html#!/details?id=${it.Id}`;
+      const rating = (it.OfficialRating || 'NR').toUpperCase();
+      const genres = (it.Genres || []).join(',');
+
+      return `
+        <div class="movie-card" data-id="${it.Id}" data-rating="${rating}" data-genres="${genres}" style="cursor:pointer">
+          <a href="${href}" target="_blank" rel="noopener">
+            <img class="movie-poster" src="${img}" alt="${name}">
+          </a>
+          <div class="movie-title">${name}</div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    console.warn('Latest Releases injector failed:', e);
+  }
+});
+</script>
+<!-- 🟢 END FLM A2 -->
+
+<!-- 🔧 FLM Jellyfin Config Override -->
+<script id="flm-jf-config">
+(function(){
+  const NEW_KEY = "ba35f10531804c839b6b2be89048b414";
+  if (window.FLM?.JF?.cfg) {
+    FLM.JF.cfg.key = NEW_KEY;
+  }
+  window.FLM_JF_CONFIG = Object.assign(window.FLM_JF_CONFIG || {}, { key: NEW_KEY });
+})();
+</script>
+
+<!-- App Module -->
+<script type="module" src="assets/app.js"></script>
+
+<!-- Floating Panel Controls -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const body = document.body;
+  const zainaBtn = document.getElementById('floatingZainaAiButton');
+  const chatBtn = document.getElementById('floatingChatButton');
+  const zainaPanel = document.getElementById('zainaAiPanel');
+  const chatPanel = document.getElementById('chatPanel');
+
+  function closePanel(panel) {
+    panel.classList.remove('open');
+    body.classList.remove('panel-active');
+  }
+
+  function togglePanel(panel) {
+    const isOpen = panel.classList.contains('open');
+    closePanel(zainaPanel);
+    closePanel(chatPanel);
+    if (!isOpen) {
+      panel.classList.add('open');
+      body.classList.add('panel-active');
+    }
+  }
+
+  zainaBtn?.addEventListener('click', () => togglePanel(zainaPanel));
+  chatBtn?.addEventListener('click', () => togglePanel(chatPanel));
+});
+</script>
+
+<!-- ⏯ Continue Watching Section -->
+<section>
+  <h2>⏯ Continue Watching</h2>
+  <div id="continue-watching-grid" class="movie-grid"></div>
+</section>
+
+<!-- 🎬 Movies Section -->
+<section>
+  <h2>🎬 Movies</h2>
+  <div id="movies-grid" class="movie-grid">
+    
+    <!-- Fallback static entries (only visible if Jellyfin doesn’t load) -->
+    <div class="movie-card">
+      <img src="assets/fallback/Primary10.jpg" alt="SciFi">
+      <h3>SciFi</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/Primary11.jpg" alt="Planet of The Apes">
+      <h3>Planet of The Apes</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/Primary12.jpg" alt="Bloodsport">
+      <h3>Bloodsport</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/Primary13.jpg" alt="Coherence">
+      <h3>Coherence</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/Primary14.jpg" alt="Nine to Five">
+      <h3>Nine to Five</h3>
+    </div>
+
+    <!-- You can keep a handful of these as backup thumbnails -->
+    
+  </div>
+</section>
+
+<!-- 📺 Awesome TV Shows Section -->
+<section>
+  <h2>📺 Awesome TV Shows</h2>
+  <div id="awesome-tv-grid" class="movie-grid">
+    
+    <!-- Fallback cards (used if Jellyfin isn’t reachable) -->
+    <div class="movie-card">
+      <img src="assets/fallback/tvshow1.jpg" alt="American Dreams">
+      <h3>American Dreams</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/tvshow2.jpg" alt="Nyaruko: Crawling with Love! (2)">
+      <h3>Nyaruko: Crawling with Love! (2)</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/tvshow3.jpg" alt="Invasion of the Body Snatchers">
+      <h3>Invasion of the Body Snatchers</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/tvshow4.jpg" alt="Batman: Gotham Knight">
+      <h3>Batman: Gotham Knight</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/tvshow5.jpg" alt="Friends">
+      <h3>Friends</h3>
+    </div>
+
+    <!-- keep a few for offline fallback -->
+  </div>
+</section>
+
+<!-- 🌏 Asian Cinema Section -->
+<section>
+  <h2>🌏 Asian Cinema</h2>
+  <div id="asian-cinema-grid" class="movie-grid">
+    
+    <!-- Fallback static cards (only used if Jellyfin fails/offline) -->
+    <div class="movie-card">
+      <img src="assets/fallback/asian1.jpg" alt="Monday">
+      <h3>Monday</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/asian2.jpg" alt="Welcome Back, Mr. McDonald">
+      <h3>Welcome Back, Mr. McDonald</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/asian3.jpg" alt="All Under the Moon">
+      <h3>All Under the Moon</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/asian4.jpg" alt="Rika: The Mixed-Blood Girl">
+      <h3>Rika: The Mixed-Blood Girl</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/asian5.jpg" alt="Dust in the Wind">
+      <h3>Dust in the Wind</h3>
+    </div>
+
+    <!-- Keep a handful of fallback titles -->
+  </div>
+</section>
+
+<!-- ✨ Beyond Reality Section -->
+<section>
+  <h2>✨ Beyond Reality</h2>
+  <div id="beyond-reality-grid" class="movie-grid">
+    
+    <!-- Static fallback card -->
+    <div class="movie-card">
+      <img src="assets/fallback/beyond1.jpg" alt="Hakuoki: Demon of the Fleeting Blossom">
+      <h3>Hakuoki: Demon of the Fleeting Blossom</h3>
+    </div>
+
+  </div>
+</section>
+
+<!-- 🎞️ Classic TV Shows Section -->
+<section>
+  <h2>🎞️ Classic TV Shows</h2>
+  <div id="classic-tv-grid" class="movie-grid">
+
+    <div class="movie-card">
+      <img src="assets/fallback/classic1.jpg" alt="BEVERLY HILLBILIES">
+      <h3>BEVERLY HILLBILIES</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/classic2.jpg" alt="CHARLIE CHAN FILMS">
+      <h3>CHARLIE CHAN FILMS</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/classic3.jpg" alt="BATTLESTAR GALATIA">
+      <h3>BATTLESTAR GALATIA</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/classic4.jpg" alt="Bewitched">
+      <h3>Bewitched</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="assets/fallback/classic5.jpg" alt="Boardwalk Empire">
+      <h3>Boardwalk Empire</h3>
+    </div>
+
+    <!-- keep only a handful of static cards -->
+  </div>
+</section>
+
+<!-- 📚 Collections -->
+<section>
+  <h2>📚 Collections</h2>
+  <div id="collections-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="assets/fallback/collections1.jpg" alt="Hopalong Cassidy Collection">
+      <h3>Hopalong Cassidy Collection</h3>
+    </div>
+    <div class="movie-card">
+      <img src="assets/fallback/collections2.jpg" alt="Sherlock Holmes (Basil Rathbone) Collection">
+      <h3>Sherlock Holmes (Basil Rathbone) Collection</h3>
+    </div>
+  </div>
+</section>
+
+<!-- 😂 Comedy -->
+<section>
+  <h2>😂 Comedy</h2>
+  <div id="comedy-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="assets/fallback/comedy1.jpg" alt="Cannon And Ball">
+      <h3>Cannon And Ball</h3>
+    </div>
+  </div>
+</section>
+
+<!-- 📰 FLM News Filipina -->
+<section>
+  <h2>📰 FLM News Filipina</h2>
+  <div id="flm-news-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="assets/fallback/news1.jpg" alt="TV-FILIPINO">
+      <h3>TV-FILIPINO</h3>
+    </div>
+  </div>
+</section>
+
+<!-- 🎥 Independent Films -->
+<section>
+  <h2>🎥 Independent Films</h2>
+  <div id="independent-grid" class="movie-grid"></div>
+</section>
+
+<!-- 🎮 Gaming -->
+<section>
+  <h2>🎮 Gaming</h2>
+  <div id="gaming-grid" class="movie-grid"></div>
+</section>
+
+<!-- 🏆 Golden Classics -->
+<section>
+  <h2>🏆 Golden Classics</h2>
+  <div id="golden-classics-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="assets/fallback/golden1.jpg" alt="Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb">
+      <h3>Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb</h3>
+    </div>
+  </div>
+</section>
+<div class="movie-card">
+  <img src="./-A15_files/Primary(88).jpg" alt="018. A Woman's Vengeance">
+  <h3>018. A Woman's Vengeance</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(89).jpg" alt="Deep Waters">
+  <h3>Deep Waters</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(90).jpg" alt="Day-time Wife">
+  <h3>Day-time Wife</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/zaina_ai_avatar.jpg" alt="Zaina Juliette Show Classic Entertainers Part 2 Commercial">
+  <h3>Zaina Juliette Show Classic Entertainers Part 2 Commercial</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(91).jpg" alt="016. A Letter To Three Wives">
+  <h3>016. A Letter To Three Wives</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(92).jpg" alt="Deadline - U.S.A.">
+  <h3>Deadline - U.S.A.</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(93).jpg" alt="Leave Her to Heaven">
+  <h3>Leave Her to Heaven</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(94).jpg" alt="Brain from Planet Arous (Colorized)">
+  <h3>Brain from Planet Arous (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(95).jpg" alt="Rome Express">
+  <h3>Rome Express</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(2).jpg" alt="Time to Kill">
+  <h3>Time to Kill</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(96).jpg" alt="The Two-Headed Spy">
+  <h3>The Two-Headed Spy</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(97).jpg" alt="My Favorite Brunette">
+  <h3>My Favorite Brunette</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(98).jpg" alt="The Night the World Exploded">
+  <h3>The Night the World Exploded</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(99).jpg" alt="The Long Wait">
+  <h3>The Long Wait</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(100).jpg" alt="The Man from Planet X">
+  <h3>The Man from Planet X</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(101).jpg" alt="Have Rocket, Will Travel (Colorized)">
+  <h3>Have Rocket, Will Travel (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(102).jpg" alt="The Abominable Snowman">
+  <h3>The Abominable Snowman</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(103).jpg" alt="The Twonky">
+  <h3>The Twonky</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(104).jpg" alt="The Gunfighter">
+  <h3>The Gunfighter</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(105).jpg" alt="Red Planet Mars">
+  <h3>Red Planet Mars</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(106).jpg" alt="Frankenstein">
+  <h3>Frankenstein</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(107).jpg" alt="The Mole People (Colorized)">
+  <h3>The Mole People (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(108).jpg" alt="The October Man">
+  <h3>The October Man</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(109).jpg" alt="Lost Horizon">
+  <h3>Lost Horizon</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(110).jpg" alt="Confessions of Boston Blackie">
+  <h3>Confessions of Boston Blackie</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(176).jpg" alt="Walk a Crooked Mile (Colorized)">
+  <h3>Walk a Crooked Mile (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(177).jpg" alt="Dick Tracy">
+  <h3>Dick Tracy</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(178).jpg" alt="Foreign Agent (Colorized)">
+  <h3>Foreign Agent (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(179).jpg" alt="Colorado Kid">
+  <h3>Colorado Kid</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(180).jpg" alt="The Chase">
+  <h3>The Chase</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(181).jpg" alt="The Wolf Man">
+  <h3>The Wolf Man</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(182).jpg" alt="His Girl Friday (Colorized)">
+  <h3>His Girl Friday (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(183).jpg" alt="Night Key">
+  <h3>Night Key</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(184).jpg" alt="War of the Satellites (Colorized)">
+  <h3>War of the Satellites (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(185).jpg" alt="Enemy Agents Meet Ellery Queen">
+  <h3>Enemy Agents Meet Ellery Queen</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(186).jpg" alt="Raffles">
+  <h3>Raffles</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(187).jpg" alt="They Met in the Dark">
+  <h3>They Met in the Dark</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(188).jpg" alt="The Blue Dahlia">
+  <h3>The Blue Dahlia</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(189).jpg" alt="A Connecticut Yankee">
+  <h3>A Connecticut Yankee</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(190).jpg" alt="International Lady (Colorized)">
+  <h3>International Lady (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(191).jpg" alt="The Strange World of Planet X">
+  <h3>The Strange World of Planet X</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(192).jpg" alt="Criminals Within">
+  <h3>Criminals Within</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(193).jpg" alt="A Touch of Larceny">
+  <h3>A Touch of Larceny</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(194).jpg" alt="Alias Boston Blackie">
+  <h3>Alias Boston Blackie</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(195).jpg" alt="Castle in the Desert">
+  <h3>Castle in the Desert</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(196).jpg" alt="Teenagers from Outer Space">
+  <h3>Teenagers from Outer Space</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(197).jpg" alt="The Day the Earth Caught Fire">
+  <h3>The Day the Earth Caught Fire</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(198).jpg" alt="The Magnetic Monster">
+  <h3>The Magnetic Monster</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(199).jpg" alt="It Happened Tomorrow">
+  <h3>It Happened Tomorrow</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(200).jpg" alt="Mark of the Lash">
+  <h3>Mark of the Lash</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(201).jpg" alt="The Last of the Mohicans">
+  <h3>The Last of the Mohicans</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(202).jpg" alt="The Invisible Man">
+  <h3>The Invisible Man</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(203).jpg" alt="The Mark of Zorro">
+  <h3>The Mark of Zorro</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(204).jpg" alt="Dead Man's Gold">
+  <h3>Dead Man's Gold</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(205).jpg" alt="A Day at the Races">
+  <h3>A Day at the Races</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(206).jpg" alt="The Corpse Vanishes">
+  <h3>The Corpse Vanishes</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(207).jpg" alt="Night Train to Munich">
+  <h3>Night Train to Munich</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(208).jpg" alt="Not of This Earth">
+  <h3>Not of This Earth</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(209).jpg" alt="Buck Rogers">
+  <h3>Buck Rogers</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(210).jpg" alt="Flash Gordon's Trip to Mars – Chapter 10">
+  <h3>Flash Gordon's Trip to Mars – Chapter 10</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(211).jpg" alt="Bulldog Drummond">
+  <h3>Bulldog Drummond</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(212).jpg" alt="After Midnight with Boston Blackie">
+  <h3>After Midnight with Boston Blackie</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(213).jpg" alt="Stormy Weather">
+  <h3>Stormy Weather</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(214).jpg" alt="Kind Hearts and Coronets">
+  <h3>Kind Hearts and Coronets</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(215).jpg" alt="Battles of Chief Pontiac">
+  <h3>Battles of Chief Pontiac</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(216).jpg" alt="Shanghai Express">
+  <h3>Shanghai Express</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(217).jpg" alt="The Man Who Wouldn't Die">
+  <h3>The Man Who Wouldn't Die</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(218).jpg" alt="Bebert and the Train">
+  <h3>Bebert and the Train</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(219).jpg" alt="Spaceways">
+  <h3>Spaceways</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(220).jpg" alt="Sahara (Colorized)">
+  <h3>Sahara (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(221).jpg" alt="Unearthly Stranger">
+  <h3>Unearthly Stranger</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(222).jpg" alt="Saboteur">
+  <h3>Saboteur</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(223).jpg" alt="Three on a Ticket">
+  <h3>Three on a Ticket</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(224).jpg" alt="Gilda">
+  <h3>Gilda</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(225).jpg" alt="Manhunt of Mystery Island (1945, Colorized Cliffhanger Serial)">
+  <h3>Manhunt of Mystery Island (1945, Colorized Cliffhanger Serial)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(226).jpg" alt="The Purple Monster Strikes (1945, Colorized Cliffhanger Serial)">
+  <h3>The Purple Monster Strikes (1945, Colorized Cliffhanger Serial)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(227).jpg" alt="Captain Midnight (1942)">
+  <h3>Captain Midnight (1942)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(228).jpg" alt="Sherlock Holmes Movies (Colorized)">
+  <h3>Sherlock Holmes Movies (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(229).jpg" alt="Zorro's Black Whip (1944, Colorized)">
+  <h3>Zorro's Black Whip (1944, Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(230).jpg" alt="The Vanishing Shadow">
+  <h3>The Vanishing Shadow</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(231).jpg" alt="Phantom Lady">
+  <h3>Phantom Lady</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(232).jpg" alt="The Black Widow (1947, Colorized Serial)">
+  <h3>The Black Widow (1947, Colorized Serial)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(233).jpg" alt="Blane Gets Her Man (1938)">
+  <h3>Blane Gets Her Man (1938)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(234).jpg" alt="The Deadly Mantis">
+  <h3>The Deadly Mantis</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(235).jpg" alt="Adventures of Captain Marvel">
+  <h3>Adventures of Captain Marvel</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(236).jpg" alt="Beyond the Time Barrier">
+  <h3>Beyond the Time Barrier</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(237).jpg" alt="Batman and Robin (1949, Colorized)">
+  <h3>Batman and Robin (1949, Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(238).jpg" alt="Buck Benny Rides Again (1940, Colorized)">
+  <h3>Buck Benny Rides Again (1940, Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(239).jpg" alt="Phantom of the West">
+  <h3>Phantom of the West</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(240).jpg" alt="Phantom of the Air">
+  <h3>Phantom of the Air</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(241).jpg" alt="Blackhawk (Colorized)">
+  <h3>Blackhawk (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(242).jpg" alt="Holt of the Secret Service (Colorized)">
+  <h3>Holt of the Secret Service (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(243).jpg" alt="Federal Operator 99">
+  <h3>Federal Operator 99</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(244).jpg" alt="Tobor the Great (1954, Colorized)">
+  <h3>Tobor the Great (1954, Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(245).jpg" alt="Captain Video Serial Trailer (Colorized)">
+  <h3>Captain Video Serial Trailer (Colorized)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(246).jpg" alt="Jungle Girl (1941)">
+  <h3>Jungle Girl (1941)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(247).jpg" alt="I Married a Monster from Outer Space">
+  <h3>I Married a Monster from Outer Space</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(248).jpg" alt="Impact">
+  <h3>Impact</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(249).jpg" alt="Bar 20">
+  <h3>Bar 20</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(250).jpg" alt="Attack of the Crab Monsters">
+  <h3>Attack of the Crab Monsters</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(251).jpg" alt="The Boy Detectives Club – The Enemy Is an Atomic Submarine">
+  <h3>The Boy Detectives Club – The Enemy Is an Atomic Submarine</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(252).jpg" alt="Appointment with Venus">
+  <h3>Appointment with Venus</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(253).jpg" alt="The Bandit Queen">
+  <h3>The Bandit Queen</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(254).jpg" alt="A Double Life">
+  <h3>A Double Life</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(255).jpg" alt="Fifth Avenue Girl">
+  <h3>Fifth Avenue Girl</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(256).jpg" alt="Abandoned">
+  <h3>Abandoned</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(257).jpg" alt="A Dog of Flanders">
+  <h3>A Dog of Flanders</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(258).jpg" alt="Batman (1943)">
+  <h3>Batman (1943)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(259).jpg" alt="Abilene Town">
+  <h3>Abilene Town</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(260).jpg" alt="12 to the Moon">
+  <h3>12 to the Moon</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(261).jpg" alt="5 Fingers">
+  <h3>5 Fingers</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(262).jpg" alt="In the Vault (1940)">
+  <h3>In the Vault (1940)</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(263).jpg" alt="Red Ryder Series">
+  <h3>Red Ryder Series</h3>
+</div>
+
+<div class="movie-card">
+  <img src="./-A15_files/Primary(264).jpg" alt="Pitfall">
+  <h3>Pitfall</h3>
+</div>
+</div>
+</section>
+
+<section>
+  <h2>🇪🇸 In Spanish TV</h2>
+  <div id="in-spanish-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(265).jpg" alt="BeWitched (Spanish)">
+      <h3>BeWitched (Spanish)</h3>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🌍 International Films</h2>
+  <div id="international-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(266).jpg" alt="The Bill">
+      <h3>The Bill</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(267).jpg" alt="Eyes Wide Shut">
+      <h3>Eyes Wide Shut</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(268).jpg" alt="Hatred">
+      <h3>Hatred</h3>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>👶 Kids World</h2>
+  <div id="kids-world-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(269).jpg" alt="Learning the Hard Way">
+      <h3>Learning the Hard Way</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(270).jpg" alt="Record of Grancrest War">
+      <h3>Record of Grancrest War</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(271).jpg" alt="Odd Squad">
+      <h3>Odd Squad</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(272).jpg" alt="Sesame Street (AE)">
+      <h3>Sesame Street (AE)</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(273).jpg" alt="Sesame Street (AE)">
+      <h3>Sesame Street (AE)</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(274).jpg" alt="Sesame Street (AE)">
+      <h3>Sesame Street (AE)</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(275).jpg" alt="Bear in the Big Blue House: Welcome to Woodland Valley">
+      <h3>Bear in the Big Blue House: Welcome to Woodland Valley</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(276).jpg" alt="Cartoons Wavoom">
+      <h3>Cartoons Wavoom</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(277).jpg" alt="Sesame Street (AE)">
+      <h3>Sesame Street (AE)</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(278).jpg" alt="Ancient Books of Ys">
+      <h3>Ancient Books of Ys</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(279).jpg" alt="The Adventures of Gamba">
+      <h3>The Adventures of Gamba</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(280).jpg" alt="Disney Anthology TV Series Classic">
+      <h3>Disney Anthology TV Series Classic</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(281).jpg" alt="Merrie Melodies Classics">
+      <h3>Merrie Melodies Classics</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(282).jpg" alt="Charlie Chalk">
+      <h3>Charlie Chalk</h3>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🎤 Live Events</h2>
+  <div id="live-events-grid" class="movie-grid"></div>
+</section>
+
+<section>
+  <h2>🌙 Midnight Circuit</h2>
+  <div id="midnight-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(283).jpg" alt="The House That Would Not Die">
+      <h3>The House That Would Not Die</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(284).jpg" alt="Amanti D'Oltretomba (Nightmare Castle)">
+      <h3>Amanti D'Oltretomba (Nightmare Castle)</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(285).jpg" alt="Horror Express (1972)">
+      <h3>Horror Express (1972)</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(286).jpg" alt="Horror Night at The Bijou">
+      <h3>Horror Night at The Bijou</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(287).jpg" alt="Classic Horror Films">
+      <h3>Classic Horror Films</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(288).jpg" alt="The Last Man on Earth">
+      <h3>The Last Man on Earth</h3>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🎙️ Talk</h2>
+  <div id="talk-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="./-A15_files/zaina_ai_avatar.jpg" alt="Zaina Juliette Show: Spotlight David Winters and Classic Entertainers">
+      <h3>Zaina Juliette Show: Spotlight David Winters and Classic Entertainers</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/zaina_ai_avatar.jpg" alt="Zaina Juliette & Friends">
+      <h3>Zaina Juliette & Friends</h3>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>🧑‍🤝‍🧑 Teens</h2>
+  <div id="teens-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(289).jpg" alt="Gunbuster">
+      <h3>Gunbuster</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(290).jpg" alt="Power Rangers HyperForce">
+      <h3>Power Rangers HyperForce</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(291).jpg" alt="Dragon Ball Z">
+      <h3>Dragon Ball Z</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/Primary(292).jpg" alt="Once Upon A Time">
+      <h3>Once Upon A Time</h3>
+    </div>
+  </div>
+</section>
+<section>
+  <h2>🌀 Zaina Zone</h2>
+  <div id="zaina-zone-grid" class="movie-grid">
+    <div class="movie-card">
+      <img src="./-A15_files/zaina_ai_avatar.jpg" alt="The Moment — Zaina Juliette">
+      <h3>The Moment — Zaina Juliette</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/zaina_ai_avatar.jpg" alt="Zaina Juliette Behind the Scenes — The Z Zone">
+      <h3>Zaina Juliette Behind the Scenes — The Z Zone</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/zaina_ai_avatar.jpg" alt="Real Love (Music Video v2) — Zaina Juliette">
+      <h3>Real Love (Music Video v2) — Zaina Juliette</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/zaina_ai_avatar.jpg" alt="Zaina TV Show Clips for Agent">
+      <h3>Zaina TV Show Clips for Agent</h3>
+    </div>
+
+    <div class="movie-card">
+      <img src="./-A15_files/zaina_ai_avatar.jpg" alt="ZJS — Zach Ring interviews Zaina Juliette: Women’s Narrative">
+      <h3>ZJS — Zach Ring interviews Zaina Juliette: Women’s Narrative</h3>
+    </div>
+  </div>
+</section>
+
+<footer style="background-color: #111; padding: 1rem; text-align: center; color: #ccc; font-size: 0.85rem; margin-top: 2rem;">
+  © 2025 <strong>FLM TV</strong>. All rights reserved. Powered by <strong>Zaina Juliette</strong>, <strong>ZJ Spotlight Productions</strong>, and <strong>FLM TV</strong>. ✨
+</footer>
+
+<script src="./-A15_files/app.js"></script>

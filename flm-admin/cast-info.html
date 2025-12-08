@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zaina Juliette Show - Cast Info</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .cast-info-container {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      background: url('/assets/Zaina-TV-Show-Poster.jpg') no-repeat center center/cover;
+      display: flex;
+      align-items: flex-end;
+      padding: 2rem;
+      animation: zoomInOut 20s ease-in-out infinite;
+    }
+    @keyframes zoomInOut {
+      0% { background-size: 100%; }
+      50% { background-size: 105%; }
+      100% { background-size: 100%; }
+    }
+    .info-panel {
+      padding: 1.5rem 2rem;
+    }
+    .info-panel h1 {
+      margin-top: 0;
+      font-size: 2.5rem;
+    }
+    .metadata {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #aaa;
+    }
+    .description {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      max-width: 800px;
+    }
+    .cast-section {
+      margin-top: 2rem;
+    }
+    .cast-section h2 {
+      margin-bottom: 1rem;
+    }
+    .cast-carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 1rem;
+    }
+    .cast-card {
+      min-width: 120px;
+      text-align: center;
+    }
+    .cast-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .close-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+    .close-button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="cast-info-container">
+    <button class="close-button" onclick="window.history.back()">✖</button>
+    <div class="hero-banner"></div>
+    <div class="info-panel">
+      <h1>Zaina Juliette Show</h1>
+      <div class="metadata">2025 • Music • 1h 40m • TV-14</div>
+      <div class="description">
+        Zaina Juliette is a fierce entertainer merging music, theatre, and cinematic spectacle into a one-of-a-kind live experience.
+        The show blends powerful performances, real stories, and stunning visuals — featuring star-studded guests and rising talents.
+      </div>
+
+      <div class="cast-section">
+        <h2>Cast</h2>
+        <div class="cast-carousel">
+          <div class="cast-card">
+            <img src="/assets/zaina.jpg" alt="Zaina Juliette">
+            <div>Zaina Juliette</div>
+            <div><small>Herself</small></div>
+          </div>
+          <div class="cast-card">
+            <img src="/assets/guest1.jpg" alt="Guest 1">
+            <div>Guest Star</div>
+            <div><small>Performer</small></div>
+          </div>
+          <div class="cast-card">
+            <img src="/assets/guest2.jpg" alt="Guest 2">
+            <div>Special Artist</div>
+            <div><small>Dancer</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

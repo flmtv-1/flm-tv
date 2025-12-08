@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV</title>
+    <!-- We're using a single style block for simplicity. You can move this to a separate CSS file later. -->
+    <style>
+        /* CSS Reset & Variables */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e50914; /* Netflix Red */
+            --primary-dark: #b8070f;
+            --bg: #141414; /* Dark background */
+            --bg-light: #1f1f1f;
+            --text: #ffffff;
+            --text-gray: #b3b3b3;
+            --card-bg: #282828;
+            --border-color: #333;
+            --panel-width: 350px;
+        }
+        
+        /* Base body and layout styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 2rem;
+            overflow-x: hidden;
+            transition: padding-right 0.3s ease-in-out;
+        }
+
+        /* Class to apply when a panel is open */
+        body.panel-active {
+            padding-right: var(--panel-width);
+            overflow-y: hidden; /* Prevent vertical scroll when panel is open */
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Navigation Buttons and Search Bar */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-left: auto; /* Push buttons to the right */
+        }
+
+        .header-search-bar {
+            background-color: var(--bg-light);
+            border-radius: 9999px; /* Rounded pill shape */
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            max-width: 250px;
+        }
+
+        .header-search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .header-search-input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .nav-button:hover {
+            color: var(--primary);
+        }
+        
+        .sign-in-button {
+            background-color: var(--primary);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .sign-in-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1s ease-in-out;
+            z-index: 1;
+        }
+
+        .hero-slide.active {
+            opacity: 1; /* Show active slide */
+            z-index: 2;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0) 100%);
+            z-index: 3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+            padding: 0 2rem;
+            color: #fff;
+        }
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-content p {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .play-button {
+            background-color: var(--primary);
+            color: var(--text);
+            padding: 0.75rem 2rem;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .play-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Floating Button Container */
+        .floating-button-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            z-index: 2000;
+            transition: right 0.3s ease-in-out;
+        }
+
+        body.panel-active .floating-button-container {
+            right: calc(2rem + var(--panel-width));
+        }
+
+        .floating-button {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            padding: 0;
+        }
+
+        .floating-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+        }
+
+        .floating-button svg {
+            color: var(--text);
+            font-size: 1.75rem;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Zaina AI specific floating button styles */
+        #floatingZainaAiButton {
+            background-color: var(--bg-light);
+            border: 2px solid var(--primary);
+            overflow: hidden;
+            width: 60px;
+            height: 60px;
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        #floatingZainaAiButton img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Category Links Container */
+        .category-links {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.5rem; /* Increased gap for text links */
+            padding: 1rem 0;
+            overflow-x: auto;
+            align-items: center;
+        }
+        
+        .category-links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-link {
+            font-size: 1rem;
+            color: var(--text-gray);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color 0.3s;
+            text-decoration: none; /* Remove underline from links */
+        }
+        
+        .category-link:hover {
+            color: var(--primary);
+        }
+
+        /* NEW: Category Tiles Section */
+        #category-tiles-container {
+            margin: 2rem 0;
+            padding: 0 2rem;
+        }
+
+        .category-tiles {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 1rem 0;
+        }
+
+        .category-tiles::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-tile {
+            flex-shrink: 0;
+            width: 250px; /* Adjust size as needed */
+            height: 150px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .category-tile:hover {
+            transform: scale(1.05);
+        }
+
+        .category-tile-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .category-tile-title {
+            width: 100%;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* Movie Carousels */
+        .movie-carousel-section {
+            margin-top: 2rem;
+        }
+        
+        .carousel-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .movie-card-carousel {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scroll-behavior: smooth;
+        }
+        
+        .movie-card-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .movie-card {
+            flex: 0 0 150px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            position: relative;
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 225px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .movie-title {
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Loading Spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 4000;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid var(--primary); /* Red */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: var(--text-gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--primary);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .modal-button-primary {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: var(--text);
+            border: none;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .modal-button-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .modal-text-link {
+            color: var(--text-gray);
+            font-size: 0.875rem;
+            text-align: center;
+            display: block;
+            margin-top: 1rem;
+        }
+        
+        .modal-text-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Panel Styles for Chat and AI Assistant */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: var(--panel-width);
+            height: 100%;
+            background-color: var(--bg-light);
+            box-shadow: -4px 0 10px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(var(--panel-width)); /* Initially off-screen to the right */
+            z-index: 2500;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-panel.open {
+            transform: translateX(0); /* Slide in */
+        }
+
+        /* --- Chatbox styles from your provided file --- */
+        #chatPanel {
+            background-color: #1a1a1a; /* Dark background for chatbox */
+            color: #ffffff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 2500;
+        }
+        
+        .chat-header {
+            background-color: #282828;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #1a1a1a;
+        }
+        
+        .message {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message.received {
+            justify-content: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.6rem 0.9rem;
+            border-radius: 1rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        
+        .message.sent .message-bubble {
+            background-color: #e50914; /* Primary red for sent messages */
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .message.received .message-bubble {
+            background-color: #333; /* Darker grey for received messages */
+            color: white;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        .message-sender {
+            font-size: 0.75em;
+            color: #b3b3b3;
+            margin-bottom: 0.25rem;
+            padding-left: 0.5rem;
+        }
+        
+        .message.sent .message-sender {
+            text-align: right;
+            padding-right: 0.5rem;
+            padding-left: 0;
+        }
+        
+        .chat-input-area {
+            background-color: #282828;
+            padding: 1rem;
+            border-top: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+        
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border-radius: 1.5rem;
+            border: 1px solid #444;
+            background-color: #333;
+            color: white;
+            outline: none;
+            font-size: 1em;
+            resize: none;
+            min-height: 40px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        
+        .chat-input::placeholder {
+            color: #777;
+        }
+        
+        .chat-send-button, .chat-emoji-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5em;
+            padding: 0;
+        }
+        
+        .chat-send-button {
+            color: var(--primary);
+        }
+        
+        .emoji-picker-container {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #282828;
+            border-radius: 0.5rem 0.5rem 0 0;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+            padding: 1rem;
+            display: none; /* Initially hidden */
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .emoji-picker-container.active {
+            display: flex;
+        }
+
+        .emoji-picker-container span {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <span class="logo-text">FLM TV</span>
+            </div>
+            <div class="nav-buttons">
+                <div class="header-search-bar">
+                    <input type="text" class="header-search-input" placeholder="Search...">
+                    <button class="nav-button"><i class="fas fa-search"></i></button>
+                </div>
+                <a href="#" class="sign-in-button">Sign In</a>
+                <button class="nav-button" id="chatButton"><i class="fas fa-comments"></i></button>
+                <button class="nav-button" id="aiButton"><i class="fas fa-robot"></i></button>
+            </div>
+        </header>
+
+        <!-- Hero Banner Section -->
+        <section class="hero-banner">
+            <div class="hero-slide active" style="background-image: url('https://placehold.co/1400x450/444/fff?text=New+Releases');"></div>
+            <div class="hero-slide" style="background-image: url('https://placehold.co/1400x450/333/fff?text=Featured+Documentary');"></div>
+            <div class="hero-slide" style="background-image: url('https://placehold.co/1400x450/555/fff?text=Family+Favorites');"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Featured Title</h1>
+                <p>A description of the featured movie or show goes here. This space can be used for new releases or a highlighted recommendation.</p>
+                <a href="#" class="play-button">Play Now</a>
+            </div>
+        </section>
+
+        <!-- NEW: Category Tiles Section -->
+        <section id="category-tiles-container">
+            <div class="container">
+                <h2 class="carousel-title">Browse Categories</h2>
+                <div class="category-tiles" id="category-tiles">
+                    <!-- Dynamic category tiles will be added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Movie Carousels Container -->
+        <div id="carousels-container">
+            <!-- Dynamic carousels will be added here -->
+        </div>
+
+    </div> <!-- End of container -->
+
+    <!-- Floating Buttons for Chat and Zaina AI -->
+    <div class="floating-button-container">
+        <!-- Zaina AI Button with your photo -->
+       <button class="floating-button" id="floatingZainaAiButton">
+  <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="w-full h-full object-cover rounded-full">
+</button>
+        <!-- Chat Button -->
+        <button class="floating-button" id="floatingChatButton">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M512 240c0 102.3-100.2 185.3-224 185.3S0 342.3 0 240 100.2 54.7 224 54.7c60.2 0 114.7 22.8 155.6 59.8L444 65c2.4-2.4 5.3-3.6 8.5-3.6 3.2 0 6.1 1.2 8.5 3.6l40 40c2.4 2.4 3.6 5.3 3.6 8.5 0 3.2-1.2 6.1-3.6 8.5l-63.5 63.5C487 202.9 512 220.9 512 240z"/></svg>
+        </button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Chat and Zaina AI Panel -->
+    <div class="side-panel" id="chatPanel">
+        <div class="chat-header">
+            <span>FLM Chat</span>
+            <button class="nav-button" id="closePanelButton"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Chat messages will be dynamically added here -->
+        </div>
+        <div class="chat-input-area">
+            <textarea id="chatInput" class="chat-input" placeholder="Type a message..." rows="1"></textarea>
+            <button class="nav-button chat-emoji-button" id="emojiButton">😊</button>
+            <button class="nav-button chat-send-button" id="chatSendButton"><i class="fas fa-paper-plane"></i></button>
+            <div class="emoji-picker-container" id="emojiPicker">
+                <span>😀</span><span>😂</span><span>😎</span><span>👍</span><span>❤️</span><span>🔥</span><span>🎉</span>
+            </div>
+        </div>
+<!-- Zaina AI Panel -->
+<div class="side-panel" id="zainaAiPanel">
+  <div class="chat-header">
+    <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="w-10 h-10 rounded-full">
+    <span class="panel-title">Zaina J AI</span>
+    <button class="nav-button" id="closeZainaAiPanel"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="chat-messages" id="zainaAiMessages">
+    <!-- Zaina AI responses will appear here -->
+  </div>
+  <div class="chat-input-area">
+    <textarea id="zainaAiInput" class="chat-input" placeholder="Ask Zaina AI..." rows="1"></textarea>
+    <button class="nav-button chat-send-button" id="zainaAiSendBtn"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+    </div>
+
+    <!-- Sign-in Modal -->
+    <div class="modal-overlay" id="signInModal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeSignInModal">&times;</span>
+            <h3 class="modal-title">Sign In</h3>
+            <form>
+                <div class="modal-form-group">
+                    <input type="text" id="usernameInput" class="modal-input" placeholder="Username" required>
+                </div>
+                <div class="modal-form-group">
+                    <input type="password" id="passwordInput" class="modal-input" placeholder="Password" required>
+                </div>
+                <button type="submit" class="modal-button-primary">Login</button>
+                <a href="#" class="modal-text-link">Forgot Password?</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- JELLYFIN API CONFIGURATION ---
+            // IMPORTANT: Replace these values with your actual Jellyfin server details
+            const JELLYFIN_SERVER = "http://192.168.1.28:8096"; // 👈 replace with your NAS LAN IP
+            const API_KEY = "61d4bab81ebd4c3b97577aa2c61a7436";
+            const USER_ID = "eb93bfe071ee4c9e9a230f093bffc0d4"; // 👈 your Jellyfin UserId
+
+            // This mapping helps us match the grid IDs to the carousel titles
+            const categoryGridIds = {
+                "689c3f2fb8ec0ad205e3d8a10f2374c3": "Movies",
+                "2bf52839930529f99103629d73a7eddf": "Awesome TV Shows",
+                "19116110a53a09d86550478370bfc335": "Asian Cinema",
+                "340bf395c964fa0cd8bb3ea7637cba92": "Beyond Reality",
+                "166e859a8da3ffff474656b30a70835b": "Classic TV",
+                "9d7ad6afe9afa2dab1a2f6e00ad28fa6": "Collections",
+                "4e568432e1e1fe9b58d9686ed00209f2": "Comedy",
+                "1259ee891225026d06a4196ea5df33bf": "FLM News",
+                "73ab9c3def8d47b4d7a3aa7a95fbc505": "Independent",
+                "acd9ad43077694066efd35f9951ccbcc": "Gaming",
+                "1a174c52bb41600a050fba01721b7bd9": "Golden Classics",
+                "f6242940555a0e587208f9a341328f76": "In Spanish",
+                "ba8b8bbcbf17886eaa65ec99bfa6dee6": "International",
+                "469e7ae569d80eaf09e9ff54b55708ba": "Kids World",
+                "2e1b17e21dc4226a24c642f954e8b949": "Live Events",
+                "3f690d06d91a896371469fa96d0b3d21": "Midnight",
+                "8fddfbad9a964aec868e3952adeb2945": "Talk",
+                "8d8187c8ab14b6edc1451b5052470fc4": "Teens",
+                "1ac641863cec9162df01d2c2a751c932": "Zaina Zone"
+            };
+
+            // NEW: Hero Banner Slideshow Data
+            const heroBanners = [
+                {
+                    title: "New Releases",
+                    description: "Check out the latest movies and shows just added to our collection.",
+                    imageUrl: "https://placehold.co/1400x450/444/fff?text=New+Releases",
+                },
+                {
+                    title: "Featured Documentary",
+                    description: "Explore the depths of the ocean and the mysteries it holds in this stunning documentary.",
+                    imageUrl: "https://placehold.co/1400x450/333/fff?text=Featured+Documentary",
+                },
+                {
+                    title: "Family Favorites",
+                    description: "Gather the whole family for a night of laughs and adventure with these beloved films.",
+                    imageUrl: "https://placehold.co/1400x450/555/fff?text=Family+Favorites",
+                }
+            ];
+
+            // --- UI Elements and State ---
+            const chatPanel = document.getElementById('chatPanel');
+            const floatingChatButton = document.getElementById('floatingChatButton');
+            const floatingZainaAiButton = document.getElementById('floatingZainaAiButton');
+            const closePanelButton = document.getElementById('closePanelButton');
+            const chatInput = document.getElementById('chatInput');
+            const chatSendButton = document.getElementById('chatSendButton');
+            const emojiButton = document.getElementById('emojiButton');
+            const emojiPicker = document.getElementById('emojiPicker');
+// --- Populate Emoji Picker ---
+  const emojis = [
+  // 😀 Smileys
+  '😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰',
+  '😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳',
+
+  // 😐 Neutral / Concerned
+  '🙂','🙁','☹️','😕','😟','😔','😞','😒','😏','🙄','😬','🤥','😳','🥺','😢','😭',
+  '😤','😠','😡','🤬','😶','😐','😑','😯','😦','😧','😮','😲','🥱','😴','🤤','😪',
+
+  // 🤯 Extreme emotions
+  '😵','😵‍💫','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫣','🫡',
+
+  // 👋 Gestures
+  '👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆',
+  '👇','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🙏','💪','🦾',
+
+  // ❤️ Hearts & Symbols
+  '❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','💔','❣️','💕','💞','💓','💗','💖',
+  '💘','💝','💟','♥️','💯','💢','💥','💫','💦','💨','🕳️',
+
+  // 🌍 Nature
+  '🌍','🌎','🌏','🌞','🌝','🌚','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','⭐','🌟',
+  '✨','⚡','🔥','🌈','❄️','☃️','🌊','🍀','🌹','🌷','🌸','🌺','🌻','🌼','🌞',
+
+  // 🍔 Food & Drink
+  '🍎','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝',
+  '🍅','🍆','🥑','🥦','🥬','🥒','🌶️','🫑','🌽','🥕','🧄','🧅','🥔',
+  '🍞','🥐','🥖','🥨','🥯','🥞','🧇','🧀','🍖','🍗','🥩','🥓','🍔','🍟','🍕',
+  '🌭','🥪','🌮','🌯','🥙','🧆','🥚','🍳','🥘','🍲','🥗','🍿','🧈','🧂','🥫',
+  '🍰','🎂','🧁','🍦','🍧','🍨','🍩','🍪','🍫','🍬','🍭','🍮','🍯','🥛','🍼',
+  '☕','🍵','🧃','🥤','🍺','🍻','🍷','🍸','🍹','🍶',
+
+  // 🚗 Travel & Places
+  '🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜',
+  '✈️','🛫','🛬','🛩️','💺','🚀','🛸','🚁','⛵','🚤','🛶','🚂','🚆','🚊',
+  '🛤️','🚇','🚉','🚏',
+
+  // ⚽ Activities
+  '⚽','🏀','🏈','⚾','🎾','🏐','🏉','🥏','🎱','🏓','🏸','🥊','🥋','🥅','⛳',
+  '🏹','🎣','🤿','🥌','🎿','⛷️','🏂','🪂','🏋️','🤼','🤸','⛹️','🤺','🤾',
+
+  // 🎵 Entertainment
+  '🎵','🎶','🎼','🎤','🎧','🎷','🎸','🎹','🎺','🥁','🪘','🎻','🎬','🎥','📷',
+  '📸','📹','🎞️','📽️','🎮','🕹️','🎲','♟️','🧩','🀄','🎴','🎭','🎨',
+
+  // 💻 Objects & Tech
+  '📱','📲','☎️','📞','💻','⌨️','🖥️','🖨️','🖱️','💽','💾','💿','📀','📷',
+  '🎥','📺','📡','🔊','🔉','🔈','🔇','🔔','📢','📣','⏰','⌚','⏱️','⏲️','🕰️',
+
+  // 🛠️ Tools / Misc
+  '🧭','🧱','🔧','🔨','⚒️','🛠️','⛏️','🔩','⚙️','🧰','🪛','🪚','🔑','🗝️',
+  '🔒','🔓','🔏','🔐','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭',
+
+  // ✨ Extra Fun
+  '👑','🎩','🕶️','💍','💄','💋','👗','🥿','👠','👡','👢','👞','👟','🥾','🧢',
+  '🥽','🥼','🧥','🧤','🧣','🎒','👜','💼','🎁','🎀','🎊','🎉','🎈','🪅','🪩'
+];
+
+// Dynamically add emojis into the picker
+emojiPicker.innerHTML = ''; // clear old ones
+emojis.forEach(emoji => {
+  const span = document.createElement('span');
+  span.textContent = emoji;
+  span.style.cursor = 'pointer';
+  span.style.margin = '3px';
+  span.addEventListener('click', () => {
+    chatInput.value += emoji;
+  });
+  emojiPicker.appendChild(span);
+});
+
+// Clear any existing hardcoded emojis
+emojiPicker.innerHTML = '';
+
+// Dynamically add emojis to picker
+emojis.forEach(emoji => {
+  const span = document.createElement('span');
+  span.textContent = emoji;
+  span.style.cursor = 'pointer';
+  span.addEventListener('click', () => {
+    chatInput.value += emoji;
+  });
+  emojiPicker.appendChild(span);
+});
+
+            const chatMessages = document.getElementById('chatMessages');
+            const signInModal = document.getElementById('signInModal');
+            const signInButton = document.querySelector('.sign-in-button');
+            const closeSignInModal = document.getElementById('closeSignInModal');
+            const carouselsContainer = document.getElementById('carousels-container');
+            const categoryTilesContainer = document.getElementById('category-tiles'); // NEW
+            const loadingOverlay = document.getElementById('loading-overlay');
+            // NEW hero banner elements
+            const heroSlides = document.querySelectorAll('.hero-slide');
+            const heroTitle = document.querySelector('.hero-content h1');
+            const heroDescription = document.querySelector('.hero-content p');
+            let currentSlideIndex = 0;
+
+            // --- Helper Functions ---
+            function showLoading() {
+                loadingOverlay.style.display = 'flex';
+            }
+
+            function hideLoading() {
+                loadingOverlay.style.display = 'none';
+            }
+
+            function createMovieCard(title, imageUrl) {
+                const card = document.createElement('div');
+                card.classList.add('movie-card');
+                card.innerHTML = `
+                    <img src="${imageUrl}" alt="${title} Poster" class="movie-poster">
+                    <div class="movie-title">${title}</div>
+                `;
+                card.addEventListener('click', () => {
+                    const message = `You clicked on: ${title}`;
+                    showNotification(message);
+                });
+                return card;
+            }
+
+            function showNotification(message) {
+                const notification = document.createElement('div');
+                notification.classList.add('notification-box');
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Animate and remove after 3 seconds
+                setTimeout(() => {
+                    notification.classList.add('fade-out');
+                    notification.addEventListener('transitionend', () => {
+                        notification.remove();
+                    });
+                }, 3000);
+            }
+
+            // Function to get the correct Jellyfin image URL
+            function getJellyfinImageUrl(itemId, imageType = 'Primary') {
+                return `${JELLYFIN_SERVER}/Items/${itemId}/Images/${imageType}?api_key=${API_KEY}`;
+            }
+
+            // --- JELLYFIN API FETCH FUNCTIONS ---
+            async function fetchCategories() {
+                try {
+                    const response = await fetch(`${JELLYFIN_SERVER}/Users/${USER_ID}/Views?api_key=${API_KEY}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    return data.Items;
+                } catch (error) {
+                    console.error("❌ Error fetching categories:", error);
+                    return [];
+                }
+            }
+
+            async function fetchItemsForCategory(categoryId) {
+                try {
+                    // Fetch items from the specified library (category)
+                    const response = await fetch(`${JELLYFIN_SERVER}/Users/${USER_ID}/Items?ParentId=${categoryId}&api_key=${API_KEY}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    return data.Items;
+                } catch (error) {
+                    console.error("❌ Error fetching items for category:", error);
+                    return [];
+                }
+            }
+
+            // Function to create a carousel section for a given category
+            function createCarouselSection(title, carouselId) {
+                const section = document.createElement('div');
+                section.classList.add('movie-carousel-section');
+                section.innerHTML = `
+                    <h2 class="carousel-title">${title}</h2>
+                    <div class="movie-card-carousel" id="${carouselId}">
+                        <!-- Movie cards will be dynamically added here -->
+                    </div>
+                `;
+                return section;
+            }
+
+            // NEW: Function to populate the category tiles section
+            async function populateCategoryTiles() {
+                const categories = await fetchCategories();
+                const container = document.getElementById('category-tiles');
+
+                if (categories.length > 0 && container) {
+                    categories.forEach(category => {
+                        // Create the tile element
+                        const tile = document.createElement('div');
+                        tile.classList.add('category-tile');
+                        
+                        // Get the image URL for the tile
+                        const imageUrl = getJellyfinImageUrl(category.Id, 'Primary');
+                        tile.style.backgroundImage = `url('${imageUrl}')`;
+
+                        // Add the title overlay
+                        tile.innerHTML = `
+                            <div class="category-tile-overlay">
+                                <h3 class="category-tile-title">${category.Name}</h3>
+                            </div>
+                        `;
+
+                        // Add a click listener to simulate navigation
+                        tile.addEventListener('click', () => {
+                            console.log(`Navigating to category: ${category.Name} (${category.Id})`);
+                            showNotification(`Clicked on ${category.Name}`);
+                        });
+                        
+                        container.appendChild(tile);
+                    });
+                }
+            }
+
+            // Main function to fetch and populate all carousels
+            async function populateCarousels() {
+                showLoading();
+                const categories = await fetchCategories();
+                
+                if (categories.length > 0) {
+                    for (const category of categories) {
+                        const carouselTitle = category.Name;
+                        const carouselId = `carousel-${category.Id}`;
+                        
+                        // Create the carousel section and add it to the container
+                        const carouselSection = createCarouselSection(carouselTitle, carouselId);
+                        carouselsContainer.appendChild(carouselSection);
+                        
+                        // Fetch and render the items for this category
+                        const items = await fetchItemsForCategory(category.Id);
+                        const carousel = document.getElementById(carouselId);
+                        if (items && carousel) {
+                            items.forEach(item => {
+                                const title = item.Name;
+                                const imageUrl = getJellyfinImageUrl(item.Id);
+                                const card = createMovieCard(title, imageUrl);
+                                carousel.appendChild(card);
+                            });
+                        }
+                    }
+                } else {
+                    // Handle case where no categories were returned
+                    carouselsContainer.innerHTML = '<p style="text-align:center; padding: 2rem;">Could not load categories. Please check your Jellyfin server and API key.</p>';
+                }
+                hideLoading();
+            }
+
+            // NEW: Hero slideshow logic
+            function startHeroSlideshow() {
+                setInterval(() => {
+                    // Hide the current slide
+                    heroSlides[currentSlideIndex].classList.remove('active');
+                    
+                    // Move to the next slide
+                    currentSlideIndex = (currentSlideIndex + 1) % heroSlides.length;
+                    
+                    // Show the next slide and update content
+                    heroSlides[currentSlideIndex].classList.add('active');
+                    heroTitle.textContent = heroBanners[currentSlideIndex].title;
+                    heroDescription.textContent = heroBanners[currentSlideIndex].description;
+
+                }, 5000); // Change slide every 5 seconds
+            }
+
+            // --- Event Listeners ---
+            
+            // Chat and AI Panel Toggles
+            floatingChatButton.addEventListener('click', () => {
+                chatPanel.classList.toggle('open');
+                document.body.classList.toggle('panel-active');
+            });
+            
+            floatingZainaAiButton.addEventListener('click', () => {
+                // For now, this button does the same as the chat button.
+                // You can add different logic here later.
+                chatPanel.classList.toggle('open');
+                document.body.classList.toggle('panel-active');
+            });
+
+            closePanelButton.addEventListener('click', () => {
+                chatPanel.classList.remove('open');
+                document.body.classList.remove('panel-active');
+            });
+            
+            // Chat message sending
+            chatSendButton.addEventListener('click', () => {
+                const message = chatInput.value.trim();
+                if (message !== '') {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.classList.add('message', 'sent');
+                    msgDiv.innerHTML = `<div class="message-bubble">${message}</div>`;
+                    chatMessages.appendChild(msgDiv);
+                    chatInput.value = '';
+                    chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
+                }
+            });
+
+            // Emoji Picker
+            emojiButton.addEventListener('click', () => {
+                emojiPicker.classList.toggle('active');
+            });
+
+            // Insert emoji into chat input
+            emojiPicker.querySelectorAll('span').forEach(emojiSpan => {
+                emojiSpan.addEventListener('click', () => {
+                    chatInput.value += emojiSpan.textContent;
+                });
+            });
+
+            // Sign-in Modal
+            signInButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                signInModal.style.display = 'flex';
+            });
+            
+            closeSignInModal.addEventListener('click', () => {
+                signInModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside of it
+            window.addEventListener('click', (event) => {
+                if (event.target === signInModal) {
+                    signInModal.style.display = 'none';
+                }
+            });
+
+            // Initialize the app
+            populateCategoryTiles(); // NEW
+            populateCarousels();
+            startHeroSlideshow(); // NEW
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FLM Admin Dashboard - Enhanced Captions &amp; Chat</title>
+<!-- Firebase SDKs -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+
+    // Global Firebase variables - MANDATORY to use these
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? initialAuthToken : null; // Corrected variable name
+
+    let app;
+    let db;
+    let auth;
+    let userId; // Will store the authenticated user's ID or a random one
+
+    // Initialize Firebase and authenticate
+    async function initializeFirebase() {
+        try {
+            if (Object.keys(firebaseConfig).length > 0) {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Sign in using custom token or anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                    console.log("Firebase signed in with custom token.");
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Firebase signed in anonymously.");
+                }
+
+                // Listen for auth state changes to get the user ID
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Admin User ID:", userId);
+                        // Once authenticated, load existing data from Firestore
+                        loadAllContentFromFirestore();
+                    } else {
+                        userId = crypto.randomUUID(); // Fallback to a random ID if not authenticated
+                        console.log("Admin User not authenticated, using random ID:", userId);
+                        loadAllContentFromFirestore(); // Still try to load content
+                    }
+                });
+            } else {
+                console.error("Firebase config is missing. Cannot initialize Firebase.");
+                // alert("Firebase is not configured. Content will not be loaded persistently."); // Removed alert for cleaner UX
+            }
+        } catch (error) {
+            console.error("Error initializing Firebase:", error);
+            // alert("Failed to initialize Firebase. Check console for details."); // Removed alert for cleaner UX
+        }
+    }
+
+    // Call initialization when the script loads
+    initializeFirebase();
+
+    // --- Firestore Data Management Functions ---
+
+    /**
+     * Loads all content (movies, series, categories, live streams) from Firestore for display in admin.
+     */
+    async function loadAllContentFromFirestore() {
+        if (!db || !userId) {
+            console.warn("Firestore not initialized or user not authenticated. Cannot load content.");
+            return;
+        }
+        console.log("Loading all content from Firestore for admin...");
+        loadMoviesList(); // Renamed to avoid conflict with existing loadMovies
+        loadSeriesList(); // Renamed for clarity
+        loadLiveChannelsList(); // Renamed for clarity
+        loadCategoriesList(); // Renamed for clarity
+    }
+
+    /**
+     * Adds a new movie to Firestore. This function is called by `sendToViewer`.
+     */
+    async function addMovieToFirestore(data) {
+        if (!db) {
+            alert('Firebase not initialized. Cannot add movie.');
+            return;
+        }
+        try {
+            // Check if contentId exists, if so, update; otherwise, add new
+            if (data.contentId) {
+                await setDoc(doc(db, `artifacts/${appId}/public/data/movies`, data.contentId), {
+                    title: data.title,
+                    description: data.description,
+                    video: data.video,
+                    poster: data.poster,
+                    genre: data.genre,
+                    year: parseInt(data.year),
+                    cast: data.cast,
+                    director: data.director,
+                    rating: data.rating || 'N/A',
+                    type: 'movie',
+                    updatedAt: new Date()
+                }, { merge: true });
+                alert('Movie updated successfully in Firestore!');
+            } else {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/movies`), {
+                    title: data.title,
+                    description: data.description,
+                    video: data.video,
+                    poster: data.poster,
+                    genre: data.genre,
+                    year: parseInt(data.year),
+                    cast: data.cast,
+                    director: data.director,
+                    rating: data.rating || 'N/A',
+                    type: 'movie',
+                    createdAt: new Date()
+                });
+                alert('Movie added successfully to Firestore!');
+            }
+
+            // Clear form
+            document.getElementById('title').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('posterUrl').value = '';
+            document.getElementById('genre').value = '';
+            document.getElementById('year').value = '';
+            document.getElementById('cast').value = '';
+            document.getElementById('director').value = '';
+            document.getElementById('rating').value = 'G';
+            document.getElementById('contentId').value = ''; // Clear hidden ID
+        } catch (e) {
+            console.error("Error adding/updating movie to Firestore: ", e);
+            alert('Error adding/updating movie to Firestore: ' + e.message);
+        }
+    }
+
+    /**
+     * Loads movies from Firestore and displays them in the right panel.
+     */
+    async function loadMoviesList() {
+        const moviesList = document.getElementById('moviesList');
+        moviesList.innerHTML = '<li>Loading movies...</li>'; // Initial loading message
+
+        try {
+            const q = query(collection(db, `artifacts/${appId}/public/data/movies`));
+            onSnapshot(q, (snapshot) => {
+                moviesList.innerHTML = ''; // Clear for real-time updates
+                if (snapshot.empty) {
+                    moviesList.innerHTML = '<li>No movies added yet.</li>';
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const movie = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between p-2 border-b border-gray-700';
+                    li.innerHTML = `
+                        <span>${movie.title} (${movie.year || 'N/A'}) - ${movie.genre || 'N/A'} [${movie.rating || 'N/A'}]</span>
+                        <div>
+                            <button onclick="deleteContent('${doc.id}', 'movies')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md ml-2">Delete</button>
+                        </div>
+                    `;
+                    moviesList.appendChild(li);
+                });
+            }, (error) => {
+                console.error("Error listening to movies:", error);
+                moviesList.innerHTML = '<li>Error loading movies.</li>';
+            });
+        } catch (e) {
+            console.error("Error setting up movie listener:", e);
+            moviesList.innerHTML = '<li>Error setting up movie listener.</li>';
+        }
+    }
+
+    /**
+     * Adds a new TV series episode to Firestore. If series/season doesn't exist, it creates them.
+     */
+    async function addTvEpisodeToFirestore(seriesTitle, seasonNumber, episodeData, seriesDocIdToUpdate = null) {
+        if (!db) {
+            alert('Firebase not initialized. Cannot add TV episode.');
+            return;
+        }
+
+        try {
+            const seriesRef = collection(db, `artifacts/${appId}/public/data/series`);
+            let seriesDocId = seriesDocIdToUpdate;
+            let existingSeasons = [];
+
+            if (!seriesDocId) {
+                // If no seriesDocId provided, search by title
+                const q = query(seriesRef, where("title", "==", seriesTitle));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    // Series does not exist, create it
+                    const newSeriesRef = await addDoc(seriesRef, {
+                        title: seriesTitle,
+                        poster: episodeData.poster || '',
+                        type: 'series',
+                        seasons: [],
+                        createdAt: new Date()
+                    });
+                    seriesDocId = newSeriesRef.id;
+                    console.log("New series created with ID:", seriesDocId);
+                } else {
+                    // Series exists
+                    seriesDocId = querySnapshot.docs[0].id;
+                    existingSeasons = querySnapshot.docs[0].data().seasons || [];
+                    console.log("Existing series found with ID:", seriesDocId);
+                }
+            } else {
+                // If seriesDocId provided, fetch existing seasons directly
+                const seriesDoc = await getDoc(doc(db, `artifacts/${appId}/public/data/series`, seriesDocId));
+                if (seriesDoc.exists()) {
+                    existingSeasons = seriesDoc.data().seasons || [];
+                } else {
+                    alert('Error: Series document not found for update.');
+                    return;
+                }
+            }
+
+
+            // Find or create the season
+            let seasonFound = false;
+            let updatedSeasons = existingSeasons.map(s => {
+                if (s.seasonNumber === parseInt(seasonNumber)) {
+                    seasonFound = true;
+                    // Add episode if it doesn't already exist or update it
+                    const existingEpisodeIndex = s.episodes.findIndex(ep => ep.episode === parseInt(episodeData.episode));
+                    if (existingEpisodeIndex === -1) {
+                        s.episodes.push(episodeData);
+                    } else {
+                        s.episodes[existingEpisodeIndex] = episodeData; // Update existing episode
+                    }
+                    return s;
+                }
+                return s;
+            });
+
+            if (!seasonFound) {
+                // Add new season
+                updatedSeasons.push({
+                    seasonNumber: parseInt(seasonNumber),
+                    episodes: [episodeData]
+                });
+            }
+
+            // Update the series document with the new seasons array
+            await setDoc(doc(db, `artifacts/${appId}/public/data/series`, seriesDocId), {
+                title: seriesTitle,
+                poster: episodeData.poster || '', // Update series poster with latest episode poster
+                type: 'series',
+                seasons: updatedSeasons.sort((a, b) => a.seasonNumber - b.seasonNumber) // Sort seasons
+            }, { merge: true }); // Use merge to avoid overwriting other fields if they exist
+
+            alert('TV Episode added/updated successfully in Firestore!');
+            document.getElementById('seriesDocId').value = seriesDocId; // Set the hidden series ID
+        } catch (e) {
+            console.error("Error adding TV episode to Firestore: ", e);
+            alert('Error adding TV episode to Firestore: ' + e.message);
+        }
+    }
+
+
+    /**
+     * Loads TV series from Firestore and displays them in the right panel.
+     */
+    async function loadSeriesList() {
+        const seriesList = document.getElementById('seriesList');
+        seriesList.innerHTML = '<li>Loading series...</li>'; // Initial loading message
+
+        try {
+            const q = query(collection(db, `artifacts/${appId}/public/data/series`));
+            onSnapshot(q, (snapshot) => {
+                seriesList.innerHTML = ''; // Clear for real-time updates
+                if (snapshot.empty) {
+                    seriesList.innerHTML = '<li>No series added yet.</li>';
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const series = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between p-2 border-b border-gray-700';
+                    let episodeCount = 0;
+                    if (series.seasons) {
+                        series.seasons.forEach(s => {
+                            if (s.episodes) episodeCount += s.episodes.length;
+                        });
+                    }
+                    li.innerHTML = `
+                        <span>${series.title} (${series.seasons ? series.seasons.length : 0} Seasons, ${episodeCount} Episodes)</span>
+                        <div>
+                            <button onclick="deleteContent('${doc.id}', 'series')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md ml-2">Delete</button>
+                        </div>
+                    `;
+                    seriesList.appendChild(li);
+                });
+            }, (error) => {
+                console.error("Error listening to series:", error);
+                seriesList.innerHTML = '<li>Error loading series.</li>';
+            });
+        } catch (e) {
+            console.error("Error setting up series listener:", e);
+            seriesList.innerHTML = '<li>Error setting up series listener.</li>';
+        }
+    }
+
+    /**
+     * Adds a new live channel to Firestore.
+     */
+    async function addLiveChannelToFirestore(data) {
+        if (!db) {
+            alert('Firebase not initialized. Cannot add live channel.');
+            return;
+        }
+        try {
+            await addDoc(collection(db, `artifacts/${appId}/public/data/liveStreams`), {
+                name: data.name,
+                banner: data.banner,
+                description: data.description,
+                streamUrl: data.streamUrl,
+                featureOnHome: data.featureOnHome, // For live events
+                createdAt: new Date()
+            });
+            alert('Live channel/event added successfully to Firestore!');
+        } catch (e) {
+            console.error("Error adding live channel to Firestore: ", e);
+            alert('Error adding live channel to Firestore: ' + e.message);
+        }
+    }
+
+    /**
+     * Loads live channels from Firestore and displays them in the right panel.
+     */
+    async function loadLiveChannelsList() {
+        const channelsList = document.getElementById('channelsList');
+        channelsList.innerHTML = '<li>Loading live channels...</li>'; // Initial loading message
+
+        try {
+            const q = query(collection(db, `artifacts/${appId}/public/data/liveStreams`));
+            onSnapshot(q, (snapshot) => {
+                channelsList.innerHTML = ''; // Clear for real-time updates
+                if (snapshot.empty) {
+                    channelsList.innerHTML = '<li>No live channels added yet.';
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const channel = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between p-2 border-b border-gray-700';
+                    li.innerHTML = `
+                        <span>${channel.name} - ${channel.description || 'Live Stream'}</span>
+                        <div>
+                            <button onclick="deleteContent('${doc.id}', 'liveStreams')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md ml-2">Delete</button>
+                        </div>
+                    `;
+                    channelsList.appendChild(li);
+                });
+            }, (error) => {
+                console.error("Error listening to live streams:", error);
+                channelsList.innerHTML = '<li>Error loading live channels.</li>';
+            });
+        } catch (e) {
+            console.error("Error setting up live stream listener:", e);
+            channelsList.innerHTML = '<li>Error setting up live stream listener.</li>';
+        }
+    }
+
+    /**
+     * Adds a new category to Firestore.
+     */
+    async function addCategoryToFirestore(name) {
+        if (!db) {
+            alert('Firebase not initialized. Cannot add category.');
+            return;
+        }
+        try {
+            await addDoc(collection(db, `artifacts/${appId}/public/data/categories`), {
+                name: name,
+                createdAt: new Date()
+            });
+            alert('Category added successfully to Firestore!');
+        } catch (e) {
+            console.error("Error adding category to Firestore: ", e);
+            alert('Error adding category to Firestore: ' + e.message);
+        }
+    }
+
+    /**
+     * Loads categories from Firestore and displays them in the right panel.
+     */
+    async function loadCategoriesList() {
+        const categoriesList = document.getElementById('categoriesList');
+        categoriesList.innerHTML = '<li>Loading categories...</li>'; // Initial loading message
+
+        try {
+            const q = query(collection(db, `artifacts/${appId}/public/data/categories`));
+            onSnapshot(q, (snapshot) => {
+                categoriesList.innerHTML = ''; // Clear for real-time updates
+                if (snapshot.empty) {
+                    categoriesList.innerHTML = '<li>No categories added yet.</li>';
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const category = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between p-2 border-b border-gray-700';
+                    // Assuming you might add an icon field to categories later
+                    li.innerHTML = `
+                        <span>${category.name}</span>
+                        <div>
+                            <button onclick="deleteContent('${doc.id}', 'categories')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md ml-2">Delete</button>
+                        </div>
+                    `;
+                    categoriesList.appendChild(li);
+                });
+            }, (error) => {
+                console.error("Error listening to categories:", error);
+                categoriesList.innerHTML = '<li>Error loading categories.</li>';
+            });
+        } catch (e) {
+            console.error("Error setting up category listener:", e);
+            categoriesList.innerHTML = '<li>Error setting up category listener.</li>';
+        }
+    }
+
+    /**
+     * Deletes a document from a specified Firestore collection.
+     * @param {string} docId - The ID of the document to delete.
+     * @param {string} collectionName - The name of the collection (e.g., 'movies', 'series').
+     */
+    async function deleteContent(docId, collectionName) {
+        if (!confirm(`Are you sure you want to delete this item from ${collectionName}?`)) {
+            return;
+        }
+        if (!db) {
+            alert('Firebase not initialized. Cannot delete content.');
+            return;
+        }
+        try {
+            await deleteDoc(doc(db, `artifacts/${appId}/public/data/${collectionName}`, docId));
+            alert('Item deleted successfully from Firestore!');
+        } catch (e) {
+            console.error(`Error deleting item from ${collectionName}: `, e);
+            alert(`Error deleting item: ${e.message}`);
+        }
+    }
+
+    // Expose Firebase-related functions to the global window object for HTML onclick attributes
+    window.addMovieToFirestore = addMovieToFirestore;
+    window.addTvEpisodeToFirestore = addTvEpisodeToFirestore;
+    window.addLiveChannelToFirestore = addLiveChannelToFirestore;
+    window.addCategoryToFirestore = addCategoryToFirestore;
+    window.deleteContent = deleteContent;
+    window.loadMoviesList = loadMoviesList;
+    window.loadSeriesList = loadSeriesList;
+    window.loadLiveChannelsList = loadLiveChannelsList;
+    window.loadCategoriesList = loadCategoriesList;
+
+  </script>
+<style>
+    :root {
+      --bg-dark: #121212;
+      --bg-light: #1f1f1f;
+      --accent: #e50914;
+      --border: #333;
+      --text: #fff;
+      --text-light: #ccc;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+    }
+
+    #container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    .panel {
+      height: 100%;
+      overflow: auto;
+    }
+
+    .left-panel, .right-panel {
+      width: 20%;
+      min-width: 220px;
+      background: var(--bg-light);
+      border-right: 2px solid var(--border);
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .middle-panel {
+      flex-grow: 1;
+      min-width: 500px;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .handle {
+      width: 5px;
+      cursor: ew-resize;
+      background: #333;
+    }
+
+    .topbar {
+      background: #1c1c1c;
+      padding: 5px 10px;
+      border-bottom: 1px solid #333;
+    }
+
+    .topbar button {
+      background: #e50914;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      margin-right: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+
+    .topbar button:hover {
+      background: #ff1a1a;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #2a2a2a;
+      border: 1px solid #555;
+      color: white;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    .btn {
+      background: var(--accent);
+      border: none;
+      padding: 12px;
+      color: white;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+
+    .btn:hover {
+      background: #ff1a1a;
+    }
+
+    .tabContent {
+      display: none;
+    }
+
+    .tabContent.active {
+      display: block;
+    }
+
+    .meta-preview {
+      background: #1f1f1f;
+      border: 1px solid #444;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+
+    .meta-preview img {
+      max-width: 100%;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .meta-preview .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .meta-preview .info {
+      margin-bottom: 5px;
+    }
+
+    .caption-output {
+      background: #1f1f1f;
+      padding: 10px;
+      border: 1px solid var(--border);
+      white-space: pre-wrap;
+      height: 180px;
+      overflow-y: auto;
+      border-radius: 6px;
+    }
+
+    .caption-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .caption-controls select {
+      flex: 1;
+    }
+
+    .video-preview {
+      width: 100%;
+      height: 300px;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    /* 🧷 Floating Chat Toggle Button */
+    .chat-toggle {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: var(--accent);
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      z-index: 9999;
+    }
+
+    .chat-toggle:hover {
+      background: #ff1a1a;
+    }
+
+    /* 🧭 Sidebar Buttons */
+    .left-panel button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 12px;
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .left-panel button:hover {
+      background: #ff1a1a;
+    }
+
+    /* Styles for new sections - adapting to existing structure */
+    .section {
+        border: 1px solid var(--border);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background-color: var(--bg-dark);
+    }
+    .section h3 {
+        color: var(--accent);
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    .section label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: var(--text);
+    }
+    .section textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+    .section ul {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 10px;
+    }
+    .section ul li {
+        margin-bottom: 5px;
+        font-size: 0.95em;
+    }
+    .section strong {
+        color: var(--accent);
+    }
+  </style>
+
+<!-- 🔐 Firebase Admin Auth Check -->
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDK4UzlMVUJWDKh0ynnDMpyhA7iUnsRUCc",
+    authDomain: "flmchat-16c19.firebaseapp.com",
+    databaseURL: "https://flmchat-16c19-default-rtdb.firebaseio.com",
+    projectId: "flmchat-16c19",
+    storageBucket: "flmchat-16c19.firebasestorage.app",
+    messagingSenderId: "855266929572",
+    appId: "1:855266929572:web:ef3200ff38ad90a8d86f31",
+    measurementId: "G-48HJZKBXKN"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  const allowedEmails = ["youradmin@email.com", "flmteam@yourdomain.com"];
+
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user && allowedEmails.includes(user.email)) {
+      document.getElementById("admin-content").style.display = "block";
+      document.getElementById("admin-email").innerText = user.email;
+    } else {
+      window.location.href = "admin_login_with_forgot.html";
+    }
+  });
+
+  function logout() {
+    firebase.auth().signOut().then(() => {
+      window.location.href = "admin_login_with_forgot.html";
+    });
+  }
+</script>
+<style>
+  #admin-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: #111;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    z-index: 999;
+  }
+  #admin-header button {
+    margin-left: 15px;
+    padding: 5px 10px;
+    font-weight: bold;
+    background: crimson;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+</style>
+<div id="admin-header">
+  Logged in as <span id="admin-email">...</span>
+<button onclick="logout()">Logout</button>
+</div>
+</head>
+<body><div id="admin-content" style="display:none;"></div></body>
+</html>
