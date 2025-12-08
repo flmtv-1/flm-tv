@@ -1,0 +1,92 @@
+Thought for 7s
+
+Perfect—your NAS folder path is clear from the screenshot:
+
+\\192.168.1.28\FLM-Media\FLM-PLATFORM\flm-viewer
+
+Here’s the one command you can paste into PowerShell on your Windows PC to serve that folder:
+
+py -m http.server 5500 --directory "\\192.168.1.28\FLM-Media\FLM-PLATFORM\flm-viewer"
+
+
+Then open this in your browser:
+
+http://127.0.0.1:5500/-A21.html
+
+
+(Or change the file name to -A18.html, AAA.html, etc.)
+
+If that command errors
+
+If py isn’t found, try:
+
+python -m http.server 5500 --directory "\\192.168.1.28\FLM-Media\FLM-PLATFORM\flm-viewer"
+
+
+If Windows asks for NAS credentials / denies access, map the share first:
+
+net use U: \\192.168.1.28\FLM-Media /user:YOUR_NAS_USERNAME YOUR_PASSWORD
+py -m http.server 5500 --directory "U:\FLM-PLATFORM\flm-viewer"
+
+
+If Windows Firewall prompts for Python, click Allow.
+
+Quick Jellyfin check (optional)
+
+After the page loads, open DevTools → Console and run:
+
+fetch('http://192.168.1.28:8096/emby/System/Info/Public')
+  .then(r => console.log('Jellyfin status:', r.status))
+  .catch(e => console.error('JF error:', e));
+
+
+If you see a status (200/401/etc.), you’re talking to Jellyfin with no CORS blocker.
+
+Tip: while you’re serving your app over http://127.0.0.1:5500
+, prefer http://192.168.1.28:8096
+ for Jellyfin too (don’t mix http/https in dev).
+
+
+UPDATED CATEGORY CODES
+
+ASIAN CINEMA:  19116110a53a09d86550478370bfc335
+
+AWESOME TV SHOWS:  2bf52839930529f99103629d73a7eddf
+
+BEYOND REALITY:  340bf395c964fa0cd8bb3ea7637cba92
+
+CLASSIC TV SHOWS:  166e859a8da3ffff474656b30a70835b
+
+COLECTIONS: Id=58b64208285f4eb3a39d9621d9bddb04
+
+COMEDY:  4e568432e1e1fe9b58d9686ed00209f2
+
+FLM NEWS FILIPINA: 1259ee891225026d06a4196ea5df33bf
+
+INDEPENDENT FILMS:  73ab9c3def8d47b4d7a3aa7a95fbc505
+
+GAMING:  acd9ad43077694066efd35f9951ccbcc
+
+GOLDEN CLASSICS:  1a174c52bb41600a050fba01721b7bd9
+
+IN SPANISH TV:  f6242940555a0e587208f9a341328f76
+
+INTERNATIONAL Films:  ba8b8bbcbf17886eaa65ec99bfa6dee6
+
+KIDS WORLD:  469e7ae569d80eaf09e9ff54b55708ba
+
+LIVE EVENTS:  =2e1b17e21dc4226a24c642f954e8b949
+
+MIDNIGHT CURCUIT: 3f690d06d91a896371469fa96d0b3d21
+
+MOVIES: 689c3f2fb8ec0ad205e3d8a10f2374c3
+
+TALK:  8fddfbad9a964aec868e3952adeb2945
+
+TEENS:  8d8187c8ab14b6edc1451b5052470fc4
+
+ZAINA ZONE: 1ac641863cec9162df01d2c2a751c932
+
+
+
+
