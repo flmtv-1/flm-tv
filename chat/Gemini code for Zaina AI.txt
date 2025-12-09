@@ -1,0 +1,336 @@
+<!-- ======================================================= -->
+<!-- ✅ COMPLETE CHAT AND AI PANEL CODE - PASTE BEFORE </body> TAG ✅ -->
+<!-- ======================================================= -->
+
+<!-- Inline CSS for Chat and AI Panel -->
+<style>
+  :root {
+      --primary: #e50914; /* Netflix Red */
+      --primary-dark: #b8070f;
+      --bg: #141414; /* Dark background */
+      --bg-light: #1f1f1f;
+      --text: #ffffff;
+      --text-gray: #b3b3b3;
+      --card-bg: #282828;
+      --border-color: #333;
+      --panel-width: 350px;
+  }
+  
+  body.panel-active {
+    padding-right: var(--panel-width);
+  }
+  
+  .luma-panel {
+    width: var(--panel-width);
+  }
+  
+  .message {
+    display: flex;
+    margin-bottom: 1rem;
+    max-width: 85%;
+  }
+
+  .message.sent {
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  .message.received {
+    justify-content: flex-start;
+  }
+
+  .message-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 1.5rem;
+    line-height: 1.4;
+  }
+  
+  .message.received .message-bubble {
+    background-color: var(--bg);
+    border-top-left-radius: 0.25rem;
+  }
+  
+  .message.sent .message-bubble {
+    background-color: var(--primary);
+    border-top-right-radius: 0.25rem;
+    color: white;
+  }
+
+  .emoji-picker {
+    display: none;
+    flex-wrap: wrap;
+  }
+
+  .emoji-picker.active {
+    display: flex;
+  }
+
+  .emoji-item {
+    font-size: 1.5rem;
+  }
+</style>
+
+<!-- Zaina AI Floating Action Button (FAB) -->
+<div class="fab-ai-container fixed bottom-8 right-8 z-50">
+  <button id="fabAIToggleBtn" class="flex items-center justify-center w-16 h-16 bg-primary rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 focus:outline-none">
+    <img id="zainaAvatar" src="https://i.ibb.co/L8GjK4T/image-0e59bc.jpg" alt="Zaina AI" class="w-12 h-12 rounded-full">
+  </button>
+</div>
+
+<!-- Main Luma Panel (Right Sidebar) -->
+<div id="lumaPanel" class="luma-panel fixed top-0 right-0 w-80 h-full bg-bg-light shadow-xl z-40 transform translate-x-full transition-transform duration-300">
+  <div class="luma-header flex items-center justify-between p-4 bg-card-bg border-b border-border-color">
+    <div class="flex items-center">
+      <img src="https://i.ibb.co/L8GjK4T/image-0e59bc.jpg" alt="Zaina AI" class="w-10 h-10 rounded-full mr-3">
+      <span class="text-xl font-semibold">Zaina AI</span>
+    </div>
+    <button id="closePanelBtn" class="text-text-gray hover:text-white transition-colors">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  
+  <!-- Chat Messages Container -->
+  <div id="chatMessages" class="chat-messages p-4 overflow-y-auto h-full pb-32">
+    <!-- Initial message from Zaina -->
+    <div class="message received">
+      <div class="message-bubble bg-bg">
+        Hey there! I'm Zaina, your personal media assistant. What can I help you with today?
+      </div>
+    </div>
+  </div>
+  
+  <!-- Chat Input Area -->
+  <div class="chat-input-area absolute bottom-0 w-full p-4 bg-card-bg border-t border-border-color">
+    <div class="flex items-center space-x-2">
+      <input type="text" id="chatInput" placeholder="Type your message..." class="flex-1 px-4 py-2 rounded-full bg-bg text-text border border-border-color focus:outline-none focus:ring-2 focus:ring-primary">
+      <button id="emojiButton" class="text-text-gray hover:text-primary transition-colors focus:outline-none">
+        <i class="fas fa-smile"></i>
+      </button>
+      <button id="chatSendButton" class="bg-primary text-white rounded-full p-2 hover:bg-primary-dark transition-colors focus:outline-none">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+    <!-- Emoji Picker (Hidden by default) -->
+    <div id="emojiPicker" class="emoji-picker absolute bottom-16 right-4 bg-card-bg border border-border-color rounded-lg shadow-lg p-2 hidden">
+        <span class="emoji-item cursor-pointer p-1">😊</span>
+        <span class="emoji-item cursor-pointer p-1">😂</span>
+        <span class="emoji-item cursor-pointer p-1">👍</span>
+        <span class="emoji-item cursor-pointer p-1">❤️</span>
+        <span class="emoji-item cursor-pointer p-1">🎉</span>
+        <span class="emoji-item cursor-pointer p-1">🔥</span>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================= -->
+<!-- ✅ JAVASCRIPT FOR CHAT FUNCTIONALITY AND AI IMAGES ✅ -->
+<!-- ======================================================= -->
+<script>
+  // This script handles the chat panel's behavior and ensures the Zaina images load correctly.
+  document.addEventListener("DOMContentLoaded", function () {
+    const lumaPanel = document.getElementById("lumaPanel");
+    const fabAIToggleBtn = document.getElementById("fabAIToggleBtn");
+    const closePanelBtn = document.getElementById("closePanelBtn");
+    const chatInput = document.getElementById("chatInput");
+    const chatSendButton = document.getElementById("chatSendButton");
+    const emojiButton = document.getElementById("emojiButton");
+    const emojiPicker = document.getElementById("emojiPicker");
+    const chatMessages = document.getElementById("chatMessages");
+    
+    // --- Panel Toggling Logic ---
+    fabAIToggleBtn.addEventListener("click", () => {
+      lumaPanel.classList.remove("translate-x-full");
+      document.body.classList.add("panel-active");
+    });
+
+    closePanelBtn.addEventListener("click", () => {
+      lumaPanel.classList.add("translate-x-full");
+      document.body.classList.remove("panel-active");
+    });
+    
+    // --- Chat Sending Logic ---
+    function sendMessage() {
+      const message = chatInput.value.trim();
+      if (message !== "") {
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message", "sent");
+        msgDiv.innerHTML = `<div class="message-bubble bg-primary">${message}</div>`;
+        chatMessages.appendChild(msgDiv);
+        chatInput.value = "";
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
+      }
+    }
+    
+    chatSendButton.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    // --- Emoji Picker Logic ---
+    emojiButton.addEventListener("click", () => {
+      emojiPicker.classList.toggle("hidden");
+    });
+
+    emojiPicker.querySelectorAll('span').forEach(emojiSpan => {
+      emojiSpan.addEventListener('click', () => {
+        chatInput.value += emojiSpan.textContent;
+        emojiPicker.classList.add('hidden');
+      });
+    });
+
+    // --- Zaina AI Image Handling ---
+    const CANDIDATES = [
+      "https://i.ibb.co/L8GjK4T/image-0e59bc.jpg",
+      "https://i.ibb.co/6Pqj4zX/image-0e5e36.jpg",
+      "https://i.ibb.co/d7z7f1T/image-0d0c73.jpg",
+      "https://i.ibb.co/gDFg9n5/image-0d00d7.jpg",
+      "https://i.ibb.co/S68Jt3V/image-0d043a.jpg"
+    ];
+    const zainaSelectors = [
+      '#fabAIToggleBtn img',
+      '#searchBarAIToggleBtn img',
+      '#playerAIToggleBtn img',
+      '#lumaPanel .luma-header img',
+      '#zainaAvatar',
+      'img[alt*="Zaina" i]'
+    ];
+    
+    function setWithFallback(img) {
+      let i = 0;
+      function tryNext() {
+        if (i >= CANDIDATES.length) return;
+        const src = CANDIDATES[i++];
+        img.removeAttribute('srcset');
+        img.onerror = tryNext;
+        img.src = src;
+      }
+      tryNext();
+    }
+    
+    function updateAll() {
+      zainaSelectors.forEach(sel => document.querySelectorAll(sel).forEach(setWithFallback));
+    }
+    
+    // Initial update
+    updateAll();
+    
+    // Use a MutationObserver to ensure new images are also handled
+    new MutationObserver(updateAll).observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+  });
+</script>
+
+<!-- ======================================================= -->
+<!-- ✅ END OF COMPLETE CHAT AND AI PANEL CODE ✅ -->
+<!-- ======================================================= -->
+
+
+----------------------------
+
+// =======================================================
+//  ✅ Zaina AI and Chat Panel Functionality
+//  Instructions: Place this script just before the closing
+//  </body> tag of your main HTML file.
+// =======================================================
+
+document.addEventListener("DOMContentLoaded", function () {
+  // --- Element Selectors ---
+  // The FAB (Floating Action Button) to toggle the panel
+  const fabAIToggleBtn = document.getElementById("fabAIToggleBtn");
+  
+  // The main chat panel element
+  const lumaPanel = document.getElementById("lumaPanel");
+  
+  // The button inside the panel to close it
+  const closePanelBtn = document.getElementById("closePanelBtn");
+  
+  // The body element to control padding
+  const body = document.body;
+
+  // --- Zaina AI Image Handling ---
+  // A list of potential image URLs for the Zaina AI avatar.
+  // The script will try to load them in order until one is successful.
+  const CANDIDATES = [
+    "https://i.ibb.co/L8GjK4T/image-0e59bc.jpg",
+    "https://i.ibb.co/6Pqj4zX/image-0e5e36.jpg",
+    "https://i.ibb.co/d7z7f1T/image-0d0c73.jpg",
+    "https://i.ibb.co/gDFg9n5/image-0d00d7.jpg",
+    "https://i.ibb.co/S68Jt3V/image-0d043a.jpg"
+  ];
+
+  // An array of CSS selectors for all elements that should display the Zaina avatar.
+  const zainaSelectors = [
+    '#fabAIToggleBtn img',
+    '#lumaPanel .luma-header img',
+    '#zainaAvatar',
+    'img[alt*="Zaina" i]'
+  ];
+  
+  /**
+   * Sets the source of an image element with a fallback mechanism.
+   * If the first URL fails, it tries the next one in the CANDIDATES list.
+   * @param {HTMLImageElement} img The image element to update.
+   */
+  function setWithFallback(img) {
+    let i = 0;
+    function tryNext() {
+      // Stop if we've run out of candidates
+      if (i >= CANDIDATES.length) return;
+      
+      const src = CANDIDATES[i++];
+      img.removeAttribute('srcset'); // Remove srcset to avoid browser choosing a different image
+      img.onerror = tryNext; // If this load fails, try the next candidate
+      img.src = src;
+    }
+    tryNext();
+  }
+  
+  /**
+   * Finds all Zaina AI image elements and applies the fallback logic.
+   */
+  function updateAllZainaImages() {
+    zainaSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(setWithFallback);
+    });
+  }
+  
+  // --- Panel Toggling Logic ---
+  // Add a click event listener to the floating action button.
+  if (fabAIToggleBtn && lumaPanel) {
+    fabAIToggleBtn.addEventListener("click", () => {
+      // Make the panel visible by removing the 'translate-x-full' class.
+      lumaPanel.classList.remove("translate-x-full");
+      // Adjust the body padding to prevent content from being hidden behind the panel.
+      body.classList.add("panel-active");
+    });
+  }
+
+  // Add a click event listener to the close button inside the panel.
+  if (closePanelBtn && lumaPanel) {
+    closePanelBtn.addEventListener("click", () => {
+      // Hide the panel by adding back the 'translate-x-full' class.
+      lumaPanel.classList.add("translate-x-full");
+      // Reset the body padding.
+      body.classList.remove("panel-active");
+    });
+  }
+
+  // --- Initialization ---
+  // Run the image update function once the document is ready.
+  updateAllZainaImages();
+  
+  // Use a MutationObserver to watch for changes in the DOM.
+  // This ensures that if new Zaina AI images are added dynamically,
+  // the fallback logic will be applied to them as well.
+  const observer = new MutationObserver(updateAllZainaImages);
+  observer.observe(document.documentElement, {
+    childList: true, // Watch for new child nodes
+    subtree: true // Watch for changes in all descendants
+  });
+
+});
+

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Zaina Juliette",
+    "role": "Angel",
+    "photo": "../assets/images/zaina.jpg"
+  },
+  {
+    "name": "Lametria Jackson",
+    "role": "Shortie",
+    "photo": "../assets/images/lametria.jpg"
+  },
+  {
+    "name": "John Redlinger",
+    "role": "Wayne",
+    "photo": "../assets/images/john.jpg"
+  }
+]

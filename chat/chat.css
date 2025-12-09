@@ -1,0 +1,127 @@
+// flm-viewer/chat/chat.js
+// This file handles all live chat functionality using Firebase Firestore.
+// It listens for new messages and sends new messages to the database.
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    orderBy,
+    onSnapshot,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// Global UI Elements
+const chatMessagesContainer = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const userIdDisplay = document.getElementById('userIdDisplay');
+
+// Global Firebase and user variables, populated by app.js and login.js
+let db;
+let currentUserId;
+let appId;
+
+/**
+ * Initializes the Firestore instance and sets up the real-time listener for chat messages.
+ */
+function setupChat(appInstance, userId, currentAppId) {
+    if (!appInstance) {
+        console.error("Firebase app instance not provided to chat.js.");
+        return;
+    }
+    
+    db = getFirestore(appInstance);
+    currentUserId = userId;
+    appId = currentAppId;
+    
+    if (!db || !currentUserId || !appId) {
+        console.error("Firestore or user ID is not available. Chat will not function.");
+        return;
+    }
+
+    // Reference to the chat collection for this specific app
+    const chatCollectionRef = collection(db, `artifacts/${appId}/public/data/chat`);
+
+    // Create a query to get messages ordered by creation time
+    const q = query(chatCollectionRef, orderBy("timestamp"));
+
+    // Set up a real-time listener
+    onSnapshot(q, (querySnapshot) => {
+        chatMessagesContainer.innerHTML = ''; // Clear previous messages
+        querySnapshot.forEach((doc) => {
+            const message = doc.data();
+            displayMessage(message);
+        });
+        // Scroll to the bottom of the chat container
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    });
+}
+
+/**
+ * Displays a single message in the chat container.
+ * @param {object} message - The message object with text, userId, and timestamp.
+ */
+function displayMessage(message) {
+    const isCurrentUser = message.userId === currentUserId;
+    const messageClass = isCurrentUser ? 'self-end bg-[--primary-dark] text-white' : 'self-start bg-gray-700 text-white';
+    const alignClass = isCurrentUser ? 'text-right' : 'text-left';
+
+    // Truncate the userId for display, but show the full ID on hover
+    const displayUserId = message.userId.substring(0, 8) + '...';
+    
+    const messageElement = document.createElement('div');
+    messageElement.className = `flex flex-col mb-2 p-2 rounded-lg max-w-xs break-words ${messageClass} ${alignClass}`;
+    messageElement.innerHTML = `
+        <span class="text-xs font-bold text-gray-400" title="${message.userId}">
+            ${isCurrentUser ? 'You' : displayUserId}
+        </span>
+        <p>${message.text}</p>
+        <span class="text-xs text-gray-500 mt-1">${formatTimestamp(message.timestamp)}</span>
+    `;
+    chatMessagesContainer.appendChild(messageElement);
+}
+
+/**
+ * Sends a new message to the Firestore database.
+ */
+async function sendMessage() {
+    const messageText = chatInput.value.trim();
+    if (messageText === '' || !currentUserId) return;
+
+    const chatCollectionRef = collection(db, `artifacts/${appId}/public/data/chat`);
+
+    try {
+        await addDoc(chatCollectionRef, {
+            text: messageText,
+            userId: currentUserId,
+            timestamp: serverTimestamp() // Use server-side timestamp
+        });
+        chatInput.value = ''; // Clear the input field
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+}
+
+/**
+ * Formats a Firestore timestamp object into a readable string.
+ * @param {object} timestamp - The Firestore timestamp object.
+ * @returns {string} - The formatted date and time.
+ */
+function formatTimestamp(timestamp) {
+    if (!timestamp) return '...';
+    const date = timestamp.toDate();
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// Attach send message event listener
+chatInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+// Make setupChat globally accessible for app.js to call
+window.setupChat = setupChat;
+window.sendMessage = sendMessage;
+

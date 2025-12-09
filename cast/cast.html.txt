@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cast Info</title>
+  <link rel="stylesheet" href="cast.css" />
+</head>
+<body>
+  <div class="cast-container">
+    <h1 class="cast-title">🎭 Cast</h1>
+    <div id="cast-list" class="cast-list"></div>
+    <button class="back-button" onclick="goBack()">← Back to Movie</button>
+  </div>
+
+  <script src="cast.js"></script>
+</body>
+</html>

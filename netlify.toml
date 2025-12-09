@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  command = "echo 'Static site - no build required'"
+
+[[redirects]]
+  from = "/jellyfin/*"
+  to = "http://flmtv26.duckdns.org:8096/:splat"
+  status = 200
+  force = true

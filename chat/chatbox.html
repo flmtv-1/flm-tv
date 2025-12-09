@@ -4,282 +4,325 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV Chat</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Custom styles for the chatbox */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a1a1a; /* Dark background */
-            color: #ffffff; /* White text */
-            margin: 0;
-            padding: 0;
+            background-color: #1a1a1a; /* Dark background for chatbox */
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden; /* Prevent body scroll */
-        }
-        #chat-container {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            padding: 10px 0 0 0; /* Top padding, no side or bottom padding here */
-            box-sizing: border-box;
-            background-color: #282828; /* Slightly lighter than body for contrast */
-            border-radius: 8px;
-            margin: 5px; /* Margin to keep it slightly off the edges if needed by iframe */
-            overflow: hidden; /* To handle internal scrolling */
-        }
-        #messages {
-            flex-grow: 1;
-            overflow-y: auto; /* Enable scrolling for messages */
-            padding: 0 10px 10px 10px; /* Padding for messages, including right for scrollbar */
-            word-wrap: break-word; /* Wrap long words */
-            background-color: #1a1a1a; /* Corrected: Dark background for messages area */
-            border-radius: 5px;
-            margin-bottom: 10px;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end; /* Messages appear from bottom */
+            margin: 0;
+            overflow: hidden; /* Prevent chatbox scrollbar */
         }
 
-        /* Message styling */
+        .chat-header {
+            background-color: #282828;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto; /* Enable scrolling for messages */
+            background-color: #1a1a1a;
+        }
+
         .message {
-            background-color: #3a3a3a; /* Darker background for messages */
-            color: #ffffff;
-            padding: 8px 12px;
-            border-radius: 15px;
-            margin-bottom: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message.received {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
             max-width: 80%;
-            align-self: flex-start;
+            padding: 0.6rem 0.9rem;
+            border-radius: 1rem;
+            line-height: 1.4;
             word-wrap: break-word;
         }
 
-        /* Styles for sent messages */
-        .message.sent {
-            background-color: #007bff; /* A distinct color for sent messages */
-            align-self: flex-end;
+        .message.sent .message-bubble {
+            background-color: #e50914; /* Primary red for sent messages */
+            color: white;
+            border-bottom-right-radius: 0.25rem; /* Sharper corner on sent side */
         }
 
-        .timestamp {
-            font-size: 0.7em;
+        .message.received .message-bubble {
+            background-color: #333; /* Darker grey for received messages */
+            color: white;
+            border-bottom-left-radius: 0.25rem; /* Sharper corner on received side */
+        }
+
+        .message-sender {
+            font-size: 0.75em;
             color: #b3b3b3;
-            margin-top: 4px;
-            text-align: right; /* For sent messages */
+            margin-bottom: 0.25rem;
+            padding-left: 0.5rem; /* Align with bubble */
+        }
+        .message.sent .message-sender {
+            text-align: right;
+            padding-right: 0.5rem;
+            padding-left: 0;
         }
 
-        .message.received .timestamp {
-            text-align: left;
-        }
-
-        /* Chat Input Area */
-        .chat-input {
+        .chat-input-area {
+            background-color: #282828;
+            padding: 1rem;
+            border-top: 1px solid #333;
             display: flex;
-            padding: 10px;
-            border-top: 1px solid #333; /* A separator */
-            background-color: #282828; /* Background for the input area */
+            align-items: center;
+            gap: 0.5rem;
+            position: relative; /* For emoji picker positioning */
         }
 
-        .chat-input input[type="text"] {
+        .chat-input {
             flex-grow: 1;
-            padding: 8px;
-            border: 1px solid #555;
-            border-radius: 5px;
-            margin-right: 10px;
-            background-color: #282828; /* Corrected: Dark background for input */
-            color: #ffffff; /* Corrected: White text for input */
+            padding: 0.75rem;
+            border-radius: 1.5rem;
+            border: 1px solid #444;
+            background-color: #333;
+            color: white;
+            outline: none;
+            font-size: 1em;
+            resize: none; /* Disable textarea resize handle */
+            min-height: 40px; /* Ensure a minimum height */
+            max-height: 100px; /* Limit height to prevent excessive growth */
+            overflow-y: auto; /* Scroll if content exceeds max-height */
         }
 
-        .chat-input button {
-            background-color: #007bff; /* Send button color */
+        .chat-input::placeholder {
+            color: #b3b3b3;
+        }
+
+        .chat-btn {
+            background-color: #e50914;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            font-size: 1.2em;
             transition: background-color 0.2s ease;
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
-        .chat-input button:hover {
-            background-color: #0056b3;
+        .chat-btn:hover {
+            background-color: #b8070f;
         }
 
         /* Emoji Picker */
         .emoji-picker {
-            display: none; /* Hidden by default */
             position: absolute;
-            bottom: 60px; /* Above the input field */
-            left: 10px;
-            background-color: #333;
+            bottom: calc(100% + 10px); /* Position above the input area */
+            left: 0;
+            right: 0;
+            background-color: #282828;
             border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.4);
+            padding: 1rem;
+            display: none; /* Hidden by default */
             flex-wrap: wrap;
-            max-width: 250px;
-            z-index: 10; /* Ensure it's above other chat elements, but still within chatbox context */
+            gap: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
         }
 
-        .emoji-button {
-            background: none;
-            border: none;
+        .emoji-picker span {
             font-size: 1.5em;
-            padding: 5px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            border-radius: 3px;
+            padding: 0.2rem;
+            border-radius: 4px;
+            transition: background-color 0.1s ease;
         }
 
-        .emoji-button:hover {
-            background-color: #555;
+        .emoji-picker span:hover {
+            background-color: #3e3e3e;
         }
     </style>
 </head>
 <body>
-    <div id="chat-container">
-        <div class="chat-header">
-            <h3>Community Chat</h3>
-            <span class="close-chat" onclick="toggleChat()">X</span>
+    <div class="chat-header">
+        <span>Live Chat</span>
+        <button onclick="parent.closeChat()" class="text-white text-xl px-2 py-1 rounded-full hover:bg-gray-700">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+        <!-- Chat messages will be appended here -->
+        <div class="message received">
+            <div class="message-bubble">Welcome to the chat!</div>
         </div>
-        <div id="messages">
-            </div>
-        <div class="chat-input">
-            <input type="text" id="message-input" placeholder="Type your message...">
-            <button id="emoji-button"><i class="far fa-smile"></i></button>
-            <div class="emoji-picker"></div>
-            <button id="send-button">Send</button>
+        <div class="message sent">
+            <div class="message-bubble">Hello there!</div>
+        </div>
+    </div>
+    <div class="chat-input-area">
+        <textarea id="chatInput" class="chat-input" placeholder="Type your message..."></textarea>
+        <button id="emojiBtn" class="chat-btn">
+            😀
+        </button>
+        <button id="sendBtn" class="chat-btn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+
+        <div id="emojiPicker" class="emoji-picker">
+            <!-- Emojis will be dynamically generated here -->
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    <script>
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+        const emojiBtn = document.getElementById('emojiBtn');
+        const emojiPicker = document.getElementById('emojiPicker');
 
-        // Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID",
-            databaseURL: "YOUR_DATABASE_URL" // IMPORTANT: Add your Realtime Database URL here
-        };
+        // Sample emojis (you can expand this list)
+        const emojis = [
+            '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚',
+            '😋', '😛', '😜', '🤪', '😝', '🤗', '🤭', '🤫', '🤔', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😌', '😔',
+            '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '😎', '🤓', '🧐', '😕',
+            '😟', '🙁', '😮', '😯', '😲', '😳', '🥺', '😦', '😧', '😨', '😩', '😫', '😤', '😠', '😡', '🤬', '😈', '👿', '💀', '👻',
+            '💩', '🤡', '👹', '👺', '👽', '👾', '🤖', '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈',
+            '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳',
+            '💪', '🦵', '🦶', '👂', '👃', '🧠', '🫀', '🫁', '🦷', '🦴', '👀', '👁️', '👅', '👄', '👶', '🧒', '👦', '👧', '🧑', '👨',
+            '👩', '🧓', '👴', '👵', '👨‍⚕️', '👩‍⚕️', '👨‍🎓', '👩‍🎓', '👨‍🏫', '👩‍🏫', '👨‍🌾', '👩‍🌾', '👨‍🍳', '👩‍🍳', '👨‍🔧', '👩‍🔧', '👨‍🏭', '👩‍ ',
+            '👨‍💼', '👩‍💼', '👨‍🔬', '👩‍🔬', '👨‍💻', '👩‍💻', '👨‍🎤', '👩‍🎤', '👨‍🎨', '👩‍🎨', '👨‍✈️', '👩‍✈️', '👨‍🚀', '👩‍🚀', '👨‍🚒', '👩‍🚒', '👮', '🕵️',
+            '💂', '👷', '🤴', '👸', '👳', '👲', '🧕', '🤵', '👰', '🤰', '🤱', '👼', '🎅', '🤶', '🦸', '🦹', '🧙', '🧚', '🧛', '🧜',
+            '🧝', '🧞', '🧟', '🚶', '🏃', '💃', '🕺', '👯', '🛀', '🛌', '🧘', '🗣️', '👤', '👥', '🫂', '👪', '👨‍👩‍👧', '👨‍👩‍👧‍👦', '👨‍👩‍👦‍👦',
+            '👨‍👩‍👧‍👧', '👨‍👦', '👨‍👦‍👦', '👨‍👧', '👨‍👧‍👦', '👨‍👧‍👧', '👩‍👦', '👩‍👦‍👦', '👩‍👧', '👩‍👧‍👦', '👩‍👧‍👧', '🏳️‍🌈', '🏳️‍⚧️', '❤', '🧡', '💛', '💚',
+            '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '🧡', '💛', '💚', '💙', '💜', '🖤',
+            '🤍', '🤎', '💔', '❣', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💯', '💢', '💥', '💫', '💦', '💨', '🕳️', '💣', '💬',
+            '👁️‍🗨️', '🗨️', '💭', '💤', '💮', '♨️', '💈', '🚏', '🗺️', '🧭', '🏔️', '⛰️', '🌋', '🏕️', '🏖️', '🏜️', '🏝️', '🏞️', '🏟️',
+            '🏛️', '🏗️', '🏘️', '🏙️', '🏚️', '🏠', '🏡', '🏢', '🏣', '🏤', '🏥', '🏦', '🏨', '🏩', '🏪', '🏫', '🏬', '🏭', '🏯', '🏰',
+            '💒', '🗼', '🗽', '⛪', '🕌', '🛕', '🕍', '⛩️', '🕋', '⛲', '⛺', '🌁', '🌃', '🌆', '🌇', '🌉', '🎠', '🎡', '🎢', '🚂',
+            '🚃', '🚄', '🚅', '🚆', '🚇', '🚈', '🚉', '🚊', '🚋', '🚌', '🚍', '🚎', '🚐', '🚑', '🚒', '🚓', '🚔', '🚕', '🚖', '🚗',
+            '🚘', '🚙', '🚚', '🚛', '🚜', '🏎️', '🏍️', '🛵', '🛺', '🚲', '🛴', '🛹', '🛼', '🚝', '🚞', '🚟', '🚠', '🚡', '✈️', '🛫',
+            '🛬', '🪂', '💺', '🚁', '🚟', '🚀', '🛰️', '🛸', '🛎️', '🧳', '⌛', '⏳', '⌚', '⏰', '⏱️', '⏲️', '🕰️', '🕛', '🕧', '🕐',
+            '🕜', '🕑', '🕝', '🕒', '🕞', '🕓', '🕟', '🕔', '🕠', '🕕', '🕡', '🕖', '🕢', '🕗', '🕣', '🕘', '🕤', '🕙', '🕥', '🕚',
+            '🕦', '🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘', '🌙', '🌚', '🌛', '🌜', '🌡️', '☀️', '🌝', '🌞', '⭐', '🌟', '🌠',
+            '☁️', '⛅', '⛈️', '🌩️', '⚡', '🔥', '💥', '❄️', '🌨️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '🌈', '☔', '💧', '🌊', '💦',
+            '🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦',
+            '🥬', '🥒', '🌶️', '🌽', '🥕', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩',
+            '🍗', '🍖', '🌭', '🍔', '🍟', '🍕', '🥪', '🥙', '🧆', '🌮', '🌯', '🥗', '🥘', '🍝', '🍜', '🍲', '🍣', '🍱', '🍛', '🍚',
+            '🍙', '🍘', '🍥', '🍢', '🍡', '🥟', '🍤', '🍣', '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭',
+            '🍮', '🍯', '🍼', '🥛', '☕', '🍵', '🍶', '🍾', '🍷', '🍸', '🍹', '🍺', '🍻', '🥂', '🥃', '🥤', '🧃', '🧉', '🧊', '🥢',
+            '🍴', '🥄', '🔪', '🏺', '🌍', '🌎', '🌏', '🌐', '🗺️', '🧭', '📍', '🚩', '🎌', '🏴', '🏳️', '🏁', '🛑', '⛔', '🚫', '📛',
+            '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '⬆️', '↗️', '➡️', '↘️', '⬇️', '↙️', '⬅️', '↖️', '↕️', '↔️', '↩️', '↪️', '⤴️',
+            '⤵️', '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝', '🛐', '⚛️', '🕉️', '✡️', '☸️', '☯️', '✝️', '☦️', '☪️', ' peace', '🕎',
+            '🔯', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '⛎', '🔀', '🔁', '🔂', '▶️', '⏸️', '⏯️', '⏹️',
+            '⏺️', '⏭️', '⏮️', '⏩', '⏪', '⏫', '⏬', '◀️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️',
+            '↩️', '↪️', '⤴️', '⤵️', '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝', '🆕', '🆓', '🔟', '🔢', '🔣', '🔤', '🅰️', '🅱️', '🆎',
+            '🅾️', '🅿️', 'ℹ️', 'Ⓜ️', '㊗️', '㊙️', '🈂️', '️', '🈳', '🈴', '🈵', '🈶', '🈷️', '🈸', '🈹', '🈺', '🉑', '🎦', '📶', '📳',
+            '📴', '♻️', '⚜️', '🔱', '📛', '🔰', '⭕', '✅', '☑️', '✔', '❌', '❎', '✖️', '❗️', '❕', '❓', '❔', '‼️', '⁉️', '💯',
+            '📍', '🚩', '🎌', '🏴', '🏳️', '🏁', '🛑', '⛔', '🚫', '📛', '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '⬆️', '↗️', '➡️',
+            '↘️', '⬇️', '↙️', '⬅️', '↖️', '↕️', '↔️', '↩️', '↪️', '⤴️', '⤵️', '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝', '🛐', '⚛️',
+            '🕉️', '✡️', '☸️', '☯️', '✝️', '☦️', '☪️', ' peace', '🕎', '🔯', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑',
+            '♒', '♓', '⛎', '🔀', '🔁', '🔂', '▶️', '⏸️', '⏯️', '⏹️', '⏺️', '⏭️', '⏮️', '⏩', '⏪', '⏫', '⏬', '◀️', '🔼', '🔽', '➡️',
+            '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↩️', '↪️', '⤴️', '⤵️', '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝',
+            '🆕', '🆓', '🔟', '🔢', '🔣', '🔤', '🅰️', '🅱️', '🆎', '🅾️', '🅿️', 'ℹ️', 'Ⓜ️', '㊗️', '㊙️', '🈂️', '️', '🈳', '🈴', '🈵',
+            '🈶', '🈷️', '🈸', '🈹', '🈺', '🉑', '🎦', '📶', '📳', '📴', '♻️', '⚜️', '🔱', '📛', '🔰', '⭕', '✅', '☑️', '✔', '❌',
+            '❎', '✖️', '❗️', '❕', '❓', '❔', '‼️', '⁉️', '💯', '📍', '🚩', '🎌', '🏴', '🏳️', '🏁', '🛑', '⛔', '🚫', '📛', '🚷',
+            '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '⬆️', '↗️', '➡️', '↘️', '⬇️', '↙️', '⬅️', '↖️', '↕️', '↔️', '↩️', '↪️', '⤴️', '⤵️',
+            '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝'
+        ];
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const auth = getAuth(app);
-        const messagesRef = ref(database, 'messages');
+        // Populate emoji picker
+        emojis.forEach(emoji => {
+            const span = document.createElement('span');
+            span.textContent = emoji;
+            span.onclick = () => insertEmoji(emoji);
+            emojiPicker.appendChild(span);
+        });
 
-        const messagesDiv = document.getElementById('messages');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
-        const emojiButton = document.getElementById('emoji-button');
-        const emojiPickerContainer = document.querySelector('.emoji-picker');
-        const closeChatButton = document.querySelector('.close-chat'); // Get the close button
+        // Function to send a message (mock implementation)
+        function sendMessage() {
+            const messageText = chatInput.value.trim();
+            if (messageText) {
+                appendMessage(messageText, 'sent');
+                chatInput.value = ''; // Clear input
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
 
-        let currentUser = null; // To store current user's display name
+                // Simulate a reply after a short delay
+                setTimeout(() => {
+                    appendMessage("I received your message! (This is a mock reply)", 'received');
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        }
 
-        // Function to toggle chat visibility (for the close button)
-        window.toggleChat = function() {
-            // This function is likely called by the parent index.html to hide/show the iframe
-            // Here, we can just ensure the body is ready to be hidden/shown by the parent
-            console.log('Toggle chat function called within iframe');
-        };
+        // Function to append a message to the chat window
+        function appendMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', type);
 
-        // Listen for auth state changes to get current user's name
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user.displayName || user.email.split('@')[0]; // Use display name or part of email
-            } else {
-                currentUser = "Guest";
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble');
+            messageBubble.textContent = text;
+
+            messageDiv.appendChild(messageBubble);
+            chatMessages.appendChild(messageDiv);
+        }
+
+        // Toggle emoji picker visibility
+        emojiBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent document click from immediately closing
+            emojiPicker.style.display = emojiPicker.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Insert emoji into chat input
+        function insertEmoji(emoji) {
+            chatInput.value += emoji;
+            emojiPicker.style.display = 'none'; // Hide picker after selection
+            chatInput.focus(); // Keep focus on input
+        }
+
+        // Close emoji picker when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+                emojiPicker.style.display = 'none';
             }
         });
 
-        // Add event listener for sending messages
-        sendButton.addEventListener('click', sendMessage);
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+        // Send message on Enter key press
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { // Allow Shift+Enter for new line
+                e.preventDefault(); // Prevent default new line
                 sendMessage();
             }
         });
 
-        function sendMessage() {
-            const messageText = messageInput.value.trim();
-            if (messageText !== "") {
-                const newMessage = {
-                    text: messageText,
-                    user: currentUser,
-                    timestamp: serverTimestamp() // Use Firebase server timestamp
-                };
-                push(messagesRef, newMessage);
-                messageInput.value = ""; // Clear input
-                emojiPickerContainer.style.display = 'none'; // Close emoji picker after sending
-            }
-        }
+        sendBtn.addEventListener('click', sendMessage);
 
-        // Listen for new messages
-        onValue(messagesRef, (snapshot) => {
-            messagesDiv.innerHTML = ''; // Clear current messages
-            snapshot.forEach((childSnapshot) => {
-                const message = childSnapshot.val();
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-
-                // Check if message.user is null or undefined and handle it
-                const userName = message.user ? message.user : "Anonymous"; // Fallback to "Anonymous"
-
-                // Determine if it's a sent message (assuming current user is logged in)
-                const isSent = currentUser && userName === currentUser;
-                if (isSent) {
-                    messageElement.classList.add('sent');
-                } else {
-                    messageElement.classList.add('received');
-                }
-
-                const timestamp = message.timestamp ? new Date(message.timestamp).toLocaleString() : 'Just now'; // Convert timestamp
-
-                messageElement.innerHTML = `<strong>${userName}:</strong> <span>${message.text}</span><div class="timestamp">${timestamp}</div>`;
-                messagesDiv.appendChild(messageElement);
-            });
-            // Scroll to the bottom to show the latest message
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }, (error) => {
-            console.error("Error fetching messages: ", error);
-        });
-
-        const commonEmojis = [
-            '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚',
-            '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣',
-            '😖', '😫', '😩', '🥺', '😤', '😠', '😡', '🤬', '😈', '👿', '💀', '👻', '👽', '🤖', '💩', '😺', '😸', '😹', '😻', '😼',
-            '😽', '🙀', '😿', '😾', '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤏', '✌️', '🤞', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️',
-            '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🙏', '✍️', '💅', '🤳', '💪', '🦵', '🦶', '👂', '👃', '🧠',
-            '🦷', '🦴', '👀', '👁️', '👅', '👄', '👶', '👦', '👧', '👨', '👩', '🧑', '👱‍♀️', '👱‍♂️', '👴', '👵', '🧓', '🙍‍♀️', '🙍‍♂️', '🙎‍♀️', '🙎‍♂️',
-            '🙅‍♀️', '🙅‍♂️', '🙆‍♀️', '🙆‍♂️', '🤷‍♀️', '🤷‍♂️', '🗣️', '👤', '👥', '🫂', '👪', '👨‍👩‍👧', '👨‍👩‍👧‍👦', '👨‍👩‍👦‍👦', '👨‍👩‍👧‍👧', '👨‍👦', '👨‍👦‍👦', '👨‍👧', '👨‍👧‍👦', '👨‍👧‍👧',
-            '👩‍👦', '👩‍👦‍👦', '👩‍👧', '👩‍👧‍👦', '👩‍👧‍👧', '💔', '❤️', '🧡', '💛', '💚', '💙', '💜', '🤎', '🖤', '🤍', '💯', '💢', '💥', '💫', '💦', '💨', '
-        ```
-
-8.  **SAVE THE `chatbox.html` FILE IN VISUAL STUDIO CODE.**
-    * Press `Ctrl + S` (Windows) / `Cmd + S` (Mac).
-    * **CRITICAL VERIFICATION:** Ensure the small white circle on the `chatbox.html` tab in VS Code **disappears**, and the tab shows an 'x'. This is your confirmation that the file has been saved correctly.
-
----
-
-**After you have confirmed that `chatbox.html` is SAVED in VS Code with this completely new content, then push your changes:**
-
-1.  **Open your PowerShell window** (in your `K:\FLM-PLATFORM>` directory).
-2.  **Stage your changes:**
-    ```bash
-    git add .
-    ```
-3.  **Commit your changes:**
-    ```bash
-    git commit -m "Refactor: Overhauled chatbox.html for consistent styling and functionality"
-    ```
-4.  **Push your changes to GitHub:**
-    ```bash
-    git push -u origin main
-    ```
-    (Use your Personal Access Token if prompted for a password.)
-
-After the `git push` command finishes successfully, give Netlify a minute or two to deploy. Then, do a **hard refresh** of your live site. This should absolutely resolve the "white space" and make your chat box fully functional and visually correct! Let me know how it looks!
+        // Initial scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    </script>
+</body>
+</html>
+ 
