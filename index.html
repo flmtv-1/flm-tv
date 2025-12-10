@@ -1612,15 +1612,17 @@
         // ═══════════════════════════════════════════════════════════════
         
         const JELLYFIN_CONFIG = {
-            // DuckDNS domain with port 8096 - accessible WORLDWIDE!
-            SERVER: 'http://flmtv26.duckdns.org',
-            API_KEY: '62131ee22c0141c6b651be75a7444350',
-            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-        ? 'http://flmtv26.duckdns.org:8096'  // Local testing
-        : '/jellyfin',                        // Production (Netlify)
-    
+    // NEW/CORRECT: Use the relative path that Netlify redirects.
+    // This is the ONLY way to make your site work publicly with HTTPS.
+    SERVER: '/jellyfin', 
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
+    COLLECTIONS: [ 
+        { 
+            id: 'db6bb6388c8c4c70825698639853ede6', 
+            name: '00 Collections', 
+            url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' 
+        },
     
     COLLECTIONS: [
         { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
