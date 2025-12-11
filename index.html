@@ -1607,15 +1607,17 @@
     <script>
         console.log('🎬 FLM TV - Initializing...');
         
-  // ═══════════════════════════════════════════════════════════════
-// JELLYFIN CONFIGURATION (FINAL FIXED VERSION)
-// ═══════════════════════════════════════════════════════════════
-const JELLYFIN_CONFIG = {
-    SERVER: '/jellyfin',
-    API_KEY: '62131ee22c0141c6b651be75a7444350',
-    USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-    
-COLLECTIONS: [
+        // ═══════════════════════════════════════════════════════════════
+        //  JELLYFIN CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        const JELLYFIN_CONFIG = {
+            // DuckDNS domain with port 8096 - accessible WORLDWIDE!
+            SERVER: 'http://flmtv26.duckdns.org:8096',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
+            
+            COLLECTIONS: [
                 { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
                 { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
                 { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
@@ -1640,9 +1642,8 @@ COLLECTIONS: [
                 { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
                 { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
             ]
-
-};
-
+        };
+        
         // ═══════════════════════════════════════════════════════════════
         //  FIREBASE & API CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
@@ -2046,12 +2047,12 @@ COLLECTIONS: [
                     maxBufferLength: 10,
                     debug: false
                 });
-                previewHls.loadSource('http://10.0.0.4:8080/hls/FLMTV.m3u8');
+                previewHls.loadSource('http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8');
                 previewHls.attachMedia(livePreviewVideo);
                 console.log('📺 Live preview loaded in card');
             } else if (livePreviewVideo && livePreviewVideo.canPlayType('application/vnd.apple.mpegurl')) {
                 // Safari native HLS
-                livePreviewVideo.src = 'http://10.0.0.4:8080/hls/FLMTV.m3u8';
+                livePreviewVideo.src = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
             }
             
             
@@ -2455,7 +2456,7 @@ COLLECTIONS: [
             modal.classList.add('active');
             
             // Your local HLS stream URL
-            const streamUrl = 'http://10.0.0.4:8080/hls/FLMTV.m3u8';
+            const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
                 if (hls) {
