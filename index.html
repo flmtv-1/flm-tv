@@ -1611,12 +1611,10 @@
 // JELLYFIN CONFIGURATION (FINAL FIXED VERSION)
 // ═══════════════════════════════════════════════════════════════
 const JELLYFIN_CONFIG = {
-    // CRITICAL FIX: The relative path is required to trigger the Netlify redirect rule.
-    SERVER: '/http://flmtv26.duckdns.org:8096', 
+    SERVER: '/jellyfin',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
     COLLECTIONS: [ 
-        // All your collections merged into one valid array:
         { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
         { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
         { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
@@ -1640,8 +1638,9 @@ const JELLYFIN_CONFIG = {
         { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
         { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
-    ],
-};        
+    ]
+};
+
         // ═══════════════════════════════════════════════════════════════
         //  FIREBASE & API CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
