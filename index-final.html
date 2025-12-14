@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Part 2: Visual Categories</title>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -1107,7 +1108,7 @@
             flex-direction: column;
             justify-content: center;
             padding: 0.75rem 1.25rem;
-            background: linear-gradient(135deg, rgba(206, 17, 38, 0.98) 0%, rgba(139, 0, 0, 0.98) 100%);
+            background: linear-gradient(135deg, rgba(206, 17, 38, 0.85) 0%, rgba(139, 0, 0, 0.85) 100%);
             backdrop-filter: blur(5px);
         }
         
@@ -1142,6 +1143,7 @@
             margin-bottom: 0rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             line-height: 1.2;
+            letter-spacing: 0.5px;
         }
         
         .live-channel-description {
@@ -1303,13 +1305,20 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - ALWAYS FIRST -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="livePreviewVideo" class="live-preview-video" autoplay muted playsinline loop></video>
+                        <iframe 
+                            class="live-preview-video" 
+                            src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                            frameborder="0" 
+                            scrolling="no"
+                            style="pointer-events: none;"
+                            allow="autoplay"
+                        ></iframe>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
                                 <span>🔴 LIVE</span>
                             </div>
-                            <div class="live-channel-name">Channel 26.5 Las Vegas</div>
+                            <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                     </div>
                     <!-- Category cards will be dynamically added here -->
@@ -2037,22 +2046,9 @@
             // Initialize hero banner slideshow
             initHeroBanner();
             
-            // Initialize live preview stream in card
-            const livePreviewVideo = document.getElementById('livePreviewVideo');
-            if (livePreviewVideo && Hls.isSupported()) {
-                const previewHls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    maxBufferLength: 10,
-                    debug: false
-                });
-                previewHls.loadSource('http://10.0.0.4:8080/hls/FLMTV.m3u8');
-                previewHls.attachMedia(livePreviewVideo);
-                console.log('📺 Live preview loaded in card');
-            } else if (livePreviewVideo && livePreviewVideo.canPlayType('application/vnd.apple.mpegurl')) {
-                // Safari native HLS
-                livePreviewVideo.src = 'http://10.0.0.4:8080/hls/FLMTV.m3u8';
-            }
+            // Live preview card - Castr version shows static banner
+            // No video preview needed since main stream is Castr iframe
+            console.log('📺 Live TV card ready (Castr version)');
             
             
             // Attach button click handlers
@@ -2455,7 +2451,7 @@
             modal.classList.add('active');
             
             // Your local HLS stream URL
-            const streamUrl = 'http://10.0.0.4:8080/hls/FLMTV.m3u8';
+            const streamUrl = 'http://flmtv26.duckdns.org:8096:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
                 if (hls) {
