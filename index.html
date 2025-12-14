@@ -1698,46 +1698,85 @@
         // ═══════════════════════════════════════════════════════════════
         
         async function jellyfinFetch(endpoint, params = {}) {
-            // Build proper Jellyfin API URL
-            const baseUrl = `${JELLYFIN_CONFIG.SERVER}`;
-            const url = new URL(`${baseUrl}${endpoint}`);
-            
-            // Add API key and all params
+            const isLocal =
+                window.location.protocol === 'file:' ||
+                window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1';
+
+            // If the site is running on HTTPS (Netlify/custom domain), use the proxy to avoid mixed-content/CORS.
+            const useProxy = !isLocal && window.location.protocol === 'https:';
+
+            if (useProxy) {
+                // ✅ Netlify Function proxy
+                const proxyUrl = new URL('/.netlify/functions/jellyfin', window.location.origin);
+
+                const jellyfinPath = new URL(endpoint, 'http://temp');
+                jellyfinPath.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
+
+                Object.keys(params).forEach(key => {
+                    if (params[key] !== null && params[key] !== undefined) {
+                        jellyfinPath.searchParams.append(key, params[key]);
+                    }
+                });
+
+                proxyUrl.searchParams.set('path', jellyfinPath.pathname + jellyfinPath.search);
+
+                console.log('🔍 Fetching via proxy:', proxyUrl.toString());
+
+                try {
+                    const response = await fetch(proxyUrl.toString(), { headers: { 'Accept': 'application/json' } });
+                    if (!response.ok) return null;
+                    return await response.json();
+                } catch (e) {
+                    console.error('❌ Proxy fetch error:', e);
+                    return null;
+                }
+            }
+
+            // ✅ Local / HTTP dev: call Jellyfin directly
+            const url = new URL(`${JELLYFIN_CONFIG.SERVER}${endpoint}`);
             url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
-            
+
             Object.keys(params).forEach(key => {
                 if (params[key] !== null && params[key] !== undefined) {
                     url.searchParams.append(key, params[key]);
                 }
             });
-            
-            console.log('🔍 Fetching:', url.toString());
-            
+
+            console.log('🔍 Fetching direct:', url.toString());
+
             try {
-                const response = await fetch(url, {
+                const response = await fetch(url.toString(), {
                     method: 'GET',
                     mode: 'cors',
                     credentials: 'omit',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
-                
-                if (!response.ok) {
-                    console.error('❌ Jellyfin API Error:', response.status, response.statusText);
-                    return null;
-                }
+                if (!response.ok) return null;
                 const data = await response.json();
                 console.log('✅ Response:', data);
                 return data;
-            } catch (error) {
-                console.error('❌ Fetch Error:', error);
+            } catch (e) {
+                console.error('❌ Direct fetch error:', e);
                 return null;
             }
         }
         
         function getImageUrl(itemId, imageTag, type = 'Primary') {
-            return `${JELLYFIN_CONFIG.SERVER}/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
+            const isLocal =
+                window.location.protocol === 'file:' ||
+                window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1';
+
+            const useProxy = !isLocal && window.location.protocol === 'https:';
+
+            const imagePath = `/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
+
+            if (useProxy) {
+                return `/.netlify/functions/jellyfin?path=${encodeURIComponent(imagePath)}`;
+            }
+
+            return `${JELLYFIN_CONFIG.SERVER}${imagePath}`;
         }
         
         function scrollCategoryNav(direction) {
