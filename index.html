@@ -1927,7 +1927,7 @@
                             card.onclick = () => playJellyfinItem(item.Id);
                             
                             // Try multiple image sources for better compatibility
-                            let imageUrl = 'https://via.placeholder.com/200x300?text=No+Image';
+                            let imageUrl = `https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}`;
                             
                             if (item.ImageTags?.Primary) {
                                 imageUrl = getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
@@ -1944,7 +1944,7 @@
                                      alt="${item.Name}" 
                                      class="content-card-image" 
                                      loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/200x300?text=${encodeURIComponent(item.Name)}'">
+                                     onerror="this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}'">
                                 <div class="content-card-overlay">
                                     <div class="content-card-title">${item.Name}</div>
                                     <div class="content-card-info">
@@ -2423,7 +2423,7 @@
                     tmdbData.results.slice(0, 3).forEach(item => {
                         const posterUrl = item.poster_path 
                             ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-                            : 'https://via.placeholder.com/200x300?text=No+Poster';
+                            : 'https://placehold.co/200x300?text=No+Poster';
                         
                         const title = item.title || item.name;
                         const year = item.release_date ? `(${item.release_date.substring(0, 4)})` : 
