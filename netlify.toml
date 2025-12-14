@@ -1,8 +1,6 @@
-[build]
-  publish = "."
-  functions = "functions"
-
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/jellyfin/*"
+  to = "http://flmtv26.duckdns.org:8096/jellyfin/:splat"
   status = 200
+  force = true
+  headers = {X-From = "Netlify"}
