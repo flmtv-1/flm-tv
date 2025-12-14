@@ -2190,7 +2190,7 @@
             const frame = document.getElementById('jellyfinFrame');
             
             // Open Jellyfin directly - Public user with no password should auto-login
-            frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}`;
+            frame.src = `/jellyfin/web/index.html#!/details?id=${itemId}`;
             
             // Inject custom FLM TV branding after iframe loads
             frame.onload = function() {
