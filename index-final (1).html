@@ -1687,36 +1687,34 @@
         //  HELPER FUNCTIONS
         // ═══════════════════════════════════════════════════════════════
         
-        
         async function jellyfinFetch(endpoint, params = {}) {
-            // Build URL for Netlify Function proxy
-            const proxyUrl = new URL('/.netlify/functions/jellyfin', window.location.origin);
+            // Build proper Jellyfin API URL
+            const baseUrl = `${JELLYFIN_CONFIG.SERVER}`;
+            const url = new URL(`${baseUrl}${endpoint}`);
             
-            // Build the full Jellyfin path with params
-            const jellyfinPath = new URL(endpoint, 'http://temp');
-            jellyfinPath.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
+            // Add API key and all params
+            url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
             
             Object.keys(params).forEach(key => {
                 if (params[key] !== null && params[key] !== undefined) {
-                    jellyfinPath.searchParams.append(key, params[key]);
+                    url.searchParams.append(key, params[key]);
                 }
             });
             
-            // Pass the full path to the proxy
-            proxyUrl.searchParams.append('path', jellyfinPath.pathname + jellyfinPath.search);
-            
-            console.log('🔍 Fetching via proxy:', proxyUrl.toString());
+            console.log('🔍 Fetching:', url.toString());
             
             try {
-                const response = await fetch(proxyUrl, {
+                const response = await fetch(url, {
                     method: 'GET',
+                    mode: 'cors',
+                    credentials: 'omit',
                     headers: {
                         'Accept': 'application/json'
                     }
                 });
                 
                 if (!response.ok) {
-                    console.error('❌ Proxy Error:', response.status, response.statusText);
+                    console.error('❌ Jellyfin API Error:', response.status, response.statusText);
                     return null;
                 }
                 const data = await response.json();
@@ -1729,9 +1727,7 @@
         }
         
         function getImageUrl(itemId, imageTag, type = 'Primary') {
-            // Use proxy for images too
-            const imagePath = `/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
-            return `/.netlify/functions/jellyfin?path=${encodeURIComponent(imagePath)}`;
+            return `${JELLYFIN_CONFIG.SERVER}/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
         }
         
         function scrollCategoryNav(direction) {
