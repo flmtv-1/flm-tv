@@ -1,26 +1,6 @@
 [build]
   publish = "."
-  command = "echo 'Static site - no build required'"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[redirects]]
-  from = "/jellyfin/*"
-  to = "http://flmtv26.duckdns.org:8096/:splat"
-  status = 200
-  force = true
-  headers = {X-From = "Netlify"}
+  functions = "functions"
 
 [[redirects]]
   from = "/*"

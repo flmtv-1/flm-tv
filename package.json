@@ -1,0 +1,8 @@
+{
+  "name": "flm-tv-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for FLM TV",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
