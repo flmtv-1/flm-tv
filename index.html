@@ -1251,11 +1251,14 @@
             
             <nav>
                 <ul class="header-nav">
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="#">Movies</a></li>
-                    <li><a href="#">TV Shows</a></li>
-                    <li><a href="#" onclick="openLiveTV(); return false;">🔴 Live TV</a></li>
-                    <li><a href="#">Categories</a></li>
+                    <li><a href="#" id="navHome" class="active">Home</a></li>
+<li><a href="#" id="navMovies">Movies</a></li>
+<li><a href="#" id="navTV">TV Shows</a></li>
+<li><a href="#" id="navLive" onclick="openLiveTV(); return false;">🔴 Live TV</a></li>
+<li><a href="#" id="navCategories">Categories</a></li>                    
+                    
+                    
+                    
                 </ul>
             </nav>
             
@@ -2067,11 +2070,40 @@
             } catch (error) {
                 console.log('⚠️ Auto-auth error:', error);
                 return false;
+
             }
         }
         
+function initTopNav() {
+  const home = document.getElementById("navHome");
+  const movies = document.getElementById("navMovies");
+  const tv = document.getElementById("navTV");
+  const categories = document.getElementById("navCategories");
+
+  home?.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  movies?.addEventListener("click", (e) => {
+    e.preventDefault();
+    const target = document.querySelector(".category-section[data-group='movies']");
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  tv?.addEventListener("click", (e) => {
+    e.preventDefault();
+    const target = document.querySelector(".category-section[data-group='tv']");
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  categories?.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("categoryNav")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 DOM loaded, starting app...');
+            console.log('🚀 DOM loaded, starting app...'); initTopNav();
             
             // Auto-authenticate in background
             autoAuthenticatePublic();
