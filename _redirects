@@ -1,0 +1,2 @@
+echo /jellyfin/*  http://flmtv26.duckdns.org:8096/:splat  200 > _redirects
+   echo /*  /index.html  200 >> _redirects
