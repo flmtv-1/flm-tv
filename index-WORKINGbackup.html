@@ -1619,7 +1619,7 @@
         //  JELLYFIN CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
         
-const JELLYFIN_CONFIG = {
+      const JELLYFIN_CONFIG = {
     SERVER: '/jellyfin',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
@@ -1649,7 +1649,8 @@ const JELLYFIN_CONFIG = {
         { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
     ]
-};        
+};
+        
         // ═══════════════════════════════════════════════════════════════
         //  FIREBASE & API CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
@@ -1686,7 +1687,7 @@ const JELLYFIN_CONFIG = {
         // ═══════════════════════════════════════════════════════════════
         
         
- async function jellyfinFetch(endpoint, params = {}) {
+     async function jellyfinFetch(endpoint, params = {}) {
     const baseUrl = JELLYFIN_CONFIG.SERVER;
     
     if (!baseUrl.startsWith('http')) {
@@ -1758,6 +1759,23 @@ const JELLYFIN_CONFIG = {
     }
 }
         
+       function getImageUrl(itemId, imageTag, type = 'Primary') {
+    return `${JELLYFIN_CONFIG.SERVER}/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
+}
+        
+        function scrollCategoryNav(direction) {
+            const scroll = document.getElementById('categoryNavScroll');
+            const scrollAmount = 300;
+            scroll.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+        
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
         // ═══════════════════════════════════════════════════════════════
         //  BUILD CATEGORY NAVIGATION
         // ═══════════════════════════════════════════════════════════════
@@ -1822,11 +1840,7 @@ const JELLYFIN_CONFIG = {
             }
             
             console.log('✅ Category navigation built!');
-        
-  // 🔗 Bind clicks after rendering
-  wireCategoryClicks();
-}
-
+        }
         
         // ═══════════════════════════════════════════════════════════════
         //  LOAD CONTENT
@@ -1880,7 +1894,7 @@ const JELLYFIN_CONFIG = {
                     header.className = 'category-header';
                     header.innerHTML = `
                         <h3 class="category-title">${collection.name}</h3>
-                        <a data-collection-id="${collection.id}" class="view-all-btn" style="cursor: pointer;">
+                        <a onclick="openJellyfinCollection('${collection.id}')" class="view-all-btn" style="cursor: pointer;">
                             View All <i class="fas fa-arrow-right"></i>
                         </a>
                     `;
@@ -1897,7 +1911,7 @@ const JELLYFIN_CONFIG = {
                             card.onclick = () => playJellyfinItem(item.Id);
                             
                             // Try multiple image sources for better compatibility
-                            let imageUrl = 'https://via.placeholder.com/200x300?text=No+Image';
+                            let imageUrl = 'https://placehold.co/200x300?text=No+Image';
                             
                             if (item.ImageTags?.Primary) {
                                 imageUrl = getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
@@ -1914,7 +1928,7 @@ const JELLYFIN_CONFIG = {
                                      alt="${item.Name}" 
                                      class="content-card-image" 
                                      loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/200x300?text=${encodeURIComponent(item.Name)}'">
+                                     onerror="this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}'">
                                 <div class="content-card-overlay">
                                     <div class="content-card-title">${item.Name}</div>
                                     <div class="content-card-info">
@@ -2056,38 +2070,7 @@ const JELLYFIN_CONFIG = {
             }
         }
         
-        
-// 🔗 Wire up category cards + View All buttons (no inline onclick)
-function wireCategoryClicks() {
-  // Category cards under hero + anywhere else
-  document.querySelectorAll('[data-collection-id]').forEach(el => {
-    if (el.__flmBound) return;
-    el.__flmBound = true;
-    el.addEventListener('click', (e) => {
-      // if someone clicks a child element, walk up to the dataset holder
-      const target = e.currentTarget;
-      const id = target.getAttribute('data-collection-id');
-      if (!id) return;
-      openJellyfinCollection(id);
-    });
-  });
-
-  // Top nav scroll links
-  const byId = (id) => document.getElementById(id);
-  const safeScrollTo = (selector, fallbackTop=0) => {
-    const el = document.querySelector(selector);
-    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
-    else window.scrollTo({top: fallbackTop, behavior:'smooth'});
-  };
-
-  byId('navHome')?.addEventListener('click', (e)=>{ e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); });
-  byId('navMovies')?.addEventListener('click', (e)=>{ e.preventDefault(); safeScrollTo('#moviesSection'); });
-  byId('navTV')?.addEventListener('click', (e)=>{ e.preventDefault(); safeScrollTo('#tvSection'); });
-  byId('navLive')?.addEventListener('click', (e)=>{ e.preventDefault(); openLiveTVPage(); });
-  byId('navCategories')?.addEventListener('click', (e)=>{ e.preventDefault(); safeScrollTo('#browseCategories'); });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
             
             // Auto-authenticate in background
@@ -2107,9 +2090,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Load content
             buildCategoryNav();
-    loadContent();
-    wireCategoryClicks();
-});
+            loadContent();
+        });
         
         // ═══════════════════════════════════════════════════════════════
         //  HERO BANNER SLIDESHOW
@@ -2425,7 +2407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     tmdbData.results.slice(0, 3).forEach(item => {
                         const posterUrl = item.poster_path 
                             ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-                            : 'https://via.placeholder.com/200x300?text=No+Poster';
+                            : 'https://placehold.co/200x300?text=No+Poster';
                         
                         const title = item.title || item.name;
                         const year = item.release_date ? `(${item.release_date.substring(0, 4)})` : 
