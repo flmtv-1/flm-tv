@@ -1325,10 +1325,10 @@
                 </button>
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
-                    <div class="live-channel-card" onclick="openLiveStream()">
+                    <div class="live-channel-card" onclick="openLiveTV()">
                         <iframe 
                             class="live-preview-video" 
-                            src="about:blank"  
+                            src="http://flmtv26.duckdns.org:8088/" 
                             frameborder="0" 
                             scrolling="no"
                             style="pointer-events: none;"
@@ -1565,7 +1565,7 @@
                 <!-- vMix Web Controller - Channel 26.5 -->
                 <iframe 
                     id="liveStreamFrame"
-                    src="about:blank"  
+                    src="http://flmtv26.duckdns.org:8088/" 
                     frameborder="0" 
                     scrolling="no" 
                     allow="autoplay; encrypted-media; fullscreen"
@@ -2024,8 +2024,9 @@
         // ═══════════════════════════════════════════════════════════════
         
         function openLiveTV() {
-            // 🎬 Use the HLS player modal (video tag) instead of the iframe
-            openLiveStream();
+            const modal = document.getElementById('liveTvModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
         
         function closeLiveTV() {
@@ -2502,20 +2503,9 @@
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('liveVideo');
             modal.classList.add('active');
-            // 🎥 LIVE STREAM SOURCES (HLS .m3u8) — tries in order
-            const LIVE_STREAM_SOURCES = [
-                // 🏠 LAN (inside your network)
-                'http://10.0.0.4:8080/hls/FLMTV.m3u8',
-
-                // 🌐 Public (use if your router forwards 8080 → 10.0.0.4:8080)
-                'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8',
-
-                // 🔧 Optional: if you later serve HLS through a reverse proxy/https, add it here:
-                // 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8',
-            ];
-
-            const pickFirstWorkingUrl = () => LIVE_STREAM_SOURCES[0]; // start with LAN first
-            const streamUrl = pickFirstWorkingUrl();
+            
+            // Your local HLS stream URL
+            const streamUrl = 'http://flmtv26.duckdns.org:8096:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
                 if (hls) {
