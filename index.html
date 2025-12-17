@@ -1619,7 +1619,7 @@
         //  JELLYFIN CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
         
-     const JELLYFIN_CONFIG = {
+      const JELLYFIN_CONFIG = {
     SERVER: '/jellyfin',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
@@ -1687,17 +1687,10 @@
         // ═══════════════════════════════════════════════════════════════
         
         
-   async function jellyfinFetch(endpoint, params = {}) {
-    // Build proper Jellyfin API URL
+     async function jellyfinFetch(endpoint, params = {}) {
     const baseUrl = JELLYFIN_CONFIG.SERVER;
     
-    // Don't use new URL() for relative paths
-    let url;
-    if (baseUrl.startsWith('http')) {
-        // Full URL (local testing)
-        url = new URL(`${baseUrl}${endpoint}`);
-    } else {
-        // Relative URL (Netlify production) - manually build it
+    if (!baseUrl.startsWith('http')) {
         const queryString = new URLSearchParams();
         queryString.append('api_key', JELLYFIN_CONFIG.API_KEY);
         
@@ -1707,7 +1700,7 @@
             }
         });
         
-        url = `${baseUrl}${endpoint}?${queryString.toString()}`;
+        const url = `${baseUrl}${endpoint}?${queryString.toString()}`;
         
         console.log('🔍 Fetching:', url);
         
@@ -1732,7 +1725,7 @@
         }
     }
     
-    // For full URLs (http://...)
+    const url = new URL(`${baseUrl}${endpoint}`);
     url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
     
     Object.keys(params).forEach(key => {
