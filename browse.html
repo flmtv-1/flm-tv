@@ -1308,11 +1308,11 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="category-nav-scroll" id="categoryNavScroll">
-                    <!-- LIVE CHANNEL 26.5 - ALWAYS FIRST -->
+                    <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
                         <iframe 
                             class="live-preview-video" 
-                            src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                            src="http://flmtv26.duckdns.org:8088/" 
                             frameborder="0" 
                             scrolling="no"
                             style="pointer-events: none;"
@@ -1546,10 +1546,10 @@
                 <button class="close-live-tv" onclick="closeLiveTV()">✕</button>
             </div>
             <div class="live-tv-player">
-                <!-- Castr Live Stream - Channel 26.5 -->
+                <!-- vMix Web Controller - Channel 26.5 -->
                 <iframe 
                     id="liveStreamFrame"
-                    src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                    src="http://flmtv26.duckdns.org:8088/" 
                     frameborder="0" 
                     scrolling="no" 
                     allow="autoplay; encrypted-media; fullscreen"
@@ -2084,9 +2084,9 @@
             // Initialize hero banner slideshow
             initHeroBanner();
             
-            // Live preview card - Castr version shows static banner
-            // No video preview needed since main stream is Castr iframe
-            console.log('📺 Live TV card ready (Castr version)');
+            // Live preview card - vMix Web Controller version
+            // Stream shows when vMix is running on port 8088
+            console.log('📺 Live TV card ready (vMix version)');
             
             
             // Attach button click handlers
