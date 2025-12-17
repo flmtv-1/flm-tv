@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FLM TV - Out of This World Entertainment 🛸</title>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <style>
+        :root {
+            --primary: #0038a8;
+            --secondary: #ce1126;
+            --accent: #fcd116;
+            --neon-green: #22c55e;
+            --cosmic-purple: #8b5cf6;
+            --bg: #0f172a;
+            --bg-light: #1e293b;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  FADED BACKGROUND SLIDESHOW                                     */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            filter: blur(8px) brightness(0.25);
+        }
+        
+        .bg-slide.active {
+            opacity: 1;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  EPIC SPLASH SCREEN - LONGER DURATION                           */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0038a8 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeOut 1.5s ease 5s forwards;
+        }
+        
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                pointer-events: none;
+                visibility: hidden;
+            }
+        }
+        
+        .splash-logo {
+            width: clamp(180px, 30vw, 280px);
+            height: auto;
+            margin-bottom: 2rem;
+            animation: float 4s ease-in-out infinite, glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-25px) scale(1.08); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 25px rgba(252, 209, 22, 0.6)); }
+            50% { filter: drop-shadow(0 0 50px rgba(252, 209, 22, 0.9)); }
+        }
+        
+        .splash-text {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--neon-green) 50%, var(--cosmic-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: slideIn 1.5s ease;
+            padding: 0 1rem;
+        }
+        
+        .splash-tagline {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--text);
+            text-align: center;
+            animation: slideIn 2s ease;
+            padding: 0 1rem;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  HEADER                                                         */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .header {
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        @media (min-width: 768px) {
+            .header {
+                padding: 1rem 2rem;
+            }
+        }
+        
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .logo-container img {
+            height: 40px;
+            width: auto;
+        }
+        
+        @media (min-width: 768px) {
+            .logo-container img {
+                height: 50px;
+            }
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+        
+        @media (min-width: 768px) {
+            .logo-text {
+                font-size: 2rem;
+            }
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-icon:hover {
+            background: var(--neon-green);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  HERO BANNER - STATIC CONTENT WITH ROTATING BACKGROUNDS         */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .hero-banner {
+            height: 55vh;
+            min-height: 400px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-banner {
+                height: 70vh;
+                min-height: 550px;
+            }
+        }
+        
+        /* Rotating background images behind content */
+        .hero-background-slideshow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .hero-bg-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero-bg-slide.active {
+            opacity: 1;
+        }
+        
+        .hero-bg-slide::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.85));
+        }
+        
+        .hero-content {
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 1rem;
+            z-index: 10;
+            max-width: 900px;
+        }
+        
+        .hero-content h1 {
+            font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--neon-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            animation: heroTitle 1s ease;
+            line-height: 1.2;
+        }
+        
+        /* Rotating Headings Container */
+        .hero-headings {
+            position: relative;
+            width: 100%;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-heading {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            margin: 0;
+        }
+        
+        .hero-heading.active {
+            opacity: 1;
+        }
+        
+        @keyframes heroTitle {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-content p {
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            animation: heroText 1.2s ease;
+        }
+        
+        @keyframes heroText {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+            width: 100%;
+            animation: heroButtons 1.5s ease;
+        }
+        
+        @media (min-width: 768px) {
+            .cta-buttons {
+                flex-direction: row;
+            }
+        }
+        
+        @keyframes heroButtons {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-cta {
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(252, 209, 22, 0.3);
+        }
+        
+        .btn-secondary-cta {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+        
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(252, 209, 22, 0.5);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  FULL-SIZE VIDEO MODAL                                          */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.98);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            padding: 1rem;
+        }
+        
+        .video-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .video-container {
+            width: 100%;
+            height: 100%;
+            max-width: 1920px;
+            max-height: 1080px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            object-fit: contain;
+        }
+        
+        .close-video {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--secondary);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        @media (min-width: 768px) {
+            .close-video {
+                top: -60px;
+                right: 0;
+            }
+        }
+        
+        .close-video:hover {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+        
+        .browse-from-video {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: 2px solid var(--neon-green);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .browse-from-video {
+                top: -60px;
+                left: 0;
+            }
+        }
+        
+        .browse-from-video:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.5);
+        }
+        
+        .video-logo {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            z-index: 5;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .video-logo:hover {
+            opacity: 1;
+        }
+        
+        .video-logo img {
+            height: 60px;
+            width: auto;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
+        }
+        
+        @media (min-width: 768px) {
+            .video-logo {
+                bottom: 100px;
+                right: 30px;
+            }
+            
+            .video-logo img {
+                height: 80px;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  SIDE PANELS                                                    */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .side-panel {
+            position: fixed;
+            right: -100%;
+            top: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: rgba(30, 41, 59, 0.98);
+            backdrop-filter: blur(20px);
+            border-left: 2px solid var(--neon-green);
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .side-panel.active {
+            right: 0;
+        }
+        
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(0, 56, 168, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+        }
+        
+        .panel-header h2 {
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .close-panel {
+            background: rgba(206, 17, 38, 0.2);
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .close-panel:hover {
+            background: var(--secondary);
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .username-setup {
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-bottom: 1px solid var(--neon-green);
+        }
+        
+        .username-setup.hidden {
+            display: none;
+        }
+        
+        .username-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .username-input-group input {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--neon-green);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        .username-input-group button {
+            padding: 0.75rem 1.5rem;
+            background: var(--neon-green);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .current-username {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        
+        .change-username-btn {
+            padding: 0.5rem 1rem;
+            background: var(--cosmic-purple);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--neon-green);
+            animation: messageSlideIn 0.3s ease;
+        }
+        
+        @keyframes messageSlideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .message-username {
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .message-text {
+            color: var(--text);
+            word-wrap: break-word;
+        }
+        
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+        }
+        
+        .chat-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chat-input-group textarea {
+            flex: 1;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            color: var(--text);
+            resize: none;
+            font-family: inherit;
+        }
+        
+        .send-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--neon-green);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  FOOTER                                                         */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .footer {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border-top: 3px solid var(--primary);
+            padding: 3rem 1rem 1rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .footer-section h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--neon-green);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icons a {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--cosmic-purple) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background: var(--neon-green);
+            transform: translateY(-5px) rotate(360deg);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Animated Background -->
+    <div class="animated-background" id="animatedBg"></div>
+    
+    <!-- Splash Screen - 5 SECONDS -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="stars" id="starsContainer"></div>
+        <img src="assets/images/FLM_logo_tag_1-thumb.jpg" alt="FLM TV Logo" class="splash-logo" onerror="this.src='assets/logos/flm-logo.png'">
+        <h1 class="splash-text">FLM TELEVISION NETWORK</h1>
+        <p class="splash-tagline">Out of This World Entertainment 🌍✨🛸</p>
+    </div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
+                <span class="logo-text">FLM TV</span>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn-icon" onclick="toggleChat()" title="Live Chat">
+                    <i class="fas fa-comments"></i>
+                </button>
+                <button class="btn-icon" onclick="toggleAI()" title="Zaina AI">
+                    <i class="fas fa-robot"></i>
+                </button>
+                <button class="btn-icon" onclick="alert('Member Login Coming Soon!')" title="Login">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Banner - Static buttons, rotating background & text -->
+    <section class="hero-banner">
+        <div class="hero-content">
+            <!-- Rotating Headings -->
+            <div class="hero-headings">
+                <h1 class="hero-heading active">FLMTV is Out of This World! 🛸</h1>
+                <h1 class="hero-heading">Las Vegas's First Multicultural TV Network 🌍</h1>
+                <h1 class="hero-heading">Channel 26.5 • Entertainment Beyond Reality ✨</h1>
+            </div>
+            
+            <p style="font-size: clamp(0.85rem, 1.8vw, 1rem); margin-bottom: 1.5rem;">Las Vegas's First Original Multicultural Television Network</p>
+            
+            <!-- STATIC BUTTONS - Never change -->
+            <div class="cta-buttons">
+                <button class="btn-cta btn-primary-cta" onclick="window.location.href='browse.html#live'">
+                    <i class="fas fa-play"></i> Watch FLM TV Channel 26.5 Las Vegas
+                </button>
+                <button class="btn-cta btn-secondary-cta" onclick="window.location.href='browse.html'">
+                    <i class="fas fa-film"></i> Browse All Content
+                </button>
+            </div>
+        </div>
+        
+        <!-- Rotating background images BEHIND the content -->
+        <div class="hero-background-slideshow">
+            <div class="hero-bg-slide active" style="background-image: url('assets/images/Beyond_Realyty_poster_1920.png');"></div>
+            <div class="hero-bg-slide" style="background-image: url('assets/images/Family_channel_back.jpg');"></div>
+            <div class="hero-bg-slide" style="background-image: url('assets/images/FireTV_1920x1080_HIGHLIGHT_3.jpg');"></div>
+            <div class="hero-bg-slide" style="background-image: url('assets/images/Graphic_2_Billboard_FLM_3840x14407-Da_One.png');"></div>
+            <div class="hero-bg-slide" style="background-image: url('assets/images/graphic_2-10-Da_One.png');"></div>
+        </div>
+    </section>
+    
+    <!-- Main Content -->
+    <main style="padding: 3rem 1rem; max-width: 900px; margin: 0 auto;">
+        <h2 style="text-align: center; color: var(--accent); margin-bottom: 1.5rem; font-size: clamp(1.8rem, 4vw, 2.5rem);">
+            Welcome to FLM Television Network
+        </h2>
+        <p style="text-align: center; color: var(--text-secondary); line-height: 1.8; font-size: clamp(1rem, 2vw, 1.2rem);">
+            Experience multicultural entertainment like never before. Watch Channel 26.5 live, explore our vast content library,
+            and connect with viewers worldwide. Your journey into out-of-this-world entertainment starts here! 🌟
+        </p>
+    </main>
+    
+    <!-- Chat Panel -->
+    <div class="side-panel" id="chatPanel">
+        <div class="panel-header">
+            <h2><i class="fas fa-comments"></i> Live Chat</h2>
+            <button class="close-panel" onclick="closePanel('chatPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="username-setup" id="usernameSetup">
+            <p style="margin-bottom: 0.5rem; color: var(--text-secondary);">Set your display name:</p>
+            <div class="username-input-group">
+                <input type="text" id="usernameInput" placeholder="Your name" maxlength="20">
+                <button onclick="setUsername()">Join</button>
+            </div>
+        </div>
+        
+        <div class="current-username hidden" id="currentUsername">
+            <span>Chatting as: <strong id="displayUsername" style="color: var(--accent);"></strong></span>
+            <button class="change-username-btn" onclick="changeUsername()">Change</button>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message">
+                <div class="message-header">
+                    <span class="message-username">FLM TV</span>
+                    <span class="message-time">Now</span>
+                </div>
+                <div class="message-text">Welcome to FLM TV Live Chat! Set your username to start chatting. 💚</div>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="chat-input-group">
+                <textarea id="chatInput" placeholder="Type message..." rows="2" disabled></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendChatMessage()" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AI Panel -->
+    <div class="side-panel" id="aiPanel">
+        <div class="panel-header">
+            <h2><i class="fas fa-robot"></i> Zaina AI</h2>
+            <button class="close-panel" onclick="closePanel('aiPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="chat-messages" id="aiMessages">
+            <div class="chat-message">
+                <div class="message-header">
+                    <span class="message-username">Zaina AI</span>
+                    <span class="message-time">Now</span>
+                </div>
+                <div class="message-text">Hello! I'm Zaina AI. Ask me anything! 🤖</div>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="chat-input-group">
+                <textarea id="aiInput" placeholder="Ask Zaina AI..." rows="2"></textarea>
+                <button class="send-btn" onclick="sendAIMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FULL-SIZE Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <button class="close-video" onclick="closeLiveStream()" title="Back to Home">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            
+            <button class="browse-from-video" onclick="window.location.href='index.html'" title="Browse All Content">
+                <i class="fas fa-film"></i> Browse Content
+            </button>
+            
+            <video id="liveVideo" controls></video>
+            
+            <div class="video-logo">
+                <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>FLM Television Network</h3>
+                <p style="color: var(--text-secondary);">
+                    Las Vegas's first original multicultural television network. Out of this world entertainment! 🌍✨
+                </p>
+                <div class="social-icons">
+                    <a href="#" onclick="alert('Add Facebook URL')"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" onclick="alert('Add Instagram URL')"><i class="fab fa-instagram"></i></a>
+                    <a href="#" onclick="alert('Add Twitter URL')"><i class="fab fa-twitter"></i></a>
+                    <a href="#" onclick="alert('Add YouTube URL')"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="alert('Add your website URL')">Main Website</a></li>
+                    <li><a href="#" onclick="alert('Add Ample Points URL')">Ample Points</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#" onclick="alert('Login coming soon!')">Member Login</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Watch</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="openLiveStream(); return false;">Live Channel 26.5</a></li>
+                    <li><a href="index.html">Browse Content</a></li>
+                    <li><a href="#" onclick="alert('Coming soon!')">TV Schedule</a></li>
+                    <li><a href="#" onclick="toggleChat(); return false;">Join Chat</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 FLM Television Network. All rights reserved.</p>
+            <p>🌍 Out of This World Entertainment ✨ | Channel 26.5 Las Vegas 🛸</p>
+        </div>
+    </footer>
+    
+    <script>
+        const VMIX_STREAM_URL = 'http://flmtv26.duckdns.org:8088/';
+        const BACKGROUND_IMAGES = [
+            'assets/images/Beyond_Realyty_poster_1920.png',
+            'assets/images/Family_channel_back.jpg',
+            'assets/images/FireTV_1920x1080_HIGHLIGHT_3.jpg',
+            'assets/images/Graphic_2_Billboard_FLM_3840x14407-Da_One.png',
+            'assets/images/graphic_2-10-Da_One.png'
+        ];
+        
+        // Splash Screen Stars
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+            }
+        }
+        createStars();
+        
+        // Background Slideshow
+        let bgCurrentSlide = 0;
+        function initBackgroundSlideshow() {
+            const container = document.getElementById('animatedBg');
+            BACKGROUND_IMAGES.forEach((img, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'bg-slide';
+                slide.style.backgroundImage = `url('${img}')`;
+                if (index === 0) slide.classList.add('active');
+                container.appendChild(slide);
+            });
+            
+            setInterval(() => {
+                const slides = document.querySelectorAll('.bg-slide');
+                slides[bgCurrentSlide].classList.remove('active');
+                bgCurrentSlide = (bgCurrentSlide + 1) % slides.length;
+                slides[bgCurrentSlide].classList.add('active');
+            }, 10000);
+        }
+        initBackgroundSlideshow();
+        
+        // Hero Background Slideshow (images rotate behind buttons)
+        let heroCurrentSlide = 0;
+        const totalHeroSlides = 5;
+        
+        function rotateHeroBackground() {
+            const slides = document.querySelectorAll('.hero-bg-slide');
+            slides[heroCurrentSlide].classList.remove('active');
+            heroCurrentSlide = (heroCurrentSlide + 1) % totalHeroSlides;
+            slides[heroCurrentSlide].classList.add('active');
+        }
+        
+        setInterval(rotateHeroBackground, 7000);
+        
+        // Hero Heading Rotation (3 headings)
+        let currentHeading = 0;
+        const totalHeadings = 3;
+        
+        function rotateHeading() {
+            const headings = document.querySelectorAll('.hero-heading');
+            headings[currentHeading].classList.remove('active');
+            currentHeading = (currentHeading + 1) % totalHeadings;
+            headings[currentHeading].classList.add('active');
+        }
+        
+        setInterval(rotateHeading, 5000);
+        
+        // Browser Back Button
+        history.pushState({page: 'home'}, '', '#home');
+        window.addEventListener('popstate', function() {
+            const chatPanel = document.getElementById('chatPanel');
+            const aiPanel = document.getElementById('aiPanel');
+            const videoModal = document.getElementById('videoModal');
+            
+            if (chatPanel.classList.contains('active')) {
+                closePanel('chatPanel');
+                history.pushState({page: 'home'}, '', '#home');
+            } else if (aiPanel.classList.contains('active')) {
+                closePanel('aiPanel');
+                history.pushState({page: 'home'}, '', '#home');
+            } else if (videoModal.classList.contains('active')) {
+                closeLiveStream();
+                history.pushState({page: 'home'}, '', '#home');
+            }
+        });
+        
+        // Panel Management
+        function toggleChat() {
+            const panel = document.getElementById('chatPanel');
+            const aiPanel = document.getElementById('aiPanel');
+            if (aiPanel.classList.contains('active')) aiPanel.classList.remove('active');
+            
+            if (panel.classList.contains('active')) {
+                panel.classList.remove('active');
+            } else {
+                panel.classList.add('active');
+                history.pushState({page: 'chat'}, '', '#chat');
+            }
+        }
+        
+        function toggleAI() {
+            const panel = document.getElementById('aiPanel');
+            const chatPanel = document.getElementById('chatPanel');
+            if (chatPanel.classList.contains('active')) chatPanel.classList.remove('active');
+            
+            if (panel.classList.contains('active')) {
+                panel.classList.remove('active');
+            } else {
+                panel.classList.add('active');
+                history.pushState({page: 'ai'}, '', '#ai');
+            }
+        }
+        
+        function closePanel(panelId) {
+            document.getElementById(panelId).classList.remove('active');
+        }
+        
+        // Chat System
+        let currentUsername = null;
+        
+        function setUsername() {
+            const input = document.getElementById('usernameInput');
+            const username = input.value.trim();
+            if (!username) { alert('Please enter a username!'); return; }
+            
+            currentUsername = username;
+            document.getElementById('usernameSetup').classList.add('hidden');
+            document.getElementById('currentUsername').classList.remove('hidden');
+            document.getElementById('displayUsername').textContent = username;
+            document.getElementById('chatInput').disabled = false;
+            document.getElementById('sendBtn').disabled = false;
+            addChatMessage('FLM TV', `Welcome ${username}! 🎉`);
+        }
+        
+        function changeUsername() {
+            currentUsername = null;
+            document.getElementById('usernameSetup').classList.remove('hidden');
+            document.getElementById('currentUsername').classList.add('hidden');
+            document.getElementById('usernameInput').value = '';
+            document.getElementById('chatInput').disabled = true;
+            document.getElementById('sendBtn').disabled = true;
+        }
+        
+        function sendChatMessage() {
+            if (!currentUsername) return;
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addChatMessage(currentUsername, message);
+            input.value = '';
+        }
+        
+        function addChatMessage(username, text) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'chat-message';
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `
+                <div class="message-header">
+                    <span class="message-username">${username}</span>
+                    <span class="message-time">${time}</span>
+                </div>
+                <div class="message-text">${text}</div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        document.getElementById('chatInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+        
+        // AI
+        function sendAIMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addAIMessage('You', message);
+            input.value = '';
+            setTimeout(() => addAIMessage('Zaina AI', 'Feature coming soon! 🤖'), 1000);
+        }
+        
+        function addAIMessage(username, text) {
+            const container = document.getElementById('aiMessages');
+            const div = document.createElement('div');
+            div.className = 'chat-message';
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `
+                <div class="message-header">
+                    <span class="message-username">${username}</span>
+                    <span class="message-time">${time}</span>
+                </div>
+                <div class="message-text">${text}</div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        document.getElementById('aiInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAIMessage();
+            }
+        });
+        
+        // Video Stream
+        let hls = null;
+        
+        function openLiveStream() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveVideo');
+            modal.classList.add('active');
+            history.pushState({page: 'video'}, '', '#video');
+            
+            if (Hls.isSupported()) {
+                if (hls) hls.destroy();
+                hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+                hls.loadSource(VMIX_STREAM_URL);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play().catch(e => console.log('Autoplay prevented'));
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = VMIX_STREAM_URL;
+                video.addEventListener('loadedmetadata', () => {
+                    video.play().catch(e => console.log('Autoplay prevented'));
+                });
+            }
+        }
+        
+        function closeLiveStream() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveVideo');
+            modal.classList.remove('active');
+            video.pause();
+            video.src = '';
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+        }
+        
+        console.log('🛸 FLM TV - Out of This World! 🌍✨');
+    </script>
+</body>
+</html>
