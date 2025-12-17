@@ -992,7 +992,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 1rem;
         }
         
         .live-tv-modal.active {
@@ -1000,25 +1000,32 @@
         }
         
         .live-tv-content {
-            width: 90%;
-            max-width: 1200px;
+            width: 95%;
+            max-width: 1000px;
             position: relative;
+            max-height: 90vh;
         }
         
         .live-tv-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
         
         .live-tv-title {
             color: var(--secondary);
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 900;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .live-tv-title {
+                font-size: 1.2rem;
+            }
         }
         
         .live-indicator {
@@ -1034,12 +1041,21 @@
             background: var(--secondary);
             border: none;
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .close-live-tv {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
         }
         
         .close-live-tv:hover {
@@ -2178,8 +2194,8 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            // Open Jellyfin directly - Public user with no password should auto-login
-            frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}`;
+            // Open Jellyfin with API key to bypass login
+            frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             
             // Inject custom FLM TV branding after iframe loads
             frame.onload = function() {
@@ -2203,11 +2219,11 @@
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             
             if (collection && collection.url) {
-                // Use the full working URL
-                frame.src = collection.url;
+                // Use the full working URL with API key
+                frame.src = `${collection.url}${collection.url.includes('?') ? '&' : '?'}api_key=${JELLYFIN_CONFIG.API_KEY}`;
             } else {
                 // Fallback to generic URL if not found
-                frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
+                frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             }
             
             // Inject custom FLM TV branding after iframe loads
