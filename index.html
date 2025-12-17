@@ -1620,8 +1620,7 @@
         // ═══════════════════════════════════════════════════════════════
         
      const JELLYFIN_CONFIG = {
-    SERVER: '/jellyfin',  // Use Netlify proxy for API calls
-    DIRECT_SERVER: 'http://flmtv26.duckdns.org:8096',  // Direct URL for iframe
+    SERVER: '/jellyfin',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
     
@@ -1688,44 +1687,52 @@
         // ═══════════════════════════════════════════════════════════════
         
         
-    async function jellyfinFetch(endpoint, params = {}) {
-    // Use the proxied path for API calls
-    const serverUrl = JELLYFIN_CONFIG.SERVER;
+   async function jellyfinFetch(endpoint, params = {}) {
+    // Build proper Jellyfin API URL
+    const baseUrl = JELLYFIN_CONFIG.SERVER;
     
-    const url = new URL(`${serverUrl}${endpoint}`, window.location.origin);
-    url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
-    
-    Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-            url.searchParams.append(key, params[key]);
-        }
-    });
-    
-    console.log('🔍 Fetching:', url.toString());
-    
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="flmtv-web", Version="1.0.0"`
+    // Don't use new URL() for relative paths
+    let url;
+    if (baseUrl.startsWith('http')) {
+        // Full URL (local testing)
+        url = new URL(`${baseUrl}${endpoint}`);
+    } else {
+        // Relative URL (Netlify production) - manually build it
+        const queryString = new URLSearchParams();
+        queryString.append('api_key', JELLYFIN_CONFIG.API_KEY);
+        
+        Object.keys(params).forEach(key => {
+            if (params[key] !== null && params[key] !== undefined) {
+                queryString.append(key, params[key]);
             }
         });
         
-        if (!response.ok) {
-            console.error('❌ Jellyfin API Error:', response.status, response.statusText);
+        url = `${baseUrl}${endpoint}?${queryString.toString()}`;
+        
+        console.log('🔍 Fetching:', url);
+        
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                console.error('❌ Jellyfin API Error:', response.status, response.statusText);
+                return null;
+            }
+            const data = await response.json();
+            console.log('✅ Response:', data);
+            return data;
+        } catch (error) {
+            console.error('❌ Fetch Error:', error);
             return null;
         }
-        const data = await response.json();
-        console.log('✅ Response:', data);
-        return data;
-    } catch (error) {
-        console.error('❌ Fetch Error:', error);
-        return null;
     }
-}
     
-    const url = new URL(`${baseUrl}${endpoint}`);
+    // For full URLs (http://...)
     url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
     
     Object.keys(params).forEach(key => {
