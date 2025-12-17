@@ -1260,6 +1260,11 @@
             </nav>
             
             <div class="nav-actions">
+                <!-- Back to Home Button -->
+                <button class="btn-icon" onclick="window.location.href='landing.html'" title="Back to Home" style="border-color: var(--accent); color: var(--accent);">
+                    <i class="fas fa-home"></i>
+                </button>
+                
                 <button class="btn-icon" onclick="openPanel('chatPanel')" title="Chat">
                     <i class="fas fa-comments"></i>
                 </button>
@@ -1303,11 +1308,11 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="category-nav-scroll" id="categoryNavScroll">
-                    <!-- LIVE CHANNEL 26.5 - ALWAYS FIRST -->
-                    <div class="live-channel-card" onclick="openLiveStream()">
+                    <!-- LIVE CHANNEL 26.5 - SAME LINK AS LIVE TV MENU -->
+                    <div class="live-channel-card" onclick="openLiveTV()" style="cursor: pointer;" title="Watch Channel 26.5 Live">
                         <iframe 
                             class="live-preview-video" 
-                            src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                            src="http://flmtv26.duckdns.org:8088/" 
                             frameborder="0" 
                             scrolling="no"
                             style="pointer-events: none;"
@@ -1541,10 +1546,10 @@
                 <button class="close-live-tv" onclick="closeLiveTV()">✕</button>
             </div>
             <div class="live-tv-player">
-                <!-- Castr Live Stream - Channel 26.5 -->
+                <!-- vMix Web Controller - Channel 26.5 -->
                 <iframe 
                     id="liveStreamFrame"
-                    src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                    src="http://flmtv26.duckdns.org:8088/" 
                     frameborder="0" 
                     scrolling="no" 
                     allow="autoplay; encrypted-media; fullscreen"
@@ -2483,8 +2488,8 @@
             const video = document.getElementById('liveVideo');
             modal.classList.add('active');
             
-            // vMix HLS stream URL via Nginx
-            const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
+            // vMix Web Controller HLS stream
+            const streamUrl = 'http://flmtv26.duckdns.org:8088/';
             
             if (Hls.isSupported()) {
                 if (hls) {
