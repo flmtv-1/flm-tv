@@ -1619,8 +1619,9 @@
         //  JELLYFIN CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
         
-      const JELLYFIN_CONFIG = {
-    SERVER: '/jellyfin',
+     const JELLYFIN_CONFIG = {
+    SERVER: '/jellyfin',  // Use Netlify proxy for API calls
+    DIRECT_SERVER: 'http://flmtv26.duckdns.org:8096',  // Direct URL for iframe
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
     

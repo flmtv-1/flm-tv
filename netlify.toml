@@ -3,7 +3,6 @@
   to = "http://flmtv26.duckdns.org:8096/:splat"
   status = 200
   force = true
-  headers = {X-From = "Netlify"}
 
 [[headers]]
   for = "/*"
