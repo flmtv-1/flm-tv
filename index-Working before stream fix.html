@@ -1238,22 +1238,6 @@
 </head>
 <body>
 
-  <!-- 🚪 FLM Gate Overlay (covers any Jellyfin/login flashes) -->
-  <div id="flmGateOverlay" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(0,0,0,0.82); backdrop-filter: blur(6px);">
-    <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;">
-      <div style="width:min(560px, 92vw); background:rgba(12,18,32,0.96); border:2px solid rgba(252,209,22,0.55); border-radius:22px; padding:28px 22px; box-shadow:0 20px 70px rgba(0,0,0,0.55); text-align:center;">
-        <div style="font-size:14px; letter-spacing:.18em; color:rgba(252,209,22,0.95); margin-bottom:10px;">FLM TV</div>
-        <div style="font-size:34px; font-weight:800; color:#fff; margin:4px 0 10px;">🎬 Enter The Movie Zone</div>
-        <div style="color:rgba(255,255,255,0.75); line-height:1.45; margin:0 0 16px;">
-          Browse free titles now. Optional sign-in is available for chat, AI, and membership features.
-        </div>
-        <button id="flmEnterBtn" style="width:100%; padding:14px 16px; border:0; border-radius:14px; font-weight:800; font-size:18px; cursor:pointer; background:linear-gradient(90deg,#0ea5e9,#22c55e); color:#06121a;">✅ Enter</button>
-        <div style="margin-top:12px; font-size:12px; color:rgba(255,255,255,0.55);">Tip: add <b>?gate=1</b> to the URL to force this screen for testing.</div>
-      </div>
-    </div>
-  </div>
-
-
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HEADER                                                         -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -1320,7 +1304,7 @@
                 </button>
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - ALWAYS FIRST -->
-                    <div class="live-channel-card" onclick="openLiveTV()">
+                    <div class="live-channel-card" onclick="openLiveStream()">
                         <iframe 
                             class="live-preview-video" 
                             src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
@@ -1635,38 +1619,37 @@
         //  JELLYFIN CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
         
-        const JELLYFIN_CONFIG = {
-            // DuckDNS domain with port 8096 - accessible WORLDWIDE!
-            SERVER: 'http://flmtv26.duckdns.org:8096',
-            API_KEY: '62131ee22c0141c6b651be75a7444350',
-            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-            
-            COLLECTIONS: [
-                { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
-                { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
-                { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
-                { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
-                { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
-                { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
-                { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
-                { id: 'a2347f687b9669054c8d2abbfd50889f', name: '07 GOLDEN CLASSICS', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=a2347f687b9669054c8d2abbfd50889f&collectionType=movies' },
-                { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
-                { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
-                { id: '48d96f519acf2fce600d06a4365632f4', name: '10 FLM NEWS FILIPINA', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
-                { id: 'f412dea8334c1260f2bfd6cfa91dddf5', name: '11 ASIAN Animation', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=f412dea8334c1260f2bfd6cfa91dddf5&collectionType=tvshows' },
-                { id: '5f2f2ace0732efb63f625d1346b9c766', name: '12 ZAINA ZONE', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
-                { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: '13 COMEDY', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
-                { id: '56f8dc1075207592d3248a09358c587a', name: '14 DOCUMENTARIES', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
-                { id: '7a941a433e06ec0512b64b1d3b52c782', name: '15 MIDNIGHT CIRCUIT', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
-                { id: 'c95ec3ddc1e8cf075ba24840d92ad9bd', name: 'BEYOND REALITY', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=c95ec3ddc1e8cf075ba24840d92ad9bd&collectionType=tvshows' },
-                { id: '4e985111ed7f570b595204d82adb02f3', name: 'Books', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=4e985111ed7f570b595204d82adb02f3&serverId=db6bb6388c8c4c70825698639853ede6' },
-                { id: '8e596d67e544894b4502eba9aeb49b01', name: 'ESCAPE', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8e596d67e544894b4502eba9aeb49b01&collectionType=tvshows' },
-                { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
-                { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
-                { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
-                { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
-            ]
-        };
+      const JELLYFIN_CONFIG = {
+    SERVER: '/jellyfin',
+    API_KEY: '62131ee22c0141c6b651be75a7444350',
+    USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
+    
+    COLLECTIONS: [
+        { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
+        { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
+        { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
+        { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
+        { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
+        { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
+        { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
+        { id: 'a2347f687b9669054c8d2abbfd50889f', name: '07 GOLDEN CLASSICS', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=a2347f687b9669054c8d2abbfd50889f&collectionType=movies' },
+        { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
+        { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
+        { id: '48d96f519acf2fce600d06a4365632f4', name: '10 FLM NEWS FILIPINA', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
+        { id: 'f412dea8334c1260f2bfd6cfa91dddf5', name: '11 ASIAN Animation', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=f412dea8334c1260f2bfd6cfa91dddf5&collectionType=tvshows' },
+        { id: '5f2f2ace0732efb63f625d1346b9c766', name: '12 ZAINA ZONE', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
+        { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: '13 COMEDY', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
+        { id: '56f8dc1075207592d3248a09358c587a', name: '14 DOCUMENTARIES', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
+        { id: '7a941a433e06ec0512b64b1d3b52c782', name: '15 MIDNIGHT CIRCUIT', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
+        { id: 'c95ec3ddc1e8cf075ba24840d92ad9bd', name: 'BEYOND REALITY', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=c95ec3ddc1e8cf075ba24840d92ad9bd&collectionType=tvshows' },
+        { id: '4e985111ed7f570b595204d82adb02f3', name: 'Books', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=4e985111ed7f570b595204d82adb02f3&serverId=db6bb6388c8c4c70825698639853ede6' },
+        { id: '8e596d67e544894b4502eba9aeb49b01', name: 'ESCAPE', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8e596d67e544894b4502eba9aeb49b01&collectionType=tvshows' },
+        { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
+        { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
+        { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
+        { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
+    ]
+};
         
         // ═══════════════════════════════════════════════════════════════
         //  FIREBASE & API CONFIGURATION
@@ -1704,51 +1687,81 @@
         // ═══════════════════════════════════════════════════════════════
         
         
-        async function jellyfinFetch(endpoint, params = {}) {
-            // Build URL for Netlify Function proxy
-            const proxyUrl = new URL('/.netlify/functions/jellyfin', window.location.origin);
-            
-            // Build the full Jellyfin path with params
-            const jellyfinPath = new URL(endpoint, 'http://temp');
-            jellyfinPath.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
-            
-            Object.keys(params).forEach(key => {
-                if (params[key] !== null && params[key] !== undefined) {
-                    jellyfinPath.searchParams.append(key, params[key]);
+     async function jellyfinFetch(endpoint, params = {}) {
+    const baseUrl = JELLYFIN_CONFIG.SERVER;
+    
+    if (!baseUrl.startsWith('http')) {
+        const queryString = new URLSearchParams();
+        queryString.append('api_key', JELLYFIN_CONFIG.API_KEY);
+        
+        Object.keys(params).forEach(key => {
+            if (params[key] !== null && params[key] !== undefined) {
+                queryString.append(key, params[key]);
+            }
+        });
+        
+        const url = `${baseUrl}${endpoint}?${queryString.toString()}`;
+        
+        console.log('🔍 Fetching:', url);
+        
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
                 }
             });
             
-            // Pass the full path to the proxy
-            proxyUrl.searchParams.append('path', jellyfinPath.pathname + jellyfinPath.search);
-            
-            console.log('🔍 Fetching via proxy:', proxyUrl.toString());
-            
-            try {
-                const response = await fetch(proxyUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    console.error('❌ Proxy Error:', response.status, response.statusText);
-                    return null;
-                }
-                const data = await response.json();
-                console.log('✅ Response:', data);
-                return data;
-            } catch (error) {
-                console.error('❌ Fetch Error:', error);
+            if (!response.ok) {
+                console.error('❌ Jellyfin API Error:', response.status, response.statusText);
                 return null;
             }
+            const data = await response.json();
+            console.log('✅ Response:', data);
+            return data;
+        } catch (error) {
+            console.error('❌ Fetch Error:', error);
+            return null;
         }
+    }
+    
+    const url = new URL(`${baseUrl}${endpoint}`);
+    url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
+    
+    Object.keys(params).forEach(key => {
+        if (params[key] !== null && params[key] !== undefined) {
+            url.searchParams.append(key, params[key]);
+        }
+    });
+    
+    console.log('🔍 Fetching:', url.toString());
+    
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'omit',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         
-        function getImageUrl(itemId, imageTag, type = 'Primary') {
-            // Use proxy for images too
-            const imagePath = `/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
-            return `/.netlify/functions/jellyfin?path=${encodeURIComponent(imagePath)}`;
+        if (!response.ok) {
+            console.error('❌ Jellyfin API Error:', response.status, response.statusText);
+            return null;
         }
+        const data = await response.json();
+        console.log('✅ Response:', data);
+        return data;
+    } catch (error) {
+        console.error('❌ Fetch Error:', error);
+        return null;
+    }
+}
+        
+       function getImageUrl(itemId, imageTag, type = 'Primary') {
+    return `${JELLYFIN_CONFIG.SERVER}/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
+}
         
         function scrollCategoryNav(direction) {
             const scroll = document.getElementById('categoryNavScroll');
@@ -1898,7 +1911,7 @@
                             card.onclick = () => playJellyfinItem(item.Id);
                             
                             // Try multiple image sources for better compatibility
-                            let imageUrl = 'https://via.placeholder.com/200x300?text=No+Image';
+                            let imageUrl = 'https://placehold.co/200x300?text=No+Image';
                             
                             if (item.ImageTags?.Primary) {
                                 imageUrl = getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
@@ -1915,7 +1928,7 @@
                                      alt="${item.Name}" 
                                      class="content-card-image" 
                                      loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/200x300?text=${encodeURIComponent(item.Name)}'">
+                                     onerror="this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}'">
                                 <div class="content-card-overlay">
                                     <div class="content-card-title">${item.Name}</div>
                                     <div class="content-card-info">
@@ -2394,7 +2407,7 @@
                     tmdbData.results.slice(0, 3).forEach(item => {
                         const posterUrl = item.poster_path 
                             ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-                            : 'https://via.placeholder.com/200x300?text=No+Poster';
+                            : 'https://placehold.co/200x300?text=No+Poster';
                         
                         const title = item.title || item.name;
                         const year = item.release_date ? `(${item.release_date.substring(0, 4)})` : 
@@ -2560,123 +2573,6 @@
         }
         
     </script>
-
-
-<script>
-/* 🧭 FLM Navigation + Gate Fixes (safe, non-destructive) */
-(function () {
-  function qs(sel, root){ return (root||document).querySelector(sel); }
-  function qsa(sel, root){ return Array.from((root||document).querySelectorAll(sel)); }
-
-  // 🚪 Gate overlay: show once (or force via ?gate=1)
-  function initGate(){
-    try{
-      const force = new URLSearchParams(location.search).get('gate') === '1';
-      const seen = localStorage.getItem('flm_gate_seen') === '1';
-      const gate = qs('#flmGateOverlay');
-      const btn = qs('#flmEnterBtn');
-      if(!gate || !btn) return;
-
-      if(force || !seen){
-        gate.style.display = 'block';
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-      }
-      btn.addEventListener('click', () => {
-        gate.style.display = 'none';
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        localStorage.setItem('flm_gate_seen','1');
-      });
-    }catch(e){ console.warn('Gate init error', e); }
-  }
-
-  // 🔝 Helpers to scroll to first matching category section
-  function scrollToTop(){ window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-  function scrollToCategoryNav(){
-    const el = qs('.category-nav-section') || qs('.category-nav') || qs('#categoryNav');
-    if(el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    else scrollToTop();
-  }
-
-  function scrollToFirstCategory(matchWords){
-    const titles = qsa('.category-title');
-    const lowerWords = (matchWords||[]).map(w => String(w).toLowerCase());
-    for(const t of titles){
-      const txt = (t.textContent||'').toLowerCase();
-      if(lowerWords.some(w => txt.includes(w))){
-        const sec = t.closest('.category-section') || t;
-        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-      }
-    }
-    // fallback: scroll to first category section
-    const first = qs('.category-section');
-    if(first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    else scrollToTop();
-  }
-
-  // 🧭 Fix top menu links (Home / Movies / TV Shows / Categories)
-  function initTopNav(){
-    const nav = qs('.top-nav') || qs('nav') || document;
-    const links = qsa('a', nav).filter(a => (a.textContent||'').trim().length);
-    function bind(label, handler){
-      const a = links.find(x => (x.textContent||'').trim().toLowerCase() === label.toLowerCase());
-      if(!a) return;
-      a.addEventListener('click', (ev) => { ev.preventDefault(); handler(); });
-      a.setAttribute('href','#');
-      a.style.cursor = 'pointer';
-    }
-    bind('Home', scrollToTop);
-    bind('Movies', () => scrollToFirstCategory(['movie','movies']));
-    bind('TV Shows', () => scrollToFirstCategory(['tv','shows','series']));
-    bind('Categories', scrollToCategoryNav);
-
-    // 🔴 Live TV top link already calls openLiveTV via onclick; keep as-is.
-  }
-
-  // 🎬 Ensure the Live TV hero card opens the SAME player as menu
-  function initLiveCard(){
-    const liveCard = qs('.live-channel-card');
-    if(liveCard){
-      liveCard.addEventListener('click', (e) => {
-        // If they clicked the iframe itself, this may not fire; still try.
-        try { window.openLiveTV && window.openLiveTV(); } catch(_) {}
-      });
-    }
-  }
-
-  // 📱 Mobile fit: avoid needing to zoom out
-  function ensureViewport(){
-    const meta = document.querySelector('meta[name="viewport"]');
-    if(!meta){
-      const m = document.createElement('meta');
-      m.name='viewport';
-      m.content='width=device-width, initial-scale=1, viewport-fit=cover';
-      document.head.appendChild(m);
-    }else{
-      // keep your existing settings but ensure width=device-width is present
-      const c = meta.getAttribute('content') || '';
-      if(!/width\s*=\s*device-width/i.test(c)){
-        meta.setAttribute('content', ('width=device-width, initial-scale=1, viewport-fit=cover, ' + c).replace(/,\s*,/g, ','));
-      }
-    }
-  }
-
-  // Run ASAP + after DOM
-  ensureViewport();
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', () => {
-      initGate();
-      initTopNav();
-      initLiveCard();
-    });
-  }else{
-    initGate(); initTopNav(); initLiveCard();
-  }
-})();
-</script>
 
 </body>
 </html>
