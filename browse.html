@@ -2504,8 +2504,8 @@
             const video = document.getElementById('liveVideo');
             modal.classList.add('active');
             
-            // Your local HLS stream URL
-            const streamUrl = '/hls/FLMTV.m3u8';
+            // Your vMix HLS stream URL via DuckDNS
+            const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
                 if (hls) {
@@ -2593,7 +2593,83 @@
             }
         }
         
-    </script>
+    
+// ═══════════════════════════════════════════════════════════════
+// ✅ FIX: "View All" (NO Jellyfin Web, NO login/logo flash)
+// Uses Jellyfin API only + in-page navigation
+// ═══════════════════════════════════════════════════════════════
+let activeCollectionId = null;
+let activeCollectionName = null;
+
+function openCollectionInline(collectionId, collectionName) {
+  activeCollectionId = collectionId;
+  activeCollectionName = collectionName || 'Collection';
+  // push state so browser back works
+  try { history.pushState({ page: 'collection', id: collectionId }, '', `?collectionId=${encodeURIComponent(collectionId)}`); } catch(e){}
+  loadCollectionPage(collectionId, activeCollectionName);
+}
+
+window.addEventListener('popstate', (e) => {
+  const params = new URLSearchParams(location.search);
+  const cid = params.get('collectionId');
+  if (cid) {
+    loadCollectionPage(cid, activeCollectionName || 'Collection');
+  } else {
+    // back to normal browse
+    activeCollectionId = null;
+    activeCollectionName = null;
+    if (typeof renderAllRows === 'function') renderAllRows();
+  }
+});
+
+async function loadCollectionPage(collectionId, title) {
+  // You should already have a main grid/container; we reuse the existing "allMoviesGrid" if present
+  const grid = document.getElementById('allMoviesGrid') || document.getElementById('moviesGrid') || document.querySelector('.movies-grid');
+  const heading = document.getElementById('pageTitle') || document.querySelector('h1') || null;
+
+  if (heading) heading.textContent = title || 'Collection';
+  if (!grid) { console.warn('No grid found to render collection'); return; }
+
+  grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">Loading ${title || 'collection'}…</div>`;
+
+  try {
+    const url = `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${encodeURIComponent(collectionId)}&Recursive=true&IncludeItemTypes=Movie,Series,Episode&Fields=PrimaryImageAspectRatio,PremiereDate,ProductionYear,RunTimeTicks,Overview&SortBy=SortName&SortOrder=Ascending`;
+    const data = await jellyfinFetch(url);
+
+    const items = (data && data.Items) ? data.Items : [];
+    if (!items.length) {
+      grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">No items found in this collection.</div>`;
+      return;
+    }
+
+    // Reuse your existing card renderer if you have one
+    if (typeof createMovieCard === 'function') {
+      grid.innerHTML = '';
+      items.forEach(item => grid.appendChild(createMovieCard(item)));
+      return;
+    }
+
+    // Fallback simple renderer
+    grid.innerHTML = items.map(item => {
+      const name = (item.Name || 'Untitled').replace(/"/g,'&quot;');
+      const img = item.ImageTags && item.ImageTags.Primary
+        ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
+        : '';
+      return `
+        <div style="width:180px;margin:10px;display:inline-block;vertical-align:top;">
+          <div style="width:180px;height:270px;border-radius:12px;overflow:hidden;background:#111827;border:1px solid rgba(255,255,255,.08);">
+            ${img ? `<img src="${img}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">` : ''}
+          </div>
+          <div style="margin-top:8px;color:#e2e8f0;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
+        </div>`;
+    }).join('');
+  } catch (err) {
+    console.error(err);
+    grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
+  }
+}
+
+</script>
 
 </body>
 </html>

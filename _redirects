@@ -1,5 +1,9 @@
 # Proxy Jellyfin API to avoid CORS issues
 /jellyfin/*  http://flmtv26.duckdns.org:8096/:splat  200
+/hls/*     http://flmtv26.duckdns.org:8080/hls/:splat     200
 
 # Handle all routes for SPA
 /*  /index.html  200
+
+
+
