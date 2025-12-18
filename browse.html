@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Part 2: Visual Categories</title>
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -1253,9 +1252,6 @@
     </style>
 </head>
 <body>
-    <!-- 🔄 Loading overlay for Jellyfin frame -->
-    <div id="flmFrameLoading" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center;color:#fcd116;font-family:system-ui;font-size:20px;">Loading…</div>
-
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HEADER                                                         -->
@@ -1331,7 +1327,7 @@
                     <div class="live-channel-card" onclick="openLiveTV()">
                         <iframe 
                             class="live-preview-video" 
-                            src="http://flmtv26.duckdns.org:8088/" 
+                            src="http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8" 
                             frameborder="0" 
                             scrolling="no"
                             style="pointer-events: none;"
@@ -1568,7 +1564,7 @@
                 <!-- vMix Web Controller - Channel 26.5 -->
                 <iframe 
                     id="liveStreamFrame"
-                    src="http://flmtv26.duckdns.org:8088/" 
+                    src="http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8" 
                     frameborder="0" 
                     scrolling="no" 
                     allow="autoplay; encrypted-media; fullscreen"
@@ -1625,16 +1621,7 @@
     <!--  HLS.JS FOR LIVE STREAMING                                      -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest">
-        // 🔙 Browser back button closes the Jellyfin viewer overlay
-        window.addEventListener('popstate', () => {
-            const viewer = document.getElementById('jellyfinViewer');
-            if (viewer && viewer.classList.contains('active')) {
-                closeJellyfinViewer();
-            }
-        });
-
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  FIREBASE & JAVASCRIPT                                          -->
@@ -2205,18 +2192,12 @@
         function playJellyfinItem(itemId) {
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
-            const loading = document.getElementById('flmFrameLoading');
-            if (loading) { loading.style.display = 'flex'; }
-            frame.style.opacity = '0';
             
             // Open Jellyfin with API key to bypass login
             frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             
             // Inject custom FLM TV branding after iframe loads
             frame.onload = function() {
-                try { frame.style.opacity = '1'; } catch(e){}
-                try { if (loading) loading.style.display='none'; } catch(e){}
-
                 try {
                     injectCustomBranding(frame);
                 } catch (e) {
@@ -2225,7 +2206,6 @@
             };
             
             viewer.classList.add('active');
-            try { history.pushState({page:'viewer'}, '', '#viewer'); } catch(e){}
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
         }
@@ -2524,7 +2504,7 @@
             modal.classList.add('active');
             
             // Your local HLS stream URL
-            const streamUrl = 'http://flmtv26.duckdns.org:8096:8080/hls/FLMTV.m3u8';
+            const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
                 if (hls) {
