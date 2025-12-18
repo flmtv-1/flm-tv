@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Part 2: Visual Categories</title>
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -1328,7 +1327,7 @@
                     <div class="live-channel-card" onclick="openLiveTV()">
                         <iframe 
                             class="live-preview-video" 
-                            src="http://flmtv26.duckdns.org:8088/" 
+                            src="http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8" 
                             frameborder="0" 
                             scrolling="no"
                             style="pointer-events: none;"
@@ -1565,7 +1564,7 @@
                 <!-- vMix Web Controller - Channel 26.5 -->
                 <iframe 
                     id="liveStreamFrame"
-                    src="http://flmtv26.duckdns.org:8088/" 
+                    src="http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8" 
                     frameborder="0" 
                     scrolling="no" 
                     allow="autoplay; encrypted-media; fullscreen"
@@ -1606,149 +1605,6 @@
             </div>
         </div>
         <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen"></iframe>
-        
-        <!-- ✅ FIRST-TIME LOGIN HELPER OVERLAY -->
-        <div id="jellyfinLoginHelper" style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(59, 7, 100, 0.95) 50%, rgba(15, 23, 42, 0.98) 100%);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            backdrop-filter: blur(15px);
-            animation: cosmicGlow 4s ease-in-out infinite;
-        ">
-            <style>
-                @keyframes cosmicGlow {
-                    0%, 100% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                }
-                @keyframes float {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-15px); }
-                }
-                @keyframes pulse {
-                    0%, 100% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                }
-                @keyframes starTwinkle {
-                    0%, 100% { opacity: 0.3; }
-                    50% { opacity: 1; }
-                }
-            </style>
-            <div style="
-                max-width: 600px;
-                padding: 3.5rem;
-                text-align: center;
-                background: linear-gradient(135deg, rgba(0, 56, 168, 0.9) 0%, rgba(139, 92, 246, 0.8) 50%, rgba(0, 56, 168, 0.9) 100%);
-                border-radius: 25px;
-                border: 3px solid var(--accent);
-                box-shadow: 
-                    0 0 60px rgba(252, 209, 22, 0.4),
-                    0 0 100px rgba(139, 92, 246, 0.3),
-                    inset 0 0 60px rgba(252, 209, 22, 0.1);
-                position: relative;
-                overflow: hidden;
-            ">
-                <!-- Animated stars background -->
-                <div style="position: absolute; top: 10%; left: 10%; width: 3px; height: 3px; background: white; border-radius: 50%; animation: starTwinkle 3s infinite;"></div>
-                <div style="position: absolute; top: 30%; right: 15%; width: 2px; height: 2px; background: var(--accent); border-radius: 50%; animation: starTwinkle 2s infinite 0.5s;"></div>
-                <div style="position: absolute; bottom: 25%; left: 20%; width: 2px; height: 2px; background: var(--neon-green); border-radius: 50%; animation: starTwinkle 4s infinite 1s;"></div>
-                <div style="position: absolute; top: 60%; right: 25%; width: 3px; height: 3px; background: white; border-radius: 50%; animation: starTwinkle 3.5s infinite 1.5s;"></div>
-                <div style="position: absolute; bottom: 40%; right: 10%; width: 2px; height: 2px; background: var(--accent); border-radius: 50%; animation: starTwinkle 2.5s infinite 0.8s;"></div>
-                
-                <!-- Content -->
-                <div style="position: relative; z-index: 1;">
-                    <div style="
-                        font-size: 5rem; 
-                        margin-bottom: 1rem; 
-                        animation: float 3s ease-in-out infinite;
-                        filter: drop-shadow(0 0 20px rgba(252, 209, 22, 0.8));
-                    ">🛸</div>
-                    
-                    <h2 style="
-                        color: var(--accent); 
-                        font-size: 2.5rem; 
-                        margin-bottom: 0.5rem;
-                        font-weight: 900;
-                        text-transform: uppercase;
-                        letter-spacing: 2px;
-                        text-shadow: 0 0 20px rgba(252, 209, 22, 0.6);
-                        animation: pulse 2s ease-in-out infinite;
-                    ">
-                        Portal Activating...
-                    </h2>
-                    
-                    <div style="
-                        font-size: 1.8rem;
-                        background: linear-gradient(135deg, var(--neon-green) 0%, var(--accent) 50%, var(--cosmic-purple) 100%);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                        background-clip: text;
-                        font-weight: 800;
-                        margin-bottom: 1.5rem;
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
-                    ">
-                        You Are Now Entering<br>The 7th Realm of FLM
-                    </div>
-                    
-                    <p style="
-                        color: var(--text); 
-                        font-size: 1.2rem; 
-                        margin-bottom: 1.5rem; 
-                        line-height: 1.8;
-                        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-                    ">
-                        <strong style="color: var(--neon-green);">Out of This World</strong> entertainment awaits! 🌍✨<br>
-                        Select <strong style="color: var(--accent);">"Public"</strong> to access the vast library of multicultural content.
-                    </p>
-                    
-                    <p style="
-                        color: var(--text-secondary); 
-                        font-size: 1rem; 
-                        margin-bottom: 2.5rem;
-                        font-style: italic;
-                    ">
-                        🌟 One-time portal sync required - you'll be remembered across all realms! 🌟
-                    </p>
-                    
-                    <button onclick="hideLoginHelper()" style="
-                        background: linear-gradient(135deg, var(--neon-green) 0%, var(--accent) 100%);
-                        color: white;
-                        border: none;
-                        padding: 1.2rem 3rem;
-                        font-size: 1.3rem;
-                        font-weight: 700;
-                        border-radius: 50px;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
-                    " 
-                    onmouseover="this.style.transform='scale(1.1) translateY(-5px)'; this.style.boxShadow='0 15px 40px rgba(34, 197, 94, 0.6)'" 
-                    onmouseout="this.style.transform='scale(1) translateY(0)'; this.style.boxShadow='0 10px 30px rgba(34, 197, 94, 0.4)'">
-                        🚀 Enter The 7th Realm 🚀
-                    </button>
-                    
-                    <div style="
-                        margin-top: 2rem;
-                        padding-top: 2rem;
-                        border-top: 1px solid rgba(252, 209, 22, 0.3);
-                        color: var(--text-secondary);
-                        font-size: 0.9rem;
-                    ">
-                        <em>Las Vegas's First Original Multicultural Television Network</em><br>
-                        📺 Channel 26.5 • 🌐 Streaming Worldwide
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     
     <!-- Floating Chat/AI buttons for main page -->
@@ -1787,13 +1643,6 @@
     SERVER: '/jellyfin',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-    
-    // ✅ ADD YOUR ACCESS TOKEN HERE TO BYPASS LOGIN
-    // To get your access token:
-    // 1. Log into Jellyfin web (http://flmtv26.duckdns.org:8096)
-    // 2. Press F12 → Application → Local Storage → jellyfin_credentials
-    // 3. Copy the "AccessToken" value and paste it below
-    ACCESS_TOKEN: '', // Paste your Jellyfin access token here
     
     COLLECTIONS: [
         { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
@@ -2369,70 +2218,16 @@
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             
             if (collection && collection.url) {
-                // Build URL with API key and access token if available
-                let url = collection.url;
-                const separator = url.includes('?') ? '&' : '?';
-                url += `${separator}api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                
-                // ✅ ADD ACCESS TOKEN IF PROVIDED (bypasses login)
-                if (JELLYFIN_CONFIG.ACCESS_TOKEN && JELLYFIN_CONFIG.ACCESS_TOKEN.length > 0) {
-                    url += `&X-Emby-Token=${JELLYFIN_CONFIG.ACCESS_TOKEN}`;
-                }
-                
-                frame.src = url;
+                // Use the full working URL with API key
+                frame.src = `${collection.url}${collection.url.includes('?') ? '&' : '?'}api_key=${JELLYFIN_CONFIG.API_KEY}`;
             } else {
                 // Fallback to generic URL if not found
-                let url = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                
-                if (JELLYFIN_CONFIG.ACCESS_TOKEN && JELLYFIN_CONFIG.ACCESS_TOKEN.length > 0) {
-                    url += `&X-Emby-Token=${JELLYFIN_CONFIG.ACCESS_TOKEN}`;
-                }
-                
-                frame.src = url;
+                frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             }
             
-            // ✅ SHOW FIRST-TIME LOGIN HELPER if user hasn't seen it before
-            const hasSeenHelper = localStorage.getItem('flmtv_jellyfin_helper_seen');
-            if (!hasSeenHelper) {
-                setTimeout(() => {
-                    const helper = document.getElementById('jellyfinLoginHelper');
-                    if (helper) {
-                        helper.style.display = 'flex';
-                    }
-                }, 2000); // Show after 2 seconds
-            }
-            
-            // ✅ AUTO-CLICK PUBLIC USER & Inject custom FLM TV branding after iframe loads
+            // Inject custom FLM TV branding after iframe loads
             frame.onload = function() {
                 try {
-                    // Auto-click the "Public" user button if login screen appears
-                    setTimeout(() => {
-                        try {
-                            const iframeDoc = frame.contentDocument || frame.contentWindow.document;
-                            
-                            // Look for the Public user button in Jellyfin login screen
-                            const publicUserCard = iframeDoc.querySelector('[data-username="Public"], .card[data-id*="Public"], .manualLoginForm + div .card');
-                            
-                            if (publicUserCard) {
-                                console.log('✅ Auto-clicking Public user...');
-                                publicUserCard.click();
-                            }
-                            
-                            // Alternative: try to find and click by text content
-                            const allCards = iframeDoc.querySelectorAll('.card, .listItem');
-                            for (let card of allCards) {
-                                if (card.textContent.toLowerCase().includes('public')) {
-                                    console.log('✅ Found Public user, clicking...');
-                                    card.click();
-                                    break;
-                                }
-                            }
-                        } catch (e) {
-                            console.log('Cannot auto-click (CORS restriction):', e);
-                        }
-                    }, 1500); // Wait 1.5 seconds for Jellyfin to load
-                    
-                    // Inject custom branding
                     injectCustomBranding(frame);
                 } catch (e) {
                     console.log('Could not inject branding (CORS):', e);
@@ -2442,16 +2237,6 @@
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
-        }
-        
-        // ✅ HIDE LOGIN HELPER and remember user preference
-        function hideLoginHelper() {
-            const helper = document.getElementById('jellyfinLoginHelper');
-            if (helper) {
-                helper.style.display = 'none';
-                // Remember that user has seen the helper
-                localStorage.setItem('flmtv_jellyfin_helper_seen', 'true');
-            }
         }
         
         // Inject FLM TV branding into Jellyfin iframe
@@ -2718,7 +2503,7 @@
             const video = document.getElementById('liveVideo');
             modal.classList.add('active');
             
-            // Your vMix HLS stream URL via DuckDNS
+            // Your local HLS stream URL
             const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
@@ -2807,83 +2592,7 @@
             }
         }
         
-    
-// ═══════════════════════════════════════════════════════════════
-// ✅ FIX: "View All" (NO Jellyfin Web, NO login/logo flash)
-// Uses Jellyfin API only + in-page navigation
-// ═══════════════════════════════════════════════════════════════
-let activeCollectionId = null;
-let activeCollectionName = null;
-
-function openCollectionInline(collectionId, collectionName) {
-  activeCollectionId = collectionId;
-  activeCollectionName = collectionName || 'Collection';
-  // push state so browser back works
-  try { history.pushState({ page: 'collection', id: collectionId }, '', `?collectionId=${encodeURIComponent(collectionId)}`); } catch(e){}
-  loadCollectionPage(collectionId, activeCollectionName);
-}
-
-window.addEventListener('popstate', (e) => {
-  const params = new URLSearchParams(location.search);
-  const cid = params.get('collectionId');
-  if (cid) {
-    loadCollectionPage(cid, activeCollectionName || 'Collection');
-  } else {
-    // back to normal browse
-    activeCollectionId = null;
-    activeCollectionName = null;
-    if (typeof renderAllRows === 'function') renderAllRows();
-  }
-});
-
-async function loadCollectionPage(collectionId, title) {
-  // You should already have a main grid/container; we reuse the existing "allMoviesGrid" if present
-  const grid = document.getElementById('allMoviesGrid') || document.getElementById('moviesGrid') || document.querySelector('.movies-grid');
-  const heading = document.getElementById('pageTitle') || document.querySelector('h1') || null;
-
-  if (heading) heading.textContent = title || 'Collection';
-  if (!grid) { console.warn('No grid found to render collection'); return; }
-
-  grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">Loading ${title || 'collection'}…</div>`;
-
-  try {
-    const url = `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${encodeURIComponent(collectionId)}&Recursive=true&IncludeItemTypes=Movie,Series,Episode&Fields=PrimaryImageAspectRatio,PremiereDate,ProductionYear,RunTimeTicks,Overview&SortBy=SortName&SortOrder=Ascending`;
-    const data = await jellyfinFetch(url);
-
-    const items = (data && data.Items) ? data.Items : [];
-    if (!items.length) {
-      grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">No items found in this collection.</div>`;
-      return;
-    }
-
-    // Reuse your existing card renderer if you have one
-    if (typeof createMovieCard === 'function') {
-      grid.innerHTML = '';
-      items.forEach(item => grid.appendChild(createMovieCard(item)));
-      return;
-    }
-
-    // Fallback simple renderer
-    grid.innerHTML = items.map(item => {
-      const name = (item.Name || 'Untitled').replace(/"/g,'&quot;');
-      const img = item.ImageTags && item.ImageTags.Primary
-        ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
-        : '';
-      return `
-        <div style="width:180px;margin:10px;display:inline-block;vertical-align:top;">
-          <div style="width:180px;height:270px;border-radius:12px;overflow:hidden;background:#111827;border:1px solid rgba(255,255,255,.08);">
-            ${img ? `<img src="${img}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">` : ''}
-          </div>
-          <div style="margin-top:8px;color:#e2e8f0;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
-        </div>`;
-    }).join('');
-  } catch (err) {
-    console.error(err);
-    grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
-  }
-}
-
-</script>
+    </script>
 
 </body>
 </html>
