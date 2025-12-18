@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Out of This World Entertainment 🛸</title>
-<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
@@ -1253,6 +1254,15 @@
             }
         });
         
+        
+        // 🔴 Stream Error UI (simple)
+        function showStreamError(msg) {
+            try {
+                alert(msg);
+            } catch(e) {}
+            console.log('STREAM ERROR:', msg);
+        }
+
         // Video Stream
         let hls = null;
         
@@ -1267,6 +1277,11 @@
                 hls = new Hls({ enableWorker: true, lowLatencyMode: true });
                 hls.loadSource(VMIX_STREAM_URL);
                 hls.attachMedia(video);
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data && data.fatal) {
+                        showStreamError('Live stream error. If you are on HTTPS, the stream must also be HTTPS (or use a tunnel).');
+                    }
+                });
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     video.play().catch(e => console.log('Autoplay prevented'));
                 });
