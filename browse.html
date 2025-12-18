@@ -948,11 +948,6 @@
             border: none;
             background: #000;
         }
-        .floating-btn-ai::after {
-            content: 'Zaina AI';
-            position: absolute;
-            right: 70px;
-            top: 50%;
             transform: translateY(-50%);
             background: linear-gradient(135deg, var(--neon-green) 0%, var(--accent) 100%);
             color: var(--bg);
@@ -966,12 +961,12 @@
             pointer-events: none;
             transition: all 0.3s ease;
         }
-
+        
         .floating-btn-ai:hover::after {
             opacity: 1;
             right: 75px;
         }
-
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -2506,8 +2501,7 @@
             modal.classList.add('active');
             
             // Your local HLS stream URL
-            const streamUrl = 'http://10.0.0.4:8080/hls/FLMTV.m3u8'; // ✅ LAN URL (Computer 1 / nginx)
-            // 🌐 Public URL should be HTTPS (recommended): https://flmtv26.duckdns.org/hls/FLMTV.m3u8 (via Cloudflare Tunnel / reverse proxy)
+            const streamUrl = 'http://flmtv26.duckdns.org:8096:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
                 if (hls) {
