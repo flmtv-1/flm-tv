@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Part 2: Visual Categories</title>
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -1328,7 +1327,7 @@
                     <div class="live-channel-card" onclick="openLiveTV()">
                         <iframe 
                             class="live-preview-video" 
-                            src="http://flmtv26.duckdns.org:8088/" 
+                            src="http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8" 
                             frameborder="0" 
                             scrolling="no"
                             style="pointer-events: none;"
@@ -1565,7 +1564,7 @@
                 <!-- vMix Web Controller - Channel 26.5 -->
                 <iframe 
                     id="liveStreamFrame"
-                    src="http://flmtv26.duckdns.org:8088/" 
+                    src="http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8" 
                     frameborder="0" 
                     scrolling="no" 
                     allow="autoplay; encrypted-media; fullscreen"
@@ -2505,7 +2504,7 @@
             modal.classList.add('active');
             
             // Your local HLS stream URL
-            const streamUrl = '/hls/FLMTV.m3u8';
+            const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
                 if (hls) {
