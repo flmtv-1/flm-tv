@@ -2019,91 +2019,22 @@
         //  LIVE TV CONTROLS
         // ═══════════════════════════════════════════════════════════════
         
-        // Global HLS instance for Live TV modal
-let liveTvHls = null;
-
-function openLiveTV() {
-    console.log('🔴 Opening Live Channel 26.5...');
-    const modal = document.getElementById('liveTvModal');
-    const video = document.getElementById('liveTvVideo');
-    const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
-    
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    if (Hls.isSupported()) {
-        // Destroy previous instance if exists
-        if (liveTvHls) {
-            liveTvHls.destroy();
+        function openLiveTV() {
+            const modal = document.getElementById('liveTvModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
         
-        // Create new HLS instance
-        liveTvHls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: true,
-            backBufferLength: 90,
-            maxBufferLength: 30,
-            maxMaxBufferLength: 600,
-            startLevel: -1,
-            debug: false
-        });
+        function closeLiveTV() {
+            const modal = document.getElementById('liveTvModal');
+            const frame = document.getElementById('liveStreamFrame');
+            
+            modal.classList.remove('active');
+            // Reload iframe to stop stream when closing
+            frame.src = frame.src;
+            document.body.style.overflow = '';
+        }
         
-        liveTvHls.loadSource(streamUrl);
-        liveTvHls.attachMedia(video);
-        
-        liveTvHls.on(Hls.Events.MANIFEST_PARSED, function() {
-            console.log('✅ Live stream loaded');
-            video.play().catch(e => {
-                console.log('Autoplay prevented, user interaction needed:', e);
-            });
-        });
-        
-        liveTvHls.on(Hls.Events.ERROR, function(event, data) {
-            if (data.fatal) {
-                console.error('❌ HLS Fatal Error:', data);
-                switch(data.type) {
-                    case Hls.ErrorTypes.NETWORK_ERROR:
-                        console.log('Network error, trying to recover...');
-                        liveTvHls.startLoad();
-                        break;
-                    case Hls.ErrorTypes.MEDIA_ERROR:
-                        console.log('Media error, trying to recover...');
-                        liveTvHls.recoverMediaError();
-                        break;
-                    default:
-                        liveTvHls.destroy();
-                        alert('Cannot load live stream. Please check if vMix/Nginx is running.');
-                        break;
-                }
-            }
-        });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = streamUrl;
-        video.addEventListener('loadedmetadata', function() {
-            video.play().catch(e => {
-                console.log('Autoplay prevented:', e);
-            });
-        });
-    } else {
-        alert('Your browser does not support HLS streaming. Please try Chrome, Firefox, or Safari.');
-    }
-}
-
-function closeLiveTV() {
-    console.log('Closing live stream...');
-    const modal = document.getElementById('liveTvModal');
-    const video = document.getElementById('liveTvVideo');
-    
-    modal.classList.remove('active');
-    video.pause();
-    video.src = '';
-    document.body.style.overflow = '';
-    
-    if (liveTvHls) {
-        liveTvHls.destroy();
-        liveTvHls = null;
-    }
-}        
         // Click outside modal to close
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal-overlay')) {
