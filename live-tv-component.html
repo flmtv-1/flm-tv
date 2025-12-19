@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV - Live Channel 26.5</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Live TV Card */
+        .live-tv-card {
+            background: linear-gradient(135deg, rgba(206, 17, 38, 0.2) 0%, rgba(0, 56, 168, 0.2) 100%);
+            border: 3px solid #fcd116;
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(252, 209, 22, 0.3);
+        }
+
+        .live-tv-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 48px rgba(252, 209, 22, 0.5);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .live-indicator {
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fcd116;
+            text-transform: uppercase;
+        }
+
+        .card-subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .watch-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #fcd116 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .watch-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);
+        }
+
+        /* Live Stream Modal */
+        .stream-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 2rem;
+        }
+
+        .stream-modal.active {
+            display: flex;
+        }
+
+        .stream-container {
+            background: #0f172a;
+            border-radius: 20px;
+            border: 3px solid #fcd116;
+            width: 100%;
+            max-width: 1200px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(252, 209, 22, 0.4);
+        }
+
+        .stream-header {
+            background: linear-gradient(135deg, #0038a8 0%, #ce1126 100%);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stream-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fcd116;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: white;
+            color: #0038a8;
+            transform: rotate(90deg);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background: #000;
+        }
+
+        #liveStreamVideo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        .stream-footer {
+            padding: 1.5rem;
+            text-align: center;
+            background: #1e293b;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #22c55e 0%, #0038a8 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);
+        }
+
+        .info-text {
+            color: #94a3b8;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+
+            .stream-title {
+                font-size: 1.2rem;
+            }
+
+            .stream-modal {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Live TV Card -->
+        <div class="live-tv-card" onclick="openStream()">
+            <div class="card-header">
+                <div class="live-indicator"></div>
+                <div class="card-title">🔴 LIVE</div>
+            </div>
+            <h2 style="font-size: 2rem; margin-bottom: 0.5rem; color: white;">FLM Channel 26.5</h2>
+            <p class="card-subtitle">Las Vegas • Broadcasting Now</p>
+            <button class="watch-btn">
+                <i class="fas fa-play"></i> Watch Live Stream
+            </button>
+        </div>
+    </div>
+
+    <!-- Stream Modal -->
+    <div class="stream-modal" id="streamModal">
+        <div class="stream-container">
+            <div class="stream-header">
+                <div class="stream-title">
+                    <div class="live-indicator"></div>
+                    <span>LIVE - FLM Channel 26.5 Las Vegas</span>
+                </div>
+                <button class="close-btn" onclick="closeStream()">×</button>
+            </div>
+            
+            <div class="video-wrapper">
+                <video id="liveStreamVideo" controls autoplay muted playsinline></video>
+            </div>
+            
+            <div class="stream-footer">
+                <button class="back-btn" onclick="closeStream()">
+                    <i class="fas fa-arrow-left"></i> Back to Browse
+                </button>
+                <p class="info-text">
+                    Las Vegas's First Original Multicultural Television Network<br>
+                    📺 Channel 26.5 • 🌐 Streaming Worldwide
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- HLS.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        //  LIVE STREAM CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        const STREAM_URL = 'http://50.158.216.170:8080/hls/FLMTV.m3u8';
+        let hls = null;
+
+        // ═══════════════════════════════════════════════════════════════
+        //  OPEN STREAM
+        // ═══════════════════════════════════════════════════════════════
+        
+        function openStream() {
+            console.log('🔴 Opening live stream...');
+            const modal = document.getElementById('streamModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Load HLS stream
+            if (Hls.isSupported()) {
+                console.log('✅ HLS.js supported');
+                
+                if (hls) {
+                    hls.destroy();
+                }
+                
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600
+                });
+                
+                hls.loadSource(STREAM_URL);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    console.log('✅ Stream loaded successfully');
+                    video.play().catch(e => {
+                        console.log('⚠️ Autoplay prevented:', e);
+                    });
+                });
+                
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        console.error('❌ HLS Error:', data.type, data.details);
+                        
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.log('🔄 Network error, retrying...');
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.log('🔄 Media error, recovering...');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                console.error('💥 Fatal error, destroying HLS');
+                                hls.destroy();
+                                alert('Cannot load stream. Please check:\n1. Is vMix/Nginx running?\n2. Is port 8080 accessible?');
+                                break;
+                        }
+                    }
+                });
+                
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari native HLS
+                console.log('✅ Native HLS supported (Safari)');
+                video.src = STREAM_URL;
+                video.play().catch(e => {
+                    console.log('⚠️ Autoplay prevented:', e);
+                });
+            } else {
+                alert('Your browser does not support HLS streaming.');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  CLOSE STREAM
+        // ═══════════════════════════════════════════════════════════════
+        
+        function closeStream() {
+            console.log('⏹️ Closing stream...');
+            const modal = document.getElementById('streamModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Stop video
+            video.pause();
+            video.src = '';
+            
+            // Destroy HLS
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            
+            console.log('✅ Stream closed');
+        }
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeStream();
+            }
+        });
+    </script>
+</body>
+</html>
