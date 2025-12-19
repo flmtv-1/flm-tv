@@ -1043,7 +1043,7 @@
     </footer>
     
     <script>
-        const VMIX_STREAM_URL = const VMIX_STREAM_URL = 'http://flmtv26.duckdns.org:8088/hls/FLMTV.m3u8'; // ✅ vMix HLS via DuckDNS
+        const VMIX_STREAM_URL = http://flmtv26.duckdns.org:8088/' // ✅ same-origin proxy to vMix HLS
         const BACKGROUND_IMAGES = [
             'assets/images/Beyond_Realyty_poster_1920.png',
             'assets/images/Family_channel_back.jpg',
@@ -1266,13 +1266,23 @@
             if (Hls.isSupported()) {
                 if (hls) hls.destroy();
                 hls = new Hls({ enableWorker: true, lowLatencyMode: true });
-                hls.loadSource(VMIX_STREAM_URL);
+                // ✅ Try same-origin first (works on https), then fall back to direct DuckDNS if needed
+                const PRIMARY = VMIX_STREAM_URL;
+                const FALLBACK = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
+                hls.loadSource(PRIMARY);
+                hls.on(Hls.Events.ERROR, function(event, data){
+                    if (data && data.fatal) {
+                        console.warn('HLS fatal error, trying fallback URL...', data);
+                        try { hls.stopLoad(); } catch(e) {}
+                        try { hls.loadSource(FALLBACK); } catch(e) {}
+                    }
+                });
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     video.play().catch(e => console.log('Autoplay prevented'));
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = VMIX_STREAM_URL;
+                video.src = (location.protocol === 'https:' ? '/hls/FLMTV.m3u8' : 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8');
                 video.addEventListener('loadedmetadata', () => {
                     video.play().catch(e => console.log('Autoplay prevented'));
                 });
