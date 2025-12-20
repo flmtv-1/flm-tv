@@ -1846,11 +1846,19 @@
                     console.log(`Loading: ${collection.name} (${loadedCount}/${totalCollections})`);
                     
                     const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                        ParentId: collection.id,
-                        Limit: 10,
-                        SortBy: 'SortName',
-                        Recursive: true
-                    });
+    ParentId: collection.id,
+    Limit: 10,
+    SortBy: 'SortName',
+    Recursive: true,
+    Fields: 'PrimaryImageAspectRatio,BasicSyncInfo,Path',
+    ImageTypeLimit: 1,
+    EnableImageTypes: 'Primary,Backdrop,Thumb'
+});
+
+console.log(`📦 ${collection.name}:`, items?.Items?.length || 0, 'items');
+if (items?.Items?.length > 0) {
+    console.log('First item:', items.Items[0]);
+}
                     
                     // Remove loading spinner on first collection
                     if (loadedCount === 1) {
