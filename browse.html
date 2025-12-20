@@ -1303,8 +1303,15 @@
                 </button>
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - ALWAYS FIRST -->
-                    <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="livePreviewVideo" class="live-preview-video" autoplay muted playsinline loop></video>
+                    <div class="live-channel-card" onclick="openLiveTV()">
+                        <iframe 
+                            class="live-preview-video" 
+                            src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                            frameborder="0" 
+                            scrolling="no"
+                            style="pointer-events: none;"
+                            allow="autoplay">
+                        </iframe>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
@@ -2038,22 +2045,7 @@
             // Initialize hero banner slideshow
             initHeroBanner();
             
-            // Initialize live preview stream in card
-            const livePreviewVideo = document.getElementById('livePreviewVideo');
-            if (livePreviewVideo && Hls.isSupported()) {
-                const previewHls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    maxBufferLength: 10,
-                    debug: false
-                });
-                previewHls.loadSource('http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8');
-                previewHls.attachMedia(livePreviewVideo);
-                console.log('📺 Live preview loaded in card');
-            } else if (livePreviewVideo && livePreviewVideo.canPlayType('application/vnd.apple.mpegurl')) {
-                // Safari native HLS
-                livePreviewVideo.src = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
-            }
+            // Castr iframe handles live preview automatically - no initialization needed
             
             
             // Attach button click handlers
