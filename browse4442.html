@@ -1505,15 +1505,8 @@
                 <button class="close-video" onclick="closeLiveStream()">✕ Close</button>
             </div>
             <div class="video-wrapper">
-                <iframe 
-                    id="castrPlayer"
-                    src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
-                    frameborder="0" 
-                    scrolling="no" 
-                    allow="autoplay; encrypted-media; fullscreen"
-                    allowfullscreen
-                    style="width: 100%; height: 100%; background: #000;">
-                </iframe>
+                <video id="liveVideo" controls autoplay muted playsinline
+                       style="width: 100%; height: 100%; background: #000;"></video>
             </div>
             <div style="text-align: center; margin-top: 1rem;">
                 <button onclick="closeLiveStream()" 
