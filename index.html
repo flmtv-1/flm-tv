@@ -1883,25 +1883,39 @@
                             card.className = 'content-card';
                             card.onclick = () => playJellyfinItem(item.Id);
                             
-                            // Try multiple image sources for better compatibility
-                            let imageUrl = 'https://via.placeholder.com/200x300?text=No+Image';
-                            
-                            if (item.ImageTags?.Primary) {
-                                imageUrl = getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
-                            } else if (item.SeriesThumb) {
-                                imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&format=webp&maxHeight=450`;
-                            } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
-                                imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&format=webp&maxHeight=450`;
-                            } else if (item.ParentThumbImageTag && item.ParentThumbItemId) {
-                                imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&format=webp&maxHeight=450`;
-                            }
+                            // Try multiple image sources with proper fallbacks
+let imageUrl = null;
+
+// Priority 1: Primary image
+if (item.ImageTags?.Primary) {
+    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&format=webp&maxHeight=450`;
+}
+// Priority 2: Thumb image
+else if (item.ImageTags?.Thumb) {
+    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Thumb}&format=webp&maxHeight=450`;
+}
+// Priority 3: Series primary image
+else if (item.SeriesPrimaryImageTag && item.SeriesId) {
+    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&format=webp&maxHeight=450`;
+}
+// Priority 4: Parent thumb image
+else if (item.ParentThumbImageTag && item.ParentThumbItemId) {
+    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&format=webp&maxHeight=450`;
+}
+// Fallback: Use a colored placeholder with first letter
+else {
+    const colors = ['0038a8', 'ce1126', 'fcd116', '22c55e'];
+    const colorIndex = item.Name.charCodeAt(0) % colors.length;
+    imageUrl = `https://via.placeholder.com/200x300/${colors[colorIndex]}/ffffff?text=${encodeURIComponent(item.Name.substring(0, 1))}`;
+}
                             
                             card.innerHTML = `
                                 <img src="${imageUrl}" 
                                      alt="${item.Name}" 
                                      class="content-card-image" 
                                      loading="lazy"
-                                     onerror="this.src='https://via.placeholder.com/200x300?text=${encodeURIComponent(item.Name)}'">
+onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)'; this.parentElement.innerHTML+='<div style=&quot;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:900;color:white;text-shadow:2px 2px 4px rgba(0,0,0,0.8);&quot;>${item.Name.substring(0, 1)}</div>';"
+
                                 <div class="content-card-overlay">
                                     <div class="content-card-title">${item.Name}</div>
                                     <div class="content-card-info">
