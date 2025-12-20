@@ -987,19 +987,18 @@
                 <i class="fas fa-arrow-left"></i>
             </button>
             
-            <button class="browse-from-video" onclick="window.location.href='index.html'" title="Browse All Content">
+            <button class="browse-from-video" onclick="window.location.href='browse.html'" title="Browse All Content">
                 <i class="fas fa-film"></i> Browse Content
             </button>
             
-            <iframe 
-                id="castrPlayer"
-                src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
-                frameborder="0" 
-                scrolling="no" 
-                allow="autoplay; encrypted-media; fullscreen"
-                allowfullscreen
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-            </iframe>
+            <video 
+                id="liveVideo"
+                controls 
+                autoplay 
+                muted
+                playsinline
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; object-fit: contain;">
+            </video>
             
             <div class="video-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
@@ -1264,18 +1263,68 @@
         
         // Video Stream
         let hls = null;
+        const STREAM_URL = 'http://50.158.216.170:8080/hls/FLMTV.m3u8';
         
         function openLiveStream() {
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveVideo');
+            
             modal.classList.add('active');
             history.pushState({page: 'video'}, '', '#video');
-            // Castr player handles streaming automatically
+            document.body.style.overflow = 'hidden';
+            
+            if (Hls.isSupported()) {
+                if (hls) hls.destroy();
+                
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600
+                });
+                
+                hls.loadSource(STREAM_URL);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(e => console.log('Autoplay prevented'));
+                });
+                
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        console.error('HLS Error:', data.type);
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hls.recoverMediaError();
+                                break;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = STREAM_URL;
+                video.play().catch(e => console.log('Autoplay prevented'));
+            }
         }
         
         function closeLiveStream() {
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveVideo');
+            
             modal.classList.remove('active');
-            // Castr player stops automatically when modal closes
+            document.body.style.overflow = '';
+            
+            if (video) {
+                video.pause();
+                video.src = '';
+            }
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
         }
             }
         }
