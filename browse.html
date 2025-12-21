@@ -1534,8 +1534,19 @@
                 <button class="close-video" onclick="closeLiveStream()">✕ Close</button>
             </div>
             <div class="video-wrapper">
-                <video id="liveVideo" controls autoplay muted playsinline
-                       style="width: 100%; height: 100%; background: #000;"></video>
+                <iframe 
+                    src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                    width="100%" 
+                    style="aspect-ratio: 16/9; min-height: 340px;" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    allow="autoplay" 
+                    allowfullscreen  
+                    webkitallowfullscreen 
+                    mozallowfullscreen 
+                    oallowfullscreen 
+                    msallowfullscreen>
+                </iframe>
             </div>
             <div style="text-align: center; margin-top: 1rem;">
                 <button onclick="closeLiveStream()" 
@@ -2499,79 +2510,18 @@
         let hls = null;
         
         function openLiveStream() {
-            console.log('🔴 Opening Live Channel 26.5...');
+            console.log('🔴 Opening Live Channel 26.5 - CASTR...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveVideo');
             modal.classList.add('active');
-            
-            // Your local HLS stream URL
-            const streamUrl = 'http://flmtv26.duckdns.org:8096:8080/hls/FLMTV.m3u8';
-            
-            if (Hls.isSupported()) {
-                if (hls) {
-                    hls.destroy();
-                }
-                hls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90,
-                    maxBufferLength: 30,
-                    maxMaxBufferLength: 600,
-                    startLevel: -1, // Auto quality
-                    debug: false
-                });
-                hls.loadSource(streamUrl);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    console.log('✅ HLS stream loaded');
-                    video.play().catch(e => {
-                        console.log('Autoplay prevented, user interaction needed:', e);
-                    });
-                });
-                hls.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        console.error('❌ HLS Fatal Error:', data);
-                        switch(data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.log('Network error, trying to recover...');
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.log('Media error, trying to recover...');
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                hls.destroy();
-                                alert('Cannot load live stream. Please check if vMix/Nginx is running.');
-                                break;
-                        }
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Safari native HLS support
-                video.src = streamUrl;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play().catch(e => {
-                        console.log('Autoplay prevented:', e);
-                    });
-                });
-            } else {
-                alert('Your browser does not support HLS streaming. Please try Chrome, Firefox, or Safari.');
-            }
+            // Castr iframe handles streaming automatically
         }
         
         function closeLiveStream() {
-            console.log('Closing live stream...');
+            console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveVideo');
-            
             modal.classList.remove('active');
-            video.pause();
-            video.src = '';
-            
-            if (hls) {
-                hls.destroy();
-                hls = null;
+            // Castr iframe stops automatically
+        }
             }
         }
         
