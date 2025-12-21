@@ -1304,14 +1304,7 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - ALWAYS FIRST -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <iframe 
-                            class="live-preview-video" 
-                            src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
-                            frameborder="0" 
-                            scrolling="no"
-                            style="pointer-events: none;"
-                            allow="autoplay">
-                        </iframe>
+                        <video id="livePreviewVideo" class="live-preview-video" autoplay muted playsinline loop></video>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
@@ -1590,17 +1583,7 @@
                 </button>
             </div>
         </div>
-        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" style="display:none;"></iframe>
-        <div id="collectionGridView" style="display:block; padding:18px; overflow:auto; height:calc(100% - 74px);">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
-                <h2 id="collectionGridTitle" style="margin:0; color:#fcd116; font-size:22px; letter-spacing:0.5px;">Collection</h2>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <input id="collectionGridSearch" placeholder="Search this collection..." style="padding:10px 12px; border-radius:10px; border:2px solid rgba(252,209,22,0.35); background:rgba(15,23,42,0.85); color:#e2e8f0; width:260px; outline:none;">
-                    <span id="collectionGridCount" style="opacity:0.8; font-size:13px;"></span>
-                </div>
-            </div>
-            <div id="collectionGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:14px;"></div>
-        </div>
+        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen"></iframe>
     </div>
     
     <!-- Floating Chat/AI buttons for main page -->
@@ -1642,29 +1625,29 @@
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
             
             COLLECTIONS: [
-                { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: '#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
-                { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: '#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
-                { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: '#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
-                { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: '#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
-                { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: '#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
-                { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: '#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
-                { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: '#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
-                { id: 'a2347f687b9669054c8d2abbfd50889f', name: '07 GOLDEN CLASSICS', url: '#/movies?topParentId=a2347f687b9669054c8d2abbfd50889f&collectionType=movies' },
-                { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: '#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
-                { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: '#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
-                { id: '48d96f519acf2fce600d06a4365632f4', name: '10 FLM NEWS FILIPINA', url: '#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
-                { id: 'f412dea8334c1260f2bfd6cfa91dddf5', name: '11 ASIAN Animation', url: '#/tv?topParentId=f412dea8334c1260f2bfd6cfa91dddf5&collectionType=tvshows' },
-                { id: '5f2f2ace0732efb63f625d1346b9c766', name: '12 ZAINA ZONE', url: '#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
-                { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: '13 COMEDY', url: '#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
-                { id: '56f8dc1075207592d3248a09358c587a', name: '14 DOCUMENTARIES', url: '#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
-                { id: '7a941a433e06ec0512b64b1d3b52c782', name: '15 MIDNIGHT CIRCUIT', url: '#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
-                { id: 'c95ec3ddc1e8cf075ba24840d92ad9bd', name: 'BEYOND REALITY', url: '#/tv?topParentId=c95ec3ddc1e8cf075ba24840d92ad9bd&collectionType=tvshows' },
-                { id: '4e985111ed7f570b595204d82adb02f3', name: 'Books', url: '#/list?parentId=4e985111ed7f570b595204d82adb02f3&serverId=db6bb6388c8c4c70825698639853ede6' },
-                { id: '8e596d67e544894b4502eba9aeb49b01', name: 'ESCAPE', url: '#/tv?topParentId=8e596d67e544894b4502eba9aeb49b01&collectionType=tvshows' },
-                { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: '#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
-                { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: '#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
-                { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: '#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
-                { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: '#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
+                { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: '/jellyfin/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
+                { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: '/jellyfin/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
+                { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: '/jellyfin/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
+                { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: '/jellyfin/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
+                { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: '/jellyfin/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
+                { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: '/jellyfin/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
+                { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: '/jellyfin/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
+                { id: 'a2347f687b9669054c8d2abbfd50889f', name: '07 GOLDEN CLASSICS', url: '/jellyfin/web/#/movies?topParentId=a2347f687b9669054c8d2abbfd50889f&collectionType=movies' },
+                { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: '/jellyfin/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
+                { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: '/jellyfin/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
+                { id: '48d96f519acf2fce600d06a4365632f4', name: '10 FLM NEWS FILIPINA', url: '/jellyfin/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
+                { id: 'f412dea8334c1260f2bfd6cfa91dddf5', name: '11 ASIAN Animation', url: '/jellyfin/web/#/tv?topParentId=f412dea8334c1260f2bfd6cfa91dddf5&collectionType=tvshows' },
+                { id: '5f2f2ace0732efb63f625d1346b9c766', name: '12 ZAINA ZONE', url: '/jellyfin/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
+                { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: '13 COMEDY', url: '/jellyfin/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
+                { id: '56f8dc1075207592d3248a09358c587a', name: '14 DOCUMENTARIES', url: '/jellyfin/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
+                { id: '7a941a433e06ec0512b64b1d3b52c782', name: '15 MIDNIGHT CIRCUIT', url: '/jellyfin/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
+                { id: 'c95ec3ddc1e8cf075ba24840d92ad9bd', name: 'BEYOND REALITY', url: '/jellyfin/web/#/tv?topParentId=c95ec3ddc1e8cf075ba24840d92ad9bd&collectionType=tvshows' },
+                { id: '4e985111ed7f570b595204d82adb02f3', name: 'Books', url: '/jellyfin/web/#/list?parentId=4e985111ed7f570b595204d82adb02f3&serverId=db6bb6388c8c4c70825698639853ede6' },
+                { id: '8e596d67e544894b4502eba9aeb49b01', name: 'ESCAPE', url: '/jellyfin/web/#/tv?topParentId=8e596d67e544894b4502eba9aeb49b01&collectionType=tvshows' },
+                { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: '/jellyfin/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
+                { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: '/jellyfin/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
+                { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: '/jellyfin/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
+                { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: '/jellyfin/web/#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
             ]
         };
         
@@ -1743,9 +1726,9 @@
         }
         
         function getImageUrl(itemId, imageTag, type = 'Primary') {
-            // ✅ Always use same-origin proxy (prevents HTTPS→HTTP mixed-content failures)
-            return `/jellyfin/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
+            return `${JELLYFIN_CONFIG.SERVER}/Items/${itemId}/Images/${type}?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${imageTag}&format=webp&maxHeight=450`;
         }
+        
         function scrollCategoryNav(direction) {
             const scroll = document.getElementById('categoryNavScroll');
             const scrollAmount = 300;
@@ -1856,19 +1839,11 @@
                     console.log(`Loading: ${collection.name} (${loadedCount}/${totalCollections})`);
                     
                     const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-    ParentId: collection.id,
-    Limit: 10,
-    SortBy: 'SortName',
-    Recursive: true,
-    Fields: 'PrimaryImageAspectRatio,BasicSyncInfo,Path',
-    ImageTypeLimit: 1,
-    EnableImageTypes: 'Primary,Backdrop,Thumb'
-});
-
-console.log(`📦 ${collection.name}:`, items?.Items?.length || 0, 'items');
-if (items?.Items?.length > 0) {
-    console.log('First item:', items.Items[0]);
-}
+                        ParentId: collection.id,
+                        Limit: 10,
+                        SortBy: 'SortName',
+                        Recursive: true
+                    });
                     
                     // Remove loading spinner on first collection
                     if (loadedCount === 1) {
@@ -1901,39 +1876,25 @@ if (items?.Items?.length > 0) {
                             card.className = 'content-card';
                             card.onclick = () => playJellyfinItem(item.Id);
                             
-                            // Try multiple image sources with proper fallbacks
-let imageUrl = null;
-
-// Priority 1: Primary image
-if (item.ImageTags?.Primary) {
-    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&format=webp&maxHeight=450`;
-}
-// Priority 2: Thumb image
-else if (item.ImageTags?.Thumb) {
-    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Thumb}&format=webp&maxHeight=450`;
-}
-// Priority 3: Series primary image
-else if (item.SeriesPrimaryImageTag && item.SeriesId) {
-    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&format=webp&maxHeight=450`;
-}
-// Priority 4: Parent thumb image
-else if (item.ParentThumbImageTag && item.ParentThumbItemId) {
-    imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&format=webp&maxHeight=450`;
-}
-// Fallback: Use a colored placeholder with first letter
-else {
-    const colors = ['0038a8', 'ce1126', 'fcd116', '22c55e'];
-    const colorIndex = item.Name.charCodeAt(0) % colors.length;
-    imageUrl = `https://via.placeholder.com/200x300/${colors[colorIndex]}/ffffff?text=${encodeURIComponent(item.Name.substring(0, 1))}`;
-}
+                            // Try multiple image sources for better compatibility
+                            let imageUrl = 'https://via.placeholder.com/200x300?text=No+Image';
+                            
+                            if (item.ImageTags?.Primary) {
+                                imageUrl = getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
+                            } else if (item.SeriesThumb) {
+                                imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&format=webp&maxHeight=450`;
+                            } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
+                                imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&format=webp&maxHeight=450`;
+                            } else if (item.ParentThumbImageTag && item.ParentThumbItemId) {
+                                imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&format=webp&maxHeight=450`;
+                            }
                             
                             card.innerHTML = `
                                 <img src="${imageUrl}" 
                                      alt="${item.Name}" 
                                      class="content-card-image" 
                                      loading="lazy"
-onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)'; this.parentElement.innerHTML+='<div style=&quot;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:900;color:white;text-shadow:2px 2px 4px rgba(0,0,0,0.8);&quot;>${item.Name.substring(0, 1)}</div>';"
-
+                                     onerror="this.src='https://via.placeholder.com/200x300?text=${encodeURIComponent(item.Name)}'">
                                 <div class="content-card-overlay">
                                     <div class="content-card-title">${item.Name}</div>
                                     <div class="content-card-info">
@@ -2084,8 +2045,22 @@ onerror="this.style.display='none'; this.parentElement.style.background='linear-
             // Initialize hero banner slideshow
             initHeroBanner();
             
-            // Castr iframe handles preview automatically
-            
+            // Initialize live preview stream in card
+            const livePreviewVideo = document.getElementById('livePreviewVideo');
+            if (livePreviewVideo && Hls.isSupported()) {
+                const previewHls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    maxBufferLength: 10,
+                    debug: false
+                });
+                previewHls.loadSource('http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8');
+                previewHls.attachMedia(livePreviewVideo);
+                console.log('📺 Live preview loaded in card');
+            } else if (livePreviewVideo && livePreviewVideo.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari native HLS
+                livePreviewVideo.src = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
+            }
             
             
             // Attach button click handlers
@@ -2194,99 +2169,17 @@ onerror="this.style.display='none'; this.parentElement.style.background='linear-
             document.body.classList.add('video-playing');
         }
         
-                function openJellyfinCollection(collectionId) {
+        function openJellyfinCollection(collectionId) {
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
-            const gridView = document.getElementById('collectionGridView');
-            const grid = document.getElementById('collectionGrid');
-            const titleEl = document.getElementById('collectionGridTitle');
-            const countEl = document.getElementById('collectionGridCount');
-            const searchEl = document.getElementById('collectionGridSearch');
-
-            // ✅ Never load Jellyfin Web UI (prevents sign-in page)
-            if (frame) {
-                frame.src = "";
-                frame.style.display = "none";
-            }
-            if (gridView) gridView.style.display = "block";
-
-            const collection = (JELLYFIN_CONFIG.COLLECTIONS || []).find(c => c.id === collectionId);
-            const collectionName = collection?.name || "Collection";
-            if (titleEl) titleEl.textContent = collectionName;
-            if (countEl) countEl.textContent = "Loading...";
-            if (grid) grid.innerHTML = `<div style="opacity:.85;">Loading ${collectionName}...</div>`;
-
-            viewer?.classList.add('active');
-            document.body.style.overflow = 'hidden';
-
-            const render = (items) => {
-                const q = (searchEl?.value || "").trim().toLowerCase();
-                const filtered = q ? items.filter(it => (it.Name || "").toLowerCase().includes(q)) : items;
-
-                if (countEl) countEl.textContent = `${filtered.length} item(s)`;
-
-                if (!grid) return;
-                if (!filtered.length) {
-                    grid.innerHTML = `<div style="opacity:.85;">No results.</div>`;
-                    return;
-                }
-
-                grid.innerHTML = filtered.map(item => {
-                    const img = item.ImageTags?.Primary ? getImageUrl(item.Id, item.ImageTags.Primary, 'Primary') : "";
-                    const year = item.ProductionYear ? `<div style="opacity:.75; font-size:12px; margin-top:6px;">${item.ProductionYear}</div>` : "";
-                    const safeName = (item.Name || 'Untitled').replace(/"/g,'&quot;');
-                    return `
-                        <div class="movie-card" style="cursor:pointer;" onclick="openItemPlayback('${item.Id}')">
-                            <img src="${img}" alt="${safeName}" onerror="this.style.display='none'">
-                            <div class="movie-card-title">${safeName}</div>
-                            ${year}
-                        </div>
-                    `;
-                }).join("");
-            };
-
-            (async () => {
-                try {
-                    const data = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${collectionId}&Recursive=true&IncludeItemTypes=Movie,Series&Fields=PrimaryImageAspectRatio,ProductionYear,ImageTags&SortBy=SortName&SortOrder=Ascending&Limit=500`, {});
-                    const items = data?.Items || [];
-                    render(items);
-                    if (searchEl) searchEl.oninput = () => render(items);
-                } catch (e) {
-                    console.error("Collection fetch failed:", e);
-                    if (countEl) countEl.textContent = "Failed to load";
-                    if (grid) grid.innerHTML = `<div style="opacity:.85;">Could not load this collection (check Jellyfin proxy).</div>`;
-                }
-            })();
-        }
-
-        async function openItemPlayback(itemId) {
-            try {
-                // Direct stream playback (no Jellyfin Web UI)
-                const streamUrl = `/jellyfin/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}`;
-
-                const modal = document.getElementById('videoModal');
-                const wrapper = modal?.querySelector('.video-wrapper');
-
-                if (!modal || !wrapper) {
-                    window.open(streamUrl, "_blank");
-                    return;
-                }
-
-                const titleEl = modal.querySelector('.video-title');
-                if (titleEl) titleEl.innerHTML = `Now Playing`;
-
-                wrapper.innerHTML = `
-                    <video id="flmVODPlayer" controls autoplay playsinline style="width:100%;height:100%;background:#000;border-radius:12px;">
-                        <source src="${streamUrl}">
-                    </video>
-                `;
-
-                modal.classList.add('active');
-            } catch (e) {
-                console.error("Playback failed:", e);
-                alert("Playback failed. Check Jellyfin proxy / API key.");
-            }
-        } else {
+            
+            // Find the collection by ID to get its full URL
+            const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
+            
+            if (collection && collection.url) {
+                // Use the full working URL
+                frame.src = collection.url;
+            } else {
                 // Fallback to generic URL if not found
                 frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
             }
@@ -2566,15 +2459,78 @@ onerror="this.style.display='none'; this.parentElement.style.background='linear-
         function openLiveStream() {
             console.log('🔴 Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveVideo');
             modal.classList.add('active');
-            // Castr player handles streaming automatically
+            
+            // Your local HLS stream URL
+            const streamUrl = 'http://flmtv26.duckdns.org:8080/hls/FLMTV.m3u8';
+            
+            if (Hls.isSupported()) {
+                if (hls) {
+                    hls.destroy();
+                }
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600,
+                    startLevel: -1, // Auto quality
+                    debug: false
+                });
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    console.log('✅ HLS stream loaded');
+                    video.play().catch(e => {
+                        console.log('Autoplay prevented, user interaction needed:', e);
+                    });
+                });
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        console.error('❌ HLS Fatal Error:', data);
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.log('Network error, trying to recover...');
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.log('Media error, trying to recover...');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                hls.destroy();
+                                alert('Cannot load live stream. Please check if vMix/Nginx is running.');
+                                break;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari native HLS support
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play().catch(e => {
+                        console.log('Autoplay prevented:', e);
+                    });
+                });
+            } else {
+                alert('Your browser does not support HLS streaming. Please try Chrome, Firefox, or Safari.');
+            }
         }
         
         function closeLiveStream() {
             console.log('Closing live stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveVideo');
+            
             modal.classList.remove('active');
-            // Castr player stops automatically when modal closes
+            video.pause();
+            video.src = '';
+            
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
         }
         
         // ═══════════════════════════════════════════════════════════════

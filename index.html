@@ -987,18 +987,19 @@
                 <i class="fas fa-arrow-left"></i>
             </button>
             
-            <button class="browse-from-video" onclick="window.location.href='browse.html'" title="Browse All Content">
+            <button class="browse-from-video" onclick="window.location.href='index.html'" title="Browse All Content">
                 <i class="fas fa-film"></i> Browse Content
             </button>
             
-            <video 
-                id="liveVideo"
-                controls 
-                autoplay 
-                muted
-                playsinline
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; object-fit: contain;">
-            </video>
+            <iframe 
+                id="castrPlayer"
+                src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                frameborder="0" 
+                scrolling="no" 
+                allow="autoplay; encrypted-media; fullscreen"
+                allowfullscreen
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+            </iframe>
             
             <div class="video-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
@@ -1036,7 +1037,7 @@
                 <h3>Watch</h3>
                 <ul class="footer-links">
                     <li><a href="#" onclick="openLiveStream(); return false;">Live Channel 26.5</a></li>
-                    <li><a href="index.html">Browse Content</a></li>
+                    <li><a href="browse.html">Browse Content</a></li>
                     <li><a href="#" onclick="alert('Coming soon!')">TV Schedule</a></li>
                     <li><a href="#" onclick="toggleChat(); return false;">Join Chat</a></li>
                 </ul>
@@ -1050,7 +1051,7 @@
     </footer>
     
     <script>
-        const VMIX_STREAM_URL = 'http://50.158.216.170:8080/hls/FLMTV.m3u8';  // ✅ vMix HLS via DuckDNS
+        const VMIX_STREAM_URL = 'https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b';  // ✅ Castr embed (Live Channel 26.5)  // ✅ vMix HLS via DuckDNS
         const BACKGROUND_IMAGES = [
             'assets/images/Beyond_Realyty_poster_1920.png',
             'assets/images/Family_channel_back.jpg',
@@ -1263,68 +1264,18 @@
         
         // Video Stream
         let hls = null;
-        const STREAM_URL = 'http://50.158.216.170:8080/hls/FLMTV.m3u8';
         
         function openLiveStream() {
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveVideo');
-            
             modal.classList.add('active');
             history.pushState({page: 'video'}, '', '#video');
-            document.body.style.overflow = 'hidden';
-            
-            if (Hls.isSupported()) {
-                if (hls) hls.destroy();
-                
-                hls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90,
-                    maxBufferLength: 30,
-                    maxMaxBufferLength: 600
-                });
-                
-                hls.loadSource(STREAM_URL);
-                hls.attachMedia(video);
-                
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log('Autoplay prevented'));
-                });
-                
-                hls.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        console.error('HLS Error:', data.type);
-                        switch(data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                hls.recoverMediaError();
-                                break;
-                        }
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = STREAM_URL;
-                video.play().catch(e => console.log('Autoplay prevented'));
-            }
+            // Castr player handles streaming automatically
         }
         
         function closeLiveStream() {
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveVideo');
-            
             modal.classList.remove('active');
-            document.body.style.overflow = '';
-            
-            if (video) {
-                video.pause();
-                video.src = '';
-            }
-            if (hls) {
-                hls.destroy();
-                hls = null;
-            }
+            // Castr player stops automatically when modal closes
         }
             }
         }
