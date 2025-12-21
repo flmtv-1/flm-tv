@@ -1219,15 +1219,20 @@
         }
         
         .close-video {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             background: var(--secondary);
             border: none;
             color: white;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 2rem;
             transition: all 0.3s ease;
+            z-index: 10001;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         
         .close-video:hover {
@@ -2198,9 +2203,15 @@
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
+            
+            // Add to browser history
+            history.pushState({modal: 'movie'}, '', '#movie');
         }
         
         function openJellyfinCollection(collectionId) {
+            alert('📂 Category pages require server setup. Watch FLM Channel 26.5 LIVE streaming now!');
+            return;
+            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
@@ -2493,6 +2504,8 @@
             console.log('🔴 Opening Live Channel 26.5 - CASTR...');
             const modal = document.getElementById('videoModal');
             modal.classList.add('active');
+            // Add to browser history so back button works
+            history.pushState({modal: 'stream'}, '', '#stream');
             // Castr iframe handles streaming automatically
         }
         
@@ -2500,8 +2513,30 @@
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
             modal.classList.remove('active');
+            // Remove from history
+            if (window.location.hash === '#stream') {
+                history.back();
+            }
             // Castr iframe stops automatically
         }
+        
+        // Handle browser back button
+        window.addEventListener('popstate', function(event) {
+            const videoModal = document.getElementById('videoModal');
+            const jellyfinViewer = document.getElementById('jellyfinViewer');
+            
+            // Close video modal if open
+            if (videoModal && videoModal.classList.contains('active')) {
+                videoModal.classList.remove('active');
+            }
+            
+            // Close Jellyfin viewer if open
+            if (jellyfinViewer && jellyfinViewer.classList.contains('active')) {
+                jellyfinViewer.classList.remove('active');
+                const frame = document.getElementById('jellyfinFrame');
+                if (frame) frame.src = '';
+            }
+        });
         
         // ═══════════════════════════════════════════════════════════════
         //  PASSWORD TOGGLE
