@@ -1917,7 +1917,7 @@
                         items.Items.forEach(item => {
                             const card = document.createElement('div');
                             card.className = 'content-card';
-                            card.onclick = () => playJellyfinItem(item.Id);
+                            card.onclick = () => alert('📺 Movies coming soon! Watch FLM Channel 26.5 LIVE now! Click the red "LIVE" card above.');
                             
                             // Try multiple image sources for better compatibility
                             let imageUrl = 'https://placehold.co/200x300?text=No+Image';
@@ -2200,6 +2200,10 @@
         }
         
         function openJellyfinCollection(collectionId) {
+            // Coming soon - custom FLM TV category pages
+            alert('📂 Category pages coming soon! Watch FLM Channel 26.5 LIVE now!');
+            return;
+            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
@@ -2213,8 +2217,6 @@
                 // Fallback to generic URL if not found
                 frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             }
-            
-            viewer.classList.add('active');
             
             // Inject custom FLM TV branding after iframe loads
             frame.onload = function() {
