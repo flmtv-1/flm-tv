@@ -1290,11 +1290,11 @@
                 </button>
                 
                 <button class="btn-icon" onclick="openPanel('chatPanel')" title="Chat">
-                    <i class="fas fa-comments"></i>
+                    <i class="fas fa-comments"></i> Chat
                 </button>
                 
                 <button class="btn-icon" onclick="openPanel('aiPanel')" title="Zaina AI">
-                    <i class="fas fa-robot"></i>
+                    <i class="fas fa-robot"></i> Zaina AI
                 </button>
                 
                 <button class="btn-icon" title="Notifications">
@@ -2199,6 +2199,9 @@
         }
         
         function openJellyfinCollection(collectionId) {
+            // Show "Entering 7th Realm" overlay
+            showSpaceWelcome();
+            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
