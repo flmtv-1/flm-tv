@@ -1334,10 +1334,13 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video muted autoplay loop 
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-                            <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
-                        </video>
+                        <iframe 
+                            src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
+                            frameborder="0" 
+                            scrolling="no"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"
+                            allow="autoplay"
+                        ></iframe>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
@@ -1533,13 +1536,20 @@
             <button class="close-video" onclick="closeLiveStream()">
                 <i class="fas fa-times"></i>
             </button>
-            <video id="liveStreamVideo" controls autoplay 
+            <iframe 
+                src="https://player.castr.com/d_4e7d53f0d30c11f08758231ac7e26e0b" 
                 width="100%" 
                 height="100%"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
-                Your browser does not support HLS playback.
-            </video>
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                frameborder="0" 
+                scrolling="no" 
+                allow="autoplay" 
+                allowfullscreen  
+                webkitallowfullscreen 
+                mozallowfullscreen 
+                oallowfullscreen 
+                msallowfullscreen>
+            </iframe>
         </div>
     </div>
 
@@ -2199,6 +2209,9 @@
         }
         
         function openJellyfinCollection(collectionId) {
+            alert('📂 Category pages require server setup. Watch FLM Channel 26.5 LIVE streaming now!');
+            return;
+            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
@@ -2227,38 +2240,6 @@
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
-        }
-        
-        function showSpaceWelcome() {
-            // Create overlay
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0038a8 100%);
-                z-index: 99999;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                animation: fadeIn 0.5s ease;
-            `;
-            overlay.innerHTML = `
-                <h1 style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem; animation: glow 1.5s ease-in-out infinite;">
-                    🛸 Entering the 7th Realm 🛸
-                </h1>
-                <p style="font-size: 1.5rem; color: white;">Welcome to FLM Television Network</p>
-            `;
-            document.body.appendChild(overlay);
-            
-            // Auto-remove after 2 seconds
-            setTimeout(() => {
-                overlay.style.animation = 'fadeOut 0.5s ease';
-                setTimeout(() => overlay.remove(), 500);
-            }, 2000);
         }
         
         // Inject FLM TV branding into Jellyfin iframe
