@@ -1732,27 +1732,7 @@
     ]
 };
 
-/* ✅ Smart Jellyfin base URL resolver
-   - On Netlify/FLMtv.com: use '/jellyfin' (Netlify redirect proxy)
-   - On local testing: use your LAN Jellyfin IP
-*/
-(function(){
-  try{
-    const isFile = location.protocol === 'file:';
-    const isLocalhost = /^(localhost|127\.0\.0\.1)$/i.test(location.hostname);
-    if (isFile || isLocalhost){
-      // 🏠 Local Jellyfin (LAN) — change if needed
-      JELLYFIN_CONFIG.SERVER = 'http://10.0.0.11:8096';
-    } else {
-      // 🌐 Deployed site (Netlify)
-      JELLYFIN_CONFIG.SERVER = '/jellyfin';
-    }
-  }catch(e){}
-})();
-
-
-        
-        // ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
         //  FIREBASE & API CONFIGURATION
         // ═══════════════════════════════════════════════════════════════
         
