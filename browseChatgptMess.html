@@ -1258,7 +1258,62 @@
             height: 100%;
         }
         
-    </style>
+    
+/* ✅ Header action buttons layout fix */
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+.nav-actions .btn,
+.nav-actions .btn-icon{
+  flex:0 0 auto;
+  white-space:nowrap;
+}
+
+/* ✅ Prevent viewer-controls .btn-icon styles from overriding header .btn-icon */
+.viewer-controls .btn-icon{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+}
+
+
+/* ✅ Native player modal */
+#nativePlayerModal.video-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.85);
+  z-index:99999;
+  padding:20px;
+}
+#nativePlayerModal .video-modal-content{
+  position:relative;
+  max-width:1100px;
+  height:min(80vh, 720px);
+  margin:40px auto;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.55);
+  background:#000;
+}
+#nativePlayerModal .video-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  z-index:2;
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  border:2px solid rgba(252,209,22,.9);
+  background:rgba(15,23,42,.9);
+  color:#fff;
+  cursor:pointer;
+}
+
+</style>
 </head>
 <body>
 
@@ -1825,7 +1880,7 @@
                     
                     const navItem = document.createElement('div');
                     navItem.className = 'category-nav-item';
-                    navItem.onclick = () => openJellyfinCollection(collection.id);
+                    navItem.onclick = () => openCollectionInline(collection.id, collection.name);
                     
                     navItem.innerHTML = `
                         <img src="${backdropUrl}" 
@@ -1899,7 +1954,7 @@
                     header.className = 'category-header';
                     header.innerHTML = `
                         <h3 class="category-title">${collection.name}</h3>
-                        <a onclick="openJellyfinCollection('${collection.id}')" class="view-all-btn" style="cursor: pointer;">
+                        <a onclick="openCollectionInline('${collection.id}', '${collection.name}')" class="view-all-btn" style="cursor: pointer;">
                             View All <i class="fas fa-arrow-right"></i>
                         </a>
                     `;
@@ -2175,11 +2230,36 @@
         }
         
         function playJellyfinItem(itemId) {
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            // Open Jellyfin with API key to bypass login
-            frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            // ✅ Play via direct stream (no Jellyfin Web login)
+            const modal = document.getElementById('nativePlayerModal');
+            const video = document.getElementById('nativePlayer');
+            if (!modal || !video) return;
+
+            try { video.pause(); } catch(e){}
+            video.removeAttribute('src');
+            video.load();
+
+            const src = `${JELLYFIN_CONFIG.SERVER}/Videos/${encodeURIComponent(itemId)}/stream?static=true&api_key=${encodeURIComponent(JELLYFIN_CONFIG.API_KEY)}`;
+            video.src = src;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            video.play().catch(() => {});
+        }
+
+        function closeNativePlayer() {
+            const modal = document.getElementById('nativePlayerModal');
+            const video = document.getElementById('nativePlayer');
+            if (video) {
+                try { video.pause(); } catch(e){}
+                video.removeAttribute('src');
+                video.load();
+            }
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             
             // Inject custom FLM TV branding after iframe loads
             frame.onload = function() {
@@ -2199,6 +2279,10 @@
         }
         
         function openJellyfinCollection(collectionId) {
+            // ✅ Redirect to inline collection page (no Jellyfin Web / no login)
+            const c = JELLYFIN_CONFIG.COLLECTIONS.find(x => x.id === collectionId);
+            return openCollectionInline(collectionId, c ? c.name : 'Collection');
+
             // Show "Entering 7th Realm" overlay
             showSpaceWelcome();
             
@@ -2655,6 +2739,17 @@ async function loadCollectionPage(collectionId, title) {
 }
 
 </script>
+
+
+    <!-- ✅ Native Player Modal (no Jellyfin Web login) -->
+    <div class="video-modal" id="nativePlayerModal" style="display:none;">
+        <div class="video-modal-content">
+            <button class="video-close" onclick="closeNativePlayer()" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <video id="nativePlayer" controls playsinline style="width:100%; height:100%; background:#000;"></video>
+        </div>
+    </div>
 
 </body>
 </html>
