@@ -857,15 +857,15 @@
             </div>
             
             <div class="nav-actions">
-                <button class="btn-icon" onclick="toggleChat()" title="Live Chat">
-                    <i class="fas fa-comments"></i><br><small>Chat</small>
-                </button>
-                <button class="btn-icon" onclick="toggleAI()" title="Zaina AI">
-                    <i class="fas fa-robot"></i><br><small>AI</small>
-                </button>
-                <button class="btn-icon" onclick="alert('Member Login Coming Soon!')" title="Login">
-                    <i class="fas fa-user"></i><br><small>Login</small>
-                </button>
+               <button class="btn-icon" onclick="toggleChat()" title="Live Chat">
+    <i class="fas fa-comments"></i>
+</button>
+<button class="btn-icon" onclick="toggleAI()" title="Zaina AI">
+    <i class="fas fa-robot"></i>
+</button>
+<button class="btn-icon" onclick="alert('Member Login Coming Soon!')" title="Login">
+    <i class="fas fa-user"></i>
+</button>
             </div>
         </div>
     </header>
@@ -1016,10 +1016,10 @@
                     Las Vegas's first original multicultural television network. Out of this world entertainment! 🌍✨
                 </p>
                 <div class="social-icons">
-                    <a href="file:///C:/Users/Dale/Documents/GitHub/flm-tv/index%20(3).html#" onclick="alert(&#39;Add Facebook URL&#39;)"><i class="fab fa-facebook-f"></i></a>
-                    <a href="file:///C:/Users/Dale/Documents/GitHub/flm-tv/index%20(3).html#" onclick="alert(&#39;Add Instagram URL&#39;)"><i class="fab fa-instagram"></i></a>
-                    <a href="file:///C:/Users/Dale/Documents/GitHub/flm-tv/index%20(3).html#" onclick="alert(&#39;Add Twitter URL&#39;)"><i class="fab fa-twitter"></i></a>
-                    <a href="file:///C:/Users/Dale/Documents/GitHub/flm-tv/index%20(3).html#" onclick="alert(&#39;Add YouTube URL&#39;)"><i class="fab fa-youtube"></i></a>
+                   <a href="https://facebook.com/flmtv" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+<a href="https://instagram.com/flmtv" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+<a href="https://twitter.com/flmtv" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+<a href="https://youtube.com/@flmtv" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             
@@ -1095,18 +1095,22 @@
         }
         initBackgroundSlideshow();
         
-        // Hero Background Slideshow (images rotate behind buttons)
-        let heroCurrentSlide = 0;
-        const totalHeroSlides = 5;
-        
-        function rotateHeroBackground() {
-            const slides = document.querySelectorAll('.hero-bg-slide');
-            slides[heroCurrentSlide].classList.remove('active');
-            heroCurrentSlide = (heroCurrentSlide + 1) % totalHeroSlides;
-            slides[heroCurrentSlide].classList.add('active');
-        }
-        
-        setInterval(rotateHeroBackground, 7000);
+       // Hero Background Slideshow (images rotate behind buttons)
+let heroCurrentSlide = 0;
+
+function rotateHeroBackground() {
+    const slides = document.querySelectorAll('.hero-bg-slide');
+    if (slides.length === 0) return;
+    
+    slides[heroCurrentSlide].classList.remove('active');
+    heroCurrentSlide = (heroCurrentSlide + 1) % slides.length;
+    slides[heroCurrentSlide].classList.add('active');
+}
+
+// Start rotation after page loads
+setTimeout(() => {
+    setInterval(rotateHeroBackground, 7000);
+}, 100);
         
         // Hero Heading Rotation (3 headings)
         let currentHeading = 0;
@@ -1266,17 +1270,68 @@
         let hls = null;
         
         function openLiveStream() {
-            const modal = document.getElementById('videoModal');
-            modal.classList.add('active');
-            history.pushState({page: 'video'}, '', '#video');
-            // Castr iframe handles streaming automatically
+    console.log('🔴 Opening Live Channel 26.5...');
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('liveVideo');
+    
+    if (!modal || !video) {
+        console.error('❌ Modal or video element not found');
+        return;
+    }
+    
+    modal.classList.add('active');
+    history.pushState({page: 'video'}, '', '#video');
+    
+    // Initialize HLS.js
+    const streamUrl = 'http://10.0.0.4:8080/FLMTV.m3u8';
+    
+    if (Hls.isSupported()) {
+        if (hls) {
+            hls.destroy();
         }
+        hls = new Hls({
+            debug: false,
+            enableWorker: true,
+            lowLatencyMode: true,
+            backBufferLength: 90
+        });
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play().catch(e => console.log('Autoplay prevented:', e));
+        });
+        hls.on(Hls.Events.ERROR, function(event, data) {
+            console.error('HLS Error:', data);
+        });
+        console.log('✅ HLS.js initialized');
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS support (Safari)
+        video.src = streamUrl;
+        video.addEventListener('loadedmetadata', function() {
+            video.play().catch(e => console.log('Autoplay prevented:', e));
+        });
+        console.log('✅ Native HLS support');
+    } else {
+        console.error('❌ HLS not supported');
+        alert('Your browser does not support live streaming. Please try Safari, Chrome, or Edge.');
+    }
+}
         
         function closeLiveStream() {
-            const modal = document.getElementById('videoModal');
-            modal.classList.remove('active');
-            // Castr iframe stops automatically
-        }
+    console.log('⏹️ Closing live stream...');
+    const modal = document.getElementById('videoModal');
+    const video = document.getElementById('liveVideo');
+    
+    if (modal) modal.classList.remove('active');
+    if (video) {
+        video.pause();
+        video.src = '';
+    }
+    if (hls) {
+        hls.destroy();
+        hls = null;
+    }
+}
         
         console.log('🛸 FLM TV - Out of This World! 🌍✨');
     </script>

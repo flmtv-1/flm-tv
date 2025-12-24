@@ -1652,7 +1652,6 @@
         { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
         { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
         { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'http://flmtv26.duckdns.org:8096/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
-        { id: '8215a671b88547b9b69213f8c3091211', name: 'TEENS+', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=8215a671b88547b9b69213f8c3091211&collectionType=tvshows' }
     ]
 };
         
@@ -2301,6 +2300,36 @@
                 .emby-button:hover {
                     transform: translateY(-2px);
                     box-shadow: 0 4px 12px rgba(252, 209, 22, 0.3);
+                }
+                
+                /* ═══════════════════════════════════════════════════════════ */
+                /* REMOVE BRIGHT YELLOW TAG HIGHLIGHTING                      */
+                /* Keep gold text, remove bright backgrounds                  */
+                /* ═══════════════════════════════════════════════════════════ */
+                
+                .itemTag,
+                .button-flat,
+                .chip,
+                .detailButton,
+                .raised.detailButton {
+                    background-color: rgba(255, 255, 255, 0.08) !important;
+                    background: rgba(255, 255, 255, 0.08) !important;
+                    color: #fcd116 !important;
+                    border: 1px solid rgba(252, 209, 22, 0.25) !important;
+                }
+                
+                .itemTag:hover,
+                .button-flat:hover,
+                .chip:hover,
+                .detailButton:hover {
+                    background-color: rgba(252, 209, 22, 0.15) !important;
+                }
+                
+                .itemTag a,
+                .button-flat span,
+                .chip span {
+                    color: #fcd116 !important;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
                 }
             `;
             doc.head.appendChild(style);
