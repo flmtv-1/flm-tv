@@ -7,7 +7,6 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="./FLM TV - Out of This World Entertainment 🛸_files/all.min.css">
-    <script src="./FLM TV - Out of This World Entertainment 🛸_files/hls.js@latest"></script>
     
     <style>
         :root {
@@ -250,6 +249,77 @@
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
+        /*  LIVE CHANNEL 26.5 CARD                                         */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .live-channel-card {
+            flex: 0 0 350px;
+            height: 200px;
+            position: relative;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 3px solid var(--secondary);
+            background: #000;
+            box-shadow: 0 8px 24px rgba(206, 17, 38, 0.4);
+        }
+        
+        .live-channel-card:hover {
+            transform: scale(1.05);
+            border-color: var(--neon-green);
+            box-shadow: 0 12px 32px rgba(34, 197, 94, 0.5);
+        }
+        
+        .live-channel-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, rgba(206, 17, 38, 0.85) 0%, rgba(139, 0, 0, 0.85) 100%);
+            backdrop-filter: blur(5px);
+        }
+        
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            color: white;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: livePulse 1.5s infinite;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .live-channel-name {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 0rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
         /*  HERO BANNER - STATIC CONTENT WITH ROTATING BACKGROUNDS         */
         /* ═══════════════════════════════════════════════════════════════ */
         
@@ -418,49 +488,32 @@
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
-        /*  FULL-SIZE VIDEO MODAL                                          */
+        /*  LIVE VIDEO MODAL                                               */
         /* ═══════════════════════════════════════════════════════════════ */
         
         .video-modal {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.98);
-            display: flex;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            padding: 1rem;
+            padding: 2rem;
         }
         
         .video-modal.active {
-            opacity: 1;
-            pointer-events: all;
+            display: flex;
         }
         
         .video-container {
-            width: 100%;
-            height: 100%;
-            max-width: 1920px;
-            max-height: 1080px;
+            width: 95%;
+            max-width: 1600px;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            max-height: 85vh;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            object-fit: contain;
+            aspect-ratio: 16/9;
         }
         
         .close-video {
@@ -475,25 +528,21 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 2rem;
-            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
             z-index: 10001;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-        }
-        
-        @media (min-width: 768px) {
-            .close-video {
-                top: 20px;
-                right: 20px;
-                width: 70px;
-                height: 70px;
-                font-size: 2.5rem;
-            }
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         
         .close-video:hover {
-            background: var(--accent);
             transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(206, 17, 38, 0.6);
+            box-shadow: 0 4px 12px rgba(206, 17, 38, 0.4);
+        }
+        
+        .close-video i {
+            font-size: 1.5rem;
         }
         
         .browse-from-video {
@@ -882,12 +931,23 @@
             
             <p style="font-size: clamp(0.85rem, 1.8vw, 1rem); margin-bottom: 1.5rem;">Las Vegas's First Original Multicultural Television Network</p>
             
-            <!-- STATIC BUTTONS - Never change -->
-            <div class="cta-buttons">
-                <button class="btn-cta btn-primary-cta" onclick="openLiveStream()">
-    <i class="fas fa-play"></i> Watch FLM TV Channel 26.5 Las Vegas
-</button>
-                <button class="btn-cta btn-secondary-cta" onclick="window.location.href=&#39;browse.html&#39;">
+            <!-- LIVE CHANNEL 26.5 CARD - Shows stream playing -->
+            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                <div class="live-channel-card" onclick="openLiveStream()">
+                    <video muted autoplay loop 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+                        <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                    </video>
+                    <div class="live-channel-content">
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            <span>🔴 LIVE</span>
+                        </div>
+                        <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
+                    </div>
+                </div>
+                
+                <button class="btn-cta btn-secondary-cta" onclick="window.location.href='browse.html';" style="align-self: center; height: fit-content;">
                     <i class="fas fa-film"></i> Browse All Content
                 </button>
             </div>
@@ -988,22 +1048,16 @@
     <!-- FULL-SIZE Video Modal -->
     <div class="video-modal" id="videoModal">
         <div class="video-container">
-            <button class="close-video" onclick="closeLiveStream()" title="Back to Home">
-                <i class="fas fa-arrow-left"></i>
+            <button class="close-video" onclick="closeLiveStream()">
+                <i class="fas fa-times"></i>
             </button>
-            
-            <button class="browse-from-video" onclick="window.location.href=&#39;browse.html&#39;" title="Browse All Content">
-                <i class="fas fa-film"></i> Browse Content
-            </button>
-            
-            <video id="liveVideo" controls autoplay muted style="width: 100%; height: 100%; background: #000;">
+            <video id="liveStreamVideo" controls autoplay 
+                width="100%" 
+                height="100%"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
                 <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
-            
-            <div class="video-logo">
-                <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display=&#39;none&#39;">
-            </div>
         </div>
     </div>
     
@@ -1267,71 +1321,24 @@ setTimeout(() => {
         });
         
         // Video Stream
-        let hls = null;
         
         function openLiveStream() {
-    console.log('🔴 Opening Live Channel 26.5...');
-    const modal = document.getElementById('videoModal');
-    const video = document.getElementById('liveVideo');
-    
-    if (!modal || !video) {
-        console.error('❌ Modal or video element not found');
-        return;
-    }
-    
-    modal.classList.add('active');
-    history.pushState({page: 'video'}, '', '#video');
-    
-    // Initialize HLS.js
-    const streamUrl = 'http://10.0.0.4:8080/FLMTV.m3u8';
-    
-    if (Hls.isSupported()) {
-        if (hls) {
-            hls.destroy();
+            console.log('🔴 Opening Live Channel 26.5...');
+            const modal = document.getElementById('videoModal');
+            modal.classList.add('active');
+            // Add to browser history so back button works
+            history.pushState({modal: 'stream'}, '', '#stream');
         }
-        hls = new Hls({
-            debug: false,
-            enableWorker: true,
-            lowLatencyMode: true,
-            backBufferLength: 90
-        });
-        hls.loadSource(streamUrl);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, function() {
-            video.play().catch(e => console.log('Autoplay prevented:', e));
-        });
-        hls.on(Hls.Events.ERROR, function(event, data) {
-            console.error('HLS Error:', data);
-        });
-        console.log('✅ HLS.js initialized');
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // Native HLS support (Safari)
-        video.src = streamUrl;
-        video.addEventListener('loadedmetadata', function() {
-            video.play().catch(e => console.log('Autoplay prevented:', e));
-        });
-        console.log('✅ Native HLS support');
-    } else {
-        console.error('❌ HLS not supported');
-        alert('Your browser does not support live streaming. Please try Safari, Chrome, or Edge.');
-    }
-}
         
         function closeLiveStream() {
-    console.log('⏹️ Closing live stream...');
-    const modal = document.getElementById('videoModal');
-    const video = document.getElementById('liveVideo');
-    
-    if (modal) modal.classList.remove('active');
-    if (video) {
-        video.pause();
-        video.src = '';
-    }
-    if (hls) {
-        hls.destroy();
-        hls = null;
-    }
-}
+            console.log('⏹️ Closing live stream...');
+            const modal = document.getElementById('videoModal');
+            modal.classList.remove('active');
+            // Remove from history
+            if (window.location.hash === '#stream') {
+                history.back();
+            }
+        }
         
         console.log('🛸 FLM TV - Out of This World! 🌍✨');
     </script>
