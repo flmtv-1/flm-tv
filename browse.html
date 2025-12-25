@@ -14,15 +14,17 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         :root {
-            --primary: #0038a8;        /* Blue */
-            --secondary: #ce1126;      /* Red */
-            --accent: #fcd116;         /* Gold/Yellow */
+            /* FLM TV Brand Colors */
+            --primary: #ffd700;        /* Gold */
+            --secondary: #22c55e;      /* Green */
+            --accent: #ffd700;         /* Gold accent */
             --neon-green: #22c55e;     /* Neon Green */
-            --bg: #0f172a;
-            --bg-light: #1e293b;
-            --bg-card: #1e293b;
-            --text: #e2e8f0;
-            --text-secondary: #94a3b8;
+            --bg: #0a0f1a;             /* Deep blue-black */
+            --bg-light: #1a1f2e;       /* Lighter blue */
+            --bg-card: #1a1f2e;        /* Card background */
+            --text: #ffffff;           /* White text */
+            --text-secondary: #94a3b8; /* Gray text */
+            --border: #334155;         /* Borders */
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -183,18 +185,18 @@
         
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
+            color: #000;  /* Black text on gold */
             border: none;
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(252, 209, 22, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -1176,6 +1178,43 @@
             box-shadow: 0 0 10px #ff0000;
         }
         
+        /* Volume Toggle Button */
+        .volume-toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .volume-toggle-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            transform: scale(1.1);
+        }
+        
+        .volume-toggle-btn.unmuted {
+            background: rgba(34, 197, 94, 0.8);
+            border-color: var(--neon-green);
+        }
+        
+        .volume-toggle-btn.unmuted:hover {
+            background: rgba(34, 197, 94, 1);
+        }
+        
         @keyframes livePulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(1.2); }
@@ -1291,94 +1330,336 @@
         
         /* Mobile - Small Phones (up to 480px) */
         @media (max-width: 480px) {
+            /* CRITICAL: Everything must fit and be visible */
+            * {
+                box-sizing: border-box;
+            }
+            
+            html {
+                overflow-x: hidden;
+                overflow-y: auto;
+                height: 100%;
+            }
+            
+            body {
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+                height: auto !important;
+                min-height: 100vh;
+                margin: 0;
+                padding: 0;
+                padding-bottom: 80px; /* Space for floating buttons */
+            }
+            
+            /* Header - Fits in one line */
             .header {
-                padding: 0.5rem 0.75rem;
+                padding: 0.75rem;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: var(--bg);
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .header-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .logo-container {
+                gap: 0.5rem;
+                flex-shrink: 0;
             }
             
             .logo-container img {
-                height: 32px;
+                height: 28px;
+                width: auto;
             }
             
             .logo-text {
-                font-size: 1.2rem;
+                font-size: 1rem;
+                white-space: nowrap;
             }
             
+            /* Hide desktop nav */
             .header-nav {
-                display: none; /* Hide main nav on small phones */
+                display: none !important;
             }
             
-            .btn-icon, .btn-icon-text {
-                width: 40px;
-                height: 40px;
-                font-size: 0.9rem;
-                padding: 0.5rem;
+            /* Compact header buttons - fit all in row */
+            .nav-actions {
+                display: flex;
+                gap: 0.3rem;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+            }
+            
+            .btn-icon, 
+            .btn-icon-text {
+                width: 32px !important;
+                height: 32px !important;
+                min-width: 32px !important;
+                padding: 0 !important;
+                font-size: 0.85rem !important;
+                flex-shrink: 0;
             }
             
             .btn-icon-text span {
-                display: none; /* Show only icons */
+                display: none !important;
             }
             
-            .nav-actions {
-                gap: 0.35rem;
-            }
-            
-            .hero-banner {
-                min-height: 300px !important;
-                padding: 1.5rem 1rem !important;
-            }
-            
-            .hero-title {
-                font-size: 1.5rem !important;
-            }
-            
-            .hero-description {
-                font-size: 0.9rem !important;
-            }
-            
-            .live-channel-card {
-                flex: 1 1 100%;
-                max-width: 100%;
-                height: 180px;
-            }
-            
-            .category-nav-scroll {
-                gap: 0.5rem;
-            }
-            
-            .category-card {
-                flex: 0 0 140px;
-                height: 80px;
-            }
-            
-            .category-name {
-                font-size: 0.85rem;
-            }
-            
-            .movies-grid, .content-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.75rem !important;
-            }
-            
-            .movie-card {
-                min-width: 140px !important;
-            }
-            
-            .movie-title {
+            .btn-primary {
+                width: 32px !important;
+                height: 32px !important;
+                padding: 0 !important;
                 font-size: 0.85rem !important;
             }
             
+            .btn-primary span {
+                display: none !important;
+            }
+            
+            /* Hero Banner - Fits nicely */
+            .hero-banner {
+                min-height: 300px !important;
+                max-height: 400px !important;
+                height: auto !important;
+                padding: 1rem !important;
+                margin-bottom: 1rem !important;
+                width: 100%;
+                overflow: hidden;
+            }
+            
+            .hero-title {
+                font-size: 1.4rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .hero-description {
+                font-size: 0.85rem !important;
+                margin-bottom: 0.75rem !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            .cta-buttons {
+                display: flex;
+                gap: 0.5rem !important;
+                flex-wrap: wrap;
+            }
+            
+            .btn-primary, 
+            .btn-secondary {
+                padding: 0.6rem 1.2rem !important;
+                font-size: 0.9rem !important;
+            }
+            
+            /* Category Navigation - Horizontal scroll */
+            .category-nav-section {
+                padding: 0.75rem 0 !important;
+                margin-bottom: 1rem !important;
+                width: 100%;
+                overflow: hidden;
+            }
+            
+            .category-nav-title {
+                font-size: 1rem !important;
+                padding: 0 0.75rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .category-nav-wrapper {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+            }
+            
+            .category-nav-arrow {
+                display: none !important;
+            }
+            
+            .category-nav-scroll {
+                display: flex;
+                gap: 0.75rem !important;
+                padding: 0 0.75rem !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+            }
+            
+            .category-nav-scroll::-webkit-scrollbar {
+                display: none;
+            }
+            
+            /* Live Channel Card */
+            .live-channel-card {
+                flex: 0 0 160px !important;
+                height: 100px !important;
+                min-width: 160px !important;
+                scroll-snap-align: start;
+            }
+            
+            .live-channel-name {
+                font-size: 0.75rem !important;
+            }
+            
+            /* Category Cards */
+            .category-card {
+                flex: 0 0 120px !important;
+                height: 75px !important;
+                min-width: 120px !important;
+                scroll-snap-align: start;
+            }
+            
+            .category-name {
+                font-size: 0.8rem !important;
+            }
+            
+            /* COLLECTIONS - Netflix Style */
+            .collection-section {
+                margin-bottom: 1.5rem !important;
+                padding: 0 !important;
+                width: 100%;
+            }
+            
+            .collection-header {
+                padding: 0 0.75rem !important;
+                margin-bottom: 0.75rem !important;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .collection-header h2 {
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+                margin: 0 !important;
+            }
+            
+            .view-all-btn {
+                font-size: 0.85rem !important;
+                padding: 0.3rem 0.6rem !important;
+            }
+            
+            /* MOVIE CARDS - Horizontal Scroll (Netflix style) */
+            .movies-scroll {
+                display: flex !important;
+                gap: 0.5rem !important;
+                padding: 0 0.75rem !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x proximity;
+                scrollbar-width: none;
+            }
+            
+            .movies-scroll::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .movie-card {
+                flex: 0 0 130px !important;
+                min-width: 130px !important;
+                max-width: 130px !important;
+                scroll-snap-align: start;
+                margin-bottom: 0;
+            }
+            
+            .movie-poster {
+                height: 195px !important; /* 3:2 ratio like Netflix */
+                border-radius: 4px !important;
+                object-fit: cover;
+                width: 100%;
+            }
+            
+            .movie-info {
+                padding: 0.5rem 0.25rem !important;
+            }
+            
+            .movie-title {
+                font-size: 0.75rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.25rem !important;
+                font-weight: 600 !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            .movie-year,
+            .movie-rating {
+                font-size: 0.7rem !important;
+            }
+            
+            /* Grid Views (if used) */
+            .movies-grid,
+            .content-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.75rem !important;
+                padding: 0 0.75rem !important;
+            }
+            
+            .movies-grid .movie-card,
+            .content-grid .movie-card {
+                flex: none !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
+            }
+            
+            /* Video Modal - Full Screen */
             .video-modal {
-                padding: 0.5rem;
+                padding: 0 !important;
+            }
+            
+            .video-container {
+                width: 100% !important;
+                height: 100vh !important;
+                border-radius: 0 !important;
             }
             
             .close-video {
-                width: 45px;
-                height: 45px;
-                font-size: 1.5rem;
-                top: 10px;
-                right: 10px;
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 1.8rem !important;
+                top: 10px !important;
+                right: 10px !important;
             }
             
+            /* Side Panels */
+            .side-panel {
+                width: 90% !important;
+                max-width: 350px !important;
+            }
+            
+            /* Floating Buttons */
+            .floating-btn {
+                width: 56px !important;
+                height: 56px !important;
+                font-size: 1.3rem !important;
+            }
+            
+            .floating-btn-chat {
+                bottom: 150px !important;
+                right: 20px !important;
+            }
+            
+            .floating-btn-ai {
+                bottom: 80px !important;
+                right: 20px !important;
+            }
+        }
+        
             .side-panel {
                 width: 100%;
                 right: -100%;
@@ -1612,7 +1893,7 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video muted autoplay loop 
+                        <video id="previewVideo" muted autoplay loop 
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
@@ -1623,6 +1904,12 @@
                             </div>
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
+                        <!-- Volume Toggle Button -->
+                        <button class="volume-toggle-btn" id="volumeToggleBtn" 
+                                onclick="event.stopPropagation(); togglePreviewVolume();" 
+                                title="Toggle sound">
+                            <i class="fas fa-volume-mute"></i>
+                        </button>
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -2848,24 +3135,120 @@
         
         let hls = null;
         
+        // Toggle preview video volume
+        function togglePreviewVolume() {
+            const video = document.getElementById('previewVideo');
+            const btn = document.getElementById('volumeToggleBtn');
+            const icon = btn.querySelector('i');
+            
+            if (video.muted) {
+                video.muted = false;
+                icon.className = 'fas fa-volume-up';
+                btn.classList.add('unmuted');
+                btn.title = 'Mute';
+                console.log('🔊 Preview audio unmuted');
+            } else {
+                video.muted = true;
+                icon.className = 'fas fa-volume-mute';
+                btn.classList.remove('unmuted');
+                btn.title = 'Unmute';
+                console.log('🔇 Preview audio muted');
+            }
+        }
+        
         function openLiveStream() {
-            console.log('🔴 Opening Live Channel 26.5 - CASTR...');
+            console.log('🔴 Opening Live Channel 26.5 - HLS Stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
             modal.classList.add('active');
+            
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
-            // Castr iframe handles streaming automatically
+            
+            // Initialize HLS streaming
+            const streamUrl = 'http://10.0.0.4:8080/FLMTV.m3u8';
+            
+            if (Hls.isSupported()) {
+                console.log('✅ HLS.js supported - initializing...');
+                
+                // Destroy existing instance if any
+                if (hls) {
+                    hls.destroy();
+                }
+                
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90
+                });
+                
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    console.log('✅ Stream manifest loaded, starting playback...');
+                    video.play().catch(err => {
+                        console.log('⚠️ Autoplay blocked, user must click play');
+                    });
+                });
+                
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error('❌ HLS Error:', data.type, data.details);
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.log('🔄 Network error, attempting to recover...');
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.log('🔄 Media error, attempting to recover...');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                console.error('💥 Fatal error, cannot recover');
+                                hls.destroy();
+                                break;
+                        }
+                    }
+                });
+                
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                console.log('✅ Native HLS supported (Safari)');
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play().catch(err => {
+                        console.log('⚠️ Autoplay blocked, user must click play');
+                    });
+                });
+            } else {
+                console.error('❌ HLS not supported in this browser');
+                alert('Your browser does not support HLS streaming. Please use Chrome, Firefox, or Safari.');
+            }
         }
         
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
             modal.classList.remove('active');
+            
+            // Stop and destroy HLS
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            
+            // Pause video
+            video.pause();
+            video.src = '';
+            
             // Remove from history
             if (window.location.hash === '#stream') {
                 history.back();
             }
-            // Castr iframe stops automatically
         }
         
         // Handle browser back button
