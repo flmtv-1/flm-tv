@@ -376,16 +376,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(0, 56, 168, 0.3) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(252, 209, 22, 0.3) 100%),
-                        url('assets/images/FireTV_1920x1080_HIGHLIGHT_3.jpg');
+            background: linear-gradient(135deg, rgba(0, 56, 168, 0.8) 0%, rgba(139, 92, 246, 0.8) 50%, rgba(252, 209, 22, 0.8) 100%),
+                        url('assets/images/Graphic_2_Billboard_FLM_3840x14407-Da_One.png');
             background-size: cover;
             background-position: center;
-            filter: brightness(0.85);
+            filter: brightness(0.7);
             transition: all 0.3s ease;
         }
         
         .browse-content-card:hover .browse-card-image {
-            filter: brightness(1.1);
+            filter: brightness(1);
             transform: scale(1.05);
         }
         
@@ -1565,28 +1565,6 @@ setTimeout(() => {
         }
         
         setInterval(rotateHeading, 5000);
-        
-        // Browse Card Background Rotation
-        let browseCardIndex = 0;
-        const browseCardImages = [
-            'assets/images/FireTV_1920x1080_HIGHLIGHT_3.jpg',
-            'assets/images/Beyond_Realyty_poster_1920.png',
-            'assets/images/Family_channel_back.jpg',
-            'assets/images/Graphic_2_Billboard_FLM_3840x14407-Da_One.png',
-            'assets/images/graphic_2-10-Da_One.png'
-        ];
-        
-        function rotateBrowseCardBackground() {
-            const browseCard = document.querySelector('.browse-card-image');
-            if (browseCard) {
-                browseCardIndex = (browseCardIndex + 1) % browseCardImages.length;
-                const nextImage = browseCardImages[browseCardIndex];
-                browseCard.style.backgroundImage = `linear-gradient(135deg, rgba(0, 56, 168, 0.3) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(252, 209, 22, 0.3) 100%), url('${nextImage}')`;
-            }
-        }
-        
-        // Rotate browse card background every 7 seconds (same as hero)
-        setInterval(rotateBrowseCardBackground, 7000);
         
         // Browser Back Button
         history.pushState({page: 'home'}, '', '#home');
