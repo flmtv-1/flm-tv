@@ -4,9 +4,10 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Out of This World Entertainment 🛸</title>
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <!-- CSP removed to allow stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="./FLM TV - Out of This World Entertainment 🛸_files/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <style>
         :root {
@@ -1320,7 +1321,11 @@ setTimeout(() => {
             }
         });
         
-        // Video Stream
+        // ═══════════════════════════════════════════════════════════════
+        //  LIVE CHANNEL 26.5 HLS STREAMING
+        // ═══════════════════════════════════════════════════════════════
+        
+        let hls = null;
         
         function openLiveStream() {
             console.log('🔴 Opening Live Channel 26.5...');
