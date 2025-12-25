@@ -38,6 +38,8 @@
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -1054,6 +1056,13 @@
         
         /* Mobile - Small Phones (up to 480px) */
         @media (max-width: 480px) {
+            /* Fix hero banner height on mobile */
+            .hero-banner {
+                height: auto !important;
+                min-height: auto !important;
+                padding: 2rem 0 !important;
+            }
+            
             .header {
                 padding: 0.5rem 0.75rem;
             }
@@ -1078,36 +1087,44 @@
             }
             
             .hero-content h1 {
-                font-size: 1.5rem !important;
-                line-height: 1.2;
-                padding: 0 0.5rem;
+                font-size: 1.2rem !important;
+                line-height: 1.3;
+                padding: 0 1rem;
                 word-wrap: break-word;
+                margin-bottom: 0.5rem;
             }
             
             .hero-content p {
-                font-size: 0.85rem !important;
-                padding: 0 0.5rem;
+                font-size: 0.8rem !important;
+                padding: 0 1rem;
+                margin-bottom: 1rem !important;
             }
             
-            /* Card container - remove gap on mobile */
+            /* Card container - force vertical stacking */
             .hero-content > div {
+                display: flex !important;
+                flex-direction: column !important;
                 gap: 1rem !important;
-                padding: 0 0.5rem;
+                padding: 0 1rem !important;
+                width: 100% !important;
             }
             
             .live-channel-card {
-                flex: 1 1 100% !important;
+                flex: none !important;
+                width: 100% !important;
                 max-width: 100% !important;
                 min-width: 100% !important;
-                height: 180px;
-                margin-bottom: 1rem;
+                height: 200px !important;
+                margin: 0 !important;
             }
             
             .browse-content-card {
-                flex: 1 1 100% !important;
+                flex: none !important;
+                width: 100% !important;
                 max-width: 100% !important;
                 min-width: 100% !important;
-                height: 180px;
+                height: 200px !important;
+                margin: 0 !important;
             }
             
             .live-channel-name {
@@ -1116,6 +1133,20 @@
             
             .browse-card-name {
                 font-size: 0.95rem;
+            }
+            
+            /* Main content section - reduce padding */
+            main {
+                padding: 2rem 1rem !important;
+            }
+            
+            main h2 {
+                font-size: 1.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            main p {
+                font-size: 0.95rem !important;
             }
             
             .btn-cta {
