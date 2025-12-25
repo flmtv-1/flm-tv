@@ -370,23 +370,43 @@
             box-shadow: 0 12px 32px rgba(34, 197, 94, 0.5);
         }
         
-        .browse-card-image {
+        .browse-card-posters {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(0, 56, 168, 0.3) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(252, 209, 22, 0.3) 100%),
-                        url('assets/images/FireTV_1920x1080_HIGHLIGHT_3.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.85);
-            transition: all 0.3s ease;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 3px;
+            overflow: hidden;
+            background: #000;
         }
         
-        .browse-content-card:hover .browse-card-image {
-            filter: brightness(1.1);
-            transform: scale(1.05);
+        .browse-poster-item {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInPoster 0.5s ease forwards;
+        }
+        
+        @keyframes fadeInPoster {
+            to { opacity: 1; }
+        }
+        
+        .browse-poster-item:nth-child(1) { animation-delay: 0.1s; }
+        .browse-poster-item:nth-child(2) { animation-delay: 0.2s; }
+        .browse-poster-item:nth-child(3) { animation-delay: 0.3s; }
+        .browse-poster-item:nth-child(4) { animation-delay: 0.4s; }
+        .browse-poster-item:nth-child(5) { animation-delay: 0.5s; }
+        .browse-poster-item:nth-child(6) { animation-delay: 0.6s; }
+        
+        .browse-content-card:hover .browse-poster-item {
+            transform: scale(1.1);
         }
         
         .browse-card-content {
@@ -1069,16 +1089,24 @@
                 padding: 0 0.5rem;
             }
             
+            /* Card container - remove gap on mobile */
+            .hero-content > div {
+                gap: 1rem !important;
+                padding: 0 0.5rem;
+            }
+            
             .live-channel-card {
-                flex: 1 1 100%;
-                max-width: 100%;
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+                min-width: 100% !important;
                 height: 180px;
                 margin-bottom: 1rem;
             }
             
             .browse-content-card {
-                flex: 1 1 100%;
-                max-width: 100%;
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+                min-width: 100% !important;
                 height: 180px;
             }
             
@@ -1309,9 +1337,11 @@
                     </div>
                 </div>
                 
-                <!-- BROWSE CONTENT CARD (matching style) -->
+                <!-- BROWSE CONTENT CARD (shows random Jellyfin movie posters) -->
                 <div class="browse-content-card" onclick="window.location.href='browse.html';">
-                    <div class="browse-card-image"></div>
+                    <div class="browse-card-posters" id="browseCardPosters">
+                        <!-- Movie posters loaded by JavaScript -->
+                    </div>
                     <div class="browse-card-content">
                         <div class="browse-indicator">
                             <i class="fas fa-film"></i>
@@ -1566,28 +1596,6 @@ setTimeout(() => {
         
         setInterval(rotateHeading, 5000);
         
-        // Browse Card Background Rotation
-        let browseCardIndex = 0;
-        const browseCardImages = [
-            'assets/images/FireTV_1920x1080_HIGHLIGHT_3.jpg',
-            'assets/images/Beyond_Realyty_poster_1920.png',
-            'assets/images/Family_channel_back.jpg',
-            'assets/images/Graphic_2_Billboard_FLM_3840x14407-Da_One.png',
-            'assets/images/graphic_2-10-Da_One.png'
-        ];
-        
-        function rotateBrowseCardBackground() {
-            const browseCard = document.querySelector('.browse-card-image');
-            if (browseCard) {
-                browseCardIndex = (browseCardIndex + 1) % browseCardImages.length;
-                const nextImage = browseCardImages[browseCardIndex];
-                browseCard.style.backgroundImage = `linear-gradient(135deg, rgba(0, 56, 168, 0.3) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(252, 209, 22, 0.3) 100%), url('${nextImage}')`;
-            }
-        }
-        
-        // Rotate browse card background every 7 seconds (same as hero)
-        setInterval(rotateBrowseCardBackground, 7000);
-        
         // Browser Back Button
         history.pushState({page: 'home'}, '', '#home');
         window.addEventListener('popstate', function() {
@@ -1752,6 +1760,65 @@ setTimeout(() => {
                 history.back();
             }
         }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  LOAD JELLYFIN MOVIE POSTERS FOR BROWSE CARD
+        // ═══════════════════════════════════════════════════════════════
+        
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+        
+        async function loadBrowsePosters() {
+            const container = document.getElementById('browseCardPosters');
+            if (!container) return;
+            
+            try {
+                // Fetch random movies from all collections
+                const response = await fetch(
+                    `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?` + 
+                    `api_key=${JELLYFIN_CONFIG.API_KEY}&` +
+                    `IncludeItemTypes=Movie&` +
+                    `Recursive=true&` +
+                    `ImageTypes=Primary&` +
+                    `Limit=20&` +
+                    `SortBy=Random`
+                );
+                
+                const data = await response.json();
+                
+                if (data.Items && data.Items.length > 0) {
+                    // Clear container
+                    container.innerHTML = '';
+                    
+                    // Show 6 random posters in grid
+                    const postersToShow = data.Items.slice(0, 6);
+                    
+                    postersToShow.forEach(item => {
+                        const posterDiv = document.createElement('div');
+                        posterDiv.className = 'browse-poster-item';
+                        
+                        if (item.ImageTags && item.ImageTags.Primary) {
+                            const imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&format=webp&maxHeight=300`;
+                            posterDiv.style.backgroundImage = `url('${imageUrl}')`;
+                        }
+                        
+                        container.appendChild(posterDiv);
+                    });
+                    
+                    console.log('✅ Loaded', postersToShow.length, 'movie posters for browse card');
+                }
+            } catch (error) {
+                console.error('❌ Error loading browse posters:', error);
+                // Show fallback background on error
+                container.style.background = 'linear-gradient(135deg, rgba(0, 56, 168, 0.9) 0%, rgba(139, 92, 246, 0.9) 50%, rgba(252, 209, 22, 0.9) 100%)';
+            }
+        }
+        
+        // Load posters when page loads
+        window.addEventListener('load', loadBrowsePosters);
         
         console.log('🛸 FLM TV - Out of This World! 🌍✨');
     </script>
