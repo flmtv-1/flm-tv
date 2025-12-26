@@ -2514,6 +2514,41 @@
      async function jellyfinFetch(endpoint, params = {}) {
     const baseUrl = JELLYFIN_CONFIG.SERVER;
     
+    if (!baseUrl.startsWith('http')) {
+        const queryString = new URLSearchParams();
+        queryString.append('api_key', JELLYFIN_CONFIG.API_KEY);
+        
+        Object.keys(params).forEach(key => {
+            if (params[key] !== null && params[key] !== undefined) {
+                queryString.append(key, params[key]);
+            }
+        });
+        
+        const url = `${baseUrl}${endpoint}?${queryString.toString()}`;
+        
+        console.log('🔍 Fetching:', url);
+        
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                console.error('❌ Jellyfin API Error:', response.status, response.statusText);
+                return null;
+            }
+            const data = await response.json();
+            console.log('✅ Response:', data);
+            return data;
+        } catch (error) {
+            console.error('❌ Fetch Error:', error);
+            return null;
+        }
+    }
+    
     const url = new URL(`${baseUrl}${endpoint}`);
     url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
     
@@ -2536,18 +2571,15 @@
         });
         
         if (!response.ok) {
-            const errorText = `Jellyfin API returned ${response.status} ${response.statusText}`;
-            console.error('❌', errorText);
-            throw new Error(errorText);
+            console.error('❌ Jellyfin API Error:', response.status, response.statusText);
+            return null;
         }
-        
         const data = await response.json();
         console.log('✅ Response:', data);
         return data;
-        
     } catch (error) {
         console.error('❌ Fetch Error:', error);
-        throw error; // Re-throw so caller can handle it
+        return null;
     }
 }
         
@@ -2636,20 +2668,14 @@
                     
                     const navItem = document.createElement('div');
                     navItem.className = 'category-nav-item';
-                    navItem.style.cursor = 'pointer';
-                    navItem.onclick = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        openJellyfinCollection(collection.id);
-                    };
+                    navItem.onclick = () => openJellyfinCollection(collection.id);
                     
                     navItem.innerHTML = `
                         <img src="${backdropUrl}" 
                              alt="${collection.name}" 
                              class="category-nav-image"
-                             loading="lazy"
-                             style="pointer-events: none;">
-                        <div class="category-nav-overlay" style="pointer-events: none;">
+                             loading="lazy">
+                        <div class="category-nav-overlay">
                             <div class="category-nav-name">${collection.name}</div>
                         </div>
                     `;
@@ -3059,28 +3085,11 @@
             }, 5000);
         }
         
-        async function playJellyfinItem(itemId) {
-            console.log('🎬 Opening detail page for:', itemId);
-            
-            // Fetch item details from Jellyfin
-            try {
-                const itemData = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
-                
-                // Create detail page
-                showDetailPage(itemData);
-                
-            } catch (error) {
-                console.error('Error loading item details:', error);
-                // Fallback to direct play if detail fetch fails
-                playVideoDirectly(itemId);
-            }
-        }
-        
-        function playVideoDirectly(itemId) {
+        function playJellyfinItem(itemId) {
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            console.log('🎬 Playing video directly:', itemId);
+            console.log('🎬 Playing item:', itemId);
             
             // DIRECT STREAM URL - bypasses ALL Jellyfin UI
             const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}&Static=true`;
@@ -3108,440 +3117,77 @@
             history.pushState({modal: 'movie'}, '', '#movie');
         }
         
-        async function showDetailPage(item) {
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            // If it's a Series, use Jellyfin's page with FLM TV frame
-            if (item.Type === 'Series') {
-                console.log('📺 Opening series page with Jellyfin UI');
-                
-                const seriesUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${item.Id}&serverId=${JELLYFIN_CONFIG.SERVER}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                
-                frame.src = seriesUrl;
-                
-                // Inject FLM TV branding after iframe loads
-                frame.onload = function() {
-                    try {
-                        injectCustomBranding(frame);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
-                    }
-                };
-                
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'series'}, '', '#series');
-                return;
-            }
-            
-            // For movies, use custom detail page
-            // Get backdrop image
-            const backdropUrl = item.BackdropImageTags && item.BackdropImageTags[0]
-                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`
-                : '';
-            
-            // Get poster image
-            const posterUrl = item.ImageTags?.Primary
-                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`
-                : '';
-            
-            // Format runtime
-            const runtime = item.RunTimeTicks 
-                ? `${Math.floor(item.RunTimeTicks / 600000000)}h ${Math.floor((item.RunTimeTicks % 600000000) / 10000000)}m`
-                : '';
-            
-            // Fetch cast and similar items
-            let castHTML = '';
-            let similarHTML = '';
-            
-            try {
-                // Get people (cast & crew)
-                const people = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${item.Id}/People`);
-                if (people && people.length > 0) {
-                    castHTML = people.slice(0, 10).map(person => {
-                        const personImage = person.PrimaryImageTag
-                            ? `${JELLYFIN_CONFIG.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=200`
-                            : 'https://via.placeholder.com/200x300?text=No+Photo';
-                        
-                        return `
-                            <div style="text-align: center; min-width: 120px;">
-                                <img src="${personImage}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #22c55e;">
-                                <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #ffd700;">${person.Name}</div>
-                                <div style="font-size: 0.75rem; color: #94a3b8;">${person.Role || person.Type}</div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-                
-                // Get similar items
-                const similar = await jellyfinFetch(`/Items/${item.Id}/Similar?userId=${JELLYFIN_CONFIG.USER_ID}&limit=10`);
-                if (similar && similar.Items && similar.Items.length > 0) {
-                    similarHTML = similar.Items.map(simItem => {
-                        const simPoster = simItem.ImageTags?.Primary
-                            ? `${JELLYFIN_CONFIG.SERVER}/Items/${simItem.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`
-                            : 'https://via.placeholder.com/200x300?text=No+Image';
-                        
-                        return `
-                            <div onclick="parent.playJellyfinItem('${simItem.Id}')" style="cursor: pointer; min-width: 150px; transition: transform 0.3s;">
-                                <img src="${simPoster}" style="width: 150px; height: 225px; border-radius: 8px; border: 2px solid rgba(34, 197, 94, 0.3);">
-                                <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600;">${simItem.Name}</div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            } catch (err) {
-                console.error('Error fetching cast/similar:', err);
-            }
-            
-            // Build detail page HTML for movies
-            frame.srcdoc = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <style>
-                        * { margin: 0; padding: 0; box-sizing: border-box; }
-                        body {
-                            background: #0a0f1a;
-                            color: #fff;
-                            font-family: 'Inter', sans-serif;
-                            overflow-x: hidden;
-                        }
-                        .backdrop {
-                            width: 100%;
-                            height: 50vh;
-                            background: url('${backdropUrl}') center/cover;
-                            position: relative;
-                        }
-                        .backdrop::after {
-                            content: '';
-                            position: absolute;
-                            bottom: 0;
-                            left: 0;
-                            right: 0;
-                            height: 100%;
-                            background: linear-gradient(to bottom, transparent, #0a0f1a);
-                        }
-                        .content {
-                            position: relative;
-                            margin-top: -150px;
-                            padding: 0 2rem 2rem;
-                            z-index: 10;
-                        }
-                        .main-info {
-                            display: flex;
-                            gap: 2rem;
-                            margin-bottom: 2rem;
-                        }
-                        .poster {
-                            flex-shrink: 0;
-                        }
-                        .poster img {
-                            width: 300px;
-                            border-radius: 12px;
-                            border: 3px solid #22c55e;
-                            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-                        }
-                        .details {
-                            flex: 1;
-                        }
-                        .title {
-                            font-size: 3rem;
-                            font-weight: 900;
-                            color: #ffd700;
-                            margin-bottom: 1rem;
-                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-                        }
-                        .meta {
-                            display: flex;
-                            gap: 1.5rem;
-                            margin-bottom: 1.5rem;
-                            font-size: 1.1rem;
-                            color: #94a3b8;
-                        }
-                        .meta span {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                        }
-                        .play-btn {
-                            background: #22c55e;
-                            color: white;
-                            border: none;
-                            padding: 1rem 3rem;
-                            font-size: 1.25rem;
-                            font-weight: 700;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 0.75rem;
-                            transition: all 0.3s;
-                            margin-bottom: 1.5rem;
-                        }
-                        .play-btn:hover {
-                            background: #1ea34b;
-                            transform: translateY(-2px);
-                            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
-                        }
-                        .overview {
-                            font-size: 1.1rem;
-                            line-height: 1.8;
-                            color: #e2e8f0;
-                            margin-bottom: 1rem;
-                        }
-                        .section {
-                            margin-top: 3rem;
-                        }
-                        .section-title {
-                            font-size: 1.5rem;
-                            font-weight: 800;
-                            color: #ffd700;
-                            margin-bottom: 1.5rem;
-                        }
-                        .scroll-container {
-                            display: flex;
-                            gap: 1.5rem;
-                            overflow-x: auto;
-                            padding-bottom: 1rem;
-                            scrollbar-width: thin;
-                            scrollbar-color: #22c55e #1a1f2e;
-                        }
-                        .scroll-container::-webkit-scrollbar {
-                            height: 8px;
-                        }
-                        .scroll-container::-webkit-scrollbar-track {
-                            background: #1a1f2e;
-                        }
-                        .scroll-container::-webkit-scrollbar-thumb {
-                            background: #22c55e;
-                            border-radius: 4px;
-                        }
-                        
-                        @media (max-width: 768px) {
-                            .main-info { flex-direction: column; align-items: center; text-align: center; }
-                            .poster img { width: 200px; }
-                            .title { font-size: 2rem; }
-                            .content { padding: 0 1rem 2rem; margin-top: -100px; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="backdrop"></div>
-                    <div class="content">
-                        <div class="main-info">
-                            <div class="poster">
-                                <img src="${posterUrl}" alt="${item.Name}">
-                            </div>
-                            <div class="details">
-                                <h1 class="title">${item.Name}</h1>
-                                <div class="meta">
-                                    <span>📅 ${item.ProductionYear || 'N/A'}</span>
-                                    ${runtime ? `<span>⏱️ ${runtime}</span>` : ''}
-                                    ${item.OfficialRating ? `<span>🎬 ${item.OfficialRating}</span>` : ''}
-                                    ${item.CommunityRating ? `<span>⭐ ${item.CommunityRating.toFixed(1)}</span>` : ''}
-                                </div>
-                                <button class="play-btn" onclick="parent.playVideoDirectly('${item.Id}')">
-                                    ▶️ Play Now
-                                </button>
-                                <p class="overview">${item.Overview || 'No description available.'}</p>
-                                ${item.Genres ? `<p style="color: #ffd700; margin-top: 1rem;"><strong>Genre:</strong> ${item.Genres.join(', ')}</p>` : ''}
-                            </div>
-                        </div>
-                        
-                        ${castHTML ? `
-                            <div class="section">
-                                <h2 class="section-title">Cast & Crew</h2>
-                                <div class="scroll-container">
-                                    ${castHTML}
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        ${similarHTML ? `
-                            <div class="section">
-                                <h2 class="section-title">More Like This</h2>
-                                <div class="scroll-container">
-                                    ${similarHTML}
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                </body>
-                </html>
-            `;
-            
-            viewer.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'detail'}, '', '#detail');
-        }
-        
         async function openJellyfinCollection(collectionId) {
             console.log('📂 Opening collection:', collectionId);
-            
-            if (!collectionId) {
-                console.error('❌ No collection ID provided');
-                return;
-            }
             
             showSpaceWelcome();
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame element not found');
-                return;
-            }
-            
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection name:', collectionName);
-            
             try {
-                console.log('🔄 Fetching items from Jellyfin...');
-                const response = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                     ParentId: collectionId,
                     Limit: 100,
                     SortBy: 'SortName',
                     Recursive: true
                 });
                 
-                console.log('📦 API Response:', response);
-                
-                // Check if response is valid
-                if (!response) {
-                    throw new Error('API returned null response');
-                }
-                
-                if (!response.Items) {
-                    throw new Error('API response missing Items array');
-                }
-                
-                const items = response.Items;
-                console.log('✅ Fetched items:', items.length);
-                
-                if (items.length === 0) {
-                    console.warn('⚠️ Collection is empty');
-                }
-                
                 // Simple grid view - NO JELLYFIN UI
                 frame.srcdoc = `
                     <!DOCTYPE html>
                     <html>
                     <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
                         <style>
                             * { margin: 0; padding: 0; box-sizing: border-box; }
                             body { 
                                 background: #0a0f1a;
                                 color: #fff;
                                 font-family: 'Inter', sans-serif;
-                                padding: 1.5rem;
+                                padding: 2rem;
                             }
-                            h1 { 
-                                color: #ffd700; 
-                                margin-bottom: 2rem;
-                                font-size: 2rem;
-                                font-weight: 800;
-                            }
+                            h1 { color: #ffd700; margin-bottom: 2rem; }
                             .grid {
                                 display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                                 gap: 1rem;
                             }
-                            .card { 
-                                cursor: pointer; 
-                                transition: transform 0.3s;
-                            }
-                            .card:hover { 
-                                transform: scale(1.05); 
-                            }
+                            .card { cursor: pointer; transition: transform 0.3s; }
+                            .card:hover { transform: scale(1.05); }
                             .card img { 
                                 width: 100%;
-                                aspect-ratio: 2/3;
-                                object-fit: cover;
                                 border-radius: 8px;
                                 border: 2px solid #22c55e;
                             }
                             .card-title {
                                 margin-top: 0.5rem;
-                                font-size: 0.85rem;
-                                line-height: 1.3;
-                            }
-                            .empty-message {
-                                color: #94a3b8;
-                                font-size: 1.1rem;
-                                text-align: center;
-                                margin-top: 3rem;
-                            }
-                            
-                            @media (max-width: 768px) {
-                                body { padding: 1rem; }
-                                h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
-                                .grid {
-                                    grid-template-columns: repeat(3, 1fr);
-                                    gap: 0.5rem;
-                                }
-                                .card-title { font-size: 0.75rem; }
+                                font-size: 0.9rem;
                             }
                         </style>
                     </head>
                     <body>
                         <h1>${collectionName}</h1>
-                        ${items.length > 0 ? `
-                            <div class="grid">
-                                ${items.map(item => `
-                                    <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
-                                        <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" 
-                                             alt="${item.Name}"
-                                             onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
-                                        <div class="card-title">${item.Name}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : `
-                            <div class="empty-message">
-                                <p>No items found in this collection</p>
-                            </div>
-                        `}
+                        <div class="grid">
+                            ${items.Items ? items.Items.map(item => `
+                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
+                                    <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300">
+                                    <div class="card-title">${item.Name}</div>
+                                </div>
+                            `).join('') : '<p>No items</p>'}
+                        </div>
                     </body>
                     </html>
                 `;
-                
-                console.log('✅ Grid HTML created');
-                
             } catch (error) {
-                console.error('❌ Error loading collection:', error);
-                console.error('❌ Error stack:', error.stack);
-                
-                frame.srcdoc = `
-                    <body style="background:#0a0f1a;color:#fff;padding:2rem;font-family:'Inter',sans-serif;">
-                        <h1 style="color:#ef4444;margin-bottom:1rem;">Error Loading Collection</h1>
-                        <p style="color:#94a3b8;margin-bottom:1rem;font-size:1.1rem;">${error.message || 'Unknown error occurred'}</p>
-                        <p style="color:#64748b;font-size:0.9rem;margin-bottom:2rem;">Collection ID: ${collectionId}</p>
-                        <button onclick="parent.closeViewer()" style="margin-top:1rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">
-                            ← Back to Browse
-                        </button>
-                    </body>
-                `;
+                frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
             }
             
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'collection'}, '', '#collection');
-            
-            console.log('✅ Collection viewer opened');
         }
         
         function showSpaceWelcome() {
@@ -3559,7 +3205,7 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                animation: fadeIn 0.3s ease;
+                animation: fadeIn 0.5s ease;
             `;
             overlay.innerHTML = `
                 <h1 style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem; animation: glow 1.5s ease-in-out infinite;">
@@ -3569,11 +3215,11 @@
             `;
             document.body.appendChild(overlay);
             
-            // Auto-remove after 0.5 seconds (quick flash!)
+            // Auto-remove after 2 seconds
             setTimeout(() => {
-                overlay.style.animation = 'fadeOut 0.3s ease';
-                setTimeout(() => overlay.remove(), 300);
-            }, 500);
+                overlay.style.animation = 'fadeOut 0.5s ease';
+                setTimeout(() => overlay.remove(), 500);
+            }, 2000);
         }
         
         // Inject FLM TV branding into Jellyfin iframe
