@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FLM TV - Multicultural Streaming</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  VARIABLES - Filipino Flag Colors                               */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --accent: #ffd700;
+            --neon-green: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --bg-card: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  RESET & BASE - MOBILE FIRST                                    */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+            position: relative;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  HEADER - MOBILE OPTIMIZED                                      */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.75rem 1rem;
+            width: 100%;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .logo-container img {
+            height: 35px;
+            width: auto;
+            border-radius: 6px;
+        }
+        
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+        
+        .header-nav {
+            display: none; /* Hide on mobile, show on desktop */
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .btn-icon:hover, .btn-icon:active {
+            background: var(--neon-green);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  HERO BANNER - MOBILE OPTIMIZED                                 */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .hero-banner {
+            height: 50vh;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(10, 15, 26, 0.3) 0%,
+                rgba(10, 15, 26, 0.7) 70%,
+                rgba(10, 15, 26, 0.95) 100%);
+        }
+        
+        .hero-content {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1rem;
+            right: 1rem;
+            z-index: 10;
+        }
+        
+        .hero-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .hero-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-watch {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-watch:hover, .btn-watch:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        .btn-info {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-info:hover, .btn-info:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .volume-toggle {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1rem;
+            z-index: 15;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .volume-toggle:hover, .volume-toggle:active {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--neon-green);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  CATEGORIES SECTION - MOBILE GRID                               */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .categories-section {
+            padding: 1.5rem 1rem;
+            width: 100%;
+        }
+        
+        .section-header {
+            margin-bottom: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .section-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            width: 100%;
+        }
+        
+        .category-card {
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            aspect-ratio: 16/9;
+            position: relative;
+        }
+        
+        .category-card:hover, .category-card:active {
+            transform: translateY(-4px);
+            border-color: var(--neon-green);
+            box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
+        }
+        
+        .category-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .category-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, 
+                rgba(0, 0, 0, 0.9) 0%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 0.75rem;
+        }
+        
+        .category-info {
+            width: 100%;
+        }
+        
+        .category-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+        
+        .category-count {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  CONTENT ROWS - HORIZONTAL SCROLL                               */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .content-row {
+            padding: 1.5rem 0;
+            width: 100%;
+        }
+        
+        .row-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .row-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+        
+        .view-all-btn {
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .view-all-btn:hover, .view-all-btn:active {
+            background: var(--neon-green);
+            color: white;
+        }
+        
+        .row-content {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            gap: 0.75rem;
+            padding: 0 1rem;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .row-content::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .movie-card {
+            flex: 0 0 140px;
+            width: 140px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .movie-card:hover, .movie-card:active {
+            transform: scale(1.05);
+        }
+        
+        .movie-poster {
+            width: 140px;
+            height: 210px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            padding: 0.5rem 0;
+        }
+        
+        .movie-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .movie-year {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  SIDE PANELS - CHAT & AI                                        */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            background: var(--bg-light);
+            border-left: 2px solid var(--primary);
+            z-index: 200;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-panel.active {
+            right: 0;
+        }
+        
+        .panel-header {
+            padding: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .close-panel {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .close-panel:hover, .close-panel:active {
+            color: var(--neon-green);
+        }
+        
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .messages-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        
+        .message.sent {
+            background: var(--neon-green);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .message.received {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            align-self: flex-start;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .message-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .message-input:focus {
+            border-color: var(--neon-green);
+        }
+        
+        .send-btn {
+            background: var(--neon-green);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .send-btn:hover, .send-btn:active {
+            background: #1ea34b;
+            transform: scale(1.05);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  JELLYFIN VIEWER MODAL - ONLY SHOWN WHEN CLICKING CONTENT       */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .jellyfin-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .jellyfin-viewer.active {
+            display: flex;
+        }
+        
+        .jellyfin-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .jellyfin-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .close-jellyfin {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .close-jellyfin:hover, .close-jellyfin:active {
+            background: var(--neon-green);
+            color: white;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  LIVE STREAM MODAL                                              */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 250;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-modal.active {
+            display: flex;
+        }
+        
+        .video-container {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            position: relative;
+        }
+        
+        .live-video {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover, .close-modal:active {
+            background: var(--neon-green);
+            color: white;
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  TABLET & DESKTOP RESPONSIVE                                    */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        @media (min-width: 768px) {
+            .header {
+                padding: 1rem 2rem;
+            }
+            
+            .logo-container img {
+                height: 50px;
+            }
+            
+            .logo-text {
+                font-size: 2rem;
+            }
+            
+            .header-nav {
+                display: flex;
+                gap: 2rem;
+                list-style: none;
+            }
+            
+            .header-nav a {
+                color: var(--text);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 1rem;
+                transition: color 0.3s ease;
+            }
+            
+            .header-nav a:hover {
+                color: var(--neon-green);
+            }
+            
+            .hero-banner {
+                height: 70vh;
+            }
+            
+            .hero-content {
+                left: 2rem;
+                right: 2rem;
+                bottom: 2rem;
+            }
+            
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-description {
+                font-size: 1.1rem;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .categories-section {
+                padding: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .movie-card {
+                flex: 0 0 200px;
+                width: 200px;
+            }
+            
+            .movie-poster {
+                width: 200px;
+                height: 300px;
+            }
+            
+            .side-panel {
+                max-width: 450px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .categories-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HEADER                                                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
+                <div class="logo-text">FLM TV</div>
+            </div>
+            
+            <nav class="header-nav">
+                <a href="#home" class="active">Home</a>
+                <a href="#browse">Browse</a>
+                <a href="#live">Live TV</a>
+            </nav>
+            
+            <div class="nav-actions">
+                <button class="btn-icon" onclick="togglePanel('chatPanel')" title="Live Chat">
+                    <i class="fas fa-comments"></i>
+                </button>
+                <button class="btn-icon" onclick="togglePanel('aiPanel')" title="Zaina AI">
+                    <i class="fas fa-robot"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HERO BANNER                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <section class="hero-banner">
+        <video id="previewVideo" class="hero-video" autoplay loop muted playsinline>
+            <source src="https://stream.castr.com/62657d0a5fdff56f4427cade/live_f13d9aa0ce6411efaa6adfe939f1ab52/index.m3u8" type="application/x-mpegURL">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">FLM Television Network</h1>
+            <p class="hero-description">
+                Las Vegas's premier multicultural streaming platform. Experience authentic Filipino entertainment, 
+                international cinema, and exclusive original programming. Broadcasting live on Channel 26.5.
+            </p>
+            <div class="hero-actions">
+                <button class="btn-watch" onclick="openLiveStream()">
+                    <i class="fas fa-play"></i> Watch Live Channel 26.5
+                </button>
+                <button class="btn-info">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </button>
+            </div>
+        </div>
+        <button id="volumeToggleBtn" class="volume-toggle" onclick="togglePreviewVolume()" title="Unmute">
+            <i class="fas fa-volume-mute"></i>
+        </button>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  CATEGORIES SECTION                                              -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <section class="categories-section">
+        <div class="section-header">
+            <h2 class="section-title">Browse by Category</h2>
+            <p class="section-subtitle">Explore our diverse collection of multicultural content</p>
+        </div>
+        <div id="categoriesGrid" class="categories-grid">
+            <!-- Categories will be loaded here -->
+        </div>
+    </section>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  CONTENT ROWS                                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="contentRows">
+        <!-- Content rows will be dynamically loaded here -->
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  CHAT PANEL                                                      -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="chatPanel" class="side-panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <i class="fas fa-comments"></i> Live Chat
+            </div>
+            <button class="close-panel" onclick="togglePanel('chatPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div id="chatMessages" class="messages-container">
+                <div class="message received">
+                    Welcome to FLM TV Live Chat! Connect with viewers worldwide. 🌏💚
+                </div>
+            </div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="chatInput" class="message-input" placeholder="Type your message..." 
+                   onkeypress="if(event.key==='Enter') sendChatMessage()">
+            <button class="send-btn" onclick="sendChatMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  ZAINA AI PANEL                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="aiPanel" class="side-panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <i class="fas fa-robot"></i> Zaina AI
+            </div>
+            <button class="close-panel" onclick="togglePanel('aiPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div id="aiMessages" class="messages-container">
+                <div class="message received">
+                    Hi! I'm Zaina AI, your entertainment assistant. Ask me anything about shows, movies, or FLM TV! 🤖✨
+                </div>
+            </div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="aiInput" class="message-input" placeholder="Ask Zaina AI anything..." 
+                   onkeypress="if(event.key==='Enter') sendAIMessage()">
+            <button class="send-btn" onclick="sendAIMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  JELLYFIN VIEWER - ONLY APPEARS WHEN CLICKING CONTENT            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="jellyfinViewer" class="jellyfin-viewer">
+        <div class="jellyfin-container">
+            <button class="close-jellyfin" onclick="closeJellyfinViewer()">
+                <i class="fas fa-times"></i>
+            </button>
+            <iframe id="jellyfinFrame" class="jellyfin-frame" allowfullscreen></iframe>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  LIVE STREAM MODAL                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div id="videoModal" class="video-modal">
+        <div class="video-container">
+            <button class="close-modal" onclick="closeLiveStream()">
+                <i class="fas fa-times"></i>
+            </button>
+            <iframe class="live-video" 
+                    src="https://stream.castr.com/62657d0a5fdff56f4427cade/live_f13d9aa0ce6411efaa6adfe939f1ab52/castr.html" 
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  FIREBASE & CONFIGURATION                                        -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        //  CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org',
+            API_KEY: 'a25c7de3c74c4de3a74fd6daa6de72ee',
+            USER_ID: 'e43d1ba8d5e94aa69e60b43bf13fc3bd'
+        };
+        
+        const API_KEYS = {
+            GEMINI: 'AIzaSyB2cRc6d33Pl84cdDr0WRCFqdbLg_k6gJ0'
+        };
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyCNw8VNwY0IRLuYPOGPjXQ1qmjxZn-V7tU",
+            authDomain: "zainas-streaming-platform.firebaseapp.com",
+            databaseURL: "https://zainas-streaming-platform-default-rtdb.firebaseio.com",
+            projectId: "zainas-streaming-platform",
+            storageBucket: "zainas-streaming-platform.firebasestorage.app",
+            messagingSenderId: "621057729451",
+            appId: "1:621057729451:web:ad9c16ed37e8d5e96a4f65"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+        
+        // Sign in anonymously for chat
+        auth.signInAnonymously().catch(err => console.error('Auth error:', err));
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  JELLYFIN API HELPER
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function jellyfinFetch(endpoint) {
+            const url = `${JELLYFIN_CONFIG.SERVER}${endpoint}`;
+            const response = await fetch(url, {
+                headers: {
+                    'X-Emby-Token': JELLYFIN_CONFIG.API_KEY
+                }
+            });
+            return response.json();
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  LOAD CATEGORIES
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadCategories() {
+            try {
+                const data = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Views`);
+                const grid = document.getElementById('categoriesGrid');
+                grid.innerHTML = '';
+                
+                if (data.Items && data.Items.length > 0) {
+                    data.Items.forEach(category => {
+                        const card = document.createElement('div');
+                        card.className = 'category-card';
+                        card.onclick = () => openCategoryContent(category.Id, category.Name);
+                        
+                        const imageUrl = category.ImageTags?.Primary 
+                            ? `${JELLYFIN_CONFIG.SERVER}/Items/${category.Id}/Images/Primary?tag=${category.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                            : '';
+                        
+                        card.innerHTML = `
+                            ${imageUrl ? `<img class="category-image" src="${imageUrl}" alt="${category.Name}">` : ''}
+                            <div class="category-overlay">
+                                <div class="category-info">
+                                    <div class="category-name">${category.Name}</div>
+                                    <div class="category-count">${category.Type || 'Collection'}</div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        grid.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  LOAD CONTENT ROWS
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadContentRows() {
+            try {
+                const data = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Views`);
+                const container = document.getElementById('contentRows');
+                container.innerHTML = '';
+                
+                if (data.Items && data.Items.length > 0) {
+                    for (const collection of data.Items) {
+                        await createContentRow(collection, container);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading content rows:', error);
+            }
+        }
+        
+        async function createContentRow(collection, container) {
+            try {
+                const items = await jellyfinFetch(
+                    `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${collection.Id}&Limit=20&SortBy=DateCreated,SortName&SortOrder=Descending`
+                );
+                
+                if (!items.Items || items.Items.length === 0) return;
+                
+                const row = document.createElement('div');
+                row.className = 'content-row';
+                
+                row.innerHTML = `
+                    <div class="row-header">
+                        <h3 class="row-title">${collection.Name}</h3>
+                        <button class="view-all-btn" onclick="openCategoryContent('${collection.Id}', '${collection.Name}')">
+                            View All <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="row-content" id="row-${collection.Id}"></div>
+                `;
+                
+                container.appendChild(row);
+                
+                const rowContent = document.getElementById(`row-${collection.Id}`);
+                items.Items.forEach(item => {
+                    const card = createMovieCard(item);
+                    rowContent.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error creating content row:', error);
+            }
+        }
+        
+        function createMovieCard(item) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.onclick = () => openJellyfinContent(item.Id);
+            
+            const imageUrl = item.ImageTags?.Primary 
+                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                : '';
+            
+            card.innerHTML = `
+                <div class="movie-poster">
+                    ${imageUrl ? `<img src="${imageUrl}" alt="${item.Name}">` : ''}
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">${item.Name}</div>
+                    <div class="movie-year">${item.ProductionYear || ''}</div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  OPEN JELLYFIN CONTENT - TRIGGERS SIGN-IN
+        // ═══════════════════════════════════════════════════════════════
+        
+        function openJellyfinContent(itemId) {
+            console.log('Opening Jellyfin content:', itemId);
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            
+            // This will show the Jellyfin web interface which requires sign-in
+            frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}`;
+            viewer.classList.add('active');
+            
+            // Add to browser history
+            history.pushState({modal: 'jellyfin', id: itemId}, '', `#content-${itemId}`);
+        }
+        
+        function openCategoryContent(categoryId, categoryName) {
+            console.log('Opening category:', categoryName);
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            
+            // This will show the Jellyfin web interface which requires sign-in
+            frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list?parentId=${categoryId}`;
+            viewer.classList.add('active');
+            
+            // Add to browser history
+            history.pushState({modal: 'jellyfin', id: categoryId}, '', `#category-${categoryId}`);
+        }
+        
+        function closeJellyfinViewer() {
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            viewer.classList.remove('active');
+            frame.src = '';
+            
+            // Remove from history
+            if (window.location.hash) {
+                history.back();
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  SIDE PANEL CONTROLS
+        // ═══════════════════════════════════════════════════════════════
+        
+        function togglePanel(panelId) {
+            const panel = document.getElementById(panelId);
+            const allPanels = document.querySelectorAll('.side-panel');
+            
+            // Close all other panels
+            allPanels.forEach(p => {
+                if (p.id !== panelId) {
+                    p.classList.remove('active');
+                }
+            });
+            
+            // Toggle the clicked panel
+            panel.classList.toggle('active');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  LIVE CHAT FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════
+        
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add message to UI
+            addChatMessage('sent', message);
+            
+            // Send to Firebase
+            if (auth.currentUser) {
+                database.ref('chat/messages').push({
+                    text: message,
+                    userId: auth.currentUser.uid,
+                    timestamp: Date.now()
+                });
+            }
+            
+            input.value = '';
+        }
+        
+        function addChatMessage(type, text) {
+            const container = document.getElementById('chatMessages');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            container.appendChild(message);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // Listen to Firebase chat messages
+        database.ref('chat/messages').limitToLast(50).on('child_added', (snapshot) => {
+            const msg = snapshot.val();
+            const chatPanel = document.getElementById('chatPanel');
+            
+            if (msg && chatPanel.classList.contains('active')) {
+                if (msg.userId !== auth.currentUser?.uid) {
+                    addChatMessage('received', msg.text);
+                }
+            }
+        });
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  ZAINA AI FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function sendAIMessage() {
+            const input = document.getElementById('aiInput');
+            const query = input.value.trim();
+            
+            if (!query) return;
+            
+            // Add user message
+            addAIMessage('sent', query);
+            input.value = '';
+            
+            // Add thinking indicator
+            const thinkingId = 'thinking-' + Date.now();
+            addAIMessage('received', '🤔 Thinking...', thinkingId);
+            
+            try {
+                // Check if asking about content
+                const contentKeywords = ['show', 'movie', 'watch', 'series', 'episode', 'film', 'video'];
+                const isContentQuery = contentKeywords.some(kw => query.toLowerCase().includes(kw));
+                
+                if (isContentQuery) {
+                    // Search Jellyfin library
+                    const searchResults = await jellyfinFetch(
+                        `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?searchTerm=${encodeURIComponent(query)}&Limit=5&Recursive=true`
+                    );
+                    
+                    let response = "I found these titles for you:\n\n";
+                    if (searchResults.Items && searchResults.Items.length > 0) {
+                        searchResults.Items.forEach(item => {
+                            response += `📺 ${item.Name}`;
+                            if (item.ProductionYear) response += ` (${item.ProductionYear})`;
+                            response += '\n';
+                        });
+                        response += '\nClick on any title to start watching!';
+                    } else {
+                        response = "I couldn't find any matches in our library. Try browsing by category or ask me something else!";
+                    }
+                    
+                    removeMessage(thinkingId);
+                    addAIMessage('received', response);
+                    
+                } else {
+                    // Use Gemini AI
+                    const geminiResponse = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{ 
+                                        text: `You are Zaina AI, the intelligent assistant for FLM Television Network, Las Vegas's premier multicultural streaming platform serving Filipino audiences worldwide. You're knowledgeable, friendly, and passionate about entertainment. Answer this question: ${query}` 
+                                    }]
+                                }]
+                            })
+                        }
+                    );
+                    
+                    const geminiData = await geminiResponse.json();
+                    const aiText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || 
+                                   'Sorry, I encountered an error. Please try again!';
+                    
+                    removeMessage(thinkingId);
+                    addAIMessage('received', aiText);
+                }
+                
+            } catch (error) {
+                console.error('AI Error:', error);
+                removeMessage(thinkingId);
+                addAIMessage('received', 'Sorry, I encountered an error. Please try again! 💚');
+            }
+        }
+        
+        function addAIMessage(type, text, id = null) {
+            const container = document.getElementById('aiMessages');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            if (id) message.id = id;
+            container.appendChild(message);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function removeMessage(id) {
+            const msg = document.getElementById(id);
+            if (msg) msg.remove();
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  LIVE STREAM CONTROLS
+        // ═══════════════════════════════════════════════════════════════
+        
+        function togglePreviewVolume() {
+            const video = document.getElementById('previewVideo');
+            const btn = document.getElementById('volumeToggleBtn');
+            const icon = btn.querySelector('i');
+            
+            if (video.muted) {
+                video.muted = false;
+                icon.className = 'fas fa-volume-up';
+            } else {
+                video.muted = true;
+                icon.className = 'fas fa-volume-mute';
+            }
+        }
+        
+        function openLiveStream() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.add('active');
+            history.pushState({modal: 'stream'}, '', '#stream');
+        }
+        
+        function closeLiveStream() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.remove('active');
+            if (window.location.hash === '#stream') {
+                history.back();
+            }
+        }
+        
+        // Handle browser back button
+        window.addEventListener('popstate', function(event) {
+            const videoModal = document.getElementById('videoModal');
+            const jellyfinViewer = document.getElementById('jellyfinViewer');
+            
+            if (videoModal.classList.contains('active')) {
+                videoModal.classList.remove('active');
+            }
+            
+            if (jellyfinViewer.classList.contains('active')) {
+                jellyfinViewer.classList.remove('active');
+                document.getElementById('jellyfinFrame').src = '';
+            }
+        });
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  INITIALIZE APP
+        // ═══════════════════════════════════════════════════════════════
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 FLM TV Loading...');
+            loadCategories();
+            loadContentRows();
+            console.log('✅ FLM TV Ready!');
+        });
+        
+    </script>
+    
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Part 2: Visual Categories</title>
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
@@ -14,17 +14,17 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         :root {
-            /* FLM TV Brand Colors */
-            --primary: #ffd700;        /* Gold */
-            --secondary: #22c55e;      /* Green */
-            --accent: #ffd700;         /* Gold accent */
-            --neon-green: #22c55e;     /* Neon Green */
-            --bg: #0a0f1a;             /* Deep blue-black */
-            --bg-light: #1a1f2e;       /* Lighter blue */
-            --bg-card: #1a1f2e;        /* Card background */
+            /* Netflix-Style Colors */
+            --primary: #e50914;        /* Netflix Red */
+            --secondary: #22c55e;      /* Green for accents */
+            --accent: #e50914;         /* Netflix Red */
+            --neon-green: #22c55e;     /* Keep green */
+            --bg: #141414;             /* Netflix Dark Background */
+            --bg-light: #2f2f2f;       /* Lighter cards */
+            --bg-card: #1f1f1f;        /* Card background */
             --text: #ffffff;           /* White text */
-            --text-secondary: #94a3b8; /* Gray text */
-            --border: #334155;         /* Borders */
+            --text-secondary: #b3b3b3; /* Gray text */
+            --border: #333333;         /* Subtle borders */
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -184,19 +184,18 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: #000;  /* Black text on gold */
+            background: var(--accent);  /* Netflix Red */
+            color: white;
             border: none;
             padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 700;
+            border-radius: 4px;  /* Netflix uses sharper corners */
+            font-weight: 700;    /* Bolder like Netflix */
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease;
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+            background: #f40612;  /* Lighter red on hover */
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -758,14 +757,13 @@
         
         .side-panel {
             position: fixed;
-            right: -100%;
             top: 0;
-            width: 100%;
-            max-width: 450px;
+            right: -450px;
+            width: 450px;
             height: 100vh;
             background: var(--bg-card);
             border-left: 3px solid var(--primary);
-            z-index: 9998;
+            z-index: 10500;
             transition: right 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -806,29 +804,6 @@
             background: var(--neon-green);
             color: white;
             transform: rotate(90deg);
-        }
-        
-        .panel-toggle {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        
-        .panel-toggle:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        /* Fullscreen panel mode */
-        .side-panel.panel-fullscreen {
-            width: 100% !important;
-            max-width: 100% !important;
         }
         
         .panel-body {
@@ -1036,9 +1011,23 @@
         /*  LIVE TV MODAL                                                  */
         /* ═══════════════════════════════════════════════════════════════ */
         
+        .live-tv-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
         
-        
-        
+        .live-tv-modal.active {
+            display: flex;
+        }
         
         .live-tv-content {
             width: 95%;
@@ -1061,117 +1050,6 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-        
-
-        /* ═══════════════════════════════════════════════════════════════ */
-        /*  MOBILE-FIRST MOVIE CARDS (Works Worldwide!)                    */
-        /* ═══════════════════════════════════════════════════════════════ */
-        
-        /* BASE: MOBILE (320px+) - Starts small for ALL phones */
-        .movie-card {
-            flex: 0 0 105px !important;
-            min-width: 105px !important;
-            max-width: 105px !important;
-            margin: 0;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            scroll-snap-align: start;
-        }
-        
-        .movie-poster {
-            width: 100%;
-            height: 158px !important;  /* 3:2 ratio - Tubi size */
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        
-        .movie-info {
-            padding: 0.4rem 0.2rem;
-        }
-        
-        .movie-title {
-            font-size: 0.7rem;
-            line-height: 1.1;
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .movie-year,
-        .movie-rating {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-        }
-        
-        /* Movies scroll container */
-        .movies-scroll {
-            display: flex;
-            gap: 0.4rem;
-            padding: 0 0.75rem;
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x proximity;
-            scrollbar-width: none;
-        }
-        
-        .movies-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        
-        /* TABLET (768px+) - Make bigger */
-        @media (min-width: 768px) {
-            .movie-card {
-                flex: 0 0 150px !important;
-                min-width: 150px !important;
-                max-width: 150px !important;
-            }
-            
-            .movie-poster {
-                height: 225px !important;
-            }
-            
-            .movie-title {
-                font-size: 0.85rem !important;
-            }
-        }
-        
-        /* DESKTOP (1024px+) - Even bigger */
-        @media (min-width: 1024px) {
-            .movie-card {
-                flex: 0 0 200px !important;
-                min-width: 200px !important;
-                max-width: 200px !important;
-            }
-            
-            .movie-poster {
-                height: 300px !important;
-            }
-            
-            .movie-title {
-                font-size: 1rem !important;
-            }
-            
-            .movie-info {
-                padding: 0.5rem 0.25rem !important;
-            }
-        }
-        
-        /* LARGE DESKTOP (1440px+) - Maximum size */
-        @media (min-width: 1440px) {
-            .movie-card {
-                flex: 0 0 220px !important;
-                min-width: 220px !important;
-                max-width: 220px !important;
-            }
-            
-            .movie-poster {
-                height: 330px !important;
-            }
         }
         
         @media (max-width: 768px) {
@@ -1299,10 +1177,8 @@
             box-shadow: 0 0 10px #ff0000;
         }
         
-        /* Volume Toggle Button */
-        
-        
-        
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(1.2); }
         }
         
@@ -1415,10 +1291,7 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         /* Mobile - Small Phones (up to 480px) */
-        /* ═══════════════════════════════════════════════════════════════ */
-        /*  MOBILE PHONES - CONSOLIDATED (0-767px)                        */
-        /* ═══════════════════════════════════════════════════════════════ */
-        @media only screen and (max-width: 767px) {
+        @media (max-width: 480px) {
             /* CRITICAL: Everything must fit and be visible */
             * {
                 box-sizing: border-box;
@@ -1428,7 +1301,6 @@
                 overflow-x: hidden;
                 overflow-y: auto;
                 height: 100%;
-                width: 100vw;
             }
             
             body {
@@ -1439,19 +1311,6 @@
                 margin: 0;
                 padding: 0;
                 padding-bottom: 80px; /* Space for floating buttons */
-                width: 100%;
-                max-width: 100vw;
-            }
-            
-            /* Ensure all containers don't exceed viewport width */
-            .header,
-            .hero-banner,
-            .category-nav-section,
-            .content-container,
-            .category-section {
-                width: 100%;
-                max-width: 100vw;
-                overflow-x: hidden;
             }
             
             /* Header - Fits in one line */
@@ -1611,26 +1470,8 @@
                 scroll-snap-align: start;
             }
             
-            /* Red bar at bottom - much smaller on mobile! */
-            .live-channel-content {
-                height: 35px !important;
-                padding: 0.4rem 0.6rem !important;
-            }
-            
-            .live-indicator {
-                font-size: 0.65rem !important;
-                margin-bottom: 0.15rem !important;
-                gap: 4px !important;
-            }
-            
-            .live-dot {
-                width: 6px !important;
-                height: 6px !important;
-            }
-            
             .live-channel-name {
-                font-size: 0.7rem !important;
-                line-height: 1 !important;
+                font-size: 0.75rem !important;
             }
             
             /* Category Cards */
@@ -1671,10 +1512,10 @@
                 padding: 0.3rem 0.6rem !important;
             }
             
-            /* MOVIE CARDS - Horizontal Scroll (Tubi size!) */
+            /* MOVIE CARDS - Horizontal Scroll (Netflix style) */
             .movies-scroll {
                 display: flex !important;
-                gap: 0.4rem !important;
+                gap: 0.5rem !important;
                 padding: 0 0.75rem !important;
                 overflow-x: auto !important;
                 overflow-y: hidden !important;
@@ -1688,28 +1529,28 @@
             }
             
             .movie-card {
-                flex: 0 0 105px !important;  /* Much smaller like Tubi! */
-                min-width: 105px !important;
-                max-width: 105px !important;
+                flex: 0 0 130px !important;
+                min-width: 130px !important;
+                max-width: 130px !important;
                 scroll-snap-align: start;
                 margin-bottom: 0;
             }
             
             .movie-poster {
-                height: 158px !important; /* 3:2 ratio - Tubi size */
+                height: 195px !important; /* 3:2 ratio like Netflix */
                 border-radius: 4px !important;
                 object-fit: cover;
                 width: 100%;
             }
             
             .movie-info {
-                padding: 0.4rem 0.2rem !important;
+                padding: 0.5rem 0.25rem !important;
             }
             
             .movie-title {
-                font-size: 0.7rem !important;
-                line-height: 1.1 !important;
-                margin-bottom: 0.2rem !important;
+                font-size: 0.75rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.25rem !important;
                 font-weight: 600 !important;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
@@ -1719,7 +1560,7 @@
             
             .movie-year,
             .movie-rating {
-                font-size: 0.65rem !important;
+                font-size: 0.7rem !important;
             }
             
             /* Grid Views (if used) */
@@ -2014,7 +1855,7 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
+                        <video muted autoplay loop 
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
@@ -2025,8 +1866,6 @@
                             </div>
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
-                        <!-- Volume Toggle Button -->
-                        
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -2131,14 +1970,9 @@
     <div class="side-panel" id="chatPanel">
         <div class="panel-header">
             <h3 class="panel-title"><i class="fas fa-comments"></i> Live Chat</h3>
-            <div style="display: flex; gap: 0.5rem;">
-                <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
-                    <i class="fas fa-expand"></i>
-                </button>
-                <button class="panel-close" onclick="closePanel('chatPanel')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+            <button class="panel-close" onclick="closePanel('chatPanel')">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
             <div class="message received">
@@ -2165,14 +1999,9 @@
     <div class="side-panel" id="aiPanel">
         <div class="panel-header">
             <h3 class="panel-title"><i class="fas fa-robot"></i> Zaina J AI</h3>
-            <div style="display: flex; gap: 0.5rem;">
-                <button class="panel-toggle" onclick="togglePanelFullscreen('aiPanel')" title="Expand Panel">
-                    <i class="fas fa-expand"></i>
-                </button>
-                <button class="panel-close" onclick="closePanel('aiPanel')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+            <button class="panel-close" onclick="closePanel('aiPanel')">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="panel-body" style="padding: 1.5rem;">
             <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
@@ -2222,17 +2051,9 @@
     
     <div class="video-modal" id="videoModal">
         <div class="video-container">
-            <!-- Close Button with visible X -->
-            <button class="close-video" onclick="closeLiveStream()" title="Close">
-                <span style="font-size: 2rem; line-height: 1;">×</span>
+            <button class="close-video" onclick="closeLiveStream()">
+                <i class="fas fa-times"></i>
             </button>
-            
-            <!-- Back Button -->
-            <button class="back-from-video" onclick="closeLiveStream()" title="Back to Home">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back</span>
-            </button>
-            
             <video id="liveStreamVideo" controls autoplay 
                 width="100%" 
                 height="100%"
@@ -2247,7 +2068,19 @@
     <!--  LIVE TV CHANNEL 26.5                                           -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    
+    <div class="live-tv-modal" id="liveTvModal">
+        <div class="live-tv-content">
+            <div class="live-tv-header">
+                <h2 class="live-tv-title">
+                    <span class="live-indicator"></span>
+                    LIVE - Channel 26.5 Las Vegas
+                </h2>
+                <button class="close-live-tv" onclick="closeLiveTV()">✕</button>
+            </div>
+            <div class="live-tv-player">
+                <!-- Removed duplicate iframe -->
+            </div>
+        </div>
     </div>
 
     <div class="jellyfin-viewer" id="jellyfinViewer">
@@ -2590,7 +2423,7 @@
                     
                     const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                         ParentId: collection.id,
-                        Limit: 50,
+                        Limit: 10,
                         SortBy: 'SortName',
                         Recursive: true
                     });
@@ -2709,48 +2542,31 @@
         }
         
         function closePanel(panelId) {
-            const panel = document.getElementById(panelId);
-            panel.classList.remove('active');
-            panel.classList.remove('panel-fullscreen');  // Reset fullscreen when closing
-            
-            // Reset toggle button icon
-            const toggleBtn = panel.querySelector('.panel-toggle i');
-            if (toggleBtn) {
-                toggleBtn.className = 'fas fa-expand';
-            }
+            document.getElementById(panelId).classList.remove('active');
             
             // Remove body padding when panel closes
             document.body.classList.remove('panel-active');
         }
         
         // ═══════════════════════════════════════════════════════════════
-        //  PANEL FULLSCREEN TOGGLE
-        // ═══════════════════════════════════════════════════════════════
-        
-        function togglePanelFullscreen(panelId) {
-            const panel = document.getElementById(panelId);
-            const toggleBtn = panel.querySelector('.panel-toggle i');
-            
-            if (panel.classList.contains('panel-fullscreen')) {
-                // Exit fullscreen - back to side panel (450px)
-                panel.classList.remove('panel-fullscreen');
-                toggleBtn.className = 'fas fa-expand';
-                console.log('✅ Panel back to side mode:', panelId);
-            } else {
-                // Enter fullscreen - panel takes full width
-                panel.classList.add('panel-fullscreen');
-                toggleBtn.className = 'fas fa-compress';
-                console.log('✅ Panel fullscreen mode:', panelId);
-            }
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
         //  LIVE TV CONTROLS
         // ═══════════════════════════════════════════════════════════════
         
+        function openLiveTV() {
+            const modal = document.getElementById('liveTvModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
         
-        
-        
+        function closeLiveTV() {
+            const modal = document.getElementById('liveTvModal');
+            const frame = document.getElementById('liveStreamFrame');
+            
+            modal.classList.remove('active');
+            // Reload iframe to stop stream when closing
+            frame.src = frame.src;
+            document.body.style.overflow = '';
+        }
         
         // Click outside modal to close
         document.addEventListener('click', (e) => {
@@ -2807,28 +2623,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
             
-            // FORCE preview video to be muted (especially on mobile!)
-            const previewVideo = document.getElementById('previewVideo');
-            if (previewVideo) {
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
-                
-                // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', 'muted');
-                previewVideo.setAttribute('playsinline', 'playsinline');
-                
-                // Prevent any unmute attempts
-                previewVideo.addEventListener('volumechange', function() {
-                    if (!this.muted) {
-                        console.log('🔇 Preview tried to unmute, forcing muted again');
-                        this.muted = true;
-                        this.volume = 0;
-                    }
-                });
-                
-                console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
-            }
-            
             // Auto-authenticate in background
             autoAuthenticatePublic();
             
@@ -2847,34 +2641,6 @@
             // Load content
             buildCategoryNav();
             loadContent();
-            
-            // AI Panel Functionality
-            const aiButton = document.getElementById('aiSearchButton');
-            const aiInput = document.getElementById('aiSearchInput');
-            
-            if (aiButton && aiInput) {
-                aiButton.addEventListener('click', () => {
-                    const query = aiInput.value.trim();
-                    if (query) {
-                        alert(`AI Search: "${query}"\n\nAI functionality will be connected soon!\n\nFor now, this is a placeholder.`);
-                        console.log('🤖 AI Search:', query);
-                    }
-                });
-                
-                aiInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        aiButton.click();
-                    }
-                });
-                
-                console.log('✅ AI panel ready');
-            }
-            
-            // DEBUG: Log screen size for mobile testing
-            console.log('📱 Screen width:', window.innerWidth);
-            console.log('📱 Screen height:', window.innerHeight);
-            console.log('📱 Device pixel ratio:', window.devicePixelRatio);
-            console.log('📱 User agent:', navigator.userAgent);
         });
         
         // ═══════════════════════════════════════════════════════════════
@@ -2957,101 +2723,54 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            console.log('🎬 Playing item:', itemId);
+            // Open Jellyfin with API key to bypass login
+            frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             
-            // DIRECT STREAM URL - bypasses ALL Jellyfin UI
-            const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}&Static=true`;
-            
-            // Create simple video player - NO JELLYFIN INTERFACE AT ALL
-            frame.srcdoc = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { margin: 0; background: #000; }
-                        video { width: 100vw; height: 100vh; }
-                    </style>
-                </head>
-                <body>
-                    <video controls autoplay src="${streamUrl}"></video>
-                </body>
-                </html>
-            `;
+            // Inject custom FLM TV branding after iframe loads
+            frame.onload = function() {
+                try {
+                    injectCustomBranding(frame);
+                } catch (e) {
+                    console.log('Could not inject branding (CORS):', e);
+                }
+            };
             
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
+            // Add to browser history
             history.pushState({modal: 'movie'}, '', '#movie');
         }
         
-        async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening collection:', collectionId);
-            
+        function openJellyfinCollection(collectionId) {
+            // Show "Entering 7th Realm" overlay
             showSpaceWelcome();
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
+            // Find the collection by ID to get its full URL
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
-            const collectionName = collection ? collection.name : 'Collection';
             
-            try {
-                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                    ParentId: collectionId,
-                    Limit: 100,
-                    SortBy: 'SortName',
-                    Recursive: true
-                });
-                
-                // Simple grid view - NO JELLYFIN UI
-                frame.srcdoc = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>
-                            * { margin: 0; padding: 0; box-sizing: border-box; }
-                            body { 
-                                background: #0a0f1a;
-                                color: #fff;
-                                font-family: 'Inter', sans-serif;
-                                padding: 2rem;
-                            }
-                            h1 { color: #ffd700; margin-bottom: 2rem; }
-                            .grid {
-                                display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                                gap: 1rem;
-                            }
-                            .card { cursor: pointer; transition: transform 0.3s; }
-                            .card:hover { transform: scale(1.05); }
-                            .card img { 
-                                width: 100%;
-                                border-radius: 8px;
-                                border: 2px solid #22c55e;
-                            }
-                            .card-title {
-                                margin-top: 0.5rem;
-                                font-size: 0.9rem;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>${collectionName}</h1>
-                        <div class="grid">
-                            ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
-                                    <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300">
-                                    <div class="card-title">${item.Name}</div>
-                                </div>
-                            `).join('') : '<p>No items</p>'}
-                        </div>
-                    </body>
-                    </html>
-                `;
-            } catch (error) {
-                frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
+            if (collection && collection.url) {
+                // Use the full working URL with API key
+                frame.src = `${collection.url}${collection.url.includes('?') ? '&' : '?'}api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            } else {
+                // Fallback to generic URL if not found
+                frame.src = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
             }
+            
+            viewer.classList.add('active');
+            
+            // Inject custom FLM TV branding after iframe loads
+            frame.onload = function() {
+                try {
+                    injectCustomBranding(frame);
+                } catch (e) {
+                    console.log('Could not inject branding (CORS):', e);
+                }
+            };
             
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -3372,33 +3091,13 @@
         
         let hls = null;
         
-        // Toggle preview video volume
-        function togglePreviewVolume() {
-            const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('volumeToggleBtn');
-            const icon = btn.querySelector('i');
-            
-            if (video.muted) {
-                video.muted = false;
-                icon.className = 'fas fa-volume-up';
-                btn.classList.add('unmuted');
-                btn.title = 'Mute';
-                console.log('🔊 Preview audio unmuted');
-            } else {
-                video.muted = true;
-                icon.className = 'fas fa-volume-mute';
-                btn.classList.remove('unmuted');
-                btn.title = 'Unmute';
-                console.log('🔇 Preview audio muted');
-            }
-        }
-        
         function openLiveStream() {
-            console.log('🔴 Opening Live Channel 26.5...');
+            console.log('🔴 Opening Live Channel 26.5 - CASTR...');
             const modal = document.getElementById('videoModal');
             modal.classList.add('active');
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
+            // Castr iframe handles streaming automatically
         }
         
         function closeLiveStream() {
@@ -3409,6 +3108,7 @@
             if (window.location.hash === '#stream') {
                 history.back();
             }
+            // Castr iframe stops automatically
         }
         
         // Handle browser back button

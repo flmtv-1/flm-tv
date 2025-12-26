@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV - Part 2: Visual Categories</title>
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
@@ -781,7 +781,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--bg-card) 100%);
+            background: var(--bg-card);
         }
         
         .panel-title {
@@ -1428,7 +1428,6 @@
                 overflow-x: hidden;
                 overflow-y: auto;
                 height: 100%;
-                width: 100vw;
             }
             
             body {
@@ -1439,19 +1438,6 @@
                 margin: 0;
                 padding: 0;
                 padding-bottom: 80px; /* Space for floating buttons */
-                width: 100%;
-                max-width: 100vw;
-            }
-            
-            /* Ensure all containers don't exceed viewport width */
-            .header,
-            .hero-banner,
-            .category-nav-section,
-            .content-container,
-            .category-section {
-                width: 100%;
-                max-width: 100vw;
-                overflow-x: hidden;
             }
             
             /* Header - Fits in one line */
@@ -2590,7 +2576,7 @@
                     
                     const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                         ParentId: collection.id,
-                        Limit: 50,
+                        Limit: 10,
                         SortBy: 'SortName',
                         Recursive: true
                     });
@@ -2830,7 +2816,20 @@
             }
             
             // Auto-authenticate in background
-            autoAuthenticatePublic();
+            autoAuthenticatePublic().then(() => {
+                // Small delay to ensure Jellyfin session is established
+                setTimeout(() => {
+                    console.log('✅ Auth complete, loading content...');
+                    // Load content after authentication
+                    buildCategoryNav();
+                    loadContent();
+                }, 800);
+            }).catch(() => {
+                // If auth fails, load content anyway
+                console.log('⚠️ Auth failed, loading content with API key...');
+                buildCategoryNav();
+                loadContent();
+            });
             
             // Initialize hero banner slideshow
             initHeroBanner();
@@ -2839,14 +2838,9 @@
             // Stream shows when vMix is running on port 8088
             console.log('📺 Live TV card ready (vMix version)');
             
-            
             // Attach button click handlers
             document.getElementById('signInBtn').onclick = () => openModal('signInModal');
             document.getElementById('parentLockBtn').onclick = () => openModal('parentLockModal');
-            
-            // Load content
-            buildCategoryNav();
-            loadContent();
             
             // AI Panel Functionality
             const aiButton = document.getElementById('aiSearchButton');
@@ -2957,101 +2951,123 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            console.log('🎬 Playing item:', itemId);
+            // Get stored credentials
+            const storedCreds = localStorage.getItem('jellyfin_credentials');
+            let accessToken = JELLYFIN_CONFIG.API_KEY;
+            let userId = JELLYFIN_CONFIG.USER_ID;
             
-            // DIRECT STREAM URL - bypasses ALL Jellyfin UI
-            const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}&Static=true`;
+            if (storedCreds) {
+                try {
+                    const creds = JSON.parse(storedCreds);
+                    if (creds.AccessToken) {
+                        accessToken = creds.AccessToken;
+                        userId = creds.UserId || userId;
+                        console.log('✅ Using authenticated session for Jellyfin');
+                    }
+                } catch (e) {
+                    console.log('⚠️ Could not parse credentials');
+                }
+            }
             
-            // Create simple video player - NO JELLYFIN INTERFACE AT ALL
-            frame.srcdoc = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { margin: 0; background: #000; }
-                        video { width: 100vw; height: 100vh; }
-                    </style>
-                </head>
-                <body>
-                    <video controls autoplay src="${streamUrl}"></video>
-                </body>
-                </html>
-            `;
+            // CRITICAL: Set Jellyfin auth cookie to bypass sign-in
+            try {
+                document.cookie = `jellyfin_credentials=${accessToken}; path=/; domain=.duckdns.org; secure; samesite=none`;
+                console.log('🍪 Set Jellyfin auth cookie for movie');
+            } catch (e) {
+                console.log('⚠️ Cookie setting failed:', e);
+            }
+            
+            // Build URL with embedded authentication
+            let url = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}`;
+            url += `&api_key=${accessToken}`;
+            url += `&X-Emby-Token=${accessToken}`;
+            url += `&userId=${userId}`;
+            
+            console.log('🎬 Opening movie:', url);
+            frame.src = url;
+            
+            // Inject custom FLM TV branding after iframe loads
+            frame.onload = function() {
+                try {
+                    injectCustomBranding(frame);
+                } catch (e) {
+                    console.log('Could not inject branding (CORS):', e);
+                }
+            };
             
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
+            // Add to browser history
             history.pushState({modal: 'movie'}, '', '#movie');
         }
         
-        async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening collection:', collectionId);
-            
+        function openJellyfinCollection(collectionId) {
+            // Show "Entering 7th Realm" overlay
             showSpaceWelcome();
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
+            // Find the collection by ID to get its full URL
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
-            const collectionName = collection ? collection.name : 'Collection';
             
-            try {
-                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                    ParentId: collectionId,
-                    Limit: 100,
-                    SortBy: 'SortName',
-                    Recursive: true
-                });
-                
-                // Simple grid view - NO JELLYFIN UI
-                frame.srcdoc = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>
-                            * { margin: 0; padding: 0; box-sizing: border-box; }
-                            body { 
-                                background: #0a0f1a;
-                                color: #fff;
-                                font-family: 'Inter', sans-serif;
-                                padding: 2rem;
-                            }
-                            h1 { color: #ffd700; margin-bottom: 2rem; }
-                            .grid {
-                                display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                                gap: 1rem;
-                            }
-                            .card { cursor: pointer; transition: transform 0.3s; }
-                            .card:hover { transform: scale(1.05); }
-                            .card img { 
-                                width: 100%;
-                                border-radius: 8px;
-                                border: 2px solid #22c55e;
-                            }
-                            .card-title {
-                                margin-top: 0.5rem;
-                                font-size: 0.9rem;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>${collectionName}</h1>
-                        <div class="grid">
-                            ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
-                                    <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300">
-                                    <div class="card-title">${item.Name}</div>
-                                </div>
-                            `).join('') : '<p>No items</p>'}
-                        </div>
-                    </body>
-                    </html>
-                `;
-            } catch (error) {
-                frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
+            // Get stored credentials
+            const storedCreds = localStorage.getItem('jellyfin_credentials');
+            let accessToken = JELLYFIN_CONFIG.API_KEY;
+            let userId = JELLYFIN_CONFIG.USER_ID;
+            
+            if (storedCreds) {
+                try {
+                    const creds = JSON.parse(storedCreds);
+                    if (creds.AccessToken) {
+                        accessToken = creds.AccessToken;
+                        userId = creds.UserId || userId;
+                        console.log('✅ Using authenticated session for collection');
+                    }
+                } catch (e) {
+                    console.log('⚠️ Could not parse credentials');
+                }
             }
+            
+            // CRITICAL: Try to set Jellyfin auth cookie before loading iframe
+            // This bypasses the sign-in screen
+            try {
+                // Set cookie that Jellyfin checks
+                document.cookie = `jellyfin_credentials=${accessToken}; path=/; domain=.duckdns.org; secure; samesite=none`;
+                console.log('🍪 Set Jellyfin auth cookie');
+            } catch (e) {
+                console.log('⚠️ Cookie setting failed:', e);
+            }
+            
+            // Build URL with embedded authentication
+            let targetUrl;
+            if (collection && collection.url) {
+                targetUrl = collection.url;
+            } else {
+                targetUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
+            }
+            
+            // Add authentication parameters
+            targetUrl += (targetUrl.includes('?') ? '&' : '?') + 
+                        `api_key=${accessToken}` +
+                        `&X-Emby-Token=${accessToken}` +
+                        `&userId=${userId}`;
+            
+            console.log('🔗 Opening collection:', targetUrl);
+            frame.src = targetUrl;
+            
+            viewer.classList.add('active');
+            
+            // Inject custom FLM TV branding after iframe loads
+            frame.onload = function() {
+                try {
+                    injectCustomBranding(frame);
+                } catch (e) {
+                    console.log('Could not inject branding (CORS):', e);
+                }
+            };
             
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
