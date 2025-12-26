@@ -3112,27 +3112,421 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            console.log('🎬 Opening detail page with Jellyfin UI for:', item.Name);
+            // If it's a Series, use Jellyfin's page with FLM TV frame
+            if (item.Type === 'Series') {
+                console.log('📺 Opening series page with Jellyfin UI');
+                
+                const seriesUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${item.Id}&serverId=${JELLYFIN_CONFIG.SERVER}`;
+                
+                frame.src = seriesUrl;
+                
+                // Inject FLM TV branding after iframe loads
+                frame.onload = function() {
+                    try {
+                        injectCustomBranding(frame);
+                    } catch (e) {
+                        console.log('Could not inject branding (CORS):', e);
+                    }
+                };
+                
+                viewer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('video-playing');
+                
+                history.pushState({modal: 'series'}, '', '#series');
+                return;
+            }
             
-            // Use Jellyfin's detail page for BOTH movies and series - it has everything!
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${item.Id}`;
+            // For movies, fetch ALL details and build custom page
+            console.log('🎬 Building movie detail page for:', item.Name);
             
-            frame.src = detailUrl;
-            
-            // Inject FLM TV branding after iframe loads
-            frame.onload = function() {
-                try {
-                    injectCustomBranding(frame);
-                } catch (e) {
-                    console.log('Could not inject branding (CORS):', e);
+            try {
+                // Fetch complete item details
+                const fullItem = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${item.Id}`);
+                
+                // Get backdrop image
+                const backdropUrl = fullItem.BackdropImageTags && fullItem.BackdropImageTags[0]
+                    ? `${JELLYFIN_CONFIG.SERVER}/Items/${fullItem.Id}/Images/Backdrop?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=1920`
+                    : '';
+                
+                // Get poster image
+                const posterUrl = fullItem.ImageTags?.Primary
+                    ? `${JELLYFIN_CONFIG.SERVER}/Items/${fullItem.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=500`
+                    : 'https://via.placeholder.com/300x450?text=No+Poster';
+                
+                // Format runtime
+                let runtime = '';
+                if (fullItem.RunTimeTicks) {
+                    const hours = Math.floor(fullItem.RunTimeTicks / 36000000000);
+                    const minutes = Math.floor((fullItem.RunTimeTicks % 36000000000) / 600000000);
+                    runtime = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
                 }
-            };
-            
-            viewer.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'detail'}, '', '#detail');
+                
+                // Get rating with star display
+                const rating = fullItem.CommunityRating ? fullItem.CommunityRating.toFixed(1) : 'N/A';
+                const stars = fullItem.CommunityRating ? '⭐'.repeat(Math.round(fullItem.CommunityRating / 2)) : '';
+                
+                // Fetch cast and crew
+                let castHTML = '';
+                try {
+                    const people = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${fullItem.Id}/People`);
+                    if (people && people.length > 0) {
+                        castHTML = people.slice(0, 12).map(person => {
+                            const personImage = person.PrimaryImageTag
+                                ? `${JELLYFIN_CONFIG.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=200`
+                                : 'https://via.placeholder.com/150x150/1a1f2e/ffffff?text=' + person.Name.charAt(0);
+                            
+                            return `
+                                <div class="cast-member">
+                                    <img src="${personImage}" alt="${person.Name}" onerror="this.src='https://via.placeholder.com/150x150/1a1f2e/ffffff?text=${person.Name.charAt(0)}'">
+                                    <div class="cast-name">${person.Name}</div>
+                                    <div class="cast-role">${person.Role || person.Type}</div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                } catch (err) {
+                    console.error('Error fetching cast:', err);
+                }
+                
+                // Fetch similar items
+                let similarHTML = '';
+                try {
+                    const similar = await jellyfinFetch(`/Items/${fullItem.Id}/Similar?userId=${JELLYFIN_CONFIG.USER_ID}&limit=12`);
+                    if (similar && similar.Items && similar.Items.length > 0) {
+                        similarHTML = similar.Items.map(simItem => {
+                            const simPoster = simItem.ImageTags?.Primary
+                                ? `${JELLYFIN_CONFIG.SERVER}/Items/${simItem.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`
+                                : 'https://via.placeholder.com/200x300/1a1f2e/ffffff?text=No+Image';
+                            
+                            return `
+                                <div class="similar-item" onclick="parent.playJellyfinItem('${simItem.Id}')">
+                                    <img src="${simPoster}" alt="${simItem.Name}" onerror="this.src='https://via.placeholder.com/200x300/1a1f2e/ffffff?text=No+Image'">
+                                    <div class="similar-title">${simItem.Name}</div>
+                                    <div class="similar-year">${simItem.ProductionYear || ''}</div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                } catch (err) {
+                    console.error('Error fetching similar:', err);
+                }
+                
+                // Build the complete detail page
+                frame.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            
+                            body {
+                                background: #0a0f1a;
+                                color: #fff;
+                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                                overflow-x: hidden;
+                            }
+                            
+                            .hero {
+                                position: relative;
+                                height: 70vh;
+                                background: linear-gradient(to bottom, rgba(10,15,26,0.3), rgba(10,15,26,0.95) 90%), url('${backdropUrl}') center/cover;
+                                display: flex;
+                                align-items: flex-end;
+                            }
+                            
+                            .hero-content {
+                                padding: 3rem;
+                                width: 100%;
+                                max-width: 1400px;
+                                margin: 0 auto;
+                                display: flex;
+                                gap: 2rem;
+                            }
+                            
+                            .poster-container {
+                                flex-shrink: 0;
+                            }
+                            
+                            .poster {
+                                width: 280px;
+                                border-radius: 12px;
+                                border: 3px solid #22c55e;
+                                box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+                            }
+                            
+                            .info-container {
+                                flex: 1;
+                            }
+                            
+                            .title {
+                                font-size: 3.5rem;
+                                font-weight: 900;
+                                color: #ffd700;
+                                margin-bottom: 1rem;
+                                text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+                                line-height: 1.1;
+                            }
+                            
+                            .metadata {
+                                display: flex;
+                                gap: 2rem;
+                                margin-bottom: 1.5rem;
+                                font-size: 1.1rem;
+                                color: #94a3b8;
+                                flex-wrap: wrap;
+                            }
+                            
+                            .metadata-item {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                            }
+                            
+                            .rating {
+                                color: #ffd700;
+                                font-weight: 700;
+                                font-size: 1.3rem;
+                            }
+                            
+                            .play-button {
+                                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                                color: white;
+                                border: none;
+                                padding: 1.2rem 3rem;
+                                font-size: 1.3rem;
+                                font-weight: 700;
+                                border-radius: 12px;
+                                cursor: pointer;
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 0.75rem;
+                                transition: all 0.3s ease;
+                                box-shadow: 0 4px 20px rgba(34,197,94,0.4);
+                            }
+                            
+                            .play-button:hover {
+                                transform: translateY(-3px);
+                                box-shadow: 0 8px 30px rgba(34,197,94,0.6);
+                            }
+                            
+                            .content {
+                                max-width: 1400px;
+                                margin: 0 auto;
+                                padding: 2rem 3rem;
+                            }
+                            
+                            .section {
+                                margin-bottom: 3rem;
+                            }
+                            
+                            .section-title {
+                                font-size: 1.8rem;
+                                font-weight: 800;
+                                color: #ffd700;
+                                margin-bottom: 1.5rem;
+                                display: flex;
+                                align-items: center;
+                                gap: 0.75rem;
+                            }
+                            
+                            .overview {
+                                font-size: 1.15rem;
+                                line-height: 1.8;
+                                color: #e2e8f0;
+                                max-width: 900px;
+                            }
+                            
+                            .genres {
+                                display: flex;
+                                gap: 0.75rem;
+                                flex-wrap: wrap;
+                                margin-top: 1rem;
+                            }
+                            
+                            .genre-tag {
+                                background: rgba(34,197,94,0.2);
+                                color: #22c55e;
+                                padding: 0.5rem 1rem;
+                                border-radius: 20px;
+                                border: 1px solid #22c55e;
+                                font-weight: 600;
+                            }
+                            
+                            .cast-grid {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                                gap: 1.5rem;
+                            }
+                            
+                            .cast-member {
+                                text-align: center;
+                            }
+                            
+                            .cast-member img {
+                                width: 120px;
+                                height: 120px;
+                                border-radius: 50%;
+                                object-fit: cover;
+                                border: 3px solid #22c55e;
+                                margin-bottom: 0.75rem;
+                            }
+                            
+                            .cast-name {
+                                font-weight: 700;
+                                color: #ffd700;
+                                font-size: 0.95rem;
+                                margin-bottom: 0.25rem;
+                            }
+                            
+                            .cast-role {
+                                color: #94a3b8;
+                                font-size: 0.85rem;
+                            }
+                            
+                            .similar-grid {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                                gap: 1.5rem;
+                            }
+                            
+                            .similar-item {
+                                cursor: pointer;
+                                transition: transform 0.3s ease;
+                            }
+                            
+                            .similar-item:hover {
+                                transform: scale(1.05);
+                            }
+                            
+                            .similar-item img {
+                                width: 100%;
+                                aspect-ratio: 2/3;
+                                border-radius: 10px;
+                                border: 2px solid rgba(34,197,94,0.3);
+                                object-fit: cover;
+                            }
+                            
+                            .similar-title {
+                                margin-top: 0.75rem;
+                                font-weight: 600;
+                                font-size: 0.95rem;
+                            }
+                            
+                            .similar-year {
+                                color: #94a3b8;
+                                font-size: 0.85rem;
+                            }
+                            
+                            @media (max-width: 768px) {
+                                .hero { height: auto; padding-top: 50vh; }
+                                .hero-content { 
+                                    flex-direction: column; 
+                                    align-items: center; 
+                                    text-align: center;
+                                    padding: 2rem 1rem;
+                                }
+                                .poster { width: 200px; }
+                                .title { font-size: 2rem; }
+                                .metadata { justify-content: center; font-size: 0.95rem; }
+                                .content { padding: 1.5rem 1rem; }
+                                .cast-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+                                .cast-member img { width: 80px; height: 80px; }
+                                .similar-grid { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="hero">
+                            <div class="hero-content">
+                                <div class="poster-container">
+                                    <img src="${posterUrl}" alt="${fullItem.Name}" class="poster">
+                                </div>
+                                <div class="info-container">
+                                    <h1 class="title">${fullItem.Name}</h1>
+                                    <div class="metadata">
+                                        <div class="metadata-item">
+                                            <i class="fas fa-calendar"></i>
+                                            <span>${fullItem.ProductionYear || 'N/A'}</span>
+                                        </div>
+                                        ${runtime ? `
+                                            <div class="metadata-item">
+                                                <i class="fas fa-clock"></i>
+                                                <span>${runtime}</span>
+                                            </div>
+                                        ` : ''}
+                                        ${fullItem.OfficialRating ? `
+                                            <div class="metadata-item">
+                                                <i class="fas fa-certificate"></i>
+                                                <span>${fullItem.OfficialRating}</span>
+                                            </div>
+                                        ` : ''}
+                                        <div class="metadata-item rating">
+                                            <span>${stars} ${rating}</span>
+                                        </div>
+                                    </div>
+                                    <button class="play-button" onclick="parent.playVideoDirectly('${fullItem.Id}')">
+                                        <i class="fas fa-play"></i> Play Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="content">
+                            <div class="section">
+                                <h2 class="section-title">
+                                    <i class="fas fa-info-circle"></i> Overview
+                                </h2>
+                                <p class="overview">${fullItem.Overview || 'No description available.'}</p>
+                                ${fullItem.Genres && fullItem.Genres.length > 0 ? `
+                                    <div class="genres">
+                                        ${fullItem.Genres.map(g => `<span class="genre-tag">${g}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            ${castHTML ? `
+                                <div class="section">
+                                    <h2 class="section-title">
+                                        <i class="fas fa-users"></i> Cast & Crew
+                                    </h2>
+                                    <div class="cast-grid">
+                                        ${castHTML}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${similarHTML ? `
+                                <div class="section">
+                                    <h2 class="section-title">
+                                        <i class="fas fa-film"></i> More Like This
+                                    </h2>
+                                    <div class="similar-grid">
+                                        ${similarHTML}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                viewer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('video-playing');
+                
+                history.pushState({modal: 'detail'}, '', '#detail');
+                
+                console.log('✅ Movie detail page created');
+                
+            } catch (error) {
+                console.error('❌ Error building detail page:', error);
+                // Fallback to direct play
+                playVideoDirectly(item.Id);
+            }
         }
         
         async function openJellyfinCollection(collectionId) {
@@ -3143,7 +3537,7 @@
                 return;
             }
             
-            // REMOVED showSpaceWelcome() - opens instantly now!
+            showSpaceWelcome();
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
@@ -3253,12 +3647,11 @@
                         ${items.length > 0 ? `
                             <div class="grid">
                                 ${items.map(item => `
-                                    <div class="card" onclick="console.log('🎬 Card clicked:', '${item.Id}'); parent.playJellyfinItem('${item.Id}');">
+                                    <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
                                         <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" 
                                              alt="${item.Name}"
-                                             onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'"
-                                             style="pointer-events: none;">
-                                        <div class="card-title" style="pointer-events: none;">${item.Name}</div>
+                                             onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+                                        <div class="card-title">${item.Name}</div>
                                     </div>
                                 `).join('')}
                             </div>

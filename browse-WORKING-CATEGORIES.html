@@ -3059,6 +3059,28 @@
             }, 5000);
         }
         
+        async function openItemDetail(itemId) {
+            console.log('🎬 Opening item detail for ID:', itemId);
+            
+            try {
+                // Fetch the full item details
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                if (!item) {
+                    throw new Error('Item not found');
+                }
+                
+                console.log('✅ Item loaded:', item.Name);
+                
+                // Call playJellyfinItem with the full item object
+                playJellyfinItem(item.Id);
+                
+            } catch (error) {
+                console.error('❌ Error loading item:', error);
+                alert('Error loading this item. Please try again.');
+            }
+        }
+        
         async function playJellyfinItem(itemId) {
             console.log('🎬 Opening detail page for:', itemId);
             
@@ -3143,7 +3165,7 @@
                 return;
             }
             
-            // REMOVED showSpaceWelcome() - opens instantly now!
+            showSpaceWelcome();
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
@@ -3253,12 +3275,11 @@
                         ${items.length > 0 ? `
                             <div class="grid">
                                 ${items.map(item => `
-                                    <div class="card" onclick="console.log('🎬 Card clicked:', '${item.Id}'); parent.playJellyfinItem('${item.Id}');">
+                                    <div class="card" onclick="parent.openItemDetail('${item.Id}')">
                                         <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" 
                                              alt="${item.Name}"
-                                             onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'"
-                                             style="pointer-events: none;">
-                                        <div class="card-title" style="pointer-events: none;">${item.Name}</div>
+                                             onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+                                        <div class="card-title">${item.Name}</div>
                                     </div>
                                 `).join('')}
                             </div>

@@ -3143,7 +3143,7 @@
                 return;
             }
             
-            // REMOVED showSpaceWelcome() - opens instantly now!
+            showSpaceWelcome();
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
@@ -3253,12 +3253,11 @@
                         ${items.length > 0 ? `
                             <div class="grid">
                                 ${items.map(item => `
-                                    <div class="card" onclick="console.log('🎬 Card clicked:', '${item.Id}'); parent.playJellyfinItem('${item.Id}');">
+                                    <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
                                         <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" 
                                              alt="${item.Name}"
-                                             onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'"
-                                             style="pointer-events: none;">
-                                        <div class="card-title" style="pointer-events: none;">${item.Name}</div>
+                                             onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+                                        <div class="card-title">${item.Name}</div>
                                     </div>
                                 `).join('')}
                             </div>
