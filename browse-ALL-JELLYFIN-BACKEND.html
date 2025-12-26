@@ -3091,10 +3091,8 @@
             
             console.log('🎬 Opening Jellyfin detail page for:', itemId);
             
-            // Load Jellyfin's detail page with API key - NO SIGN-IN!
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading URL:', detailUrl);
+            // Load Jellyfin's detail page - shows movie info, cast, play button, etc.
+            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}`;
             
             frame.src = detailUrl;
             
@@ -3130,15 +3128,11 @@
             
             console.log('📂 Loading Jellyfin page for:', collectionName);
             
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
+            // Load Jellyfin's native collection page - just like your screenshot!
+            // This shows the grid AND each movie is clickable to its detail page
+            const collectionUrl = collection && collection.url 
                 ? collection.url 
                 : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Add API key to URL (works for both ? and & cases)
-            collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading URL:', collectionUrl);
             
             frame.src = collectionUrl;
             

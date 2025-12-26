@@ -2408,7 +2408,7 @@
                 </button>
             </div>
         </div>
-        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
     </div>
     
     <!-- Floating Chat/AI buttons for main page -->
@@ -2510,44 +2510,14 @@
         //  HELPER FUNCTIONS
         // ═══════════════════════════════════════════════════════════════
         
+        // Global function that iframe content can call
+        window.openMovieFromIframe = function(itemId) {
+            console.log('🎬 openMovieFromIframe called with:', itemId);
+            playJellyfinItem(itemId);
+        };
         
      async function jellyfinFetch(endpoint, params = {}) {
     const baseUrl = JELLYFIN_CONFIG.SERVER;
-    
-    if (!baseUrl.startsWith('http')) {
-        const queryString = new URLSearchParams();
-        queryString.append('api_key', JELLYFIN_CONFIG.API_KEY);
-        
-        Object.keys(params).forEach(key => {
-            if (params[key] !== null && params[key] !== undefined) {
-                queryString.append(key, params[key]);
-            }
-        });
-        
-        const url = `${baseUrl}${endpoint}?${queryString.toString()}`;
-        
-        console.log('🔍 Fetching:', url);
-        
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            
-            if (!response.ok) {
-                console.error('❌ Jellyfin API Error:', response.status, response.statusText);
-                return null;
-            }
-            const data = await response.json();
-            console.log('✅ Response:', data);
-            return data;
-        } catch (error) {
-            console.error('❌ Fetch Error:', error);
-            return null;
-        }
-    }
     
     const url = new URL(`${baseUrl}${endpoint}`);
     url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
@@ -2571,15 +2541,18 @@
         });
         
         if (!response.ok) {
-            console.error('❌ Jellyfin API Error:', response.status, response.statusText);
-            return null;
+            const errorText = `Jellyfin API returned ${response.status} ${response.statusText}`;
+            console.error('❌', errorText);
+            throw new Error(errorText);
         }
+        
         const data = await response.json();
         console.log('✅ Response:', data);
         return data;
+        
     } catch (error) {
         console.error('❌ Fetch Error:', error);
-        return null;
+        throw error; // Re-throw so caller can handle it
     }
 }
         
@@ -2668,14 +2641,20 @@
                     
                     const navItem = document.createElement('div');
                     navItem.className = 'category-nav-item';
-                    navItem.onclick = () => openJellyfinCollection(collection.id);
+                    navItem.style.cursor = 'pointer';
+                    navItem.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openJellyfinCollection(collection.id);
+                    };
                     
                     navItem.innerHTML = `
                         <img src="${backdropUrl}" 
                              alt="${collection.name}" 
                              class="category-nav-image"
-                             loading="lazy">
-                        <div class="category-nav-overlay">
+                             loading="lazy"
+                             style="pointer-events: none;">
+                        <div class="category-nav-overlay" style="pointer-events: none;">
                             <div class="category-nav-name">${collection.name}</div>
                         </div>
                     `;
@@ -2683,7 +2662,31 @@
                     navScroll.appendChild(navItem);
                     
                 } catch (error) {
-                    console.error(`Error building nav for ${collection.name}:`, error);
+                    console.error(`❌ Error building nav for ${collection.name} (${collection.id}):`, error);
+                    console.error('Error details:', error.message, error.stack);
+                    
+                    // Even if there's an error, create a basic card with placeholder
+                    const navItem = document.createElement('div');
+                    navItem.className = 'category-nav-item';
+                    navItem.style.cursor = 'pointer';
+                    navItem.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openJellyfinCollection(collection.id);
+                    };
+                    
+                    navItem.innerHTML = `
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300" 
+                             alt="${collection.name}" 
+                             class="category-nav-image"
+                             loading="lazy"
+                             style="pointer-events: none;">
+                        <div class="category-nav-overlay" style="pointer-events: none;">
+                            <div class="category-nav-name">${collection.name}</div>
+                        </div>
+                    `;
+                    
+                    navScroll.appendChild(navItem);
                 }
             }
             
@@ -3085,16 +3088,63 @@
             }, 5000);
         }
         
-        function playJellyfinItem(itemId) {
+        async function playJellyfinItem(itemId) {
+            console.log('🎬 Opening detail page for:', itemId);
+            
+            // Fetch item details from Jellyfin
+            try {
+                const itemData = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                // Create detail page
+                showDetailPage(itemData);
+                
+            } catch (error) {
+                console.error('Error loading item details:', error);
+                // Fallback to direct play if detail fetch fails
+                playVideoDirectly(itemId);
+            }
+        }
+        
+        function playVideoDirectly(itemId) {
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            console.log('🎬 Opening Jellyfin detail page for:', itemId);
+            console.log('🎬 Playing video directly:', itemId);
             
-            // Load Jellyfin's detail page with API key - NO SIGN-IN!
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            // DIRECT STREAM URL - bypasses ALL Jellyfin UI
+            const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}&Static=true`;
             
-            console.log('🔗 Loading URL:', detailUrl);
+            // Create simple video player - NO JELLYFIN INTERFACE AT ALL
+            frame.srcdoc = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { margin: 0; background: #000; }
+                        video { width: 100vw; height: 100vh; }
+                    </style>
+                </head>
+                <body>
+                    <video controls autoplay src="${streamUrl}"></video>
+                </body>
+                </html>
+            `;
+            
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('video-playing');
+            
+            history.pushState({modal: 'movie'}, '', '#movie');
+        }
+        
+        async function showDetailPage(item) {
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            
+            console.log('🎬 Opening detail page with Jellyfin UI for:', item.Name);
+            
+            // Use Jellyfin's detail page for BOTH movies and series - it has everything!
+            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${item.Id}`;
             
             frame.src = detailUrl;
             
@@ -3111,11 +3161,18 @@
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
-            history.pushState({modal: 'movie'}, '', '#movie');
+            history.pushState({modal: 'detail'}, '', '#detail');
         }
         
         async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening Jellyfin collection page for:', collectionId);
+            console.log('📂 Opening collection:', collectionId);
+            
+            if (!collectionId) {
+                console.error('❌ No collection ID provided');
+                return;
+            }
+            
+            // REMOVED showSpaceWelcome() - opens instantly now!
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
@@ -3128,34 +3185,161 @@
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Loading Jellyfin page for:', collectionName);
+            console.log('📂 Collection name:', collectionName);
             
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
-                ? collection.url 
-                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Add API key to URL (works for both ? and & cases)
-            collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading URL:', collectionUrl);
-            
-            frame.src = collectionUrl;
-            
-            // Inject FLM TV branding after iframe loads
-            frame.onload = function() {
-                try {
-                    injectCustomBranding(frame);
-                } catch (e) {
-                    console.log('Could not inject branding (CORS):', e);
+            try {
+                console.log('🔄 Fetching items from Jellyfin...');
+                const response = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    ParentId: collectionId,
+                    Limit: 100,
+                    SortBy: 'SortName',
+                    Recursive: true
+                });
+                
+                console.log('📦 API Response:', response);
+                
+                // Check if response is valid
+                if (!response) {
+                    throw new Error('API returned null response');
                 }
-            };
+                
+                if (!response.Items) {
+                    throw new Error('API response missing Items array');
+                }
+                
+                const items = response.Items;
+                console.log('✅ Fetched items:', items.length);
+                
+                if (items.length === 0) {
+                    console.warn('⚠️ Collection is empty');
+                }
+                
+                // Simple grid view - NO JELLYFIN UI
+                frame.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            body { 
+                                background: #0a0f1a;
+                                color: #fff;
+                                font-family: 'Inter', sans-serif;
+                                padding: 1.5rem;
+                            }
+                            h1 { 
+                                color: #ffd700; 
+                                margin-bottom: 2rem;
+                                font-size: 2rem;
+                                font-weight: 800;
+                            }
+                            .grid {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                                gap: 1rem;
+                            }
+                            .card { 
+                                cursor: pointer; 
+                                transition: transform 0.3s;
+                            }
+                            .card:hover { 
+                                transform: scale(1.05); 
+                            }
+                            .card img { 
+                                width: 100%;
+                                aspect-ratio: 2/3;
+                                object-fit: cover;
+                                border-radius: 8px;
+                                border: 2px solid #22c55e;
+                            }
+                            .card-title {
+                                margin-top: 0.5rem;
+                                font-size: 0.85rem;
+                                line-height: 1.3;
+                            }
+                            .empty-message {
+                                color: #94a3b8;
+                                font-size: 1.1rem;
+                                text-align: center;
+                                margin-top: 3rem;
+                            }
+                            
+                            @media (max-width: 768px) {
+                                body { padding: 1rem; }
+                                h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+                                .grid {
+                                    grid-template-columns: repeat(3, 1fr);
+                                    gap: 0.5rem;
+                                }
+                                .card-title { font-size: 0.75rem; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${collectionName}</h1>
+                        ${items.length > 0 ? `
+                            <div class="grid">
+                                ${items.map(item => {
+                                    const itemName = item.Name.replace(/'/g, "\\'");
+                                    const itemId = item.Id;
+                                    return `
+                                    <div class="card" onclick="
+                                        console.log('🎬 Card clicked!', '${itemId}'); 
+                                        if (window.parent && window.parent.openMovieFromIframe) {
+                                            window.parent.openMovieFromIframe('${itemId}');
+                                        } else if (window.parent && window.parent.playJellyfinItem) {
+                                            window.parent.playJellyfinItem('${itemId}');
+                                        } else if (parent && parent.playJellyfinItem) {
+                                            parent.playJellyfinItem('${itemId}');
+                                        } else {
+                                            console.error('❌ Cannot access parent functions!');
+                                        }
+                                        return false;">
+                                        <img src="${JELLYFIN_CONFIG.SERVER}/Items/${itemId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" 
+                                             alt="${itemName}"
+                                             onerror="this.style.background='linear-gradient(135deg, #1a1f2e 0%, #0a0f1a 100%)'; this.alt='No Image';"
+                                             style="pointer-events: none;">
+                                        <div class="card-title" style="pointer-events: none;">${item.Name}</div>
+                                    </div>
+                                `;
+                                }).join('')}
+                            </div>
+                        ` : `
+                            <div class="empty-message">
+                                <p>No items found in this collection</p>
+                            </div>
+                        `}
+                    </body>
+                    </html>
+                `;
+                
+                console.log('✅ Grid HTML created');
+                
+            } catch (error) {
+                console.error('❌ Error loading collection:', error);
+                console.error('❌ Error stack:', error.stack);
+                
+                frame.srcdoc = `
+                    <body style="background:#0a0f1a;color:#fff;padding:2rem;font-family:'Inter',sans-serif;">
+                        <h1 style="color:#ef4444;margin-bottom:1rem;">Error Loading Collection</h1>
+                        <p style="color:#94a3b8;margin-bottom:1rem;font-size:1.1rem;">${error.message || 'Unknown error occurred'}</p>
+                        <p style="color:#64748b;font-size:0.9rem;margin-bottom:2rem;">Collection ID: ${collectionId}</p>
+                        <button onclick="parent.closeViewer()" style="margin-top:1rem;padding:0.75rem 1.5rem;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">
+                            ← Back to Browse
+                        </button>
+                    </body>
+                `;
+            }
             
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
             history.pushState({modal: 'collection'}, '', '#collection');
+            
+            console.log('✅ Collection viewer opened');
         }
         
         function showSpaceWelcome() {
@@ -3173,7 +3357,7 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                animation: fadeIn 0.5s ease;
+                animation: fadeIn 0.3s ease;
             `;
             overlay.innerHTML = `
                 <h1 style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem; animation: glow 1.5s ease-in-out infinite;">
@@ -3183,11 +3367,11 @@
             `;
             document.body.appendChild(overlay);
             
-            // Auto-remove after 2 seconds
+            // Auto-remove after 0.5 seconds (quick flash!)
             setTimeout(() => {
-                overlay.style.animation = 'fadeOut 0.5s ease';
-                setTimeout(() => overlay.remove(), 500);
-            }, 2000);
+                overlay.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => overlay.remove(), 300);
+            }, 500);
         }
         
         // Inject FLM TV branding into Jellyfin iframe
