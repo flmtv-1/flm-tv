@@ -1012,23 +1012,9 @@
         /*  LIVE TV MODAL                                                  */
         /* ═══════════════════════════════════════════════════════════════ */
         
-        .live-tv-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
         
-        .live-tv-modal.active {
-            display: flex;
-        }
+        
+        
         
         .live-tv-content {
             width: 95%;
@@ -2115,19 +2101,7 @@
     <!--  LIVE TV CHANNEL 26.5                                           -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    <div class="live-tv-modal" id="liveTvModal">
-        <div class="live-tv-content">
-            <div class="live-tv-header">
-                <h2 class="live-tv-title">
-                    <span class="live-indicator"></span>
-                    LIVE - Channel 26.5 Las Vegas
-                </h2>
-                <button class="close-live-tv" onclick="closeLiveTV()">✕</button>
-            </div>
-            <div class="live-tv-player">
-                <!-- Removed duplicate iframe -->
-            </div>
-        </div>
+    
     </div>
 
     <div class="jellyfin-viewer" id="jellyfinViewer">
@@ -2599,21 +2573,9 @@
         //  LIVE TV CONTROLS
         // ═══════════════════════════════════════════════════════════════
         
-        function openLiveTV() {
-            const modal = document.getElementById('liveTvModal');
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
         
-        function closeLiveTV() {
-            const modal = document.getElementById('liveTvModal');
-            const frame = document.getElementById('liveStreamFrame');
-            
-            modal.classList.remove('active');
-            // Reload iframe to stop stream when closing
-            frame.src = frame.src;
-            document.body.style.overflow = '';
-        }
+        
+        
         
         // Click outside modal to close
         document.addEventListener('click', (e) => {
@@ -3160,25 +3122,18 @@
         }
         
         function openLiveStream() {
-            console.log('🔴 Opening Live Channel 26.5 - HLS Stream...');
+            console.log('🔴 Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('liveStreamVideo');
             
             modal.classList.add('active');
-            
-            // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
             
             // Initialize HLS streaming
             const streamUrl = 'http://10.0.0.4:8080/FLMTV.m3u8';
             
             if (Hls.isSupported()) {
-                console.log('✅ HLS.js supported - initializing...');
-                
-                // Destroy existing instance if any
-                if (hls) {
-                    hls.destroy();
-                }
+                if (hls) hls.destroy();
                 
                 hls = new Hls({
                     enableWorker: true,
@@ -3190,44 +3145,24 @@
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    console.log('✅ Stream manifest loaded, starting playback...');
-                    video.play().catch(err => {
-                        console.log('⚠️ Autoplay blocked, user must click play');
-                    });
+                    video.play().catch(err => console.log('Autoplay blocked'));
                 });
                 
                 hls.on(Hls.Events.ERROR, function(event, data) {
-                    console.error('❌ HLS Error:', data.type, data.details);
                     if (data.fatal) {
-                        switch(data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.log('🔄 Network error, attempting to recover...');
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.log('🔄 Media error, attempting to recover...');
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                console.error('💥 Fatal error, cannot recover');
-                                hls.destroy();
-                                break;
+                        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+                            hls.startLoad();
+                        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                            hls.recoverMediaError();
                         }
                     }
                 });
                 
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Native HLS support (Safari)
-                console.log('✅ Native HLS supported (Safari)');
                 video.src = streamUrl;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play().catch(err => {
-                        console.log('⚠️ Autoplay blocked, user must click play');
-                    });
+                video.addEventListener('loadedmetadata', () => {
+                    video.play().catch(err => console.log('Autoplay blocked'));
                 });
-            } else {
-                console.error('❌ HLS not supported in this browser');
-                alert('Your browser does not support HLS streaming. Please use Chrome, Firefox, or Safari.');
             }
         }
         
@@ -3238,17 +3173,14 @@
             
             modal.classList.remove('active');
             
-            // Stop and destroy HLS
             if (hls) {
                 hls.destroy();
                 hls = null;
             }
             
-            // Pause video
             video.pause();
             video.src = '';
             
-            // Remove from history
             if (window.location.hash === '#stream') {
                 history.back();
             }
