@@ -758,13 +758,14 @@
         
         .side-panel {
             position: fixed;
+            right: -100%;
             top: 0;
-            right: -450px;
-            width: 450px;
+            width: 100%;
+            max-width: 450px;
             height: 100vh;
             background: var(--bg-card);
             border-left: 3px solid var(--primary);
-            z-index: 10500;
+            z-index: 9998;
             transition: right 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -805,6 +806,29 @@
             background: var(--neon-green);
             color: white;
             transform: rotate(90deg);
+        }
+        
+        .panel-toggle {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Fullscreen panel mode */
+        .side-panel.panel-fullscreen {
+            width: 100% !important;
+            max-width: 100% !important;
         }
         
         .panel-body {
@@ -1037,6 +1061,117 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+        
+
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  MOBILE-FIRST MOVIE CARDS (Works Worldwide!)                    */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        /* BASE: MOBILE (320px+) - Starts small for ALL phones */
+        .movie-card {
+            flex: 0 0 105px;
+            min-width: 105px;
+            max-width: 105px;
+            margin: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            scroll-snap-align: start;
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 158px;  /* 3:2 ratio - Tubi size */
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .movie-info {
+            padding: 0.4rem 0.2rem;
+        }
+        
+        .movie-title {
+            font-size: 0.7rem;
+            line-height: 1.1;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .movie-year,
+        .movie-rating {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Movies scroll container */
+        .movies-scroll {
+            display: flex;
+            gap: 0.4rem;
+            padding: 0 0.75rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
+            scrollbar-width: none;
+        }
+        
+        .movies-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* TABLET (768px+) - Make bigger */
+        @media (min-width: 768px) {
+            .movie-card {
+                flex: 0 0 150px !important;
+                min-width: 150px !important;
+                max-width: 150px !important;
+            }
+            
+            .movie-poster {
+                height: 225px !important;
+            }
+            
+            .movie-title {
+                font-size: 0.85rem !important;
+            }
+        }
+        
+        /* DESKTOP (1024px+) - Even bigger */
+        @media (min-width: 1024px) {
+            .movie-card {
+                flex: 0 0 200px !important;
+                min-width: 200px !important;
+                max-width: 200px !important;
+            }
+            
+            .movie-poster {
+                height: 300px !important;
+            }
+            
+            .movie-title {
+                font-size: 1rem !important;
+            }
+            
+            .movie-info {
+                padding: 0.5rem 0.25rem !important;
+            }
+        }
+        
+        /* LARGE DESKTOP (1440px+) - Maximum size */
+        @media (min-width: 1440px) {
+            .movie-card {
+                flex: 0 0 220px !important;
+                min-width: 220px !important;
+                max-width: 220px !important;
+            }
+            
+            .movie-poster {
+                height: 330px !important;
+            }
         }
         
         @media (max-width: 768px) {
@@ -2003,9 +2138,14 @@
     <div class="side-panel" id="chatPanel">
         <div class="panel-header">
             <h3 class="panel-title"><i class="fas fa-comments"></i> Live Chat</h3>
-            <button class="panel-close" onclick="closePanel('chatPanel')">
-                <i class="fas fa-times"></i>
-            </button>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="panel-close" onclick="closePanel('chatPanel')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
         <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
             <div class="message received">
@@ -2032,9 +2172,14 @@
     <div class="side-panel" id="aiPanel">
         <div class="panel-header">
             <h3 class="panel-title"><i class="fas fa-robot"></i> Zaina J AI</h3>
-            <button class="panel-close" onclick="closePanel('aiPanel')">
-                <i class="fas fa-times"></i>
-            </button>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="panel-toggle" onclick="togglePanelFullscreen('aiPanel')" title="Expand Panel">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="panel-close" onclick="closePanel('aiPanel')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
         <div class="panel-body" style="padding: 1.5rem;">
             <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
@@ -2571,10 +2716,39 @@
         }
         
         function closePanel(panelId) {
-            document.getElementById(panelId).classList.remove('active');
+            const panel = document.getElementById(panelId);
+            panel.classList.remove('active');
+            panel.classList.remove('panel-fullscreen');  // Reset fullscreen when closing
+            
+            // Reset toggle button icon
+            const toggleBtn = panel.querySelector('.panel-toggle i');
+            if (toggleBtn) {
+                toggleBtn.className = 'fas fa-expand';
+            }
             
             // Remove body padding when panel closes
             document.body.classList.remove('panel-active');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  PANEL FULLSCREEN TOGGLE
+        // ═══════════════════════════════════════════════════════════════
+        
+        function togglePanelFullscreen(panelId) {
+            const panel = document.getElementById(panelId);
+            const toggleBtn = panel.querySelector('.panel-toggle i');
+            
+            if (panel.classList.contains('panel-fullscreen')) {
+                // Exit fullscreen - back to side panel (450px)
+                panel.classList.remove('panel-fullscreen');
+                toggleBtn.className = 'fas fa-expand';
+                console.log('✅ Panel back to side mode:', panelId);
+            } else {
+                // Enter fullscreen - panel takes full width
+                panel.classList.add('panel-fullscreen');
+                toggleBtn.className = 'fas fa-compress';
+                console.log('✅ Panel fullscreen mode:', panelId);
+            }
         }
         
         // ═══════════════════════════════════════════════════════════════
@@ -2639,6 +2813,28 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
+            
+            // FORCE preview video to be muted (especially on mobile!)
+            const previewVideo = document.getElementById('previewVideo');
+            if (previewVideo) {
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
+                
+                // Extra enforcement for mobile
+                previewVideo.setAttribute('muted', 'muted');
+                previewVideo.setAttribute('playsinline', 'playsinline');
+                
+                // Prevent any unmute attempts
+                previewVideo.addEventListener('volumechange', function() {
+                    if (!this.muted) {
+                        console.log('🔇 Preview tried to unmute, forcing muted again');
+                        this.muted = true;
+                        this.volume = 0;
+                    }
+                });
+                
+                console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
+            }
             
             // Auto-authenticate in background
             autoAuthenticatePublic();
