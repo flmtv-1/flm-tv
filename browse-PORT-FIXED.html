@@ -2508,7 +2508,7 @@
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
     
     COLLECTIONS: [
-        { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
+        { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
         { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
         { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
         { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
@@ -3188,19 +3188,7 @@
             const collectionName = collection ? collection.name : 'Collection';
             
             console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
-            
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
-            try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
+            console.log('📂 Collection URL:', collection?.url);
             
             // Load Jellyfin's native collection page with API key - NO SIGN-IN!
             let collectionUrl = collection && collection.url 
@@ -3218,7 +3206,7 @@
                 collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
             }
             
-            console.log('🔗 Final URL we are loading:', collectionUrl);
+            console.log('🔗 Final URL:', collectionUrl);
             console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
             
             frame.src = collectionUrl;

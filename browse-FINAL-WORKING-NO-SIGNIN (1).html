@@ -1622,65 +1622,6 @@
                 display: none !important;
             }
             
-            /* Jellyfin Viewer Overlay - Mobile Fix */
-            .viewer-header {
-                padding: 0.5rem !important;
-                gap: 0.5rem !important;
-                min-height: 50px !important;
-                max-height: 50px !important;
-                flex-wrap: nowrap !important;
-            }
-            
-            .viewer-logo {
-                gap: 0.25rem !important;
-            }
-            
-            .viewer-logo img {
-                height: 24px !important;
-            }
-            
-            .viewer-logo span {
-                font-size: 1rem !important;
-            }
-            
-            .viewer-back {
-                padding: 0.5rem 0.75rem !important;
-                font-size: 0.85rem !important;
-                white-space: nowrap !important;
-                flex-shrink: 0 !important;
-            }
-            
-            .viewer-back i {
-                font-size: 0.85rem !important;
-            }
-            
-            .viewer-controls {
-                gap: 0.5rem !important;
-            }
-            
-            .viewer-controls .btn-icon {
-                width: 36px !important;
-                height: 36px !important;
-                min-width: 36px !important;
-                padding: 0 !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-            
-            .viewer-controls .btn-icon i {
-                font-size: 1rem !important;
-                margin: 0 !important;
-            }
-            
-            .viewer-close {
-                width: 36px !important;
-                height: 36px !important;
-                min-width: 36px !important;
-                padding: 0 !important;
-                font-size: 1.2rem !important;
-            }
-            
             /* Hero Banner - Fits nicely */
             .hero-banner {
                 min-height: 300px !important;
@@ -2508,7 +2449,7 @@
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
     
     COLLECTIONS: [
-        { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
+        { id: 'db6bb6388c8c4c70825698639853ede6', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=db6bb6388c8c4c70825698639853ede6&collectionType=tvshows' },
         { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
         { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
         { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
@@ -3187,45 +3128,22 @@
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
-            
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
-            try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
+            console.log('📂 Loading Jellyfin page for:', collectionName);
             
             // Load Jellyfin's native collection page with API key - NO SIGN-IN!
             let collectionUrl = collection && collection.url 
                 ? collection.url 
                 : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
             
-            // Fix URL format - change #/ to #!/ if needed
-            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
-            
-            // Ensure the URL keeps the :8920 port (not :8096)
-            collectionUrl = collectionUrl.replace(':8096', ':8920');
-            
             // Add API key to URL (works for both ? and & cases)
-            if (!collectionUrl.includes('api_key=')) {
-                collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            }
+            collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
             
-            console.log('🔗 Final URL we are loading:', collectionUrl);
-            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
+            console.log('🔗 Loading URL:', collectionUrl);
             
             frame.src = collectionUrl;
             
             // Inject FLM TV branding after iframe loads
             frame.onload = function() {
-                console.log('✅ Iframe loaded');
                 try {
                     injectCustomBranding(frame);
                 } catch (e) {
