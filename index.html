@@ -2115,6 +2115,18 @@
                 -webkit-overflow-scrolling: touch !important;
             }
             
+            /* AI Search button - smaller on mobile */
+            #aiSearchButton {
+                padding: 0.75rem !important;
+                font-size: 1rem !important;
+                min-width: 50px !important;
+            }
+            
+            /* Hide search text on mobile, show only icon */
+            #aiSearchButton .search-text {
+                display: none !important;
+            }
+            
             .panel-body input[type="text"] {
                 font-size: 16px !important; /* Prevents iOS zoom */
             }
@@ -2670,7 +2682,7 @@
                        style="flex: 1; padding: 0.75rem; border-radius: 0.5rem; background: #333; color: white; border: 1px solid #444; font-family: inherit;">
                 <button id="aiSearchButton" 
                         style="background: var(--secondary); color: white; padding: 0.75rem 1.25rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
-                    Search
+                    <i class="fas fa-search"></i><span class="search-text"> Search</span>
                 </button>
             </div>
             
@@ -4117,7 +4129,7 @@ User question: ${query}`
                 console.log('📤 Sending to Gemini:', requestBody);
                 
                 const geminiResponse = await fetch(
-                    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEYS.GEMINI}`,
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
