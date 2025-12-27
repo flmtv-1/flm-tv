@@ -1579,6 +1579,19 @@
             }
             
             /* Right side actions - icon buttons only */
+            /* Header - allow horizontal scroll */
+            .header {
+                padding: 0.75rem 0.5rem !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            
+            .header-content {
+                flex-wrap: nowrap !important;
+                min-width: min-content !important;
+            }
+            
             .nav-actions {
                 display: flex;
                 gap: 0.5rem;
@@ -1588,11 +1601,11 @@
                 overflow-x: auto !important;
                 overflow-y: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
-                scrollbar-width: none !important; /* Firefox */
-                -ms-overflow-style: none !important; /* IE/Edge */
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
             }
             
-            /* Hide scrollbar but keep scroll function */
+            /* Hide scrollbar but keep scroll */
             .nav-actions::-webkit-scrollbar {
                 display: none !important;
             }
@@ -2385,21 +2398,25 @@
     
     <header class="header">
         <div class="header-content">
-            <div class="logo-container">
-                <img src="assets/logos/flm-logo.png" alt="FLM TV Logo">
-                <h1 class="logo-text">FLM TV</h1>
+            <!-- LEFT SIDE: Logo + Text Nav -->
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-shrink: 0;">
+                <div class="logo-container">
+                    <img src="assets/logos/flm-logo.png" alt="FLM TV Logo">
+                    <h1 class="logo-text">FLM TV</h1>
+                </div>
+                
+                <nav>
+                    <ul class="header-nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
+                        <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
+                        <li><a href="#" onclick="openLiveStream(); return false;">🔴 Live TV</a></li>
+                        <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
+                    </ul>
+                </nav>
             </div>
             
-            <nav>
-                <ul class="header-nav">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
-                    <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
-                    <li><a href="#" onclick="openLiveStream(); return false;">🔴 Live TV</a></li>
-                    <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
-                </ul>
-            </nav>
-            
+            <!-- RIGHT SIDE: Scrollable Buttons -->
             <div class="nav-actions">
                 <!-- Back to Gate Button -->
                 <button class="btn-icon" onclick="window.location.href='index.html'" title="Back to Home" style="border-color: var(--accent); color: var(--accent);">
