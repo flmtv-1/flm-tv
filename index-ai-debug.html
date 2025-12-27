@@ -2583,7 +2583,7 @@
         };
         
         const API_KEYS = {
-            GEMINI: 'AIzaSyBpAfUi--FOy8LUXTucSE4ZXIh3Z0vM6cY',
+            GEMINI: 'AIzaSyCpUcDg0fnz08_48qQe9eJksHRSnQkTezU',
             TMDB: '34773a6e0f80645a5b07a1ee76ecc26b',
             OMDB: '266aeb44',
             YOUTUBE: 'AIzaSyBJMZDXDPcVPUFhMKdYrABrke4PQZgRsT8'
@@ -3790,40 +3790,26 @@
                 
                 // Use Gemini AI for ALL other questions (general knowledge, people, events, etc)
                 console.log('🤖 Using Gemini AI for query:', query);
-                console.log('🔑 Using API key:', API_KEYS.GEMINI.substring(0, 20) + '...');
-                
-                const requestBody = {
-                    contents: [{
-                        parts: [{ 
-                            text: `You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).
-
-User question: ${query}` 
-                        }]
-                    }]
-                };
-                
-                console.log('📤 Sending to Gemini:', requestBody);
                 
                 const geminiResponse = await fetch(
                     `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(requestBody)
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{ 
+                                    text: `You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).
+
+User question: ${query}` 
+                                }]
+                            }]
+                        })
                     }
                 );
                 
-                console.log('📥 Response status:', geminiResponse.status, geminiResponse.statusText);
-                
-                if (!geminiResponse.ok) {
-                    const errorText = await geminiResponse.text();
-                    console.error('❌ Gemini API Error:', errorText);
-                    addAIMessage('received', `API Error (${geminiResponse.status}): Unable to connect to AI. Please try again later.`);
-                    return;
-                }
-                
                 const geminiData = await geminiResponse.json();
-                console.log('🤖 Full Gemini response:', JSON.stringify(geminiData, null, 2));
+                console.log('🤖 Gemini response:', geminiData);
                 
                 // Check if Gemini blocked the response
                 if (geminiData.promptFeedback?.blockReason) {
@@ -3838,8 +3824,7 @@ User question: ${query}`
                     console.log('✅ AI response received:', aiText.substring(0, 100));
                     addAIMessage('received', aiText);
                 } else {
-                    console.error('❌ No text in Gemini response. Full response:', geminiData);
-                    console.error('❌ Candidates:', geminiData.candidates);
+                    console.error('❌ No text in Gemini response:', geminiData);
                     addAIMessage('received', 'I had trouble understanding that. Could you rephrase your question? 💚');
                 }
                 

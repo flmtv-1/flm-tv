@@ -2583,7 +2583,7 @@
         };
         
         const API_KEYS = {
-            GEMINI: 'AIzaSyBpAfUi--FOy8LUXTucSE4ZXIh3Z0vM6cY',
+            GEMINI: 'AIzaSyCpUcDg0fnz08_48qQe9eJksHRSnQkTezU',
             TMDB: '34773a6e0f80645a5b07a1ee76ecc26b',
             OMDB: '266aeb44',
             YOUTUBE: 'AIzaSyBJMZDXDPcVPUFhMKdYrABrke4PQZgRsT8'
@@ -2596,8 +2596,6 @@
         
         // Sign in anonymously and wait for it
         let isAuthReady = false;
-        let fallbackUserId = 'user_' + Math.random().toString(36).substring(7);
-        
         auth.signInAnonymously()
             .then(() => {
                 console.log('✅ Firebase Auth: Signed in anonymously');
@@ -2605,9 +2603,7 @@
             })
             .catch(err => {
                 console.error('❌ Firebase Auth Error:', err);
-                console.log('⚠️ Using fallback mode - messages will still work!');
-                // Don't show alert - just use fallback
-                isAuthReady = true; // Allow chat to work with fallback
+                alert('Chat authentication failed. Refresh the page to try again.');
             });
         
         // Monitor auth state
@@ -2616,8 +2612,8 @@
                 console.log('✅ User authenticated:', user.uid.substring(0, 8));
                 isAuthReady = true;
             } else {
-                console.log('⚠️ Using fallback user ID');
-                isAuthReady = true; // Allow fallback mode
+                console.log('⚠️ User not authenticated');
+                isAuthReady = false;
             }
         });
         
@@ -3667,24 +3663,31 @@
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
                 
-                // Get user ID (Firebase or fallback)
+                // Check if user is authenticated
                 const user = auth.currentUser;
-                const userId = user ? user.uid : fallbackUserId;
-                const username = `Viewer ${userId.substring(0, 6)}`;
+                if (!user) {
+                    console.error('❌ Not authenticated yet. Waiting for Firebase...');
+                    // Add message locally so user sees it immediately
+                    addMessage('sent', messageText);
+                    // Show alert
+                    setTimeout(() => {
+                        alert('Connecting to chat... Please wait a moment and try again.');
+                    }, 100);
+                    return;
+                }
                 
-                // Send to Firebase
+                // Send to Firebase - Firebase listener will show it to EVERYONE (including you)
                 console.log('📤 Sending message to Firebase:', messageText);
                 database.ref('chat/messages').push({
                     text: messageText,
-                    userId: userId,
-                    username: username,
+                    userId: user.uid,
+                    username: `Viewer ${user.uid.substring(0, 6)}`,
                     timestamp: Date.now()
                 }).then(() => {
                     console.log('✅ Message sent to Firebase successfully');
                 }).catch((error) => {
                     console.error('❌ Error sending message:', error);
-                    // Show message locally as fallback
-                    addMessage('sent', messageText);
+                    alert('Failed to send message. Check your internet connection.');
                 });
             }
         }
@@ -3751,96 +3754,57 @@
             try {
                 console.log('🤖 Zaina AI processing:', query);
                 
-                // Detect if this is a movie/TV search (contains words like: movie, film, show, actor, series, watch)
-                const isEntertainmentQuery = /\b(movie|film|show|actor|actress|series|watch|episode|season|tv|director|star|cast)\b/i.test(query);
+                // First try TMDB for movie/TV searches
+                const tmdbResponse = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEYS.TMDB}&query=${encodeURIComponent(query)}`);
+                const tmdbData = await tmdbResponse.json();
                 
-                if (isEntertainmentQuery) {
-                    // Try TMDB for movie/TV searches
-                    const tmdbResponse = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEYS.TMDB}&query=${encodeURIComponent(query)}`);
-                    const tmdbData = await tmdbResponse.json();
+                if (tmdbData.results && tmdbData.results.length > 0) {
+                    // Visual search results
+                    let visualResponse = '<div style="margin: 10px 0;">';
                     
-                    if (tmdbData.results && tmdbData.results.length > 0) {
-                        // Visual search results
-                        let visualResponse = '<div style="margin: 10px 0;">';
+                    tmdbData.results.slice(0, 3).forEach(item => {
+                        const posterUrl = item.poster_path 
+                            ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
+                            : 'https://placehold.co/200x300?text=No+Poster';
                         
-                        tmdbData.results.slice(0, 3).forEach(item => {
-                            const posterUrl = item.poster_path 
-                                ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-                                : 'https://placehold.co/200x300?text=No+Poster';
-                            
-                            const title = item.title || item.name;
-                            const year = item.release_date ? `(${item.release_date.substring(0, 4)})` : 
-                                         item.first_air_date ? `(${item.first_air_date.substring(0, 4)})` : '';
-                            
-                            visualResponse += `
-                                <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--neon-green);">
-                                    <img src="${posterUrl}" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
-                                    <strong style="color: var(--accent);">${title} ${year}</strong><br>
-                                    <small style="color: var(--text-secondary);">${item.overview ? item.overview.substring(0, 150) + '...' : 'No description available'}</small><br>
-                                    <small style="color: var(--neon-green);">⭐ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}/10</small>
-                                </div>
-                            `;
-                        });
+                        const title = item.title || item.name;
+                        const year = item.release_date ? `(${item.release_date.substring(0, 4)})` : 
+                                     item.first_air_date ? `(${item.first_air_date.substring(0, 4)})` : '';
                         
-                        visualResponse += '</div>';
-                        addAIMessage('received', visualResponse);
-                        return; // Exit early if we found results
-                    }
-                }
-                
-                // Use Gemini AI for ALL other questions (general knowledge, people, events, etc)
-                console.log('🤖 Using Gemini AI for query:', query);
-                console.log('🔑 Using API key:', API_KEYS.GEMINI.substring(0, 20) + '...');
-                
-                const requestBody = {
-                    contents: [{
-                        parts: [{ 
-                            text: `You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).
-
-User question: ${query}` 
-                        }]
-                    }]
-                };
-                
-                console.log('📤 Sending to Gemini:', requestBody);
-                
-                const geminiResponse = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(requestBody)
-                    }
-                );
-                
-                console.log('📥 Response status:', geminiResponse.status, geminiResponse.statusText);
-                
-                if (!geminiResponse.ok) {
-                    const errorText = await geminiResponse.text();
-                    console.error('❌ Gemini API Error:', errorText);
-                    addAIMessage('received', `API Error (${geminiResponse.status}): Unable to connect to AI. Please try again later.`);
-                    return;
-                }
-                
-                const geminiData = await geminiResponse.json();
-                console.log('🤖 Full Gemini response:', JSON.stringify(geminiData, null, 2));
-                
-                // Check if Gemini blocked the response
-                if (geminiData.promptFeedback?.blockReason) {
-                    console.error('❌ Gemini blocked:', geminiData.promptFeedback.blockReason);
-                    addAIMessage('received', "I couldn't process that question. Try asking in a different way! 🤔");
-                    return;
-                }
-                
-                const aiText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
-                
-                if (aiText) {
-                    console.log('✅ AI response received:', aiText.substring(0, 100));
-                    addAIMessage('received', aiText);
+                        visualResponse += `
+                            <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--neon-green);">
+                                <img src="${posterUrl}" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                                <strong style="color: var(--accent);">${title} ${year}</strong><br>
+                                <small style="color: var(--text-secondary);">${item.overview ? item.overview.substring(0, 150) + '...' : 'No description available'}</small><br>
+                                <small style="color: var(--neon-green);">⭐ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}/10</small>
+                            </div>
+                        `;
+                    });
+                    
+                    visualResponse += '</div>';
+                    addAIMessage('received', visualResponse);
+                    
                 } else {
-                    console.error('❌ No text in Gemini response. Full response:', geminiData);
-                    console.error('❌ Candidates:', geminiData.candidates);
-                    addAIMessage('received', 'I had trouble understanding that. Could you rephrase your question? 💚');
+                    // Use Gemini AI for general questions
+                    const geminiResponse = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{ 
+                                        text: `You are Zaina AI, the intelligent assistant for FLM Television Network, a multicultural streaming platform serving Filipino audiences worldwide. Be friendly, helpful, and knowledgeable about entertainment, TV shows, and movies. Here's the user's question: ${query}` 
+                                    }]
+                                }]
+                            })
+                        }
+                    );
+                    
+                    const geminiData = await geminiResponse.json();
+                    const aiText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || 
+                                   'Sorry, I could not process that. Please try again!';
+                    addAIMessage('received', aiText);
                 }
                 
             } catch (err) {
