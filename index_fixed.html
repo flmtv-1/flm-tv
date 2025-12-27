@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FLM TV - Zaina AI Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0f1a;
+            color: white;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .test-section {
+            background: #1a1f2e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 2px solid #22c55e;
+        }
+        
+        h2 {
+            color: #ffd700;
+            margin-top: 0;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: #333;
+        }
+        
+        .message.sent {
+            background: #22c55e;
+            margin-left: 20%;
+        }
+        
+        .message.received {
+            background: #333;
+            margin-right: 20%;
+        }
+        
+        input, button {
+            padding: 12px;
+            margin: 5px;
+            border-radius: 8px;
+            border: 2px solid #22c55e;
+            background: #1a1f2e;
+            color: white;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #22c55e;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #1ea34a;
+        }
+        
+        #log {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .log-entry {
+            margin: 3px 0;
+        }
+        
+        .log-success { color: #22c55e; }
+        .log-error { color: #ff4444; }
+        .log-info { color: #66aaff; }
+        .log-warning { color: #ffaa00; }
+    </style>
+</head>
+<body>
+    <h1>🤖 FLM TV - Zaina AI Diagnostic Test</h1>
+    
+    <div class="test-section">
+        <h2>API Key Test</h2>
+        <p>Testing Gemini API connection...</p>
+        <button onclick="testAPIKey()">Test API Key</button>
+        <div id="apiKeyResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Chat with Zaina AI</h2>
+        <div id="messages" style="min-height: 200px;"></div>
+        <input type="text" id="userInput" placeholder="Ask Zaina AI anything..." style="width: 70%;">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Debug Log</h2>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const API_KEY = 'AIzaSyD52T5sXrwo4p_U_EJOA-e_1UAY8qZ1dys';
+        
+        // Custom logging
+        function logMessage(message, type = 'info') {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+        
+        // Test API key
+        async function testAPIKey() {
+            const resultDiv = document.getElementById('apiKeyResult');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+            logMessage('🔑 Testing Gemini API key...', 'info');
+            
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{ text: "Say 'Hello from Zaina AI!'" }]
+                            }]
+                        })
+                    }
+                );
+                
+                logMessage(`📡 Response status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    logMessage(`❌ Error response: ${errorText}`, 'error');
+                    resultDiv.innerHTML = `<p style="color: #ff4444;">❌ API Error (${response.status}): ${errorText}</p>`;
+                    return;
+                }
+                
+                const data = await response.json();
+                logMessage('✅ API key is working!', 'success');
+                logMessage(`Response: ${JSON.stringify(data)}`, 'info');
+                
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (aiText) {
+                    resultDiv.innerHTML = `<p style="color: #22c55e;">✅ API Key Valid! Response: "${aiText}"</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: #ffaa00;">⚠️ API responded but no text found</p>`;
+                    logMessage('⚠️ No text in response', 'warning');
+                }
+                
+            } catch (error) {
+                logMessage(`❌ Exception: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<p style="color: #ff4444;">❌ Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Send chat message
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const query = input.value.trim();
+            
+            if (!query) return;
+            
+            // Add user message
+            addMessage('sent', query);
+            input.value = '';
+            
+            logMessage(`💬 User asked: "${query}"`, 'info');
+            
+            // Detect if movie/TV search
+            const isEntertainment = /\b(movie|film|show|actor|actress|series|watch|episode|season|tv|director|star|cast)\b/i.test(query);
+            
+            if (isEntertainment) {
+                logMessage('🎬 Detected entertainment query - would search TMDB', 'info');
+            }
+            
+            try {
+                logMessage('🤖 Sending to Gemini AI...', 'info');
+                
+                const requestBody = {
+                    contents: [{
+                        parts: [{ 
+                            text: `You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).
+
+User question: ${query}` 
+                        }]
+                    }]
+                };
+                
+                logMessage(`📤 Request: ${JSON.stringify(requestBody)}`, 'info');
+                
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    }
+                );
+                
+                logMessage(`📡 Response: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    logMessage(`❌ Error: ${errorText}`, 'error');
+                    addMessage('received', `API Error (${response.status}): Unable to connect to AI. Please try again later.`);
+                    return;
+                }
+                
+                const data = await response.json();
+                logMessage(`📥 Full response: ${JSON.stringify(data, null, 2)}`, 'info');
+                
+                // Check if blocked
+                if (data.promptFeedback?.blockReason) {
+                    logMessage(`❌ Blocked: ${data.promptFeedback.blockReason}`, 'error');
+                    addMessage('received', "I couldn't process that question. Try asking in a different way! 🤔");
+                    return;
+                }
+                
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (aiText) {
+                    logMessage(`✅ AI responded: "${aiText.substring(0, 100)}..."`, 'success');
+                    addMessage('received', aiText);
+                } else {
+                    logMessage('❌ No text in response', 'error');
+                    logMessage(`Candidates: ${JSON.stringify(data.candidates)}`, 'error');
+                    addMessage('received', 'I had trouble understanding that. Could you rephrase your question? 💚');
+                }
+                
+            } catch (error) {
+                logMessage(`❌ Exception: ${error.message}`, 'error');
+                addMessage('received', 'Sorry, I encountered an error. Please try again! 💚');
+            }
+        }
+        
+        // Add message to chat
+        function addMessage(type, text) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        // Enter to send
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Auto-test on load
+        setTimeout(() => {
+            logMessage('🚀 Page loaded - ready to test', 'success');
+        }, 100);
+    </script>
+</body>
+</html>
