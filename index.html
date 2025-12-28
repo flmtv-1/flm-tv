@@ -3110,7 +3110,7 @@
                     
                     const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                         ParentId: collection.id,
-                        Limit: 20,  // Reduced from 50 for faster loading
+                        Limit: 50,
                         SortBy: 'SortName',
                         Recursive: true
                     });
@@ -3142,7 +3142,15 @@
                     
                     // Add items to carousel or show empty message
                     if (items && items.Items && items.Items.length > 0) {
-                        items.Items.forEach(item => {
+                        // FILTER: Only show items that have poster images
+                        const itemsWithImages = items.Items.filter(item => 
+                            item.ImageTags?.Primary || 
+                            item.SeriesThumb || 
+                            item.SeriesPrimaryImageTag || 
+                            item.ParentThumbImageTag
+                        );
+                        
+                        itemsWithImages.forEach(item => {
                             const card = document.createElement('div');
                             card.className = 'content-card';
                             card.onclick = () => playJellyfinItem(item.Id);
@@ -3336,7 +3344,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
             
-            // FORCE preview video to be muted AND play (especially on mobile!)
+            // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
                 previewVideo.muted = true;
@@ -3345,19 +3353,6 @@
                 // Extra enforcement for mobile
                 previewVideo.setAttribute('muted', 'muted');
                 previewVideo.setAttribute('playsinline', 'playsinline');
-                
-                // FORCE PLAY after a tiny delay
-                setTimeout(() => {
-                    previewVideo.play().then(() => {
-                        console.log('✅ Preview video playing!');
-                    }).catch(err => {
-                        console.log('⚠️ Preview autoplay blocked, will retry on user interaction');
-                        // Retry on first click anywhere
-                        document.body.addEventListener('click', () => {
-                            previewVideo.play().catch(() => {});
-                        }, { once: true });
-                    });
-                }, 100);
                 
                 // Prevent any unmute attempts
                 previewVideo.addEventListener('volumechange', function() {
@@ -3431,7 +3426,7 @@
             slides.push({
                 image: 'assets/images/ZainaShowTheaterBanner.jpg',
                 title: 'The Zaina Juliette Show',
-                description: 'A Contemporary variety/talk show hosted by Multi-Award-Winning Entertainer, Recording Artist, Actress, Zaina Juliette, featuring celebrity guests and upcoming talent. "A Gumbo of Entertainment."',
+                description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
                 link: null
             });
             
