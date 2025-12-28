@@ -1,14 +1,5 @@
 [build]
-     publish = "."
-     command = "echo 'No build needed'"
+  functions = "netlify/functions"
 
-   [[redirects]]
-     from = "/jellyfin/*"
-     to = "http://flmtv26.duckdns.org:8096/:splat"
-     status = 200
-     force = true
-
-   [[redirects]]
-     from = "/*"
-     to = "/index.html"
-     status = 200
+[functions]
+  node_bundler = "esbuild"
