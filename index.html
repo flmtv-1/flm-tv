@@ -4066,75 +4066,71 @@
             console.log('✅ AI chat ready');
         }
         
-        // ═══════════════════════════════════════════════════════════════
-        //  ZAINA AI - INTELLIGENT ASSISTANT WITH VISUAL SEARCH
-        // ═══════════════════════════════════════════════════════════════
-        
-        async function handleAIMessage(query) {
-            try {
-                console.log('🤖 Zaina AI (Coming Soon):', query);
-                
-                // TEMPORARY: Coming Soon message
-                addAIMessage('received', '🌟 Zaina AI is coming soon! We\'re working on bringing you the best AI assistant for FLM TV. In the meantime, feel free to use the live chat below to connect with other viewers! 💚');
-                
-                return;
-                
-                /* DISABLED TEMPORARILY - Will re-enable when backend is ready
-                
-                console.log('🤖 Zaina AI processing:', query);
-                
-                // Detect if this is a movie/TV search (contains words like: movie, film, show, actor, series, watch)
-                const isEntertainmentQuery = /\b(movie|film|show|actor|actress|series|watch|episode|season|tv|director|star|cast)\b/i.test(query);
-                
-                if (isEntertainmentQuery) {
-                    // Try TMDB for movie/TV searches
-                    const tmdbResponse = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEYS.TMDB}&query=${encodeURIComponent(query)}`);
-                    const tmdbData = await tmdbResponse.json();
-                    
-                    if (tmdbData.results && tmdbData.results.length > 0) {
-                        // Visual search results
-                        let visualResponse = '<div style="margin: 10px 0;">';
-                        
-                        tmdbData.results.slice(0, 3).forEach(item => {
-                            const posterUrl = item.poster_path 
-                                ? `https://image.tmdb.org/t/p/w200${item.poster_path}`
-                                : 'https://placehold.co/200x300?text=No+Poster';
-                            
-                            const title = item.title || item.name;
-                            const year = item.release_date ? `(${item.release_date.substring(0, 4)})` : 
-                                         item.first_air_date ? `(${item.first_air_date.substring(0, 4)})` : '';
-                            
-                            visualResponse += `
-                                <div style="margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--neon-green);">
-                                    <img src="${posterUrl}" style="width: 100%; border-radius: 8px; margin-bottom: 10px;">
-                                    <strong style="color: var(--accent);">${title} ${year}</strong><br>
-                                    <small style="color: var(--text-secondary);">${item.overview ? item.overview.substring(0, 150) + '...' : 'No description available'}</small><br>
-                                    <small style="color: var(--neon-green);">⭐ ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}/10</small>
-                                </div>
-                            `;
-                        });
-                        
-                        visualResponse += '</div>';
-                        addAIMessage('received', visualResponse);
-                        return; // Exit early if we found results
-                    }
-                }
+ // ═══════════════════════════════════════════════════════════════
+//  ZAINA AI - INTELLIGENT ASSISTANT (NETLIFY FUNCTION)
+//  ═══════════════════════════════════════════════════════════════
+
+async function handleAIMessage(query) {
+  try {
+    console.log('🤖 Zaina AI query:', query);
+
+    // Optional: quick "thinking" message
+    addAIMessage('received', '🤖 Thinking...');
+
+    const aiResponse = await fetch('/.netlify/functions/zaina-ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+
+    console.log('📥 AI status:', aiResponse.status, aiResponse.statusText);
+
+    if (!aiResponse.ok) {
+      const errTxt = await aiResponse.text();
+      console.error('❌ Zaina AI error response:', errTxt);
+      addAIMessage('received', `⚠️ Zaina AI error (${aiResponse.status}). Please try again.`);
+      return;
+    }
+
+    const data = await aiResponse.json();
+    const aiText = data?.text;
+
+    if (aiText && String(aiText).trim()) {
+      addAIMessage('received', aiText);
+    } else {
+      addAIMessage('received', 'I didn’t get a response. Try again. 💚');
+    }
+  } catch (err) {
+    console.error('❌ Zaina AI Error:', err);
+    addAIMessage('received', '⚠️ Zaina AI connection error. Please try again. 💚');
+  }
+}
+
                 
                 // Use OpenAI ChatGPT for ALL questions
-                console.log('🤖 Using AI Gateway for OpenAI query:', query);
-                
-                // AI Gateway will automatically intercept this call
-               const aiResponse = await fetch('/api/zaina', {
+               console.log('🤖 Zaina AI:', query);
+
+// Show a quick “thinking” bubble (optional)
+addAIMessage('received', '⏳ Thinking...');
+
+const res = await fetch('/.netlify/functions/zaina-ai', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ message: query })
 });
 
-if (!aiResponse.ok) {
-  const err = await aiResponse.text();
-  console.error('❌ Zaina AI error:', err);
-  addAIMessage('received', 'Zaina AI is not connected yet. Please try again.');
+const data = await res.json();
+
+// Remove the "Thinking..." bubble by adding the real response next
+if (!res.ok) {
+  console.error('Zaina AI error:', data);
+  addAIMessage('received', `⚠️ Zaina AI error: ${data?.error || 'Unknown error'}`);
   return;
+}
+
+addAIMessage('received', data.reply || "I’m here! Ask me again.");
+return;
+
 }
 
 const aiData = await aiResponse.json();
@@ -4155,24 +4151,9 @@ if (aiText) {
                     return;
                 }
                 
-                const aiData = await aiResponse.json();
-                console.log('🤖 Full response:', JSON.stringify(aiData, null, 2));
-                
-                const aiText = aiData.choices?.[0]?.message?.content;
-                
-                if (aiText) {
-                    console.log('✅ AI response received:', aiText.substring(0, 100));
-                    addAIMessage('received', aiText);
-                } else {
-                    console.error('❌ No response text');
-                    addAIMessage('received', 'I had trouble understanding that. Could you rephrase your question? 💚');
-                }
-                
-                */ // End of disabled AI code
-                
+           
             } catch (err) {
                 console.error('❌ AI Error:', err);
-                addAIMessage('received', '🌟 Zaina AI is coming soon! 💚');
             }
         }
         
