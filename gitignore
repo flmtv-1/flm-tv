@@ -1,0 +1,13 @@
+# FLM TV - Files to exclude from GitHub
+
+# API Configuration (contains secret keys)
+config.js
+
+# Other sensitive files
+*.env
+.env.local
+.env.production
+
+# System files
+.DS_Store
+Thumbs.db

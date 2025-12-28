@@ -2801,6 +2801,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
+    <!-- Load API configuration from separate file -->
+    <script src="config.js"></script>
+    
     <script>
         console.log('🎬 FLM TV - Initializing...');
         
@@ -2854,13 +2857,8 @@
             appId: "1:354930172302:web:3176dfff3d81ce823404df"
         };
         
-        const API_KEYS = {
-            OPENAI: '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',
-            GEMINI: '',
-            TMDB: '34773a6e0f80645a5b07a1ee76ecc26b',
-            OMDB: '266aeb44',
-            YOUTUBE: 'AIzaSyBJMZDXDPcVPUFhMKdYrABrke4PQZgRsT8'
-        };
+        // API keys are loaded from config.js
+        // DO NOT put API keys directly in this file!
         
         // Initialize Firebase
         firebase.initializeApp(FIREBASE_CONFIG);
