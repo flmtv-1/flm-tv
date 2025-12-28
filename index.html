@@ -3142,15 +3142,17 @@
                     
                     // Add items to carousel or show empty message
                     if (items && items.Items && items.Items.length > 0) {
-                        // FILTER: Only show items that have poster images
-                        const itemsWithImages = items.Items.filter(item => 
-                            item.ImageTags?.Primary || 
-                            item.SeriesThumb || 
-                            item.SeriesPrimaryImageTag || 
-                            item.ParentThumbImageTag
-                        );
-                        
-                        itemsWithImages.forEach(item => {
+                        items.Items.forEach(item => {
+                            // Skip items that have NO image sources at all (likely TrickPlay orphans)
+                            if (!item.ImageTags?.Primary && 
+                                !item.SeriesThumb && 
+                                !item.SeriesPrimaryImageTag && 
+                                !item.ParentThumbImageTag &&
+                                !item.BackdropImageTags) {
+                                console.log('⏭️ Skipping item with no images:', item.Name);
+                                return; // Skip this item
+                            }
+                            
                             const card = document.createElement('div');
                             card.className = 'content-card';
                             card.onclick = () => playJellyfinItem(item.Id);
@@ -3426,7 +3428,7 @@
             slides.push({
                 image: 'assets/images/ZainaShowTheaterBanner.jpg',
                 title: 'The Zaina Juliette Show',
-                description: 'A Contemporary variety/talk show hosted by Multi-Award-Winning Entertainer, Recording Artist, Actress, Zaina Juliette, featuring celebrity guests and upcoming talent. "A Gumbo of Entertainment."',
+                description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
                 link: null
             });
             
