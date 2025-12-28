@@ -2492,7 +2492,10 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        
+                        <button id="volumeToggle" onclick="event.stopPropagation(); togglePreviewVolume()" 
+                            style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: none; color: white; padding: 8px 12px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 1.2rem;">
+                            <i class="fas fa-volume-mute"></i>
+                        </button>
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -2752,6 +2755,9 @@
             <div class="viewer-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
                 <span>FLM TV</span>
+                <a href="https://7realmtv.com" target="_blank" style="margin-left: 1rem; color: #fcd116; text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: opacity 0.2s;">
+                    <i class="fas fa-globe"></i> 7RealmTV.com
+                </a>
             </div>
             
             <button class="viewer-back" onclick="closeViewer()">
