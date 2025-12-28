@@ -4072,6 +4072,15 @@
         
         async function handleAIMessage(query) {
             try {
+                console.log('🤖 Zaina AI (Coming Soon):', query);
+                
+                // TEMPORARY: Coming Soon message
+                addAIMessage('received', '🌟 Zaina AI is coming soon! We\'re working on bringing you the best AI assistant for FLM TV. In the meantime, feel free to use the live chat below to connect with other viewers! 💚');
+                
+                return;
+                
+                /* DISABLED TEMPORARILY - Will re-enable when backend is ready
+                
                 console.log('🤖 Zaina AI processing:', query);
                 
                 // Detect if this is a movie/TV search (contains words like: movie, film, show, actor, series, watch)
@@ -4159,9 +4168,11 @@
                     addAIMessage('received', 'I had trouble understanding that. Could you rephrase your question? 💚');
                 }
                 
+                */ // End of disabled AI code
+                
             } catch (err) {
                 console.error('❌ AI Error:', err);
-                addAIMessage('received', 'Sorry, I encountered an error. Please try again! 💚');
+                addAIMessage('received', '🌟 Zaina AI is coming soon! 💚');
             }
         }
         
