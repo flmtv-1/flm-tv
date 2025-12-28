@@ -3418,7 +3418,7 @@
             slides.push({
                 image: 'assets/images/ZainaShowTheaterBanner.jpg',
                 title: 'The Zaina Juliette Show',
-                description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
+                description: 'A Contemporary variety/talk show hosted by Multi-Award-Winning Entertainer, Recording Artist, Actress, Zaina Juliette, featuring celebrity guests and upcoming talent. "A Gumbo of Entertainment."',
                 link: null
             });
             
@@ -4072,15 +4072,6 @@
         
         async function handleAIMessage(query) {
             try {
-                console.log('🤖 Zaina AI (Coming Soon):', query);
-                
-                // TEMPORARY: Coming Soon message
-                addAIMessage('received', '🌟 Zaina AI is coming soon! We\'re working on bringing you the best AI assistant for FLM TV. In the meantime, feel free to use the live chat below to connect with other viewers! 💚');
-                
-                return;
-                
-                /* DISABLED TEMPORARILY - Will re-enable when backend is ready
-                
                 console.log('🤖 Zaina AI processing:', query);
                 
                 // Detect if this is a movie/TV search (contains words like: movie, film, show, actor, series, watch)
@@ -4121,36 +4112,26 @@
                 }
                 
                 // Use OpenAI ChatGPT for ALL questions
-                console.log('🤖 Using AI Gateway for OpenAI query:', query);
+                console.log('🤖 Using Netlify Function for OpenAI query:', query);
                 
-                // AI Gateway will automatically intercept this call
-                const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' // Netlify AI Gateway sets this automatically
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: 'You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).'
-                            },
-                            {
-                                role: 'user',
-                                content: query
-                            }
-                        ],
-                        max_tokens: 500
-                    })
-                });
+                console.log('📤 Sending to Netlify Function...');
+                
+                const aiResponse = await fetch(
+                    '/.netlify/functions/chat',
+                    {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ query: query })
+                    }
+                );
                 
                 console.log('📥 Response status:', aiResponse.status, aiResponse.statusText);
                 
                 if (!aiResponse.ok) {
                     const errorText = await aiResponse.text();
-                    console.error('❌ AI Error:', errorText);
+                    console.error('❌ Function Error:', errorText);
                     addAIMessage('received', `API Error (${aiResponse.status}): Unable to connect to AI. Please try again later.`);
                     return;
                 }
@@ -4158,7 +4139,7 @@
                 const aiData = await aiResponse.json();
                 console.log('🤖 Full response:', JSON.stringify(aiData, null, 2));
                 
-                const aiText = aiData.choices?.[0]?.message?.content;
+                const aiText = aiData.response;
                 
                 if (aiText) {
                     console.log('✅ AI response received:', aiText.substring(0, 100));
@@ -4168,11 +4149,9 @@
                     addAIMessage('received', 'I had trouble understanding that. Could you rephrase your question? 💚');
                 }
                 
-                */ // End of disabled AI code
-                
             } catch (err) {
                 console.error('❌ AI Error:', err);
-                addAIMessage('received', '🌟 Zaina AI is coming soon! 💚');
+                addAIMessage('received', 'Sorry, I encountered an error. Please try again! 💚');
             }
         }
         
