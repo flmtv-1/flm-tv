@@ -2855,7 +2855,7 @@
         };
         
         const API_KEYS = {
-            OPENAI: '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',
+            OPENAI: '', // Will be set by user
             GEMINI: '',
             TMDB: '34773a6e0f80645a5b07a1ee76ecc26b',
             OMDB: '266aeb44',
@@ -4074,6 +4074,16 @@
         
         async function handleAIMessage(query) {
             try {
+                // Check if API key is set
+                if (!API_KEYS.OPENAI) {
+                    const apiKey = prompt('Please enter your OpenAI API key to use Zaina AI:\n\n(Get one at https://platform.openai.com/api-keys)');
+                    if (!apiKey) {
+                        addAIMessage('received', 'API key is required to use Zaina AI.');
+                        return;
+                    }
+                    API_KEYS.OPENAI = apiKey.trim();
+                }
+                
                 console.log('🤖 Zaina AI processing:', query);
                 
                 // Detect if this is a movie/TV search (contains words like: movie, film, show, actor, series, watch)
