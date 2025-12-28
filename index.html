@@ -3097,7 +3097,7 @@
                     continue;
                 }
                 
-                try {
+                try {Ffetch
                     loadedCount++;
                     
                     // Update loading text
@@ -4124,28 +4124,28 @@
                 console.log('🤖 Using AI Gateway for OpenAI query:', query);
                 
                 // AI Gateway will automatically intercept this call
-                const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' // Netlify AI Gateway sets this automatically
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: 'You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).'
-                            },
-                            {
-                                role: 'user',
-                                content: query
-                            }
-                        ],
-                        max_tokens: 500
-                    })
-                });
-                
+               const aiResponse = await fetch('/api/zaina', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: query })
+});
+
+if (!aiResponse.ok) {
+  const err = await aiResponse.text();
+  console.error('❌ Zaina AI error:', err);
+  addAIMessage('received', 'Zaina AI is not connected yet. Please try again.');
+  return;
+}
+
+const aiData = await aiResponse.json();
+const aiText = aiData?.text;
+
+if (aiText) {
+  addAIMessage('received', aiText);
+} else {
+  addAIMessage('received', 'I didn’t get a response. Try again.');
+}
+
                 console.log('📥 Response status:', aiResponse.status, aiResponse.statusText);
                 
                 if (!aiResponse.ok) {
