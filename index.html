@@ -3151,13 +3151,9 @@
                         items.Items.forEach(item => {
                             // ONLY filter phantom images for "01 MOVIES 1" category
                             if (collection.name === '01 MOVIES 1') {
-                                // Skip items that have NO image sources at all (likely TrickPlay orphans)
-                                if (!item.ImageTags?.Primary && 
-                                    !item.SeriesThumb && 
-                                    !item.SeriesPrimaryImageTag && 
-                                    !item.ParentThumbImageTag &&
-                                    !item.BackdropImageTags) {
-                                    console.log('⏭️ Skipping phantom item in Movie 1:', item.Name);
+                                // Skip items that are NOT movies (filters out TrickPlay images)
+                                if (item.Type !== 'Movie' && item.Type !== 'Episode') {
+                                    console.log('⏭️ Skipping non-video item in Movie 1:', item.Name, 'Type:', item.Type);
                                     return; // Skip this item
                                 }
                             }
