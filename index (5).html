@@ -2755,8 +2755,8 @@
             <div class="viewer-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
                 <span>FLM TV</span>
-                <a href="https://7realmstv.com" target="_blank" style="margin-left: 1rem; color: #fcd116; text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: opacity 0.2s;" title="Visit 7RealmsTV">
-                    <i class="fas fa-globe"></i> 7RealmsTV
+                <a href="https://7realmtv.com" target="_blank" style="margin-left: 1rem; color: #fcd116; text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: opacity 0.2s;">
+                    <i class="fas fa-globe"></i> 7RealmTV.com
                 </a>
             </div>
             
@@ -3542,74 +3542,33 @@
                 clearInterval(jellyfinMonitorInterval);
             }
             
-            // Monitor every 300ms (more frequent) to ensure Jellyfin UI stays hidden
+            // Monitor every 500ms to ensure Jellyfin UI stays hidden
             jellyfinMonitorInterval = setInterval(() => {
                 try {
                     const doc = frame.contentDocument || frame.contentWindow.document;
                     if (doc) {
-                        // Hide all possible header elements
-                        const headersToHide = doc.querySelectorAll(`
-                            .skinHeader, 
-                            .skinHeader-withBackground,
-                            .headerTop, 
-                            .headerLeft, 
-                            .headerRight, 
-                            .headerLogo, 
-                            .mainDrawer,
-                            .viewMenuBar,
-                            .mdl-layout__header,
-                            [class*="header"],
-                            [class*="Header"]
-                        `);
-                        
+                        // Hide header elements if they appear
+                        const headersToHide = doc.querySelectorAll('.skinHeader, .headerTop, .headerLeft, .headerRight, .headerLogo, .mainDrawer');
                         headersToHide.forEach(el => {
                             if (el && el.style.display !== 'none') {
                                 el.style.display = 'none';
                                 el.style.visibility = 'hidden';
                                 el.style.height = '0';
                                 el.style.overflow = 'hidden';
-                                el.style.position = 'absolute';
-                                el.style.top = '-9999px';
                             }
                         });
                         
-                        // Target blue background elements (Jellyfin's blue header)
-                        const allElements = doc.querySelectorAll('div');
-                        allElements.forEach(el => {
-                            const bgColor = window.getComputedStyle(el).backgroundColor;
-                            // Check for Jellyfin's blue: rgb(0, 56, 168)
-                            if (bgColor && (
-                                bgColor.includes('0, 56, 168') || 
-                                bgColor.includes('0,56,168') ||
-                                bgColor === 'rgb(0, 56, 168)'
-                            )) {
-                                // Only hide if it's at the top of the page (likely a header)
-                                const rect = el.getBoundingClientRect();
-                                if (rect.top < 100) {
-                                    el.style.display = 'none';
-                                    el.style.visibility = 'hidden';
-                                }
-                            }
-                        });
-                        
-                        // Ensure content starts at top
+                        // Ensure content is at top
                         const mainPages = doc.querySelector('.mainAnimatedPages');
-                        if (mainPages) {
+                        if (mainPages && mainPages.style.paddingTop !== '0px') {
                             mainPages.style.paddingTop = '0';
                             mainPages.style.marginTop = '0';
-                            mainPages.style.top = '0';
-                        }
-                        
-                        const view = doc.querySelector('.view');
-                        if (view) {
-                            view.style.paddingTop = '0';
-                            view.style.marginTop = '0';
                         }
                     }
                 } catch (e) {
                     // CORS error - ignore
                 }
-            }, 300); // Run every 300ms
+            }, 500);
         }
         
         function stopJellyfinUIMonitor() {
@@ -3878,37 +3837,273 @@
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
+            // Auto-login: Click Public user if on login page
+            setTimeout(() => {
+                try {
+                    // Find and click Public user card
+                    const publicUser = doc.querySelector('.card-usercard');
+                    if (publicUser && publicUser.textContent.includes('Public')) {
+                        publicUser.click();
+                        console.log('✅ Auto-clicked Public user');
+                        
+                        // Wait and click Manual Login button
+                        setTimeout(() => {
+                            const manualLoginBtn = doc.querySelector('.button-submit');
+                            if (manualLoginBtn) {
+                                manualLoginBtn.click();
+                                console.log('✅ Auto-submitted login');
+                            }
+                        }, 100);
+                    }
+                } catch (e) {
+                    console.log('Auto-login not needed or failed:', e);
+                }
+            }, 500);
+            
             const style = doc.createElement('style');
             style.textContent = `
-                /* MINIMAL CSS - Only hide Jellyfin header */
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  HIDE JELLYFIN'S HEADER AND NAVIGATION - KEEP PLAYER ONLY       */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                /* Hide entire Jellyfin header */
                 .skinHeader,
-                .skinHeader-withBackground,
                 .headerTop,
                 .headerLeft,
                 .headerRight,
-                .headerLogo,
-                .mainDrawer {
-                    display: none !important;
+                .headerTabs,
+                .headerUserButtonRound,
+                .headerBackButton,
+                .headerCastButton,
+                .headerSyncButton,
+                .btnNotifications,
+                .headerSearchButton,
+                .headerButton,
+                .flex-grow { 
+                    display: none !important; 
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    min-height: 0 !important;
+                    max-height: 0 !important;
+                    overflow: hidden !important;
+                    opacity: 0 !important;
                 }
                 
-                /* Remove top padding */
+                /* Hide Jellyfin logo */
+                .headerLogo,
+                .logoLibraryMenuButton,
+                .headerHomeButton { 
+                    display: none !important; 
+                }
+                
+                /* Hide top navigation */
+                .mdl-layout__header-row,
+                .mdl-layout__drawer-button { 
+                    display: none !important; 
+                }
+                
+                /* Hide sidebar/drawer navigation */
+                .mainDrawer,
+                .navDrawer,
+                .mdl-layout__drawer { 
+                    display: none !important; 
+                }
+                
+                /* Expand content to full width (no header) */
                 .mainAnimatedPages,
-                .view {
+                .view,
+                .layout-desktop,
+                .layout-tv,
+                .layout-mobile,
+                .page,
+                .detailPage,
+                .itemsContainer,
+                .padded-top,
+                .padded-bottom,
+                body { 
                     padding-top: 0 !important;
                     margin-top: 0 !important;
                 }
                 
-                /* Keep Filipino colors for buttons */
-                .button-submit,
+                /* Make content full height */
+                .view,
+                .page {
+                    top: 0 !important;
+                    min-height: 100vh !important;
+                }
+                
+                /* Ensure video player and controls are ALWAYS visible */
+                .videoPlayerContainer,
+                .videoPlayerWrapper,
+                video,
+                .upNextDialog,
+                .osdControls,
+                .videoOsdBottom,
+                .videoOsdTop,
+                .nowPlayingBar,
+                .nowPlayingBarTop,
+                .nowPlayingBarCurrentTime,
+                .nowPlayingBarPositionContainer,
+                .sliderBubble,
+                .videoOsdTitle,
+                .osdTextContainer,
+                .videoOsd Buttons,
+                .btnVideoOsd,
+                .videoOsdSettingsButton,
+                .videoOsdPlaybackInfo,
+                .videoOsdBottomButtons,
+                .videoBrightnessContainer,
+                .btnFullscreen,
+                .btnPause,
+                .btnPlay,
+                .btnRewind,
+                .btnFastForward,
+                .btnNextTrack,
+                .btnPreviousTrack,
+                .btnStop,
+                .btnAudio,
+                .btnSubtitles,
+                .seekTimeText,
+                .videoTrackSelection,
+                .subtitleSettings,
+                .qualitySettingsButton { 
+                    display: block !important; 
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    pointer-events: auto !important;
+                }
+                
+                /* Keep all Jellyfin detail page content visible */
+                .itemBackdrop,
+                .detailLogo,
+                .detailPagePrimaryContainer,
+                .detailPageContent,
+                .itemName,
+                .itemMiscInfo,
+                .overview,
+                .detailButton,
+                .itemExternalLinks,
+                .detailSectionContent,
+                .sections,
+                .verticalSection,
+                .sectionTitle,
+                .itemsContainer,
+                .card,
+                .cardBox,
+                .cardContent,
+                .cardImageContainer,
+                .cardScalable,
+                .cardPadder,
+                .listItem,
+                .listItemBody,
+                .secondary,
+                .actionsheetMenuItem,
+                .emby-button,
+                .button-link,
                 .raised,
-                .btnPlay {
-                    background: linear-gradient(135deg, #ce1126 0%, #fcd116 100%) !important;
-                    color: white !important;
+                .btnPlay,
+                .btnResume,
+                .btnPrimary,
+                .btnCircular,
+                .detailButtons,
+                .seriesDetailPage,
+                .episodesContainer,
+                .episodeDetailPage { 
+                    display: block !important; 
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+                
+                /* Ensure episode lists and season selectors work */
+                .listTabButton,
+                .buttonActive,
+                .segmentedTabs,
+                .scrollButtons { 
+                    display: inline-block !important; 
+                    visibility: visible !important;
+                }
+                
+                /* Login page (if needed) - keep minimal  */
+                .loginPage,
+                .readOnlyContent,
+                .visualLoginForm,
+                .manualLoginForm,
+                .inputContainer,
+                .checkboxContainer,
+                .card-usercard { 
+                    display: block !important; 
+                    visibility: visible !important;
+                }
+                
+                /* Filipino Flag Colors for remaining visible elements */
+                .skinHeader { background: #0038a8 !important; }
+                .button-submit, .raised { background: #ce1126 !important; }
+                .listItem:hover { background: rgba(252, 209, 22, 0.1) !important; }
+                .itemSelectionPanel { border-color: #22c55e !important; }
+                
+                /* Login page styling */
+                .loginPage { background: #0f172a !important; }
+                .readOnlyContent { color: #e2e8f0 !important; }
+                .inputContainer { background: rgba(255, 255, 255, 0.05) !important; }
+                
+                /* Button styling */
+                .emby-button { 
+                    background: linear-gradient(135deg, #0038a8 0%, #fcd116 100%) !important;
+                    border: none !important;
+                }
+                .emby-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(252, 209, 22, 0.3);
+                }
+                
+                /* Dark theme for better integration */
+                body,
+                .view,
+                .page,
+                .backgroundContainer,
+                .detailPage { 
+                    background: #0a0f1a !important;
+                }
+                
+                /* Make sure scrollbars work */
+                body,
+                .mainAnimatedPages {
+                    overflow-y: auto !important;
+                }
+                
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  CRITICAL: ENSURE PLAYER FUNCTIONALITY                          */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                /* Video element must be visible and functional */
+                video {
+                    position: relative !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    z-index: 1 !important;
+                }
+                
+                /* Controls overlay */
+                .osdControls {
+                    position: absolute !important;
+                    bottom: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    z-index: 1000 !important;
+                }
+                
+                /* Subtitle rendering */
+                .videoSubtitles {
+                    position: absolute !important;
+                    bottom: 80px !important;
+                    width: 100% !important;
+                    text-align: center !important;
+                    z-index: 999 !important;
+                    pointer-events: none !important;
                 }
             `;
             doc.head.appendChild(style);
-            
-            console.log('✅ FLM TV minimal branding applied');
+            console.log('✅ Injected comprehensive FLM TV branding - Jellyfin UI hidden, player visible');
         }
         
         function closeViewer() {

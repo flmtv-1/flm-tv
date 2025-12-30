@@ -3878,37 +3878,166 @@
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
+            // Fast auto-login - try immediately and repeatedly
+            const autoLogin = () => {
+                try {
+                    const publicUser = doc.querySelector('.card-usercard');
+                    if (publicUser && publicUser.textContent.includes('Public')) {
+                        publicUser.click();
+                        console.log('✅ Auto-clicked Public user');
+                        
+                        setTimeout(() => {
+                            const manualLoginBtn = doc.querySelector('.button-submit');
+                            if (manualLoginBtn) {
+                                manualLoginBtn.click();
+                                console.log('✅ Auto-submitted login');
+                            }
+                        }, 50);
+                        return true;
+                    }
+                    return false;
+                } catch (e) {
+                    return false;
+                }
+            };
+            
+            // Try immediately
+            autoLogin();
+            
+            // Keep trying every 100ms for 3 seconds
+            let attempts = 0;
+            const loginInterval = setInterval(() => {
+                attempts++;
+                if (autoLogin() || attempts >= 30) {
+                    clearInterval(loginInterval);
+                }
+            }, 100);
+            
             const style = doc.createElement('style');
             style.textContent = `
-                /* MINIMAL CSS - Only hide Jellyfin header */
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  HIDE JELLYFIN HEADER                                           */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
                 .skinHeader,
                 .skinHeader-withBackground,
                 .headerTop,
                 .headerLeft,
                 .headerRight,
+                .headerTabs,
+                .headerUser,
+                .headerUserButton,
+                .headerBackButton,
+                .headerCastButton,
+                .headerSearchButton,
+                .headerButton,
+                .headerHomeButton,
                 .headerLogo,
-                .mainDrawer {
+                .logoLibraryMenuButton,
+                .btnNotifications,
+                .mdl-layout__header,
+                .viewMenuBar {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    opacity: 0 !important;
+                }
+                
+                .mainDrawer,
+                .navDrawer,
+                .mdl-layout__drawer {
                     display: none !important;
                 }
                 
-                /* Remove top padding */
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  HIDE LOGIN PAGE ONLY IF IT EXISTS                              */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                /* Hide login page elements but keep them functional */
+                .loginPage .readOnlyContent,
+                .loginPage .visualLoginForm,
+                .loginPage .manualLoginForm {
+                    opacity: 0 !important;
+                    transition: none !important;
+                }
+                
+                /* Show loading message on login page only */
+                .loginPage::before {
+                    content: 'Loading...' !important;
+                    position: fixed !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    font-size: 1.5rem !important;
+                    color: #fcd116 !important;
+                    opacity: 1 !important;
+                }
+                
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  ENSURE ALL CONTENT IS VISIBLE                                  */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                /* Remove top spacing */
                 .mainAnimatedPages,
-                .view {
+                .view,
+                .page,
+                body {
                     padding-top: 0 !important;
                     margin-top: 0 !important;
                 }
                 
-                /* Keep Filipino colors for buttons */
+                /* ALL detail page content must be visible */
+                .itemBackdrop,
+                .detailImageContainer,
+                .detailPagePrimaryContainer,
+                .detailPageContent,
+                .itemName,
+                .overview,
+                .detailButton,
+                .sections,
+                .itemsContainer,
+                .card,
+                .listItem,
+                .emby-button,
+                .btnPlay,
+                .btnResume,
+                .detailButtons,
+                .episodesContainer,
+                .emby-tab-button,
+                .videoPlayerContainer,
+                video,
+                .osdControls {
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+                
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  STYLING                                                         */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                body {
+                    background: #0f172a !important;
+                }
+                
                 .button-submit,
                 .raised,
                 .btnPlay {
                     background: linear-gradient(135deg, #ce1126 0%, #fcd116 100%) !important;
                     color: white !important;
                 }
+                
+                .card {
+                    background: #1e293b !important;
+                }
+                
+                .card:hover {
+                    border-color: #22c55e !important;
+                }
             `;
             doc.head.appendChild(style);
             
-            console.log('✅ FLM TV minimal branding applied');
+            console.log('✅ FLM TV branding applied');
         }
         
         function closeViewer() {
