@@ -884,14 +884,14 @@
             max-height: 60px;
         }
         
-        /* KEEP FLM TV header visible - we'll hide Jellyfin's header instead */
+        /* Hide FLM TV header when viewing movie to prevent double header and allow Jellyfin buttons to work */
         .jellyfin-viewer.viewing-movie .viewer-header {
-            display: flex; /* Keep it visible */
+            display: none;
         }
         
-        /* Account for FLM TV header height */
+        /* Make iframe full height when header is hidden */
         .jellyfin-viewer.viewing-movie iframe {
-            height: calc(100vh - 60px); /* 60px for FLM TV header */
+            height: 100vh;
         }
         
         .viewer-logo {
@@ -2492,10 +2492,7 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button id="volumeToggle" onclick="event.stopPropagation(); togglePreviewVolume()" 
-                            style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: none; color: white; padding: 8px 12px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 1.2rem;">
-                            <i class="fas fa-volume-mute"></i>
-                        </button>
+                        
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -2755,9 +2752,6 @@
             <div class="viewer-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
                 <span>FLM TV</span>
-                <a href="https://7realmstv.com" target="_blank" style="margin-left: 1rem; color: #fcd116; text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: opacity 0.2s;" title="Visit 7RealmsTV">
-                    <i class="fas fa-globe"></i> 7RealmsTV
-                </a>
             </div>
             
             <button class="viewer-back" onclick="closeViewer()">
@@ -3149,19 +3143,6 @@
                     // Add items to carousel or show empty message
                     if (items && items.Items && items.Items.length > 0) {
                         items.Items.forEach(item => {
-                            // ONLY filter phantom images for "01 MOVIES 1" category
-                            if (collection.name === '01 MOVIES 1') {
-                                // Skip items that have NO image sources at all (likely TrickPlay orphans)
-                                if (!item.ImageTags?.Primary && 
-                                    !item.SeriesThumb && 
-                                    !item.SeriesPrimaryImageTag && 
-                                    !item.ParentThumbImageTag &&
-                                    !item.BackdropImageTags) {
-                                    console.log('⏭️ Skipping phantom item in Movie 1:', item.Name);
-                                    return; // Skip this item
-                                }
-                            }
-                            
                             const card = document.createElement('div');
                             card.className = 'content-card';
                             card.onclick = () => playJellyfinItem(item.Id);
@@ -3518,105 +3499,17 @@
             frame.onload = function() {
                 try {
                     injectCustomBranding(frame);
-                    // Start monitoring to keep Jellyfin UI hidden
-                    startJellyfinUIMonitor(frame);
                 } catch (e) {
                     console.log('Could not inject branding (CORS):', e);
                 }
             };
             
             viewer.classList.add('active');
-            viewer.classList.add('viewing-movie'); // Add this class for styling
+            viewer.classList.add('viewing-movie'); // Add this class to hide FLM TV header
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
             history.pushState({modal: 'movie'}, '', '#movie');
-        }
-        
-        // Monitor and hide Jellyfin UI elements continuously
-        let jellyfinMonitorInterval = null;
-        
-        function startJellyfinUIMonitor(frame) {
-            // Clear any existing monitor
-            if (jellyfinMonitorInterval) {
-                clearInterval(jellyfinMonitorInterval);
-            }
-            
-            // Monitor every 300ms (more frequent) to ensure Jellyfin UI stays hidden
-            jellyfinMonitorInterval = setInterval(() => {
-                try {
-                    const doc = frame.contentDocument || frame.contentWindow.document;
-                    if (doc) {
-                        // Hide all possible header elements
-                        const headersToHide = doc.querySelectorAll(`
-                            .skinHeader, 
-                            .skinHeader-withBackground,
-                            .headerTop, 
-                            .headerLeft, 
-                            .headerRight, 
-                            .headerLogo, 
-                            .mainDrawer,
-                            .viewMenuBar,
-                            .mdl-layout__header,
-                            [class*="header"],
-                            [class*="Header"]
-                        `);
-                        
-                        headersToHide.forEach(el => {
-                            if (el && el.style.display !== 'none') {
-                                el.style.display = 'none';
-                                el.style.visibility = 'hidden';
-                                el.style.height = '0';
-                                el.style.overflow = 'hidden';
-                                el.style.position = 'absolute';
-                                el.style.top = '-9999px';
-                            }
-                        });
-                        
-                        // Target blue background elements (Jellyfin's blue header)
-                        const allElements = doc.querySelectorAll('div');
-                        allElements.forEach(el => {
-                            const bgColor = window.getComputedStyle(el).backgroundColor;
-                            // Check for Jellyfin's blue: rgb(0, 56, 168)
-                            if (bgColor && (
-                                bgColor.includes('0, 56, 168') || 
-                                bgColor.includes('0,56,168') ||
-                                bgColor === 'rgb(0, 56, 168)'
-                            )) {
-                                // Only hide if it's at the top of the page (likely a header)
-                                const rect = el.getBoundingClientRect();
-                                if (rect.top < 100) {
-                                    el.style.display = 'none';
-                                    el.style.visibility = 'hidden';
-                                }
-                            }
-                        });
-                        
-                        // Ensure content starts at top
-                        const mainPages = doc.querySelector('.mainAnimatedPages');
-                        if (mainPages) {
-                            mainPages.style.paddingTop = '0';
-                            mainPages.style.marginTop = '0';
-                            mainPages.style.top = '0';
-                        }
-                        
-                        const view = doc.querySelector('.view');
-                        if (view) {
-                            view.style.paddingTop = '0';
-                            view.style.marginTop = '0';
-                        }
-                    }
-                } catch (e) {
-                    // CORS error - ignore
-                }
-            }, 300); // Run every 300ms
-        }
-        
-        function stopJellyfinUIMonitor() {
-            if (jellyfinMonitorInterval) {
-                clearInterval(jellyfinMonitorInterval);
-                jellyfinMonitorInterval = null;
-            }
         }
         
         async function openJellyfinCollection(collectionId) {
@@ -3694,8 +3587,6 @@
                     console.log('✅ Iframe loaded');
                     try {
                         injectCustomBranding(frame);
-                        // Start monitoring to keep Jellyfin UI hidden
-                        startJellyfinUIMonitor(frame);
                     } catch (e) {
                         console.log('Could not inject branding (CORS):', e);
                     }
@@ -3804,8 +3695,6 @@
                     console.log('✅ Iframe loaded');
                     try {
                         injectCustomBranding(frame);
-                        // Start monitoring to keep Jellyfin UI hidden
-                        startJellyfinUIMonitor(frame);
                         
                         // Auto-click Public user after a delay
                         setTimeout(() => {
@@ -3878,43 +3767,69 @@
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
+            // Auto-login: Click Public user if on login page
+            setTimeout(() => {
+                try {
+                    // Find and click Public user card
+                    const publicUser = doc.querySelector('.card-usercard');
+                    if (publicUser && publicUser.textContent.includes('Public')) {
+                        publicUser.click();
+                        console.log('✅ Auto-clicked Public user');
+                        
+                        // Wait and click Manual Login button
+                        setTimeout(() => {
+                            const manualLoginBtn = doc.querySelector('.button-submit');
+                            if (manualLoginBtn) {
+                                manualLoginBtn.click();
+                                console.log('✅ Auto-submitted login');
+                            }
+                        }, 100);
+                    }
+                } catch (e) {
+                    console.log('Auto-login not needed or failed:', e);
+                }
+            }, 500);
+            
             const style = doc.createElement('style');
             style.textContent = `
-                /* MINIMAL CSS - Only hide Jellyfin header */
-                .skinHeader,
-                .skinHeader-withBackground,
-                .headerTop,
-                .headerLeft,
-                .headerRight,
-                .headerLogo,
-                .mainDrawer {
-                    display: none !important;
+                /* Hide Jellyfin logo and replace with FLM TV branding */
+                .headerLogo { display: none !important; }
+                .headerRight::before {
+                    content: 'FLM TV';
+                    font-size: 2rem;
+                    font-weight: 900;
+                    background: linear-gradient(135deg, #fcd116 0%, #0038a8 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    margin-right: 2rem;
                 }
                 
-                /* Remove top padding */
-                .mainAnimatedPages,
-                .view {
-                    padding-top: 0 !important;
-                    margin-top: 0 !important;
-                }
+                /* Filipino Flag Colors */
+                .skinHeader { background: #0038a8 !important; }
+                .button-submit, .raised { background: #ce1126 !important; }
+                .listItem:hover { background: rgba(252, 209, 22, 0.1) !important; }
+                .itemSelectionPanel { border-color: #22c55e !important; }
                 
-                /* Keep Filipino colors for buttons */
-                .button-submit,
-                .raised,
-                .btnPlay {
-                    background: linear-gradient(135deg, #ce1126 0%, #fcd116 100%) !important;
-                    color: white !important;
+                /* Login page customization */
+                .loginPage { background: #0f172a !important; }
+                .readOnlyContent { color: #e2e8f0 !important; }
+                .inputContainer { background: rgba(255, 255, 255, 0.05) !important; }
+                
+                /* Buttons */
+                .emby-button { 
+                    background: linear-gradient(135deg, #0038a8 0%, #fcd116 100%) !important;
+                    border: none !important;
+                }
+                .emby-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(252, 209, 22, 0.3);
                 }
             `;
             doc.head.appendChild(style);
-            
-            console.log('✅ FLM TV minimal branding applied');
         }
         
         function closeViewer() {
-            // Stop monitoring Jellyfin UI
-            stopJellyfinUIMonitor();
-            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             viewer.classList.remove('active');
