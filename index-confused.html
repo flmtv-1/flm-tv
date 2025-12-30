@@ -3878,14 +3878,27 @@
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
-            // Fast auto-login - try immediately and repeatedly
+            // IMMEDIATELY hide login page with inline styles
+            setTimeout(() => {
+                try {
+                    const loginPage = doc.querySelector('.loginPage');
+                    if (loginPage) {
+                        loginPage.style.display = 'none';
+                        loginPage.style.visibility = 'hidden';
+                    }
+                } catch (e) {}
+            }, 0);
+            
+            // Auto-login: Click Public user IMMEDIATELY and REPEATEDLY
             const autoLogin = () => {
                 try {
+                    // Find and click Public user card
                     const publicUser = doc.querySelector('.card-usercard');
                     if (publicUser && publicUser.textContent.includes('Public')) {
                         publicUser.click();
                         console.log('✅ Auto-clicked Public user');
                         
+                        // Click submit button immediately
                         setTimeout(() => {
                             const manualLoginBtn = doc.querySelector('.button-submit');
                             if (manualLoginBtn) {
@@ -3893,6 +3906,7 @@
                                 console.log('✅ Auto-submitted login');
                             }
                         }, 50);
+                        
                         return true;
                     }
                     return false;
@@ -3901,20 +3915,50 @@
                 }
             };
             
-            // Try immediately
+            // Try auto-login immediately
             autoLogin();
             
-            // Keep trying every 100ms for 3 seconds
+            // Keep trying every 100ms for 5 seconds
             let attempts = 0;
+            const maxAttempts = 50;
             const loginInterval = setInterval(() => {
                 attempts++;
-                if (autoLogin() || attempts >= 30) {
+                if (autoLogin() || attempts >= maxAttempts) {
                     clearInterval(loginInterval);
                 }
             }, 100);
             
             const style = doc.createElement('style');
             style.textContent = `
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  HIDE LOGIN PAGE COMPLETELY                                     */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                /* Hide the entire login page */
+                .loginPage,
+                .loginPage *,
+                .readOnlyContent,
+                .visualLoginForm,
+                .manualLoginForm {
+                    opacity: 0 !important;
+                    pointer-events: none !important;
+                    transition: none !important;
+                }
+                
+                /* Show loading state instead */
+                .loginPage::before {
+                    content: 'Loading FLM TV...' !important;
+                    position: fixed !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    font-size: 1.5rem !important;
+                    color: #fcd116 !important;
+                    opacity: 1 !important;
+                    z-index: 99999 !important;
+                    pointer-events: none !important;
+                }
+                
                 /* ═══════════════════════════════════════════════════════════════ */
                 /*  HIDE JELLYFIN HEADER                                           */
                 /* ═══════════════════════════════════════════════════════════════ */
@@ -3927,66 +3971,68 @@
                 .headerTabs,
                 .headerUser,
                 .headerUserButton,
+                .headerUserButtonRound,
                 .headerBackButton,
                 .headerCastButton,
+                .headerSyncButton,
+                .headerAudioPlayerButton,
                 .headerSearchButton,
                 .headerButton,
                 .headerHomeButton,
                 .headerLogo,
                 .logoLibraryMenuButton,
                 .btnNotifications,
+                .flex-grow,
                 .mdl-layout__header,
-                .viewMenuBar {
+                .mdl-layout__header-row,
+                .mdl-layout__drawer-button,
+                .viewMenuBar,
+                .viewMenuBar-withBackground {
                     display: none !important;
                     visibility: hidden !important;
                     height: 0 !important;
+                    min-height: 0 !important;
+                    max-height: 0 !important;
+                    overflow: hidden !important;
                     opacity: 0 !important;
+                    pointer-events: none !important;
+                    position: absolute !important;
+                    top: -9999px !important;
+                    left: -9999px !important;
                 }
                 
                 .mainDrawer,
                 .navDrawer,
-                .mdl-layout__drawer {
+                .mdl-layout__drawer,
+                .viewMenuSecondary {
                     display: none !important;
                 }
                 
                 /* ═══════════════════════════════════════════════════════════════ */
-                /*  HIDE LOGIN PAGE ONLY IF IT EXISTS                              */
+                /*  CONTENT POSITIONING                                            */
                 /* ═══════════════════════════════════════════════════════════════ */
                 
-                /* Hide login page elements but keep them functional */
-                .loginPage .readOnlyContent,
-                .loginPage .visualLoginForm,
-                .loginPage .manualLoginForm {
-                    opacity: 0 !important;
-                    transition: none !important;
-                }
-                
-                /* Show loading message on login page only */
-                .loginPage::before {
-                    content: 'Loading...' !important;
-                    position: fixed !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    transform: translate(-50%, -50%) !important;
-                    font-size: 1.5rem !important;
-                    color: #fcd116 !important;
-                    opacity: 1 !important;
-                }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  ENSURE ALL CONTENT IS VISIBLE                                  */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                /* Remove top spacing */
                 .mainAnimatedPages,
                 .view,
                 .page,
-                body {
+                body,
+                html {
                     padding-top: 0 !important;
                     margin-top: 0 !important;
                 }
                 
-                /* ALL detail page content must be visible */
+                .mainAnimatedPages {
+                    top: 0 !important;
+                }
+                
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  KEEP ALL CONTENT VISIBLE                                       */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                .videoPlayerContainer,
+                .videoPlayerWrapper,
+                video,
+                .osdControls,
                 .itemBackdrop,
                 .detailImageContainer,
                 .detailPagePrimaryContainer,
@@ -3995,28 +4041,30 @@
                 .overview,
                 .detailButton,
                 .sections,
+                .verticalSection,
                 .itemsContainer,
                 .card,
+                .cardContent,
                 .listItem,
                 .emby-button,
                 .btnPlay,
                 .btnResume,
                 .detailButtons,
                 .episodesContainer,
+                .listTabButton,
                 .emby-tab-button,
-                .videoPlayerContainer,
-                video,
-                .osdControls {
+                .emby-tabs {
                     display: block !important;
                     visibility: visible !important;
                     opacity: 1 !important;
                 }
                 
                 /* ═══════════════════════════════════════════════════════════════ */
-                /*  STYLING                                                         */
+                /*  FILIPINO FLAG STYLING                                          */
                 /* ═══════════════════════════════════════════════════════════════ */
                 
-                body {
+                body,
+                .backgroundContainer {
                     background: #0f172a !important;
                 }
                 
@@ -4029,15 +4077,38 @@
                 
                 .card {
                     background: #1e293b !important;
+                    border: 1px solid rgba(0, 56, 168, 0.3) !important;
                 }
                 
                 .card:hover {
                     border-color: #22c55e !important;
                 }
+                
+                .itemProgressBar,
+                .sliderBubble {
+                    background: #22c55e !important;
+                }
+                
+                a {
+                    color: #fcd116 !important;
+                }
             `;
             doc.head.appendChild(style);
             
-            console.log('✅ FLM TV branding applied');
+            // Additional JavaScript hiding
+            setTimeout(() => {
+                try {
+                    const possibleHeaders = doc.querySelectorAll('[class*="header"], [class*="Header"]');
+                    possibleHeaders.forEach(el => {
+                        if (el && el.offsetHeight > 0) {
+                            el.style.display = 'none';
+                            el.style.visibility = 'hidden';
+                        }
+                    });
+                } catch (e) {}
+            }, 500);
+            
+            console.log('✅ FLM TV branding applied - Auto-login active');
         }
         
         function closeViewer() {
