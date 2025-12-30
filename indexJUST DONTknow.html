@@ -884,14 +884,14 @@
             max-height: 60px;
         }
         
-        /* KEEP FLM TV header visible - we'll hide Jellyfin's header instead */
+        /* Hide FLM TV header when viewing movie to prevent double header and allow Jellyfin buttons to work */
         .jellyfin-viewer.viewing-movie .viewer-header {
-            display: flex; /* Keep it visible */
+            display: none;
         }
         
-        /* Account for FLM TV header height */
+        /* Make iframe full height when header is hidden */
         .jellyfin-viewer.viewing-movie iframe {
-            height: calc(100vh - 60px); /* 60px for FLM TV header */
+            height: 100vh;
         }
         
         .viewer-logo {
@@ -2482,7 +2482,7 @@
                     <div class="live-channel-card" onclick="openLiveStream()">
                         <video id="previewVideo" muted autoplay loop playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-                            <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                            <source src="http://flmtv26.duckdns.org:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                         <div class="live-channel-content">
                             <div class="live-indicator">
@@ -2492,7 +2492,7 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button id="volumeToggle" onclick="event.stopPropagation(); togglePreviewVolume()" 
+                        <button id="volumeToggleBtn" onclick="event.stopPropagation(); togglePreviewVolume()" 
                             style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: none; color: white; padding: 8px 12px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 1.2rem;">
                             <i class="fas fa-volume-mute"></i>
                         </button>
@@ -2737,7 +2737,7 @@
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                <source src="http://flmtv26.duckdns.org:8080/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
         </div>
@@ -2755,9 +2755,6 @@
             <div class="viewer-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
                 <span>FLM TV</span>
-                <a href="https://7realmstv.com" target="_blank" style="margin-left: 1rem; color: #fcd116; text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: opacity 0.2s;" title="Visit 7RealmsTV">
-                    <i class="fas fa-globe"></i> 7RealmsTV
-                </a>
             </div>
             
             <button class="viewer-back" onclick="closeViewer()">
@@ -2807,9 +2804,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
-    <!-- Load API configuration from separate file -->
-    <script src="private/config.js"></script>
-    
     <script>
         console.log('🎬 FLM TV - Initializing...');
         
@@ -2824,7 +2818,7 @@
     
     COLLECTIONS: [
         { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
-        { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
+        { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
         { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
         { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
         { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
@@ -2863,8 +2857,12 @@
             appId: "1:354930172302:web:3176dfff3d81ce823404df"
         };
         
-        // API keys are loaded from config.js
-        // DO NOT put API keys directly in this file!
+        const API_KEYS = {
+            GEMINI: 'AIzaSyBpAfUi--FOy8LUXTucSE4ZXIh3Z0vM6cY',
+            TMDB: '34773a6e0f80645a5b07a1ee76ecc26b',
+            OMDB: '266aeb44',
+            YOUTUBE: 'AIzaSyBJMZDXDPcVPUFhMKdYrABrke4PQZgRsT8'
+        };
         
         // Initialize Firebase
         firebase.initializeApp(FIREBASE_CONFIG);
@@ -3149,16 +3147,12 @@
                     // Add items to carousel or show empty message
                     if (items && items.Items && items.Items.length > 0) {
                         items.Items.forEach(item => {
-                            // ONLY filter phantom images for "01 MOVIES 1" category
+                            // Filter phantom boxes ONLY in Movie 1 category
                             if (collection.name === '01 MOVIES 1') {
-                                // Skip items that have NO image sources at all (likely TrickPlay orphans)
-                                if (!item.ImageTags?.Primary && 
-                                    !item.SeriesThumb && 
-                                    !item.SeriesPrimaryImageTag && 
-                                    !item.ParentThumbImageTag &&
-                                    !item.BackdropImageTags) {
-                                    console.log('⏭️ Skipping phantom item in Movie 1:', item.Name);
-                                    return; // Skip this item
+                                // Skip if not a real movie (filters TrickPlay images)
+                                if (item.Type !== 'Movie' && item.Type !== 'Episode') {
+                                    console.log('⏭️ Skipping non-video:', item.Name, 'Type:', item.Type);
+                                    return;
                                 }
                             }
                             
@@ -3437,7 +3431,7 @@
             slides.push({
                 image: 'assets/images/ZainaShowTheaterBanner.jpg',
                 title: 'The Zaina Juliette Show',
-                description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
+                description: 'A Contemporary variety/talk show hosted by Multi-Award-Winning Entertainer, Recording Artist, Actress, Zaina Juliette, featuring celebrity guests and upcoming talent. "A Gumbo of Entertainment."',
                 link: null
             });
             
@@ -3518,105 +3512,17 @@
             frame.onload = function() {
                 try {
                     injectCustomBranding(frame);
-                    // Start monitoring to keep Jellyfin UI hidden
-                    startJellyfinUIMonitor(frame);
                 } catch (e) {
                     console.log('Could not inject branding (CORS):', e);
                 }
             };
             
             viewer.classList.add('active');
-            viewer.classList.add('viewing-movie'); // Add this class for styling
+            viewer.classList.add('viewing-movie'); // Add this class to hide FLM TV header
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
             history.pushState({modal: 'movie'}, '', '#movie');
-        }
-        
-        // Monitor and hide Jellyfin UI elements continuously
-        let jellyfinMonitorInterval = null;
-        
-        function startJellyfinUIMonitor(frame) {
-            // Clear any existing monitor
-            if (jellyfinMonitorInterval) {
-                clearInterval(jellyfinMonitorInterval);
-            }
-            
-            // Monitor every 300ms (more frequent) to ensure Jellyfin UI stays hidden
-            jellyfinMonitorInterval = setInterval(() => {
-                try {
-                    const doc = frame.contentDocument || frame.contentWindow.document;
-                    if (doc) {
-                        // Hide all possible header elements
-                        const headersToHide = doc.querySelectorAll(`
-                            .skinHeader, 
-                            .skinHeader-withBackground,
-                            .headerTop, 
-                            .headerLeft, 
-                            .headerRight, 
-                            .headerLogo, 
-                            .mainDrawer,
-                            .viewMenuBar,
-                            .mdl-layout__header,
-                            [class*="header"],
-                            [class*="Header"]
-                        `);
-                        
-                        headersToHide.forEach(el => {
-                            if (el && el.style.display !== 'none') {
-                                el.style.display = 'none';
-                                el.style.visibility = 'hidden';
-                                el.style.height = '0';
-                                el.style.overflow = 'hidden';
-                                el.style.position = 'absolute';
-                                el.style.top = '-9999px';
-                            }
-                        });
-                        
-                        // Target blue background elements (Jellyfin's blue header)
-                        const allElements = doc.querySelectorAll('div');
-                        allElements.forEach(el => {
-                            const bgColor = window.getComputedStyle(el).backgroundColor;
-                            // Check for Jellyfin's blue: rgb(0, 56, 168)
-                            if (bgColor && (
-                                bgColor.includes('0, 56, 168') || 
-                                bgColor.includes('0,56,168') ||
-                                bgColor === 'rgb(0, 56, 168)'
-                            )) {
-                                // Only hide if it's at the top of the page (likely a header)
-                                const rect = el.getBoundingClientRect();
-                                if (rect.top < 100) {
-                                    el.style.display = 'none';
-                                    el.style.visibility = 'hidden';
-                                }
-                            }
-                        });
-                        
-                        // Ensure content starts at top
-                        const mainPages = doc.querySelector('.mainAnimatedPages');
-                        if (mainPages) {
-                            mainPages.style.paddingTop = '0';
-                            mainPages.style.marginTop = '0';
-                            mainPages.style.top = '0';
-                        }
-                        
-                        const view = doc.querySelector('.view');
-                        if (view) {
-                            view.style.paddingTop = '0';
-                            view.style.marginTop = '0';
-                        }
-                    }
-                } catch (e) {
-                    // CORS error - ignore
-                }
-            }, 300); // Run every 300ms
-        }
-        
-        function stopJellyfinUIMonitor() {
-            if (jellyfinMonitorInterval) {
-                clearInterval(jellyfinMonitorInterval);
-                jellyfinMonitorInterval = null;
-            }
         }
         
         async function openJellyfinCollection(collectionId) {
@@ -3694,8 +3600,6 @@
                     console.log('✅ Iframe loaded');
                     try {
                         injectCustomBranding(frame);
-                        // Start monitoring to keep Jellyfin UI hidden
-                        startJellyfinUIMonitor(frame);
                     } catch (e) {
                         console.log('Could not inject branding (CORS):', e);
                     }
@@ -3804,8 +3708,6 @@
                     console.log('✅ Iframe loaded');
                     try {
                         injectCustomBranding(frame);
-                        // Start monitoring to keep Jellyfin UI hidden
-                        startJellyfinUIMonitor(frame);
                         
                         // Auto-click Public user after a delay
                         setTimeout(() => {
@@ -3878,19 +3780,8 @@
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
-            // IMMEDIATELY hide login page with inline styles
+            // Auto-login: Click Public user if on login page
             setTimeout(() => {
-                try {
-                    const loginPage = doc.querySelector('.loginPage');
-                    if (loginPage) {
-                        loginPage.style.display = 'none';
-                        loginPage.style.visibility = 'hidden';
-                    }
-                } catch (e) {}
-            }, 0);
-            
-            // Auto-login: Click Public user IMMEDIATELY and REPEATEDLY
-            const autoLogin = () => {
                 try {
                     // Find and click Public user card
                     const publicUser = doc.querySelector('.card-usercard');
@@ -3898,223 +3789,60 @@
                         publicUser.click();
                         console.log('✅ Auto-clicked Public user');
                         
-                        // Click submit button immediately
+                        // Wait and click Manual Login button
                         setTimeout(() => {
                             const manualLoginBtn = doc.querySelector('.button-submit');
                             if (manualLoginBtn) {
                                 manualLoginBtn.click();
                                 console.log('✅ Auto-submitted login');
                             }
-                        }, 50);
-                        
-                        return true;
+                        }, 100);
                     }
-                    return false;
                 } catch (e) {
-                    return false;
+                    console.log('Auto-login not needed or failed:', e);
                 }
-            };
-            
-            // Try auto-login immediately
-            autoLogin();
-            
-            // Keep trying every 100ms for 5 seconds
-            let attempts = 0;
-            const maxAttempts = 50;
-            const loginInterval = setInterval(() => {
-                attempts++;
-                if (autoLogin() || attempts >= maxAttempts) {
-                    clearInterval(loginInterval);
-                }
-            }, 100);
+            }, 500);
             
             const style = doc.createElement('style');
             style.textContent = `
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  HIDE LOGIN PAGE COMPLETELY                                     */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                /* Hide the entire login page */
-                .loginPage,
-                .loginPage *,
-                .readOnlyContent,
-                .visualLoginForm,
-                .manualLoginForm {
-                    opacity: 0 !important;
-                    pointer-events: none !important;
-                    transition: none !important;
+                /* Hide Jellyfin logo and replace with FLM TV branding */
+                .headerLogo { display: none !important; }
+                .headerRight::before {
+                    content: 'FLM TV';
+                    font-size: 2rem;
+                    font-weight: 900;
+                    background: linear-gradient(135deg, #fcd116 0%, #0038a8 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    margin-right: 2rem;
                 }
                 
-                /* Show loading state instead */
-                .loginPage::before {
-                    content: 'Loading FLM TV...' !important;
-                    position: fixed !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    transform: translate(-50%, -50%) !important;
-                    font-size: 1.5rem !important;
-                    color: #fcd116 !important;
-                    opacity: 1 !important;
-                    z-index: 99999 !important;
-                    pointer-events: none !important;
+                /* Filipino Flag Colors */
+                .skinHeader { background: #0038a8 !important; }
+                .button-submit, .raised { background: #ce1126 !important; }
+                .listItem:hover { background: rgba(252, 209, 22, 0.1) !important; }
+                .itemSelectionPanel { border-color: #22c55e !important; }
+                
+                /* Login page customization */
+                .loginPage { background: #0f172a !important; }
+                .readOnlyContent { color: #e2e8f0 !important; }
+                .inputContainer { background: rgba(255, 255, 255, 0.05) !important; }
+                
+                /* Buttons */
+                .emby-button { 
+                    background: linear-gradient(135deg, #0038a8 0%, #fcd116 100%) !important;
+                    border: none !important;
                 }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  HIDE JELLYFIN HEADER                                           */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                .skinHeader,
-                .skinHeader-withBackground,
-                .headerTop,
-                .headerLeft,
-                .headerRight,
-                .headerTabs,
-                .headerUser,
-                .headerUserButton,
-                .headerUserButtonRound,
-                .headerBackButton,
-                .headerCastButton,
-                .headerSyncButton,
-                .headerAudioPlayerButton,
-                .headerSearchButton,
-                .headerButton,
-                .headerHomeButton,
-                .headerLogo,
-                .logoLibraryMenuButton,
-                .btnNotifications,
-                .flex-grow,
-                .mdl-layout__header,
-                .mdl-layout__header-row,
-                .mdl-layout__drawer-button,
-                .viewMenuBar,
-                .viewMenuBar-withBackground {
-                    display: none !important;
-                    visibility: hidden !important;
-                    height: 0 !important;
-                    min-height: 0 !important;
-                    max-height: 0 !important;
-                    overflow: hidden !important;
-                    opacity: 0 !important;
-                    pointer-events: none !important;
-                    position: absolute !important;
-                    top: -9999px !important;
-                    left: -9999px !important;
-                }
-                
-                .mainDrawer,
-                .navDrawer,
-                .mdl-layout__drawer,
-                .viewMenuSecondary {
-                    display: none !important;
-                }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  CONTENT POSITIONING                                            */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                .mainAnimatedPages,
-                .view,
-                .page,
-                body,
-                html {
-                    padding-top: 0 !important;
-                    margin-top: 0 !important;
-                }
-                
-                .mainAnimatedPages {
-                    top: 0 !important;
-                }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  KEEP ALL CONTENT VISIBLE                                       */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                .videoPlayerContainer,
-                .videoPlayerWrapper,
-                video,
-                .osdControls,
-                .itemBackdrop,
-                .detailImageContainer,
-                .detailPagePrimaryContainer,
-                .detailPageContent,
-                .itemName,
-                .overview,
-                .detailButton,
-                .sections,
-                .verticalSection,
-                .itemsContainer,
-                .card,
-                .cardContent,
-                .listItem,
-                .emby-button,
-                .btnPlay,
-                .btnResume,
-                .detailButtons,
-                .episodesContainer,
-                .listTabButton,
-                .emby-tab-button,
-                .emby-tabs {
-                    display: block !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  FILIPINO FLAG STYLING                                          */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                body,
-                .backgroundContainer {
-                    background: #0f172a !important;
-                }
-                
-                .button-submit,
-                .raised,
-                .btnPlay {
-                    background: linear-gradient(135deg, #ce1126 0%, #fcd116 100%) !important;
-                    color: white !important;
-                }
-                
-                .card {
-                    background: #1e293b !important;
-                    border: 1px solid rgba(0, 56, 168, 0.3) !important;
-                }
-                
-                .card:hover {
-                    border-color: #22c55e !important;
-                }
-                
-                .itemProgressBar,
-                .sliderBubble {
-                    background: #22c55e !important;
-                }
-                
-                a {
-                    color: #fcd116 !important;
+                .emby-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(252, 209, 22, 0.3);
                 }
             `;
             doc.head.appendChild(style);
-            
-            // Additional JavaScript hiding
-            setTimeout(() => {
-                try {
-                    const possibleHeaders = doc.querySelectorAll('[class*="header"], [class*="Header"]');
-                    possibleHeaders.forEach(el => {
-                        if (el && el.offsetHeight > 0) {
-                            el.style.display = 'none';
-                            el.style.visibility = 'hidden';
-                        }
-                    });
-                } catch (e) {}
-            }, 500);
-            
-            console.log('✅ FLM TV branding applied - Auto-login active');
         }
         
         function closeViewer() {
-            // Stop monitoring Jellyfin UI
-            stopJellyfinUIMonitor();
-            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             viewer.classList.remove('active');
@@ -4357,15 +4085,6 @@
         
         async function handleAIMessage(query) {
             try {
-                console.log('🤖 Zaina AI (Coming Soon):', query);
-                
-                // TEMPORARY: Coming Soon message
-                addAIMessage('received', '🌟 Zaina AI is coming soon! We\'re working on bringing you the best AI assistant for FLM TV. In the meantime, feel free to use the live chat below to connect with other viewers! 💚');
-                
-                return;
-                
-                /* DISABLED TEMPORARILY - Will re-enable when backend is ready
-                
                 console.log('🤖 Zaina AI processing:', query);
                 
                 // Detect if this is a movie/TV search (contains words like: movie, film, show, actor, series, watch)
@@ -4405,59 +4124,64 @@
                     }
                 }
                 
-                // Use OpenAI ChatGPT for ALL questions
-                console.log('🤖 Using AI Gateway for OpenAI query:', query);
+                // Use Gemini AI for ALL other questions (general knowledge, people, events, etc)
+                console.log('🤖 Using Gemini AI for query:', query);
+                console.log('🔑 Using API key:', API_KEYS.GEMINI.substring(0, 20) + '...');
                 
-                // AI Gateway will automatically intercept this call
-                const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' // Netlify AI Gateway sets this automatically
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: 'You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).'
-                            },
-                            {
-                                role: 'user',
-                                content: query
-                            }
-                        ],
-                        max_tokens: 500
-                    })
-                });
+                const requestBody = {
+                    contents: [{
+                        parts: [{ 
+                            text: `You are Zaina AI, a friendly and knowledgeable assistant for FLM Television Network. You can answer questions about entertainment, current events, people, places, and general knowledge. Be conversational, helpful, and concise (2-4 sentences unless more detail is needed).
+
+User question: ${query}` 
+                        }]
+                    }]
+                };
                 
-                console.log('📥 Response status:', aiResponse.status, aiResponse.statusText);
+                console.log('📤 Sending to Gemini:', requestBody);
                 
-                if (!aiResponse.ok) {
-                    const errorText = await aiResponse.text();
-                    console.error('❌ AI Error:', errorText);
-                    addAIMessage('received', `API Error (${aiResponse.status}): Unable to connect to AI. Please try again later.`);
+                const geminiResponse = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    }
+                );
+                
+                console.log('📥 Response status:', geminiResponse.status, geminiResponse.statusText);
+                
+                if (!geminiResponse.ok) {
+                    const errorText = await geminiResponse.text();
+                    console.error('❌ Gemini API Error:', errorText);
+                    addAIMessage('received', `API Error (${geminiResponse.status}): Unable to connect to AI. Please try again later.`);
                     return;
                 }
                 
-                const aiData = await aiResponse.json();
-                console.log('🤖 Full response:', JSON.stringify(aiData, null, 2));
+                const geminiData = await geminiResponse.json();
+                console.log('🤖 Full Gemini response:', JSON.stringify(geminiData, null, 2));
                 
-                const aiText = aiData.choices?.[0]?.message?.content;
+                // Check if Gemini blocked the response
+                if (geminiData.promptFeedback?.blockReason) {
+                    console.error('❌ Gemini blocked:', geminiData.promptFeedback.blockReason);
+                    addAIMessage('received', "I couldn't process that question. Try asking in a different way! 🤔");
+                    return;
+                }
+                
+                const aiText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
                 
                 if (aiText) {
                     console.log('✅ AI response received:', aiText.substring(0, 100));
                     addAIMessage('received', aiText);
                 } else {
-                    console.error('❌ No response text');
+                    console.error('❌ No text in Gemini response. Full response:', geminiData);
+                    console.error('❌ Candidates:', geminiData.candidates);
                     addAIMessage('received', 'I had trouble understanding that. Could you rephrase your question? 💚');
                 }
                 
-                */ // End of disabled AI code
-                
             } catch (err) {
                 console.error('❌ AI Error:', err);
-                addAIMessage('received', '🌟 Zaina AI is coming soon! 💚');
+                addAIMessage('received', 'Sorry, I encountered an error. Please try again! 💚');
             }
         }
         
