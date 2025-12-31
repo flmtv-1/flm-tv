@@ -1437,126 +1437,90 @@
             display: none; /* Hidden on desktop */
         }
         
-@media only screen and (max-width: 767px) {
+        @media only screen and (max-width: 767px) {
+            /* 📱 Mobile: hide floating buttons (use bottom nav instead) */
+            .floating-buttons,
+            .floating-btn,
+            .floating-btn-chat,
+            .floating-btn-ai{
+                display: none !important;
+                pointer-events: none !important;
+            }
 
-    /* 📱 Mobile: hide floating buttons (use bottom nav instead) */
-    .floating-buttons,
-    .floating-btn,
-    .floating-btn-chat,
-    .floating-btn-ai {
-        display: none !important;
-        pointer-events: none !important;
-    }
+            .bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(10, 15, 26, 0.98);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: 0.5rem 0;
+                z-index: 1000;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+            }
+            
+            .bottom-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0.25rem;
+                padding: 0.5rem 1rem;
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.6);
+                text-decoration: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                min-width: 70px;
+            }
+            
+            .bottom-nav-item i {
+                font-size: 1.25rem;
+            }
 
-    /* ✅ Bottom Navigation */
-    .bottom-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(10, 15, 26, 0.98);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        padding: 0.5rem 0;
-        z-index: 1000;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .bottom-nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.25rem;
-        padding: 0.5rem 1rem;
-        background: none;
-        border: none;
-        color: rgba(255, 255, 255, 0.6);
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-width: 70px;
-    }
-
-    .bottom-nav-item i {
-        font-size: 1.25rem;
-    }
-
-    /* 🎭 Bottom Nav: Zaina AI avatar icon */
-    .nav-avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid rgba(34,197,94,.9);
-        box-shadow: 0 0 14px rgba(34,197,94,.45);
-        margin-bottom: 4px;
-    }
-
-    .bottom-nav-item span {
-        font-size: 0.5rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .bottom-nav-item.active,
-    .bottom-nav-item:active {
-        color: var(--neon-green);
-    }
-
-    .bottom-nav-item:hover {
-        color: var(--primary);
-    }
-
-    /* Add padding to body to account for bottom nav */
-    body {
-        padding-bottom: 70px !important;
-    }
-
-    /* ✅ FIX LIVE TV CARD ON MOBILE */
-
-    /* ❌ Remove red dot + green dot completely */
-    .live-dot,
-    .live-indicator::before {
-        display: none !important;
-    }
-
-    /* Make LIVE indicator text smaller + aligned */
-    .live-indicator {
-        font-size: 0.65rem !important;
-        margin-bottom: 2px !important;
-        gap: 0 !important;
-        padding: 0 !important;
-        line-height: 1 !important;
-    }
-
-    /* Live channel title smaller and aligned */
-    .live-channel-name {
-        font-size: 0.75rem !important;
-        line-height: 1.1 !important;
-        white-space: normal !important;
-        text-align: left !important;
-    }
-
-    /* Shrink the red bar area on mobile */
-    .live-channel-content {
-        height: auto !important;
-        padding: 0.35rem 0.6rem !important;
-    }
-
-    /* Shrink mute button */
-    .volume-toggle-btn,
-    .mute-button,
-    .live-mute-btn {
-        transform: scale(0.75) !important;
-    }
-
+           /* 🎭 Bottom Nav: Zaina AI avatar icon */
+  .nav-avatar {
+    width: 44px;        /* ⬅️ change here */
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(34,197,94,.9);
+    box-shadow: 0 0 14px rgba(34,197,94,.45);
+    margin-bottom: 4px;
 }
 
+flm channel 26
+            
+            .bottom-nav-item span {
+                font-size: 0.5rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .bottom-nav-item.active,
+            .bottom-nav-item:active {
+                color: var(--neon-green);
+            }
+            
+            .bottom-nav-item:hover {
+                color: var(--primary);
+            }
+            
+            /* Add padding to body to account for bottom nav */
+            body {
+                padding-bottom: 70px !important;
+            }
+/* ❌ Remove LIVE red dot (mobile) */
+.live-dot {
+    display: none !important;
+        }
+        
         /* ═══════════════════════════════════════════════════════════════ */
         /*  MOBILE PHONES - CONSOLIDATED (0-767px)                        */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -2552,7 +2516,7 @@
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
-                                <span>LIVE</span>
+                                <span>🔴 LIVE</span>
                             </div>
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
