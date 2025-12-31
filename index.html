@@ -1438,6 +1438,15 @@
         }
         
         @media only screen and (max-width: 767px) {
+            /* 📱 Mobile: hide floating buttons (use bottom nav instead) */
+            .floating-buttons,
+            .floating-btn,
+            .floating-btn-chat,
+            .floating-btn-ai{
+                display: none !important;
+                pointer-events: none !important;
+            }
+
             .bottom-nav {
                 position: fixed;
                 bottom: 0;
@@ -1472,6 +1481,18 @@
             
             .bottom-nav-item i {
                 font-size: 1.25rem;
+            }
+
+            /* 🎭 Bottom Nav: Zaina AI avatar icon */
+            .nav-avatar{
+                width: 26px;
+                height: 26px;
+                border-radius: 999px;
+                object-fit: cover;
+                border: 2px solid rgba(34,197,94,.9);
+                box-shadow: 0 0 10px rgba(34,197,94,.35);
+                display: block;
+                margin: 0 auto 6px;
             }
             
             .bottom-nav-item span {
@@ -2482,7 +2503,7 @@
                     <div class="live-channel-card" onclick="openLiveStream()">
                         <video id="previewVideo" muted autoplay loop playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-                            <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                            <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                         <div class="live-channel-content">
                             <div class="live-indicator">
@@ -2737,7 +2758,7 @@
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
         </div>
@@ -4535,9 +4556,62 @@
         function openLiveStream() {
             console.log('🔴 Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            if (!modal || !video) {
+                console.warn('Live stream modal/video element not found.');
+                return;
+            }
+
+            // ✅ Public HTTPS HLS URL (served by Caddy -> Python HLS)
+            const streamUrl = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+
             modal.classList.add('active');
-            // Add to browser history so back button works
-            history.pushState({modal: 'stream'}, '', '#stream');
+
+            // Clean previous playback
+            try { video.pause(); } catch(e) {}
+            video.removeAttribute('src');
+            try { video.load(); } catch(e) {}
+
+            // Destroy previous HLS instance if any
+            if (window.__flmHls) {
+                try { window.__flmHls.destroy(); } catch(e) {}
+                window.__flmHls = null;
+            }
+
+            // iOS Safari supports native HLS
+            const canPlayNative = video.canPlayType('application/vnd.apple.mpegurl') || video.canPlayType('application/x-mpegURL');
+            if (canPlayNative) {
+                video.src = streamUrl;
+                video.play().catch(() => {});
+            } else if (window.Hls && Hls.isSupported()) {
+                const hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600,
+                    startLevel: -1,
+                    debug: false
+                });
+                window.__flmHls = hls;
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play().catch(() => {});
+                });
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    console.warn('HLS error', data);
+                });
+            } else {
+                // Fallback: direct src (some browsers might still attempt)
+                video.src = streamUrl;
+                video.play().catch(() => {});
+            }
+
+            // Add #stream to history so Back works
+            if (window.location.hash !== '#stream') {
+                history.pushState({ page: 'stream' }, '', '#stream');
+            }
         }
         
         function closeLiveStream() {
@@ -4682,7 +4756,7 @@ async function loadCollectionPage(collectionId, title) {
         <span>Live TV</span>
     </button>
     <button class="bottom-nav-item" onclick="openPanel('aiPanel')">
-        <i class="fas fa-robot"></i>
+        <img class="nav-avatar" src="assets/images/z-ai-avatar2.png" alt="Zaina AI">
         <span>Zaina AI</span>
     </button>
 </nav>
