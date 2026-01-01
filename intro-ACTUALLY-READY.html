@@ -66,24 +66,24 @@
             z-index: 1;
         }
         
-        /* CONTENT - BUTTON EVEN LOWER */
+        /* CONTENT - BUTTON WAY DOWN AT BOTTOM */
         .content {
             position: relative;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             align-items: flex-end;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px 20px 120px;
+            padding: 20px 20px 160px;
         }
         
-        /* ENTER BUTTON - SMALLER */
+        /* ENTER BUTTON - EVEN SMALLER */
         .enter-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 32px;
-            font-size: 22px;
+            padding: 14px 35px;
+            font-size: 24px;
             font-weight: 900;
             text-decoration: none;
             color: #000;
@@ -241,6 +241,12 @@
         
         // Load and play the video
         video.load();
+        
+        // UNMUTE for SOUND!
+        video.addEventListener('loadeddata', function() {
+            video.muted = false;
+            console.log('🔊 Sound enabled');
+        });
         
         // HIDE VIDEO WHEN IT ENDS - SHOW BACKGROUND IMAGE!
         video.addEventListener('ended', function() {

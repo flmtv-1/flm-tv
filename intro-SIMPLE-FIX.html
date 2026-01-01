@@ -194,7 +194,7 @@
     
     <!-- ENTER BUTTON -->
     <div class="content">
-        <a class="enter-btn" href="app.html">
+        <a class="enter-btn" href="home.html">
             <span>▶</span>
             <span>ENTER</span>
         </a>
@@ -241,6 +241,12 @@
         
         // Load and play the video
         video.load();
+        
+        // UNMUTE for SOUND
+        video.addEventListener('loadeddata', function() {
+            video.muted = false;
+            console.log('🔊 Sound enabled');
+        });
         
         // HIDE VIDEO WHEN IT ENDS - SHOW BACKGROUND IMAGE!
         video.addEventListener('ended', function() {

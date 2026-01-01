@@ -242,6 +242,12 @@
         // Load and play the video
         video.load();
         
+        // UNMUTE for SOUND
+        video.addEventListener('loadeddata', function() {
+            video.muted = false;
+            console.log('🔊 Sound enabled');
+        });
+        
         // HIDE VIDEO WHEN IT ENDS - SHOW BACKGROUND IMAGE!
         video.addEventListener('ended', function() {
             video.style.opacity = '0';
