@@ -889,9 +889,11 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary);
-            z-index: 10000;
-            position: sticky;
+            z-index: 99999;
+            position: absolute;
             top: 0;
+            left: 0;
+            right: 0;
             pointer-events: auto;
             gap: 1rem;
             min-height: 60px;
@@ -905,7 +907,7 @@
         
         /* Account for FLM TV header height */
         .jellyfin-viewer.viewing-movie iframe {
-            height: calc(100vh - 60px); /* 60px for FLM TV header */
+            height: 100vh; /* Full height - header overlays on top */
         }
         
         .viewer-logo {
@@ -3444,14 +3446,6 @@
                 previewVideo.setAttribute('muted', 'muted');
                 previewVideo.setAttribute('playsinline', 'playsinline');
                 
-                // REMOVED: volumechange listener was blocking the mute button
-                // previewVideo.addEventListener('volumechange', function() {
-                //     if (!this.muted) {
-                //         console.log('🔇 Preview tried to unmute, forcing muted again');
-                //         this.muted = true;
-                //         this.volume = 0;
-                //     }
-                // });
                 
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
             }
