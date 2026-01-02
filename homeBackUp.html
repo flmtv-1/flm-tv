@@ -2933,7 +2933,7 @@
                     User Name
                 </h3>
                 <p id="flmUserEmail" style="color: var(--text-secondary); margin-bottom: 2rem;">
-                    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5e2b2d3b2c1e3b333f3732703d3133">[email&#160;protected]</a>
+                    user@email.com
                 </p>
                 
                 <button id="flmSignOutBtn" class="flm-btn flm-btn-danger">
@@ -3457,7 +3457,7 @@
     <!--  HLS.JS FOR LIVE STREAMING                                      -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  FIREBASE & JAVASCRIPT                                          -->
@@ -3725,11 +3725,7 @@
                     navItem.className = 'category-nav-item';
                     navItem.onclick = () => {
                         if (collection.id === '7e2a5d7fd8bd73b8768e302be39536df') {
-                            // AWESOME TV - use jellyfinViewer instead of new tab
-                            document.getElementById('jellyfinFrame').src = 'https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df';
-                            document.getElementById('jellyfinViewer').classList.add('active');
-                            document.body.style.overflow = 'hidden';
-                            document.body.classList.add('video-playing');
+                            window.open('https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df', '_blank');
                         } else {
                             openJellyfinCollection(collection.id);
                         }
@@ -3806,15 +3802,9 @@
                     // Create header
                     const header = document.createElement('div');
                     header.className = 'category-header';
-                    
-                    // Special handling for AWESOME TV collection - use viewer instead of new tab
-                    const viewAllAction = collection.id === '7e2a5d7fd8bd73b8768e302be39536df'
-                        ? `document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df'; document.getElementById('jellyfinViewer').classList.add('active'); document.body.style.overflow='hidden'; document.body.classList.add('video-playing')`
-                        : `openJellyfinCollection('${collection.id}')`;
-                    
                     header.innerHTML = `
                         <h3 class="category-title">${collection.name}</h3>
-                        <a onclick="${viewAllAction}" class="view-all-btn" style="cursor: pointer;">
+                        <a onclick="openJellyfinCollection('${collection.id}')" class="view-all-btn" style="cursor: pointer;">
                             View All <i class="fas fa-arrow-right"></i>
                         </a>
                     `;
@@ -5652,4 +5642,12 @@ window.addEventListener('load', function() {
         <i class="fas fa-tv"></i>
         <span>Live TV</span>
     </button>
-    <button class="bottom-nav-item" onc
+    <button class="bottom-nav-item" onclick="openPanel('aiPanel')">
+        <img class="nav-avatar" src="assets/images/z-ai-avatar2.png" alt="Zaina AI">
+        <span>Zaina AI</span>
+    </button>
+</nav>
+ <script src="flm-auth-system.js"></script>
+
+</body>
+</html>
