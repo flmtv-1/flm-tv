@@ -433,10 +433,11 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         .content-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    padding: 2rem;
+    padding-top: 120px; /* Pushes content BELOW header */
+    max-width: 1600px;
+    margin: 0 auto;
+}
         
         .category-section {
             margin-bottom: 3rem;
@@ -5484,9 +5485,19 @@ async function loadCollectionPage(collectionId, title) {
     // Fallback simple renderer
     grid.innerHTML = items.map(item => {
       const name = (item.Name || 'Untitled').replace(/"/g,'&quot;');
-      const img = item.ImageTags && item.ImageTags.Primary
-        ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
-        : '';
+     // Try multiple image sources (for TV shows and movies)
+      let img = '';
+      if (item.ImageTags && item.ImageTags.Primary) {
+        // Standard primary image
+        img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+      } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
+        // For TV episodes, use series image
+        img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?tag=${item.SeriesPrimaryImageTag}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+      } else if (item.BackdropImageTags && item.BackdropImageTags.length > 0) {
+        // Fallback to backdrop
+        img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?tag=${item.BackdropImageTags[0]}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+      }
+
       return `
         <div style="width:180px;margin:10px;display:inline-block;vertical-align:top;">
           <div style="width:180px;height:270px;border-radius:12px;overflow:hidden;background:#111827;border:1px solid rgba(255,255,255,.08);">
