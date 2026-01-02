@@ -4577,7 +4577,7 @@
                         <div class="grid">
                             ${items.Items ? items.Items.map(item => `
                                 <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
-                                    <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300">
+                                    <img src="${item.ImageTags?.Primary ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`}">
                                     <div class="card-title">${item.Name}</div>
                                 </div>
                             `).join('') : '<p>No items</p>'}
