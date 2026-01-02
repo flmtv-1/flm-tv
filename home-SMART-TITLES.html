@@ -857,6 +857,171 @@
         
         
         /* ═══════════════════════════════════════════════════════════════ */
+        /*  CUSTOM CATEGORY VIEWER (NO Jellyfin UI!)                      */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .category-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .category-viewer.active {
+            display: flex;
+        }
+        
+        .category-header {
+            background: rgba(15, 23, 42, 0.98);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary);
+            min-height: 70px;
+        }
+        
+        .category-title-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .category-title-section h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fcd116 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        
+        .category-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        
+        .category-loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.5rem;
+            color: #fcd116;
+        }
+        
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+        
+        .movie-card {
+            background: rgba(26, 31, 46, 0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #fcd116;
+            box-shadow: 0 8px 24px rgba(252, 209, 22, 0.4);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            background: #1a1f2e;
+        }
+        
+        .movie-info {
+            padding: 0.75rem;
+        }
+        
+        .movie-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .movie-year {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        @media (max-width: 768px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.75rem;
+            }
+            
+            /* Movie info - smaller on mobile when shown */
+            .movie-info {
+                padding: 0.5rem;
+            }
+            
+            .movie-title {
+                font-size: 0.8rem;
+                -webkit-line-clamp: 2;
+            }
+            
+            .movie-year {
+                font-size: 0.7rem;
+            }
+            
+            .category-header {
+                padding: 0.5rem 0.75rem;
+                min-height: 44px;
+            }
+            
+            .category-title-section {
+                gap: 0.4rem;
+            }
+            
+            .category-title-section .viewer-logo img {
+                height: 20px !important;
+            }
+            
+            .category-title-section .viewer-logo span {
+                font-size: 0.75rem !important;
+                margin-left: 0.3rem !important;
+            }
+            
+            .category-title-section h1 {
+                font-size: 0.85rem;
+                font-weight: 700;
+            }
+            
+            .viewer-back {
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.8rem !important;
+                border-radius: 6px !important;
+            }
+            
+            .viewer-back i {
+                font-size: 0.75rem !important;
+            }
+            
+            .category-content {
+                padding: 0.75rem;
+            }
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
         /*  JELLYFIN VIEWER FRAME                                         */
         /* ═══════════════════════════════════════════════════════════════ */
         
@@ -889,9 +1054,11 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary);
-            z-index: 10000;
-            position: sticky;
+            z-index: 99999;
+            position: absolute;
             top: 0;
+            left: 0;
+            right: 0;
             pointer-events: auto;
             gap: 1rem;
             min-height: 60px;
@@ -905,7 +1072,7 @@
         
         /* Account for FLM TV header height */
         .jellyfin-viewer.viewing-movie iframe {
-            height: calc(100vh - 60px); /* 60px for FLM TV header */
+            height: 100vh; /* Full height - header overlays on top */
         }
         
         .viewer-logo {
@@ -2861,6 +3028,28 @@
         <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
     
+    <!-- CUSTOM CATEGORY VIEWER (NO Jellyfin UI!) -->
+    <div class="category-viewer" id="categoryViewer">
+        <div class="category-header">
+            <div class="category-title-section">
+                <div class="viewer-logo">
+                    <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'" style="height: 40px;">
+                    <span style="font-size: 1.5rem; font-weight: 900; color: #fcd116; margin-left: 0.75rem;">FLM TV</span>
+                </div>
+                <h1 id="categoryTitle">Category</h1>
+            </div>
+            
+            <button class="viewer-back" onclick="closeCategoryViewer()">
+                <i class="fas fa-arrow-left"></i> Back to Browse
+            </button>
+        </div>
+        
+        <div class="category-content">
+            <div class="category-loading" id="categoryLoading">Loading content...</div>
+            <div class="movies-grid" id="moviesGrid"></div>
+        </div>
+    </div>
+    
     <!-- Floating Chat/AI buttons for main page -->
     <div class="floating-buttons">
         <button class="floating-btn floating-btn-chat" onclick="openPanel('chatPanel')" title="Chat">
@@ -3444,14 +3633,6 @@
                 previewVideo.setAttribute('muted', 'muted');
                 previewVideo.setAttribute('playsinline', 'playsinline');
                 
-                // REMOVED: volumechange listener was blocking the mute button
-                // previewVideo.addEventListener('volumechange', function() {
-                //     if (!this.muted) {
-                //         console.log('🔇 Preview tried to unmute, forcing muted again');
-                //         this.muted = true;
-                //         this.volume = 0;
-                //     }
-                // });
                 
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
             }
@@ -3699,93 +3880,118 @@
         }
         
         async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening Jellyfin collection page for:', collectionId);
-            
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame element not found');
-                return;
-            }
+            console.log('📂 Opening CUSTOM category viewer for:', collectionId);
             
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
+            console.log('📂 Loading FLM TV custom page for:', collectionName);
             
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
+            // Open custom category viewer
+            const categoryViewer = document.getElementById('categoryViewer');
+            const categoryTitle = document.getElementById('categoryTitle');
+            const moviesGrid = document.getElementById('moviesGrid');
+            const loading = document.getElementById('categoryLoading');
+            
+            // Show viewer
+            categoryViewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Set title
+            categoryTitle.textContent = collectionName;
+            
+            // Clear previous content
+            moviesGrid.innerHTML = '';
+            loading.style.display = 'block';
+            loading.textContent = 'Loading content...';
+            
+            // Fetch movies from Jellyfin API
             try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
-            
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
-                ? collection.url 
-                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Fix URL format - change #/ to #!/ if needed
-            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
-            
-            // Ensure the URL keeps the :8920 port (not :8096)
-            collectionUrl = collectionUrl.replace(':8096', ':8920');
-            
-            // IMPORTANT: For hash-based URLs, API key must go BEFORE the hash!
-            // Split at the hash
-            const hashIndex = collectionUrl.indexOf('#');
-            if (hashIndex > -1) {
-                const baseUrl = collectionUrl.substring(0, hashIndex);
-                const hashPart = collectionUrl.substring(hashIndex);
+                console.log('🎬 Fetching items for collection:', collectionId);
                 
-                // Add api_key to base URL (before hash)
-                if (!baseUrl.includes('api_key=')) {
-                    const separator = baseUrl.includes('?') ? '&' : '?';
-                    collectionUrl = baseUrl + separator + `api_key=${JELLYFIN_CONFIG.API_KEY}` + hashPart;
-                }
-            } else {
-                // No hash, add normally
-                if (!collectionUrl.includes('api_key=')) {
-                    collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                }
-            }
-            
-            console.log('🔗 Final URL we are loading:', collectionUrl);
-            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
-            console.log('🔗 API key check:', collectionUrl.includes('api_key=') ? '✅ Has API key' : '❌ NO API KEY!');
-            
-            // Special handling for "00 Collections" - show Enter overlay
-            if (collectionName === '00 Collections') {
-                showCollectionsEnterOverlay(collectionUrl, collectionName);
-            } else {
-                // Load normally for other collections
-                frame.src = collectionUrl;
+                const data = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    ParentId: collectionId,
+                    SortBy: 'SortName',
+                    SortOrder: 'Ascending',
+                    Recursive: true,
+                    Fields: 'PrimaryImageAspectRatio,BasicSyncInfo'
+                });
                 
-                // Inject FLM TV branding after iframe loads
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                        // Start monitoring to keep Jellyfin UI hidden
-                        startJellyfinUIMonitor(frame);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
+                console.log('🎬 API Response:', data);
+                
+                if (!data) {
+                    console.error('❌ No data returned from API');
+                    loading.textContent = 'Error: No response from server';
+                    return;
+                }
+                
+                if (!data.Items) {
+                    console.error('❌ Data has no Items property:', data);
+                    loading.textContent = 'Error: Invalid response';
+                    return;
+                }
+                
+                if (data.Items.length === 0) {
+                    loading.textContent = 'This category is empty';
+                    return;
+                }
+                
+                console.log('✅ Loaded', data.Items.length, 'items!');
+                
+                // Hide loading
+                loading.style.display = 'none';
+                
+                // Display movies
+                data.Items.forEach(item => {
+                    // Only show items that have a primary image
+                    if (!item.ImageTags || !item.ImageTags.Primary) {
+                        console.log('⚠️ Skipping', item.Name, '- no poster image');
+                        return;
                     }
-                };
+                    
+                    const card = document.createElement('div');
+                    card.className = 'movie-card';
+                    card.onclick = () => {
+                        console.log('🎬 Playing:', item.Name);
+                        closeCategoryViewer();
+                        playJellyfinItem(item.Id);
+                    };
+                    
+                    // Construct poster URL - simplified format
+                    const posterUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?maxHeight=300&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                    
+                    console.log('🖼️ Loading poster for:', item.Name, posterUrl);
+                    
+                    card.innerHTML = `
+                        <img src="${posterUrl}" alt="${item.Name}" class="movie-poster" 
+                             onload="if(window.innerWidth <= 768) this.nextElementSibling.style.display='none';"
+                             onerror="this.src='assets/logos/flm-logo.png'; if(window.innerWidth <= 768) this.nextElementSibling.style.display='block';">
+                        <div class="movie-info">
+                            <div class="movie-title">${item.Name}</div>
+                            <div class="movie-year">${item.ProductionYear || ''}</div>
+                        </div>
+                    `;
+                    
+                    moviesGrid.appendChild(card);
+                });
                 
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
+                // Check if any movies were added
+                if (moviesGrid.children.length === 0) {
+                    loading.style.display = 'block';
+                    loading.textContent = 'No items with poster images found in this category';
+                    console.log('⚠️ No items with images were found');
+                }
                 
-                history.pushState({modal: 'collection'}, '', '#collection');
+            } catch (error) {
+                console.error('❌ Error:', error);
+                loading.textContent = 'Error loading content. Check console (F12).';
             }
+        }
+        
+        function closeCategoryViewer() {
+            const categoryViewer = document.getElementById('categoryViewer');
+            categoryViewer.classList.remove('active');
+            document.body.style.overflow = '';
         }
         
         function showCollectionsEnterOverlay(collectionUrl, collectionName) {

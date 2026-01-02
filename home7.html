@@ -3444,14 +3444,6 @@
                 previewVideo.setAttribute('muted', 'muted');
                 previewVideo.setAttribute('playsinline', 'playsinline');
                 
-                // REMOVED: volumechange listener was blocking the mute button
-                // previewVideo.addEventListener('volumechange', function() {
-                //     if (!this.muted) {
-                //         console.log('🔇 Preview tried to unmute, forcing muted again');
-                //         this.muted = true;
-                //         this.volume = 0;
-                //     }
-                // });
                 
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
             }

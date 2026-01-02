@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FLM TV - Loading...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f172a;
+            color: #fcd116;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .loading {
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid #1e293b;
+            border-top: 4px solid #fcd116;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+        iframe.loaded {
+            display: block;
+        }
+        .loading.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <h2>Loading FLM TV Player...</h2>
+    </div>
+    
+    <iframe id="jellyfinFrame"></iframe>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const server = urlParams.get('server') || 'https://flmtv26.duckdns.org:8920';
+        const itemId = urlParams.get('item');
+        const apiKey = urlParams.get('key') || '62131ee22c0141c6b651be75a7444350';
+        
+        async function autoLogin() {
+            try {
+                console.log('🔐 Authenticating as Public user...');
+                
+                // Authenticate as Public user
+                const authResponse = await fetch(`${server}/Users/AuthenticateByName`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Emby-Authorization': `MediaBrowser Client="FLM Television Network", Device="Web Browser", DeviceId="flmtv-web-${Date.now()}", Version="1.0.0"`
+                    },
+                    body: JSON.stringify({
+                        Username: 'Public',
+                        Pw: ''
+                    })
+                });
+                
+                if (!authResponse.ok) {
+                    throw new Error('Authentication failed');
+                }
+                
+                const authData = await authResponse.json();
+                console.log('✅ Authenticated successfully!');
+                
+                // Store credentials for Jellyfin web client
+                localStorage.setItem('jellyfin_credentials', JSON.stringify({
+                    Servers: [{
+                        AccessToken: authData.AccessToken,
+                        UserId: authData.User.Id,
+                        Id: authData.ServerId || server,
+                        ManualAddress: server,
+                        LocalAddress: server
+                    }]
+                }));
+                
+                // Also try Emby-style storage
+                localStorage.setItem('MediaBrowser.ApiClient', JSON.stringify({
+                    AccessToken: authData.AccessToken,
+                    UserId: authData.User.Id
+                }));
+                
+                // Load Jellyfin player with authenticated session
+                const frame = document.getElementById('jellyfinFrame');
+                const loading = document.getElementById('loading');
+                
+                // Build Jellyfin URL with item details
+                const jellyfinUrl = `${server}/web/index.html#!/details?id=${itemId}&serverId=${authData.ServerId || server}`;
+                
+                console.log('🎬 Loading Jellyfin player:', jellyfinUrl);
+                
+                // Load the iframe
+                frame.src = jellyfinUrl;
+                
+                // Show iframe when loaded
+                frame.onload = () => {
+                    loading.classList.add('hidden');
+                    frame.classList.add('loaded');
+                };
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                document.getElementById('loading').innerHTML = `
+                    <h2>Error Loading Player</h2>
+                    <p>Please try again or contact support.</p>
+                    <button onclick="window.close()" style="background: #22c55e; color: #000; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; margin-top: 1rem;">Close</button>
+                `;
+            }
+        }
+        
+        // Start authentication
+        if (itemId) {
+            autoLogin();
+        } else {
+            document.getElementById('loading').innerHTML = `
+                <h2>Invalid Request</h2>
+                <p>No item specified.</p>
+            `;
+        }
+    </script>
+</body>
+</html>
