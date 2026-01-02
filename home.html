@@ -3723,7 +3723,13 @@
                     
                     const navItem = document.createElement('div');
                     navItem.className = 'category-nav-item';
-                    navItem.onclick = () => openJellyfinCollection(collection.id);
+                    navItem.onclick = () => {
+                        if (collection.id === '7e2a5d7fd8bd73b8768e302be39536df') {
+                            window.open('https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df', '_blank');
+                        } else {
+                            openJellyfinCollection(collection.id);
+                        }
+                    };
                     
                     navItem.innerHTML = `
                         <img src="${backdropUrl}" 
