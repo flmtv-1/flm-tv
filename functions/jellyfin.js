@@ -1,75 +1,77 @@
+// jellyfin-auth.js
 const fetch = require('node-fetch');
 
-const JELLYFIN_SERVER = 'http://flmtv26.duckdns.org:8096';
-
 exports.handler = async (event, context) => {
-  // Enable CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
   };
 
-  // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
   }
 
-  try {
-    const path = event.queryStringParameters.path;
-    
-    if (!path) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: 'Missing path parameter' })
-      };
-    }
-
-    const jellyfinUrl = `${JELLYFIN_SERVER}${path}`;
-    console.log('Proxying request to:', jellyfinUrl);
-
-    const response = await fetch(jellyfinUrl, {
-      method: event.httpMethod,
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-
-    const contentType = response.headers.get('content-type');
-    
-    // Handle images
-    if (contentType && contentType.includes('image')) {
-      const buffer = await response.buffer();
-      return {
-        statusCode: response.status,
-        headers: {
-          ...headers,
-          'Content-Type': contentType
-        },
-        body: buffer.toString('base64'),
-        isBase64Encoded: true
-      };
-    }
-
-    // Handle JSON
-    const data = await response.json();
-    
+  if (event.httpMethod !== 'POST') {
     return {
-      statusCode: response.status,
-      headers: {
-        ...headers,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ error: 'Method not allowed' })
     };
+  }
+
+  try {
+    const { username, password, action } = JSON.parse(event.body);
+    const JELLYFIN_URL = 'http://flmtv.duckdns.org:8096';
+
+    if (action === 'login') {
+      const response = await fetch(`${JELLYFIN_URL}/Users/AuthenticateByName`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web-app", Version="1.0.0"'
+        },
+        body: JSON.stringify({
+          Username: username,
+          Pw: password
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({
+            success: true,
+            accessToken: data.AccessToken,
+            userId: data.User.Id,
+            userName: data.User.Name,
+            serverId: data.ServerId
+          })
+        };
+      } else {
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            error: 'Invalid username or password'
+          })
+        };
+      }
+    }
 
   } catch (error) {
-    console.error('Proxy error:', error);
+    console.error('Auth error:', error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({
+        success: false,
+        error: 'Authentication failed. Please try again.'
+      })
     };
   }
 };
