@@ -5501,6 +5501,85 @@ async function loadCollectionPage(collectionId, title) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════
+//  BROWSER BACK BUTTON FIX
+// ═══════════════════════════════════════════════════════════════
+
+// Function to update browser history when navigating
+function navigateWithHistory(pageName, pageData) {
+    // Push state to browser history
+    history.pushState(
+        { page: pageName, data: pageData }, 
+        pageName, 
+        `#${pageName}`
+    );
+}
+
+// Listen for browser back/forward button
+window.addEventListener('popstate', function(event) {
+    if (event.state) {
+        // User clicked back button - restore previous page
+        const previousPage = event.state.page;
+        const previousData = event.state.data;
+        
+        console.log('Back button clicked, restoring:', previousPage);
+        
+        // Handle different page types
+        if (previousPage === 'home' || previousPage === 'browse') {
+            // Go back to main browse view
+            loadMainCategories();
+        } else if (previousPage.startsWith('category-')) {
+            // Go back to category view
+            const categoryId = previousData.categoryId;
+            loadCategory(categoryId);
+        } else if (previousPage.startsWith('movie-')) {
+            // Go back to movie view
+            const movieId = previousData.movieId;
+            loadMovieDetails(movieId);
+        }
+    } else {
+        // No state, go to home
+        loadMainCategories();
+    }
+});
+
+// Update your existing navigation functions to use history
+// Example: When loading a category
+function loadCategory(categoryId, categoryName) {
+    // Your existing category loading code here...
+    
+    // Add this line to update browser history:
+    navigateWithHistory(`category-${categoryId}`, { 
+        categoryId: categoryId, 
+        categoryName: categoryName 
+    });
+}
+
+// Example: When loading a movie
+function loadMovieDetails(movieId, movieTitle) {
+    // Your existing movie loading code here...
+    
+    // Add this line to update browser history:
+    navigateWithHistory(`movie-${movieId}`, { 
+        movieId: movieId, 
+        movieTitle: movieTitle 
+    });
+}
+
+// Example: When going back to main browse
+function loadMainCategories() {
+    // Your existing browse loading code here...
+    
+    // Add this line:
+    navigateWithHistory('browse', {});
+}
+
+// Initialize: Set initial state when page loads
+window.addEventListener('load', function() {
+    if (!history.state) {
+        history.replaceState({ page: 'home' }, 'Home', '#home');
+    }
+});
 </script>
 
 </script>
