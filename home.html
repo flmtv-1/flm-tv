@@ -4524,6 +4524,17 @@
                     Recursive: true
                 });
                 
+// 🔍 DEBUG: Check AWESOME TV & FILMS collection
+                if (collectionId === '7e2a5d7fd8bd73b8768e302be39536df') {
+                    console.log('🔍 AWESOME TV & FILMS Debug:');
+                    console.log('Total items:', items.Items?.length);
+                    if (items.Items && items.Items.length > 0) {
+                        console.log('First item:', items.Items[0]);
+                        console.log('Has ImageTags?', !!items.Items[0].ImageTags);
+                        console.log('ImageTags:', items.Items[0].ImageTags);
+                    }
+                }
+
                 // Simple grid view - NO JELLYFIN UI
                 frame.srcdoc = `
                     <!DOCTYPE html>
