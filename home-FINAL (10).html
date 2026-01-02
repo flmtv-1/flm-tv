@@ -889,9 +889,11 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary);
-            z-index: 10000;
-            position: sticky;
+            z-index: 99999;
+            position: absolute;
             top: 0;
+            left: 0;
+            right: 0;
             pointer-events: auto;
             gap: 1rem;
             min-height: 60px;
@@ -905,7 +907,7 @@
         
         /* Account for FLM TV header height */
         .jellyfin-viewer.viewing-movie iframe {
-            height: calc(100vh - 60px); /* 60px for FLM TV header */
+            height: 100vh; /* Full height - header overlays on top */
         }
         
         .viewer-logo {
@@ -2479,6 +2481,116 @@
             }
         }
         
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  MOBILE IMPROVEMENTS - Better Layout & Draggable Panels         */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        @media (max-width: 768px) {
+            /* Header - Stack properly on mobile */
+            header {
+                padding: 0.5rem 1rem !important;
+                min-height: 60px !important;
+            }
+            
+            .header-content {
+                flex-wrap: nowrap !important;
+                gap: 0.5rem !important;
+            }
+            
+            /* Logo smaller on mobile */
+            .logo {
+                font-size: 1.25rem !important;
+                white-space: nowrap !important;
+            }
+            
+            .logo img {
+                height: 30px !important;
+            }
+            
+            /* Viewer header - Better spacing */
+            .jellyfin-viewer.active header {
+                padding: 0.5rem 0.75rem !important;
+            }
+            
+            .viewer-back {
+                font-size: 0.9rem !important;
+                padding: 0.6rem 1rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Side panels - Better mobile width */
+            .side-panel {
+                width: 85vw !important; /* Wider on mobile */
+                max-width: 400px !important;
+            }
+            
+            /* Adjust panel content spacing */
+            .panel-header {
+                padding-top: 1rem !important;
+            }
+            
+            /* Category grid - Better mobile spacing */
+            .movies-grid,
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+                gap: 0.75rem !important;
+                padding: 1rem !important;
+            }
+            
+            /* Category page heading */
+            .category-header,
+            h1 {
+                font-size: 1.5rem !important;
+                padding: 0.75rem 1rem !important;
+                margin: 0 !important;
+            }
+            
+            /* Movie cards on mobile */
+            .movie-card {
+                min-width: 120px !important;
+            }
+            
+            .movie-card img {
+                border-radius: 6px !important;
+            }
+            
+            /* Chat messages - Better mobile layout */
+            .chat-message {
+                max-width: 85% !important;
+                font-size: 0.9rem !important;
+                padding: 0.6rem 0.9rem !important;
+            }
+            
+            /* Input areas on mobile */
+            .chat-input-container input,
+            .chat-input-container textarea {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+            }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .side-panel {
+                width: 90vw !important;
+                max-width: none !important;
+            }
+            
+            .logo {
+                font-size: 1.1rem !important;
+            }
+            
+            .viewer-back {
+                font-size: 0.85rem !important;
+                padding: 0.5rem 0.75rem !important;
+            }
+            
+            .movies-grid,
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+                gap: 0.5rem !important;
+            }
+        }
+        
     </style>
 </head>
 <body>
@@ -3573,348 +3685,457 @@
         }
         
         function playJellyfinItem(itemId) {
+            console.log('═══════════════════════════════════════');
+            console.log('🎬 playJellyfinItem CALLED!');
+            console.log('🆔 Item ID:', itemId);
+            console.log('═══════════════════════════════════════');
+            
+            try {
+                const viewer = document.getElementById('jellyfinViewer');
+                const frame = document.getElementById('jellyfinFrame');
+                
+                if (!viewer || !frame) {
+                    console.error('❌ Viewer or frame not found!');
+                    return;
+                }
+                
+                console.log('📺 Viewer element:', viewer);
+                console.log('🖼️ Frame element:', frame);
+                
+                // CRITICAL: Clear srcdoc first (it takes precedence over src)!
+                frame.removeAttribute('srcdoc');
+                
+                // Load Jellyfin's NATIVE detail page WITH API KEY (no login!)
+                const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                console.log('🔗 Loading Jellyfin detail page:', detailUrl);
+                
+                frame.src = detailUrl;
+                
+                viewer.classList.add('active');
+                viewer.classList.add('viewing-movie');
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('video-playing');
+                
+                history.pushState({modal: 'movie'}, '', '#movie');
+                
+                console.log('✅ playJellyfinItem completed!');
+            } catch (error) {
+                console.error('❌ Error in playJellyfinItem:', error);
+            }
+        }
+        
+        // Make function globally accessible for iframe - DO THIS IMMEDIATELY!
+        window.playJellyfinItem = playJellyfinItem;
+        
+        // Test that it's accessible
+        console.log('✅ window.playJellyfinItem set:', typeof window.playJellyfinItem);
+        
+        function playVideoDirectly(itemId) {
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            console.log('🎬 Opening Jellyfin detail page for:', itemId);
+            console.log('🎬 Playing video directly:', itemId);
             
-            // Load Jellyfin's detail page with API key - NO SIGN-IN!
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            // DIRECT STREAM URL - bypasses ALL Jellyfin UI
+            const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}&Static=true`;
             
-            console.log('🔗 Loading URL:', detailUrl);
-            
-            frame.src = detailUrl;
-            
-            // Inject FLM TV branding after iframe loads
-            frame.onload = function() {
-                try {
-                    injectCustomBranding(frame);
-                    // Start monitoring to keep Jellyfin UI hidden
-                    startJellyfinUIMonitor(frame);
-                } catch (e) {
-                    console.log('Could not inject branding (CORS):', e);
-                }
-            };
+            // Create simple video player - NO JELLYFIN INTERFACE AT ALL
+            frame.srcdoc = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { margin: 0; background: #000; }
+                        video { width: 100vw; height: 100vh; }
+                    </style>
+                </head>
+                <body>
+                    <video controls autoplay src="${streamUrl}"></video>
+                </body>
+                </html>
+            `;
             
             viewer.classList.add('active');
-            viewer.classList.add('viewing-movie'); // Add this class for styling
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
             history.pushState({modal: 'movie'}, '', '#movie');
         }
         
-        // Monitor and hide Jellyfin UI elements continuously
-        let jellyfinMonitorInterval = null;
-        
-        function startJellyfinUIMonitor(frame) {
-            // Clear any existing monitor
-            if (jellyfinMonitorInterval) {
-                clearInterval(jellyfinMonitorInterval);
+        async function showDetailPage(item) {
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            
+            // If it's a Series, use Jellyfin's page with FLM TV frame
+            if (item.Type === 'Series') {
+                console.log('📺 Opening series page with Jellyfin UI');
+                
+                const seriesUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${item.Id}&serverId=${JELLYFIN_CONFIG.SERVER}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                frame.src = seriesUrl;
+                
+                // Inject FLM TV branding after iframe loads
+                frame.onload = function() {
+                    try {
+                        injectCustomBranding(frame);
+                    } catch (e) {
+                        console.log('Could not inject branding (CORS):', e);
+                    }
+                };
+                
+                viewer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('video-playing');
+                
+                history.pushState({modal: 'series'}, '', '#series');
+                return;
             }
             
-            // Monitor every 300ms (more frequent) to ensure Jellyfin UI stays hidden
-            jellyfinMonitorInterval = setInterval(() => {
-                try {
-                    const doc = frame.contentDocument || frame.contentWindow.document;
-                    if (doc) {
-                        // Hide all possible header elements
-                        const headersToHide = doc.querySelectorAll(`
-                            .skinHeader, 
-                            .skinHeader-withBackground,
-                            .headerTop, 
-                            .headerLeft, 
-                            .headerRight, 
-                            .headerLogo, 
-                            .mainDrawer,
-                            .viewMenuBar,
-                            .mdl-layout__header,
-                            [class*="header"],
-                            [class*="Header"]
-                        `);
+            // For movies, use custom detail page
+            // Get backdrop image
+            const backdropUrl = item.BackdropImageTags && item.BackdropImageTags[0]
+                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`
+                : '';
+            
+            // Get poster image
+            const posterUrl = item.ImageTags?.Primary
+                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`
+                : '';
+            
+            // Format runtime
+            const runtime = item.RunTimeTicks 
+                ? `${Math.floor(item.RunTimeTicks / 600000000)}h ${Math.floor((item.RunTimeTicks % 600000000) / 10000000)}m`
+                : '';
+            
+            // Fetch cast and similar items
+            let castHTML = '';
+            let similarHTML = '';
+            
+            try {
+                // Get people (cast & crew)
+                const people = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${item.Id}/People`);
+                if (people && people.length > 0) {
+                    castHTML = people.slice(0, 10).map(person => {
+                        const personImage = person.PrimaryImageTag
+                            ? `${JELLYFIN_CONFIG.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=200`
+                            : 'https://via.placeholder.com/200x300?text=No+Photo';
                         
-                        headersToHide.forEach(el => {
-                            if (el && el.style.display !== 'none') {
-                                el.style.display = 'none';
-                                el.style.visibility = 'hidden';
-                                el.style.height = '0';
-                                el.style.overflow = 'hidden';
-                                el.style.position = 'absolute';
-                                el.style.top = '-9999px';
-                            }
-                        });
-                        
-                        // Target blue background elements (Jellyfin's blue header)
-                        const allElements = doc.querySelectorAll('div');
-                        allElements.forEach(el => {
-                            const bgColor = window.getComputedStyle(el).backgroundColor;
-                            // Check for Jellyfin's blue: rgb(0, 56, 168)
-                            if (bgColor && (
-                                bgColor.includes('0, 56, 168') || 
-                                bgColor.includes('0,56,168') ||
-                                bgColor === 'rgb(0, 56, 168)'
-                            )) {
-                                // Only hide if it's at the top of the page (likely a header)
-                                const rect = el.getBoundingClientRect();
-                                if (rect.top < 100) {
-                                    el.style.display = 'none';
-                                    el.style.visibility = 'hidden';
-                                }
-                            }
-                        });
-                        
-                        // Ensure content starts at top
-                        const mainPages = doc.querySelector('.mainAnimatedPages');
-                        if (mainPages) {
-                            mainPages.style.paddingTop = '0';
-                            mainPages.style.marginTop = '0';
-                            mainPages.style.top = '0';
-                        }
-                        
-                        const view = doc.querySelector('.view');
-                        if (view) {
-                            view.style.paddingTop = '0';
-                            view.style.marginTop = '0';
-                        }
-                    }
-                } catch (e) {
-                    // CORS error - ignore
+                        return `
+                            <div style="text-align: center; min-width: 120px;">
+                                <img src="${personImage}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #22c55e;">
+                                <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #ffd700;">${person.Name}</div>
+                                <div style="font-size: 0.75rem; color: #94a3b8;">${person.Role || person.Type}</div>
+                            </div>
+                        `;
+                    }).join('');
                 }
-            }, 300); // Run every 300ms
+                
+                // Get similar items
+                const similar = await jellyfinFetch(`/Items/${item.Id}/Similar?userId=${JELLYFIN_CONFIG.USER_ID}&limit=10`);
+                if (similar && similar.Items && similar.Items.length > 0) {
+                    similarHTML = similar.Items.map(simItem => {
+                        const simPoster = simItem.ImageTags?.Primary
+                            ? `${JELLYFIN_CONFIG.SERVER}/Items/${simItem.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`
+                            : 'https://via.placeholder.com/200x300?text=No+Image';
+                        
+                        return `
+                            <div onclick="parent.playJellyfinItem('${simItem.Id}')" style="cursor: pointer; min-width: 150px; transition: transform 0.3s;">
+                                <img src="${simPoster}" style="width: 150px; height: 225px; border-radius: 8px; border: 2px solid rgba(34, 197, 94, 0.3);">
+                                <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600;">${simItem.Name}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error('Error fetching cast/similar:', err);
+            }
+            
+            // Build detail page HTML for movies
+            frame.srcdoc = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        body {
+                            background: #0a0f1a;
+                            color: #fff;
+                            font-family: 'Inter', sans-serif;
+                            overflow-x: hidden;
+                        }
+                        .backdrop {
+                            width: 100%;
+                            height: 50vh;
+                            background: url('${backdropUrl}') center/cover;
+                            position: relative;
+                        }
+                        .backdrop::after {
+                            content: '';
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            height: 100%;
+                            background: linear-gradient(to bottom, transparent, #0a0f1a);
+                        }
+                        .content {
+                            position: relative;
+                            margin-top: -150px;
+                            padding: 0 2rem 2rem;
+                            z-index: 10;
+                        }
+                        .main-info {
+                            display: flex;
+                            gap: 2rem;
+                            margin-bottom: 2rem;
+                        }
+                        .poster {
+                            flex-shrink: 0;
+                        }
+                        .poster img {
+                            width: 300px;
+                            border-radius: 12px;
+                            border: 3px solid #22c55e;
+                            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+                        }
+                        .details {
+                            flex: 1;
+                        }
+                        .title {
+                            font-size: 3rem;
+                            font-weight: 900;
+                            color: #ffd700;
+                            margin-bottom: 1rem;
+                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+                        }
+                        .meta {
+                            display: flex;
+                            gap: 1.5rem;
+                            margin-bottom: 1.5rem;
+                            font-size: 1.1rem;
+                            color: #94a3b8;
+                        }
+                        .meta span {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                        }
+                        .play-btn {
+                            background: #22c55e;
+                            color: white;
+                            border: none;
+                            padding: 1rem 3rem;
+                            font-size: 1.25rem;
+                            font-weight: 700;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            transition: all 0.3s;
+                            margin-bottom: 1.5rem;
+                        }
+                        .play-btn:hover {
+                            background: #1ea34b;
+                            transform: translateY(-2px);
+                            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+                        }
+                        .overview {
+                            font-size: 1.1rem;
+                            line-height: 1.8;
+                            color: #e2e8f0;
+                            margin-bottom: 1rem;
+                        }
+                        .section {
+                            margin-top: 3rem;
+                        }
+                        .section-title {
+                            font-size: 1.5rem;
+                            font-weight: 800;
+                            color: #ffd700;
+                            margin-bottom: 1.5rem;
+                        }
+                        .scroll-container {
+                            display: flex;
+                            gap: 1.5rem;
+                            overflow-x: auto;
+                            padding-bottom: 1rem;
+                            scrollbar-width: thin;
+                            scrollbar-color: #22c55e #1a1f2e;
+                        }
+                        .scroll-container::-webkit-scrollbar {
+                            height: 8px;
+                        }
+                        .scroll-container::-webkit-scrollbar-track {
+                            background: #1a1f2e;
+                        }
+                        .scroll-container::-webkit-scrollbar-thumb {
+                            background: #22c55e;
+                            border-radius: 4px;
+                        }
+                        
+                        @media (max-width: 768px) {
+                            .main-info { flex-direction: column; align-items: center; text-align: center; }
+                            .poster img { width: 200px; }
+                            .title { font-size: 2rem; }
+                            .content { padding: 0 1rem 2rem; margin-top: -100px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="backdrop"></div>
+                    <div class="content">
+                        <div class="main-info">
+                            <div class="poster">
+                                <img src="${posterUrl}" alt="${item.Name}">
+                            </div>
+                            <div class="details">
+                                <h1 class="title">${item.Name}</h1>
+                                <div class="meta">
+                                    <span>📅 ${item.ProductionYear || 'N/A'}</span>
+                                    ${runtime ? `<span>⏱️ ${runtime}</span>` : ''}
+                                    ${item.OfficialRating ? `<span>🎬 ${item.OfficialRating}</span>` : ''}
+                                    ${item.CommunityRating ? `<span>⭐ ${item.CommunityRating.toFixed(1)}</span>` : ''}
+                                </div>
+                                <button class="play-btn" onclick="parent.playVideoDirectly('${item.Id}')">
+                                    ▶️ Play Now
+                                </button>
+                                <p class="overview">${item.Overview || 'No description available.'}</p>
+                                ${item.Genres ? `<p style="color: #ffd700; margin-top: 1rem;"><strong>Genre:</strong> ${item.Genres.join(', ')}</p>` : ''}
+                            </div>
+                        </div>
+                        
+                        ${castHTML ? `
+                            <div class="section">
+                                <h2 class="section-title">Cast & Crew</h2>
+                                <div class="scroll-container">
+                                    ${castHTML}
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${similarHTML ? `
+                            <div class="section">
+                                <h2 class="section-title">More Like This</h2>
+                                <div class="scroll-container">
+                                    ${similarHTML}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('video-playing');
+            
+            history.pushState({modal: 'detail'}, '', '#detail');
         }
         
-        function stopJellyfinUIMonitor() {
-            if (jellyfinMonitorInterval) {
-                clearInterval(jellyfinMonitorInterval);
-                jellyfinMonitorInterval = null;
-            }
-        }
+        // ═══════════════════════════════════════════════════════════════
+        //  CUSTOM CATEGORY VIEWER (Fast, No Flash!)
+        // ═══════════════════════════════════════════════════════════════
         
         async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening Jellyfin collection page for:', collectionId);
+            console.log('📂 Opening collection:', collectionId);
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame element not found');
-                return;
-            }
+            // Show viewer FIRST
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('video-playing');
+            
+            // Show overlay on top while content loads (FAST - 100ms)
+            const overlay = showSpaceWelcome();
             
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
-            
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
             try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
-            
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
-                ? collection.url 
-                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Fix URL format - change #/ to #!/ if needed
-            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
-            
-            // Ensure the URL keeps the :8920 port (not :8096)
-            collectionUrl = collectionUrl.replace(':8096', ':8920');
-            
-            // IMPORTANT: For hash-based URLs, API key must go BEFORE the hash!
-            // Split at the hash
-            const hashIndex = collectionUrl.indexOf('#');
-            if (hashIndex > -1) {
-                const baseUrl = collectionUrl.substring(0, hashIndex);
-                const hashPart = collectionUrl.substring(hashIndex);
+                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    ParentId: collectionId,
+                    Limit: 100,
+                    SortBy: 'SortName',
+                    Recursive: true
+                });
                 
-                // Add api_key to base URL (before hash)
-                if (!baseUrl.includes('api_key=')) {
-                    const separator = baseUrl.includes('?') ? '&' : '?';
-                    collectionUrl = baseUrl + separator + `api_key=${JELLYFIN_CONFIG.API_KEY}` + hashPart;
-                }
-            } else {
-                // No hash, add normally
-                if (!collectionUrl.includes('api_key=')) {
-                    collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                }
-            }
-            
-            console.log('🔗 Final URL we are loading:', collectionUrl);
-            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
-            console.log('🔗 API key check:', collectionUrl.includes('api_key=') ? '✅ Has API key' : '❌ NO API KEY!');
-            
-            // Special handling for "00 Collections" - show Enter overlay
-            if (collectionName === '00 Collections') {
-                showCollectionsEnterOverlay(collectionUrl, collectionName);
-            } else {
-                // Load normally for other collections
-                frame.src = collectionUrl;
-                
-                // Inject FLM TV branding after iframe loads
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                        // Start monitoring to keep Jellyfin UI hidden
-                        startJellyfinUIMonitor(frame);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
-                    }
-                };
-                
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'collection'}, '', '#collection');
-            }
-        }
-        
-        function showCollectionsEnterOverlay(collectionUrl, collectionName) {
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            // Create beautiful enter overlay
-            const overlay = document.createElement('div');
-            overlay.id = 'collectionsEnterOverlay';
-            overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0038a8 100%);
-                z-index: 99999;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                animation: fadeIn 0.5s ease;
-            `;
-            
-            overlay.innerHTML = `
-                <style>
-                    @keyframes fadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                    @keyframes glow {
-                        0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-                        50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
-                    }
-                    #collectionsEnterOverlay h1 {
-                        font-size: 3rem;
-                        font-weight: 900;
-                        background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                        background-clip: text;
-                        margin-bottom: 1rem;
-                        text-align: center;
-                    }
-                    #collectionsEnterOverlay p {
-                        color: #e2e8f0;
-                        font-size: 1.25rem;
-                        margin-bottom: 3rem;
-                        text-align: center;
-                    }
-                    #collectionsEnterOverlay button {
-                        background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
-                        border: none;
-                        color: #000;
-                        padding: 1.5rem 4rem;
-                        font-size: 1.5rem;
-                        font-weight: 900;
-                        border-radius: 12px;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        animation: glow 2s infinite;
-                        text-transform: uppercase;
-                        letter-spacing: 2px;
-                    }
-                    #collectionsEnterOverlay button:hover {
-                        transform: scale(1.05);
-                        box-shadow: 0 0 50px rgba(255, 215, 0, 1);
-                    }
-                    @media (max-width: 768px) {
-                        #collectionsEnterOverlay h1 { font-size: 2rem; }
-                        #collectionsEnterOverlay p { font-size: 1rem; margin-bottom: 2rem; }
-                        #collectionsEnterOverlay button { 
-                            padding: 1rem 2.5rem; 
-                            font-size: 1.25rem; 
-                        }
-                    }
-                </style>
-                <h1>🌟 FLM TV Collections</h1>
-                <p>Discover Popular & Trending Content</p>
-                <button onclick="enterCollections()">ENTER COLLECTIONS</button>
-            `;
-            
-            document.body.appendChild(overlay);
-            
-            // Make enter function globally accessible
-            window.enterCollections = function() {
-                // Remove overlay
-                overlay.remove();
-                
-                // Load the Jellyfin collection page
-                frame.src = collectionUrl;
-                
-                // Inject FLM TV branding and auto-click Public user
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                        // Start monitoring to keep Jellyfin UI hidden
-                        startJellyfinUIMonitor(frame);
-                        
-                        // Auto-click Public user after a delay
-                        setTimeout(() => {
-                            try {
-                                const doc = frame.contentDocument || frame.contentWindow.document;
-                                const publicUser = doc.querySelector('.card-usercard');
-                                if (publicUser && publicUser.textContent.includes('Public')) {
-                                    publicUser.click();
-                                    console.log('✅ Auto-clicked Public user');
-                                    
-                                    // Click submit button
-                                    setTimeout(() => {
-                                        const submitBtn = doc.querySelector('.button-submit');
-                                        if (submitBtn) {
-                                            submitBtn.click();
-                                            console.log('✅ Auto-submitted login');
-                                        }
-                                    }, 200);
-                                }
-                            } catch (e) {
-                                console.log('Auto-login attempt:', e);
+                // Simple grid view - NO JELLYFIN UI
+                frame.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            body { 
+                                background: #0a0f1a;
+                                color: #fff;
+                                font-family: 'Inter', sans-serif;
+                                padding: 2rem;
                             }
-                        }, 1000);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
-                    }
+                            h1 { color: #ffd700; margin-bottom: 2rem; }
+                            .grid {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                                gap: 1rem;
+                            }
+                            .card { cursor: pointer; transition: transform 0.3s; }
+                            .card:hover { transform: scale(1.05); }
+                            .card img { 
+                                width: 100%;
+                                border-radius: 8px;
+                                border: 2px solid #22c55e;
+                            }
+                            .card-title {
+                                margin-top: 0.5rem;
+                                font-size: 0.75rem;
+                                text-align: center;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                color: #e2e8f0;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${collectionName}</h1>
+                        <div class="grid">
+                            ${items.Items ? items.Items.map(item => `
+                                <div class="card" onclick="console.log('🎯 CLICK:', '${item.Id}'); if(parent.playJellyfinItem){parent.playJellyfinItem('${item.Id}')}else{console.error('❌ Function missing')}">
+                                    <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300">
+                                    <div class="card-title">${item.Name}</div>
+                                </div>
+                            `).join('') : '<p>No items</p>'}
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                // Wait for iframe to load, then hide overlay FAST (100ms)
+                frame.onload = () => {
+                    setTimeout(() => {
+                        if (overlay && overlay.parentNode) {
+                            overlay.style.animation = 'fadeOut 0.2s ease';
+                            setTimeout(() => overlay.remove(), 200);
+                        }
+                    }, 100); // FAST - only 100ms delay
                 };
                 
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'collection'}, '', '#collection');
-            };
+            } catch (error) {
+                frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
+                if (overlay && overlay.parentNode) {
+                    setTimeout(() => overlay.remove(), 300);
+                }
+            }
         }
         
         function showSpaceWelcome() {
-            // Create overlay
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position: fixed;
@@ -3928,7 +4149,7 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                animation: fadeIn 0.5s ease;
+                animation: fadeIn 0.2s ease;
             `;
             overlay.innerHTML = `
                 <h1 style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem; animation: glow 1.5s ease-in-out infinite;">
@@ -3937,15 +4158,9 @@
                 <p style="font-size: 1.5rem; color: white;">Welcome to FLM Television Network</p>
             `;
             document.body.appendChild(overlay);
-            
-            // Auto-remove after 2 seconds
-            setTimeout(() => {
-                overlay.style.animation = 'fadeOut 0.5s ease';
-                setTimeout(() => overlay.remove(), 500);
-            }, 2000);
+            return overlay;
         }
         
-        // Inject FLM TV branding into Jellyfin iframe
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
@@ -4112,15 +4327,21 @@
         }
         
         function closeViewer() {
-            // Stop monitoring Jellyfin UI
-            stopJellyfinUIMonitor();
+            console.log('🔙 Closing viewer...');
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
+            
+            // Clear both src and srcdoc
+            frame.src = '';
+            frame.removeAttribute('srcdoc');
+            
+            // Remove viewer classes
             viewer.classList.remove('active');
-            viewer.classList.remove('viewing-movie'); // Remove the class when closing
-            frame.src = ''; // Clear the iframe
-            document.body.style.overflow = ''; // Restore scrolling
+            viewer.classList.remove('viewing-movie');
+            
+            // Restore page scroll
+            document.body.style.overflow = '';
             document.body.classList.remove('video-playing');
             
             // Close any open panels
@@ -4128,6 +4349,8 @@
                 panel.classList.remove('active');
             });
             document.body.classList.remove('panel-active');
+            
+            console.log('✅ Viewer closed!');
         }
         
         // ═══════════════════════════════════════════════════════════════
@@ -4667,11 +4890,34 @@
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // CRITICAL: Actually STOP the video!
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+                video.removeAttribute('src');
+                video.load(); // Reset video element
+            }
+            
+            // Destroy HLS instance if exists
+            if (window.__flmHls) {
+                try {
+                    window.__flmHls.destroy();
+                } catch(e) {
+                    console.log('HLS cleanup:', e);
+                }
+                window.__flmHls = null;
+            }
+            
             modal.classList.remove('active');
+            
             // Remove from history
             if (window.location.hash === '#stream') {
                 history.back();
             }
+            
+            console.log('✅ Stream stopped and modal closed');
         }
         
         // Handle browser back button
@@ -4681,14 +4927,26 @@
             
             // Close video modal if open
             if (videoModal && videoModal.classList.contains('active')) {
+                const video = document.getElementById('liveStreamVideo');
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                    video.removeAttribute('src');
+                    video.load();
+                }
+                
+                // Destroy HLS
+                if (window.__flmHls) {
+                    try { window.__flmHls.destroy(); } catch(e) {}
+                    window.__flmHls = null;
+                }
+                
                 videoModal.classList.remove('active');
             }
             
             // Close Jellyfin viewer if open
             if (jellyfinViewer && jellyfinViewer.classList.contains('active')) {
-                jellyfinViewer.classList.remove('active');
-                const frame = document.getElementById('jellyfinFrame');
-                if (frame) frame.src = '';
+                closeViewer();
             }
         });
         
@@ -4785,6 +5043,8 @@ async function loadCollectionPage(collectionId, title) {
     grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
   }
 }
+
+</script>
 
 </script>
 
