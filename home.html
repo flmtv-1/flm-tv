@@ -5470,6 +5470,19 @@ async function loadCollectionPage(collectionId, title) {
     const data = await jellyfinFetch(url);
 
     const items = (data && data.Items) ? data.Items : [];
+
+// Debug: Check what's in AWESOME TV collection
+if (collectionId === '7e2a5d7fd8bd73b8768e302be39536df') {
+    console.log('🔍 AWESOME TV & FILMS Debug:');
+    console.log('Total items:', items.length);
+    if (items.length > 0) {
+        console.log('First item:', items[0]);
+        console.log('Has ImageTags?', items[0].ImageTags);
+        console.log('Has SeriesPrimaryImageTag?', items[0].SeriesPrimaryImageTag);
+        console.log('Has BackdropImageTags?', items[0].BackdropImageTags);
+    }
+}
+
     if (!items.length) {
       grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">No items found in this collection.</div>`;
       return;
