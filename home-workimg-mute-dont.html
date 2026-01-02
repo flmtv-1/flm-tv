@@ -2518,15 +2518,51 @@
                 white-space: nowrap !important;
             }
             
-            /* Side panels - Better mobile width */
+            /* Side panels - Make draggable/resizable on mobile */
             .side-panel {
                 width: 85vw !important; /* Wider on mobile */
                 max-width: 400px !important;
+                touch-action: none; /* Enable touch dragging */
             }
             
-            /* Adjust panel content spacing */
+            .side-panel.dragging {
+                transition: none !important; /* Disable transition while dragging */
+            }
+            
+            /* Drag handle for mobile */
+            .side-panel::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.05);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                cursor: grab;
+                touch-action: none;
+            }
+            
+            .side-panel.dragging::before {
+                cursor: grabbing;
+            }
+            
+            /* Visual indicator for draggable */
+            .side-panel::after {
+                content: '⋮⋮⋮';
+                position: absolute;
+                top: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 1.2rem;
+                color: rgba(255, 255, 255, 0.3);
+                letter-spacing: 2px;
+                pointer-events: none;
+            }
+            
+            /* Adjust panel content to account for drag handle */
             .panel-header {
-                padding-top: 1rem !important;
+                margin-top: 40px !important;
             }
             
             /* Category grid - Better mobile spacing */
@@ -2970,7 +3006,7 @@
                 </button>
             </div>
         </div>
-        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"></iframe>
+        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
     
     <!-- Floating Chat/AI buttons for main page -->
@@ -3685,32 +3721,44 @@
         }
         
         function playJellyfinItem(itemId) {
-            console.log('🎬 Opening movie:', itemId);
+            console.log('═══════════════════════════════════════');
+            console.log('🎬 playJellyfinItem CALLED!');
+            console.log('🆔 Item ID:', itemId);
+            console.log('═══════════════════════════════════════');
             
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame not found!');
-                return;
+            try {
+                const viewer = document.getElementById('jellyfinViewer');
+                const frame = document.getElementById('jellyfinFrame');
+                
+                if (!viewer || !frame) {
+                    console.error('❌ Viewer or frame not found!');
+                    return;
+                }
+                
+                console.log('📺 Viewer element:', viewer);
+                console.log('🖼️ Frame element:', frame);
+                
+                // CRITICAL: Clear srcdoc first (it takes precedence over src)!
+                frame.removeAttribute('srcdoc');
+                
+                // Load Jellyfin's NATIVE detail page WITH API KEY (no login!)
+                const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                console.log('🔗 Loading Jellyfin detail page:', detailUrl);
+                
+                frame.src = detailUrl;
+                
+                viewer.classList.add('active');
+                viewer.classList.add('viewing-movie');
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('video-playing');
+                
+                history.pushState({modal: 'movie'}, '', '#movie');
+                
+                console.log('✅ playJellyfinItem completed!');
+            } catch (error) {
+                console.error('❌ Error in playJellyfinItem:', error);
             }
-            
-            // Clear srcdoc first
-            frame.removeAttribute('srcdoc');
-            
-            // Load Jellyfin detail page
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading:', detailUrl);
-            
-            frame.src = detailUrl;
-            
-            viewer.classList.add('active');
-            viewer.classList.add('viewing-movie');
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'movie'}, '', '#movie');
         }
         
         // Make function globally accessible for iframe - DO THIS IMMEDIATELY!
@@ -4095,7 +4143,19 @@
                         <h1>${collectionName}</h1>
                         <div class="grid">
                             ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
+                                <div class="card" onclick="
+                                    try {
+                                        console.log('🎯 Card clicked for:', '${item.Id}');
+                                        console.log('📞 Calling parent.playJellyfinItem...');
+                                        if (typeof parent.playJellyfinItem === 'function') {
+                                            parent.playJellyfinItem('${item.Id}');
+                                        } else {
+                                            console.error('❌ parent.playJellyfinItem is not a function!', typeof parent.playJellyfinItem);
+                                        }
+                                    } catch (error) {
+                                        console.error('❌ Error in card onclick:', error);
+                                    }
+                                ">
                                     <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300">
                                     <div class="card-title">${item.Name}</div>
                                 </div>
@@ -4878,34 +4938,11 @@
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            
-            // CRITICAL: Actually STOP the video!
-            if (video) {
-                video.pause();
-                video.currentTime = 0;
-                video.removeAttribute('src');
-                video.load(); // Reset video element
-            }
-            
-            // Destroy HLS instance if exists
-            if (window.__flmHls) {
-                try {
-                    window.__flmHls.destroy();
-                } catch(e) {
-                    console.log('HLS cleanup:', e);
-                }
-                window.__flmHls = null;
-            }
-            
             modal.classList.remove('active');
-            
             // Remove from history
             if (window.location.hash === '#stream') {
                 history.back();
             }
-            
-            console.log('✅ Stream stopped and modal closed');
         }
         
         // Handle browser back button
@@ -4915,20 +4952,6 @@
             
             // Close video modal if open
             if (videoModal && videoModal.classList.contains('active')) {
-                const video = document.getElementById('liveStreamVideo');
-                if (video) {
-                    video.pause();
-                    video.currentTime = 0;
-                    video.removeAttribute('src');
-                    video.load();
-                }
-                
-                // Destroy HLS
-                if (window.__flmHls) {
-                    try { window.__flmHls.destroy(); } catch(e) {}
-                    window.__flmHls = null;
-                }
-                
                 videoModal.classList.remove('active');
             }
             
@@ -5033,6 +5056,124 @@ async function loadCollectionPage(collectionId, title) {
 }
 
 </script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DRAGGABLE/RESIZABLE PANELS FOR MOBILE
+// ═══════════════════════════════════════════════════════════════
+
+(function() {
+    'use strict';
+    
+    // Only enable on touch devices or small screens
+    const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+    
+    if (!isMobile) return;
+    
+    console.log('📱 Initializing draggable panels for mobile...');
+    
+    let activePanel = null;
+    let startX = 0;
+    let startWidth = 0;
+    let isDragging = false;
+    
+    function initDraggablePanels() {
+        const panels = document.querySelectorAll('.side-panel');
+        
+        panels.forEach(panel => {
+            // Touch events
+            panel.addEventListener('touchstart', handleDragStart, { passive: false });
+            panel.addEventListener('touchmove', handleDrag, { passive: false });
+            panel.addEventListener('touchend', handleDragEnd);
+            
+            // Mouse events (for desktop testing)
+            panel.addEventListener('mousedown', handleDragStart);
+            document.addEventListener('mousemove', handleDrag);
+            document.addEventListener('mouseup', handleDragEnd);
+        });
+        
+        console.log('✅ Draggable panels initialized');
+    }
+    
+    function handleDragStart(e) {
+        const panel = e.target.closest('.side-panel');
+        if (!panel) return;
+        
+        // CRITICAL: Don't interfere with iframe content!
+        if (e.target.closest('iframe') || e.target.tagName === 'IFRAME') {
+            return; // Let iframe handle its own events
+        }
+        
+        // Only drag from top 40px (drag handle area)
+        const rect = panel.getBoundingClientRect();
+        const y = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        if (y - rect.top > 40) return; // Not in drag handle area
+        
+        e.preventDefault();
+        
+        activePanel = panel;
+        isDragging = true;
+        startX = e.touches ? e.touches[0].clientX : e.clientX;
+        startWidth = parseInt(getComputedStyle(panel).width, 10);
+        
+        panel.classList.add('dragging');
+        
+        console.log('🤏 Started dragging panel');
+    }
+    
+    function handleDrag(e) {
+        if (!isDragging || !activePanel) return;
+        
+        e.preventDefault();
+        
+        const currentX = e.touches ? e.touches[0].clientX : e.clientX;
+        const deltaX = startX - currentX;
+        
+        // For right-side panels, increase width as you drag left
+        const newWidth = Math.max(200, Math.min(window.innerWidth - 20, startWidth + deltaX));
+        
+        activePanel.style.width = newWidth + 'px';
+    }
+    
+    function handleDragEnd(e) {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        
+        if (activePanel) {
+            activePanel.classList.remove('dragging');
+            
+            // Snap to predefined widths
+            const currentWidth = parseInt(activePanel.style.width, 10);
+            const snapWidths = [280, 350, 420, window.innerWidth * 0.9];
+            
+            // Find closest snap width
+            const closestWidth = snapWidths.reduce((prev, curr) => 
+                Math.abs(curr - currentWidth) < Math.abs(prev - currentWidth) ? curr : prev
+            );
+            
+            activePanel.style.width = closestWidth + 'px';
+            
+            console.log('✅ Panel snapped to:', closestWidth + 'px');
+            
+            activePanel = null;
+        }
+    }
+    
+    // Initialize when DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDraggablePanels);
+    } else {
+        initDraggablePanels();
+    }
+    
+    // Reinitialize on orientation change
+    window.addEventListener('orientationchange', () => {
+        setTimeout(initDraggablePanels, 100);
+    });
+    
+})();
 
 </script>
 
