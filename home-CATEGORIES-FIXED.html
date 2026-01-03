@@ -1769,9 +1769,6 @@
                 min-height: 50px !important;
                 max-height: 50px !important;
                 flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                -webkit-overflow-scrolling: touch !important;
             }
             
             .viewer-logo {
@@ -2397,8 +2394,8 @@
             }
             
             .movies-grid, .content-grid {
-                grid-template-columns: repeat(5, 1fr) !important; /* 5 columns on mobile - smaller boxes */
-                gap: 0.4rem !important; /* Even smaller gap */
+                grid-template-columns: repeat(4, 1fr) !important; /* 4 columns instead of 3 - smaller boxes */
+                gap: 0.5rem !important; /* Smaller gap */
             }
             
             .side-panel {
@@ -4591,7 +4588,7 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            // Clear loaded class first to start fresh (iframe will be invisible)
+            // Clear loaded class first to start fresh
             frame.classList.remove('loaded');
             
             // Show viewer FIRST
@@ -4637,17 +4634,11 @@
                                 font-family: 'Inter', sans-serif;
                                 padding: 2rem;
                             }
-                            h1 { color: #ffd700; margin-bottom: 2rem; font-size: 1.5rem; }
+                            h1 { color: #ffd700; margin-bottom: 2rem; }
                             .grid {
                                 display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                                gap: 0.5rem;
-                            }
-                            @media (min-width: 768px) {
-                                .grid {
-                                    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                                    gap: 1rem;
-                                }
+                                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                                gap: 1rem;
                             }
                             .card { cursor: pointer; transition: transform 0.3s; }
                             .card:hover { transform: scale(1.05); }
@@ -4681,20 +4672,23 @@
                     </html>
                 `;
                 
-                // Add loaded class after short delay (onload doesn't fire reliably for srcdoc)
-                setTimeout(() => {
-                    frame.classList.add('loaded');
-                    
-                    // Hide overlay
-                    if (overlay && overlay.parentNode) {
-                        overlay.style.animation = 'fadeOut 0.2s ease';
-                        setTimeout(() => overlay.remove(), 200);
-                    }
-                }, 300); // 300ms delay for content to render
+                // Wait for iframe to load, then add loaded class and hide overlay
+                frame.onload = () => {
+                    // Wait a moment for content to fully render
+                    setTimeout(() => {
+                        // Fade in the iframe
+                        frame.classList.add('loaded');
+                        
+                        // Hide overlay
+                        if (overlay && overlay.parentNode) {
+                            overlay.style.animation = 'fadeOut 0.2s ease';
+                            setTimeout(() => overlay.remove(), 200);
+                        }
+                    }, 100); // Small delay to ensure rendering
+                };
                 
             } catch (error) {
                 frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
-                frame.classList.add('loaded'); // Make error visible
                 if (overlay && overlay.parentNode) {
                     setTimeout(() => overlay.remove(), 300);
                 }
@@ -4940,14 +4934,23 @@
             document.body.classList.remove('video-playing');
             
             // Make sure content is visible
-            if (contentContainer) contentContainer.style.display = 'block';
-            if (heroBanner) heroBanner.style.display = 'block';
+            if (contentContainer) {
+                contentContainer.style.display = 'block';
+                contentContainer.style.visibility = 'visible';
+                contentContainer.style.opacity = '1';
+            }
+            if (heroBanner) {
+                heroBanner.style.display = 'block';
+                heroBanner.style.visibility = 'visible';
+            }
             
             // Close any open panels
             document.querySelectorAll('.side-panel').forEach(panel => {
                 panel.classList.remove('active');
             });
             document.body.classList.remove('panel-active');
+            
+            // DO NOT use history.back() - it causes black screens!
             
             console.log('✅ Viewer closed and content restored!');
         }
@@ -5587,156 +5590,156 @@ function openCollectionInline(collectionId, collectionName) {
   loadCollectionPage(collectionId, activeCollectionName);
 }
 
-window.addEventListener('popstate', (e) => {
-  const params = new URLSearchParams(location.search);
-  const cid = params.get('collectionId');
-  if (cid) {
-    loadCollectionPage(cid, activeCollectionName || 'Collection');
-  } else {
-    // back to normal browse
-    activeCollectionId = null;
-    activeCollectionName = null;
-    if (typeof renderAllRows === 'function') renderAllRows();
-  }
-});
-
-async function loadCollectionPage(collectionId, title) {
-  // You should already have a main grid/container; we reuse the existing "allMoviesGrid" if present
-  const grid = document.getElementById('allMoviesGrid') || document.getElementById('moviesGrid') || document.querySelector('.movies-grid');
-  const heading = document.getElementById('pageTitle') || document.querySelector('h1') || null;
-
-  if (heading) heading.textContent = title || 'Collection';
-  if (!grid) { console.warn('No grid found to render collection'); return; }
-
-  grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">Loading ${title || 'collection'}…</div>`;
-
-  try {
-    const url = `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${encodeURIComponent(collectionId)}&Recursive=true&IncludeItemTypes=Movie,Series,Episode&Fields=PrimaryImageAspectRatio,PremiereDate,ProductionYear,RunTimeTicks,Overview&SortBy=SortName&SortOrder=Ascending`;
-    const data = await jellyfinFetch(url);
-
-    const items = (data && data.Items) ? data.Items : [];
-
-// Debug: Check what's in AWESOME TV collection
-if (collectionId === '7e2a5d7fd8bd73b8768e302be39536df') {
-    console.log('🔍 AWESOME TV & FILMS Debug:');
-    console.log('Total items:', items.length);
-    if (items.length > 0) {
-        console.log('First item:', items[0]);
-        console.log('Has ImageTags?', items[0].ImageTags);
-        console.log('Has SeriesPrimaryImageTag?', items[0].SeriesPrimaryImageTag);
-        console.log('Has BackdropImageTags?', items[0].BackdropImageTags);
-    }
-}
-
-    if (!items.length) {
-      grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">No items found in this collection.</div>`;
-      return;
-    }
-
-    // Reuse your existing card renderer if you have one
-    if (typeof createMovieCard === 'function') {
-      grid.innerHTML = '';
-      items.forEach(item => grid.appendChild(createMovieCard(item)));
-      return;
-    }
-
-    // Fallback simple renderer
-    grid.innerHTML = items.map(item => {
-      const name = (item.Name || 'Untitled').replace(/"/g,'&quot;');
-     // Try multiple image sources (for TV shows and movies)
-      let img = '';
-      if (item.ImageTags && item.ImageTags.Primary) {
-        // Standard primary image
-        img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-      } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
-        // For TV episodes, use series image
-        img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?tag=${item.SeriesPrimaryImageTag}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-      } else if (item.BackdropImageTags && item.BackdropImageTags.length > 0) {
-        // Fallback to backdrop
-        img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?tag=${item.BackdropImageTags[0]}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-      }
-
-      return `
-        <div style="width:180px;margin:10px;display:inline-block;vertical-align:top;">
-          <div style="width:180px;height:270px;border-radius:12px;overflow:hidden;background:#111827;border:1px solid rgba(255,255,255,.08);">
-            ${img ? `<img src="${img}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">` : ''}
-          </div>
-          <div style="margin-top:8px;color:#e2e8f0;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
-        </div>`;
-    }).join('');
-  } catch (err) {
-    console.error(err);
-    grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  BROWSER BACK BUTTON FIX
-// ═══════════════════════════════════════════════════════════════
-
-// Function to update browser history when navigating
-function navigateWithHistory(pageName, pageData) {
-    // Push state to browser history
-    history.pushState(
-        { page: pageName, data: pageData }, 
-        pageName, 
-        `#${pageName}`
-    );
-}
-
-// Listen for browser back/forward button
-window.addEventListener('popstate', function(event) {
-    if (event.state) {
-        // User clicked back button - restore previous page
-        const previousPage = event.state.page;
-        const previousData = event.state.data;
-        
-        console.log('Back button clicked, restoring:', previousPage);
-        
-        // Handle different page types
-        if (previousPage === 'home' || previousPage === 'browse') {
-            // Go back to main browse view
-            loadMainCategories();
-        } else if (previousPage.startsWith('category-')) {
-            // Go back to category view
-            const categoryId = previousData.categoryId;
-            loadCategory(categoryId);
-        } else if (previousPage.startsWith('movie-')) {
-            // Go back to movie view
-            const movieId = previousData.movieId;
-            loadMovieDetails(movieId);
-        }
-    } else {
-        // No state, go to home
-        loadMainCategories();
-    }
-});
-
-// Update your existing navigation functions to use history
-// Example: When loading a category
-function loadCategory(categoryId, categoryName) {
-    // Your existing category loading code here...
-    
-    // Add this line to update browser history:
-    navigateWithHistory(`category-${categoryId}`, { 
-        categoryId: categoryId, 
-        categoryName: categoryName 
-    });
-}
-
-// Example: When loading a movie
-function loadMovieDetails(movieId, movieTitle) {
-    // Your existing movie loading code here...
-    
-    // Add this line to update browser history:
-    navigateWithHistory(`movie-${movieId}`, { 
-        movieId: movieId, 
-        movieTitle: movieTitle 
-    });
-}
-
-// Example: When going back to main browse
-function loadMainCategories() {
+// DISABLED: window.addEventListener('popstate', (e) => {
+// DISABLED:   const params = new URLSearchParams(location.search);
+// DISABLED:   const cid = params.get('collectionId');
+// DISABLED:   if (cid) {
+// DISABLED:     loadCollectionPage(cid, activeCollectionName || 'Collection');
+// DISABLED:   } else {
+// DISABLED:     // back to normal browse
+// DISABLED:     activeCollectionId = null;
+// DISABLED:     activeCollectionName = null;
+// DISABLED:     if (typeof renderAllRows === 'function') renderAllRows();
+// DISABLED:   }
+// DISABLED: });
+// DISABLED: 
+// DISABLED: async function loadCollectionPage(collectionId, title) {
+// DISABLED:   // You should already have a main grid/container; we reuse the existing "allMoviesGrid" if present
+// DISABLED:   const grid = document.getElementById('allMoviesGrid') || document.getElementById('moviesGrid') || document.querySelector('.movies-grid');
+// DISABLED:   const heading = document.getElementById('pageTitle') || document.querySelector('h1') || null;
+// DISABLED: 
+// DISABLED:   if (heading) heading.textContent = title || 'Collection';
+// DISABLED:   if (!grid) { console.warn('No grid found to render collection'); return; }
+// DISABLED: 
+// DISABLED:   grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">Loading ${title || 'collection'}…</div>`;
+// DISABLED: 
+// DISABLED:   try {
+// DISABLED:     const url = `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${encodeURIComponent(collectionId)}&Recursive=true&IncludeItemTypes=Movie,Series,Episode&Fields=PrimaryImageAspectRatio,PremiereDate,ProductionYear,RunTimeTicks,Overview&SortBy=SortName&SortOrder=Ascending`;
+// DISABLED:     const data = await jellyfinFetch(url);
+// DISABLED: 
+// DISABLED:     const items = (data && data.Items) ? data.Items : [];
+// DISABLED: 
+// DISABLED: // Debug: Check what's in AWESOME TV collection
+// DISABLED: if (collectionId === '7e2a5d7fd8bd73b8768e302be39536df') {
+// DISABLED:     console.log('🔍 AWESOME TV & FILMS Debug:');
+// DISABLED:     console.log('Total items:', items.length);
+// DISABLED:     if (items.length > 0) {
+// DISABLED:         console.log('First item:', items[0]);
+// DISABLED:         console.log('Has ImageTags?', items[0].ImageTags);
+// DISABLED:         console.log('Has SeriesPrimaryImageTag?', items[0].SeriesPrimaryImageTag);
+// DISABLED:         console.log('Has BackdropImageTags?', items[0].BackdropImageTags);
+// DISABLED:     }
+// DISABLED: }
+// DISABLED: 
+// DISABLED:     if (!items.length) {
+// DISABLED:       grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">No items found in this collection.</div>`;
+// DISABLED:       return;
+// DISABLED:     }
+// DISABLED: 
+// DISABLED:     // Reuse your existing card renderer if you have one
+// DISABLED:     if (typeof createMovieCard === 'function') {
+// DISABLED:       grid.innerHTML = '';
+// DISABLED:       items.forEach(item => grid.appendChild(createMovieCard(item)));
+// DISABLED:       return;
+// DISABLED:     }
+// DISABLED: 
+// DISABLED:     // Fallback simple renderer
+// DISABLED:     grid.innerHTML = items.map(item => {
+// DISABLED:       const name = (item.Name || 'Untitled').replace(/"/g,'&quot;');
+// DISABLED:      // Try multiple image sources (for TV shows and movies)
+// DISABLED:       let img = '';
+// DISABLED:       if (item.ImageTags && item.ImageTags.Primary) {
+// DISABLED:         // Standard primary image
+// DISABLED:         img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+// DISABLED:       } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
+// DISABLED:         // For TV episodes, use series image
+// DISABLED:         img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?tag=${item.SeriesPrimaryImageTag}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+// DISABLED:       } else if (item.BackdropImageTags && item.BackdropImageTags.length > 0) {
+// DISABLED:         // Fallback to backdrop
+// DISABLED:         img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?tag=${item.BackdropImageTags[0]}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+// DISABLED:       }
+// DISABLED: 
+// DISABLED:       return `
+// DISABLED:         <div style="width:180px;margin:10px;display:inline-block;vertical-align:top;">
+// DISABLED:           <div style="width:180px;height:270px;border-radius:12px;overflow:hidden;background:#111827;border:1px solid rgba(255,255,255,.08);">
+// DISABLED:             ${img ? `<img src="${img}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">` : ''}
+// DISABLED:           </div>
+// DISABLED:           <div style="margin-top:8px;color:#e2e8f0;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
+// DISABLED:         </div>`;
+// DISABLED:     }).join('');
+// DISABLED:   } catch (err) {
+// DISABLED:     console.error(err);
+// DISABLED:     grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
+// DISABLED:   }
+// DISABLED: }
+// DISABLED: 
+// DISABLED: // ═══════════════════════════════════════════════════════════════
+// DISABLED: //  BROWSER BACK BUTTON FIX
+// DISABLED: // ═══════════════════════════════════════════════════════════════
+// DISABLED: 
+// DISABLED: // Function to update browser history when navigating
+// DISABLED: function navigateWithHistory(pageName, pageData) {
+// DISABLED:     // Push state to browser history
+// DISABLED:     history.pushState(
+// DISABLED:         { page: pageName, data: pageData }, 
+// DISABLED:         pageName, 
+// DISABLED:         `#${pageName}`
+// DISABLED:     );
+// DISABLED: }
+// DISABLED: 
+// DISABLED: // Listen for browser back/forward button
+// DISABLED: window.addEventListener('popstate', function(event) {
+// DISABLED:     if (event.state) {
+// DISABLED:         // User clicked back button - restore previous page
+// DISABLED:         const previousPage = event.state.page;
+// DISABLED:         const previousData = event.state.data;
+// DISABLED:         
+// DISABLED:         console.log('Back button clicked, restoring:', previousPage);
+// DISABLED:         
+// DISABLED:         // Handle different page types
+// DISABLED:         if (previousPage === 'home' || previousPage === 'browse') {
+// DISABLED:             // Go back to main browse view
+// DISABLED:             loadMainCategories();
+// DISABLED:         } else if (previousPage.startsWith('category-')) {
+// DISABLED:             // Go back to category view
+// DISABLED:             const categoryId = previousData.categoryId;
+// DISABLED:             loadCategory(categoryId);
+// DISABLED:         } else if (previousPage.startsWith('movie-')) {
+// DISABLED:             // Go back to movie view
+// DISABLED:             const movieId = previousData.movieId;
+// DISABLED:             loadMovieDetails(movieId);
+// DISABLED:         }
+// DISABLED:     } else {
+// DISABLED:         // No state, go to home
+// DISABLED:         loadMainCategories();
+// DISABLED:     }
+// DISABLED: });
+// DISABLED: 
+// DISABLED: // Update your existing navigation functions to use history
+// DISABLED: // Example: When loading a category
+// DISABLED: function loadCategory(categoryId, categoryName) {
+// DISABLED:     // Your existing category loading code here...
+// DISABLED:     
+// DISABLED:     // Add this line to update browser history:
+// DISABLED:     navigateWithHistory(`category-${categoryId}`, { 
+// DISABLED:         categoryId: categoryId, 
+// DISABLED:         categoryName: categoryName 
+// DISABLED:     });
+// DISABLED: }
+// DISABLED: 
+// DISABLED: // Example: When loading a movie
+// DISABLED: function loadMovieDetails(movieId, movieTitle) {
+// DISABLED:     // Your existing movie loading code here...
+// DISABLED:     
+// DISABLED:     // Add this line to update browser history:
+// DISABLED:     navigateWithHistory(`movie-${movieId}`, { 
+// DISABLED:         movieId: movieId, 
+// DISABLED:         movieTitle: movieTitle 
+// DISABLED:     });
+// DISABLED: }
+// DISABLED: 
+// DISABLED: // Example: When going back to main browse
+// DISABLED: function loadMainCategories() {
     // Your existing browse loading code here...
     
     // Add this line:

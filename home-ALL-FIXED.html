@@ -1769,9 +1769,6 @@
                 min-height: 50px !important;
                 max-height: 50px !important;
                 flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                -webkit-overflow-scrolling: touch !important;
             }
             
             .viewer-logo {
@@ -2397,8 +2394,8 @@
             }
             
             .movies-grid, .content-grid {
-                grid-template-columns: repeat(5, 1fr) !important; /* 5 columns on mobile - smaller boxes */
-                gap: 0.4rem !important; /* Even smaller gap */
+                grid-template-columns: repeat(4, 1fr) !important; /* 4 columns instead of 3 - smaller boxes */
+                gap: 0.5rem !important; /* Smaller gap */
             }
             
             .side-panel {
@@ -2750,7 +2747,7 @@
 <!-- SIGN IN MODAL -->
 <div class="flm-modal-overlay" id="flmSignInModal" style="display: none;">
     <div class="flm-modal-content">
-        <button class="flm-modal-close" onclick="(window.flmAuth ? flmAuth.closeModal('flmSignInModal') : closeFlmModal('flmSignInModal'))">
+        <button class="flm-modal-close" onclick="flmAuth.closeModal('flmSignInModal')">
             <i class="fas fa-times"></i>
         </button>
         
@@ -2822,7 +2819,7 @@
             <!-- Sign Up Link -->
             <div class="flm-form-footer">
                 Not a member? 
-                <a href="#" onclick="(window.flmAuth ? (flmAuth.closeModal('flmSignInModal'), flmAuth.openModal('flmSignUpModal')) : (closeFlmModal('flmSignInModal'), openFlmModal('flmSignUpModal'))); return false;">
+                <a href="#" onclick="flmAuth.closeModal('flmSignInModal'); flmAuth.openModal('flmSignUpModal'); return false;">
                     Sign Up
                 </a>
             </div>
@@ -2838,7 +2835,7 @@
 <!-- SIGN UP MODAL -->
 <div class="flm-modal-overlay" id="flmSignUpModal" style="display: none;">
     <div class="flm-modal-content">
-        <button class="flm-modal-close" onclick="(window.flmAuth ? flmAuth.closeModal('flmSignUpModal') : closeFlmModal('flmSignUpModal'))">
+        <button class="flm-modal-close" onclick="flmAuth.closeModal('flmSignUpModal')">
             <i class="fas fa-times"></i>
         </button>
         
@@ -2924,7 +2921,7 @@
             <!-- Sign In Link -->
             <div class="flm-form-footer">
                 Already have an account? 
-                <a href="#" onclick="(window.flmAuth ? (flmAuth.closeModal('flmSignUpModal'), flmAuth.openModal('flmSignInModal')) : (closeFlmModal('flmSignUpModal'), openFlmModal('flmSignInModal'))); return false;">
+                <a href="#" onclick="flmAuth.closeModal('flmSignUpModal'); flmAuth.openModal('flmSignInModal'); return false;">
                     Sign In
                 </a>
             </div>
@@ -4086,23 +4083,8 @@
             console.log('📺 Live TV card ready (vMix version)');
             
             
-            // Attach button click handlers - Use FLM Auth System with proper timing
-            const signInBtn = document.getElementById('signInBtn');
-            if (signInBtn) {
-                signInBtn.onclick = () => {
-                    // Check if flmAuth is loaded, if not open modal directly
-                    if (window.flmAuth) {
-                        flmAuth.openModal('flmSignInModal');
-                    } else {
-                        // Fallback: open modal directly
-                        const modal = document.getElementById('flmSignInModal');
-                        if (modal) {
-                            modal.style.display = 'flex';
-                            document.body.style.overflow = 'hidden';
-                        }
-                    }
-                };
-            }
+            // Attach button click handlers - Use FLM Auth System
+            document.getElementById('signInBtn').onclick = () => flmAuth.openModal('flmSignInModal');
             document.getElementById('parentLockBtn').onclick = () => openModal('parentLockModal');
             
             // Load content
@@ -4591,9 +4573,6 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            // Clear loaded class first to start fresh (iframe will be invisible)
-            frame.classList.remove('loaded');
-            
             // Show viewer FIRST
             viewer.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -4637,17 +4616,11 @@
                                 font-family: 'Inter', sans-serif;
                                 padding: 2rem;
                             }
-                            h1 { color: #ffd700; margin-bottom: 2rem; font-size: 1.5rem; }
+                            h1 { color: #ffd700; margin-bottom: 2rem; }
                             .grid {
                                 display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-                                gap: 0.5rem;
-                            }
-                            @media (min-width: 768px) {
-                                .grid {
-                                    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                                    gap: 1rem;
-                                }
+                                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                                gap: 1rem;
                             }
                             .card { cursor: pointer; transition: transform 0.3s; }
                             .card:hover { transform: scale(1.05); }
@@ -4681,20 +4654,18 @@
                     </html>
                 `;
                 
-                // Add loaded class after short delay (onload doesn't fire reliably for srcdoc)
-                setTimeout(() => {
-                    frame.classList.add('loaded');
-                    
-                    // Hide overlay
-                    if (overlay && overlay.parentNode) {
-                        overlay.style.animation = 'fadeOut 0.2s ease';
-                        setTimeout(() => overlay.remove(), 200);
-                    }
-                }, 300); // 300ms delay for content to render
+                // Wait for iframe to load, then hide overlay FAST (100ms)
+                frame.onload = () => {
+                    setTimeout(() => {
+                        if (overlay && overlay.parentNode) {
+                            overlay.style.animation = 'fadeOut 0.2s ease';
+                            setTimeout(() => overlay.remove(), 200);
+                        }
+                    }, 100); // FAST - only 100ms delay
+                };
                 
             } catch (error) {
                 frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
-                frame.classList.add('loaded'); // Make error visible
                 if (overlay && overlay.parentNode) {
                     setTimeout(() => overlay.remove(), 300);
                 }
@@ -4892,30 +4863,6 @@
             console.log('✅ FLM TV branding applied');
         }
         
-        // ═══════════════════════════════════════════════════════════════
-        //  FLM AUTH MODAL HELPERS (Fallback if flmAuth not loaded)
-        // ═══════════════════════════════════════════════════════════════
-        
-        window.closeFlmModal = function(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-        };
-        
-        window.openFlmModal = function(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        };
-        
-        // ═══════════════════════════════════════════════════════════════
-        //  CLOSE VIEWER
-        // ═══════════════════════════════════════════════════════════════
-        
         function closeViewer() {
             console.log('🔙 Closing viewer...');
             
@@ -4948,6 +4895,11 @@
                 panel.classList.remove('active');
             });
             document.body.classList.remove('panel-active');
+            
+            // Go back in history to restore proper URL
+            if (window.history.length > 1) {
+                window.history.back();
+            }
             
             console.log('✅ Viewer closed and content restored!');
         }
