@@ -434,7 +434,7 @@
         
         .content-container {
     padding: 2rem;
-    padding-top: 2rem; /* Removed excessive padding */
+    padding-top: 120px; /* Pushes content BELOW header */
     max-width: 1600px;
     margin: 0 auto;
 }
@@ -2933,7 +2933,7 @@
                     User Name
                 </h3>
                 <p id="flmUserEmail" style="color: var(--text-secondary); margin-bottom: 2rem;">
-                    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5e2b2d3b2c1e3b333f3732703d3133">[email&#160;protected]</a>
+                    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e0b0d1b0c3e1b131f1712501d1113">[email&#160;protected]</a>
                 </p>
                 
                 <button id="flmSignOutBtn" class="flm-btn flm-btn-danger">
@@ -3725,11 +3725,7 @@
                     navItem.className = 'category-nav-item';
                     navItem.onclick = () => {
                         if (collection.id === '7e2a5d7fd8bd73b8768e302be39536df') {
-                            // AWESOME TV - use jellyfinViewer instead of new tab
-                            document.getElementById('jellyfinFrame').src = 'https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df';
-                            document.getElementById('jellyfinViewer').classList.add('active');
-                            document.body.style.overflow = 'hidden';
-                            document.body.classList.add('video-playing');
+                            window.open('https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df', '_blank');
                         } else {
                             openJellyfinCollection(collection.id);
                         }
@@ -3806,15 +3802,9 @@
                     // Create header
                     const header = document.createElement('div');
                     header.className = 'category-header';
-                    
-                    // Special handling for AWESOME TV collection - use viewer instead of new tab
-                    const viewAllAction = collection.id === '7e2a5d7fd8bd73b8768e302be39536df'
-                        ? `document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df'; document.getElementById('jellyfinViewer').classList.add('active'); document.body.style.overflow='hidden'; document.body.classList.add('video-playing')`
-                        : `openJellyfinCollection('${collection.id}')`;
-                    
                     header.innerHTML = `
                         <h3 class="category-title">${collection.name}</h3>
-                        <a onclick="${viewAllAction}" class="view-all-btn" style="cursor: pointer;">
+                        <a onclick="openJellyfinCollection('${collection.id}')" class="view-all-btn" style="cursor: pointer;">
                             View All <i class="fas fa-arrow-right"></i>
                         </a>
                     `;
@@ -4173,14 +4163,6 @@
         function playJellyfinItem(itemId) {
             console.log('🎬 Opening movie:', itemId);
             
-            // MUTE PREVIEW VIDEO IMMEDIATELY
-            const previewVideo = document.getElementById('previewVideo');
-            if (previewVideo) {
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
-                console.log('🔇 Preview video muted automatically');
-            }
-            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
@@ -4525,14 +4507,6 @@
         
         async function openJellyfinCollection(collectionId) {
             console.log('📂 Opening collection:', collectionId);
-            
-            // MUTE PREVIEW VIDEO IMMEDIATELY
-            const previewVideo = document.getElementById('previewVideo');
-            if (previewVideo) {
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
-                console.log('🔇 Preview video muted automatically');
-            }
             
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
@@ -5312,18 +5286,14 @@
             const btn = document.getElementById('volumeToggleBtn');
             const icon = btn.querySelector('i');
             
-            if (video.muted || video.volume === 0) {
-                // Unmute: turn on sound
+            if (video.muted) {
                 video.muted = false;
-                video.volume = 0.5; // Set to 50% volume
                 icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
                 btn.title = 'Mute';
                 console.log('🔊 Preview audio unmuted');
             } else {
-                // Mute: turn off sound
                 video.muted = true;
-                video.volume = 0;
                 icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
