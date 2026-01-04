@@ -127,6 +127,10 @@ class FLMAuthSystem {
                 // Close modal after delay
                 setTimeout(() => {
                     this.closeModal('flmSignInModal');
+                    // Reload page to apply authentication everywhere
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
                 }, 1500);
                 
                 console.log('✅ Authentication successful');
