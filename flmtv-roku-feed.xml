@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" 
+     xmlns:media="http://search.yahoo.com/mrss/" 
+     xmlns:dcterms="http://purl.org/dc/terms/">
+  <channel>
+    <title>FLM Television Network</title>
+    <link>https://flmtv.netlify.app</link>
+    <description>FLM Television Network - Las Vegas's First Multicultural Television Network. Stream the best in international entertainment, movies, TV shows, and live programming 24/7 on Channel 26.5.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Jan 2026 01:30:00 +0000</lastBuildDate>
+    
+    <!-- LIVE STREAM - Channel 26.5 Las Vegas -->
+    <item>
+      <title>FLM Channel 26.5 Las Vegas - LIVE</title>
+      <description>Watch FLM Television Network live 24/7. Broadcasting from Las Vegas, Nevada on Channel 26.5. Featuring multicultural programming, international entertainment, movies, music, and community content.</description>
+      <link>https://flmtv.netlify.app</link>
+      <guid isPermaLink="false">flmtv-live-channel-265</guid>
+      <pubDate>Sun, 05 Jan 2026 01:30:00 +0000</pubDate>
+      
+      <!-- Live Stream Video -->
+      <media:content 
+        url="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" 
+        type="application/x-mpegURL" 
+        isDefault="true">
+      </media:content>
+      
+      <!-- Channel Thumbnail -->
+      <media:thumbnail url="https://flmtv.netlify.app/assets/images/live-channel-poster.jpg"/>
+      
+      <!-- Category -->
+      <media:category scheme="urn:roku:genre">Live</media:category>
+      
+      <!-- Content Rating -->
+      <media:rating scheme="urn:roku:rating">TV-PG</media:rating>
+    </item>
+    
+  </channel>
+</rss>
