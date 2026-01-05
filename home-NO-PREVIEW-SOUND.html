@@ -1033,7 +1033,7 @@
             height: 100%;
             border: none;
             background: #000;
-            opacity: 1;
+            opacity: 0;
             transition: opacity 0.3s ease-in;
         }
         
@@ -2705,21 +2705,48 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="category-nav-scroll" id="categoryNavScroll">
-                    <!-- LIVE CHANNEL 26.5 - vMix Stream -->
+                    <!-- LIVE CHANNEL 26.5 - PREVIEW (NO SOUND EVER!) -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
+                        <video id="previewVideo" 
+                            muted 
+                            autoplay 
+                            loop 
+                            playsinline
+                            preload="metadata"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                         
-                        <!-- 🔇 INLINE MUTE ENFORCEMENT - Runs immediately! -->
+                        <!-- 🔇 AGGRESSIVE MUTE ENFORCEMENT -->
                         <script>
                             (function() {
                                 const vid = document.getElementById('previewVideo');
                                 if (vid) {
+                                    // Nuclear mute - can NEVER unmute
                                     vid.muted = true;
                                     vid.volume = 0;
-                                    console.log('🔇 INLINE: Video muted immediately');
+                                    vid.defaultMuted = true;
+                                    
+                                    // Prevent ANY volume changes
+                                    Object.defineProperty(vid, 'volume', {
+                                        get: function() { return 0; },
+                                        set: function(v) { return 0; }
+                                    });
+                                    
+                                    Object.defineProperty(vid, 'muted', {
+                                        get: function() { return true; },
+                                        set: function(v) { return true; }
+                                    });
+                                    
+                                    // Continuously enforce mute
+                                    setInterval(function() {
+                                        try {
+                                            vid.muted = true;
+                                            vid.volume = 0;
+                                        } catch(e) {}
+                                    }, 100);
+                                    
+                                    console.log('🔇 Preview locked to SILENT - cannot unmute');
                                 }
                             })();
                         </script>
@@ -2732,7 +2759,7 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         
-                        <!-- MUTE BUTTON REMOVED - Preview always silent -->
+                        <!-- MUTE BUTTON REMOVED - Preview has NO SOUND, period! -->
                         
                     </div>
                     <!-- Category cards will be dynamically added here -->
@@ -4125,7 +4152,7 @@
             console.log('🚀 DOM loaded, starting app...');
             
             // ═══════════════════════════════════════════════════════════
-            // INITIALIZE PREVIEW VIDEO (NO MUTE BUTTON)
+            // INITIALIZE PREVIEW VIDEO AND MUTE BUTTON
             // ═══════════════════════════════════════════════════════════
             
             const previewVideo = document.getElementById('previewVideo');
@@ -4134,6 +4161,18 @@
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
                 console.log('🔇 Preview video muted on load');
+            }
+            
+            const volumeBtn = document.getElementById('volumeToggleBtn');
+            if (volumeBtn) {
+                // Set button to muted state
+                const icon = volumeBtn.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-volume-mute';
+                }
+                volumeBtn.classList.remove('unmuted');
+                volumeBtn.title = 'Unmute';
+                console.log('✅ Mute button initialized (onclick handler already works)');
             }
             
             // Auto-authenticate in background

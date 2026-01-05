@@ -1033,7 +1033,7 @@
             height: 100%;
             border: none;
             background: #000;
-            opacity: 1;
+            opacity: 0;
             transition: opacity 0.3s ease-in;
         }
         
@@ -1369,12 +1369,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: #000;
             z-index: 10000;
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 0;
             transition: padding-right 0.3s ease;
         }
         
@@ -1388,10 +1388,10 @@
         }
         
         .video-container {
-            width: 95%;
-            max-width: 1600px;
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
             position: relative;
-            aspect-ratio: 16/9;
         }
         
         .video-header {
@@ -2705,21 +2705,48 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div class="category-nav-scroll" id="categoryNavScroll">
-                    <!-- LIVE CHANNEL 26.5 - vMix Stream -->
+                    <!-- LIVE CHANNEL 26.5 - PREVIEW (NO SOUND EVER!) -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
+                        <video id="previewVideo" 
+                            muted 
+                            autoplay 
+                            loop 
+                            playsinline
+                            preload="metadata"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                         
-                        <!-- 🔇 INLINE MUTE ENFORCEMENT - Runs immediately! -->
+                        <!-- 🔇 AGGRESSIVE MUTE ENFORCEMENT -->
                         <script>
                             (function() {
                                 const vid = document.getElementById('previewVideo');
                                 if (vid) {
+                                    // Nuclear mute - can NEVER unmute
                                     vid.muted = true;
                                     vid.volume = 0;
-                                    console.log('🔇 INLINE: Video muted immediately');
+                                    vid.defaultMuted = true;
+                                    
+                                    // Prevent ANY volume changes
+                                    Object.defineProperty(vid, 'volume', {
+                                        get: function() { return 0; },
+                                        set: function(v) { return 0; }
+                                    });
+                                    
+                                    Object.defineProperty(vid, 'muted', {
+                                        get: function() { return true; },
+                                        set: function(v) { return true; }
+                                    });
+                                    
+                                    // Continuously enforce mute
+                                    setInterval(function() {
+                                        try {
+                                            vid.muted = true;
+                                            vid.volume = 0;
+                                        } catch(e) {}
+                                    }, 100);
+                                    
+                                    console.log('🔇 Preview locked to SILENT - cannot unmute');
                                 }
                             })();
                         </script>
@@ -2732,7 +2759,7 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         
-                        <!-- MUTE BUTTON REMOVED - Preview always silent -->
+                        <!-- MUTE BUTTON REMOVED - Preview has NO SOUND, period! -->
                         
                     </div>
                     <!-- Category cards will be dynamically added here -->
@@ -3440,10 +3467,14 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls autoplay 
+            <video id="liveStreamVideo" 
+                controls 
+                controlsList="nodownload"
+                autoplay 
+                playsinline
                 width="100%" 
                 height="100%"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; background: #000;">
                 <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
@@ -4125,7 +4156,7 @@
             console.log('🚀 DOM loaded, starting app...');
             
             // ═══════════════════════════════════════════════════════════
-            // INITIALIZE PREVIEW VIDEO (NO MUTE BUTTON)
+            // INITIALIZE PREVIEW VIDEO AND MUTE BUTTON
             // ═══════════════════════════════════════════════════════════
             
             const previewVideo = document.getElementById('previewVideo');
@@ -4134,6 +4165,18 @@
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
                 console.log('🔇 Preview video muted on load');
+            }
+            
+            const volumeBtn = document.getElementById('volumeToggleBtn');
+            if (volumeBtn) {
+                // Set button to muted state
+                const icon = volumeBtn.querySelector('i');
+                if (icon) {
+                    icon.className = 'fas fa-volume-mute';
+                }
+                volumeBtn.classList.remove('unmuted');
+                volumeBtn.title = 'Unmute';
+                console.log('✅ Mute button initialized (onclick handler already works)');
             }
             
             // Auto-authenticate in background
@@ -5492,6 +5535,11 @@
                 try { window.__flmHls.destroy(); } catch(e) {}
                 window.__flmHls = null;
             }
+            
+            // ✅ UNMUTE full screen video and set volume
+            video.muted = false;
+            video.volume = 0.7; // Start at 70% volume
+            console.log('🔊 Full screen video UNMUTED - volume:', video.volume);
 
             // iOS Safari supports native HLS
             const canPlayNative = video.canPlayType('application/vnd.apple.mpegurl') || video.canPlayType('application/x-mpegURL');
@@ -5512,6 +5560,9 @@
                 hls.loadSource(streamUrl);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    // Re-ensure unmuted before playing
+                    video.muted = false;
+                    video.volume = 0.7;
                     video.play().catch(() => {});
                 });
                 hls.on(Hls.Events.ERROR, (event, data) => {
