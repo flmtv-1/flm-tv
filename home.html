@@ -901,14 +901,47 @@
             max-height: 60px;
         }
         
-        /* KEEP FLM TV header visible - we'll hide Jellyfin's header instead */
+        /* HIDE FLM TV header when viewing movie - shows Jellyfin controls! */
         .jellyfin-viewer.viewing-movie .viewer-header {
-            display: flex; /* Keep it visible */
+            display: none; /* HIDE header so Jellyfin controls are accessible */
         }
         
-        /* Account for FLM TV header height */
+        /* Floating close button - appears when header is hidden */
+        .floating-close-btn {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 999999;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .floating-close-btn:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+            box-shadow: 0 6px 30px rgba(252, 209, 22, 0.6);
+        }
+        
+        /* Show floating close button when viewing movie */
+        .jellyfin-viewer.viewing-movie .floating-close-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Account for NO header - iframe uses full height */
         .jellyfin-viewer.viewing-movie iframe {
-            height: 100vh; /* Full height - header overlays on top */
+            height: 100vh; /* Full height */
+            top: 0; /* Start at top since header is hidden */
         }
         
         .viewer-logo {
@@ -2712,14 +2745,38 @@
                             <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                         
-                        <!-- 🔇 INLINE MUTE ENFORCEMENT - Runs immediately! -->
+                        <!-- 🔇 NUCLEAR MUTE ENFORCEMENT - LOCKS PROPERTIES! -->
                         <script>
                             (function() {
                                 const vid = document.getElementById('previewVideo');
                                 if (vid) {
+                                    // Set muted immediately
                                     vid.muted = true;
                                     vid.volume = 0;
-                                    console.log('🔇 INLINE: Video muted immediately');
+                                    vid.defaultMuted = true;
+                                    
+                                    // LOCK THE PROPERTIES - CANNOT BE CHANGED!
+                                    Object.defineProperty(vid, 'muted', {
+                                        get: function() { return true; },
+                                        set: function() { return true; },
+                                        configurable: false
+                                    });
+                                    
+                                    Object.defineProperty(vid, 'volume', {
+                                        get: function() { return 0; },
+                                        set: function() { return 0; },
+                                        configurable: false
+                                    });
+                                    
+                                    // Also prevent play with sound
+                                    const originalPlay = vid.play;
+                                    vid.play = function() {
+                                        vid.muted = true;
+                                        vid.volume = 0;
+                                        return originalPlay.apply(this, arguments);
+                                    };
+                                    
+                                    console.log('🔇🔒 NUCLEAR: Video locked to SILENT - cannot unmute!');
                                 }
                             })();
                         </script>
@@ -3486,7 +3543,13 @@
                 </button>
             </div>
         </div>
-        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"></iframe>
+        
+        <!-- FLOATING CLOSE BUTTON - Appears when header is hidden -->
+        <button class="floating-close-btn" onclick="closeViewer()" title="Close and return to browse">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-modals allow-downloads"></iframe>
         
         <!-- CUSTOM LOADING OVERLAY - Hides Jellyfin logo -->
         <div id="jellyfinLoadingOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; align-items: center; justify-content: center; z-index: 9999;">
@@ -3943,7 +4006,21 @@
                             
                             const card = document.createElement('div');
                             card.className = 'content-card';
-                            card.onclick = () => playJellyfinItem(item.Id);
+                            card.style.cursor = 'pointer';
+                            card.style.webkitTapHighlightColor = 'rgba(252, 209, 22, 0.3)';
+                            
+                            // Both onclick and touch events for mobile compatibility
+                            card.onclick = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                playJellyfinItem(item.Id);
+                            };
+                            
+                            card.ontouchend = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                playJellyfinItem(item.Id);
+                            };
                             
                             // Try multiple image sources for better compatibility
                             let imageUrl = 'https://placehold.co/200x300?text=No+Image';
@@ -4315,6 +4392,13 @@
         
         function playJellyfinItem(itemId) {
             console.log('🎬 Opening movie:', itemId);
+            console.log('📱 User agent:', navigator.userAgent);
+            console.log('📱 Touch support:', 'ontouchstart' in window);
+            
+            // Alert on mobile for debugging
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                console.log('📱 MOBILE DEVICE DETECTED - playJellyfinItem called');
+            }
             
             // MUTE PREVIEW VIDEO IMMEDIATELY
             const previewVideo = document.getElementById('previewVideo');
@@ -4328,14 +4412,24 @@
             const frame = document.getElementById('jellyfinFrame');
             const loadingOverlay = document.getElementById('jellyfinLoadingOverlay');
             
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame not found!');
+            if (!viewer) {
+                console.error('❌ Viewer not found!');
+                alert('ERROR: Viewer element not found');
                 return;
             }
+            
+            if (!frame) {
+                console.error('❌ Frame not found!');
+                alert('ERROR: Frame element not found');
+                return;
+            }
+            
+            console.log('✅ Viewer and frame found, proceeding...');
             
             // SHOW LOADING OVERLAY - Hides Jellyfin logo!
             if (loadingOverlay) {
                 loadingOverlay.style.display = 'flex';
+                console.log('✅ Loading overlay shown');
             }
             
             // Clear srcdoc first
