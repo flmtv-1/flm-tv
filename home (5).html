@@ -22,6 +22,51 @@
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- 🔇🔇🔇 EXTREME EARLY MUTE - RUNS BEFORE PAGE LOADS! -->
+    <script>
+        // GLOBAL MUTE FUNCTION - runs immediately
+        (function() {
+            console.log('🔇 EXTREME MUTE: Starting early enforcement...');
+            
+            // Mute all audio/video elements immediately
+            function muteEverything() {
+                document.querySelectorAll('video, audio').forEach(el => {
+                    el.muted = true;
+                    el.volume = 0;
+                    el.defaultMuted = true;
+                });
+            }
+            
+            // Run immediately
+            muteEverything();
+            
+            // Run on DOMContentLoaded
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('🔇 EXTREME MUTE: DOMContentLoaded');
+                muteEverything();
+                
+                // Keep muting every 50ms for first 5 seconds
+                let muteCount = 0;
+                const muteInterval = setInterval(() => {
+                    muteEverything();
+                    muteCount++;
+                    if (muteCount > 100) { // 100 * 50ms = 5 seconds
+                        clearInterval(muteInterval);
+                        console.log('🔇 EXTREME MUTE: Initial enforcement complete');
+                    }
+                }, 50);
+            });
+            
+            // Also run on load
+            window.addEventListener('load', muteEverything);
+            
+            // And on pageshow (for back button)
+            window.addEventListener('pageshow', muteEverything);
+            
+            console.log('🔇 EXTREME MUTE: Early script loaded');
+        })();
+    </script>
+    
     <style>
         /* ═══════════════════════════════════════════════════════════════ */
         /*  VARIABLES - Filipino Flag Colors                               */
@@ -901,14 +946,47 @@
             max-height: 60px;
         }
         
-        /* KEEP FLM TV header visible - we'll hide Jellyfin's header instead */
+        /* HIDE FLM TV header when viewing movie - shows Jellyfin controls! */
         .jellyfin-viewer.viewing-movie .viewer-header {
-            display: flex; /* Keep it visible */
+            display: none; /* HIDE header so Jellyfin controls are accessible */
         }
         
-        /* Account for FLM TV header height */
+        /* Floating close button - appears when header is hidden */
+        .floating-close-btn {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 999999;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .floating-close-btn:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+            box-shadow: 0 6px 30px rgba(252, 209, 22, 0.6);
+        }
+        
+        /* Show floating close button when viewing movie */
+        .jellyfin-viewer.viewing-movie .floating-close-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Account for NO header - iframe uses full height */
         .jellyfin-viewer.viewing-movie iframe {
-            height: 100vh; /* Full height - header overlays on top */
+            height: 100vh; /* Full height */
+            top: 0; /* Start at top since header is hidden */
         }
         
         .viewer-logo {
@@ -2707,44 +2785,74 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
+                        <video id="previewVideo" 
+                            muted 
+                            defaultmuted
+                            volume="0"
+                            autoplay 
+                            loop 
+                            playsinline
+                            preload="metadata"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                         
-                        <!-- 🔇 NUCLEAR MUTE ENFORCEMENT - LOCKS PROPERTIES! -->
+                        <!-- 🔇 ULTRA-AGGRESSIVE MUTE ENFORCEMENT -->
                         <script>
                             (function() {
                                 const vid = document.getElementById('previewVideo');
-                                if (vid) {
-                                    // Set muted immediately
-                                    vid.muted = true;
-                                    vid.volume = 0;
-                                    vid.defaultMuted = true;
-                                    
-                                    // LOCK THE PROPERTIES - CANNOT BE CHANGED!
+                                if (!vid) return;
+                                
+                                // Mute function
+                                function forceMute() {
+                                    if (vid.muted === false) vid.muted = true;
+                                    if (vid.volume !== 0) vid.volume = 0;
+                                }
+                                
+                                // Set initial mute
+                                vid.muted = true;
+                                vid.volume = 0;
+                                vid.defaultMuted = true;
+                                
+                                // LOCK THE PROPERTIES
+                                try {
                                     Object.defineProperty(vid, 'muted', {
                                         get: function() { return true; },
-                                        set: function() { return true; },
+                                        set: function() { forceMute(); return true; },
                                         configurable: false
                                     });
                                     
                                     Object.defineProperty(vid, 'volume', {
                                         get: function() { return 0; },
-                                        set: function() { return 0; },
+                                        set: function() { forceMute(); return 0; },
                                         configurable: false
                                     });
-                                    
-                                    // Also prevent play with sound
-                                    const originalPlay = vid.play;
-                                    vid.play = function() {
-                                        vid.muted = true;
-                                        vid.volume = 0;
-                                        return originalPlay.apply(this, arguments);
-                                    };
-                                    
-                                    console.log('🔇🔒 NUCLEAR: Video locked to SILENT - cannot unmute!');
+                                } catch(e) {
+                                    console.log('Property lock failed, using fallback');
                                 }
+                                
+                                // Intercept play
+                                const originalPlay = vid.play;
+                                vid.play = function() {
+                                    forceMute();
+                                    return originalPlay.apply(this, arguments);
+                                };
+                                
+                                // Listen to ALL media events and force mute
+                                const events = ['loadstart', 'loadeddata', 'loadedmetadata', 'canplay', 'canplaythrough', 
+                                               'play', 'playing', 'volumechange', 'seeking', 'seeked'];
+                                events.forEach(event => {
+                                    vid.addEventListener(event, forceMute, true);
+                                });
+                                
+                                // Watch for attribute changes
+                                const observer = new MutationObserver(() => forceMute());
+                                observer.observe(vid, { attributes: true, attributeFilter: ['muted', 'volume'] });
+                                
+                                // Continuous enforcement every 100ms
+                                setInterval(forceMute, 100);
+                                
+                                console.log('🔇🔒 ULTRA-AGGRESSIVE: Video LOCKED to SILENT');
                             })();
                         </script>
                         
@@ -3510,6 +3618,12 @@
                 </button>
             </div>
         </div>
+        
+        <!-- FLOATING CLOSE BUTTON - Appears when header is hidden -->
+        <button class="floating-close-btn" onclick="closeViewer()" title="Close and return to browse">
+            <i class="fas fa-times"></i>
+        </button>
+        
         <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-modals allow-downloads"></iframe>
         
         <!-- CUSTOM LOADING OVERLAY - Hides Jellyfin logo -->
@@ -3970,19 +4084,6 @@
                             card.style.cursor = 'pointer';
                             card.style.webkitTapHighlightColor = 'rgba(252, 209, 22, 0.3)';
                             
-                            // Both onclick and touch events for mobile compatibility
-                            card.onclick = (e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                playJellyfinItem(item.Id);
-                            };
-                            
-                            card.ontouchend = (e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                playJellyfinItem(item.Id);
-                            };
-                            
                             // Try multiple image sources for better compatibility
                             let imageUrl = 'https://placehold.co/200x300?text=No+Image';
                             
@@ -4009,6 +4110,29 @@
                                     </div>
                                 </div>
                             `;
+                            
+                            // ADD EVENT HANDLERS AFTER innerHTML (critical for mobile!)
+                            card.onclick = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('🖱️ Card clicked:', item.Name);
+                                playJellyfinItem(item.Id);
+                            };
+                            
+                            card.ontouchend = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('👆 Card touched:', item.Name);
+                                playJellyfinItem(item.Id);
+                            };
+                            
+                            // Also add addEventListener for better compatibility
+                            card.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                console.log('📱 Card clicked (addEventListener):', item.Name);
+                                playJellyfinItem(item.Id);
+                            }, { passive: false });
                             
                             carousel.appendChild(card);
                         });
@@ -4406,17 +4530,38 @@
             
             frame.src = detailUrl;
             
+            // Fallback: Hide overlay after 5 seconds even if onload doesn't fire (mobile fix)
+            const fallbackTimer = setTimeout(() => {
+                if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+                    console.log('⏰ Fallback: Hiding overlay after timeout');
+                    loadingOverlay.style.display = 'none';
+                    frame.classList.add('loaded');
+                }
+            }, 5000);
+            
             // Hide loading overlay after content loads
             frame.onload = () => {
+                clearTimeout(fallbackTimer); // Cancel fallback if onload fires
+                console.log('✅ Iframe loaded successfully');
                 setTimeout(() => {
                     frame.classList.add('loaded');
-                    // HIDE LOADING OVERLAY after 2 seconds (gives Jellyfin time to fully render)
+                    // HIDE LOADING OVERLAY after 2 seconds
                     setTimeout(() => {
                         if (loadingOverlay) {
                             loadingOverlay.style.display = 'none';
+                            console.log('✅ Loading overlay hidden');
                         }
                     }, 2000);
                 }, 300);
+            };
+            
+            // Error handling for iframe
+            frame.onerror = () => {
+                clearTimeout(fallbackTimer);
+                console.error('❌ Iframe failed to load');
+                if (loadingOverlay) {
+                    loadingOverlay.innerHTML = '<div style="color: #ef4444; text-align: center;"><h2>Error Loading Content</h2><p>Unable to load Jellyfin viewer</p><button onclick="closeViewer()" style="padding: 10px 20px; margin-top: 20px; background: var(--secondary); color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button></div>';
+                }
             };
             
             viewer.classList.add('active');
