@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        /* VIDEO BACKGROUND - FULL IMAGE VISIBLE */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-image: url('assets/images/flmtv-AlienBanner1-1200x630.png');
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #0a0a0a;
+        }
+        
+        /* Mobile - scale background to fit better */
+        @media (max-width: 768px) {
+            .video-bg {
+                background-size: 100% auto;
+            }
+        }
+        
+        .video-bg video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1s ease;
+        }
+        
+        /* Dark overlay for button visibility */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+        
+        /* CONTENT - BUTTON EVEN LOWER */
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px 20px 120px;
+        }
+        
+        /* ENTER BUTTON - SMALLER */
+        .enter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 32px;
+            font-size: 22px;
+            font-weight: 900;
+            text-decoration: none;
+            color: #000;
+            background: linear-gradient(135deg, #fcd116 0%, #22c55e 100%);
+            border-radius: 100px;
+            box-shadow: 0 0 60px rgba(252, 209, 22, 0.8), 0 20px 60px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .enter-btn:hover {
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 0 0 100px rgba(252, 209, 22, 1), 0 30px 80px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* SOUND BUTTON */
+        .sound-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #fcd116;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .sound-btn:hover {
+            background: rgba(252, 209, 22, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .sound-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #fcd116;
+        }
+        
+        @media (max-width: 768px) {
+            .sound-btn {
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .sound-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+        
+        /* FOOTER */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 20px;
+            z-index: 10;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+        }
+        
+        .footer-info {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1.5px;
+        }
+        
+        .footer-info strong {
+            color: #fcd116;
+        }
+        
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px 15px 110px;
+            }
+            
+            .enter-btn {
+                padding: 12px 30px;
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content {
+                padding: 15px 10px 100px;
+            }
+            
+            .enter-btn {
+                padding: 10px 28px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- VIDEO BACKGROUND -->
+    <div class="video-bg">
+        <video id="introVideo" autoplay muted playsinline>
+            <!-- Video source is set by JavaScript -->
+            <source id="videoSource" src="" type="video/mp4">
+        </video>
+    </div>
+    
+    <!-- Dark overlay -->
+    <div class="overlay"></div>
+    
+    <!-- SOUND BUTTON -->
+    <button class="sound-btn" id="soundBtn" aria-label="Toggle sound">
+        <!-- Muted icon (shows when muted) -->
+        <svg id="mutedIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+        </svg>
+        <!-- Unmuted icon (shows when playing sound) -->
+        <svg id="unmutedIcon" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+        </svg>
+    </button>
+    
+    <!-- ENTER BUTTON -->
+    <div class="content">
+        <a class="enter-btn" href="home.html?v=20250104" id="enterBtn">
+            <span>▶</span>
+            <span>ENTER</span>
+        </a>
+    </div>
+    
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-info">
+            <strong>Channel 26.5 Las Vegas</strong> • Film • Live • Music
+        </div>
+    </div>
+    
+    <!-- SCRIPT TO CHOOSE VIDEO BASED ON VISIT -->
+    <script>
+        // Check if user has visited before
+        const hasVisited = localStorage.getItem('flmtv_visited');
+        
+        // Get video element
+        const videoSource = document.getElementById('videoSource');
+        const video = document.getElementById('introVideo');
+        
+        if (!hasVisited) {
+            // FIRST VISIT - Show Blue Aliens video
+            videoSource.src = 'assets/videos/FLM TV Tag Blue Aliens2.mp4';
+            
+            // Mark as visited for next time
+            localStorage.setItem('flmtv_visited', 'true');
+            
+            console.log('🎬 First visit - Playing Blue Aliens intro');
+        } else {
+            // SECOND VISIT (and beyond) - Show Tag 4-1 video
+            videoSource.src = 'assets/videos/Tag 4-1.mp4';
+            
+            console.log('🎬 Returning visitor - Playing Tag 4-1 intro');
+        }
+        
+        // Load and play the video
+        video.load();
+        
+        // Try to play (important for mobile)
+        video.play().catch(function(error) {
+            console.log('Autoplay prevented, showing background');
+        });
+        
+        // SOUND TOGGLE BUTTON
+        const soundBtn = document.getElementById('soundBtn');
+        const mutedIcon = document.getElementById('mutedIcon');
+        const unmutedIcon = document.getElementById('unmutedIcon');
+        
+        soundBtn.addEventListener('click', function() {
+            if (video.muted) {
+                video.muted = false;
+                mutedIcon.style.display = 'none';
+                unmutedIcon.style.display = 'block';
+                console.log('🔊 Sound ON');
+            } else {
+                video.muted = true;
+                mutedIcon.style.display = 'block';
+                unmutedIcon.style.display = 'none';
+                console.log('🔇 Sound OFF');
+            }
+        });
+        
+        // HIDE VIDEO WHEN IT ENDS - SHOW BACKGROUND IMAGE!
+        video.addEventListener('ended', function() {
+            video.style.opacity = '0';
+            soundBtn.style.display = 'none'; // Hide sound button when video ends
+            console.log('✅ Video ended - Showing Alien Banner background');
+        });
+    </script>
+    
+</body>
+</html>
