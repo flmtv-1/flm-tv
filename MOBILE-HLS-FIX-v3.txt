@@ -1,0 +1,82 @@
+═══════════════════════════════════════════════════════════════════════════════
+FLM TV - MOBILE HLS UNMUTE FIX (v3 - FINAL)
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEM YOU REPORTED:
+"The preview card starts SILENT, then sound KICKS IN after" - on mobile phone
+
+WHAT'S HAPPENING:
+✅ Initial muting WORKS
+❌ HLS video stream loads → UNMUTES itself automatically
+❌ This happens 1-2 seconds after page loads
+
+THE FIX - Version 3:
+═══════════════════════════════════════════════════════════════════════════════
+
+I added 4 NEW event listeners that catch EXACTLY when the stream unmutes:
+
+1. **loadeddata** - When HLS data loads → RE-MUTE
+2. **canplay** - When stream is ready to play → RE-MUTE  
+3. **playing** - When stream actually starts → RE-MUTE
+4. **volumechange** - If anything tries to unmute → BLOCK IT
+
+PLUS:
+- Extended initial muting from 2 seconds to 5 seconds (mobile needs time)
+- Continuous re-muting every 250ms as safety net
+- Smart flag system so YOUR unmute button still works
+
+═══════════════════════════════════════════════════════════════════════════════
+INSTALL THIS FIX
+═══════════════════════════════════════════════════════════════════════════════
+
+FILE: home-FIXED-v3-MOBILE-HLS.html
+
+STEP 1: Backup your current home.html
+
+STEP 2: Download home-FIXED-v3-MOBILE-HLS.html
+
+STEP 3: Rename it to: home.html
+
+STEP 4: Upload to your website (replace old one)
+
+STEP 5: FORCE CLEAR CACHE ON YOUR PHONE
+- iPhone: Settings → Safari → Clear History and Website Data
+- Android: Chrome Settings → Privacy → Clear Browsing Data
+
+STEP 6: Test on your phone:
+- Go to your site
+- Click ENTER from intro
+- Wait 3-4 seconds
+- Preview card should stay MUTED (no sound kicking in!)
+- Click mute button → should unmute and stay unmuted
+
+═══════════════════════════════════════════════════════════════════════════════
+WHAT TO WATCH FOR
+═══════════════════════════════════════════════════════════════════════════════
+
+GOOD SIGNS:
+✅ Preview card loads - NO sound
+✅ Wait 5 seconds - STILL no sound
+✅ Click mute button - sound TURNS ON
+✅ Sound stays on until you mute again
+✅ Can open content without sound interference
+
+BAD SIGNS (tell me if this happens):
+❌ Sound still kicks in after 2-3 seconds
+❌ Mute button doesn't work
+❌ Sound keeps coming back
+
+═══════════════════════════════════════════════════════════════════════════════
+IF IT STILL DOESN'T WORK
+═══════════════════════════════════════════════════════════════════════════════
+
+Tell me:
+1. How many seconds after loading does sound kick in?
+2. Does it happen on WiFi, cellular data, or both?
+3. What phone model and browser are you using?
+4. Open Chrome Developer Tools on desktop and check console - what messages appear?
+
+This v3 fix targets EXACTLY the moment when HLS unmutes. If this doesn't work, 
+we need to look at your HLS stream configuration itself.
+
+═══════════════════════════════════════════════════════════════════════════════
