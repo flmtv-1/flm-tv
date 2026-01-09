@@ -149,6 +149,46 @@
             color: #ffd700;
         }
         
+        /* Chat Icon Button */
+        .chat-icon-btn {
+            width: 45px;
+            height: 45px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 0;
+        }
+        
+        .chat-icon-btn:hover {
+            background: #16a34a;
+            transform: scale(1.1);
+        }
+        
+        /* AI Avatar Button (YOUR PHOTO!) */
+        .ai-avatar-btn {
+            width: 45px;
+            height: 45px;
+            background: #22c55e;
+            border-radius: 50%;
+            padding: 0;
+            overflow: hidden;
+            border: 3px solid #22c55e;
+        }
+        
+        .ai-avatar-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .ai-avatar-btn:hover {
+            border-color: #ffd700;
+            transform: scale(1.1);
+        }
+        
         #playPauseBtn {
             font-size: 2rem;
         }
@@ -575,14 +615,16 @@
                     <option value="auto">Auto</option>
                 </select>
                 
-                <!-- Chat Button -->
-                <button class="control-btn" id="chatBtn" onclick="toggleChat()" title="Toggle Chat">
-                    💬
+                <!-- Chat Button (matches your design!) -->
+                <button class="control-btn chat-icon-btn" id="chatBtn" onclick="toggleChat()" title="Live Chat">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                    </svg>
                 </button>
                 
-                <!-- AI Assistant Button -->
-                <button class="control-btn" id="aiBtn" onclick="toggleAI()" title="AI Assistant">
-                    🤖
+                <!-- AI Button (YOUR PHOTO!) -->
+                <button class="control-btn ai-avatar-btn" id="aiBtn" onclick="toggleAI()" title="Ask Zaina">
+                    <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI">
                 </button>
                 
                 <!-- Fullscreen -->
@@ -595,7 +637,10 @@
     <div id="chatPanel">
         <div class="panel-header">
             <div class="panel-title">
-                💬 Live Chat
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                </svg>
+                Live Chat
             </div>
             <button class="panel-close" onclick="toggleChat()">Close</button>
         </div>
