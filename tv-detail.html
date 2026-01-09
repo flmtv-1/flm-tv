@@ -527,8 +527,10 @@
         
         async function loadShowDetails() {
             try {
-                // Fetch show data
-                let show = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${movieId}`);
+                // Fetch show data WITH cast/crew
+                let show = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${movieId}`, {
+                    Fields: 'People,Genres,Studios,Overview'
+                });
                 
                 console.log('Item data:', show);
                 
@@ -645,12 +647,12 @@
                 const seasonsTabs = document.getElementById('seasonsTabs');
                 seasonsTabs.innerHTML = seasons.Items.map((season, index) => `
                     <button class="season-tab ${index === 0 ? 'active' : ''}" 
-                            onclick="loadEpisodes('${season.Id}', this)">
+                            onclick="window.location.href='season-detail.html?id=${season.Id}&seriesId=${movieId}'">
                         ${season.Name}
                     </button>
                 `).join('');
                 
-                // Load first season's episodes
+                // Load first season's episodes inline as preview
                 if (seasons.Items.length > 0) {
                     currentSeasonId = seasons.Items[0].Id;
                     await loadEpisodes(currentSeasonId);

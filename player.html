@@ -1863,16 +1863,39 @@
             });
         }
         
-        // Auto-load chat messages when panel opens
-        openPanel = (function() {
-            const original = openPanel;
-            return function(panelId) {
-                original(panelId);
-                if (panelId === 'chatPanel') {
-                    loadChatMessages();
-                }
-            };
-        })();
+        // ═══════════════════════════════════════════════════════════════
+        // ZAINA AI YOUTUBE SEARCH
+        // ═══════════════════════════════════════════════════════════════
+        
+        function searchYouTube() {
+            const input = document.getElementById('lumaSearch');
+            const query = input ? input.value.trim() : '';
+            
+            if (!query) {
+                alert('Please enter a film title to search');
+                return;
+            }
+            
+            console.log('Searching YouTube for:', query);
+            alert(`YouTube search feature coming soon! Searching for: "${query}"`);
+            
+            // TODO: Implement YouTube API search
+            // This would search YouTube for trailers and auto-fill metadata
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // EXPOSE FUNCTIONS TO WINDOW (for onclick handlers)
+        // ═══════════════════════════════════════════════════════════════
+        
+        window.openPanel = openPanel;
+        window.closePanel = closePanel;
+        window.togglePanelFullscreen = togglePanelFullscreen;
+        window.toggleChapters = toggleChapters;
+        window.playPreviousEpisode = playPreviousEpisode;
+        window.playNextEpisode = playNextEpisode;
+        window.searchYouTube = searchYouTube;
+        
+        console.log('✅ FLM TV Player initialized successfully!');
     </script>
     
 </body>
