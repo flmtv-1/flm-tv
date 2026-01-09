@@ -120,8 +120,10 @@
             width: 300px;
             border-radius: 12px;
             overflow: hidden;
-            border: 3px solid var(--secondary);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(34, 197, 94, 0.4),
+                0 0 80px rgba(34, 197, 94, 0.2);
         }
         
         .poster img {
@@ -237,6 +239,12 @@
         
         .cast-card {
             text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .cast-card:hover {
+            transform: translateY(-5px);
         }
         
         .cast-photo {
@@ -481,7 +489,7 @@
             const cast = people.filter(p => p.Type === 'Actor').slice(0, 12);
             
             castGrid.innerHTML = cast.map(person => `
-                <div class="cast-card">
+                <div class="cast-card" onclick="window.location.href='person-detail.html?id=${person.Id}'" style="cursor: pointer;">
                     <div class="cast-photo">
                         ${person.PrimaryImageTag ? 
                             `<img src="${JELLYFIN_CONFIG.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" alt="${person.Name}">` :
