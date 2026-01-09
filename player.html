@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV Player</title>
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- HLS.js for video streaming -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -76,6 +77,8 @@
             width: 100%;
             height: 100%;
             display: block;
+            object-fit: contain; /* Fit screen properly without cropping or zooming */
+            background: #000;
         }
         
         /* CUSTOM CONTROLS */
@@ -86,7 +89,7 @@
             right: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
             padding: 1rem;
-            opacity: 0;
+            opacity: 1;
             transition: opacity 0.3s ease;
             z-index: 100;
         }
@@ -94,6 +97,18 @@
         #playerContainer:hover #customControls,
         #customControls.show {
             opacity: 1;
+        }
+        
+        /* Hide controls when inactive in fullscreen */
+        #playerContainer.fullscreen #customControls.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Keep controls visible when interacting */
+        #playerContainer.fullscreen #customControls:hover {
+            opacity: 1 !important;
+            pointer-events: auto !important;
         }
         
         /* PROGRESS BAR */
@@ -415,10 +430,19 @@
             border-left: 3px solid #22c55e;
         }
         
+        .chat-message.own-message {
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 3px solid #ffd700;
+        }
+        
         .chat-user {
             font-weight: 700;
             color: #ffd700;
             margin-bottom: 0.25rem;
+        }
+        
+        .chat-message.own-message .chat-user {
+            color: #ffd700;
         }
         
         .chat-text {
@@ -615,6 +639,21 @@
                     <option value="auto">Auto</option>
                 </select>
                 
+                <!-- Chapters Button -->
+                <button class="control-btn" id="chaptersBtn" onclick="toggleChapters()" title="Chapters" style="display:none;">
+                    <i class="fas fa-list"></i>
+                </button>
+                
+                <!-- Previous Episode -->
+                <button class="control-btn" id="prevEpisodeBtn" onclick="playPreviousEpisode()" title="Previous Episode" style="display:none;">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                
+                <!-- Next Episode -->
+                <button class="control-btn" id="nextEpisodeBtn" onclick="playNextEpisode()" title="Next Episode" style="display:none;">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+                
                 <!-- Chat Button (matches your design!) -->
                 <button class="control-btn chat-icon-btn" id="chatBtn" onclick="toggleChat()" title="Live Chat">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -649,6 +688,17 @@
             <input type="text" id="chatMessageInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
             <button onclick="sendChatMessage()">Send</button>
         </div>
+    </div>
+    
+    <!-- CHAPTERS PANEL -->
+    <div id="chaptersPanel" style="display:none; position: absolute; bottom: 80px; right: 20px; background: rgba(0,0,0,0.95); border: 2px solid #ffd700; border-radius: 12px; padding: 1rem; max-height: 400px; overflow-y: auto; min-width: 300px; z-index: 200;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #ffd700;">
+            <h3 style="color: #ffd700; margin: 0; font-size: 1.2rem;">
+                <i class="fas fa-list"></i> Chapters
+            </h3>
+            <button onclick="toggleChapters()" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 0; line-height: 1;">×</button>
+        </div>
+        <div id="chaptersList"></div>
     </div>
     
     <!-- AI ASSISTANT PANEL -->
@@ -774,16 +824,32 @@
                         `url('${JELLYFIN_CONFIG.SERVER}/Items/${itemId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90')`;
                 }
                 
-                // Get video stream URL
-                const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/master.m3u8?api_key=${JELLYFIN_CONFIG.API_KEY}&mediaSourceId=${itemId}`;
+                // Get video stream URL - Try multiple formats
+                console.log('🎬 Attempting to load video stream...');
                 
-                console.log('🎬 Stream URL:', streamUrl);
+                // Option 1: Try direct stream first (most compatible)
+                const directStreamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?Static=true&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                // Option 2: HLS stream (for adaptive bitrate)
+                const hlsStreamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/master.m3u8?api_key=${JELLYFIN_CONFIG.API_KEY}&mediaSourceId=${itemId}`;
+                
+                // Option 3: Universal stream endpoint
+                const universalStreamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}&Static=false&MediaSourceId=${itemId}&DeviceId=flmtv-player&VideoCodec=h264,hevc&AudioCodec=aac,mp3`;
+                
+                console.log('📺 Direct Stream URL:', directStreamUrl);
+                console.log('📺 HLS Stream URL:', hlsStreamUrl);
+                console.log('📺 Universal Stream URL:', universalStreamUrl);
                 
                 // Initialize player after backdrop fades
                 setTimeout(() => {
-                    initializeVideoPlayer(streamUrl);
+                    // Try HLS first (best for 4K)
+                    initializeVideoPlayer(hlsStreamUrl, directStreamUrl);
                     playerContainer.classList.add('visible');
                     backBtn.classList.add('visible');
+                    
+                    // Load chapters and episode navigation
+                    loadChapters();
+                    loadEpisodeNavigation();
                 }, 2500);
                 
             } catch (error) {
@@ -792,47 +858,75 @@
             }
         }
         
-        function initializeVideoPlayer(streamUrl) {
+        function initializeVideoPlayer(hlsUrl, fallbackUrl) {
+            console.log('🎥 Initializing video player...');
+            console.log('🎥 Primary (HLS):', hlsUrl);
+            console.log('🎥 Fallback (Direct):', fallbackUrl);
+            
             // Check if HLS is supported natively (Safari)
             if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = streamUrl;
+                console.log('✅ Native HLS support detected (Safari/iOS)');
+                video.src = hlsUrl;
                 setupVideoEvents();
+                
+                // If HLS fails, try direct stream
+                video.addEventListener('error', (e) => {
+                    console.error('❌ HLS stream failed:', e);
+                    console.log('🔄 Trying direct stream fallback...');
+                    video.src = fallbackUrl;
+                }, { once: true });
             } 
             // Use HLS.js for other browsers
             else if (Hls.isSupported()) {
+                console.log('✅ HLS.js support detected');
                 hls = new Hls({
                     enableWorker: true,
                     lowLatencyMode: false,
-                    backBufferLength: 90
+                    backBufferLength: 90,
+                    debug: true // Enable debug logging
                 });
                 
-                hls.loadSource(streamUrl);
+                hls.loadSource(hlsUrl);
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    console.log('✅ HLS manifest parsed');
+                    console.log('✅ HLS manifest parsed successfully');
                     loadingSpinner.classList.add('hidden');
-                    video.play().catch(e => console.log('Autoplay prevented:', e));
+                    video.play().catch(e => {
+                        console.log('⚠️ Autoplay prevented:', e);
+                        // Show play button overlay if autoplay fails
+                    });
                     
                     // Populate quality selector
                     populateQualityOptions();
                 });
                 
                 hls.on(Hls.Events.ERROR, (event, data) => {
-                    console.error('HLS Error:', data);
+                    console.error('❌ HLS Error:', data);
+                    
                     if (data.fatal) {
                         switch(data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.log('Network error, trying to recover...');
+                                console.log('🔄 Network error, trying to recover...');
                                 hls.startLoad();
+                                
+                                // If recovery fails, try direct stream
+                                setTimeout(() => {
+                                    if (video.readyState === 0) {
+                                        console.log('🔄 Recovery failed, switching to direct stream...');
+                                        tryDirectStream(fallbackUrl);
+                                    }
+                                }, 3000);
                                 break;
+                                
                             case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.log('Media error, trying to recover...');
+                                console.log('🔄 Media error, trying to recover...');
                                 hls.recoverMediaError();
                                 break;
+                                
                             default:
-                                console.log('Fatal error, cannot recover');
-                                alert('Error playing video. Please try again.');
+                                console.log('❌ Fatal error, switching to direct stream...');
+                                tryDirectStream(fallbackUrl);
                                 break;
                         }
                     }
@@ -840,8 +934,49 @@
                 
                 setupVideoEvents();
             } else {
-                alert('Your browser does not support HLS video streaming.');
+                console.log('⚠️ No HLS support, using direct stream');
+                tryDirectStream(fallbackUrl);
             }
+        }
+        
+        function tryDirectStream(url) {
+            console.log('🎥 Loading direct stream:', url);
+            
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            
+            video.src = url;
+            setupVideoEvents();
+            
+            video.addEventListener('loadeddata', () => {
+                console.log('✅ Direct stream loaded successfully');
+                loadingSpinner.classList.add('hidden');
+                video.play().catch(e => console.log('⚠️ Autoplay prevented:', e));
+            }, { once: true });
+            
+            video.addEventListener('error', (e) => {
+                console.error('❌ Direct stream also failed:', e);
+                loadingSpinner.classList.add('hidden');
+                
+                // Show error message to user
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;text-align:center;padding:2rem;background:rgba(0,0,0,0.8);border-radius:12px;max-width:80%;';
+                errorDiv.innerHTML = `
+                    <h2 style="color:#ffd700;margin-bottom:1rem;">Unable to Load Video</h2>
+                    <p style="margin-bottom:1rem;">The video stream could not be loaded. This might be due to:</p>
+                    <ul style="text-align:left;margin-bottom:1rem;">
+                        <li>Video file format not supported</li>
+                        <li>HTTPS certificate issues</li>
+                        <li>Network connectivity problems</li>
+                        <li>Jellyfin server unavailable</li>
+                    </ul>
+                    <button onclick="location.reload()" style="background:#22c55e;color:#000;border:none;padding:0.75rem 2rem;border-radius:25px;font-weight:700;cursor:pointer;">Try Again</button>
+                    <button onclick="goBack()" style="background:#ffd700;color:#000;border:none;padding:0.75rem 2rem;border-radius:25px;font-weight:700;cursor:pointer;margin-left:1rem;">Go Back</button>
+                `;
+                playerContainer.appendChild(errorDiv);
+            }, { once: true });
         }
         
         function setupVideoEvents() {
@@ -871,16 +1006,69 @@
                 loadingSpinner.classList.add('hidden');
             });
             
-            // Hide controls after inactivity
-            playerContainer.addEventListener('mousemove', () => {
+            // Auto-hide controls in fullscreen (professional behavior)
+            let hideControlsTimeout;
+            let isFullscreen = false;
+            
+            function showControls() {
+                customControls.classList.remove('hide');
                 customControls.classList.add('show');
+                
+                // Reset hide timer
                 clearTimeout(hideControlsTimeout);
-                hideControlsTimeout = setTimeout(() => {
-                    if (!video.paused) {
+                
+                // Auto-hide after 3 seconds if in fullscreen and playing
+                if (isFullscreen && !video.paused) {
+                    hideControlsTimeout = setTimeout(() => {
+                        customControls.classList.add('hide');
                         customControls.classList.remove('show');
-                    }
-                }, 3000);
+                    }, 3000);
+                }
+            }
+            
+            function hideControls() {
+                if (isFullscreen && !video.paused) {
+                    customControls.classList.add('hide');
+                    customControls.classList.remove('show');
+                }
+            }
+            
+            // Show controls on mouse move
+            playerContainer.addEventListener('mousemove', showControls);
+            
+            // Show controls on touch (mobile/TV)
+            playerContainer.addEventListener('touchstart', showControls);
+            
+            // Show controls when touching bottom 25% of screen
+            playerContainer.addEventListener('touchend', (e) => {
+                const touch = e.changedTouches[0];
+                const containerRect = playerContainer.getBoundingClientRect();
+                const touchY = touch.clientY - containerRect.top;
+                const bottomZone = containerRect.height * 0.75; // Bottom 25%
+                
+                if (touchY > bottomZone) {
+                    showControls();
+                }
             });
+            
+            // Track fullscreen state
+            document.addEventListener('fullscreenchange', () => {
+                isFullscreen = !!document.fullscreenElement;
+                if (!isFullscreen) {
+                    showControls(); // Always show controls when exiting fullscreen
+                    clearTimeout(hideControlsTimeout);
+                }
+            });
+            
+            // Hide controls on play if in fullscreen
+            video.addEventListener('play', () => {
+                if (isFullscreen) {
+                    hideControlsTimeout = setTimeout(hideControls, 3000);
+                }
+            });
+            
+            // Show controls on pause
+            video.addEventListener('pause', showControls);
         }
         
         function populateQualityOptions() {
@@ -1009,11 +1197,12 @@
         }
         
         // ═══════════════════════════════════════════════════════════════
-        // CHAT FUNCTIONALITY
+        // CHAT FUNCTIONALITY (Same as home page!)
         // ═══════════════════════════════════════════════════════════════
         
         let chatOpen = false;
         let aiOpen = false;
+        let displayedMessages = new Set();
         
         function toggleChat() {
             chatOpen = !chatOpen;
@@ -1027,6 +1216,7 @@
                 // Close AI if open
                 if (aiOpen) {
                     aiPanel.classList.remove('open');
+                    playerContainer.classList.remove('ai-open');
                     aiOpen = false;
                 }
                 
@@ -1061,20 +1251,45 @@
         
         function loadChatMessages() {
             const chatMessages = document.getElementById('chatMessages');
-            const chatRef = database.ref('player-chat').limitToLast(50);
             
+            // Use SAME Firebase path as home page: 'messages'
+            const chatRef = database.ref('messages').limitToLast(50);
+            
+            // Listen for new messages (YOUTUBE STYLE - everyone sees everything)
             chatRef.on('child_added', (snapshot) => {
-                const message = snapshot.val();
-                displayChatMessage(message);
+                const messageId = snapshot.key;
+                const msg = snapshot.val();
+                
+                // Prevent duplicate messages
+                if (displayedMessages.has(messageId)) {
+                    return;
+                }
+                displayedMessages.add(messageId);
+                
+                // Show ALL messages to EVERYONE
+                if (msg && msg.text) {
+                    const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+                    
+                    // Check if this is from current user
+                    let isOwnMessage = false;
+                    const savedUsername = localStorage.getItem('flmtvChatUsername');
+                    if (savedUsername && msg.username === savedUsername) {
+                        isOwnMessage = true;
+                    } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
+                        isOwnMessage = true;
+                    }
+                    
+                    displayChatMessage(msg, username, isOwnMessage);
+                }
             });
         }
         
-        function displayChatMessage(message) {
+        function displayChatMessage(message, username, isOwn) {
             const chatMessages = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message';
+            messageDiv.className = 'chat-message' + (isOwn ? ' own-message' : '');
             messageDiv.innerHTML = `
-                <div class="chat-user">${message.user || 'Anonymous'}</div>
+                <div class="chat-user" style="color: ${isOwn ? '#ffd700' : '#22c55e'};">${username}</div>
                 <div class="chat-text">${escapeHtml(message.text)}</div>
                 <div class="chat-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
             `;
@@ -1088,13 +1303,22 @@
             
             if (!text) return;
             
+            // Get or create username
+            let username = localStorage.getItem('flmtvChatUsername');
+            if (!username) {
+                username = `Viewer${Math.random().toString(36).substring(2, 8)}`;
+                localStorage.setItem('flmtvChatUsername', username);
+            }
+            
             const message = {
-                user: 'Viewer',
+                username: username,
+                userId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
                 text: text,
                 timestamp: Date.now()
             };
             
-            database.ref('player-chat').push(message);
+            // Use SAME Firebase path as home page: 'messages'
+            database.ref('messages').push(message);
             input.value = '';
         }
         
@@ -1184,6 +1408,157 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // CHAPTERS FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentChapters = [];
+        
+        function toggleChapters() {
+            const panel = document.getElementById('chaptersPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        async function loadChapters() {
+            try {
+                const itemId = urlParams.get('id');
+                const response = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                if (response.Chapters && response.Chapters.length > 0) {
+                    currentChapters = response.Chapters;
+                    document.getElementById('chaptersBtn').style.display = 'inline-flex';
+                    displayChapters();
+                } else {
+                    document.getElementById('chaptersBtn').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading chapters:', error);
+            }
+        }
+        
+        function displayChapters() {
+            const chaptersList = document.getElementById('chaptersList');
+            chaptersList.innerHTML = currentChapters.map((chapter, index) => `
+                <div onclick="seekToChapter(${chapter.StartPositionTicks / 10000000})" 
+                     style="padding: 0.75rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s; border-left: 3px solid #22c55e;"
+                     onmouseover="this.style.background='rgba(34,197,94,0.2)'"
+                     onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                    <div style="font-weight: 600; color: #ffd700; margin-bottom: 0.25rem;">
+                        ${chapter.Name || `Chapter ${index + 1}`}
+                    </div>
+                    <div style="font-size: 0.9rem; color: #94a3b8;">
+                        ${formatTime(chapter.StartPositionTicks / 10000000)}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function seekToChapter(timeInSeconds) {
+            video.currentTime = timeInSeconds;
+            toggleChapters(); // Close panel after selecting
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // EPISODE NAVIGATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentEpisodeData = null;
+        let allEpisodes = [];
+        let currentEpisodeIndex = -1;
+        
+        async function loadEpisodeNavigation() {
+            try {
+                const itemId = urlParams.get('id');
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                // Check if this is an episode
+                if (item.Type === 'Episode') {
+                    currentEpisodeData = item;
+                    
+                    // Load all episodes in the season
+                    const episodes = await jellyfinFetch(`/Shows/${item.SeriesId}/Episodes`, {
+                        SeasonId: item.SeasonId,
+                        UserId: JELLYFIN_CONFIG.USER_ID,
+                        Fields: 'Overview'
+                    });
+                    
+                    allEpisodes = episodes.Items || [];
+                    currentEpisodeIndex = allEpisodes.findIndex(ep => ep.Id === itemId);
+                    
+                    // Show/hide navigation buttons
+                    const prevBtn = document.getElementById('prevEpisodeBtn');
+                    const nextBtn = document.getElementById('nextEpisodeBtn');
+                    
+                    if (currentEpisodeIndex > 0) {
+                        prevBtn.style.display = 'inline-flex';
+                    }
+                    
+                    if (currentEpisodeIndex < allEpisodes.length - 1) {
+                        nextBtn.style.display = 'inline-flex';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading episode navigation:', error);
+            }
+        }
+        
+        function playPreviousEpisode() {
+            if (currentEpisodeIndex > 0) {
+                const prevEpisode = allEpisodes[currentEpisodeIndex - 1];
+                window.location.href = `player.html?id=${prevEpisode.Id}`;
+            }
+        }
+        
+        function playNextEpisode() {
+            if (currentEpisodeIndex < allEpisodes.length - 1) {
+                const nextEpisode = allEpisodes[currentEpisodeIndex + 1];
+                window.location.href = `player.html?id=${nextEpisode.Id}`;
+            }
+        }
+        
+        // Auto-play next episode when current ends
+        video.addEventListener('ended', () => {
+            if (currentEpisodeIndex >= 0 && currentEpisodeIndex < allEpisodes.length - 1) {
+                // Show "Next Episode" overlay for 5 seconds
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:2rem;border-radius:12px;text-align:center;z-index:300;border:3px solid #ffd700;';
+                overlay.innerHTML = `
+                    <h2 style="color:#ffd700;margin-bottom:1rem;">Episode Complete!</h2>
+                    <p style="color:#fff;margin-bottom:1.5rem;">Playing next episode in <span id="countdown">5</span> seconds...</p>
+                    <button onclick="playNextEpisode()" style="background:#22c55e;color:#000;border:none;padding:0.75rem 2rem;border-radius:25px;font-weight:700;cursor:pointer;margin-right:1rem;">Play Now</button>
+                    <button onclick="this.parentElement.remove()" style="background:#fff;color:#000;border:none;padding:0.75rem 2rem;border-radius:25px;font-weight:700;cursor:pointer;">Cancel</button>
+                `;
+                playerContainer.appendChild(overlay);
+                
+                let countdown = 5;
+                const countdownInterval = setInterval(() => {
+                    countdown--;
+                    const countdownEl = document.getElementById('countdown');
+                    if (countdownEl) countdownEl.textContent = countdown;
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        playNextEpisode();
+                    }
+                }, 1000);
+                
+                // Cancel autoplay if user interacts
+                overlay.querySelector('button:last-child').addEventListener('click', () => {
+                    clearInterval(countdownInterval);
+                });
+            }
+        });
+        
+        async function jellyfinFetch(endpoint, params = {}) {
+            const queryString = new URLSearchParams({
+                api_key: JELLYFIN_CONFIG.API_KEY,
+                ...params
+            }).toString();
+            
+            const url = `${JELLYFIN_CONFIG.SERVER}${endpoint}?${queryString}`;
+            const response = await fetch(url);
+            return response.json();
         }
     </script>
     
