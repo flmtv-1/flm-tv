@@ -1384,13 +1384,16 @@
                 panel.classList.add('active');
                 console.log('✅ Panel opened:', panelId);
                 
-                // If opening chat panel, load saved username
+                // If opening chat panel, load saved username and messages
                 if (panelId === 'chatPanel') {
                     const savedUsername = localStorage.getItem('flmtvChatUsername');
                     const usernameInput = document.getElementById('chatUsernameInput');
                     if (savedUsername && usernameInput) {
                         usernameInput.value = savedUsername;
                     }
+                    
+                    // Load chat messages
+                    loadChatMessages();
                 }
             } else {
                 console.error('❌ Panel not found:', panelId);
@@ -1507,6 +1510,32 @@
             // Use SAME Firebase path as home page: 'messages'
             database.ref('messages').push(message);
             input.value = '';
+        }
+        
+        // Wrapper function for emoji system
+        function sendMessage(text) {
+            // Get or create username
+            let username = localStorage.getItem('flmtvChatUsername');
+            const usernameInput = document.getElementById('chatUsernameInput');
+            
+            // Check if user entered a name
+            if (usernameInput && usernameInput.value.trim()) {
+                username = usernameInput.value.trim();
+                localStorage.setItem('flmtvChatUsername', username);
+            } else if (!username) {
+                username = `Viewer${Math.random().toString(36).substring(2, 8)}`;
+                localStorage.setItem('flmtvChatUsername', username);
+            }
+            
+            const message = {
+                username: username,
+                userId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+                text: text,
+                timestamp: Date.now()
+            };
+            
+            // Use SAME Firebase path as home page: 'messages'
+            database.ref('messages').push(message);
         }
         
         // ═══════════════════════════════════════════════════════════════

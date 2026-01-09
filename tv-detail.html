@@ -528,7 +528,24 @@
         async function loadShowDetails() {
             try {
                 // Fetch show data
-                const show = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${movieId}`);
+                let show = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${movieId}`);
+                
+                console.log('Item data:', show);
+                
+                // ⚠️ CRITICAL: If someone clicked on an episode, redirect to the series
+                if (show.Type === 'Episode') {
+                    console.log('🔄 Episode detected! Redirecting to series page...');
+                    const seriesId = show.SeriesId;
+                    window.location.href = `tv-detail.html?id=${seriesId}`;
+                    return;
+                }
+                
+                // ⚠️ If this is a movie, redirect to movie page
+                if (show.Type === 'Movie') {
+                    console.log('🎬 Movie detected! Redirecting to movie page...');
+                    window.location.href = `movie-detail.html?id=${movieId}`;
+                    return;
+                }
                 
                 console.log('Show data:', show);
                 
