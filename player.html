@@ -9,6 +9,11 @@
     <!-- HLS.js for video streaming -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
+    <!-- Firebase for chat -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -50,11 +55,20 @@
             height: 100%;
             background: #000;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease, width 0.3s ease;
         }
         
         #playerContainer.visible {
             opacity: 1;
+        }
+        
+        /* Shift player left when chat is open */
+        #playerContainer.chat-open {
+            width: calc(100% - 450px);
+        }
+        
+        #playerContainer.ai-open {
+            width: calc(100% - 450px);
         }
         
         /* VIDEO ELEMENT */
@@ -280,6 +294,239 @@
                 padding: 0.5rem 1rem;
                 font-size: 0.9rem;
             }
+            
+            #playerContainer.chat-open,
+            #playerContainer.ai-open {
+                width: 100%;
+            }
+            
+            #chatPanel,
+            #aiPanel {
+                width: 100% !important;
+            }
+        }
+        
+        /* CHAT PANEL */
+        #chatPanel {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100%;
+            background: rgba(10, 15, 26, 0.98);
+            border-left: 2px solid #ffd700;
+            z-index: 500;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #chatPanel.open {
+            right: 0;
+        }
+        
+        .panel-header {
+            background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .panel-close {
+            background: transparent;
+            border: 2px solid #000;
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-close:hover {
+            background: #000;
+            color: #ffd700;
+        }
+        
+        #chatMessages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .chat-message {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border-left: 3px solid #22c55e;
+        }
+        
+        .chat-user {
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .chat-text {
+            color: #fff;
+        }
+        
+        .chat-time {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        
+        #chatInput {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #chatInput input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        #chatInput input:focus {
+            border-color: #ffd700;
+        }
+        
+        #chatInput button {
+            background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
+            border: none;
+            color: #000;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.2s ease;
+        }
+        
+        #chatInput button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* AI PANEL */
+        #aiPanel {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100%;
+            background: rgba(10, 15, 26, 0.98);
+            border-left: 2px solid #22c55e;
+            z-index: 500;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #aiPanel.open {
+            right: 0;
+        }
+        
+        #aiMessages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .ai-message {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+        
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #22c55e;
+            flex-shrink: 0;
+        }
+        
+        .ai-bubble {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+            padding: 1rem;
+            border-radius: 12px;
+            flex: 1;
+        }
+        
+        .user-message {
+            justify-content: flex-end;
+        }
+        
+        .user-bubble {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+        }
+        
+        .ai-text {
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        #aiInput {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #aiInput input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.75rem;
+            border-radius: 8px;
+            outline: none;
+        }
+        
+        #aiInput input:focus {
+            border-color: #22c55e;
+        }
+        
+        #aiInput button {
+            background: linear-gradient(135deg, #22c55e 0%, #ffd700 100%);
+            border: none;
+            color: #000;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.2s ease;
+        }
+        
+        #aiInput button:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -328,9 +575,59 @@
                     <option value="auto">Auto</option>
                 </select>
                 
+                <!-- Chat Button -->
+                <button class="control-btn" id="chatBtn" onclick="toggleChat()" title="Toggle Chat">
+                    💬
+                </button>
+                
+                <!-- AI Assistant Button -->
+                <button class="control-btn" id="aiBtn" onclick="toggleAI()" title="AI Assistant">
+                    🤖
+                </button>
+                
                 <!-- Fullscreen -->
                 <button class="control-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
             </div>
+        </div>
+    </div>
+    
+    <!-- CHAT PANEL -->
+    <div id="chatPanel">
+        <div class="panel-header">
+            <div class="panel-title">
+                💬 Live Chat
+            </div>
+            <button class="panel-close" onclick="toggleChat()">Close</button>
+        </div>
+        <div id="chatMessages"></div>
+        <div id="chatInput">
+            <input type="text" id="chatMessageInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()">Send</button>
+        </div>
+    </div>
+    
+    <!-- AI ASSISTANT PANEL -->
+    <div id="aiPanel">
+        <div class="panel-header" style="border-left-color: #22c55e;">
+            <div class="panel-title">
+                <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #000;">
+                Zaina AI
+            </div>
+            <button class="panel-close" onclick="toggleAI()">Close</button>
+        </div>
+        <div id="aiMessages">
+            <div class="ai-message">
+                <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="ai-avatar">
+                <div class="ai-bubble">
+                    <div class="ai-text">
+                        Hi! I'm Zaina, your AI assistant. Ask me anything about FLM TV, the content you're watching, or anything else!
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="aiInput">
+            <input type="text" id="aiMessageInput" placeholder="Ask Zaina anything..." onkeypress="if(event.key==='Enter') sendAIMessage()">
+            <button onclick="sendAIMessage()">Ask</button>
         </div>
     </div>
     
@@ -344,6 +641,26 @@
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
         };
+        
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyD871FYC8vGc7JAAw-2rGMZBB_h4sI0HpQ",
+            authDomain: "flmtv-site-counter.firebaseapp.com",
+            databaseURL: "https://flmtv-site-counter-default-rtdb.firebaseio.com",
+            projectId: "flmtv-site-counter",
+            storageBucket: "flmtv-site-counter.firebasestorage.app",
+            messagingSenderId: "480859127361",
+            appId: "1:480859127361:web:2cb3b8c51c7e1e5d9c8f7e"
+        };
+        
+        const GEMINI_API_KEY = 'AIzaSyD871FYC8vGc7JAAw-2rGMZBB_h4sI0HpQ';
+        
+        // Initialize Firebase
+        firebase.initializeApp(FIREBASE_CONFIG);
+        const database = firebase.database();
+        const auth = firebase.auth();
+        
+        // Anonymous authentication
+        auth.signInAnonymously().catch(error => console.error('Auth error:', error));
         
         const video = document.getElementById('videoPlayer');
         const playerContainer = document.getElementById('playerContainer');
@@ -644,6 +961,184 @@
             loadPlayer();
         } else {
             alert('No video ID provided');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // CHAT FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════
+        
+        let chatOpen = false;
+        let aiOpen = false;
+        
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            const chatPanel = document.getElementById('chatPanel');
+            const aiPanel = document.getElementById('aiPanel');
+            
+            if (chatOpen) {
+                chatPanel.classList.add('open');
+                playerContainer.classList.add('chat-open');
+                
+                // Close AI if open
+                if (aiOpen) {
+                    aiPanel.classList.remove('open');
+                    aiOpen = false;
+                }
+                
+                // Load chat messages
+                loadChatMessages();
+            } else {
+                chatPanel.classList.remove('open');
+                playerContainer.classList.remove('chat-open');
+            }
+        }
+        
+        function toggleAI() {
+            aiOpen = !aiOpen;
+            const aiPanel = document.getElementById('aiPanel');
+            const chatPanel = document.getElementById('chatPanel');
+            
+            if (aiOpen) {
+                aiPanel.classList.add('open');
+                playerContainer.classList.add('ai-open');
+                
+                // Close chat if open
+                if (chatOpen) {
+                    chatPanel.classList.remove('open');
+                    playerContainer.classList.remove('chat-open');
+                    chatOpen = false;
+                }
+            } else {
+                aiPanel.classList.remove('open');
+                playerContainer.classList.remove('ai-open');
+            }
+        }
+        
+        function loadChatMessages() {
+            const chatMessages = document.getElementById('chatMessages');
+            const chatRef = database.ref('player-chat').limitToLast(50);
+            
+            chatRef.on('child_added', (snapshot) => {
+                const message = snapshot.val();
+                displayChatMessage(message);
+            });
+        }
+        
+        function displayChatMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            messageDiv.innerHTML = `
+                <div class="chat-user">${message.user || 'Anonymous'}</div>
+                <div class="chat-text">${escapeHtml(message.text)}</div>
+                <div class="chat-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function sendChatMessage() {
+            const input = document.getElementById('chatMessageInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const message = {
+                user: 'Viewer',
+                text: text,
+                timestamp: Date.now()
+            };
+            
+            database.ref('player-chat').push(message);
+            input.value = '';
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // AI ASSISTANT FUNCTIONALITY
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function sendAIMessage() {
+            const input = document.getElementById('aiMessageInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            // Display user message
+            displayAIMessage(text, true);
+            input.value = '';
+            
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'ai-message';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="ai-avatar">
+                <div class="ai-bubble">
+                    <div class="ai-text">Zaina is typing...</div>
+                </div>
+            `;
+            document.getElementById('aiMessages').appendChild(typingDiv);
+            
+            try {
+                // Call Gemini API
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `You are Zaina, the AI assistant for FLM TV, a multicultural television network. You're friendly, helpful, and knowledgeable about entertainment, movies, TV shows, and FLM TV's content. Keep responses concise and engaging. User question: ${text}`
+                            }]
+                        }]
+                    })
+                });
+                
+                const data = await response.json();
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                
+                // Remove typing indicator
+                typingDiv.remove();
+                
+                // Display AI response
+                displayAIMessage(aiResponse, false);
+                
+            } catch (error) {
+                console.error('AI Error:', error);
+                typingDiv.remove();
+                displayAIMessage("Sorry, I'm having trouble connecting right now. Please try again!", false);
+            }
+        }
+        
+        function displayAIMessage(text, isUser) {
+            const aiMessages = document.getElementById('aiMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isUser ? 'ai-message user-message' : 'ai-message';
+            
+            if (isUser) {
+                messageDiv.innerHTML = `
+                    <div class="ai-bubble user-bubble">
+                        <div class="ai-text">${escapeHtml(text)}</div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="ai-avatar">
+                    <div class="ai-bubble">
+                        <div class="ai-text">${escapeHtml(text)}</div>
+                    </div>
+                `;
+            }
+            
+            aiMessages.appendChild(messageDiv);
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
     </script>
     
