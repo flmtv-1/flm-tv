@@ -80,7 +80,7 @@
         }
         
         .header-content {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -141,6 +141,67 @@
             right: 0;
             height: 2px;
             background: var(--neon-green);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  CATEGORY NAVIGATION BAR (like Jellyfin)                        */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .category-nav {
+            background: rgba(10, 15, 26, 0.98);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 2rem;
+            position: sticky;
+            top: 82px; /* Below main header */
+            z-index: 99;
+            display: none; /* Hidden by default, show when in category view */
+        }
+        
+        .category-nav.active {
+            display: block;
+        }
+        
+        .category-nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .category-nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        .category-nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .category-nav-links a:hover {
+            color: var(--neon-green);
+        }
+        
+        .category-nav-links a.active {
+            color: var(--accent);
+        }
+        
+        .category-nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
         }
         
         .nav-actions {
@@ -326,7 +387,7 @@
         }
         
         .category-nav-container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
@@ -435,7 +496,7 @@
         .content-container {
     padding: 2rem;
     padding-top: 1rem; /* Reduced from 2rem to remove dead space */
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
 }
         
@@ -522,28 +583,20 @@
             background: var(--bg-card);
         }
         
-        .content-card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 70%, transparent 100%);
-            padding: 1rem;
-            border-radius: 0 0 8px 8px;
+        /* TEXT BELOW POSTER - NOT OVERLAY */
+        .content-card-text {
+            padding: 0.5rem 0.25rem;
         }
         
-        .content-card-title {
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
+        .content-card-title-below {
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-        }
-        
-        .content-card-info {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -1389,7 +1442,7 @@
         
         .video-container {
             width: 95%;
-            max-width: 1600px;
+            max-width: 1400px;
             position: relative;
             aspect-ratio: 16/9;
         }
@@ -2684,6 +2737,22 @@
             </div>
         </div>
     </header>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  CATEGORY NAVIGATION (like Jellyfin)                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div class="category-nav" id="categoryNav">
+        <div class="category-nav-content">
+            <ul class="category-nav-links">
+                <li><a href="#" class="active" onclick="showAllMovies(); return false;">Movies</a></li>
+                <li><a href="#" onclick="showSuggestions(); return false;">Suggestions</a></li>
+                <li><a href="#" onclick="showFavorites(); return false;">Favorites</a></li>
+                <li><a href="#" onclick="showCollections(); return false;">Collections</a></li>
+                <li><a href="#" onclick="showGenres(); return false;">Genres</a></li>
+            </ul>
+        </div>
+    </div>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HERO BANNER                                                    -->
@@ -3777,7 +3846,108 @@
             if (categorySection) {
                 categorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+            
+            // Show category nav bar
+            showCategoryNav();
         }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  CATEGORY NAVIGATION BAR FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        
+        function showCategoryNav() {
+            const categoryNav = document.getElementById('categoryNav');
+            if (categoryNav) {
+                categoryNav.classList.add('active');
+            }
+        }
+        
+        function hideCategoryNav() {
+            const categoryNav = document.getElementById('categoryNav');
+            if (categoryNav) {
+                categoryNav.classList.remove('active');
+            }
+        }
+        
+        function updateCategoryNavActive(linkText) {
+            const links = document.querySelectorAll('.category-nav-links a');
+            links.forEach(link => {
+                if (link.textContent === linkText) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        function showAllMovies() {
+            showCategoryNav();
+            updateCategoryNavActive('Movies');
+            
+            // Scroll to first collection
+            const firstCollection = document.querySelector('.category-section');
+            if (firstCollection) {
+                firstCollection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        function showSuggestions() {
+            showCategoryNav();
+            updateCategoryNavActive('Suggestions');
+            
+            // You can implement suggestions logic here
+            console.log('Showing suggestions...');
+            alert('Suggestions feature - coming soon! This will show AI-recommended content based on your viewing history.');
+        }
+        
+        function showFavorites() {
+            showCategoryNav();
+            updateCategoryNavActive('Favorites');
+            
+            // You can implement favorites logic here
+            console.log('Showing favorites...');
+            alert('Favorites feature - coming soon! This will show content you\'ve marked as favorites in Jellyfin.');
+        }
+        
+        function showCollections() {
+            showCategoryNav();
+            updateCategoryNavActive('Collections');
+            
+            // Scroll to collections if you have them
+            const collectionsSection = document.querySelector('[data-collection-id="00 Collections"]');
+            if (collectionsSection) {
+                collectionsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                alert('Collections feature - coming soon! This will show curated collections of content.');
+            }
+        }
+        
+        function showGenres() {
+            showCategoryNav();
+            updateCategoryNavActive('Genres');
+            
+            // Scroll to category nav where genres are
+            scrollToCategoryNav();
+        }
+        
+        // Show category nav when clicking Movies or TV Shows in main nav
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click handlers to Movies and TV Shows links
+            const moviesLink = document.querySelector('.header-nav a[onclick*="6fcfa6221b9a5741d5fdcf30f78f946b"]');
+            const tvShowsLink = document.querySelector('.header-nav a[onclick*="7e2a5d7fd8bd73b8768e302be39536df"]');
+            
+            if (moviesLink) {
+                moviesLink.addEventListener('click', () => {
+                    setTimeout(showCategoryNav, 500);
+                });
+            }
+            
+            if (tvShowsLink) {
+                tvShowsLink.addEventListener('click', () => {
+                    setTimeout(showCategoryNav, 500);
+                });
+            }
+        });
         
         // ═══════════════════════════════════════════════════════════════
         //  BUILD CATEGORY NAVIGATION
@@ -3896,6 +4066,9 @@
                         Recursive: true
                     });
                     
+                    // NO FILTERING - show all content as it comes from Jellyfin
+                    // (Removed Episode filtering that was breaking categories)
+                    
                     // Remove loading spinner on first collection
                     if (loadedCount === 1) {
                         container.innerHTML = '';
@@ -3980,11 +4153,8 @@
                                      class="content-card-image" 
                                      loading="lazy"
                                      onerror="this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}'">
-                                <div class="content-card-overlay">
-                                    <div class="content-card-title">${item.Name}</div>
-                                    <div class="content-card-info">
-                                        ${item.ProductionYear || ''} ${item.OfficialRating ? '• ' + item.OfficialRating : ''}
-                                    </div>
+                                <div style="padding: 0.5rem 0.25rem;">
+                                    <div style="font-size: 0.75rem; font-weight: 600; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.Name}</div>
                                 </div>
                             `;
                             
@@ -4343,37 +4513,33 @@
         }
         
         async function playJellyfinItem(itemId) {
-            console.log('🎬 Opening item:', itemId);
+            console.log('🎬 Opening custom detail page:', itemId);
             
             try {
-                // Fetch item to determine type (Movie or TV Show)
-                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`, {});
-                
-                console.log('📦 Item type:', item.Type);
+                // Fetch item to determine type
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
                 
                 // MUTE PREVIEW VIDEO IMMEDIATELY
                 const previewVideo = document.getElementById('previewVideo');
                 if (previewVideo) {
                     previewVideo.muted = true;
                     previewVideo.volume = 0;
-                    console.log('🔇 Preview video muted automatically');
                 }
                 
-                // Redirect to appropriate detail page
+                // Open YOUR CUSTOM PAGES (not Jellyfin!)
                 if (item.Type === 'Movie') {
-                    console.log('🎬 Opening movie detail page');
                     window.location.href = `movie-detail.html?id=${itemId}`;
                 } else if (item.Type === 'Series') {
-                    console.log('📺 Opening TV show detail page');
                     window.location.href = `tv-detail.html?id=${itemId}`;
+                } else if (item.Type === 'Episode') {
+                    // If episode, open the series page
+                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                 } else {
-                    console.log('❓ Unknown type, opening movie detail page as fallback');
                     window.location.href = `movie-detail.html?id=${itemId}`;
                 }
                 
             } catch (error) {
-                console.error('❌ Error fetching item:', error);
-                // Fallback to movie detail page
+                console.error('Error:', error);
                 window.location.href = `movie-detail.html?id=${itemId}`;
             }
         }
@@ -5544,6 +5710,36 @@ window.addEventListener('load', function() {
     if (!history.state) {
         history.replaceState({ page: 'home' }, 'Home', '#home');
     }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // AGGRESSIVE MUTING OF PREVIEW VIDEO
+    // ═══════════════════════════════════════════════════════════════
+    setTimeout(() => {
+        const previewVideo = document.getElementById('previewVideo');
+        if (previewVideo) {
+            previewVideo.muted = true;
+            previewVideo.volume = 0;
+            previewVideo.defaultMuted = true;
+            console.log('🔇 PREVIEW VIDEO FORCE MUTED ON LOAD');
+        }
+    }, 100);
+    
+    // Keep checking and muting every second for first 5 seconds
+    let mutingAttempts = 0;
+    const mutingInterval = setInterval(() => {
+        const previewVideo = document.getElementById('previewVideo');
+        if (previewVideo && !previewVideo.dataset.userUnmuted) {
+            previewVideo.muted = true;
+            previewVideo.volume = 0;
+            console.log(`🔇 Muting attempt #${mutingAttempts + 1}`);
+        }
+        
+        mutingAttempts++;
+        if (mutingAttempts >= 5) {
+            clearInterval(mutingInterval);
+            console.log('✅ Muting checks complete');
+        }
+    }, 1000);
 });
 </script>
 

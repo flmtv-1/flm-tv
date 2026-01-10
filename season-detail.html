@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Season - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #101010;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .btn-icon:hover {
+            opacity: 0.7;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Season Header */
+        .season-header {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .poster {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+        
+        .season-info h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .season-subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+        
+        .meta {
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        
+        /* Episodes List */
+        .episodes {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .episode {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .episode:hover {
+            background: #252525;
+        }
+        
+        .episode-thumb {
+            position: relative;
+        }
+        
+        .episode-thumb img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .episode:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #000;
+        }
+        
+        .episode-info {
+            padding: 1.5rem;
+        }
+        
+        .episode-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .episode-meta {
+            display: flex;
+            gap: 1rem;
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .episode-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            padding: 4rem;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #22c55e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .season-header {
+                grid-template-columns: 1fr;
+            }
+            
+            .episode {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+    <button class="btn-icon" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <button class="btn-icon" onclick="window.location.href='home.html'">
+        <i class="fas fa-home"></i>
+    </button>
+    <button class="btn-icon">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <div id="content" style="display: none;">
+        <!-- Season Header -->
+        <div class="season-header">
+            <img id="poster" class="poster" alt="Season Poster">
+            
+            <div class="season-info">
+                <h1 id="showTitle">Loading...</h1>
+                <div class="season-subtitle" id="seasonTitle"></div>
+                <div class="meta" id="meta"></div>
+            </div>
+        </div>
+        
+        <!-- Episodes -->
+        <div class="episodes" id="episodes"></div>
+    </div>
+</div>
+
+<script>
+// Config
+const JELLYFIN_CONFIG = {
+    SERVER: 'https://flmtv26.duckdns.org:8920',
+    API_KEY: '24674385633844efbe3a1367b8f63d43',
+    USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37'
+};
+
+const urlParams = new URLSearchParams(window.location.search);
+const seasonId = urlParams.get('id');
+const showId = urlParams.get('showId');
+
+// Fetch helper
+async function jellyfinFetch(endpoint, params = {}) {
+    const url = new URL(`${JELLYFIN_CONFIG.SERVER}${endpoint}`);
+    url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            url.searchParams.append(key, value);
+        }
+    });
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+    }
+    return response.json();
+}
+
+// Format duration
+function formatDuration(ticks) {
+    const minutes = Math.floor(ticks / 600000000);
+    return `${minutes}m`;
+}
+
+// Calculate end time
+function calculateEndTime(ticks) {
+    const minutes = Math.floor(ticks / 600000000);
+    const endTime = new Date(Date.now() + minutes * 60000);
+    return endTime.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+    });
+}
+
+// Load season details
+async function loadSeasonDetails() {
+    try {
+        // Get season info
+        const season = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${seasonId}`);
+        
+        console.log('Season:', season);
+        
+        // Get show info
+        const show = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${showId || season.SeriesId}`);
+        
+        console.log('Show:', show);
+        
+        // Poster
+        document.getElementById('poster').src = season.ImageTags?.Primary
+            ? `${JELLYFIN_CONFIG.SERVER}/Items/${season.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=400`
+            : 'https://placehold.co/300x450?text=No+Poster';
+        
+        // Titles
+        document.getElementById('showTitle').textContent = show.Name;
+        document.getElementById('seasonTitle').textContent = season.Name;
+        document.title = `${show.Name} - ${season.Name} - FLM TV`;
+        
+        // Get episodes
+        const episodes = await jellyfinFetch(`/Shows/${seasonId}/Episodes`, {
+            userId: JELLYFIN_CONFIG.USER_ID,
+            Fields: 'Overview'
+        });
+        
+        console.log('Episodes:', episodes);
+        
+        // Meta
+        document.getElementById('meta').textContent = `${episodes.Items.length} episodes`;
+        
+        // Load episodes
+        loadEpisodes(episodes.Items);
+        
+        // Show content
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load season details');
+    }
+}
+
+// Load episodes
+function loadEpisodes(episodes) {
+    const episodesDiv = document.getElementById('episodes');
+    
+    if (episodes.length === 0) {
+        episodesDiv.innerHTML = '<p style="text-align: center; color: #888; padding: 2rem;">No episodes found.</p>';
+        return;
+    }
+    
+    episodesDiv.innerHTML = episodes.map(ep => {
+        const thumbUrl = ep.ImageTags?.Primary
+            ? `${JELLYFIN_CONFIG.SERVER}/Items/${ep.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=480`
+            : 'https://placehold.co/320x180?text=Episode+' + ep.IndexNumber;
+        
+        const duration = ep.RunTimeTicks ? formatDuration(ep.RunTimeTicks) : '';
+        const endTime = ep.RunTimeTicks ? calculateEndTime(ep.RunTimeTicks) : '';
+        const rating = ep.CommunityRating ? ep.CommunityRating.toFixed(1) : '';
+        
+        return `
+            <div class="episode" onclick="window.location.href='player.html?id=${ep.Id}'">
+                <div class="episode-thumb">
+                    <img src="${thumbUrl}" alt="${ep.Name}">
+                    <div class="play-overlay">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="episode-info">
+                    <div class="episode-title">${ep.IndexNumber}. ${ep.Name}</div>
+                    <div class="episode-meta">
+                        ${duration ? `<span>${duration}</span>` : ''}
+                        ${rating ? `<span>⭐ ${rating}</span>` : ''}
+                        ${endTime ? `<span>Ends at ${endTime}</span>` : ''}
+                    </div>
+                    <div class="episode-desc">${ep.Overview || 'No description available.'}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Go back
+function goBack() {
+    if (showId) {
+        window.location.href = `tv-detail.html?id=${showId}`;
+    } else {
+        window.history.back();
+    }
+}
+
+// Initialize
+if (seasonId) {
+    loadSeasonDetails();
+} else {
+    alert('No season ID provided');
+    window.history.back();
+}
+</script>
+
+</body>
+</html>
