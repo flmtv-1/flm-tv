@@ -63,15 +63,15 @@
             z-index: 1;
         }
         
-        /* CONTENT - BUTTON VISIBLE ON MOBILE */
+        /* CONTENT - BUTTON CENTERED */
         .content {
             position: relative;
-            z-index: 100;  /* HIGH z-index - above footer! */
+            z-index: 1000;  /* HIGH z-index - above footer */
             display: flex;
-            align-items: flex-end;
+            align-items: center;  /* CENTER vertically */
             justify-content: center;
             min-height: 100vh;
-            padding: 20px 20px 150px;  /* More padding for mobile */
+            padding: 20px;
         }
         
         /* ENTER BUTTON - SMALLER */
@@ -166,29 +166,37 @@
             color: #fcd116;
         }
         
-        /* MOBILE */
+        /* MOBILE - BUTTON ALWAYS VISIBLE AND CENTERED */
         @media (max-width: 768px) {
             .content {
-                padding: 20px 15px 180px;  /* MORE bottom padding */
-                z-index: 1000 !important;  /* FORCE above everything */
+                padding: 20px;  /* Equal padding all around */
+                align-items: center !important;  /* FORCE center */
+                justify-content: center !important;
             }
             
             .enter-btn {
-                padding: 16px 40px;  /* BIGGER */
-                font-size: 24px;  /* LARGER text */
-                box-shadow: 0 0 80px rgba(252, 209, 22, 1), 0 20px 60px rgba(0, 0, 0, 0.8);  /* MORE glow */
+                padding: 20px 50px;  /* MUCH BIGGER */
+                font-size: 28px;  /* MUCH LARGER text */
+                box-shadow: 0 0 120px rgba(252, 209, 22, 1), 
+                            0 0 80px rgba(34, 197, 94, 0.8),
+                            0 20px 60px rgba(0, 0, 0, 0.8);  /* HUGE glow */
+                z-index: 10000 !important;
             }
         }
         
         @media (max-width: 480px) {
             .content {
-                padding: 15px 10px 160px;  /* MORE bottom padding */
-                z-index: 1000 !important;  /* FORCE above everything */
+                padding: 20px;
+                align-items: center !important;
+                justify-content: center !important;
             }
             
             .enter-btn {
-                padding: 14px 36px;  /* BIGGER */
-                font-size: 22px;  /* LARGER text */
+                padding: 18px 45px;  /* BIGGER */
+                font-size: 26px;  /* LARGER */
+                box-shadow: 0 0 100px rgba(252, 209, 22, 1), 
+                            0 0 60px rgba(34, 197, 94, 0.8),
+                            0 20px 60px rgba(0, 0, 0, 0.8);
             }
         }
     </style>

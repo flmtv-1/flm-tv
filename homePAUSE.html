@@ -4513,17 +4513,35 @@
         }
         
         async function playJellyfinItem(itemId) {
-            console.log('🎬 Playing item directly:', itemId);
+            console.log('🎬 Opening custom detail page:', itemId);
             
-            // MUTE PREVIEW VIDEO IMMEDIATELY
-            const previewVideo = document.getElementById('previewVideo');
-            if (previewVideo) {
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
+            try {
+                // Fetch item to determine type
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                // MUTE PREVIEW VIDEO IMMEDIATELY
+                const previewVideo = document.getElementById('previewVideo');
+                if (previewVideo) {
+                    previewVideo.muted = true;
+                    previewVideo.volume = 0;
+                }
+                
+                // Open YOUR CUSTOM PAGES (not Jellyfin!)
+                if (item.Type === 'Movie') {
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                } else if (item.Type === 'Series') {
+                    window.location.href = `tv-detail.html?id=${itemId}`;
+                } else if (item.Type === 'Episode') {
+                    // If episode, open the series page
+                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
+                } else {
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = `movie-detail.html?id=${itemId}`;
             }
-            
-            // Go DIRECTLY to player - no detail page!
-            window.location.href = `player.html?id=${itemId}`;
         }
         
         // Make function globally accessible
@@ -5696,32 +5714,53 @@ window.addEventListener('load', function() {
     // ═══════════════════════════════════════════════════════════════
     // AGGRESSIVE MUTING OF PREVIEW VIDEO
     // ═══════════════════════════════════════════════════════════════
-    setTimeout(() => {
-        const previewVideo = document.getElementById('previewVideo');
-        if (previewVideo) {
-            previewVideo.muted = true;
-            previewVideo.volume = 0;
-            previewVideo.defaultMuted = true;
-            console.log('🔇 PREVIEW VIDEO FORCE MUTED ON LOAD');
-        }
-    }, 100);
     
-    // Keep checking and muting every second for first 5 seconds
-    let mutingAttempts = 0;
-    const mutingInterval = setInterval(() => {
+    function forceMutePreview() {
         const previewVideo = document.getElementById('previewVideo');
         if (previewVideo && !previewVideo.dataset.userUnmuted) {
             previewVideo.muted = true;
             previewVideo.volume = 0;
-            console.log(`🔇 Muting attempt #${mutingAttempts + 1}`);
+            previewVideo.defaultMuted = true;
+            
+            // Mute audio tracks directly
+            if (previewVideo.audioTracks) {
+                for (let i = 0; i < previewVideo.audioTracks.length; i++) {
+                    previewVideo.audioTracks[i].enabled = false;
+                }
+            }
         }
-        
-        mutingAttempts++;
-        if (mutingAttempts >= 5) {
-            clearInterval(mutingInterval);
-            console.log('✅ Muting checks complete');
+    }
+    
+    // Run immediately
+    forceMutePreview();
+    
+    // Run after delays
+    setTimeout(forceMutePreview, 50);
+    setTimeout(forceMutePreview, 100);
+    setTimeout(forceMutePreview, 500);
+    setTimeout(forceMutePreview, 1000);
+    setTimeout(forceMutePreview, 2000);
+    
+    // Run continuously every 2 seconds
+    setInterval(forceMutePreview, 2000);
+    
+    // Listen to video events
+    setTimeout(() => {
+        const previewVideo = document.getElementById('previewVideo');
+        if (previewVideo) {
+            ['loadstart', 'loadeddata', 'loadedmetadata', 'canplay', 'canplaythrough', 'play', 'playing'].forEach(event => {
+                previewVideo.addEventListener(event, forceMutePreview);
+            });
+            
+            previewVideo.addEventListener('volumechange', function() {
+                if (!previewVideo.dataset.userUnmuted && !previewVideo.muted) {
+                    forceMutePreview();
+                }
+            });
+            
+            console.log('🔇 AGGRESSIVE PREVIEW MUTE INSTALLED');
         }
-    }, 1000);
+    }, 100);
 });
 </script>
 
