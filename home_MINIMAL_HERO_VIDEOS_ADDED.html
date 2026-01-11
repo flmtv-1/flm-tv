@@ -2680,7 +2680,20 @@
             }
         }
         
-    </style>
+    
+/* 🎞️ HERO BACKGROUND VIDEO (minimal: replaces/augments hero background image) */
+.hero-slide{ position: relative; overflow: hidden; }
+.hero-video-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:0;
+}
+.hero-content{ position: relative; z-index:1; }
+
+</style>
 </head>
 <body>
 
@@ -4443,6 +4456,35 @@
         async function initHeroBanner() {
             const heroBanner = document.getElementById('heroBanner');
             const slides = [];
+
+            // ═══════════════════════════════════════════════════════════════
+            // 🎞️ HERO INTRO VIDEOS AS SLIDES (NO EXTRA UI)
+            // ✅ Just adds your MP4s as hero slides (background video)
+            // ✅ Muted autoplay (safe) • no controls • no new buttons
+            // ═══════════════════════════════════════════════════════════════
+            slides.push({
+                video: 'assets/videos/FLM TV Tag Blue Aliens2.mp4',
+                image: null,
+                title: '',
+                description: '',
+                link: null
+            });
+            slides.push({
+                video: 'assets/videos/Tag 4-1.mp4',
+                image: null,
+                title: '',
+                description: '',
+                link: null
+            });
+            // Optional bonus clip (leave it in the folder; it will appear as a slide)
+            slides.push({
+                video: 'assets/videos/FLMsummonsCOMMERCIAL.mp4',
+                image: null,
+                title: '',
+                description: '',
+                link: null
+            });
+
             
             // Add your Zaina Show banner first
             slides.push({
@@ -4484,10 +4526,29 @@
             slides.forEach((slide, index) => {
                 const slideDiv = document.createElement('div');
                 slideDiv.className = `hero-slide ${index === 0 ? 'active' : ''}`;
-                slideDiv.style.backgroundImage = `url('${slide.image}')`;
-                
-                const content = document.createElement('div');
+                // Background image OR background video
+                if (slide.video) {
+                    const v = document.createElement('video');
+                    v.className = 'hero-video-bg';
+                    v.src = slide.video;
+                    v.autoplay = true;
+                    v.muted = true;
+                    v.playsInline = true;
+                    v.loop = true; // keep motion without controls
+                    v.preload = 'auto';
+                    slideDiv.appendChild(v);
+                } else if (slide.image) {
+                    slideDiv.style.backgroundImage = `url('${slide.image}')`;
+                }
+
+const content = document.createElement('div');
                 content.className = 'hero-content';
+
+                // ✅ HERO CONTENT EMPTY GUARD (video-only slides)
+                // If title/description are empty, don't render the content overlay at all.
+                if (!slide.title && !slide.description) {
+                    content.style.display = 'none';
+                }
                 content.innerHTML = `
                     <h2 class="hero-title">${slide.title}</h2>
                     <p class="hero-description">${slide.description}</p>
@@ -4513,17 +4574,35 @@
         }
         
         async function playJellyfinItem(itemId) {
-            console.log('🎬 Playing item directly:', itemId);
+            console.log('🎬 Opening custom detail page:', itemId);
             
-            // MUTE PREVIEW VIDEO IMMEDIATELY
-            const previewVideo = document.getElementById('previewVideo');
-            if (previewVideo) {
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
+            try {
+                // Fetch item to determine type
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                // MUTE PREVIEW VIDEO IMMEDIATELY
+                const previewVideo = document.getElementById('previewVideo');
+                if (previewVideo) {
+                    previewVideo.muted = true;
+                    previewVideo.volume = 0;
+                }
+                
+                // Open YOUR CUSTOM PAGES (not Jellyfin!)
+                if (item.Type === 'Movie') {
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                } else if (item.Type === 'Series') {
+                    window.location.href = `tv-detail.html?id=${itemId}`;
+                } else if (item.Type === 'Episode') {
+                    // If episode, open the series page
+                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
+                } else {
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = `movie-detail.html?id=${itemId}`;
             }
-            
-            // Go DIRECTLY to player - no detail page!
-            window.location.href = `player.html?id=${itemId}`;
         }
         
         // Make function globally accessible
@@ -5722,6 +5801,51 @@ window.addEventListener('load', function() {
             console.log('✅ Muting checks complete');
         }
     }, 1000);
+    
+    // ═══════════════════════════════════════════════════════════════
+    // FORCE MUTE - AGGRESSIVE (Runs continuously)
+    // ═══════════════════════════════════════════════════════════════
+    
+    (function forceMuteAggressively() {
+        function doForceMute() {
+            const v = document.getElementById('previewVideo');
+            if (v && !v.dataset.userUnmuted) {
+                v.muted = true;
+                v.volume = 0;
+                v.defaultMuted = true;
+                
+                // Mute audio tracks directly
+                if (v.audioTracks) {
+                    for (let i = 0; i < v.audioTracks.length; i++) {
+                        v.audioTracks[i].enabled = false;
+                    }
+                }
+            }
+        }
+        
+        // Run immediately and repeatedly
+        doForceMute();
+        setTimeout(doForceMute, 100);
+        setTimeout(doForceMute, 500);
+        setTimeout(doForceMute, 1000);
+        setInterval(doForceMute, 2000);
+        
+        // Listen for video events
+        const v = document.getElementById('previewVideo');
+        if (v) {
+            ['loadeddata', 'canplay', 'play', 'playing'].forEach(event => {
+                v.addEventListener(event, doForceMute);
+            });
+            
+            v.addEventListener('volumechange', function() {
+                if (!v.dataset.userUnmuted && !v.muted) {
+                    doForceMute();
+                }
+            });
+        }
+        
+        console.log('🔇 Aggressive force mute active');
+    })();
 });
 </script>
 
