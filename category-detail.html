@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Season - FLM TV</title>
+    <title>Category - FLM TV</title>
     <style>
         :root {
             --primary: #ffd700;
@@ -55,17 +55,16 @@
             margin: 0 auto;
         }
         
-        .season-title {
-            font-size: 2.5rem;
+        .category-title {
+            font-size: 3rem;
             font-weight: 800;
             color: var(--primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
         
-        .show-title {
-            font-size: 1.3rem;
+        .category-count {
+            font-size: 1.2rem;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
         }
         
         .content {
@@ -74,68 +73,50 @@
             padding: 2rem;
         }
         
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-        }
-        
-        .episodes-list {
-            display: flex;
-            flex-direction: column;
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 1.5rem;
         }
         
-        .episode-card {
+        .item-card {
             background: var(--bg-light);
             border: 2px solid transparent;
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
-            gap: 1.5rem;
         }
         
-        .episode-card:hover {
+        .item-card:hover {
             border-color: var(--primary);
-            transform: translateX(4px);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
         }
         
-        .episode-thumbnail {
-            width: 300px;
-            height: 169px;
+        .item-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
             object-fit: cover;
             background: #1a1a1a;
-            flex-shrink: 0;
         }
         
-        .episode-info {
-            padding: 1.5rem;
-            flex: 1;
+        .item-info {
+            padding: 1rem;
         }
         
-        .episode-number {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .episode-title {
-            font-size: 1.3rem;
+        .item-title {
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         
-        .episode-overview {
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 0.5rem;
-        }
-        
-        .episode-runtime {
+        .item-year {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
@@ -162,15 +143,8 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 768px) {
-            .episode-card {
-                flex-direction: column;
-            }
-            .episode-thumbnail {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 16/9;
-            }
-            .season-title { font-size: 1.8rem; }
+            .category-title { font-size: 2rem; }
+            .items-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
         }
     </style>
 </head>
@@ -182,14 +156,13 @@
 
 <div class="header">
     <div class="header-content">
-        <h2 class="show-title" id="showTitle">Loading...</h2>
-        <h1 class="season-title" id="seasonTitle">Loading...</h1>
+        <h1 class="category-title" id="categoryTitle">Loading...</h1>
+        <div class="category-count" id="categoryCount"></div>
     </div>
 </div>
 
 <div class="content">
-    <h2 class="section-title">Episodes</h2>
-    <div class="episodes-list" id="episodesList"></div>
+    <div class="items-grid" id="itemsGrid"></div>
 </div>
 
 <script>
@@ -199,8 +172,8 @@ const CONFIG = {
     USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37'
 };
 
-const seasonId = new URLSearchParams(window.location.search).get('id');
-const showId = new URLSearchParams(window.location.search).get('showId');
+const categoryId = new URLSearchParams(window.location.search).get('id');
+const categoryName = new URLSearchParams(window.location.search).get('name');
 
 // AUTHENTICATE FIRST
 async function authenticate() {
@@ -230,7 +203,7 @@ async function authenticate() {
     return false;
 }
 
-async function loadSeason() {
+async function loadCategory() {
     try {
         // Authenticate first
         await authenticate();
@@ -239,78 +212,86 @@ async function loadSeason() {
             'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
         };
         
-        // Get season info
-        const seasonUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${seasonId}`;
-        const seasonRes = await fetch(seasonUrl, { headers });
-        const season = await seasonRes.json();
-        
-        console.log('Season:', season);
-        
-        // Get show info
-        if (showId) {
-            const showUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${showId}`;
-            const showRes = await fetch(showUrl, { headers });
-            const show = await showRes.json();
-            document.getElementById('showTitle').textContent = show.Name;
+        // Set category name if provided
+        if (categoryName) {
+            document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
         }
         
-        // Set season title
-        document.getElementById('seasonTitle').textContent = season.Name;
+        // Load items in category
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName`;
+        console.log('Loading category:', itemsUrl);
         
-        // Load episodes
-        const episodesUrl = `${CONFIG.SERVER}/Shows/${showId}/Episodes?seasonId=${seasonId}&userId=${CONFIG.USER_ID}`;
-        const episodesRes = await fetch(episodesUrl, { headers });
-        const episodesData = await episodesRes.json();
+        const itemsRes = await fetch(itemsUrl, { headers });
+        const itemsData = await itemsRes.json();
         
-        console.log('Episodes:', episodesData);
+        console.log('Category items:', itemsData);
         
-        const episodesList = document.getElementById('episodesList');
-        episodesList.innerHTML = '';
+        // Update count
+        document.getElementById('categoryCount').textContent = `${itemsData.TotalRecordCount || itemsData.Items.length} items`;
         
-        if (episodesData.Items && episodesData.Items.length > 0) {
-            episodesData.Items.forEach(episode => {
+        // If no name provided, try to get it from first item's parent
+        if (!categoryName && itemsData.Items.length > 0) {
+            try {
+                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}`;
+                const parentRes = await fetch(parentUrl, { headers });
+                const parent = await parentRes.json();
+                document.getElementById('categoryTitle').textContent = parent.Name || 'Category';
+            } catch (e) {
+                document.getElementById('categoryTitle').textContent = 'Category';
+            }
+        }
+        
+        const itemsGrid = document.getElementById('itemsGrid');
+        itemsGrid.innerHTML = '';
+        
+        if (itemsData.Items && itemsData.Items.length > 0) {
+            itemsData.Items.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'episode-card';
+                card.className = 'item-card';
                 card.onclick = () => {
-                    window.location.href = `player.html?id=${episode.Id}`;
+                    // Determine if this is a TV show or movie
+                    if (item.Type === 'Series') {
+                        window.location.href = `tv-detail.html?id=${item.Id}`;
+                    } else if (item.Type === 'Movie') {
+                        window.location.href = `player.html?id=${item.Id}`;
+                    } else {
+                        // Default to player
+                        window.location.href = `player.html?id=${item.Id}`;
+                    }
                 };
                 
-                const thumbnailUrl = episode.ImageTags && episode.ImageTags.Primary
-                    ? `${CONFIG.SERVER}/Items/${episode.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${episode.ImageTags.Primary}&maxWidth=600`
+                const posterUrl = item.ImageTags && item.ImageTags.Primary
+                    ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=400`
                     : '';
                 
-                const runtime = episode.RunTimeTicks ? Math.round(episode.RunTimeTicks / 600000000) : 0;
-                
                 card.innerHTML = `
-                    ${thumbnailUrl ? `<img src="${thumbnailUrl}" alt="Episode ${episode.IndexNumber}" class="episode-thumbnail" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="episode-thumbnail"></div>'}
-                    <div class="episode-info">
-                        <div class="episode-number">Episode ${episode.IndexNumber || '?'}</div>
-                        <div class="episode-title">${episode.Name || 'Untitled'}</div>
-                        <div class="episode-overview">${episode.Overview || 'No description available.'}</div>
-                        ${runtime ? `<div class="episode-runtime">${runtime} min</div>` : ''}
+                    ${posterUrl ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="item-poster"></div>'}
+                    <div class="item-info">
+                        <div class="item-title">${item.Name}</div>
+                        ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
                     </div>
                 `;
                 
-                episodesList.appendChild(card);
+                itemsGrid.appendChild(card);
             });
         } else {
-            episodesList.innerHTML = '<p style="color: var(--text-secondary);">No episodes found</p>';
+            itemsGrid.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">No items found in this category</p>';
         }
         
         document.getElementById('loading').style.display = 'none';
         
     } catch (error) {
-        console.error('Error loading season:', error);
-        alert('Error loading season. Check console for details.');
+        console.error('Error loading category:', error);
+        alert('Error loading category. Check console for details.');
         document.getElementById('loading').style.display = 'none';
     }
 }
 
-if (!seasonId) {
-    alert('No season ID provided');
+if (!categoryId) {
+    alert('No category ID provided');
     history.back();
 } else {
-    loadSeason();
+    loadCategory();
 }
 </script>
 

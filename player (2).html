@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12"></script>
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --accent: #ffd700;
+            --neon-green: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --bg-card: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; font-family: -apple-system, sans-serif; overflow: hidden; }
+        
+        #videoContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+        }
+        
+        #loading { 
+            position: fixed; 
+            inset: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #fff; 
+            z-index: 999; 
+        }
+        
+        .spinner { 
+            width: 40px; 
+            height: 40px; 
+            border: 3px solid rgba(255,255,255,0.1); 
+            border-top-color: #0f0; 
+            border-radius: 50%; 
+            animation: spin 0.6s linear infinite; 
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Custom Video Controls with Chat/AI buttons */
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 60px 20px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        
+        #videoContainer:hover .custom-controls,
+        .custom-controls.show {
+            opacity: 1;
+        }
+        
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .control-btn-chat,
+        .control-btn-ai {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2rem;
+        }
+        
+        .control-btn-ai {
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .control-btn-ai img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Side Panels */
+        .side-panel {
+            position: fixed;
+            right: -100%;
+            top: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 3px solid var(--primary);
+            z-index: 9998;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-panel.active { right: 0; }
+        
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--neon-green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.95);
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--neon-green);
+        }
+        
+        .panel-close {
+            background: none;
+            border: none;
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-close:hover {
+            background: var(--neon-green);
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .panel-toggle {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .side-panel.panel-fullscreen {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        .panel-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .side-panel { width: 100%; max-width: 100%; }
+            .custom-controls {
+                padding: 40px 10px 10px;
+                gap: 8px;
+            }
+            .control-btn-chat,
+            .control-btn-ai {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="videoContainer">
+    <video id="video" controls></video>
+    
+    <!-- Custom Controls with Chat & AI -->
+    <div class="custom-controls">
+        <button class="control-btn" id="playPauseBtn">
+            <i class="fas fa-play"></i>
+        </button>
+        
+        <div style="flex: 1;"></div>
+        
+        <!-- Chat & AI in Controls -->
+        <button class="control-btn control-btn-chat" onclick="openPanel('chatPanel')" title="Live Chat">
+            <i class="fas fa-comments"></i>
+        </button>
+        <button class="control-btn control-btn-ai" onclick="openPanel('aiPanel')" title="Zaina AI">
+            <img src="assets/images/z-ai-avatar2.png" alt="AI">
+        </button>
+        
+        <button class="control-btn" id="fullscreenBtn">
+            <i class="fas fa-expand"></i>
+        </button>
+    </div>
+</div>
+
+<div id="loading"><div class="spinner"></div></div>
+
+<!-- EXACT Chat Panel from home.html -->
+<div class="side-panel" id="chatPanel">
+    <div class="panel-header">
+        <div>
+            <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-comments"></i> Live Chat</h3>
+            <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
+                <i class="fas fa-expand"></i>
+            </button>
+            <button class="panel-close" onclick="closePanel('chatPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div style="padding: 0.75rem; background: #282828; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 0.5rem;">
+        <label style="font-size: 0.85rem; color: #b3b3b3; white-space: nowrap;">Name:</label>
+        <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
+               style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
+               maxlength="20">
+    </div>
+    
+    <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
+    </div>
+    
+    <div class="chat-input-area" style="background-color: #282828; padding: 1rem; border-top: 1px solid #333; display: flex; align-items: center; gap: 0.5rem; position: sticky; bottom: 0; flex-shrink: 0;">
+        <textarea id="chatInput" class="chat-input" placeholder="Type your message..." style="flex-grow: 1; padding: 0.75rem; border-radius: 1.5rem; border: 1px solid #444; background-color: #333; color: white; outline: none; font-size: 1em; resize: none; min-height: 40px; max-height: 100px; overflow-y: auto; font-family: inherit;"></textarea>
+        <button id="emojiBtn" class="chat-btn" style="background-color: var(--secondary); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">😀</button>
+        <button id="sendBtn" class="chat-btn" style="background-color: var(--secondary); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+        <div id="emojiPicker" class="emoji-picker" style="position: absolute; bottom: calc(100% + 10px); left: 0; right: 0; background-color: #282828; border-radius: 8px; box-shadow: 0 -5px 15px rgba(0,0,0,0.4); padding: 1rem; display: none; flex-wrap: wrap; gap: 0.5rem; max-height: 200px; overflow-y: auto; z-index: 10;"></div>
+    </div>
+</div>
+
+<!-- EXACT AI Panel from home.html -->
+<div class="side-panel" id="aiPanel">
+    <div class="panel-header">
+        <h3 class="panel-title"><i class="fas fa-robot"></i> Zaina J AI</h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="panel-toggle" onclick="togglePanelFullscreen('aiPanel')" title="Expand Panel">
+                <i class="fas fa-expand"></i>
+            </button>
+            <button class="panel-close" onclick="closePanel('aiPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="panel-body" style="padding: 1.5rem; overflow-y: auto; flex-grow: 1;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+            <div>
+                <h4 style="color: var(--accent); font-weight: 700; margin-bottom: 0.25rem;">Zaina J AI</h4>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Your Entertainment Assistant</p>
+            </div>
+        </div>
+        
+        <div style="background: rgba(255, 215, 0, 0.05); border: 2px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                Search YouTube for trailers, auto-fill metadata, and preview posters.
+            </p>
+            <label style="color: var(--text); font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                🎬 Search Film or Trailer:
+            </label>
+            <input id="lumaSearch" placeholder="Enter film title..." 
+                   style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); color: white; border: 2px solid rgba(255, 215, 0, 0.3); font-family: inherit; margin-bottom: 1rem;">
+            <button onclick="alert('YouTube search - connect to backend')" 
+                    style="width: 100%; background: var(--accent); color: #000; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1rem;">
+                🔍 Search YouTube
+            </button>
+            <div id="lumaResults" style="margin-top: 1.5rem;"></div>
+        </div>
+        
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--text);">
+            Search film info, trailers, actors...
+        </h3>
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+            <input type="text" id="aiSearchInput" placeholder="Search film..." 
+                   style="flex: 1; padding: 0.75rem; border-radius: 0.5rem; background: #333; color: white; border: 1px solid #444; font-family: inherit;">
+            <button id="aiSearchButton" 
+                    style="background: var(--secondary); color: white; padding: 0.75rem 1.25rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
+                <i class="fas fa-search"></i><span class="search-text"> Search</span>
+            </button>
+        </div>
+        
+        <div style="border-top: 1px solid #333; padding-top: 1.5rem; margin-top: 1.5rem;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--neon-green);">
+                Chat with Zaina AI
+            </h3>
+            <div id="aiMessages" class="chat-messages" style="background-color: #1a1a1a; border-radius: 8px; padding: 1rem; min-height: 200px; max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                <div class="message received">
+                    <div class="message-bubble">👋 Hi! I'm Zaina AI. Ask me anything about movies, TV shows, or entertainment!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-input-area" style="background-color: #282828; padding: 1rem; border-top: 1px solid #333; display: flex; align-items: center; gap: 0.5rem;">
+        <textarea id="aiChatInput" class="chat-input" placeholder="Ask Zaina AI anything..." style="flex-grow: 1; padding: 0.75rem; border-radius: 1.5rem; border: 1px solid #444; background-color: #333; color: white; outline: none; font-size: 1em; resize: none; min-height: 40px; max-height: 100px; overflow-y: auto; font-family: inherit;"></textarea>
+        <button id="aiSendBtn" class="chat-btn" style="background-color: var(--accent); color: #000; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+// Firebase
+firebase.initializeApp({
+    apiKey: "62131ee22c0141c6b651be75a7444350",
+    authDomain: "flmtv-6d44e.firebaseapp.com",
+    databaseURL: "https://flmtv-6d44e-default-rtdb.firebaseio.com",
+    projectId: "flmtv-6d44e",
+    storageBucket: "flmtv-6d44e.appspot.com",
+    messagingSenderId: "407609346199",
+    appId: "1:407609346199:web:0407d4609a0346f99c09e0d7ddc9ccd1"
+});
+const auth = firebase.auth();
+const database = firebase.database();
+
+let fallbackUserId = 'user_' + Math.random().toString(36).substring(7);
+
+const CFG = {
+    SERVER: 'https://flmtv26.duckdns.org:8920',
+    API_KEY: '24674385633844efbe3a1367b8f63d43',
+    USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37'
+};
+
+// Panel Functions
+function openPanel(panelId) {
+    document.querySelectorAll('.side-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    const panel = document.getElementById(panelId);
+    if (panel) {
+        panel.classList.add('active');
+        if (panelId === 'chatPanel') {
+            const savedUsername = localStorage.getItem('flmtvChatUsername');
+            const usernameInput = document.getElementById('chatUsernameInput');
+            if (savedUsername && usernameInput) {
+                usernameInput.value = savedUsername;
+            }
+            // Load all existing messages when chat opens
+            loadAllChatMessages();
+        }
+    }
+}
+
+function closePanel(panelId) {
+    const panel = document.getElementById(panelId);
+    panel.classList.remove('active');
+    panel.classList.remove('panel-fullscreen');
+    const toggleBtn = panel.querySelector('.panel-toggle i');
+    if (toggleBtn) {
+        toggleBtn.className = 'fas fa-expand';
+    }
+}
+
+function togglePanelFullscreen(panelId) {
+    const panel = document.getElementById(panelId);
+    const toggleBtn = panel.querySelector('.panel-toggle i');
+    panel.classList.toggle('panel-fullscreen');
+    if (panel.classList.contains('panel-fullscreen')) {
+        toggleBtn.className = 'fas fa-compress';
+    } else {
+        toggleBtn.className = 'fas fa-expand';
+    }
+}
+
+// Player Controls
+const video = document.getElementById('video');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+playPauseBtn.addEventListener('click', () => {
+    if (video.paused) {
+        video.play();
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    } else {
+        video.pause();
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+});
+
+fullscreenBtn.addEventListener('click', () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.getElementById('videoContainer').requestFullscreen();
+    }
+});
+
+video.addEventListener('play', () => {
+    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+});
+
+video.addEventListener('pause', () => {
+    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+});
+
+// Chat Functionality
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const chatMessages = document.getElementById('chatMessages');
+const emojiBtn = document.getElementById('emojiBtn');
+const emojiPicker = document.getElementById('emojiPicker');
+
+const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😜', '🤪', '😝', '🤗', '🤭', '🤫', '🤔', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '😎', '🤓', '🧐', '😕', '😟', '🙁', '😮', '😯', '😲', '😳', '🥺', '😦', '😧', '😨', '😩', '😫', '😤', '😠', '😡', '🤬', '😈', '👿', '💀', '👻', '💩', '🤡', '👹', '👺', '👽', '👾', '🤖', '👋', '🤚', '✋', '👌', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '👇', '☝️', '👍', '👎', '✊', '👊', '👏', '🙌', '👐', '🤲', '🙏', '💪', '❤️', '🧡', '💛', '💚', '💙', '💜', '🤎', '🖤', '🤍', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '🔥', '💧', '💨', '🎶', '🎵', '💯'];
+
+emojis.forEach(emoji => {
+    const span = document.createElement('span');
+    span.textContent = emoji;
+    span.style.fontSize = '1.5em';
+    span.style.cursor = 'pointer';
+    span.style.padding = '0.2rem';
+    span.style.borderRadius = '4px';
+    span.addEventListener('click', () => insertEmoji(emoji));
+    span.addEventListener('mouseenter', (e) => e.target.style.backgroundColor = '#3e3e3e');
+    span.addEventListener('mouseleave', (e) => e.target.style.backgroundColor = 'transparent');
+    emojiPicker.appendChild(span);
+});
+
+function insertEmoji(emoji) {
+    chatInput.value += emoji;
+    emojiPicker.style.display = 'none';
+    chatInput.focus();
+}
+
+function sendMessage() {
+    const messageText = chatInput.value.trim();
+    if (messageText !== '') {
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        
+        const usernameInput = document.getElementById('chatUsernameInput');
+        let username = usernameInput.value.trim();
+        
+        if (!username) {
+            usernameInput.focus();
+            usernameInput.style.border = '2px solid #ce1126';
+            setTimeout(() => {
+                usernameInput.style.border = '1px solid #444';
+            }, 2000);
+            alert('Please enter your name first!');
+            chatInput.value = messageText;
+            return;
+        }
+        
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        sendBtn.disabled = true;
+        sendBtn.style.opacity = '0.6';
+        
+        localStorage.setItem('flmtvChatUsername', username);
+        
+        const user = auth.currentUser;
+        const userId = user ? user.uid : fallbackUserId;
+        
+        database.ref('messages').push({
+            text: messageText,
+            username: username,
+            userId: userId,
+            timestamp: Date.now()
+        }).then(() => {
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            sendBtn.disabled = false;
+            sendBtn.style.opacity = '1';
+        }).catch((error) => {
+            console.error('Firebase error:', error);
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            sendBtn.disabled = false;
+            sendBtn.style.opacity = '1';
+        });
+    }
+}
+
+if (emojiBtn && sendBtn && chatInput) {
+    emojiBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        emojiPicker.style.display = emojiPicker.style.display === 'flex' ? 'none' : 'flex';
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+            emojiPicker.style.display = 'none';
+        }
+    });
+    
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+    sendBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        sendMessage();
+    });
+}
+
+// Load ALL existing chat messages when panel opens
+function loadAllChatMessages() {
+    console.log('Loading all chat messages...');
+    const messagesContainer = document.getElementById('chatMessages');
+    messagesContainer.innerHTML = ''; // Clear first
+    
+    database.ref('messages').limitToLast(50).once('value', (snapshot) => {
+        console.log('Messages loaded:', snapshot.numChildren());
+        snapshot.forEach((childSnapshot) => {
+            const msg = childSnapshot.val();
+            displayMessage(msg);
+        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+    
+    // Then listen for new messages
+    database.ref('messages').limitToLast(1).on('child_added', (snapshot) => {
+        // Skip if this is initial load (already handled above)
+        if (messagesContainer.children.length > 0) {
+            const msg = snapshot.val();
+            displayMessage(msg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    });
+}
+
+function displayMessage(msg) {
+    if (!msg || !msg.text) return;
+    
+    const username = msg.username || 'Anonymous';
+    const savedUsername = localStorage.getItem('flmtvChatUsername');
+    const isOwnMessage = (savedUsername && msg.username === savedUsername) || 
+                         (auth.currentUser && msg.userId === auth.currentUser.uid);
+    
+    const messagesContainer = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+    messageDiv.style.marginBottom = '0.75rem';
+    messageDiv.style.display = 'flex';
+    messageDiv.style.flexDirection = 'column';
+    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
+    
+    const messageBubble = document.createElement('div');
+    messageBubble.className = 'message-bubble';
+    messageBubble.style.maxWidth = '80%';
+    messageBubble.style.padding = '0.6rem 0.9rem';
+    messageBubble.style.borderRadius = '1rem';
+    messageBubble.style.lineHeight = '1.4';
+    messageBubble.style.wordWrap = 'break-word';
+    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
+    messageBubble.style.color = 'white';
+    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
+    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
+    
+    const div = document.createElement('div');
+    div.textContent = msg.text;
+    messageBubble.innerHTML = `
+        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
+            ${username}
+        </div>
+        <div>${div.innerHTML}</div>
+    `;
+    
+    messageDiv.appendChild(messageBubble);
+    messagesContainer.appendChild(messageDiv);
+}
+
+// Video Player
+const itemId = new URLSearchParams(window.location.search).get('id');
+const loading = document.getElementById('loading');
+
+if (!itemId) {
+    loading.innerHTML = '<p style="color:#f00">No video ID</p>';
+} else {
+    const directUrl = `${CFG.SERVER}/Videos/${itemId}/stream?Static=true&MediaSourceId=${itemId}&api_key=${CFG.API_KEY}`;
+    video.src = directUrl;
+    
+    let hasTriedHLS = false;
+    
+    video.addEventListener('loadedmetadata', () => {
+        loading.style.display = 'none';
+        video.play().catch(() => {});
+    }, { once: true });
+    
+    video.addEventListener('error', () => {
+        if (hasTriedHLS) {
+            loading.innerHTML = '<p style="color:#f00">Playback error</p>';
+            return;
+        }
+        
+        hasTriedHLS = true;
+        const hlsUrl = `${CFG.SERVER}/Videos/${itemId}/master.m3u8?` + new URLSearchParams({
+            api_key: CFG.API_KEY,
+            DeviceId: 'flmtv_web',
+            MediaSourceId: itemId,
+            VideoCodec: 'h264,hevc',
+            AudioCodec: 'aac,mp3',
+            MaxStreamingBitrate: 120000000,
+            SegmentContainer: 'ts'
+        });
+        
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                loading.style.display = 'none';
+                video.play().catch(() => {});
+            });
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    loading.innerHTML = '<p style="color:#f00">Playback error</p>';
+                }
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = hlsUrl;
+            loading.style.display = 'none';
+        }
+    }, { once: true });
+}
+</script>
+
+</body>
+</html>

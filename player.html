@@ -3,51 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player</title>
+    <title>Player - FLM TV</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12"></script>
     <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; }
-        #video { width: 100vw; height: 100vh; object-fit: contain; }
-        #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; background: #000; z-index: 999; }
-        .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #0f0; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        body { background: #000; font-family: -apple-system, sans-serif; overflow: hidden; }
+        
+        #videoContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain;
+        }
+        
+        #loading { 
+            position: fixed; 
+            inset: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #fff; 
+            z-index: 999; 
+        }
+        
+        .spinner { 
+            width: 40px; 
+            height: 40px; 
+            border: 3px solid rgba(255,255,255,0.1); 
+            border-top-color: #0f0; 
+            border-radius: 50%; 
+            animation: spin 0.6s linear infinite; 
+        }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Custom Video Controls */
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 60px 20px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        
+        #videoContainer:hover .custom-controls,
+        .custom-controls.show {
+            opacity: 1;
+        }
+        
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .control-btn-chat,
+        .control-btn-ai {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2rem;
+        }
+        
+        .control-btn-ai {
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .control-btn-ai img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Side Panels */
+        .side-panel {
+            position: fixed;
+            right: -100%;
+            top: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 3px solid var(--primary);
+            z-index: 9998;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-panel.active { right: 0; }
+        
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.95);
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+        
+        .panel-close {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-close:hover {
+            background: var(--secondary);
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .panel-toggle {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .side-panel.panel-fullscreen {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        .panel-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .side-panel { width: 100%; max-width: 100%; }
+            .custom-controls {
+                padding: 40px 10px 10px;
+                gap: 8px;
+            }
+            .control-btn-chat,
+            .control-btn-ai {
+                width: 40px;
+                height: 40px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<video id="video" controls></video>
+<div id="videoContainer">
+    <!-- NO NATIVE CONTROLS - prevents double player -->
+    <video id="video"></video>
+    
+    <!-- Custom Controls ONLY -->
+    <div class="custom-controls">
+        <button class="control-btn" id="playPauseBtn">
+            <i class="fas fa-play"></i>
+        </button>
+        
+        <div style="flex: 1;"></div>
+        
+        <!-- Chat & AI -->
+        <button class="control-btn control-btn-chat" onclick="openPanel('chatPanel')" title="Live Chat">
+            <i class="fas fa-comments"></i>
+        </button>
+        <button class="control-btn control-btn-ai" onclick="openPanel('aiPanel')" title="Zaina AI">
+            <img src="assets/images/z-ai-avatar2.png" alt="AI">
+        </button>
+        
+        <button class="control-btn" id="fullscreenBtn">
+            <i class="fas fa-expand"></i>
+        </button>
+    </div>
+</div>
+
 <div id="loading"><div class="spinner"></div></div>
+
+<!-- Chat Panel (simplified - your full version from home.html) -->
+<div class="side-panel" id="chatPanel">
+    <div class="panel-header">
+        <h3 class="panel-title">💬 Live Chat</h3>
+        <button class="panel-close" onclick="closePanel('chatPanel')">×</button>
+    </div>
+    <div class="panel-body">
+        <p style="color: var(--text-secondary);">Chat panel - integrate your full chat from home.html</p>
+    </div>
+</div>
+
+<!-- AI Panel (simplified - your full version from home.html) -->
+<div class="side-panel" id="aiPanel">
+    <div class="panel-header">
+        <h3 class="panel-title">🤖 Zaina J AI</h3>
+        <button class="panel-close" onclick="closePanel('aiPanel')">×</button>
+    </div>
+    <div class="panel-body">
+        <p style="color: var(--text-secondary);">AI panel - integrate your full AI from home.html</p>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <script>
 const CONFIG = {
     SERVER: 'https://flmtv26.duckdns.org:8920',
-    API_KEY: '24674385633844efbe3a1367b8f63d43'
+    API_KEY: '24674385633844efbe3a1367b8f63d43',
+    USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37'
 };
 
-const itemId = new URLSearchParams(window.location.search).get('id');
+// Panel Functions
+function openPanel(panelId) {
+    document.querySelectorAll('.side-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    document.getElementById(panelId).classList.add('active');
+}
+
+function closePanel(panelId) {
+    document.getElementById(panelId).classList.remove('active');
+}
+
+// Player Controls
 const video = document.getElementById('video');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+playPauseBtn.addEventListener('click', () => {
+    if (video.paused) {
+        video.play();
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    } else {
+        video.pause();
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+});
+
+fullscreenBtn.addEventListener('click', () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.getElementById('videoContainer').requestFullscreen();
+    }
+});
+
+video.addEventListener('play', () => {
+    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+});
+
+video.addEventListener('pause', () => {
+    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+});
+
+// Video Player
+const itemId = new URLSearchParams(window.location.search).get('id');
 const loading = document.getElementById('loading');
 
 if (!itemId) {
     loading.innerHTML = '<p style="color:#f00">No video ID</p>';
 } else {
-    // Try direct MP4 stream first (most reliable)
-    const streamUrl = `${CONFIG.SERVER}/Videos/${itemId}/stream.mp4?Static=true&api_key=${CONFIG.API_KEY}`;
+    const directUrl = `${CONFIG.SERVER}/Videos/${itemId}/stream?Static=true&MediaSourceId=${itemId}&api_key=${CONFIG.API_KEY}`;
+    video.src = directUrl;
     
-    console.log('Stream URL:', streamUrl);
+    let hasTriedHLS = false;
     
-    video.src = streamUrl;
-    
-    video.addEventListener('canplay', () => {
+    video.addEventListener('loadedmetadata', () => {
         loading.style.display = 'none';
-        video.play().catch(e => console.log('Autoplay prevented'));
-    });
+        video.play().catch(() => {});
+    }, { once: true });
     
-    video.addEventListener('error', (e) => {
-        console.error('Video error:', video.error);
-        loading.innerHTML = '<p style="color:#f00">Playback error. Please try another video.</p>';
-    });
+    video.addEventListener('error', () => {
+        if (hasTriedHLS) {
+            loading.innerHTML = '<p style="color:#f00">Playback error</p>';
+            return;
+        }
+        
+        hasTriedHLS = true;
+        const hlsUrl = `${CONFIG.SERVER}/Videos/${itemId}/master.m3u8?` + new URLSearchParams({
+            api_key: CONFIG.API_KEY,
+            DeviceId: 'flmtv_web',
+            MediaSourceId: itemId,
+            VideoCodec: 'h264,hevc',
+            AudioCodec: 'aac,mp3',
+            MaxStreamingBitrate: 120000000,
+            SegmentContainer: 'ts'
+        });
+        
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                loading.style.display = 'none';
+                video.play().catch(() => {});
+            });
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    loading.innerHTML = '<p style="color:#f00">Playback error</p>';
+                }
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = hlsUrl;
+            loading.style.display = 'none';
+        }
+    }, { once: true });
 }
 </script>
 
