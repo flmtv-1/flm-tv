@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Show - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #ffd700;
+            --neon-green: #22c55e;
             --secondary: #22c55e;
             --bg: #0a0f1a;
             --bg-light: #1a1f2e;
@@ -98,6 +100,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
+            padding-bottom: 100px;
         }
         
         .section-title {
@@ -111,7 +114,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 3rem;
         }
         
         .season-card {
@@ -172,9 +174,78 @@
         
         @keyframes spin { to { transform: rotate(360deg); } }
         
+        /* Mobile Footer */
+        .bottom-nav {
+            display: none;
+        }
+        
         @media (max-width: 768px) {
             .show-title { font-size: 2rem; }
             .seasons-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .back-btn { top: 10px; left: 10px; padding: 8px 16px; font-size: 0.9rem; }
+            
+            body { padding-bottom: 70px !important; }
+            
+            .bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(10, 15, 26, 0.98);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 0.5rem 1rem;
+                gap: 1rem;
+                z-index: 1000;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            
+            .bottom-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                min-width: 70px;
+                gap: 0.25rem;
+                padding: 0.5rem 1rem;
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.6);
+                text-decoration: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .bottom-nav-item i {
+                font-size: 1.25rem;
+            }
+            
+            .nav-avatar {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid rgba(34,197,94,.9);
+                box-shadow: 0 0 14px rgba(34,197,94,.45);
+                margin-bottom: 4px;
+            }
+            
+            .bottom-nav-item span {
+                font-size: 0.5rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .bottom-nav-item.active {
+                color: var(--neon-green);
+            }
         }
     </style>
 </head>
@@ -197,6 +268,26 @@
     <div class="seasons-grid" id="seasonsGrid"></div>
 </div>
 
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav">
+    <a href="home.html" class="bottom-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <button class="bottom-nav-item" onclick="alert('Chat coming soon!')">
+        <i class="fas fa-comments"></i>
+        <span>Chat</span>
+    </button>
+    <button class="bottom-nav-item" onclick="alert('Zaina AI coming soon!')">
+        <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="nav-avatar">
+        <span>Zaina AI</span>
+    </button>
+    <button class="bottom-nav-item" onclick="alert('Live TV coming soon!')">
+        <i class="fas fa-tv"></i>
+        <span>Live TV</span>
+    </button>
+</nav>
+
 <script>
 const CONFIG = {
     SERVER: 'https://flmtv26.duckdns.org:8920',
@@ -206,7 +297,6 @@ const CONFIG = {
 
 const showId = new URLSearchParams(window.location.search).get('id');
 
-// AUTHENTICATE FIRST
 async function authenticate() {
     try {
         const response = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
@@ -215,17 +305,13 @@ async function authenticate() {
                 'Content-Type': 'application/json',
                 'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
             },
-            body: JSON.stringify({
-                Username: 'Public',
-                Pw: ''
-            })
+            body: JSON.stringify({ Username: 'Public', Pw: '' })
         });
         
         if (response.ok) {
             const data = await response.json();
             CONFIG.ACCESS_TOKEN = data.AccessToken;
             CONFIG.USER_ID = data.User.Id;
-            console.log('✅ Authenticated');
             return true;
         }
     } catch (error) {
@@ -236,10 +322,8 @@ async function authenticate() {
 
 async function loadShow() {
     try {
-        // Authenticate first
         await authenticate();
         
-        // Get show info
         const headers = {
             'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
         };
@@ -248,33 +332,24 @@ async function loadShow() {
         const showRes = await fetch(showUrl, { headers });
         const show = await showRes.json();
         
-        console.log('Show:', show);
-        
-        // Set backdrop
         if (show.BackdropImageTags && show.BackdropImageTags.length > 0) {
             const backdropUrl = `${CONFIG.SERVER}/Items/${showId}/Images/Backdrop?api_key=${CONFIG.API_KEY}&tag=${show.BackdropImageTags[0]}&maxWidth=1920`;
             document.getElementById('hero').style.backgroundImage = `url(${backdropUrl})`;
         }
         
-        // Set title
         document.getElementById('showTitle').textContent = show.Name;
         
-        // Set meta
         const metaHTML = [];
         if (show.ProductionYear) metaHTML.push(`<span>${show.ProductionYear}</span>`);
         if (show.OfficialRating) metaHTML.push(`<span>${show.OfficialRating}</span>`);
         if (show.CommunityRating) metaHTML.push(`<span>⭐ ${show.CommunityRating.toFixed(1)}</span>`);
         document.getElementById('showMeta').innerHTML = metaHTML.join(' • ');
         
-        // Set overview
         document.getElementById('showOverview').textContent = show.Overview || 'No description available.';
         
-        // Load seasons
         const seasonsUrl = `${CONFIG.SERVER}/Shows/${showId}/Seasons?userId=${CONFIG.USER_ID}`;
         const seasonsRes = await fetch(seasonsUrl, { headers });
         const seasonsData = await seasonsRes.json();
-        
-        console.log('Seasons:', seasonsData);
         
         const seasonsGrid = document.getElementById('seasonsGrid');
         seasonsGrid.innerHTML = '';
@@ -308,14 +383,14 @@ async function loadShow() {
         document.getElementById('loading').style.display = 'none';
         
     } catch (error) {
-        console.error('Error loading show:', error);
-        alert('Error loading show. Check console for details.');
+        console.error('Error:', error);
+        alert('Error loading show');
         document.getElementById('loading').style.display = 'none';
     }
 }
 
 if (!showId) {
-    alert('No show ID provided');
+    alert('No show ID');
     history.back();
 } else {
     loadShow();
