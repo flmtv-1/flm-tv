@@ -39,6 +39,30 @@
             object-fit: contain;
         }
         
+        /* Ensure video controls are visible and touchable on mobile */
+        #video::-webkit-media-controls-panel {
+            display: flex !important;
+        }
+        
+        #video::-webkit-media-controls {
+            visibility: visible !important;
+        }
+        
+        /* Mobile specific */
+        @media (max-width: 768px) {
+            #video {
+                width: 100%;
+                height: auto;
+                min-height: 200px;
+                max-height: calc(100vh - 70px);
+            }
+            
+            /* Make controls larger and easier to tap on mobile */
+            #video::-webkit-media-controls-panel {
+                padding: 10px;
+            }
+        }
+        
         #loading { 
             position: fixed; 
             inset: 0; 
@@ -380,7 +404,7 @@
 </head>
 <body>
 
-<video id="video"></video>
+<video id="video" controls playsinline preload="metadata"></video>
 <div id="loading"><div class="spinner"></div></div>
 
 <!-- Desktop Mini Buttons -->
@@ -864,6 +888,10 @@ async function playVideo() {
         const item = await getItemDetails();
         console.log('📺 Playing:', item.Name, item.Type);
         
+        // Ensure video is unmuted and has audio
+        video.muted = false;
+        video.volume = 1.0;
+        
         // Check if it's a TV episode (needs HLS)
         const isEpisode = item.Type === 'Episode';
         
@@ -876,7 +904,15 @@ async function playVideo() {
                 hls.loadSource(hlsUrl);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play();
+                    // Ensure audio is enabled
+                    video.muted = false;
+                    video.volume = 1.0;
+                    
+                    // Try to autoplay, if blocked user can tap play button
+                    video.play().catch(err => {
+                        console.log('⚠️ Autoplay blocked, user must tap play button');
+                    });
+                    
                     loading.style.display = 'none';
                 });
                 hls.on(Hls.Events.ERROR, (event, data) => {
@@ -887,7 +923,13 @@ async function playVideo() {
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = hlsUrl;
                 video.addEventListener('loadedmetadata', () => {
-                    video.play();
+                    video.muted = false;
+                    video.volume = 1.0;
+                    
+                    video.play().catch(err => {
+                        console.log('⚠️ Autoplay blocked, user must tap play button');
+                    });
+                    
                     loading.style.display = 'none';
                 });
             } else {
@@ -909,7 +951,13 @@ async function playVideo() {
 function playDirectVideo() {
     const directUrl = `${CONFIG.SERVER}/Videos/${itemId}/stream?static=true&api_key=${CONFIG.API_KEY}`;
     video.src = directUrl;
-    video.play();
+    video.muted = false;
+    video.volume = 1.0;
+    
+    video.play().catch(err => {
+        console.log('⚠️ Autoplay blocked, user must tap play button');
+    });
+    
     loading.style.display = 'none';
 }
 
@@ -940,10 +988,8 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Click video to play/pause
-video.addEventListener('click', () => {
-    video.paused ? video.play() : video.pause();
-});
+// Don't interfere with native controls on mobile
+// Removed: video.addEventListener('click', ...) to allow controls to work
 
 // Start playing
 if (itemId) {
