@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- ✅ FLM TV: App entry page (was home.html). Generated from your working home.html so the site loads the app at / -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2777,10 +2776,56 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
+                        <video id="previewVideo" muted loop playsinline preload="metadata" onplay="this.muted=true;this.defaultMuted=true;this.volume=0;" onloadedmetadata="this.muted=true;this.defaultMuted=true;this.volume=0;"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
+                        <script>
+                            // ✅ HARD MUTE + START PREVIEW SILENTLY (prevents loud audio when arriving from intro)
+                            (function(){
+                                const v = document.getElementById('previewVideo');
+                                if (!v) return;
+
+                                // Always start muted
+                                v.muted = true;
+                                v.defaultMuted = true;
+                                v.volume = 0;
+
+                                // If we came from the intro page, extra enforce for the first few seconds
+                                let force = false;
+                                try {
+                                    force = sessionStorage.getItem('flm_forceMutePreview') === '1';
+                                    if (force) sessionStorage.removeItem('flm_forceMutePreview');
+                                } catch(e) {}
+
+                                const enforce = () => {
+                                    if (!v.dataset.userUnmuted) {
+                                        v.muted = true;
+                                        v.defaultMuted = true;
+                                        v.volume = 0;
+                                    }
+                                };
+
+                                enforce();
+
+                                // Start playing (muted) to keep the card animated
+                                const tryPlay = () => v.play().catch(()=>{});
+                                // Run immediately and again after load events
+                                tryPlay();
+                                v.addEventListener('loadeddata', () => { enforce(); tryPlay(); }, { once:false });
+                                v.addEventListener('playing', enforce, { once:false });
+
+                                if (force) {
+                                    // extra safety: enforce mute frequently for a short window right after landing
+                                    const t0 = Date.now();
+                                    const iv = setInterval(() => {
+                                        enforce();
+                                        if (Date.now() - t0 > 4000) clearInterval(iv);
+                                    }, 100);
+                                }
+                            })();
+                        </script>
+
                         
                         <div class="live-channel-content">
                             <div class="live-indicator">
@@ -4513,50 +4558,21 @@
             }, 5000);
         }
         
-        async function openItemDetail(itemId, itemType) {
-            // 🔗 Route to the correct custom page (NO Jellyfin UI)
-            try {
-                // Always silence any preview audio before leaving
-                const previewVideo = document.getElementById('previewVideo');
-                if (previewVideo) {
-                    previewVideo.muted = true;
-                    previewVideo.volume = 0;
-                }
-            } catch (e) {}
-
-            // If we already know type, route instantly
-            if (itemType) {
-                const t = String(itemType).toLowerCase();
-                if (t === 'movie') return window.location.href = `movie-detail.html?id=${itemId}`;
-                if (t === 'series') return window.location.href = `tv-detail.html?id=${itemId}`;
-                if (t === 'person') return window.location.href = `person-detail.html?id=${itemId}`;
-                // Fallback
-                return window.location.href = `movie-detail.html?id=${itemId}`;
+        async function playJellyfinItem(itemId) {
+            console.log('🎬 Playing item directly:', itemId);
+            
+            // MUTE PREVIEW VIDEO IMMEDIATELY
+            const previewVideo = document.getElementById('previewVideo');
+            if (previewVideo) {
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
             }
-
-            // Otherwise: fetch item to detect type
-            jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`, {})
-                .then(item => {
-                    const t = (item && item.Type) ? String(item.Type).toLowerCase() : '';
-                    if (t === 'movie') window.location.href = `movie-detail.html?id=${itemId}`;
-                    else if (t === 'series') window.location.href = `tv-detail.html?id=${itemId}`;
-                    else if (t === 'person') window.location.href = `person-detail.html?id=${itemId}`;
-                    else if (t === 'boxset' || t === 'collectionfolder') window.location.href = `category-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name || 'Category')}`;
-                    else window.location.href = `movie-detail.html?id=${itemId}`;
-                })
-                .catch(() => {
-                    // last resort
-                    window.location.href = `movie-detail.html?id=${itemId}`;
-                });
+            
+            // Go DIRECTLY to player - no detail page!
+            window.location.href = `player.html?id=${itemId}`;
         }
-
-        function playJellyfinItem(itemId, itemType) {
-            // Back-compat for old onclicks
-            return openItemDetail(itemId, itemType);
-        }
-
-        // Make functions globally accessible
-        window.openItemDetail = openItemDetail;
+        
+        // Make function globally accessible
         window.playJellyfinItem = playJellyfinItem;
         console.log('✅ playJellyfinItem ready - redirects to custom detail pages');
         
@@ -4663,8 +4679,8 @@
                         <h1>${collectionName}</h1>
                         <div class="grid">
                             ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.openItemDetail('${item.Id}')">
-                                    <img src="${(item.ImageTags && item.ImageTags.Primary) ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `assets/logos/flm-logo.png` }">
+                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
+                                    <img src="${item.ImageTags?.Primary ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`}">
                                     <div class="card-title">${item.Name}</div>
                                 </div>
                             `).join('') : '<p>No items</p>'}
@@ -5564,9 +5580,11 @@ let activeCollectionId = null;
 let activeCollectionName = null;
 
 function openCollectionInline(collectionId, collectionName) {
-  // 📁 Open your custom Category page (separate file)
-  const name = collectionName || 'Category';
-  window.location.href = `category-detail.html?id=${encodeURIComponent(collectionId)}&name=${encodeURIComponent(name)}`;
+  activeCollectionId = collectionId;
+  activeCollectionName = collectionName || 'Collection';
+  // push state so browser back works
+  try { history.pushState({ page: 'collection', id: collectionId }, '', `?collectionId=${encodeURIComponent(collectionId)}`); } catch(e){}
+  loadCollectionPage(collectionId, activeCollectionName);
 }
 
 // DUPLICATE POPSTATE HANDLER REMOVED - Causes blank pages

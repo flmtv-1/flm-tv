@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- ✅ FLM TV: App entry page (was home.html). Generated from your working home.html so the site loads the app at / -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2681,9 +2680,32 @@
             }
         }
         
-    </style>
+    
+/* 🧯 OFFLINE DIAGNOSTIC BANNER */
+#flmOfflineBanner{
+  position:fixed;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9999;
+  max-width:min(92vw, 980px);
+  padding:12px 14px;
+  border-radius:14px;
+  background:rgba(0,0,0,0.65);
+  border:1px solid rgba(255,215,0,0.35);
+  color:#fff;
+  font-weight:700;
+  display:none;
+  backdrop-filter: blur(6px);
+}
+#flmOfflineBanner code{ color:#ffd700; font-weight:900; }
+
+</style>
 </head>
 <body>
+
+<div id="flmOfflineBanner">⚠️ FLM couldn’t reach Jellyfin. If you’re testing locally (<code>file://</code>), this will look blank. Test on Netlify (with <code>_redirects</code>) or run a local server/proxy. Check Console for details.</div>
+
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HEADER                                                         -->
@@ -3693,12 +3715,15 @@
             messagingSenderId: "354930172302",
             appId: "1:354930172302:web:3176dfff3d81ce823404df"
         };
-        
-        // API keys are loaded from config.js
-        // DO NOT put API keys directly in this file!
-        
-        // Initialize Firebase
-        firebase.initializeApp(FIREBASE_CONFIG);
+
+        // Initialize Firebase (guarded)
+        try {
+            firebase.initializeApp(FIREBASE_CONFIG);
+        } catch (e) {
+            console.warn('⚠️ Firebase init skipped/failed:', e);
+        }
+
+        // FIREBASE_CONFIG);
         const auth = firebase.auth();
         const database = firebase.database();
         

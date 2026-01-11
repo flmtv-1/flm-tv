@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- ✅ FLM TV: App entry page (was home.html). Generated from your working home.html so the site loads the app at / -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2681,7 +2680,17 @@
             }
         }
         
-    </style>
+    
+/* 🔇 MUTE GLOW */
+#volumeToggleBtn.muted-glow {
+    box-shadow: 0 0 0 2px rgba(252, 209, 22, 0.7), 0 0 25px rgba(252, 209, 22, 0.55);
+    transform: scale(1.02);
+}
+#volumeToggleBtn.unmuted-glow {
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.75), 0 0 25px rgba(34, 197, 94, 0.55);
+    transform: scale(1.02);
+}
+
 </head>
 <body>
 
@@ -2777,7 +2786,7 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
+                        <video id="previewVideo" muted playsinline preload="metadata"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
@@ -3625,6 +3634,8 @@
                 video.volume = 0.5;
                 if (icon) icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
+                btn.classList.remove('muted-glow');
+                btn.classList.add('unmuted-glow');
                 btn.title = 'Mute';
                 console.log('🔊 UNMUTED - volume:', video.volume);
             } else {
@@ -3634,6 +3645,8 @@
                 video.volume = 0;
                 if (icon) icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
+                btn.classList.remove('unmuted-glow');
+                btn.classList.add('muted-glow');
                 btn.title = 'Unmute';
                 console.log('🔇 MUTED');
             }
@@ -3641,6 +3654,76 @@
         
         // Make it globally accessible IMMEDIATELY
         window.togglePreviewVolume = togglePreviewVolume;
+
+        // ═══════════════════════════════════════════════════════════════
+        //  🔇 LIVE PREVIEW CARD - ALWAYS START MUTED (EVEN FROM INTRO)
+        //  ✅ Keeps autoplay feel, but starts AFTER a short pause (2s)
+        //  ✅ Prevents the "user gesture" from intro from blasting audio
+        // ═══════════════════════════════════════════════════════════════
+
+        function initPreviewCardAudioFix() {
+            const pv = document.getElementById('previewVideo');
+            const btn = document.getElementById('volumeToggleBtn');
+
+            if (!pv) return;
+
+            // Hard mute (must happen BEFORE play)
+            pv.muted = true;
+            pv.defaultMuted = true;
+            pv.volume = 0;
+
+            // Button glow state
+            if (btn) {
+                btn.classList.add('muted-glow');
+                btn.classList.remove('unmuted-glow');
+                btn.title = 'Unmute';
+                const icon = btn.querySelector('i');
+                if (icon) icon.className = 'fas fa-volume-mute';
+            }
+
+            // If we came from intro, enforce extra-hard for first seconds
+            const fromIntro = sessionStorage.getItem('FLM_FROM_INTRO') === '1';
+            if (fromIntro) {
+                sessionStorage.removeItem('FLM_FROM_INTRO');
+                const hardLockUntil = Date.now() + 4000;
+
+                const hardMute = () => {
+                    if (Date.now() < hardLockUntil) {
+                        pv.muted = true;
+                        pv.defaultMuted = true;
+                        pv.volume = 0;
+                        requestAnimationFrame(hardMute);
+                    }
+                };
+                requestAnimationFrame(hardMute);
+            }
+
+            // Start preview after a short pause (keeps "autoplay vibe" but prevents blast)
+            setTimeout(() => {
+                pv.play().catch(() => {
+                    // If browser blocks it, ignore (still safe and muted)
+                });
+            }, 2000);
+
+            // If something tries to unmute on play, force it back unless user intentionally unmutes
+            pv.addEventListener('play', () => {
+                if (pv.dataset.userUnmuted === 'true') return;
+                pv.muted = true;
+                pv.volume = 0;
+            });
+
+            // iOS/Safari sometimes fires metadata later—re-apply mute
+            pv.addEventListener('loadedmetadata', () => {
+                if (pv.dataset.userUnmuted === 'true') return;
+                pv.muted = true;
+                pv.defaultMuted = true;
+                pv.volume = 0;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initPreviewCardAudioFix);
+
+
         
         console.log('✅ togglePreviewVolume ready and available globally');
         
@@ -4513,50 +4596,21 @@
             }, 5000);
         }
         
-        async function openItemDetail(itemId, itemType) {
-            // 🔗 Route to the correct custom page (NO Jellyfin UI)
-            try {
-                // Always silence any preview audio before leaving
-                const previewVideo = document.getElementById('previewVideo');
-                if (previewVideo) {
-                    previewVideo.muted = true;
-                    previewVideo.volume = 0;
-                }
-            } catch (e) {}
-
-            // If we already know type, route instantly
-            if (itemType) {
-                const t = String(itemType).toLowerCase();
-                if (t === 'movie') return window.location.href = `movie-detail.html?id=${itemId}`;
-                if (t === 'series') return window.location.href = `tv-detail.html?id=${itemId}`;
-                if (t === 'person') return window.location.href = `person-detail.html?id=${itemId}`;
-                // Fallback
-                return window.location.href = `movie-detail.html?id=${itemId}`;
+        async function playJellyfinItem(itemId) {
+            console.log('🎬 Playing item directly:', itemId);
+            
+            // MUTE PREVIEW VIDEO IMMEDIATELY
+            const previewVideo = document.getElementById('previewVideo');
+            if (previewVideo) {
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
             }
-
-            // Otherwise: fetch item to detect type
-            jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`, {})
-                .then(item => {
-                    const t = (item && item.Type) ? String(item.Type).toLowerCase() : '';
-                    if (t === 'movie') window.location.href = `movie-detail.html?id=${itemId}`;
-                    else if (t === 'series') window.location.href = `tv-detail.html?id=${itemId}`;
-                    else if (t === 'person') window.location.href = `person-detail.html?id=${itemId}`;
-                    else if (t === 'boxset' || t === 'collectionfolder') window.location.href = `category-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name || 'Category')}`;
-                    else window.location.href = `movie-detail.html?id=${itemId}`;
-                })
-                .catch(() => {
-                    // last resort
-                    window.location.href = `movie-detail.html?id=${itemId}`;
-                });
+            
+            // Go DIRECTLY to player - no detail page!
+            window.location.href = `player.html?id=${itemId}`;
         }
-
-        function playJellyfinItem(itemId, itemType) {
-            // Back-compat for old onclicks
-            return openItemDetail(itemId, itemType);
-        }
-
-        // Make functions globally accessible
-        window.openItemDetail = openItemDetail;
+        
+        // Make function globally accessible
         window.playJellyfinItem = playJellyfinItem;
         console.log('✅ playJellyfinItem ready - redirects to custom detail pages');
         
@@ -4663,8 +4717,8 @@
                         <h1>${collectionName}</h1>
                         <div class="grid">
                             ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.openItemDetail('${item.Id}')">
-                                    <img src="${(item.ImageTags && item.ImageTags.Primary) ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `assets/logos/flm-logo.png` }">
+                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
+                                    <img src="${item.ImageTags?.Primary ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`}">
                                     <div class="card-title">${item.Name}</div>
                                 </div>
                             `).join('') : '<p>No items</p>'}
@@ -5564,9 +5618,11 @@ let activeCollectionId = null;
 let activeCollectionName = null;
 
 function openCollectionInline(collectionId, collectionName) {
-  // 📁 Open your custom Category page (separate file)
-  const name = collectionName || 'Category';
-  window.location.href = `category-detail.html?id=${encodeURIComponent(collectionId)}&name=${encodeURIComponent(name)}`;
+  activeCollectionId = collectionId;
+  activeCollectionName = collectionName || 'Collection';
+  // push state so browser back works
+  try { history.pushState({ page: 'collection', id: collectionId }, '', `?collectionId=${encodeURIComponent(collectionId)}`); } catch(e){}
+  loadCollectionPage(collectionId, activeCollectionName);
 }
 
 // DUPLICATE POPSTATE HANDLER REMOVED - Causes blank pages

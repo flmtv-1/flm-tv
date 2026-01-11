@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- ✅ FLM TV: App entry page (was home.html). Generated from your working home.html so the site loads the app at / -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2681,7 +2680,15 @@
             }
         }
         
-    </style>
+    
+/* 🔇 MUTE GLOW */
+#volumeToggleBtn.muted-glow{
+  box-shadow: 0 0 0 2px rgba(252, 209, 22, 0.7), 0 0 25px rgba(252, 209, 22, 0.55);
+}
+#volumeToggleBtn.unmuted-glow{
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.75), 0 0 25px rgba(34, 197, 94, 0.55);
+}
+
 </head>
 <body>
 
@@ -2777,10 +2784,10 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-                            <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
-                        </video>
+                        <video id="previewVideo" muted playsinline preload="metadata"
+                style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;">
+                <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
+            </video>
                         
                         <div class="live-channel-content">
                             <div class="live-indicator">
@@ -5755,6 +5762,110 @@ window.addEventListener('load', function() {
 
 <!-- FLM TV Custom Authentication System -->
 <script src="flm-auth-system.js"></script>
+
+
+// ═══════════════════════════════════════════════════════════════
+// 🔇 LIVE TV PREVIEW CARD — ALWAYS START MUTED (even from Intro)
+// ✅ Keeps the autoplay feel (silent preview starts after a short delay)
+// ✅ Prevents the "enter from intro page" user-gesture from blasting sound
+// ═══════════════════════════════════════════════════════════════
+function setPreviewButtonState(isMuted){
+  const btn = document.getElementById('volumeToggleBtn');
+  if(!btn) return;
+  btn.classList.toggle('muted-glow', isMuted);
+  btn.classList.toggle('unmuted-glow', !isMuted);
+  btn.title = isMuted ? 'Unmute preview' : 'Mute preview';
+  const icon = btn.querySelector('i');
+  if(icon) icon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+}
+
+function hardMutePreview(pv){
+  pv.muted = true;
+  pv.defaultMuted = true;
+  pv.volume = 0;
+  pv.dataset.userUnmuted = 'false';
+  setPreviewButtonState(true);
+}
+
+function initLivePreviewMuteLock(){
+  const pv = document.getElementById('previewVideo');
+  if(!pv) return;
+
+  // Always enforce mute BEFORE any play attempt
+  hardMutePreview(pv);
+
+  // Coming from intro? hard-lock mute for first ~4s
+  const fromIntro = sessionStorage.getItem('FLM_FROM_INTRO') === '1';
+  if(fromIntro){
+    sessionStorage.removeItem('FLM_FROM_INTRO');
+    const lockUntil = Date.now() + 4500;
+    (function lock(){
+      if(Date.now() < lockUntil){
+        pv.muted = true;
+        pv.defaultMuted = true;
+        pv.volume = 0;
+        requestAnimationFrame(lock);
+      }
+    })();
+  }
+
+  // Autoplay feel: start silent preview after short delay
+  setTimeout(() => {
+    // Re-apply mute right before play (important)
+    if(pv.dataset.userUnmuted !== 'true') {
+      pv.muted = true;
+      pv.defaultMuted = true;
+      pv.volume = 0;
+    }
+    pv.play().catch(()=>{ /* autoplay may be blocked; still fine */ });
+  }, 1800);
+
+  // Extra safety hooks
+  pv.addEventListener('play', () => {
+    if(pv.dataset.userUnmuted !== 'true'){
+      pv.muted = true; pv.volume = 0;
+    }
+  });
+  pv.addEventListener('loadedmetadata', () => {
+    if(pv.dataset.userUnmuted !== 'true'){
+      pv.muted = true; pv.defaultMuted = true; pv.volume = 0;
+    }
+  });
+
+  // If tab becomes visible again, re-mute unless user intentionally unmuted
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'visible' && pv.dataset.userUnmuted !== 'true'){
+      pv.muted = true; pv.defaultMuted = true; pv.volume = 0;
+      setPreviewButtonState(true);
+    }
+  });
+}
+
+// Hook after DOM loads
+document.addEventListener('DOMContentLoaded', initLivePreviewMuteLock);
+
+// Override/ensure the preview volume toggle works
+window.togglePreviewVolume = function(){
+  const pv = document.getElementById('previewVideo');
+  if(!pv) return;
+
+  const willUnmute = pv.muted === true || pv.volume === 0;
+
+  if(willUnmute){
+    pv.muted = false;
+    pv.defaultMuted = false;
+    pv.volume = 1.0;
+    pv.dataset.userUnmuted = 'true';
+    setPreviewButtonState(false);
+    pv.play().catch(()=>{});
+  }else{
+    pv.muted = true;
+    pv.defaultMuted = true;
+    pv.volume = 0;
+    pv.dataset.userUnmuted = 'false';
+    setPreviewButtonState(true);
+  }
+};
 
 </script>
 

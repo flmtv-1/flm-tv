@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- ✅ FLM TV: App entry page (was home.html). Generated from your working home.html so the site loads the app at / -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -4513,50 +4512,21 @@
             }, 5000);
         }
         
-        async function openItemDetail(itemId, itemType) {
-            // 🔗 Route to the correct custom page (NO Jellyfin UI)
-            try {
-                // Always silence any preview audio before leaving
-                const previewVideo = document.getElementById('previewVideo');
-                if (previewVideo) {
-                    previewVideo.muted = true;
-                    previewVideo.volume = 0;
-                }
-            } catch (e) {}
-
-            // If we already know type, route instantly
-            if (itemType) {
-                const t = String(itemType).toLowerCase();
-                if (t === 'movie') return window.location.href = `movie-detail.html?id=${itemId}`;
-                if (t === 'series') return window.location.href = `tv-detail.html?id=${itemId}`;
-                if (t === 'person') return window.location.href = `person-detail.html?id=${itemId}`;
-                // Fallback
-                return window.location.href = `movie-detail.html?id=${itemId}`;
+        async function playJellyfinItem(itemId) {
+            console.log('🎬 Playing item directly:', itemId);
+            
+            // MUTE PREVIEW VIDEO IMMEDIATELY
+            const previewVideo = document.getElementById('previewVideo');
+            if (previewVideo) {
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
             }
-
-            // Otherwise: fetch item to detect type
-            jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`, {})
-                .then(item => {
-                    const t = (item && item.Type) ? String(item.Type).toLowerCase() : '';
-                    if (t === 'movie') window.location.href = `movie-detail.html?id=${itemId}`;
-                    else if (t === 'series') window.location.href = `tv-detail.html?id=${itemId}`;
-                    else if (t === 'person') window.location.href = `person-detail.html?id=${itemId}`;
-                    else if (t === 'boxset' || t === 'collectionfolder') window.location.href = `category-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name || 'Category')}`;
-                    else window.location.href = `movie-detail.html?id=${itemId}`;
-                })
-                .catch(() => {
-                    // last resort
-                    window.location.href = `movie-detail.html?id=${itemId}`;
-                });
+            
+            // Go DIRECTLY to player - no detail page!
+            window.location.href = `player.html?id=${itemId}`;
         }
-
-        function playJellyfinItem(itemId, itemType) {
-            // Back-compat for old onclicks
-            return openItemDetail(itemId, itemType);
-        }
-
-        // Make functions globally accessible
-        window.openItemDetail = openItemDetail;
+        
+        // Make function globally accessible
         window.playJellyfinItem = playJellyfinItem;
         console.log('✅ playJellyfinItem ready - redirects to custom detail pages');
         
@@ -4663,8 +4633,8 @@
                         <h1>${collectionName}</h1>
                         <div class="grid">
                             ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.openItemDetail('${item.Id}')">
-                                    <img src="${(item.ImageTags && item.ImageTags.Primary) ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `assets/logos/flm-logo.png` }">
+                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
+                                    <img src="${item.ImageTags?.Primary ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`}">
                                     <div class="card-title">${item.Name}</div>
                                 </div>
                             `).join('') : '<p>No items</p>'}
@@ -5564,9 +5534,11 @@ let activeCollectionId = null;
 let activeCollectionName = null;
 
 function openCollectionInline(collectionId, collectionName) {
-  // 📁 Open your custom Category page (separate file)
-  const name = collectionName || 'Category';
-  window.location.href = `category-detail.html?id=${encodeURIComponent(collectionId)}&name=${encodeURIComponent(name)}`;
+  activeCollectionId = collectionId;
+  activeCollectionName = collectionName || 'Collection';
+  // push state so browser back works
+  try { history.pushState({ page: 'collection', id: collectionId }, '', `?collectionId=${encodeURIComponent(collectionId)}`); } catch(e){}
+  loadCollectionPage(collectionId, activeCollectionName);
 }
 
 // DUPLICATE POPSTATE HANDLER REMOVED - Causes blank pages
