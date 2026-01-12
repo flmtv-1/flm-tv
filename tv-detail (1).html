@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Show - FLM TV</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #ffd700;
             --secondary: #22c55e;
-            --accent: #ffd700;
             --bg: #0a0f1a;
             --bg-light: #1a1f2e;
             --text: #ffffff;
@@ -182,9 +180,7 @@
 </head>
 <body>
 
-<button class="back-btn" onclick="history.back()">
-    <i class="fas fa-arrow-left"></i> Back
-</button>
+<button class="back-btn" onclick="history.back()">← Back</button>
 
 <div id="loading"><div class="spinner"></div></div>
 
@@ -210,18 +206,46 @@ const CONFIG = {
 
 const showId = new URLSearchParams(window.location.search).get('id');
 
-if (!showId) {
-    alert('No show ID provided');
-    history.back();
-} else {
-    loadShow();
+// AUTHENTICATE FIRST
+async function authenticate() {
+    try {
+        const response = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
+            },
+            body: JSON.stringify({
+                Username: 'Public',
+                Pw: ''
+            })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            CONFIG.ACCESS_TOKEN = data.AccessToken;
+            CONFIG.USER_ID = data.User.Id;
+            console.log('✅ Authenticated');
+            return true;
+        }
+    } catch (error) {
+        console.error('Auth error:', error);
+    }
+    return false;
 }
 
 async function loadShow() {
     try {
+        // Authenticate first
+        await authenticate();
+        
         // Get show info
-        const showUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${showId}?api_key=${CONFIG.API_KEY}`;
-        const showRes = await fetch(showUrl);
+        const headers = {
+            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
+        };
+        
+        const showUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${showId}`;
+        const showRes = await fetch(showUrl, { headers });
         const show = await showRes.json();
         
         console.log('Show:', show);
@@ -246,8 +270,8 @@ async function loadShow() {
         document.getElementById('showOverview').textContent = show.Overview || 'No description available.';
         
         // Load seasons
-        const seasonsUrl = `${CONFIG.SERVER}/Shows/${showId}/Seasons?userId=${CONFIG.USER_ID}&api_key=${CONFIG.API_KEY}`;
-        const seasonsRes = await fetch(seasonsUrl);
+        const seasonsUrl = `${CONFIG.SERVER}/Shows/${showId}/Seasons?userId=${CONFIG.USER_ID}`;
+        const seasonsRes = await fetch(seasonsUrl, { headers });
         const seasonsData = await seasonsRes.json();
         
         console.log('Seasons:', seasonsData);
@@ -268,7 +292,7 @@ async function loadShow() {
                     : `${CONFIG.SERVER}/Items/${showId}/Images/Primary?api_key=${CONFIG.API_KEY}&maxWidth=400`;
                 
                 card.innerHTML = `
-                    <img src="${posterUrl}" alt="${season.Name}" class="season-poster" loading="lazy">
+                    <img src="${posterUrl}" alt="${season.Name}" class="season-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">
                     <div class="season-info">
                         <div class="season-name">${season.Name}</div>
                         <div class="season-episodes">${season.ChildCount || 0} Episodes</div>
@@ -285,9 +309,16 @@ async function loadShow() {
         
     } catch (error) {
         console.error('Error loading show:', error);
-        alert('Error loading show: ' + error.message);
+        alert('Error loading show. Check console for details.');
         document.getElementById('loading').style.display = 'none';
     }
+}
+
+if (!showId) {
+    alert('No show ID provided');
+    history.back();
+} else {
+    loadShow();
 }
 </script>
 

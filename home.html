@@ -2680,15 +2680,7 @@
             }
         }
         
-    
-/* 🔇 MUTE GLOW */
-#volumeToggleBtn.muted-glow{
-  box-shadow: 0 0 0 2px rgba(252, 209, 22, 0.7), 0 0 25px rgba(252, 209, 22, 0.55);
-}
-#volumeToggleBtn.unmuted-glow{
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.75), 0 0 25px rgba(34, 197, 94, 0.55);
-}
-
+    </style>
 </head>
 <body>
 
@@ -2784,10 +2776,10 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted playsinline preload="metadata"
-                style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;">
-                <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
-            </video>
+                        <video id="previewVideo" muted autoplay loop playsinline
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+                            <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
+                        </video>
                         
                         <div class="live-channel-content">
                             <div class="live-indicator">
@@ -4520,50 +4512,39 @@
             }, 5000);
         }
         
-        async function openItemDetail(itemId, itemType) {
-            // 🔗 Route to the correct custom page (NO Jellyfin UI)
+        async function playJellyfinItem(itemId) {
+            console.log('🎬 Opening custom detail page:', itemId);
+            
             try {
-                // Always silence any preview audio before leaving
+                // Fetch item to determine type
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                // MUTE PREVIEW VIDEO IMMEDIATELY
                 const previewVideo = document.getElementById('previewVideo');
                 if (previewVideo) {
                     previewVideo.muted = true;
                     previewVideo.volume = 0;
                 }
-            } catch (e) {}
-
-            // If we already know type, route instantly
-            if (itemType) {
-                const t = String(itemType).toLowerCase();
-                if (t === 'movie') return window.location.href = `movie-detail.html?id=${itemId}`;
-                if (t === 'series') return window.location.href = `tv-detail.html?id=${itemId}`;
-                if (t === 'person') return window.location.href = `person-detail.html?id=${itemId}`;
-                // Fallback
-                return window.location.href = `movie-detail.html?id=${itemId}`;
-            }
-
-            // Otherwise: fetch item to detect type
-            jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`, {})
-                .then(item => {
-                    const t = (item && item.Type) ? String(item.Type).toLowerCase() : '';
-                    if (t === 'movie') window.location.href = `movie-detail.html?id=${itemId}`;
-                    else if (t === 'series') window.location.href = `tv-detail.html?id=${itemId}`;
-                    else if (t === 'person') window.location.href = `person-detail.html?id=${itemId}`;
-                    else if (t === 'boxset' || t === 'collectionfolder') window.location.href = `category-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name || 'Category')}`;
-                    else window.location.href = `movie-detail.html?id=${itemId}`;
-                })
-                .catch(() => {
-                    // last resort
+                
+                // Open YOUR CUSTOM PAGES (not Jellyfin!)
+                if (item.Type === 'Movie') {
                     window.location.href = `movie-detail.html?id=${itemId}`;
-                });
+                } else if (item.Type === 'Series') {
+                    window.location.href = `tv-detail.html?id=${itemId}`;
+                } else if (item.Type === 'Episode') {
+                    // If episode, open the series page
+                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
+                } else {
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = `movie-detail.html?id=${itemId}`;
+            }
         }
-
-        function playJellyfinItem(itemId, itemType) {
-            // Back-compat for old onclicks
-            return openItemDetail(itemId, itemType);
-        }
-
-        // Make functions globally accessible
-        window.openItemDetail = openItemDetail;
+        
+        // Make function globally accessible
         window.playJellyfinItem = playJellyfinItem;
         console.log('✅ playJellyfinItem ready - redirects to custom detail pages');
         
@@ -4670,8 +4651,8 @@
                         <h1>${collectionName}</h1>
                         <div class="grid">
                             ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.openItemDetail('${item.Id}')">
-                                    <img src="${(item.ImageTags && item.ImageTags.Primary) ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `assets/logos/flm-logo.png` }">
+                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
+                                    <img src="${item.ImageTags?.Primary ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`}">
                                     <div class="card-title">${item.Name}</div>
                                 </div>
                             `).join('') : '<p>No items</p>'}
@@ -5571,9 +5552,11 @@ let activeCollectionId = null;
 let activeCollectionName = null;
 
 function openCollectionInline(collectionId, collectionName) {
-  // 📁 Open your custom Category page (separate file)
-  const name = collectionName || 'Category';
-  window.location.href = `category-detail.html?id=${encodeURIComponent(collectionId)}&name=${encodeURIComponent(name)}`;
+  activeCollectionId = collectionId;
+  activeCollectionName = collectionName || 'Collection';
+  // push state so browser back works
+  try { history.pushState({ page: 'collection', id: collectionId }, '', `?collectionId=${encodeURIComponent(collectionId)}`); } catch(e){}
+  loadCollectionPage(collectionId, activeCollectionName);
 }
 
 // DUPLICATE POPSTATE HANDLER REMOVED - Causes blank pages
@@ -5762,110 +5745,6 @@ window.addEventListener('load', function() {
 
 <!-- FLM TV Custom Authentication System -->
 <script src="flm-auth-system.js"></script>
-
-
-// ═══════════════════════════════════════════════════════════════
-// 🔇 LIVE TV PREVIEW CARD — ALWAYS START MUTED (even from Intro)
-// ✅ Keeps the autoplay feel (silent preview starts after a short delay)
-// ✅ Prevents the "enter from intro page" user-gesture from blasting sound
-// ═══════════════════════════════════════════════════════════════
-function setPreviewButtonState(isMuted){
-  const btn = document.getElementById('volumeToggleBtn');
-  if(!btn) return;
-  btn.classList.toggle('muted-glow', isMuted);
-  btn.classList.toggle('unmuted-glow', !isMuted);
-  btn.title = isMuted ? 'Unmute preview' : 'Mute preview';
-  const icon = btn.querySelector('i');
-  if(icon) icon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
-}
-
-function hardMutePreview(pv){
-  pv.muted = true;
-  pv.defaultMuted = true;
-  pv.volume = 0;
-  pv.dataset.userUnmuted = 'false';
-  setPreviewButtonState(true);
-}
-
-function initLivePreviewMuteLock(){
-  const pv = document.getElementById('previewVideo');
-  if(!pv) return;
-
-  // Always enforce mute BEFORE any play attempt
-  hardMutePreview(pv);
-
-  // Coming from intro? hard-lock mute for first ~4s
-  const fromIntro = sessionStorage.getItem('FLM_FROM_INTRO') === '1';
-  if(fromIntro){
-    sessionStorage.removeItem('FLM_FROM_INTRO');
-    const lockUntil = Date.now() + 4500;
-    (function lock(){
-      if(Date.now() < lockUntil){
-        pv.muted = true;
-        pv.defaultMuted = true;
-        pv.volume = 0;
-        requestAnimationFrame(lock);
-      }
-    })();
-  }
-
-  // Autoplay feel: start silent preview after short delay
-  setTimeout(() => {
-    // Re-apply mute right before play (important)
-    if(pv.dataset.userUnmuted !== 'true') {
-      pv.muted = true;
-      pv.defaultMuted = true;
-      pv.volume = 0;
-    }
-    pv.play().catch(()=>{ /* autoplay may be blocked; still fine */ });
-  }, 1800);
-
-  // Extra safety hooks
-  pv.addEventListener('play', () => {
-    if(pv.dataset.userUnmuted !== 'true'){
-      pv.muted = true; pv.volume = 0;
-    }
-  });
-  pv.addEventListener('loadedmetadata', () => {
-    if(pv.dataset.userUnmuted !== 'true'){
-      pv.muted = true; pv.defaultMuted = true; pv.volume = 0;
-    }
-  });
-
-  // If tab becomes visible again, re-mute unless user intentionally unmuted
-  document.addEventListener('visibilitychange', () => {
-    if(document.visibilityState === 'visible' && pv.dataset.userUnmuted !== 'true'){
-      pv.muted = true; pv.defaultMuted = true; pv.volume = 0;
-      setPreviewButtonState(true);
-    }
-  });
-}
-
-// Hook after DOM loads
-document.addEventListener('DOMContentLoaded', initLivePreviewMuteLock);
-
-// Override/ensure the preview volume toggle works
-window.togglePreviewVolume = function(){
-  const pv = document.getElementById('previewVideo');
-  if(!pv) return;
-
-  const willUnmute = pv.muted === true || pv.volume === 0;
-
-  if(willUnmute){
-    pv.muted = false;
-    pv.defaultMuted = false;
-    pv.volume = 1.0;
-    pv.dataset.userUnmuted = 'true';
-    setPreviewButtonState(false);
-    pv.play().catch(()=>{});
-  }else{
-    pv.muted = true;
-    pv.defaultMuted = true;
-    pv.volume = 0;
-    pv.dataset.userUnmuted = 'false';
-    setPreviewButtonState(true);
-  }
-};
 
 </script>
 

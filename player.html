@@ -851,290 +851,356 @@ database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// 🎬 VIDEO PLAYER - JELLYFIN-LIKE (No Jellyfin UI, No Logo, No Sign-in)
-// ✅ Fixes audio by forcing AAC when needed
-// ✅ Adds Chapters panel (like Jellyfin "Chapters")
-// ✅ Adds Next/Prev episode (when playing TV episodes)
+// VIDEO PLAYER - WITH WORKING AUDIO ON MOBILE
 // ═══════════════════════════════════════════════════════════════
 
 const CONFIG = {
-    // ✅ Keep SERVER + API_KEY aligned with home.html
     SERVER: 'https://flmtv26.duckdns.org:8920',
-    API_KEY: '62131ee22c0141c6b651be75a7444350',
-
-    // Public Jellyfin user (no password)
-    PUBLIC_USERNAME: 'Public',
-    PUBLIC_PASSWORD: '',
-
-    USER_ID: '',
+    API_KEY: '24674385633844efbe3a1367b8f63d43',
+    USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37',
     ACCESS_TOKEN: ''
 };
 
 const video = document.getElementById('video');
 const loading = document.getElementById('loading');
 const loadingText = document.getElementById('loading-text');
-
 const urlParams = new URLSearchParams(window.location.search);
 const itemId = urlParams.get('id');
 
-// Keep global refs so we can control playback
-let hls = null;
-let currentItem = null;
-let currentMediaSourceId = null;
-
-// 🔊 Force audio ON (best effort)
+// CRITICAL: Enable audio immediately
 function enableAudio() {
-    // Important: some codecs (DTS/TrueHD) won't play in browsers unless Jellyfin transcodes to AAC.
-    // We'll address that via the stream URLs below.
+    console.log('🔊 Enabling audio...');
+    
+    // Unmute video
     video.muted = false;
+    video.volume = 1.0;
     video.defaultMuted = false;
-    if (video.volume === 0) video.volume = 1.0;
-
-    // Some browsers expose audioTracks
-    try {
-        if (video.audioTracks && video.audioTracks.length) {
-            for (let i = 0; i < video.audioTracks.length; i++) video.audioTracks[i].enabled = true;
+    
+    // Check if video has audio tracks
+    if (video.audioTracks && video.audioTracks.length > 0) {
+        console.log(`✅ Found ${video.audioTracks.length} audio track(s)`);
+        for (let i = 0; i < video.audioTracks.length; i++) {
+            video.audioTracks[i].enabled = true;
+            console.log(`✅ Enabled audio track ${i}: ${video.audioTracks[i].label || 'Unknown'}`);
         }
-    } catch (e) {}
-}
-
-// 🔐 Authenticate (so Jellyfin never shows its own UI)
-async function authenticate() {
-    loadingText.textContent = 'Authenticating...';
-    const response = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
-        },
-        body: JSON.stringify({ Username: CONFIG.PUBLIC_USERNAME, Pw: CONFIG.PUBLIC_PASSWORD })
-    });
-
-    if (!response.ok) {
-        const err = await response.text().catch(() => '');
-        throw new Error(`Auth failed (${response.status}). ${err}`);
+    } else {
+        console.log('⚠️ No audio tracks found yet (may load later)');
     }
-
-    const data = await response.json();
-    CONFIG.ACCESS_TOKEN = data.AccessToken;
-    CONFIG.USER_ID = data.User?.Id || '';
-    return true;
+    
+    // Check video properties
+    console.log('📊 Video properties:');
+    console.log('  - muted:', video.muted);
+    console.log('  - volume:', video.volume);
+    console.log('  - audioTracks:', video.audioTracks ? video.audioTracks.length : 'not available');
+    console.log('  - src:', video.src ? video.src.substring(0, 100) + '...' : 'not set');
 }
 
-function jfHeaders() {
-    return {
+// Authenticate with Jellyfin
+async function authenticate() {
+    try {
+        loadingText.textContent = 'Authenticating...';
+        console.log('🔐 Authenticating with:', CONFIG.SERVER);
+        
+        const response = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
+            },
+            body: JSON.stringify({
+                Username: 'Public',
+                Pw: ''
+            })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            CONFIG.ACCESS_TOKEN = data.AccessToken;
+            CONFIG.USER_ID = data.User.Id;
+            console.log('✅ Authenticated with Jellyfin as:', data.User.Name);
+            console.log('✅ Access Token:', CONFIG.ACCESS_TOKEN);
+            return true;
+        } else {
+            console.error('❌ Auth failed with status:', response.status);
+            const errorText = await response.text();
+            console.error('❌ Auth error response:', errorText);
+            alert('Authentication failed. Please check if the Public user exists in Jellyfin.');
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Auth error:', error);
+        alert('Cannot connect to Jellyfin server at ' + CONFIG.SERVER + '. Please check if the server is running.');
+        return false;
+    }
+}
+
+// Get item details
+async function getItemDetails() {
+    const headers = {
         'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
     };
-}
-
-// ℹ️ Get Item details (Episode/Movie/etc.)
-async function getItemDetails() {
+    
     const url = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${itemId}`;
-    const response = await fetch(url, { headers: jfHeaders() });
-    if (!response.ok) throw new Error(`Item fetch failed (${response.status})`);
+    const response = await fetch(url, { headers });
     return await response.json();
 }
 
-// 🎛️ PlaybackInfo is the key for browser-safe playback (audio transcoding, mediasourceId, etc.)
-async function getPlaybackInfo() {
-    const url = `${CONFIG.SERVER}/Items/${itemId}/PlaybackInfo?UserId=${CONFIG.USER_ID}&api_key=${CONFIG.API_KEY}`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { ...jfHeaders(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            // Keep minimal; Jellyfin still returns MediaSources, etc.
-            DeviceProfile: {
-                Name: "FLM TV Web",
-                MaxStreamingBitrate: 12000000
+// Play video
+async function playVideo() {
+    try {
+        loadingText.textContent = 'Connecting to server...';
+        const authSuccess = await authenticate();
+        
+        if (!authSuccess) {
+            console.error('❌ Authentication failed, stopping playback');
+            loading.style.display = 'none';
+            return;
+        }
+        
+        loadingText.textContent = 'Loading video details...';
+        const item = await getItemDetails();
+        console.log('📺 Playing:', item.Name, item.Type);
+        
+        // CRITICAL: Enable audio BEFORE loading video
+        enableAudio();
+        
+        const isEpisode = item.Type === 'Episode';
+        
+        if (isEpisode) {
+            loadingText.textContent = 'Loading TV episode...';
+            // Use HLS for TV episodes with proper auth token
+            const hlsUrl = `${CONFIG.SERVER}/Videos/${itemId}/master.m3u8?api_key=${CONFIG.API_KEY}&MediaSourceId=${itemId}&X-Emby-Token=${CONFIG.ACCESS_TOKEN}`;
+            
+            console.log('🎬 HLS URL:', hlsUrl);
+            
+            if (Hls.isSupported()) {
+                const hls = new Hls({
+                    debug: true,
+                    enableWorker: true,
+                    lowLatencyMode: false,
+                    xhrSetup: function(xhr, url) {
+                        // Add auth headers to HLS requests
+                        xhr.setRequestHeader('X-Emby-Authorization', `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`);
+                    },
+                    autoStartLoad: true
+                });
+                
+                hls.loadSource(hlsUrl);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    console.log('✅ HLS manifest parsed');
+                    
+                    // CRITICAL: Enable audio after HLS loads
+                    enableAudio();
+                    
+                    loading.style.display = 'none';
+                    
+                    // Try to autoplay
+                    const playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            console.log('✅ Autoplay started');
+                            enableAudio(); // Ensure audio is enabled after play
+                            
+                            // Try to unmute after 1 second if still muted
+                            setTimeout(() => {
+                                if (video.muted) {
+                                    console.log('⚠️ Video still muted, attempting to unmute...');
+                                    video.muted = false;
+                                }
+                            }, 1000);
+                        }).catch(err => {
+                            console.log('⚠️ Autoplay blocked - user must tap play');
+                            console.log('⚠️ Error:', err);
+                            
+                            // Create a manual play button
+                            showManualPlayButton();
+                        });
+                    }
+                });
+                
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    console.error('HLS Error:', data);
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.log('Network error, trying to recover...');
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.log('Media error, trying to recover...');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                console.log('Fatal error, switching to direct play...');
+                                hls.destroy();
+                                playDirectVideo();
+                                break;
+                        }
+                    }
+                });
+                
+                // Keep audio enabled
+                hls.on(Hls.Events.AUDIO_TRACK_LOADED, () => {
+                    enableAudio();
+                });
+                
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                video.src = hlsUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    enableAudio();
+                    loading.style.display = 'none';
+                    video.play().catch(() => {
+                        console.log('⚠️ Autoplay blocked - user must tap play');
+                    });
+                });
+            } else {
+                console.log('HLS not supported, using direct play');
+                playDirectVideo();
             }
-        })
-    });
-    if (!response.ok) {
-        const err = await response.text().catch(() => '');
-        throw new Error(`PlaybackInfo failed (${response.status}). ${err}`);
-    }
-    return await response.json();
-}
-
-// 🧩 Chapters UI
-function ensureChaptersPanel() {
-    if (document.getElementById('chaptersPanel')) return;
-
-    const panel = document.createElement('div');
-    panel.className = 'side-panel';
-    panel.id = 'chaptersPanel';
-    panel.innerHTML = `
-        <div class="panel-header">
-            <div>
-                <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-list"></i> Chapters</h3>
-                <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Jump to a scene 🎬</p>
-            </div>
-            <div style="display:flex; gap:0.5rem;">
-                <button class="panel-toggle" onclick="togglePanelFullscreen('chaptersPanel')" title="Expand Panel">
-                    <i class="fas fa-expand"></i>
-                </button>
-                <button class="panel-close" onclick="closePanel('chaptersPanel')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-        <div class="panel-body">
-            <div id="chaptersList" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
-        </div>
-    `;
-    document.body.appendChild(panel);
-
-    // Add "Chapters" button alongside mini buttons (Chat + AI stay)
-    const mini = document.querySelector('.mini-btns');
-    if (mini && !document.getElementById('chaptersMiniBtn')) {
-        const btn = document.createElement('button');
-        btn.id = 'chaptersMiniBtn';
-        btn.className = 'mini-btn';
-        btn.title = 'Chapters';
-        btn.onclick = () => openPanel('chaptersPanel');
-        btn.innerHTML = `<i class="fas fa-list"></i>`;
-        mini.insertBefore(btn, mini.firstChild); // Put chapters first
-    }
-
-    // Add to mobile nav too
-    const bottomNav = document.querySelector('.bottom-nav');
-    if (bottomNav && !document.getElementById('chaptersNavBtn')) {
-        const b = document.createElement('button');
-        b.id = 'chaptersNavBtn';
-        b.className = 'bottom-nav-item';
-        b.onclick = () => openPanel('chaptersPanel');
-        b.innerHTML = `<i class="fas fa-list"></i><span>Chapters</span>`;
-        // Insert after Home
-        bottomNav.insertBefore(b, bottomNav.children[1] || null);
+        } else {
+            // Direct play for movies
+            loadingText.textContent = 'Loading movie...';
+            playDirectVideo();
+        }
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        alert('Error loading video. Please try again.');
+        loading.style.display = 'none';
     }
 }
 
-function formatTime(seconds) {
-    seconds = Math.max(0, Math.floor(seconds || 0));
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    return `${m}:${String(s).padStart(2,'0')}`;
-}
-
-function renderChapters(chapters) {
-    ensureChaptersPanel();
-    const list = document.getElementById('chaptersList');
-    if (!list) return;
-
-    list.innerHTML = '';
-    if (!chapters || !chapters.length) {
-        list.innerHTML = `<div style="color:#94a3b8;">No chapters found for this title.</div>`;
-        return;
-    }
-
-    chapters.forEach((ch, idx) => {
-        // Jellyfin chapters provide StartPositionTicks
-        const startSec = (ch.StartPositionTicks || 0) / 10000000;
-        const name = ch.Name || `Chapter ${idx + 1}`;
-
-        const row = document.createElement('button');
-        row.style.cssText = `
-            background: rgba(0,0,0,.35);
-            border: 1px solid rgba(255,255,255,.12);
-            color: #fff;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            text-align: left;
-            display:flex;
-            justify-content: space-between;
-            gap: 1rem;
-        `;
-        row.innerHTML = `
-            <div style="font-weight:700;">${name}</div>
-            <div style="color:#94a3b8; font-weight:700;">${formatTime(startSec)}</div>
-        `;
-        row.onclick = () => {
-            try {
-                video.currentTime = startSec;
-                video.play().catch(() => {});
-                closePanel('chaptersPanel');
-            } catch (e) {}
-        };
-        list.appendChild(row);
-    });
-}
-
-// ⏭️ Next/Prev episode (basic)
-async function getSeasonEpisodes(seasonId) {
-    const url = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${seasonId}&Recursive=true&IncludeItemTypes=Episode&SortBy=IndexNumber&SortOrder=Ascending`;
-    const res = await fetch(url, { headers: jfHeaders() });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data?.Items || [];
-}
-
-function ensureEpisodeNav() {
-    if (document.getElementById('episodeNav')) return;
-
-    const nav = document.createElement('div');
-    nav.id = 'episodeNav';
-    nav.style.cssText = `
-        position: fixed;
-        left: 20px;
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        display:flex;
-        justify-content: space-between;
-        pointer-events: none;
-        z-index: 120;
-    `;
-    nav.innerHTML = `
-        <button id="prevEpisodeBtn" style="pointer-events:auto; opacity:.85; border:none; background:rgba(0,0,0,.55); color:#fff; border:2px solid rgba(255,255,255,.25); width:54px; height:54px; border-radius:999px; cursor:pointer; display:none;">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button id="nextEpisodeBtn" style="pointer-events:auto; opacity:.85; border:none; background:rgba(0,0,0,.55); color:#fff; border:2px solid rgba(255,255,255,.25); width:54px; height:54px; border-radius:999px; cursor:pointer; display:none;">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    `;
-    document.body.appendChild(nav);
-}
-
-// 🎬 Build stream URLs that force browser-safe AUDIO (AAC)
-function buildHlsUrl(mediaSourceId) {
-    // Force AAC audio + H.264 video for broad browser compatibility.
-    // This is the #1 reason the Jellyfin web player works but a "direct stream" might be silent.
-    return `${CONFIG.SERVER}/Videos/${itemId}/master.m3u8`
-        + `?api_key=${encodeURIComponent(CONFIG.API_KEY)}`
-        + `&MediaSourceId=${encodeURIComponent(mediaSourceId)}`
-        + `&X-Emby-Token=${encodeURIComponent(CONFIG.ACCESS_TOKEN)}`
-        + `&VideoCodec=h264`
-        + `&AudioCodec=aac`
-        + `&TranscodingProtocol=hls`
-        + `&MaxStreamingBitrate=12000000`
-        + `&EnableSubtitlesInManifest=true`;
-}
-
-function buildDirectUrl(mediaSourceId) {
-    return `${CONFIG.SERVER}/Videos/${itemId}/stream`
-        + `?static=false`
-        + `&api_key=${encodeURIComponent(CONFIG.API_KEY)}`
-        + `&MediaSourceId=${encodeURIComponent(mediaSourceId)}`
-        + `&X-Emby-Token=${encodeURIComponent(CONFIG.ACCESS_TOKEN)}`
-        + `&VideoCodec=h264`
-        + `&AudioCodec=aac,mp3,ac3`
-        + `&MaxStreamingBitrate=12000000`;
-}
-
-function destroyHls() {
-    if (hls) {
-        try { hls.destroy(); } catch(e) {}
-        hls = null;
+function playDirectVideo() {
+    // Request direct stream with explicit audio codec
+    const directUrl = `${CONFIG.SERVER}/Videos/${itemId}/stream?static=true&api_key=${CONFIG.API_KEY}&X-Emby-Token=${CONFIG.ACCESS_TOKEN}&AudioCodec=aac,mp3,ac3&VideoCodec=h264,mpeg4&MaxStreamingBitrate=8000000`;
+    console.log('🎬 Direct URL:', directUrl);
+    video.src = directUrl;
+    
+    // CRITICAL: Enable audio for direct playback
+    enableAudio();
+    
+    video.addEventListener('loadedmetadata', () => {
+        enableAudio(); // Enable again after metadata loads
+        loading.style.display = 'none';
+    }, { once: true });
+    
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log('✅ Direct playback started');
+            enableAudio();
+            
+            // Try to unmute after 1 second if still muted
+            setTimeout(() => {
+                if (video.muted) {
+                    console.log('⚠️ Video still muted after 1s, attempting to unmute...');
+                    video.muted = false;
+                }
+            }, 1000);
+        }).catch(err => {
+            console.log('⚠️ Autoplay blocked for direct playback');
+            console.log('⚠️ Error:', err);
+            showManualPlayButton();
+        });
     }
 }
 
+// Handle video errors
+video.addEventListener('error', (e) => {
+    console.error('❌ Video error:', e);
+    console.error('❌ Video error code:', video.error ? video.error.code : 'unknown');
+    console.error('❌ Video error message:', video.error ? video.error.message : 'unknown');
+    console.error('❌ Video src:', video.src);
+    
+    loading.style.display = 'none';
+    
+    if (video.error) {
+        let errorMsg = 'Error playing video';
+        switch(video.error.code) {
+            case 1: errorMsg = 'Video loading aborted'; break;
+            case 2: errorMsg = 'Network error - Check if Jellyfin server is running at ' + CONFIG.SERVER; break;
+            case 3: errorMsg = 'Video decode error - Format may not be supported'; break;
+            case 4: errorMsg = 'Video format not supported by browser'; break;
+        }
+        
+        const retryBtn = confirm(errorMsg + '\n\nDo you want to try again?');
+        if (retryBtn) {
+            location.reload();
+        }
+    }
+});
+
+// Ensure audio stays enabled
+video.addEventListener('loadeddata', () => {
+    console.log('📺 Video data loaded');
+    enableAudio();
+});
+
+video.addEventListener('loadedmetadata', () => {
+    console.log('📺 Video metadata loaded');
+    enableAudio();
+    
+    // Check if video actually has audio
+    if (video.mozHasAudio !== undefined) {
+        console.log('🔊 Has audio (Firefox):', video.mozHasAudio);
+    }
+    if (video.webkitAudioDecodedByteCount !== undefined) {
+        console.log('🔊 Audio bytes decoded (Chrome):', video.webkitAudioDecodedByteCount);
+    }
+});
+
+video.addEventListener('play', () => {
+    enableAudio();
+});
+
+video.addEventListener('playing', () => {
+    enableAudio();
+});
+
+// Handle fullscreen changes
+let isFullscreen = false;
+document.addEventListener('fullscreenchange', () => {
+    isFullscreen = !!document.fullscreenElement;
+    document.body.classList.toggle('fullscreen', isFullscreen);
+    console.log('Fullscreen:', isFullscreen);
+});
+
+document.addEventListener('webkitfullscreenchange', () => {
+    isFullscreen = !!document.webkitFullscreenElement;
+    document.body.classList.toggle('fullscreen', isFullscreen);
+});
+
+// Keyboard controls (desktop)
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'k') {
+        e.preventDefault();
+        video.paused ? video.play() : video.pause();
+    } else if (e.key === 'ArrowLeft') {
+        video.currentTime -= 10;
+    } else if (e.key === 'ArrowRight') {
+        video.currentTime += 10;
+    } else if (e.key === 'f') {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            document.documentElement.requestFullscreen();
+        }
+    } else if (e.key === 'm') {
+        video.muted = !video.muted;
+    } else if (e.key === 'Escape') {
+        // Close panels on Escape
+        document.querySelectorAll('.side-panel.active').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        document.body.classList.remove('panel-active');
+    }
+});
+
+// Show manual play button when autoplay is blocked
 function showManualPlayButton() {
-    // Only show one overlay
-    if (document.getElementById('manualPlayOverlay')) return;
-
     const playOverlay = document.createElement('div');
     playOverlay.id = 'manualPlayOverlay';
     playOverlay.style.cssText = `
@@ -1147,173 +1213,58 @@ function showManualPlayButton() {
         z-index: 10000;
         cursor: pointer;
     `;
-
+    
     playOverlay.innerHTML = `
         <div style="text-align: center;">
-            <div style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #22c55e); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <div style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #22c55e); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; cursor: pointer;">
                 <i class="fas fa-play" style="font-size: 40px; color: #000; margin-left: 5px;"></i>
             </div>
-            <div style="color: #fff; font-size: 1.5rem; font-weight: 800;">Tap to Play with Sound 🔊</div>
-            <div style="color: #94a3b8; font-size: 1rem; margin-top: 10px;">Some browsers block autoplay with audio.</div>
+            <div style="color: #fff; font-size: 1.5rem; font-weight: 700;">Click to Play with Audio</div>
+            <div style="color: #94a3b8; font-size: 1rem; margin-top: 10px;">Browser blocked autoplay</div>
         </div>
     `;
-
+    
     playOverlay.addEventListener('click', () => {
-        enableAudio();
+        video.muted = false;
+        video.volume = 1.0;
         video.play().then(() => {
+            console.log('✅ Manual play started with audio');
             enableAudio();
             playOverlay.remove();
-        }).catch(() => {
-            alert('Could not start playback. Please refresh and try again.');
+        }).catch(err => {
+            console.error('❌ Manual play failed:', err);
+            alert('Could not play video. Please try refreshing the page.');
         });
     });
-
+    
     document.body.appendChild(playOverlay);
 }
 
-async function startPlayback() {
-    try {
-        if (!itemId) {
-            alert('No video ID provided');
-            loading.style.display = 'none';
-            return;
-        }
-
-        loadingText.textContent = 'Connecting...';
-        await authenticate();
-
-        loadingText.textContent = 'Loading details...';
-        currentItem = await getItemDetails();
-
-        // Chapters
-        try {
-            // Some servers include Chapters on the item, some under MediaSources via PlaybackInfo.
-            // We'll prioritize PlaybackInfo if present.
-            const playbackInfo = await getPlaybackInfo();
-            const ms = playbackInfo?.MediaSources?.[0];
-            currentMediaSourceId = ms?.Id || currentItem?.MediaSources?.[0]?.Id || itemId;
-
-            const chapters = ms?.Chapters || currentItem?.Chapters || [];
-            renderChapters(chapters);
-        } catch (e) {
-            // Not fatal
-            console.warn('Chapters/PlaybackInfo warning:', e);
-            currentMediaSourceId = currentItem?.MediaSources?.[0]?.Id || itemId;
-        }
-
+// Force unmute when user clicks video
+video.addEventListener('click', () => {
+    if (video.muted) {
+        console.log('🔊 User clicked video - unmuting');
+        video.muted = false;
+        video.volume = 1.0;
         enableAudio();
-
-        // Episode nav (only for Episodes)
-        ensureEpisodeNav();
-        if (currentItem?.Type === 'Episode' && currentItem?.SeasonId) {
-            const eps = await getSeasonEpisodes(currentItem.SeasonId);
-            const idx = eps.findIndex(e => e.Id === itemId);
-
-            const prevBtn = document.getElementById('prevEpisodeBtn');
-            const nextBtn = document.getElementById('nextEpisodeBtn');
-
-            if (prevBtn && nextBtn) {
-                if (idx > 0) {
-                    prevBtn.style.display = 'block';
-                    prevBtn.onclick = () => location.href = `player.html?id=${eps[idx - 1].Id}`;
-                }
-                if (idx >= 0 && idx < eps.length - 1) {
-                    nextBtn.style.display = 'block';
-                    nextBtn.onclick = () => location.href = `player.html?id=${eps[idx + 1].Id}`;
-                }
-            }
-        }
-
-        // ✅ Prefer HLS (best for TV episodes + browser)
-        const hlsUrl = buildHlsUrl(currentMediaSourceId);
-        const directUrl = buildDirectUrl(currentMediaSourceId);
-
-        console.log('🎬 Playing:', currentItem?.Name, currentItem?.Type);
-        console.log('🎬 HLS URL:', hlsUrl);
-
-        destroyHls();
-
-        if (Hls.isSupported()) {
-            hls = new Hls({
-                debug: false,
-                enableWorker: true,
-                lowLatencyMode: false,
-                xhrSetup: function(xhr) {
-                    // Auth header for every HLS request (segments + playlists)
-                    xhr.setRequestHeader('X-Emby-Authorization', `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`);
-                }
-            });
-
-            hls.loadSource(hlsUrl);
-            hls.attachMedia(video);
-
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                enableAudio();
-                loading.style.display = 'none';
-
-                video.play().then(() => {
-                    enableAudio();
-                }).catch(() => {
-                    // Autoplay blocked -> show manual overlay
-                    showManualPlayButton();
-                });
-            });
-
-            hls.on(Hls.Events.ERROR, (event, data) => {
-                console.error('HLS Error:', data);
-                if (data?.fatal) {
-                    // Fallback to direct URL
-                    destroyHls();
-                    video.src = directUrl;
-                    enableAudio();
-                    loading.style.display = 'none';
-                    video.play().catch(() => showManualPlayButton());
-                }
-            });
-
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // Safari native HLS
-            video.src = hlsUrl;
-            video.addEventListener('loadedmetadata', () => {
-                enableAudio();
-                loading.style.display = 'none';
-                video.play().catch(() => showManualPlayButton());
-            }, { once: true });
-        } else {
-            // Last resort
-            video.src = directUrl;
-            enableAudio();
-            loading.style.display = 'none';
-            video.play().catch(() => showManualPlayButton());
-        }
-
-    } catch (error) {
-        console.error('❌ Player error:', error);
-        loading.style.display = 'none';
-        alert('Player error: ' + (error?.message || error));
-    }
-}
-
-// Keep audio enabled when user interacts
-video.addEventListener('click', () => enableAudio());
-video.addEventListener('play', () => enableAudio());
-video.addEventListener('playing', () => enableAudio());
-video.addEventListener('loadedmetadata', () => enableAudio());
-video.addEventListener('loadeddata', () => enableAudio());
-
-// Keyboard: M to mute, C to open chapters
-document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'm') {
-        video.muted = !video.muted;
-    }
-    if (e.key.toLowerCase() === 'c') {
-        ensureChaptersPanel();
-        openPanel('chaptersPanel');
     }
 });
 
-// Start
-startPlayback();
+// Start playing
+if (itemId) {
+    console.log('🎬 Starting video player for item:', itemId);
+    playVideo();
+} else {
+    alert('No video ID provided');
+    loading.style.display = 'none';
+}
+
+// Log video state for debugging
+video.addEventListener('loadstart', () => console.log('📡 Load start'));
+video.addEventListener('progress', () => console.log('⏳ Loading progress'));
+video.addEventListener('canplay', () => console.log('✅ Can play'));
+video.addEventListener('canplaythrough', () => console.log('✅ Can play through'));
+
 </script>
 
 </body>

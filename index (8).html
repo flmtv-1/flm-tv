@@ -63,15 +63,15 @@
             z-index: 1;
         }
         
-        /* CONTENT - BUTTON CENTERED */
+        /* CONTENT - BUTTON EVEN LOWER */
         .content {
             position: relative;
-            z-index: 1000;  /* HIGH z-index - above footer */
+            z-index: 10;
             display: flex;
-            align-items: center;  /* CENTER vertically */
+            align-items: flex-end;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 20px 20px 120px;
         }
         
         /* ENTER BUTTON - SMALLER */
@@ -166,37 +166,26 @@
             color: #fcd116;
         }
         
-        /* MOBILE - BUTTON ALWAYS VISIBLE AND CENTERED */
+        /* MOBILE */
         @media (max-width: 768px) {
             .content {
-                padding: 20px;  /* Equal padding all around */
-                align-items: center !important;  /* FORCE center */
-                justify-content: center !important;
+                padding: 20px 15px 110px;
             }
             
             .enter-btn {
-                padding: 20px 50px;  /* MUCH BIGGER */
-                font-size: 28px;  /* MUCH LARGER text */
-                box-shadow: 0 0 120px rgba(252, 209, 22, 1), 
-                            0 0 80px rgba(34, 197, 94, 0.8),
-                            0 20px 60px rgba(0, 0, 0, 0.8);  /* HUGE glow */
-                z-index: 10000 !important;
+                padding: 12px 30px;
+                font-size: 20px;
             }
         }
         
         @media (max-width: 480px) {
             .content {
-                padding: 20px;
-                align-items: center !important;
-                justify-content: center !important;
+                padding: 15px 10px 100px;
             }
             
             .enter-btn {
-                padding: 18px 45px;  /* BIGGER */
-                font-size: 26px;  /* LARGER */
-                box-shadow: 0 0 100px rgba(252, 209, 22, 1), 
-                            0 0 60px rgba(34, 197, 94, 0.8),
-                            0 20px 60px rgba(0, 0, 0, 0.8);
+                padding: 10px 28px;
+                font-size: 18px;
             }
         }
     </style>
@@ -205,10 +194,10 @@
     
     <!-- VIDEO BACKGROUND -->
     <div class="video-bg">
-        <video id="introVideo" autoplay muted playsinline preload="auto"
-        style="position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;">
-        <source id="videoSource" src="assets/FLM_Intro.mp4" type="video/mp4">
-    </video>
+        <video id="introVideo" autoplay muted playsinline>
+            <!-- Video source is set by JavaScript -->
+            <source id="videoSource" src="" type="video/mp4">
+        </video>
     </div>
     
     <!-- Dark overlay -->
@@ -298,50 +287,7 @@
             soundBtn.style.display = 'none'; // Hide sound button when video ends
             console.log('✅ Video ended - Showing Alien Banner background');
         });
-    
-// ═══════════════════════════════════════════════════════════════
-// 🔊 INTRO SOUND TOGGLE (Commercial intro)
-// ═══════════════════════════════════════════════════════════════
-(function(){
-    const v = document.getElementById('introVideo');
-    const btn = document.getElementById('soundToggle') || document.querySelector('.sound-toggle') || document.querySelector('[data-sound-toggle]');
-    const enter = document.getElementById('enterButton') || document.getElementById('enterBtn') || document.querySelector('button');
-
-    function setIcon(isMuted){
-        if (!btn) return;
-        btn.classList.toggle('muted', isMuted);
-        btn.innerHTML = isMuted ? '🔇' : '🔊';
-        btn.title = isMuted ? 'Unmute' : 'Mute';
-    }
-
-    // Start muted for autoplay, but user can unmute with a click
-    if (v) {
-        v.muted = true;
-        v.defaultMuted = true;
-        setIcon(true);
-    }
-
-    if (btn && v) {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // Toggle
-            v.muted = !v.muted;
-            v.defaultMuted = v.muted;
-            if (!v.muted && v.volume === 0) v.volume = 1.0;
-            setIcon(v.muted);
-            v.play().catch(()=>{});
-        }, { passive:false });
-    }
-
-    // On ENTER: set a flag so home page hard-mutes preview even though this was a user gesture
-    if (enter) {
-        enter.addEventListener('click', () => {
-            try { sessionStorage.setItem('FLM_FROM_INTRO','1'); } catch(e){}
-        }, { capture:true });
-    }
-})();
-</script>
+    </script>
     
 </body>
 </html>
