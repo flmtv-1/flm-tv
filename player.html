@@ -3,161 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - Cinematic Player</title>
+    <title>FLM TV Mobile Player</title>
     
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #ffd700;
-            --secondary: #22c55e;
-            --bg: #000;
-            --panel-width: 450px;
+            --primary: #ffd700; --secondary: #22c55e; --panel-width: 450px;
         }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
 
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; overflow: hidden; font-family: sans-serif;
-        }
-
-        /* 1. THE MAIN WRAPPER (This handles the sliding) */
-        .master-container {
-            display: flex;
-            width: calc(100vw + var(--panel-width)); /* Total width including hidden panel */
-            height: 100vh;
+        /* THE SLIDING WRAPPER */
+        .master-layout {
+            display: flex; width: calc(100vw + var(--panel-width)); height: 100vh;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: translateX(0); /* Default: Panel hidden */
         }
+        .master-layout.panel-active { transform: translateX(calc(-1 * var(--panel-width))); }
 
-        /* When active, shift the whole container left by the panel width */
-        .master-container.panel-open {
-            transform: translateX(calc(-1 * var(--panel-width)));
+        .video-container { width: 100vw; height: 100vh; position: relative; background: #000; }
+
+        /* BIG TOUCH-FRIENDLY CONTROLS */
+        .vjs-control-bar {
+            background: linear-gradient(transparent, rgba(0,0,0,0.95)) !important;
+            height: 6em !important; /* Larger for thumbs */
+            padding: 0 10px !important;
         }
+        .vjs-button > .vjs-icon-placeholder:before { font-size: 2.2em !important; line-height: 2.5 !important; }
 
-        /* 2. VIDEO SECTION */
-        .video-section {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
+        /* CHAT/AI BUTTONS IN BAR */
+        .vjs-flm-btn { cursor: pointer; display: flex !important; align-items: center; justify-content: center; width: 5em !important; }
+        .vjs-flm-btn i { color: var(--primary); font-size: 2rem; }
+        .vjs-flm-btn img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--secondary); }
 
-        .video-js { width: 100% !important; height: 100% !important; }
+        /* THE PANELS */
+        .side-panel { width: var(--panel-width); height: 100vh; background: #111; border-left: 2px solid var(--primary); display: flex; flex-direction: column; }
+        
+        @media (max-width: 768px) { :root { --panel-width: 100vw; } }
 
-        /* 3. PANEL SECTION */
-        .panel-section {
-            width: var(--panel-width);
-            height: 100vh;
-            background: #1a1f2e;
-            border-left: 2px solid var(--primary);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel-header {
-            padding: 20px;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* INTEGRATED CONTROL BUTTONS */
-        .vjs-flm-icon {
-            cursor: pointer;
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            width: 4em !important;
-        }
-        .vjs-flm-icon i { color: var(--primary); font-size: 1.5rem; }
-        .vjs-flm-icon img { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--secondary); }
-
-        /* Mobile full-screen panels */
-        @media (max-width: 768px) {
-            :root { --panel-width: 100vw; }
+        /* UNMUTE OVERLAY (Crucial for Mobile) */
+        #unmuteOverlay {
+            position: absolute; top: 20px; right: 20px; z-index: 9999;
+            background: var(--primary); color: #000; padding: 10px 20px;
+            border-radius: 50px; font-weight: bold; display: none; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="master-container" id="mainWrapper">
-    <div class="video-section">
-        <video id="flm-player" class="video-js vjs-big-play-centered" controls playsinline></video>
+<div class="master-layout" id="layoutWrapper">
+    <div class="video-container">
+        <div id="unmuteOverlay" onclick="unmute()"><i class="fas fa-volume-up"></i> TAP TO UNMUTE</div>
         
-        <button onclick="window.history.back()" style="position:absolute; top:20px; left:20px; z-index:10; background:rgba(0,0,0,0.5); border:1px solid var(--primary); color:white; padding:8px 15px; border-radius:5px; cursor:pointer;">
-            <i class="fas fa-arrow-left"></i>
-        </button>
+        <video id="flm-mobile-player" class="video-js vjs-big-play-centered" playsinline muted></video>
     </div>
 
-    <div class="panel-section">
-        <div class="panel-header">
-            <h2 id="panelTitle" style="color:var(--primary); margin:0;">GLOBAL CHAT</h2>
-            <button onclick="closeUI()" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+    <div class="side-panel">
+        <div style="padding:20px; border-bottom:2px solid var(--secondary); display:flex; justify-content:space-between; align-items:center;">
+            <h2 id="pTitle" style="color:var(--primary); margin:0;">CHAT</h2>
+            <button onclick="closeUI()" style="background:none; border:none; color:white; font-size:2.5rem;">&times;</button>
         </div>
-        <div id="panelContent" style="flex:1; padding:20px; color:white; overflow-y:auto;">
-            <p>Panel content area...</p>
-        </div>
+        <div id="pContent" style="flex:1; overflow-y:auto; padding:15px; color:white;">
+            </div>
     </div>
 </div>
 
 <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 <script>
-    const wrapper = document.getElementById('mainWrapper');
-    const title = document.getElementById('panelTitle');
-    
-    // Initialize Player
-    const player = videojs('flm-player', {
+    const player = videojs('flm-mobile-player', {
+        controls: true,
         autoplay: true,
+        fluid: false,
+        userActions: { doubleClick: true },
         controlBar: {
             children: [
-                'playToggle', 'volumePanel', 'currentTimeDisplay', 
-                'progressControl', 'durationDisplay', 'fullscreenToggle'
+                'playToggle', 'progressControl', 'volumePanel', 
+                'currentTimeDisplay', 'fullscreenToggle'
             ]
         }
     });
 
-    // Inject buttons into the control bar so they fade out automatically
     player.ready(function() {
         const bar = player.controlBar.el();
-
-        // Chat Button
+        
+        // Add Chat
         const chatBtn = document.createElement('div');
-        chatBtn.className = 'vjs-control vjs-button vjs-flm-icon';
+        chatBtn.className = 'vjs-control vjs-button vjs-flm-btn';
         chatBtn.innerHTML = `<i class="fas fa-comments"></i>`;
-        chatBtn.onclick = () => openUI('CHAT');
+        chatBtn.onclick = () => openUI('GLOBAL CHAT');
 
-        // AI Button
+        // Add AI
         const aiBtn = document.createElement('div');
-        aiBtn.className = 'vjs-control vjs-button vjs-flm-icon';
+        aiBtn.className = 'vjs-control vjs-button vjs-flm-btn';
         aiBtn.innerHTML = `<img src="assets/images/z-ai-avatar2.png">`;
         aiBtn.onclick = () => openUI('ZAINA AI');
 
-        // Add to bar
         const fs = player.controlBar.fullscreenToggle.el();
         bar.insertBefore(chatBtn, fs);
         bar.insertBefore(aiBtn, chatBtn);
 
-        // Load Stream
-        const id = new URLSearchParams(window.location.search).get('id');
-        if(id) {
-            player.src({
-                src: `https://flmtv26.duckdns.org:8920/Videos/${id}/stream?static=true&api_key=5423f03b4131464490333d964f4f7830`,
-                type: 'video/mp4'
-            });
+        // Show unmute button if muted
+        if (player.muted()) {
+            document.getElementById('unmuteOverlay').style.display = 'block';
         }
+
+        const id = new URLSearchParams(window.location.search).get('id');
+        player.src({
+            src: `https://flmtv26.duckdns.org:8920/Videos/${id}/stream?static=true&api_key=5423f03b4131464490333d964f4f7830`,
+            type: 'video/mp4'
+        });
     });
 
-    function openUI(type) {
-        title.innerText = type;
-        title.style.color = (type === 'CHAT') ? 'var(--primary)' : 'var(--secondary)';
-        wrapper.classList.add('panel-open');
-        // Trigger a resize so the video fits the new smaller width
+    function unmute() {
+        player.muted(false);
+        player.volume(1);
+        document.getElementById('unmuteOverlay').style.display = 'none';
+    }
+
+    function openUI(name) {
+        document.getElementById('pTitle').innerText = name;
+        document.getElementById('layoutWrapper').classList.add('panel-active');
         setTimeout(() => player.trigger('resize'), 400);
     }
 
     function closeUI() {
-        wrapper.classList.remove('panel-open');
+        document.getElementById('layoutWrapper').classList.remove('panel-active');
         setTimeout(() => player.trigger('resize'), 400);
     }
 </script>
