@@ -3,109 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV Mobile Player</title>
+    <title>FLM TV - Pro Player</title>
     
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #ffd700; --secondary: #22c55e; --panel-width: 450px;
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --bg-card: #1a1f2e;
         }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
 
-        /* THE SLIDING WRAPPER */
-        .master-layout {
-            display: flex; width: calc(100vw + var(--panel-width)); height: 100vh;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: #000; overflow: hidden; font-family: 'Inter', sans-serif;
         }
-        .master-layout.panel-active { transform: translateX(calc(-1 * var(--panel-width))); }
 
-        .video-container { width: 100vw; height: 100vh; position: relative; background: #000; }
+        /* MASTER WRAPPER: Ensures 100% visibility of everything */
+        .master-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        /* BIG TOUCH-FRIENDLY CONTROLS */
+        /* VIDEO AREA: Resizes dynamically to keep controls on screen */
+        .video-stage {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* THE PLAYER: Forced to fill the stage */
+        .video-js {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* 👑 THE FIX: FORCE CONTROL BAR VISIBILITY & SIZE */
         .vjs-control-bar {
-            background: linear-gradient(transparent, rgba(0,0,0,0.95)) !important;
-            height: 6em !important; /* Larger for thumbs */
-            padding: 0 10px !important;
+            height: 60px !important; /* Larger height for high-res monitors */
+            background: rgba(0, 0, 0, 0.85) !important;
+            display: flex !important;
+            align-items: center !important;
+            font-size: 14px !important;
         }
-        .vjs-button > .vjs-icon-placeholder:before { font-size: 2.2em !important; line-height: 2.5 !important; }
 
-        /* CHAT/AI BUTTONS IN BAR */
-        .vjs-flm-btn { cursor: pointer; display: flex !important; align-items: center; justify-content: center; width: 5em !important; }
-        .vjs-flm-btn i { color: var(--primary); font-size: 2rem; }
-        .vjs-flm-btn img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--secondary); }
+        /* Custom Icons Scaling */
+        .vjs-flm-btn { 
+            cursor: pointer; 
+            display: flex !important; 
+            align-items: center; 
+            justify-content: center; 
+            width: 50px !important; 
+        }
+        .vjs-flm-btn i { font-size: 1.8rem !important; color: var(--primary); }
+        .vjs-flm-btn img { 
+            width: 36px; height: 36px; 
+            border-radius: 50%; 
+            border: 2px solid var(--secondary); 
+        }
 
-        /* THE PANELS */
-        .side-panel { width: var(--panel-width); height: 100vh; background: #111; border-left: 2px solid var(--primary); display: flex; flex-direction: column; }
-        
-        @media (max-width: 768px) { :root { --panel-width: 100vw; } }
+        /* SIDE PANEL */
+        .side-panel {
+            width: 0;
+            height: 100%;
+            background: var(--bg-card);
+            border-left: 0px solid var(--primary);
+            transition: width 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-        /* UNMUTE OVERLAY (Crucial for Mobile) */
-        #unmuteOverlay {
-            position: absolute; top: 20px; right: 20px; z-index: 9999;
-            background: var(--primary); color: #000; padding: 10px 20px;
-            border-radius: 50px; font-weight: bold; display: none; cursor: pointer;
+        body.panel-active .side-panel {
+            width: 450px;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Mobile full-screen panel */
+        @media (max-width: 768px) {
+            body.panel-active .side-panel { width: 100vw; }
+            body.panel-active .video-stage { display: none; }
+        }
+
+        /* Sound Unlock Overlay */
+        #audioGuard {
+            position: absolute; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.8); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="master-layout" id="layoutWrapper">
-    <div class="video-container">
-        <div id="unmuteOverlay" onclick="unmute()"><i class="fas fa-volume-up"></i> TAP TO UNMUTE</div>
-        
-        <video id="flm-mobile-player" class="video-js vjs-big-play-centered" playsinline muted></video>
+<div class="master-container">
+    <div class="video-stage">
+        <div id="audioGuard" onclick="startEverything()">
+            <i class="fas fa-play-circle" style="font-size: 5rem; color: var(--primary); margin-bottom: 20px;"></i>
+            <h2 style="color:white; margin:0;">TAP TO START MOVIE</h2>
+            <p style="color:var(--primary)">Click to enable audio & controls</p>
+        </div>
+
+        <video id="flmPlayer" class="video-js vjs-big-play-centered" playsinline></video>
     </div>
 
-    <div class="side-panel">
-        <div style="padding:20px; border-bottom:2px solid var(--secondary); display:flex; justify-content:space-between; align-items:center;">
-            <h2 id="pTitle" style="color:var(--primary); margin:0;">CHAT</h2>
-            <button onclick="closeUI()" style="background:none; border:none; color:white; font-size:2.5rem;">&times;</button>
+    <div class="side-panel" id="uiPanel">
+        <div style="padding: 20px; border-bottom: 2px solid var(--secondary); display:flex; justify-content:space-between; align-items:center;">
+            <h3 id="pTitle" style="color:var(--secondary); margin:0;">ZAINA AI</h3>
+            <button onclick="closeUI()" style="background:none; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
         </div>
-        <div id="pContent" style="flex:1; overflow-y:auto; padding:15px; color:white;">
+        <div id="pContent" style="flex:1; padding:20px; color:white; overflow-y:auto;">
             </div>
     </div>
 </div>
 
 <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 <script>
-    const player = videojs('flm-mobile-player', {
+    const player = videojs('flmPlayer', {
         controls: true,
-        autoplay: true,
-        fluid: false,
-        userActions: { doubleClick: true },
+        autoplay: false,
         controlBar: {
             children: [
-                'playToggle', 'progressControl', 'volumePanel', 
-                'currentTimeDisplay', 'fullscreenToggle'
+                'playToggle', 
+                'progressControl', 
+                'volumePanel', 
+                'currentTimeDisplay', 
+                'durationDisplay', 
+                'fullscreenToggle'
             ]
         }
     });
 
     player.ready(function() {
         const bar = player.controlBar.el();
-        
-        // Add Chat
-        const chatBtn = document.createElement('div');
-        chatBtn.className = 'vjs-control vjs-button vjs-flm-btn';
-        chatBtn.innerHTML = `<i class="fas fa-comments"></i>`;
-        chatBtn.onclick = () => openUI('GLOBAL CHAT');
+        const fs = player.controlBar.fullscreenToggle.el();
 
-        // Add AI
+        // Integrated Buttons
         const aiBtn = document.createElement('div');
         aiBtn.className = 'vjs-control vjs-button vjs-flm-btn';
-        aiBtn.innerHTML = `<img src="assets/images/z-ai-avatar2.png">`;
+        aiBtn.innerHTML = '<img src="assets/images/z-ai-avatar2.png">';
         aiBtn.onclick = () => openUI('ZAINA AI');
 
-        const fs = player.controlBar.fullscreenToggle.el();
+        const chatBtn = document.createElement('div');
+        chatBtn.className = 'vjs-control vjs-button vjs-flm-btn';
+        chatBtn.innerHTML = '<i class="fas fa-comments"></i>';
+        chatBtn.onclick = () => openUI('GLOBAL CHAT');
+
         bar.insertBefore(chatBtn, fs);
         bar.insertBefore(aiBtn, chatBtn);
-
-        // Show unmute button if muted
-        if (player.muted()) {
-            document.getElementById('unmuteOverlay').style.display = 'block';
-        }
 
         const id = new URLSearchParams(window.location.search).get('id');
         player.src({
@@ -114,23 +164,24 @@
         });
     });
 
-    function unmute() {
+    function startEverything() {
+        document.getElementById('audioGuard').style.display = 'none';
         player.muted(false);
-        player.volume(1);
-        document.getElementById('unmuteOverlay').style.display = 'none';
+        player.volume(1.0);
+        player.play();
     }
 
-    function openUI(name) {
-        document.getElementById('pTitle').innerText = name;
-        document.getElementById('layoutWrapper').classList.add('panel-active');
-        setTimeout(() => player.trigger('resize'), 400);
+    function openUI(title) {
+        document.getElementById('pTitle').innerText = title;
+        document.body.classList.add('panel-active');
+        // RE-CALCULATE: Important to keep bar fitting the new width
+        setTimeout(() => player.trigger('resize'), 350);
     }
 
     function closeUI() {
-        document.getElementById('layoutWrapper').classList.remove('panel-active');
-        setTimeout(() => player.trigger('resize'), 400);
+        document.body.classList.remove('panel-active');
+        setTimeout(() => player.trigger('resize'), 350);
     }
 </script>
-
 </body>
 </html>
