@@ -3,116 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - Pro Player</title>
+    <title>FLM TV - Media Player</title>
     
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --primary: #ffd700;
-            --secondary: #22c55e;
-            --bg-card: #1a1f2e;
-        }
-
+        :root { --primary: #ffd700; --secondary: #22c55e; --bg: #0a0f1a; }
+        
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; overflow: hidden; font-family: 'Inter', sans-serif;
+            background: #000; overflow: hidden; font-family: sans-serif;
         }
 
-        /* MASTER WRAPPER: Ensures 100% visibility of everything */
-        .master-container {
+        /* 1. THE LAYOUT: Guaranteed to fit the screen width */
+        .main-shell {
             display: flex;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* VIDEO AREA: Resizes dynamically to keep controls on screen */
-        .video-stage {
-            flex: 1;
+        .video-container {
+            flex: 1; /* This makes the movie shrink to fit the screen */
             height: 100%;
             position: relative;
             background: #000;
+        }
+
+        /* 2. THE PLAYER: Using native controls to prevent 'greyed out' audio */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 3. THE SOUND UNLOCKER: One big button to force the browser to allow audio */
+        #soundUnlocker {
+            position: absolute;
+            inset: 0;
+            z-index: 999;
+            background: rgba(0,0,0,0.9);
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
         }
 
-        /* THE PLAYER: Forced to fill the stage */
-        .video-js {
-            width: 100% !important;
-            height: 100% !important;
+        .unlock-btn {
+            background: var(--primary);
+            color: #000;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
 
-        /* 👑 THE FIX: FORCE CONTROL BAR VISIBILITY & SIZE */
-        .vjs-control-bar {
-            height: 60px !important; /* Larger height for high-res monitors */
-            background: rgba(0, 0, 0, 0.85) !important;
-            display: flex !important;
-            align-items: center !important;
-            font-size: 14px !important;
-        }
-
-        /* Custom Icons Scaling */
-        .vjs-flm-btn { 
-            cursor: pointer; 
-            display: flex !important; 
-            align-items: center; 
-            justify-content: center; 
-            width: 50px !important; 
-        }
-        .vjs-flm-btn i { font-size: 1.8rem !important; color: var(--primary); }
-        .vjs-flm-btn img { 
-            width: 36px; height: 36px; 
-            border-radius: 50%; 
-            border: 2px solid var(--secondary); 
-        }
-
-        /* SIDE PANEL */
+        /* 4. SIDE PANEL: Exactly like your index.html */
         .side-panel {
             width: 0;
             height: 100%;
-            background: var(--bg-card);
-            border-left: 0px solid var(--primary);
+            background: #1a1f2e;
             transition: width 0.3s ease;
+            border-left: 0px solid var(--primary);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
         body.panel-active .side-panel {
-            width: 450px;
+            width: 400px;
             border-left: 3px solid var(--primary);
         }
 
-        /* Mobile full-screen panel */
         @media (max-width: 768px) {
             body.panel-active .side-panel { width: 100vw; }
-            body.panel-active .video-stage { display: none; }
+            body.panel-active .video-container { display: none; }
         }
 
-        /* Sound Unlock Overlay */
-        #audioGuard {
-            position: absolute; inset: 0; z-index: 9999;
-            background: rgba(0,0,0,0.8); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; cursor: pointer;
+        /* Floating buttons for Chat/AI */
+        .ui-triggers {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+
+        .ui-btn {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: rgba(0,0,0,0.7); border: 2px solid var(--primary);
+            color: var(--primary); display: flex; align-items: center;
+            justify-content: center; font-size: 1.8rem; cursor: pointer;
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
 <body>
 
-<div class="master-container">
-    <div class="video-stage">
-        <div id="audioGuard" onclick="startEverything()">
-            <i class="fas fa-play-circle" style="font-size: 5rem; color: var(--primary); margin-bottom: 20px;"></i>
-            <h2 style="color:white; margin:0;">TAP TO START MOVIE</h2>
-            <p style="color:var(--primary)">Click to enable audio & controls</p>
+<div class="main-shell">
+    <div class="video-container">
+        <div id="soundUnlocker" onclick="enableAudio()">
+            <div class="unlock-btn">
+                <i class="fas fa-volume-up"></i> CLICK FOR SOUND & VIDEO
+            </div>
+            <p style="margin-top:20px; font-weight:bold;">FLM TV CINEMA</p>
         </div>
 
-        <video id="flmPlayer" class="video-js vjs-big-play-centered" playsinline></video>
+        <video id="vPlayer" playsinline>
+            <source id="vSource" type="video/mp4">
+        </video>
+
+        <div class="ui-triggers">
+            <div class="ui-btn" style="border-color:var(--secondary)" onclick="openUI('ZAINA AI')">
+                <img src="assets/images/z-ai-avatar2.png" style="width:100%; border-radius:50%;">
+            </div>
+            <div class="ui-btn" onclick="openUI('GLOBAL CHAT')">
+                <i class="fas fa-comments"></i>
+            </div>
+        </div>
     </div>
 
-    <div class="side-panel" id="uiPanel">
+    <div class="side-panel">
         <div style="padding: 20px; border-bottom: 2px solid var(--secondary); display:flex; justify-content:space-between; align-items:center;">
             <h3 id="pTitle" style="color:var(--secondary); margin:0;">ZAINA AI</h3>
             <button onclick="closeUI()" style="background:none; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
@@ -122,66 +137,41 @@
     </div>
 </div>
 
-<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 <script>
-    const player = videojs('flmPlayer', {
-        controls: true,
-        autoplay: false,
-        controlBar: {
-            children: [
-                'playToggle', 
-                'progressControl', 
-                'volumePanel', 
-                'currentTimeDisplay', 
-                'durationDisplay', 
-                'fullscreenToggle'
-            ]
-        }
-    });
+    const v = document.getElementById('vPlayer');
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
 
-    player.ready(function() {
-        const bar = player.controlBar.el();
-        const fs = player.controlBar.fullscreenToggle.el();
+    // Set the source immediately
+    if (id) {
+        document.getElementById('vSource').src = `https://flmtv26.duckdns.org:8920/Videos/${id}/stream?static=true&api_key=5423f03b4131464490333d964f4f7830`;
+        v.load();
+    }
 
-        // Integrated Buttons
-        const aiBtn = document.createElement('div');
-        aiBtn.className = 'vjs-control vjs-button vjs-flm-btn';
-        aiBtn.innerHTML = '<img src="assets/images/z-ai-avatar2.png">';
-        aiBtn.onclick = () => openUI('ZAINA AI');
-
-        const chatBtn = document.createElement('div');
-        chatBtn.className = 'vjs-control vjs-button vjs-flm-btn';
-        chatBtn.innerHTML = '<i class="fas fa-comments"></i>';
-        chatBtn.onclick = () => openUI('GLOBAL CHAT');
-
-        bar.insertBefore(chatBtn, fs);
-        bar.insertBefore(aiBtn, chatBtn);
-
-        const id = new URLSearchParams(window.location.search).get('id');
-        player.src({
-            src: `https://flmtv26.duckdns.org:8920/Videos/${id}/stream?static=true&api_key=5423f03b4131464490333d964f4f7830`,
-            type: 'video/mp4'
+    function enableAudio() {
+        // Hides the overlay
+        document.getElementById('soundUnlocker').style.display = 'none';
+        
+        // FORCES browser to show controls and enable sound
+        v.muted = false;
+        v.volume = 1.0;
+        v.controls = true; 
+        
+        // Final attempt to play
+        v.play().catch(e => {
+            console.log("Auto-play blocked, showing native play button");
         });
-    });
-
-    function startEverything() {
-        document.getElementById('audioGuard').style.display = 'none';
-        player.muted(false);
-        player.volume(1.0);
-        player.play();
     }
 
     function openUI(title) {
         document.getElementById('pTitle').innerText = title;
         document.body.classList.add('panel-active');
-        // RE-CALCULATE: Important to keep bar fitting the new width
-        setTimeout(() => player.trigger('resize'), 350);
     }
 
     function closeUI() {
         document.body.classList.remove('panel-active');
-        setTimeout(() => player.trigger('resize'), 350);
     }
 </script>
+
 </body>
 </html>
