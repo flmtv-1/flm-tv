@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FLM TV Player</title>
+    
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+        }
+
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Inter', sans-serif; }
+
+        /* THE PLAYER AREA */
+        .video-wrapper { width: 100vw; height: 100vh; position: relative; background: #000; }
+        .video-js { width: 100% !important; height: 100% !important; }
+
+        /* INTEGRATED CONTROL BAR (Fades out when inactive) */
+        .vjs-control-bar {
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
+            height: 5em !important;
+            padding: 0 10px !important;
+        }
+
+        /* CUSTOM BUTTONS IN THE PLAYER BAR */
+        .vjs-flm-btn {
+            cursor: pointer;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 4em !important;
+        }
+        .vjs-flm-btn i { font-size: 1.6rem; color: var(--primary); }
+        .vjs-flm-btn img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--secondary); }
+
+        /* YOUR ACTUAL PANELS (Matched to index.html) */
+        .side-panel {
+            position: fixed; top: 0; right: -450px; width: 450px; height: 100%;
+            background: var(--bg-light); border-left: 3px solid var(--primary);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5000;
+            display: flex; flex-direction: column;
+        }
+        .side-panel.active { right: 0; }
+        @media (max-width: 768px) { .side-panel { width: 100%; right: -100%; } }
+
+        .panel-header { padding: 1.25rem; border-bottom: 2px solid var(--secondary); display: flex; justify-content: space-between; align-items: center; }
+
+        /* INITIAL OVERLAY TO PREVENT BLACK SCREEN */
+        #startOverlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 10000; display: flex; align-items: center; justify-content: center;
+            color: var(--primary); cursor: pointer; flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+
+<div class="video-wrapper">
+    <div id="startOverlay" onclick="startPlayer()">
+        <i class="fas fa-play-circle fa-5x"></i>
+        <h2 style="margin-top:15px;">TAP TO WATCH FLM TV</h2>
+    </div>
+
+    <video id="flm-player" class="video-js vjs-big-play-centered" playsinline></video>
+
+    <button onclick="window.history.back()" style="position:absolute; top:20px; left:20px; z-index:4000; background:rgba(0,0,0,0.6); border:2px solid var(--primary); color:white; padding:10px 15px; border-radius:8px; cursor:pointer;">
+        <i class="fas fa-arrow-left"></i> BACK
+    </button>
+</div>
+
+<div id="chatPanel" class="side-panel">
+    <div class="panel-header">
+        <h2 style="color:var(--primary); margin:0;">GLOBAL CHAT</h2>
+        <button onclick="togglePanel('chatPanel')" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button>
+    </div>
+    <div id="chatMessages" style="flex:1; overflow-y:auto; padding:15px;"></div>
+</div>
+
+<div id="aiPanel" class="side-panel">
+    <div class="panel-header">
+        <h2 style="color:var(--secondary); margin:0;">ZAINA AI</h2>
+        <button onclick="togglePanel('aiPanel')" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button>
+    </div>
+    <div id="aiChatMessages" style="flex:1; overflow-y:auto; padding:15px;"></div>
+</div>
+
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const itemId = urlParams.get('id');
+
+    // 1. Initialize Player with full Controls (Play, Stop, Seek, etc)
+    const player = videojs('flm-player', {
+        controls: true,
+        autoplay: false,
+        preload: 'auto',
+        controlBar: {
+            children: [
+                'playToggle', 'volumePanel', 'currentTimeDisplay', 
+                'progressControl', 'durationDisplay', 'fullscreenToggle'
+            ]
+        }
+    });
+
+    // 2. Inject Chat and AI into the bar so they FADE OUT when not touched
+    player.ready(function() {
+        const bar = player.controlBar.el();
+        const fsBtn = player.controlBar.fullscreenToggle.el();
+
+        // Chat Button
+        const chatBtn = document.createElement('div');
+        chatBtn.className = 'vjs-control vjs-button vjs-flm-btn';
+        chatBtn.innerHTML = `<i class="fas fa-comments"></i>`;
+        chatBtn.onclick = () => togglePanel('chatPanel');
+
+        // AI Button
+        const aiBtn = document.createElement('div');
+        aiBtn.className = 'vjs-control vjs-button vjs-flm-btn';
+        aiBtn.innerHTML = `<img src="assets/images/z-ai-avatar2.png">`;
+        aiBtn.onclick = () => togglePanel('aiPanel');
+
+        bar.insertBefore(chatBtn, fsBtn);
+        bar.insertBefore(aiBtn, chatBtn);
+
+        if (itemId) {
+            player.src({
+                src: `https://flmtv26.duckdns.org:8920/Videos/${itemId}/stream?static=true&api_key=5423f03b4131464490333d964f4f7830`,
+                type: 'video/mp4'
+            });
+        }
+    });
+
+    function startPlayer() {
+        document.getElementById('startOverlay').style.display = 'none';
+        player.play();
+    }
+
+    function togglePanel(id) {
+        const p = document.getElementById(id);
+        const isActive = p.classList.contains('active');
+        document.querySelectorAll('.side-panel').forEach(el => el.classList.remove('active'));
+        if (!isActive) p.classList.add('active');
+    }
+</script>
+
+<script src="flm-auth-system.js"></script>
+
+</body>
+</html>

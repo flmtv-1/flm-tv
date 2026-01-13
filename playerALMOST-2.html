@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FLM TV - Integrated Player</title>
+    
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --bg-dark: #0a0f1a;
+            --panel-bg: #1a1f2e;
+        }
+
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+
+        /* THE PLAYER */
+        .video-js { width: 100vw; height: 100vh; }
+        
+        /* CUSTOMIZING THE CONTROL BAR (The 'Fade Zone') */
+        .vjs-control-bar {
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
+            height: 5em !important;
+            padding: 0 15px !important;
+            align-items: center !important;
+        }
+
+        /* CUSTOM BUTTONS INSIDE THE BAR */
+        .vjs-integrated-btn {
+            cursor: pointer;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 4em !important;
+            height: 100%;
+        }
+        
+        .vjs-integrated-btn img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--secondary);
+        }
+
+        .vjs-integrated-btn i {
+            font-size: 1.6rem;
+            color: var(--primary);
+        }
+
+        /* PANELS (Matching index.html) */
+        .side-panel {
+            position: fixed; top: 0; right: -450px; width: 450px; height: 100%;
+            background: var(--panel-bg); border-left: 3px solid var(--primary);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2000;
+            display: flex; flex-direction: column;
+        }
+        .side-panel.active { right: 0; }
+        @media (max-width: 768px) { .side-panel { width: 100%; right: -100%; } }
+
+        .panel-header { padding: 1.5rem; border-bottom: 2px solid var(--secondary); display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+
+    <video id="flm-integrated-player" class="video-js vjs-big-play-centered" playsinline></video>
+
+    <div id="chatPanel" class="side-panel">
+        <div class="panel-header">
+            <h2 style="color:var(--primary); margin:0;">GLOBAL CHAT</h2>
+            <button onclick="togglePanel('chatPanel')" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button>
+        </div>
+        <div id="chatMessages" style="flex:1; overflow-y:auto; padding:15px;"></div>
+    </div>
+
+    <div id="aiPanel" class="side-panel">
+        <div class="panel-header">
+            <h2 style="color:var(--secondary); margin:0;">ZAINA AI</h2>
+            <button onclick="togglePanel('aiPanel')" style="background:none; border:none; color:white; font-size:1.8rem;">&times;</button>
+        </div>
+        <div id="aiChatMessages" style="flex:1; overflow-y:auto; padding:15px;"></div>
+    </div>
+
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const itemId = urlParams.get('id');
+
+    // 1. Initialize Video.js with Standard Controls
+    const player = videojs('flm-integrated-player', {
+        autoplay: true,
+        controls: true,
+        userActions: { hotkeys: true },
+        controlBar: {
+            children: [
+                'playToggle',
+                'volumePanel',
+                'currentTimeDisplay',
+                'progressControl',
+                'durationDisplay',
+                'fullscreenToggle'
+            ]
+        }
+    });
+
+    // 2. Inject Chat & AI into the Control Bar so they fade out with it
+    player.ready(function() {
+        const ctrlBar = player.controlBar.el();
+
+        // Create Chat Button
+        const chatBtn = document.createElement('div');
+        chatBtn.className = 'vjs-control vjs-button vjs-integrated-btn';
+        chatBtn.innerHTML = `<i class="fas fa-comments"></i>`;
+        chatBtn.onclick = () => togglePanel('chatPanel');
+
+        // Create AI Button
+        const aiBtn = document.createElement('div');
+        aiBtn.className = 'vjs-control vjs-button vjs-integrated-btn';
+        aiBtn.innerHTML = `<img src="assets/images/z-ai-avatar2.png">`;
+        aiBtn.onclick = () => togglePanel('aiPanel');
+
+        // Insert buttons into the bar before the fullscreen button
+        const fsBtn = player.controlBar.fullscreenToggle.el();
+        ctrlBar.insertBefore(chatBtn, fsBtn);
+        ctrlBar.insertBefore(aiBtn, chatBtn);
+
+        // Load Stream
+        if (itemId) {
+            player.src({
+                src: `https://flmtv26.duckdns.org:8920/Videos/${itemId}/stream?static=true&api_key=5423f03b4131464490333d964f4f7830`,
+                type: 'video/mp4'
+            });
+        }
+    });
+
+    // 3. Panel Logic (Maintains current state)
+    function togglePanel(id) {
+        const panel = document.getElementById(id);
+        const active = panel.classList.contains('active');
+        document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
+        if (!active) panel.classList.add('active');
+    }
+</script>
+
+<script src="flm-auth-system.js"></script>
+
+</body>
+</html>
