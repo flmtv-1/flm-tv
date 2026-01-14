@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV - Movie Details</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* BACKDROP */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60vh;
+            z-index: 0;
+            background-size: cover;
+            background-position: center top;
+        }
+        
+        .backdrop::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(10, 15, 26, 0) 0%, rgba(10, 15, 26, 0.8) 50%, rgba(10, 15, 26, 1) 100%);
+        }
+        
+        /* BACKDROP SPLASH SCREEN */
+        .backdrop-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 9999;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .backdrop-splash.active {
+            display: block;
+        }
+        
+        .backdrop-splash::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .backdrop-splash-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1;
+        }
+        
+        .backdrop-splash-logo {
+            max-width: 600px;
+            width: 90%;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.7));
+            animation: logoZoom 0.8s ease-out;
+        }
+        
+        .backdrop-splash-play-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #000;
+            animation: pulse 2s infinite;
+            box-shadow: 0 10px 40px rgba(34, 197, 94, 0.5);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes logoZoom {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        /* HEADER */
+        .header {
+            position: relative;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary);
+            padding: 1rem 2rem;
+        }
+        
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: var(--secondary);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* CONTENT */
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 20vh;
+        }
+        
+        .movie-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .poster {
+            flex-shrink: 0;
+            width: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(34, 197, 94, 0.4),
+                0 0 80px rgba(34, 197, 94, 0.2);
+        }
+        
+        .poster img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .movie-info {
+            flex: 1;
+        }
+        
+        .title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .metadata {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .rating {
+            background: var(--primary);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        
+        .overview {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .detail-item {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-value {
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        .play-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #000;
+            border: none;
+            padding: 1.25rem 3rem;
+            border-radius: 50px;
+            font-size: 1.25rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 0 40px rgba(252, 209, 22, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .play-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 60px rgba(252, 209, 22, 0.8);
+        }
+        
+        /* SECTIONS */
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* CAST */
+        .cast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .cast-card {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .cast-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .cast-photo {
+            width: 100%;
+            aspect-ratio: 2/3;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            background: var(--bg-light);
+            border: 2px solid var(--secondary);
+        }
+        
+        .cast-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cast-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .cast-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        /* SIMILAR TITLES */
+        .similar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .similar-card {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .similar-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .similar-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            border: 2px solid var(--secondary);
+        }
+        
+        .similar-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .similar-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* LOADING */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .movie-header {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .poster {
+                width: 200px;
+            }
+            
+            .title {
+                font-size: 2rem;
+                text-align: center;
+            }
+            
+            .metadata {
+                justify-content: center;
+            }
+            
+            .cast-grid,
+            .similar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- BACKDROP SPLASH SCREEN -->
+    <div class="backdrop-splash" id="backdropSplash">
+        <div class="backdrop-splash-content">
+            <img id="splashLogo" src="" alt="Movie" class="backdrop-splash-logo" style="display: none;">
+            <div class="backdrop-splash-play-icon">
+                <i class="fas fa-play"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-text">FLM TV</div>
+            <a href="home.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Browse
+            </a>
+        </div>
+    </header>
+    
+    <!-- BACKDROP -->
+    <div class="backdrop" id="backdrop"></div>
+    
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+        <i class="fas fa-spinner fa-spin"></i> Loading movie details...
+    </div>
+    
+    <!-- CONTENT -->
+    <div class="content" id="content" style="display: none;">
+        <!-- Movie details will be inserted here -->
+    </div>
+    
+    <script>
+        // Get movie ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('id');
+        
+        // Store movie data globally for playMovie function
+        let currentMovie = null;
+        
+        // Jellyfin config
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+        
+        async function jellyfinFetch(endpoint, params = {}) {
+            const queryString = new URLSearchParams({
+                api_key: JELLYFIN_CONFIG.API_KEY,
+                ...params
+            }).toString();
+            
+            const url = `${JELLYFIN_CONFIG.SERVER}${endpoint}?${queryString}`;
+            const response = await fetch(url);
+            return response.json();
+        }
+        
+        async function loadMovieDetails() {
+            try {
+                // Fetch movie data
+                const movie = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${movieId}`);
+                
+                // Store globally for playMovie function
+                currentMovie = movie;
+                
+                console.log('Movie data:', movie);
+                
+                // Set backdrop
+                if (movie.BackdropImageTags && movie.BackdropImageTags.length > 0) {
+                    document.getElementById('backdrop').style.backgroundImage = 
+                        `url('${JELLYFIN_CONFIG.SERVER}/Items/${movieId}/Images/Backdrop?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${movie.BackdropImageTags[0]}&quality=90')`;
+                }
+                
+                // Build content
+                const content = document.getElementById('content');
+                content.innerHTML = `
+                    <div class="movie-header">
+                        <div class="poster">
+                            <img src="${JELLYFIN_CONFIG.SERVER}/Items/${movieId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90" 
+                                 alt="${movie.Name}">
+                        </div>
+                        
+                        <div class="movie-info">
+                            <h1 class="title">${movie.Name}</h1>
+                            
+                            <div class="metadata">
+                                ${movie.ProductionYear ? `<div class="metadata-item">${movie.ProductionYear}</div>` : ''}
+                                ${movie.OfficialRating ? `<div class="rating">${movie.OfficialRating}</div>` : ''}
+                                ${movie.RunTimeTicks ? `<div class="metadata-item"><i class="far fa-clock"></i> ${Math.floor(movie.RunTimeTicks / 600000000)} min</div>` : ''}
+                                ${movie.CommunityRating ? `<div class="metadata-item"><i class="fas fa-star"></i> ${movie.CommunityRating.toFixed(1)}</div>` : ''}
+                            </div>
+                            
+                            <p class="overview">${movie.Overview || 'No description available.'}</p>
+                            
+                            <div class="details-grid">
+                                ${movie.Genres && movie.Genres.length ? `
+                                    <div class="detail-item">
+                                        <div class="detail-label">Genres</div>
+                                        <div class="detail-value">${movie.Genres.join(', ')}</div>
+                                    </div>
+                                ` : ''}
+                                ${movie.Studios && movie.Studios.length ? `
+                                    <div class="detail-item">
+                                        <div class="detail-label">Studio</div>
+                                        <div class="detail-value">${movie.Studios[0].Name}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <button class="play-btn" onclick="playMovie()">
+                                <i class="fas fa-play"></i>
+                                PLAY MOVIE
+                            </button>
+                        </div>
+                    </div>
+                    
+                    ${movie.People && movie.People.length ? `
+                        <div class="section">
+                            <h2 class="section-title">Cast & Crew</h2>
+                            <div class="cast-grid" id="castGrid"></div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="section">
+                        <h2 class="section-title">More Like This</h2>
+                        <div class="similar-grid" id="similarGrid"></div>
+                    </div>
+                `;
+                
+                // Load cast
+                if (movie.People && movie.People.length) {
+                    loadCast(movie.People);
+                }
+                
+                // Load similar titles
+                loadSimilarTitles();
+                
+                // Hide loading, show content
+                document.getElementById('loading').style.display = 'none';
+                content.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading movie:', error);
+                document.getElementById('loading').innerHTML = 
+                    '<i class="fas fa-exclamation-triangle"></i> Error loading movie details';
+            }
+        }
+        
+        function loadCast(people) {
+            const castGrid = document.getElementById('castGrid');
+            const cast = people.filter(p => p.Type === 'Actor').slice(0, 12);
+            
+            castGrid.innerHTML = cast.map(person => `
+                <div class="cast-card" onclick="window.location.href='person-detail.html?id=${person.Id}'" style="cursor: pointer;">
+                    <div class="cast-photo">
+                        ${person.PrimaryImageTag ? 
+                            `<img src="${JELLYFIN_CONFIG.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" alt="${person.Name}">` :
+                            '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#1a1f2e;"><i class="fas fa-user" style="font-size:3rem;color:#94a3b8;"></i></div>'
+                        }
+                    </div>
+                    <div class="cast-name">${person.Name}</div>
+                    <div class="cast-role">${person.Role || 'Actor'}</div>
+                </div>
+            `).join('');
+        }
+        
+        async function loadSimilarTitles() {
+            try {
+                const similar = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    SortBy: 'Random',
+                    IncludeItemTypes: 'Movie',
+                    Limit: 12,
+                    Recursive: true
+                });
+                
+                const similarGrid = document.getElementById('similarGrid');
+                similarGrid.innerHTML = similar.Items.map(item => `
+                    <div class="similar-card" onclick="window.location.href='movie-detail.html?id=${item.Id}'">
+                        <div class="similar-poster">
+                            <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300" 
+                                 alt="${item.Name}">
+                        </div>
+                        <div class="similar-title">${item.Name}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading similar titles:', error);
+            }
+        }
+        
+        function playMovie() {
+            if (!currentMovie) {
+                window.location.href = `player.html?id=${movieId}&type=movie`;
+                return;
+            }
+            
+            // Get backdrop splash element
+            const splash = document.getElementById('backdropSplash');
+            const splashLogo = document.getElementById('splashLogo');
+            
+            // Set backdrop image
+            if (currentMovie.BackdropImageTags && currentMovie.BackdropImageTags.length > 0) {
+                const backdropUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${movieId}/Images/Backdrop?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${currentMovie.BackdropImageTags[0]}&quality=90`;
+                splash.style.backgroundImage = `url('${backdropUrl}')`;
+            } else if (currentMovie.ImageTags?.Primary) {
+                const posterUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${movieId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`;
+                splash.style.backgroundImage = `url('${posterUrl}')`;
+            }
+            
+            // Show logo if available
+            if (currentMovie.ImageTags?.Logo) {
+                const logoUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${movieId}/Images/Logo?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`;
+                splashLogo.src = logoUrl;
+                splashLogo.style.display = 'block';
+            }
+            
+            // Show splash screen
+            splash.classList.add('active');
+            
+            // Navigate to player after 2.5 seconds
+            setTimeout(() => {
+                window.location.href = `player.html?id=${movieId}&type=movie`;
+            }, 2500);
+        }
+        
+        // Load movie on page load
+        if (movieId) {
+            loadMovieDetails();
+        } else {
+            document.getElementById('loading').innerHTML = 
+                '<i class="fas fa-exclamation-triangle"></i> No movie ID provided';
+        }
+    </script>
+    
+</body>
+</html>
