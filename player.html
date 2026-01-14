@@ -2,169 +2,808 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>FLM TV Player</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing - FLM TV</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --primary: #ffd700; --secondary: #22c55e; --bg: #0a0f1a; }
-        
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; overflow: hidden; font-family: sans-serif;
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --accent: #ffd700;
+            --neon-green: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --bg-card: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+            --border: #334155;
         }
 
-        .app-container {
-            display: flex;
-            width: 100vw;
-            height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: var(--text);
             overflow: hidden;
         }
 
-        .movie-stage {
-            flex: 1;
-            height: 100%;
-            position: relative;
+        /* Main Container */
+        .player-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
             background: #000;
+        }
+
+        /* Header */
+        .player-header {
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary);
+            z-index: 100;
+        }
+
+        .player-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .player-logo img {
+            height: 40px;
+        }
+
+        .player-logo span {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .player-controls-top {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-header {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--neon-green);
+            color: white;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-header:hover {
+            background: var(--neon-green);
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: var(--neon-green);
+            border: none;
+        }
+
+        .btn-back:hover {
+            background: #16a34a;
+        }
+
+        .btn-close {
+            background: #ef4444;
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        /* Video Area */
+        .video-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            position: relative;
+            transition: margin-right 0.3s ease;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        body.panel-active .video-wrapper {
+            margin-right: 450px;
         }
 
         video {
             width: 100%;
             height: 100%;
-            background: #000;
+            max-height: 100%;
             object-fit: contain;
+            display: block;
         }
 
-        #mediaLock {
+        /* Big Play Button Overlay */
+        .play-overlay {
             position: absolute;
-            inset: 0;
-            z-index: 999;
-            background: rgba(0,0,0,0.95);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
             cursor: pointer;
-            text-align: center;
+            z-index: 2;
+            transition: opacity 0.3s ease;
         }
 
-        .big-play-btn {
-            background: var(--primary);
-            color: #000;
-            width: 120px;
-            height: 120px;
+        .play-overlay:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .play-overlay.hidden {
+            display: none !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-btn-big {
+            width: 100px;
+            height: 100px;
+            background: rgba(34, 197, 94, 0.9);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+            font-size: 3rem;
+            color: white;
+            border: 4px solid white;
+            transition: all 0.3s ease;
         }
 
+        .play-overlay:hover .play-btn-big {
+            transform: scale(1.1);
+            background: rgba(34, 197, 94, 1);
+        }
+
+        /* Video Info Overlay */
+        .video-info {
+            position: absolute;
+            bottom: 100px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 2rem 1.5rem 0.5rem;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+            max-height: 150px;
+        }
+
+        video:hover ~ .video-info {
+            opacity: 1;
+        }
+
+        .video-wrapper:hover .video-info {
+            opacity: 1;
+        }
+
+        .video-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
+        }
+
+        .video-meta {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .video-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Loading State */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--neon-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Side Panel */
         .side-panel {
-            width: 0;
-            height: 100%;
-            background: #1a1f2e;
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-left: 0px solid var(--primary);
+            position: fixed;
+            right: -100%;
+            top: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 3px solid var(--primary);
+            z-index: 9998;
+            transition: right 0.3s ease;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
-        body.panel-active .side-panel {
-            width: 450px;
-            border-left: 3px solid var(--primary);
+        .side-panel.active {
+            right: 0;
         }
 
-        @media (max-width: 768px) {
-            body.panel-active .side-panel { width: 100vw; }
-            body.panel-active .movie-stage { display: none; }
-        }
-
-        /* MOVED BUTTONS TO TOP RIGHT TO PREVENT OVERLAP WITH CONTROLS */
-        .floating-ui {
-            position: absolute;
-            top: 30px; /* Moved from bottom to top */
-            right: 30px;
-            z-index: 100;
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--neon-green);
             display: flex;
-            flex-direction: column; /* Stacked vertically for a cleaner look */
-            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.95);
         }
 
-        .trigger {
-            width: 60px; height: 60px; border-radius: 50%;
-            background: rgba(0,0,0,0.7); border: 2px solid var(--primary);
-            color: var(--primary); display: flex; align-items: center;
-            justify-content: center; font-size: 1.8rem; cursor: pointer;
-            backdrop-filter: blur(5px);
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--neon-green);
+        }
+
+        .panel-close {
+            background: none;
+            border: none;
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .panel-close:hover {
+            background: var(--neon-green);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .panel-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        /* Chat Styles */
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #1a1a1a;
+            max-height: calc(100vh - 300px);
+        }
+
+        .message {
+            margin-bottom: 0.75rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.6rem 0.9rem;
+            border-radius: 1rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            background-color: #333;
+            color: white;
+        }
+
+        .message.sent {
+            align-items: flex-end;
+        }
+
+        .message.sent .message-bubble {
+            background-color: var(--secondary);
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .message.received .message-bubble {
+            background-color: #333;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .chat-input-area {
+            background-color: #282828;
+            padding: 1rem;
+            border-top: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border-radius: 1.5rem;
+            border: 1px solid #444;
+            background-color: #333;
+            color: white;
+            outline: none;
+            font-size: 1em;
+            resize: none;
+            min-height: 40px;
+            max-height: 100px;
+            font-family: inherit;
+        }
+
+        .chat-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .chat-btn:hover {
+            background-color: #16a34a;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .player-header {
+                padding: 0.5rem 1rem;
+            }
+
+            .player-logo span {
+                font-size: 1.2rem;
+            }
+
+            .player-logo img {
+                height: 32px;
+            }
+
+            .btn-header {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-close {
+                width: 40px;
+                height: 40px;
+            }
+
+            .video-title {
+                font-size: 1.5rem;
+            }
+
+            .video-meta {
+                font-size: 0.9rem;
+                flex-wrap: wrap;
+            }
+
+            .side-panel {
+                width: 90%;
+            }
+
+            body.panel-active .video-wrapper {
+                margin-right: 0;
+            }
+
+            .play-btn-big {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
-
-<div class="app-container">
-    <div class="movie-stage">
-        <div id="mediaLock" onclick="startCinema()">
-            <div class="big-play-btn"><i class="fas fa-play"></i></div>
-            <h1 style="color:white; margin:0;">FLM TV</h1>
-            <p style="color:var(--primary); font-weight:bold;">CLICK TO UNMUTE & START</p>
+    <div class="player-container">
+        <!-- Header -->
+        <div class="player-header">
+            <div class="player-logo">
+                <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
+                <span>FLM TV</span>
+            </div>
+            <div class="player-controls-top">
+                <button class="btn-header btn-back" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button class="btn-header" onclick="openPanel('chatPanel')">
+                    <i class="fas fa-comments"></i> Chat
+                </button>
+                <button class="btn-header" onclick="openPanel('aiPanel')">
+                    <i class="fas fa-robot"></i> Zaina AI
+                </button>
+                <button class="btn-close" onclick="goBack()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
 
-        <video id="cinemaPlayer" playsinline>
-            <source id="movieSource" type="video/mp4">
-        </video>
-
-        <div class="floating-ui">
-            <div class="trigger" style="border-color:var(--secondary)" onclick="toggleUI('ZAINA AI')">
-                <img src="assets/images/z-ai-avatar2.png" style="width:100%; border-radius:50%;">
+        <!-- Video Player -->
+        <div class="video-wrapper">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div style="color: var(--primary); font-size: 1.2rem;">Loading video...</div>
             </div>
-            <div class="trigger" onclick="toggleUI('GLOBAL CHAT')">
-                <i class="fas fa-comments"></i>
+            
+            <!-- BIG PLAY BUTTON -->
+            <div class="play-overlay hidden" id="playOverlay" onclick="startPlayback()">
+                <div class="play-btn-big">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            
+            <video id="videoPlayer" controls playsinline style="display: none;">
+                Your browser does not support the video tag.
+            </video>
+
+            <!-- Video Info Overlay -->
+            <div class="video-info">
+                <h1 class="video-title" id="videoTitle">Loading...</h1>
+                <div class="video-meta" id="videoMeta">
+                    <span><i class="fas fa-calendar"></i> <span id="videoYear">-</span></span>
+                    <span><i class="fas fa-clock"></i> <span id="videoRuntime">-</span></span>
+                    <span><i class="fas fa-film"></i> <span id="videoGenres">-</span></span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="side-panel">
-        <div style="padding: 20px; border-bottom: 2px solid var(--secondary); display:flex; justify-content:space-between; align-items:center;">
-            <h3 id="panelTitle" style="color:var(--secondary); margin:0; font-weight:bold;">ZAINA AI</h3>
-            <button onclick="toggleUI()" style="background:none; border:none; color:white; font-size:2.5rem; cursor:pointer;">&times;</button>
+    <!-- CHAT PANEL -->
+    <div class="side-panel" id="chatPanel">
+        <div class="panel-header">
+            <h3 class="panel-title"><i class="fas fa-comments"></i> Live Chat</h3>
+            <button class="panel-close" onclick="closePanel('chatPanel')">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-        <div id="panelBody" style="flex:1; padding:20px; color:white; overflow-y:auto;">
-            </div>
+        
+        <div style="padding: 0.75rem; background: #282828; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 0.5rem;">
+            <label style="font-size: 0.85rem; color: #b3b3b3; white-space: nowrap;">Name:</label>
+            <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
+                   style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
+                   maxlength="20">
+        </div>
+        
+        <div class="chat-messages" id="chatMessages"></div>
+        
+        <div class="chat-input-area">
+            <textarea id="chatInput" class="chat-input" placeholder="Type your message..."></textarea>
+            <button id="sendBtn" class="chat-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
     </div>
-</div>
 
-<script>
-    const video = document.getElementById('cinemaPlayer');
-    const params = new URLSearchParams(window.location.search);
-    const movieID = params.get('id');
+    <!-- AI PANEL -->
+    <div class="side-panel" id="aiPanel">
+        <div class="panel-header">
+            <h3 class="panel-title"><i class="fas fa-robot"></i> Zaina J AI</h3>
+            <button class="panel-close" onclick="closePanel('aiPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-body" style="overflow-y: auto;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                <div>
+                    <h4 style="color: var(--accent); font-weight: 700; margin-bottom: 0.25rem;">Zaina J AI</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">Your Entertainment Assistant</p>
+                </div>
+            </div>
+            
+            <div id="aiMessages" class="chat-messages" style="background-color: #1a1a1a; border-radius: 8px; padding: 1rem; min-height: 200px; max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                <div class="message received">
+                    <div class="message-bubble">👋 Hi! I'm Zaina AI. Ask me anything about movies, TV shows, or entertainment!</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-area">
+            <textarea id="aiChatInput" class="chat-input" placeholder="Ask Zaina AI anything..."></textarea>
+            <button id="aiSendBtn" class="chat-btn" style="background-color: var(--accent); color: #000;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
 
-    if (movieID) {
-        document.getElementById('movieSource').src = `https://flmtv26.duckdns.org:8920/Videos/${movieID}/stream?static=true&api_key=5423f03b4131464490333d964f4f7830`;
-        video.load();
-    }
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // Jellyfin Config
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
 
-    function startCinema() {
-        document.getElementById('mediaLock').style.display = 'none';
-        video.muted = false;
-        video.volume = 1.0;
-        video.controls = true; 
-        video.play();
-    }
+        // Firebase Config
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyD871FYC8vGc7JAAw-2rGMZBB_h4sI0HpQ",
+            authDomain: "flmtv-site-counter.firebaseapp.com",
+            databaseURL: "https://flmtv-site-counter-default-rtdb.firebaseio.com",
+            projectId: "flmtv-site-counter",
+            storageBucket: "flmtv-site-counter.firebasestorage.app",
+            messagingSenderId: "354930172302",
+            appId: "1:354930172302:web:3176dfff3d81ce823404df"
+        };
 
-    function toggleUI(name) {
-        if (!name || document.body.classList.contains('panel-active')) {
-            document.body.classList.remove('panel-active');
-        } else {
-            document.getElementById('panelTitle').innerText = name;
+        // Initialize Firebase
+        firebase.initializeApp(FIREBASE_CONFIG);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        
+        let fallbackUserId = 'user_' + Math.random().toString(36).substring(7);
+        
+        auth.signInAnonymously().catch(err => console.log('Using fallback mode'));
+
+        // Get movie ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('id');
+
+        // Panel Functions
+        function openPanel(panelId) {
+            document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
             document.body.classList.add('panel-active');
+            
+            if (panelId === 'chatPanel') {
+                const saved = localStorage.getItem('flmtvChatUsername');
+                if (saved) document.getElementById('chatUsernameInput').value = saved;
+            }
         }
-    }
-</script>
 
+        function closePanel(panelId) {
+            document.getElementById(panelId).classList.remove('active');
+            document.body.classList.remove('panel-active');
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Chat Functions
+        function sendMessage() {
+            const messageText = document.getElementById('chatInput').value.trim();
+            const sendBtn = document.getElementById('sendBtn');
+            
+            if (!messageText) return;
+            
+            const usernameInput = document.getElementById('chatUsernameInput');
+            let username = usernameInput.value.trim();
+            
+            if (!username) {
+                usernameInput.focus();
+                usernameInput.style.border = '2px solid #ce1126';
+                setTimeout(() => usernameInput.style.border = '1px solid #444', 2000);
+                alert('Please enter your name first!');
+                return;
+            }
+            
+            document.getElementById('chatInput').value = '';
+            sendBtn.disabled = true;
+            
+            localStorage.setItem('flmtvChatUsername', username);
+            const userId = auth.currentUser ? auth.currentUser.uid : fallbackUserId;
+            
+            database.ref('messages').push({
+                text: messageText,
+                username: username,
+                userId: userId,
+                timestamp: Date.now()
+            }).then(() => {
+                sendBtn.disabled = false;
+            }).catch(() => {
+                sendBtn.disabled = false;
+                addMessage('sent', messageText);
+            });
+        }
+
+        function addMessage(sender, text) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+            messageDiv.innerHTML = `<div class="message-bubble">${escapeHtml(text)}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Listen to Firebase messages
+        const displayedMessages = new Set();
+        database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+            const messageId = snapshot.key;
+            const msg = snapshot.val();
+            
+            if (displayedMessages.has(messageId) || !msg || !msg.text) return;
+            displayedMessages.add(messageId);
+            
+            const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+            const savedUsername = localStorage.getItem('flmtvChatUsername');
+            const isOwnMessage = (savedUsername && msg.username === savedUsername) || 
+                                (auth.currentUser && msg.userId === auth.currentUser.uid);
+            
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
+                        ${username}
+                    </div>
+                    <div>${escapeHtml(msg.text)}</div>
+                </div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+
+        // Event Listeners
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+
+        // Format Runtime
+        function formatRuntime(ticks) {
+            if (!ticks) return 'N/A';
+            const minutes = Math.floor(ticks / 600000000);
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+        }
+
+        // Load Movie
+        async function loadMovie() {
+            if (!movieId) {
+                alert('No movie ID provided');
+                goBack();
+                return;
+            }
+
+            try {
+                const itemUrl = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${movieId}?api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                const response = await fetch(itemUrl);
+                const item = await response.json();
+
+                // Update UI
+                document.getElementById('videoTitle').textContent = item.Name;
+                document.getElementById('videoYear').textContent = item.ProductionYear || 'N/A';
+                document.getElementById('videoRuntime').textContent = formatRuntime(item.RunTimeTicks);
+                document.getElementById('videoGenres').textContent = item.Genres?.join(', ') || 'N/A';
+                document.title = `${item.Name} - FLM TV`;
+
+                // Get stream URL
+                const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${movieId}/stream?Static=true&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const video = document.getElementById('videoPlayer');
+                
+                // CRITICAL: Set audio properties BEFORE loading
+                video.muted = false;
+                video.volume = 1.0;
+                video.controls = true;
+                video.preload = 'metadata';
+                
+                video.src = streamUrl;
+                video.load();
+
+                // Hide loading, show video and play button
+                document.getElementById('loading').style.display = 'none';
+                video.style.display = 'block';
+                document.getElementById('playOverlay').classList.remove('hidden');
+
+                console.log('✅ Video ready - click play button');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load video');
+                goBack();
+            }
+        }
+
+        // Start Playback (fixes audio on mobile)
+        function startPlayback() {
+            const video = document.getElementById('videoPlayer');
+            const overlay = document.getElementById('playOverlay');
+            
+            // Ensure unmuted with full volume
+            video.muted = false;
+            video.volume = 1.0;
+            
+            // IMMEDIATELY hide overlay so controls are visible
+            overlay.style.display = 'none';
+            
+            // Play video
+            video.play()
+                .then(() => {
+                    console.log('✅ Playback started with audio');
+                })
+                .catch(err => {
+                    console.error('❌ Playback error:', err);
+                    // Show controls even if autoplay fails
+                    video.controls = true;
+                    alert('Click the play button on the video to start.');
+                });
+        }
+
+        // Load movie on page load
+        loadMovie();
+    </script>
 </body>
 </html>
