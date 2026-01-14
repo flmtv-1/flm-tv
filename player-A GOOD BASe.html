@@ -805,9 +805,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        console.log('🎬 PLAYER.HTML LOADED - Script starting...');
-        console.log('📍 Current URL:', window.location.href);
-        
         const JELLYFIN = {
             SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
@@ -815,13 +812,6 @@
         };
 
         const movieId = new URLSearchParams(window.location.search).get('id');
-        console.log('🎬 Movie ID:', movieId);
-        
-        if (!movieId) {
-            console.error('❌ NO MOVIE ID IN URL!');
-            alert('Error: No movie ID provided in URL');
-        }
-        
         let hasStarted = false;
         
         // ═══════════════════════════════════════════════════════════════
@@ -1022,7 +1012,6 @@
         const emojiBtn = document.getElementById('emojiBtn');
         const emojiPicker = document.getElementById('emojiPicker');
         const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
         
         if (emojiBtn && emojiPicker) {
             // Populate emoji picker
@@ -1055,7 +1044,8 @@
         }
         
         // Firebase chat send function
-        // chatInput and sendBtn already declared above
+        const sendBtn = document.getElementById('sendBtn');
+        const chatInput = document.getElementById('chatInput');
         
         function sendMessage() {
             const messageText = chatInput.value.trim();
@@ -1228,33 +1218,21 @@
             
             console.log('🔊 Unmute button clicked');
             
-            // Mark that user wants sound
-            hasStarted = true;
-            
-            // Pause video first
-            const wasPlaying = !video.paused;
-            video.pause();
-            
             // iOS-specific unmute sequence
             // Remove the muted attribute completely
             video.removeAttribute('muted');
             video.muted = false;
             video.volume = 1.0;
-            video.defaultMuted = false;
             
             console.log('After unmute attempt:', {
                 muted: video.muted,
                 volume: video.volume,
-                hasAttribute: video.hasAttribute('muted'),
-                defaultMuted: video.defaultMuted
+                hasAttribute: video.hasAttribute('muted')
             });
             
-            // Force reload the video element (iOS fix)
-            video.load();
-            
-            // Resume playing if it was playing
-            if (wasPlaying) {
-                video.play().catch(e => console.log('Play after unmute error:', e));
+            // If video is paused, play it
+            if (video.paused) {
+                video.play().catch(e => console.log('Play error:', e));
             }
             
             // Hide button
@@ -1291,24 +1269,9 @@
         });
 
         async function loadMovie() {
-            console.log('🎬 loadMovie() called with ID:', movieId);
-            
-            if (!movieId) {
-                console.error('❌ Cannot load movie - no ID');
-                alert('Error: No movie ID');
-                return;
-            }
-            
             try {
-                console.log('📡 Fetching movie data from Jellyfin...');
                 const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${movieId}?Fields=People&api_key=${JELLYFIN.API_KEY}`);
-                
-                if (!r.ok) {
-                    throw new Error(`HTTP ${r.status}: ${r.statusText}`);
-                }
-                
                 const item = await r.json();
-                console.log('✅ Movie data loaded:', item.Name);
 
                 // Video - Mobile-optimized setup
                 const video = document.getElementById('videoPlayer');
@@ -1325,8 +1288,7 @@
                     `api_key=${JELLYFIN.API_KEY}`;
                 
                 video.src = streamUrl;
-                // Don't set muted here - it's already set in HTML
-                // and user may have unmuted via forceUnmute()
+                video.muted = true; // Start muted - will unmute on play button click
                 
                 // Add event listener to detect when video can play
                 video.addEventListener('canplay', () => {
@@ -1334,18 +1296,15 @@
                 }, { once: true });
                 
                 // Add listener for when video actually starts playing
-                // Remove { once: true } so this keeps working even after pause/play
                 video.addEventListener('playing', () => {
                     console.log('▶️ Video playing, muted:', video.muted);
                     
                     // Force unmute when playing starts (mobile fix)
                     if (hasStarted) {
-                        console.log('🔓 Auto-unmuting because video started playing');
-                        video.removeAttribute('muted');
                         video.muted = false;
                         video.volume = 1.0;
                     }
-                });
+                }, { once: true });
                 
                 // Listen for volume change (when user clicks native unmute button)
                 video.addEventListener('volumechange', () => {
