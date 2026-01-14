@@ -1339,9 +1339,9 @@
                     console.log('Auth error:', authError);
                 }
                 
-                // Load Jellyfin player in iframe with API key (no Public button!)
+                // Load Jellyfin player in iframe
                 const iframe = document.getElementById('jellyfinPlayerFrame');
-                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&serverId=db6bb6388c8c4c70825698639853ede6`;
                 iframe.src = playerUrl;
                 console.log('🎬 Loading Jellyfin player');
                 

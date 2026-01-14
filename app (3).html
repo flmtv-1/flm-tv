@@ -3511,70 +3511,29 @@
         async function playJellyfinItem(itemId) {
             console.log('🎬 Checking item type for:', itemId);
             
+            // Fetch the item to check its type
             try {
-                // Fetch item to check type
-                const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
-                const item = await response.json();
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
                 
                 if (item.Type === 'Series') {
-                    // TV Series go to custom page
-                    console.log('📺 Redirecting to TV detail page:', item.Name);
+                    // Redirect to TV detail page
+                    console.log('📺 Redirecting to TV series page:', item.Name);
                     window.location.href = `tv-detail.html?id=${itemId}`;
-                    return;
-                } else if (item.Type === 'Episode') {
-                    // Episodes go to series custom page
-                    console.log('📺 Redirecting to series page');
-                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
-                    return;
+                } else if (item.Type === 'Movie') {
+                    // Redirect to Movie detail page
+                    console.log('🎬 Redirecting to movie page:', item.Name);
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                } else {
+                    // For episodes or other types, try movie page
+                    console.log('🎞️ Loading:', item.Type, item.Name);
+                    window.location.href = `movie-detail.html?id=${itemId}`;
                 }
-                
-                // Movies and everything else open in Jellyfin viewer (current behavior)
-                console.log('🎬 Opening in viewer:', item.Name);
                 
             } catch (error) {
-                console.error('Error fetching item:', error);
+                console.error('Error fetching item details:', error);
+                // Fallback to movie page
+                window.location.href = `movie-detail.html?id=${itemId}`;
             }
-            
-            // Open in Jellyfin viewer iframe
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading URL:', detailUrl);
-            
-            frame.src = detailUrl;
-            
-            // Show loading overlay
-            const overlay = document.getElementById('jellyfinLoadingOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
-            }
-            
-            // Auto-hide loading overlay after 4 seconds
-            setTimeout(() => {
-                if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.style.display = 'none', 500);
-                }
-            }, 4000);
-            
-            // Inject FLM TV branding after iframe loads
-            frame.onload = function() {
-                try {
-                    injectCustomBranding(frame);
-                } catch (e) {
-                    console.log('Could not inject branding (CORS):', e);
-                }
-            };
-            
-            viewer.classList.add('active');
-            // KEEP FLM TV header visible (removed viewing-movie class)
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'movie'}, '', '#movie');
         }
         
         async function openJellyfinCollection(collectionId) {

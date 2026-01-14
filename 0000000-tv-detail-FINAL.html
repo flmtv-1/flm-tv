@@ -660,9 +660,11 @@
                 <div class="episodes-grid" id="episodesGrid"></div>
             </div>
 
-            <!-- Recommendations -->
-            <h2 class="section-title">You May Also Like</h2>
-            <div class="movies-grid" id="similarMovies"></div>
+            <!-- Recommendations - HIDDEN (Jellyfin shows this already) -->
+            <div style="display: none;">
+                <h2 class="section-title">You May Also Like</h2>
+                <div class="movies-grid" id="similarMovies"></div>
+            </div>
         </div>
     </div>
 
@@ -1401,11 +1403,11 @@
                 const director = item.People?.find(p => p.Type === 'Director')?.Name;
                 document.getElementById('director').textContent = director || 'N/A';
 
-                // Episodes for TV shows
+                // Episodes for TV shows - HIDDEN (Jellyfin iframe shows them)
                 if (item.Type === 'Series' || item.Type === 'Episode') {
                     const seriesId = item.Type === 'Series' ? item.Id : item.SeriesId;
-                    await loadSeasons(seriesId);
-                    document.getElementById('episodesSection').style.display = 'block';
+                    // Don't show episodes section - Jellyfin handles this
+                    // document.getElementById('episodesSection').style.display = 'block';
                 }
 
                 loadSimilar(item.ParentId);

@@ -3509,41 +3509,41 @@
         }
         
         async function playJellyfinItem(itemId) {
-            console.log('🎬 Checking item type for:', itemId);
-            
-            try {
-                // Fetch item to check type
-                const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
-                const item = await response.json();
-                
-                if (item.Type === 'Series') {
-                    // TV Series go to custom page
-                    console.log('📺 Redirecting to TV detail page:', item.Name);
-                    window.location.href = `tv-detail.html?id=${itemId}`;
-                    return;
-                } else if (item.Type === 'Episode') {
-                    // Episodes go to series custom page
-                    console.log('📺 Redirecting to series page');
-                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
-                    return;
-                }
-                
-                // Movies and everything else open in Jellyfin viewer (current behavior)
-                console.log('🎬 Opening in viewer:', item.Name);
-                
-            } catch (error) {
-                console.error('Error fetching item:', error);
-            }
-            
-            // Open in Jellyfin viewer iframe
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            console.log('🎬 Opening Jellyfin for item:', itemId);
             
-            console.log('🔗 Loading URL:', detailUrl);
-            
-            frame.src = detailUrl;
+            // First, fetch the item to check its type
+            try {
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                
+                let detailUrl;
+                
+                if (item.Type === 'Series') {
+                    // For TV Series, use the TV shows page which handles seasons/episodes better
+                    detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                    console.log('📺 Loading TV Series:', item.Name);
+                } else if (item.Type === 'Movie') {
+                    // For Movies, use details page
+                    detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                    console.log('🎬 Loading Movie:', item.Name);
+                } else {
+                    // For other types (Episode, etc), use details
+                    detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                    console.log('🎞️ Loading:', item.Type, item.Name);
+                }
+                
+                console.log('🔗 Loading URL:', detailUrl);
+                
+                frame.src = detailUrl;
+                
+            } catch (error) {
+                console.error('Error fetching item details:', error);
+                // Fallback to basic details page
+                const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                frame.src = detailUrl;
+            }
             
             // Show loading overlay
             const overlay = document.getElementById('jellyfinLoadingOverlay');

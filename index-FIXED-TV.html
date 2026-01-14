@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - Part 2: Visual Categories</title>
+
+    <title>FLM TV — Streaming MOVIES, TV & Beyond • International Content • Music & MORE “Out of this world” | Channel 26.5 Las Vegas & Global Streaming</title>
+    <!-- 🔖 SEO + Share Metadata -->
+    <meta name="description" content="FLM TV — Streaming MOVIES, TV SHOWS, CLASSICS, MUSIC & More. Live Channel 26.5 TV Las Vegas and global streaming.">
+
+    <meta property="og:title" content="FLM TV Is Out of This World">
+<meta property="og:description" content="Film, international content, music & live broadcasts. Watch FLM TV on Channel 26.5 Las Vegas and worldwide.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://flmtv.com/">
+<meta property="og:image" content="https://flmtv.com/assets/flm-banner-REAL-Z-1200x630.png">
+<meta property="og:image" content="https://flmtv.com/assets/flmtv-AlienBanner1-1200x630.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -66,7 +80,7 @@
         }
         
         .header-content {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -127,6 +141,67 @@
             right: 0;
             height: 2px;
             background: var(--neon-green);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  CATEGORY NAVIGATION BAR (like Jellyfin)                        */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .category-nav {
+            background: rgba(10, 15, 26, 0.98);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 2rem;
+            position: sticky;
+            top: 82px; /* Below main header */
+            z-index: 99;
+            display: none; /* Hidden by default, show when in category view */
+        }
+        
+        .category-nav.active {
+            display: block;
+        }
+        
+        .category-nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .category-nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        .category-nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .category-nav-links a:hover {
+            color: var(--neon-green);
+        }
+        
+        .category-nav-links a.active {
+            color: var(--accent);
+        }
+        
+        .category-nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
         }
         
         .nav-actions {
@@ -312,7 +387,7 @@
         }
         
         .category-nav-container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
@@ -320,7 +395,7 @@
             font-size: 1.75rem;
             font-weight: 800;
             color: var(--accent);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* Reduced from 1.5rem */
         }
         
         .category-nav-wrapper {
@@ -419,10 +494,11 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         .content-container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    padding: 2rem;
+    padding-top: 1rem; /* Reduced from 2rem to remove dead space */
+    max-width: 1400px;
+    margin: 0 auto;
+}
         
         .category-section {
             margin-bottom: 3rem;
@@ -432,7 +508,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* Reduced from 1.5rem */
         }
         
         .category-title {
@@ -507,28 +583,20 @@
             background: var(--bg-card);
         }
         
-        .content-card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 70%, transparent 100%);
-            padding: 1rem;
-            border-radius: 0 0 8px 8px;
+        /* TEXT BELOW POSTER - NOT OVERLAY */
+        .content-card-text {
+            padding: 0.5rem 0.25rem;
         }
         
-        .content-card-title {
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
+        .content-card-title-below {
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-        }
-        
-        .content-card-info {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -765,7 +833,7 @@
             height: 100vh;
             background: var(--bg-card);
             border-left: 3px solid var(--primary);
-            z-index: 10000; /* ABOVE video player (9999) */
+            z-index: 9998;
             transition: right 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -868,11 +936,6 @@
             right: 450px;
         }
         
-        /* Spinner animation */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
         .viewer-header {
             background: rgba(15, 23, 42, 0.98);
             padding: 0.75rem 1rem;
@@ -880,23 +943,25 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary);
-            z-index: 10000;
-            position: sticky;
+            z-index: 99999;
+            position: absolute;
             top: 0;
+            left: 0;
+            right: 0;
             pointer-events: auto;
             gap: 1rem;
             min-height: 60px;
             max-height: 60px;
         }
         
-        /* Hide FLM TV header when viewing movie to prevent double header and allow Jellyfin buttons to work */
+        /* KEEP FLM TV header visible - we'll hide Jellyfin's header instead */
         .jellyfin-viewer.viewing-movie .viewer-header {
-            display: none;
+            display: flex; /* Keep it visible */
         }
         
-        /* Make iframe full height when header is hidden */
+        /* Account for FLM TV header height */
         .jellyfin-viewer.viewing-movie iframe {
-            height: 100vh;
+            height: 100vh; /* Full height - header overlays on top */
         }
         
         .viewer-logo {
@@ -1021,6 +1086,12 @@
             height: 100%;
             border: none;
             background: #000;
+            opacity: 1;
+            transition: opacity 0.3s ease-in;
+        }
+        
+        #jellyfinFrame.loaded {
+            opacity: 1;
         }
             transform: translateY(-50%);
             background: linear-gradient(135deg, var(--neon-green) 0%, var(--accent) 100%);
@@ -1371,7 +1442,7 @@
         
         .video-container {
             width: 95%;
-            max-width: 1600px;
+            max-width: 1400px;
             position: relative;
             aspect-ratio: 16/9;
         }
@@ -1442,65 +1513,132 @@
             display: none; /* Hidden on desktop */
         }
         
-        @media only screen and (max-width: 767px) {
-            .bottom-nav {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(10, 15, 26, 0.98);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                padding: 0.5rem 0;
-                z-index: 1000;
-                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-            }
-            
-            .bottom-nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 0.25rem;
-                padding: 0.5rem 1rem;
-                background: none;
-                border: none;
-                color: rgba(255, 255, 255, 0.6);
-                text-decoration: none;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                min-width: 70px;
-            }
-            
-            .bottom-nav-item i {
-                font-size: 1.25rem;
-            }
-            
-            .bottom-nav-item span {
-                font-size: 0.7rem;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-            
-            .bottom-nav-item.active,
-            .bottom-nav-item:active {
-                color: var(--neon-green);
-            }
-            
-            .bottom-nav-item:hover {
-                color: var(--primary);
-            }
-            
-            /* Add padding to body to account for bottom nav */
-            body {
-                padding-bottom: 70px !important;
-            }
-        }
-        
+@media only screen and (max-width: 767px) {
+
+    /* 📱 Mobile: hide floating buttons (use bottom nav instead) */
+    .floating-buttons,
+    .floating-btn,
+    .floating-btn-chat,
+    .floating-btn-ai {
+        display: none !important;
+        pointer-events: none !important;
+    }
+
+    /* ✅ Bottom Navigation - Scrollable on mobile */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(10, 15, 26, 0.98);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: flex-start; /* Changed from space-around */
+        align-items: center;
+        padding: 0.5rem 1rem; /* Added horizontal padding */
+        gap: 1rem; /* Space between items */
+        z-index: 1000;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        overflow-x: auto; /* Allow horizontal scrolling */
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+
+    .bottom-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0; /* Prevent items from shrinking */
+        min-width: 70px; /* Minimum width for each item */
+        gap: 0.25rem;
+        padding: 0.5rem 1rem;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 70px;
+    }
+
+    .bottom-nav-item i {
+        font-size: 1.25rem;
+    }
+
+    /* 🎭 Bottom Nav: Zaina AI avatar icon */
+    .nav-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(34,197,94,.9);
+        box-shadow: 0 0 14px rgba(34,197,94,.45);
+        margin-bottom: 4px;
+    }
+
+    .bottom-nav-item span {
+        font-size: 0.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .bottom-nav-item.active,
+    .bottom-nav-item:active {
+        color: var(--neon-green);
+    }
+
+    .bottom-nav-item:hover {
+        color: var(--primary);
+    }
+
+    /* Add padding to body to account for bottom nav */
+    body {
+        padding-bottom: 70px !important;
+    }
+
+    /* ✅ FIX LIVE TV CARD ON MOBILE */
+
+    /* ❌ Remove red dot + green dot completely */
+    .live-dot,
+    .live-indicator::before {
+        display: none !important;
+    }
+
+    /* Make LIVE indicator text smaller + aligned */
+    .live-indicator {
+        font-size: 0.65rem !important;
+        margin-bottom: 2px !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+    }
+
+    /* Live channel title smaller and aligned */
+    .live-channel-name {
+        font-size: 0.75rem !important;
+        line-height: 1.1 !important;
+        white-space: normal !important;
+        text-align: left !important;
+    }
+
+    /* Shrink the red bar area on mobile */
+    .live-channel-content {
+        height: auto !important;
+        padding: 0.35rem 0.6rem !important;
+    }
+
+    /* Shrink mute button */
+    .volume-toggle-btn,
+    .mute-button,
+    .live-mute-btn {
+        transform: scale(0.75) !important;
+    }
+
+}
+
         /* ═══════════════════════════════════════════════════════════════ */
         /*  MOBILE PHONES - CONSOLIDATED (0-767px)                        */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -1530,7 +1668,14 @@
             }
             
             /* Ensure all containers don't exceed viewport width */
-            .header,
+            .header {
+                width: 100%;
+                max-width: 100vw;
+                overflow-x: auto !important; /* ALLOW scrolling for nav */
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            
             .hero-banner,
             .category-nav-section,
             .content-container,
@@ -1578,9 +1723,21 @@
                 font-weight: 900;
             }
             
-            /* Hide desktop nav */
+            /* Show nav but make it scrollable */
             .header-nav {
-                display: none !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                gap: 0.5rem !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .header-nav a {
+                white-space: nowrap !important;
+                font-size: 0.9rem !important;
+                flex-shrink: 0 !important;
             }
             
             /* Right side actions - icon buttons only */
@@ -1671,6 +1828,9 @@
                 min-height: 50px !important;
                 max-height: 50px !important;
                 flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
             }
             
             .viewer-logo {
@@ -1844,9 +2004,13 @@
             }
             
             .live-channel-name {
-                font-size: 0.7rem !important;
-                line-height: 1 !important;
-            }
+    font-size: 0.48rem !important;
+    line-height: 1.05 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
             
             /* Category Cards */
             .category-card {
@@ -2269,7 +2433,8 @@
             /* Header buttons container - scrollable! */
             .header-nav {
                 flex-wrap: nowrap !important;
-                overflow-x: visible !important;
+                overflow-x: auto !important; /* Allow horizontal scrolling */
+                -webkit-overflow-scrolling: touch !important; /* Smooth scrolling on iOS */
             }
             
             .logo-text {
@@ -2291,8 +2456,8 @@
             }
             
             .movies-grid, .content-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 1rem !important;
+                grid-template-columns: repeat(5, 1fr) !important; /* 5 columns on mobile - smaller boxes */
+                gap: 0.4rem !important; /* Even smaller gap */
             }
             
             .side-panel {
@@ -2405,6 +2570,116 @@
             }
         }
         
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  MOBILE IMPROVEMENTS - Better Layout & Draggable Panels         */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        @media (max-width: 768px) {
+            /* Header - Stack properly on mobile */
+            header {
+                padding: 0.5rem 1rem !important;
+                min-height: 60px !important;
+            }
+            
+            .header-content {
+                flex-wrap: nowrap !important;
+                gap: 0.5rem !important;
+            }
+            
+            /* Logo smaller on mobile */
+            .logo {
+                font-size: 1.25rem !important;
+                white-space: nowrap !important;
+            }
+            
+            .logo img {
+                height: 30px !important;
+            }
+            
+            /* Viewer header - Better spacing */
+            .jellyfin-viewer.active header {
+                padding: 0.5rem 0.75rem !important;
+            }
+            
+            .viewer-back {
+                font-size: 0.9rem !important;
+                padding: 0.6rem 1rem !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Side panels - Better mobile width */
+            .side-panel {
+                width: 85vw !important; /* Wider on mobile */
+                max-width: 400px !important;
+            }
+            
+            /* Adjust panel content spacing */
+            .panel-header {
+                padding-top: 1rem !important;
+            }
+            
+            /* Category grid - Better mobile spacing */
+            .movies-grid,
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+                gap: 0.75rem !important;
+                padding: 1rem !important;
+            }
+            
+            /* Category page heading */
+            .category-header,
+            h1 {
+                font-size: 1.5rem !important;
+                padding: 0.75rem 1rem !important;
+                margin: 0 !important;
+            }
+            
+            /* Movie cards on mobile */
+            .movie-card {
+                min-width: 120px !important;
+            }
+            
+            .movie-card img {
+                border-radius: 6px !important;
+            }
+            
+            /* Chat messages - Better mobile layout */
+            .chat-message {
+                max-width: 85% !important;
+                font-size: 0.9rem !important;
+                padding: 0.6rem 0.9rem !important;
+            }
+            
+            /* Input areas on mobile */
+            .chat-input-container input,
+            .chat-input-container textarea {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+            }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .side-panel {
+                width: 90vw !important;
+                max-width: none !important;
+            }
+            
+            .logo {
+                font-size: 1.1rem !important;
+            }
+            
+            .viewer-back {
+                font-size: 0.85rem !important;
+                padding: 0.5rem 0.75rem !important;
+            }
+            
+            .movies-grid,
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+                gap: 0.5rem !important;
+            }
+        }
+        
     </style>
 </head>
 <body>
@@ -2427,7 +2702,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
-                        <li><a href="#" onclick="openLiveStream(); return false;"> Live TV</a></li>
+                        <li><a href="#" onclick="openLiveStream(); return false;">🔴 Live TV</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
                     </ul>
                 </nav>
@@ -2462,6 +2737,22 @@
             </div>
         </div>
     </header>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  CATEGORY NAVIGATION (like Jellyfin)                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div class="category-nav" id="categoryNav">
+        <div class="category-nav-content">
+            <ul class="category-nav-links">
+                <li><a href="#" class="active" onclick="showAllMovies(); return false;">Movies</a></li>
+                <li><a href="#" onclick="showSuggestions(); return false;">Suggestions</a></li>
+                <li><a href="#" onclick="showFavorites(); return false;">Favorites</a></li>
+                <li><a href="#" onclick="showCollections(); return false;">Collections</a></li>
+                <li><a href="#" onclick="showGenres(); return false;">Genres</a></li>
+            </ul>
+        </div>
+    </div>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HERO BANNER                                                    -->
@@ -2487,16 +2778,26 @@
                     <div class="live-channel-card" onclick="openLiveStream()">
                         <video id="previewVideo" muted autoplay loop playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-                            <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                            <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
+                        
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
-                                <span> LIVE</span>
+                                <span>LIVE</span>
                             </div>
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
-                        <!-- Volume Toggle Button -->
+                        
+                        <!-- 🔇 MUTE BUTTON - User can toggle sound -->
+                        <button id="volumeToggleBtn" onclick="event.stopPropagation(); togglePreviewVolume();" 
+                            style="position: absolute; bottom: 12px; right: 12px; width: 40px; height: 40px; 
+                            background: rgba(0,0,0,0.7); border: 2px solid #fcd116; border-radius: 50%; 
+                            cursor: pointer; z-index: 100; display: flex; align-items: center; 
+                            justify-content: center; transition: all 0.3s ease;"
+                            title="Unmute">
+                            <i class="fas fa-volume-mute" style="color: #fcd116; font-size: 18px;"></i>
+                        </button>
                         
                     </div>
                     <!-- Category cards will be dynamically added here -->
@@ -2523,39 +2824,508 @@
     <!--  SIGN IN MODAL                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    <div class="modal-overlay" id="signInModal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3 class="modal-title" style="color: white;">Log In</h3>
-                <button class="modal-close" onclick="closeModal('signInModal')" style="background: none; border: none; color: white; font-size: 2rem; cursor: pointer; line-height: 1;">
-                    ✕
-                </button>
+   <!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  FLM TV AUTHENTICATION MODALS                                   -->
+<!--  Beautiful, branded sign-in and sign-up modals                  -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<!-- SIGN IN MODAL -->
+<div class="flm-modal-overlay" id="flmSignInModal" style="display: none;">
+    <div class="flm-modal-content">
+        <button class="flm-modal-close" onclick="(window.flmAuth ? flmAuth.closeModal('flmSignInModal') : closeFlmModal('flmSignInModal'))">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="flm-modal-header">
+            <h2 style="color: var(--primary); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
+                Log In
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Welcome back to FLM TV! 🎬
+            </p>
+        </div>
+        
+        <div class="flm-modal-body">
+            <!-- Error Message -->
+            <div id="flmSignInError" class="flm-error-message" style="display: none;">
+                Error message here
             </div>
-            <div class="modal-body" style="padding: 2rem;">
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <input type="email" class="form-input" placeholder="Email Address" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: white; color: #333; font-size: 1rem;">
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem; position: relative;">
-                    <input type="password" id="signInPassword" class="form-input" placeholder="Password" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: #3a3a3a; color: white; font-size: 1rem;">
-                    <button onclick="togglePassword('signInPassword')" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #999; cursor: pointer; font-size: 1.2rem;">
+            
+            <!-- Success Message -->
+            <div id="flmSignInSuccess" class="flm-success-message" style="display: none;">
+                Success message here
+            </div>
+            
+            <!-- Email Input -->
+            <div class="flm-form-group">
+                <label for="flmSignInEmail" class="flm-form-label">Email Address</label>
+                <input 
+                    type="email" 
+                    id="flmSignInEmail" 
+                    class="flm-form-input" 
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                >
+            </div>
+            
+            <!-- Password Input -->
+            <div class="flm-form-group">
+                <label for="flmSignInPassword" class="flm-form-label">Password</label>
+                <div class="flm-password-wrapper">
+                    <input 
+                        type="password" 
+                        id="flmSignInPassword" 
+                        class="flm-form-input" 
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                    >
+                    <button 
+                        type="button" 
+                        class="flm-password-toggle" 
+                        onclick="togglePasswordVisibility('flmSignInPassword')"
+                    >
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <a href="#" style="color: #999; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
+            </div>
+            
+            <!-- Forgot Password Link -->
+            <div class="flm-form-links">
+                <a href="#" onclick="alert('Please contact support@flmtv.com for password reset'); return false;">
+                    Forgot Password?
+                </a>
+            </div>
+            
+            <!-- Sign In Button -->
+            <button id="flmSignInBtn" class="flm-btn flm-btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Log In
+            </button>
+            
+            <!-- Sign Up Link -->
+            <div class="flm-form-footer">
+                Not a member? 
+                <a href="#" onclick="(window.flmAuth ? (flmAuth.closeModal('flmSignInModal'), flmAuth.openModal('flmSignUpModal')) : (closeFlmModal('flmSignInModal'), openFlmModal('flmSignUpModal'))); return false;">
+                    Sign Up
+                </a>
+            </div>
+            
+            <!-- Membership Button -->
+            <button class="flm-btn flm-btn-secondary" style="margin-top: 1rem;">
+                <i class="fas fa-crown"></i> Try Paid Membership
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SIGN UP MODAL -->
+<div class="flm-modal-overlay" id="flmSignUpModal" style="display: none;">
+    <div class="flm-modal-content">
+        <button class="flm-modal-close" onclick="(window.flmAuth ? flmAuth.closeModal('flmSignUpModal') : closeFlmModal('flmSignUpModal'))">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="flm-modal-header">
+            <h2 style="color: var(--primary); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
+                Sign Up
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                Join FLM TV and start streaming! 🌟
+            </p>
+        </div>
+        
+        <div class="flm-modal-body">
+            <!-- Error Message -->
+            <div id="flmSignUpError" class="flm-error-message" style="display: none;">
+                Error message here
+            </div>
+            
+            <!-- Success Message -->
+            <div id="flmSignUpSuccess" class="flm-success-message" style="display: none;">
+                Success message here
+            </div>
+            
+            <!-- Email Input -->
+            <div class="flm-form-group">
+                <label for="flmSignUpEmail" class="flm-form-label">Email Address</label>
+                <input 
+                    type="email" 
+                    id="flmSignUpEmail" 
+                    class="flm-form-input" 
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                >
+            </div>
+            
+            <!-- Password Input -->
+            <div class="flm-form-group">
+                <label for="flmSignUpPassword" class="flm-form-label">Password</label>
+                <div class="flm-password-wrapper">
+                    <input 
+                        type="password" 
+                        id="flmSignUpPassword" 
+                        class="flm-form-input" 
+                        placeholder="Create a password (min 6 characters)"
+                        autocomplete="new-password"
+                    >
+                    <button 
+                        type="button" 
+                        class="flm-password-toggle" 
+                        onclick="togglePasswordVisibility('flmSignUpPassword')"
+                    >
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
-                <button class="btn-modal btn-modal-primary" style="width: 100%; padding: 1rem; background: var(--secondary); color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
-                    Log In
-                </button>
-                <div style="text-align: center; margin-bottom: 1.5rem; color: #999;">
-                    Not a member? <a href="#" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Sign Up</a>
+            </div>
+            
+            <!-- Confirm Password Input -->
+            <div class="flm-form-group">
+                <label for="flmSignUpConfirmPassword" class="flm-form-label">Confirm Password</label>
+                <div class="flm-password-wrapper">
+                    <input 
+                        type="password" 
+                        id="flmSignUpConfirmPassword" 
+                        class="flm-form-input" 
+                        placeholder="Confirm your password"
+                        autocomplete="new-password"
+                    >
+                    <button 
+                        type="button" 
+                        class="flm-password-toggle" 
+                        onclick="togglePasswordVisibility('flmSignUpConfirmPassword')"
+                    >
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
-                <button style="width: 100%; padding: 1rem; background: #666; color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                    👑 Try Paid Membership
+            </div>
+            
+            <!-- Sign Up Button -->
+            <button id="flmSignUpBtn" class="flm-btn flm-btn-primary">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+            
+            <!-- Sign In Link -->
+            <div class="flm-form-footer">
+                Already have an account? 
+                <a href="#" onclick="(window.flmAuth ? (flmAuth.closeModal('flmSignUpModal'), flmAuth.openModal('flmSignInModal')) : (closeFlmModal('flmSignUpModal'), openFlmModal('flmSignInModal'))); return false;">
+                    Sign In
+                </a>
+            </div>
+            
+            <!-- Terms & Conditions -->
+            <p style="color: var(--text-secondary); font-size: 0.75rem; text-align: center; margin-top: 1.5rem; line-height: 1.4;">
+                By signing up, you agree to our 
+                <a href="#" style="color: var(--primary);">Terms of Service</a> 
+                and 
+                <a href="#" style="color: var(--primary);">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- USER PROFILE MODAL (When logged in) -->
+<div class="flm-modal-overlay" id="flmUserProfileModal" style="display: none;">
+    <div class="flm-modal-content">
+        <button class="flm-modal-close" onclick="flmAuth.closeModal('flmUserProfileModal')">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="flm-modal-header">
+            <h2 style="color: var(--primary); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
+                <i class="fas fa-user-circle"></i> My Account
+            </h2>
+        </div>
+        
+        <div class="flm-modal-body">
+            <div style="text-align: center; padding: 2rem 0;">
+                <div style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 id="flmUserDisplayName" style="color: var(--text); font-size: 1.5rem; margin-bottom: 0.5rem;">
+                    User Name
+                </h3>
+                <p id="flmUserEmail" style="color: var(--text-secondary); margin-bottom: 2rem;">
+                    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5e2b2d3b2c1e3b333f3732703d3133">[email&#160;protected]</a>
+                </p>
+                
+                <button id="flmSignOutBtn" class="flm-btn flm-btn-danger">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
                 </button>
             </div>
         </div>
     </div>
+</div>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════ */
+/*  FLM TV AUTHENTICATION MODAL STYLES                             */
+/* ═══════════════════════════════════════════════════════════════ */
+
+.flm-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 1rem;
+}
+
+.flm-modal-content {
+    background: linear-gradient(135deg, #1a1f2e 0%, #0a0f1a 100%);
+    border: 2px solid var(--primary);
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.flm-modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.flm-modal-close:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--primary);
+    transform: rotate(90deg);
+}
+
+.flm-modal-header {
+    padding: 3rem 2rem 1rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.flm-modal-body {
+    padding: 2rem;
+}
+
+.flm-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.flm-form-label {
+    display: block;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.flm-form-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.flm-form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.1);
+}
+
+.flm-password-wrapper {
+    position: relative;
+}
+
+.flm-password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.flm-password-toggle:hover {
+    color: var(--primary);
+}
+
+.flm-form-links {
+    text-align: right;
+    margin-bottom: 1.5rem;
+}
+
+.flm-form-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.flm-form-links a:hover {
+    color: var(--primary);
+}
+
+.flm-btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.flm-btn-primary {
+    background: linear-gradient(135deg, var(--secondary) 0%, #16a34a 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+}
+
+.flm-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
+}
+
+.flm-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.flm-btn-secondary {
+    background: linear-gradient(135deg, #666 0%, #444 100%);
+    color: white;
+}
+
+.flm-btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 102, 102, 0.4);
+}
+
+.flm-btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.flm-btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+}
+
+.flm-form-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.flm-form-footer a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.flm-form-footer a:hover {
+    color: var(--primary);
+}
+
+.flm-error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid #ef4444;
+    color: #ef4444;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    animation: shake 0.5s ease-in-out;
+}
+
+.flm-success-message {
+    background: rgba(34, 197, 94, 0.1);
+    border: 2px solid #22c55e;
+    color: #22c55e;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .flm-modal-content {
+        border-radius: 15px;
+        max-height: 95vh;
+    }
+    
+    .flm-modal-header {
+        padding: 2.5rem 1.5rem 1rem 1.5rem;
+    }
+    
+    .flm-modal-body {
+        padding: 1.5rem;
+    }
+}
+</style>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  PARENT LOCK MODAL                                              -->
@@ -2739,7 +3509,7 @@
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
         </div>
@@ -2757,6 +3527,9 @@
             <div class="viewer-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
                 <span>FLM TV</span>
+                <a href="https://7realmstv.com" target="_blank" style="margin-left: 1rem; color: #fcd116; text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: opacity 0.2s;" title="Visit 7RealmsTV">
+                    <i class="fas fa-globe"></i> 7RealmsTV
+                </a>
             </div>
             
             <button class="viewer-back" onclick="closeViewer()">
@@ -2778,20 +3551,17 @@
                 </button>
             </div>
         </div>
+        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-modals allow-downloads"></iframe>
         
-        <!-- Loading overlay that auto-hides after 3 seconds -->
-        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
-            <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
-                <h2 style="color: #ffd700; margin-bottom: 1rem;">Loading Player...</h2>
-                <p style="color: #94a3b8; font-size: 1.1rem; max-width: 400px;">If you see a "Public" button, click it once to continue</p>
-                <div style="margin-top: 2rem;">
-                    <div style="width: 50px; height: 50px; border: 4px solid #333; border-top-color: #ffd700; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+        <!-- CUSTOM LOADING OVERLAY - Hides Jellyfin logo -->
+        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; align-items: center; justify-content: center; z-index: 9999;">
+            <div style="text-align: center;">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
                 </div>
+                <div style="color: #fcd116; font-size: 1.2rem; margin-top: 1rem;">Loading...</div>
             </div>
         </div>
-        
-        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
     
     <!-- Floating Chat/AI buttons for main page -->
@@ -2808,7 +3578,7 @@
     <!--  HLS.JS FOR LIVE STREAMING                                      -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  FIREBASE & JAVASCRIPT                                          -->
@@ -2824,6 +3594,54 @@
     
     <script>
         console.log('🎬 FLM TV - Initializing...');
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  MUTE BUTTON TOGGLE - DEFINED FIRST SO IT'S ALWAYS AVAILABLE!
+        // ═══════════════════════════════════════════════════════════════
+        
+        function togglePreviewVolume() {
+            console.log('🔘 togglePreviewVolume called!');
+            
+            const video = document.getElementById('previewVideo');
+            const btn = document.getElementById('volumeToggleBtn');
+            
+            if (!video) {
+                console.error('❌ Preview video not found!');
+                return;
+            }
+            
+            if (!btn) {
+                console.error('❌ Mute button not found!');
+                return;
+            }
+            
+            const icon = btn.querySelector('i');
+            
+            if (video.muted || video.volume === 0) {
+                // Unmute: turn on sound
+                video.dataset.userUnmuted = 'true'; // Prevent auto-muting
+                video.muted = false;
+                video.volume = 0.5;
+                if (icon) icon.className = 'fas fa-volume-up';
+                btn.classList.add('unmuted');
+                btn.title = 'Mute';
+                console.log('🔊 UNMUTED - volume:', video.volume);
+            } else {
+                // Mute: turn off sound
+                delete video.dataset.userUnmuted; // Allow auto-muting again
+                video.muted = true;
+                video.volume = 0;
+                if (icon) icon.className = 'fas fa-volume-mute';
+                btn.classList.remove('unmuted');
+                btn.title = 'Unmute';
+                console.log('🔇 MUTED');
+            }
+        }
+        
+        // Make it globally accessible IMMEDIATELY
+        window.togglePreviewVolume = togglePreviewVolume;
+        
+        console.log('✅ togglePreviewVolume ready and available globally');
         
         // ═══════════════════════════════════════════════════════════════
         //  JELLYFIN CONFIGURATION
@@ -3028,7 +3846,108 @@
             if (categorySection) {
                 categorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
+            
+            // Show category nav bar
+            showCategoryNav();
         }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  CATEGORY NAVIGATION BAR FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        
+        function showCategoryNav() {
+            const categoryNav = document.getElementById('categoryNav');
+            if (categoryNav) {
+                categoryNav.classList.add('active');
+            }
+        }
+        
+        function hideCategoryNav() {
+            const categoryNav = document.getElementById('categoryNav');
+            if (categoryNav) {
+                categoryNav.classList.remove('active');
+            }
+        }
+        
+        function updateCategoryNavActive(linkText) {
+            const links = document.querySelectorAll('.category-nav-links a');
+            links.forEach(link => {
+                if (link.textContent === linkText) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        function showAllMovies() {
+            showCategoryNav();
+            updateCategoryNavActive('Movies');
+            
+            // Scroll to first collection
+            const firstCollection = document.querySelector('.category-section');
+            if (firstCollection) {
+                firstCollection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        function showSuggestions() {
+            showCategoryNav();
+            updateCategoryNavActive('Suggestions');
+            
+            // You can implement suggestions logic here
+            console.log('Showing suggestions...');
+            alert('Suggestions feature - coming soon! This will show AI-recommended content based on your viewing history.');
+        }
+        
+        function showFavorites() {
+            showCategoryNav();
+            updateCategoryNavActive('Favorites');
+            
+            // You can implement favorites logic here
+            console.log('Showing favorites...');
+            alert('Favorites feature - coming soon! This will show content you\'ve marked as favorites in Jellyfin.');
+        }
+        
+        function showCollections() {
+            showCategoryNav();
+            updateCategoryNavActive('Collections');
+            
+            // Scroll to collections if you have them
+            const collectionsSection = document.querySelector('[data-collection-id="00 Collections"]');
+            if (collectionsSection) {
+                collectionsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                alert('Collections feature - coming soon! This will show curated collections of content.');
+            }
+        }
+        
+        function showGenres() {
+            showCategoryNav();
+            updateCategoryNavActive('Genres');
+            
+            // Scroll to category nav where genres are
+            scrollToCategoryNav();
+        }
+        
+        // Show category nav when clicking Movies or TV Shows in main nav
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click handlers to Movies and TV Shows links
+            const moviesLink = document.querySelector('.header-nav a[onclick*="6fcfa6221b9a5741d5fdcf30f78f946b"]');
+            const tvShowsLink = document.querySelector('.header-nav a[onclick*="7e2a5d7fd8bd73b8768e302be39536df"]');
+            
+            if (moviesLink) {
+                moviesLink.addEventListener('click', () => {
+                    setTimeout(showCategoryNav, 500);
+                });
+            }
+            
+            if (tvShowsLink) {
+                tvShowsLink.addEventListener('click', () => {
+                    setTimeout(showCategoryNav, 500);
+                });
+            }
+        });
         
         // ═══════════════════════════════════════════════════════════════
         //  BUILD CATEGORY NAVIGATION
@@ -3074,7 +3993,21 @@
                     
                     const navItem = document.createElement('div');
                     navItem.className = 'category-nav-item';
-                    navItem.onclick = () => openJellyfinCollection(collection.id);
+                    navItem.onclick = async () => {
+                        if (collection.id === '7e2a5d7fd8bd73b8768e302be39536df') {
+                            // AWESOME TV - authenticate FIRST, then use jellyfinViewer
+                            console.log('🔐 Authenticating for AWESOME TV...');
+                            await autoAuthenticatePublic();
+                            console.log('✅ Authenticated - loading AWESOME TV');
+                            
+                            document.getElementById('jellyfinFrame').src = 'https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df';
+                            document.getElementById('jellyfinViewer').classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                            document.body.classList.add('video-playing');
+                        } else {
+                            openJellyfinCollection(collection.id);
+                        }
+                    };
                     
                     navItem.innerHTML = `
                         <img src="${backdropUrl}" 
@@ -3133,6 +4066,9 @@
                         Recursive: true
                     });
                     
+                    // NO FILTERING - show all content as it comes from Jellyfin
+                    // (Removed Episode filtering that was breaking categories)
+                    
                     // Remove loading spinner on first collection
                     if (loadedCount === 1) {
                         container.innerHTML = '';
@@ -3147,9 +4083,15 @@
                     // Create header
                     const header = document.createElement('div');
                     header.className = 'category-header';
+                    
+                    // Special handling for AWESOME TV collection - use viewer instead of new tab
+                    const viewAllAction = collection.id === '7e2a5d7fd8bd73b8768e302be39536df'
+                        ? `document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html#!/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df'; document.getElementById('jellyfinViewer').classList.add('active'); document.body.style.overflow='hidden'; document.body.classList.add('video-playing')`
+                        : `openJellyfinCollection('${collection.id}')`;
+                    
                     header.innerHTML = `
                         <h3 class="category-title">${collection.name}</h3>
-                        <a onclick="openJellyfinCollection('${collection.id}')" class="view-all-btn" style="cursor: pointer;">
+                        <a onclick="${viewAllAction}" class="view-all-btn" style="cursor: pointer;">
                             View All <i class="fas fa-arrow-right"></i>
                         </a>
                     `;
@@ -3160,18 +4102,37 @@
                     
                     // Add items to carousel or show empty message
                     if (items && items.Items && items.Items.length > 0) {
-                        // FILTER: Only show items that have poster images
-                        const itemsWithImages = items.Items.filter(item => 
-                            item.ImageTags?.Primary || 
-                            item.SeriesThumb || 
-                            item.SeriesPrimaryImageTag || 
-                            item.ParentThumbImageTag
-                        );
-                        
-                        itemsWithImages.forEach(item => {
+                        items.Items.forEach(item => {
+                            // ONLY filter phantom images for "01 MOVIES 1" category
+                            if (collection.name === '01 MOVIES 1') {
+                                // Skip items that have NO image sources at all (likely TrickPlay orphans)
+                                if (!item.ImageTags?.Primary && 
+                                    !item.SeriesThumb && 
+                                    !item.SeriesPrimaryImageTag && 
+                                    !item.ParentThumbImageTag &&
+                                    !item.BackdropImageTags) {
+                                    console.log('⏭️ Skipping phantom item in Movie 1:', item.Name);
+                                    return; // Skip this item
+                                }
+                            }
+                            
                             const card = document.createElement('div');
                             card.className = 'content-card';
-                            card.onclick = () => playJellyfinItem(item.Id);
+                            card.style.cursor = 'pointer';
+                            card.style.webkitTapHighlightColor = 'rgba(252, 209, 22, 0.3)';
+                            
+                            // Both onclick and touch events for mobile compatibility
+                            card.onclick = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                playJellyfinItem(item.Id);
+                            };
+                            
+                            card.ontouchend = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                playJellyfinItem(item.Id);
+                            };
                             
                             // Try multiple image sources for better compatibility
                             let imageUrl = 'https://placehold.co/200x300?text=No+Image';
@@ -3192,11 +4153,8 @@
                                      class="content-card-image" 
                                      loading="lazy"
                                      onerror="this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}'">
-                                <div class="content-card-overlay">
-                                    <div class="content-card-title">${item.Name}</div>
-                                    <div class="content-card-info">
-                                        ${item.ProductionYear || ''} ${item.OfficialRating ? '• ' + item.OfficialRating : ''}
-                                    </div>
+                                <div style="padding: 0.5rem 0.25rem;">
+                                    <div style="font-size: 0.75rem; font-weight: 600; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.Name}</div>
                                 </div>
                             `;
                             
@@ -3362,27 +4320,58 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
             
-            // FORCE preview video to be muted (especially on mobile!)
+            // ═══════════════════════════════════════════════════════════
+            // SUPER AGGRESSIVE PREVIEW VIDEO MUTING
+            // ═══════════════════════════════════════════════════════════
+            
+            function forcePreviewMute() {
+                const previewVideo = document.getElementById('previewVideo');
+                if (previewVideo && !previewVideo.dataset.userUnmuted) {
+                    previewVideo.muted = true;
+                    previewVideo.volume = 0;
+                    previewVideo.defaultMuted = true;
+                }
+            }
+            
+            // Mute immediately
+            forcePreviewMute();
+            console.log('🔇 Preview video muted on DOM load');
+            
+            // Gently re-mute after stream loads (catches HLS unmute)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
-                
-                // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', 'muted');
-                previewVideo.setAttribute('playsinline', 'playsinline');
-                
-                // Prevent any unmute attempts
-                previewVideo.addEventListener('volumechange', function() {
-                    if (!this.muted) {
-                        console.log('🔇 Preview tried to unmute, forcing muted again');
-                        this.muted = true;
-                        this.volume = 0;
+                // Wait for stream to fully load, then mute once
+                setTimeout(() => {
+                    if (previewVideo && !previewVideo.dataset.userUnmuted) {
+                        previewVideo.muted = true;
+                        previewVideo.volume = 0;
+                        console.log('🔇 Re-muted after HLS load');
                     }
-                });
-                
-                console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
+                }, 3000); // Wait 3 seconds for HLS to initialize
             }
+            
+            // Continuously enforce muting (gentle - every 500ms)
+            setInterval(forcePreviewMute, 500);
+            
+            // Mute when page becomes visible (catches navigation from intro)
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    forcePreviewMute();
+                    console.log('🔇 Preview muted on visibility change');
+                }
+            });
+            
+            // Mute when window gains focus
+            window.addEventListener('focus', () => {
+                forcePreviewMute();
+                console.log('🔇 Preview muted on window focus');
+            });
+            
+            // Mute on page show (catches back/forward navigation)
+            window.addEventListener('pageshow', () => {
+                forcePreviewMute();
+                console.log('🔇 Preview muted on page show');
+            });
             
             // Auto-authenticate in background
             autoAuthenticatePublic();
@@ -3395,8 +4384,23 @@
             console.log('📺 Live TV card ready (vMix version)');
             
             
-            // Attach button click handlers
-            document.getElementById('signInBtn').onclick = () => openModal('signInModal');
+            // Attach button click handlers - Use FLM Auth System with proper timing
+            const signInBtn = document.getElementById('signInBtn');
+            if (signInBtn) {
+                signInBtn.onclick = () => {
+                    // Check if flmAuth is loaded, if not open modal directly
+                    if (window.flmAuth) {
+                        flmAuth.openModal('flmSignInModal');
+                    } else {
+                        // Fallback: open modal directly
+                        const modal = document.getElementById('flmSignInModal');
+                        if (modal) {
+                            modal.style.display = 'flex';
+                            document.body.style.overflow = 'hidden';
+                        }
+                    }
+                };
+            }
             document.getElementById('parentLockBtn').onclick = () => openModal('parentLockModal');
             
             // Load content
@@ -3444,7 +4448,7 @@
             slides.push({
                 image: 'assets/images/ZainaShowTheaterBanner.jpg',
                 title: 'The Zaina Juliette Show',
-                description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
+                description: 'A Contemporary variety/talk show hosted by Multi-Award-Winning Entertainer, Recording Artist, Actress, CREATOR OF FLM TV, Zaina Juliette, featuring celebrity guests and upcoming talent. "A Gumbo of Entertainment."',
                 link: null
             });
             
@@ -3509,295 +4513,198 @@
         }
         
         async function playJellyfinItem(itemId) {
-            console.log('🎬 Checking item type for:', itemId);
+            console.log('🎬 Opening custom detail page:', itemId);
             
             try {
-                // Fetch item to check type
-                const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
-                const item = await response.json();
+                // Fetch item to determine type
+                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
                 
-                if (item.Type === 'Series') {
-                    // TV Series go to custom page
-                    console.log('📺 Redirecting to TV detail page:', item.Name);
-                    window.location.href = `tv-detail.html?id=${itemId}`;
-                    return;
-                } else if (item.Type === 'Episode') {
-                    // Episodes go to series custom page
-                    console.log('📺 Redirecting to series page');
-                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
-                    return;
+                // MUTE PREVIEW VIDEO IMMEDIATELY
+                const previewVideo = document.getElementById('previewVideo');
+                if (previewVideo) {
+                    previewVideo.muted = true;
+                    previewVideo.volume = 0;
                 }
                 
-                // Movies and everything else open in Jellyfin viewer (current behavior)
-                console.log('🎬 Opening in viewer:', item.Name);
+                // Open YOUR CUSTOM PAGES for movies, Jellyfin viewer for TV
+                if (item.Type === 'Movie') {
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                } else if (item.Type === 'Series') {
+                    // Open TV series in Jellyfin viewer iframe
+                    openJellyfinItem(itemId);
+                } else if (item.Type === 'Episode') {
+                    // If episode, open in viewer
+                    openJellyfinItem(itemId);
+                } else {
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                }
                 
             } catch (error) {
-                console.error('Error fetching item:', error);
+                console.error('Error:', error);
+                window.location.href = `movie-detail.html?id=${itemId}`;
             }
-            
-            // Open in Jellyfin viewer iframe
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading URL:', detailUrl);
-            
-            frame.src = detailUrl;
-            
-            // Show loading overlay
-            const overlay = document.getElementById('jellyfinLoadingOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
-            }
-            
-            // Auto-hide loading overlay after 4 seconds
-            setTimeout(() => {
-                if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.style.display = 'none', 500);
-                }
-            }, 4000);
-            
-            // Inject FLM TV branding after iframe loads
-            frame.onload = function() {
-                try {
-                    injectCustomBranding(frame);
-                } catch (e) {
-                    console.log('Could not inject branding (CORS):', e);
-                }
-            };
-            
-            viewer.classList.add('active');
-            // KEEP FLM TV header visible (removed viewing-movie class)
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'movie'}, '', '#movie');
         }
         
-        async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening Jellyfin collection page for:', collectionId);
-            
+        // Make function globally accessible
+        window.playJellyfinItem = playJellyfinItem;
+        console.log('✅ playJellyfinItem ready - redirects to custom detail pages');
+        
+        // Open item in Jellyfin viewer iframe (for TV series)
+        function openJellyfinItem(itemId) {
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
             if (!viewer || !frame) {
-                console.error('❌ Viewer or frame element not found');
+                console.error('Jellyfin viewer not found');
                 return;
             }
+            
+            console.log('📺 Opening in Jellyfin viewer:', itemId);
+            
+            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            frame.src = detailUrl;
+            
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('video-playing');
+            
+            history.pushState({modal: 'viewer'}, '', '#viewer');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  CUSTOM CATEGORY VIEWER (Fast, No Flash!)
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function openJellyfinCollection(collectionId) {
+            console.log('📂 Opening collection:', collectionId);
+            
+            // ✅ AUTHENTICATE AS PUBLIC FIRST - NO LOGIN SCREEN!
+            console.log('🔐 Authenticating as Public user...');
+            await autoAuthenticatePublic();
+            console.log('✅ Authenticated - loading collection');
+            
+            // MUTE PREVIEW VIDEO IMMEDIATELY
+            const previewVideo = document.getElementById('previewVideo');
+            if (previewVideo) {
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
+                console.log('🔇 Preview video muted automatically');
+            }
+            
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            
+            // Clear loaded class first to start fresh (iframe will be invisible)
+            frame.classList.remove('loaded');
+            
+            // Show viewer FIRST
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('video-playing');
+            
+            // Show overlay on top while content loads (FAST - 100ms)
+            const overlay = showSpaceWelcome();
             
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
-            
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
             try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
-            
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
-                ? collection.url 
-                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Fix URL format - change #/ to #!/ if needed
-            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
-            
-            // Ensure the URL keeps the :8920 port (not :8096)
-            collectionUrl = collectionUrl.replace(':8096', ':8920');
-            
-            // IMPORTANT: For hash-based URLs, API key must go BEFORE the hash!
-            // Split at the hash
-            const hashIndex = collectionUrl.indexOf('#');
-            if (hashIndex > -1) {
-                const baseUrl = collectionUrl.substring(0, hashIndex);
-                const hashPart = collectionUrl.substring(hashIndex);
+                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    ParentId: collectionId,
+                    Limit: 100,
+                    SortBy: 'SortName',
+                    Recursive: true
+                });
                 
-                // Add api_key to base URL (before hash)
-                if (!baseUrl.includes('api_key=')) {
-                    const separator = baseUrl.includes('?') ? '&' : '?';
-                    collectionUrl = baseUrl + separator + `api_key=${JELLYFIN_CONFIG.API_KEY}` + hashPart;
+// 🔍 DEBUG: Check AWESOME TV & FILMS collection
+                if (collectionId === '7e2a5d7fd8bd73b8768e302be39536df') {
+                    console.log('🔍 AWESOME TV & FILMS Debug:');
+                    console.log('Total items:', items.Items?.length);
+                    if (items.Items && items.Items.length > 0) {
+                        console.log('First item:', items.Items[0]);
+                        console.log('Has ImageTags?', !!items.Items[0].ImageTags);
+                        console.log('ImageTags:', items.Items[0].ImageTags);
+                    }
                 }
-            } else {
-                // No hash, add normally
-                if (!collectionUrl.includes('api_key=')) {
-                    collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                }
-            }
-            
-            console.log('🔗 Final URL we are loading:', collectionUrl);
-            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
-            console.log('🔗 API key check:', collectionUrl.includes('api_key=') ? '✅ Has API key' : '❌ NO API KEY!');
-            
-            // Special handling for "00 Collections" - show Enter overlay
-            if (collectionName === '00 Collections') {
-                showCollectionsEnterOverlay(collectionUrl, collectionName);
-            } else {
-                // Load normally for other collections
-                frame.src = collectionUrl;
-                
-                // Inject FLM TV branding after iframe loads
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
-                    }
-                };
-                
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'collection'}, '', '#collection');
-            }
-        }
-        
-        function showCollectionsEnterOverlay(collectionUrl, collectionName) {
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            // Create beautiful enter overlay
-            const overlay = document.createElement('div');
-            overlay.id = 'collectionsEnterOverlay';
-            overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0038a8 100%);
-                z-index: 99999;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                animation: fadeIn 0.5s ease;
-            `;
-            
-            overlay.innerHTML = `
-                <style>
-                    @keyframes fadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                    @keyframes glow {
-                        0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-                        50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
-                    }
-                    #collectionsEnterOverlay h1 {
-                        font-size: 3rem;
-                        font-weight: 900;
-                        background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                        background-clip: text;
-                        margin-bottom: 1rem;
-                        text-align: center;
-                    }
-                    #collectionsEnterOverlay p {
-                        color: #e2e8f0;
-                        font-size: 1.25rem;
-                        margin-bottom: 3rem;
-                        text-align: center;
-                    }
-                    #collectionsEnterOverlay button {
-                        background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
-                        border: none;
-                        color: #000;
-                        padding: 1.5rem 4rem;
-                        font-size: 1.5rem;
-                        font-weight: 900;
-                        border-radius: 12px;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        animation: glow 2s infinite;
-                        text-transform: uppercase;
-                        letter-spacing: 2px;
-                    }
-                    #collectionsEnterOverlay button:hover {
-                        transform: scale(1.05);
-                        box-shadow: 0 0 50px rgba(255, 215, 0, 1);
-                    }
-                    @media (max-width: 768px) {
-                        #collectionsEnterOverlay h1 { font-size: 2rem; }
-                        #collectionsEnterOverlay p { font-size: 1rem; margin-bottom: 2rem; }
-                        #collectionsEnterOverlay button { 
-                            padding: 1rem 2.5rem; 
-                            font-size: 1.25rem; 
-                        }
-                    }
-                </style>
-                <h1>🌟 FLM TV Collections</h1>
-                <p>Discover Popular & Trending Content</p>
-                <button onclick="enterCollections()">ENTER COLLECTIONS</button>
-            `;
-            
-            document.body.appendChild(overlay);
-            
-            // Make enter function globally accessible
-            window.enterCollections = function() {
-                // Remove overlay
-                overlay.remove();
-                
-                // Load the Jellyfin collection page
-                frame.src = collectionUrl;
-                
-                // Inject FLM TV branding and auto-click Public user
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                        
-                        // Auto-click Public user after a delay
-                        setTimeout(() => {
-                            try {
-                                const doc = frame.contentDocument || frame.contentWindow.document;
-                                const publicUser = doc.querySelector('.card-usercard');
-                                if (publicUser && publicUser.textContent.includes('Public')) {
-                                    publicUser.click();
-                                    console.log('✅ Auto-clicked Public user');
-                                    
-                                    // Click submit button
-                                    setTimeout(() => {
-                                        const submitBtn = doc.querySelector('.button-submit');
-                                        if (submitBtn) {
-                                            submitBtn.click();
-                                            console.log('✅ Auto-submitted login');
-                                        }
-                                    }, 200);
-                                }
-                            } catch (e) {
-                                console.log('Auto-login attempt:', e);
+
+                // Simple grid view - NO JELLYFIN UI
+                frame.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            * { margin: 0; padding: 0; box-sizing: border-box; }
+                            body { 
+                                background: #0a0f1a;
+                                color: #fff;
+                                font-family: 'Inter', sans-serif;
+                                padding: 2rem;
                             }
-                        }, 1000);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
+                            h1 { color: #ffd700; margin-bottom: 2rem; font-size: 1.5rem; }
+                            .grid {
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                                gap: 0.5rem;
+                            }
+                            @media (min-width: 768px) {
+                                .grid {
+                                    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                                    gap: 1rem;
+                                }
+                            }
+                            .card { cursor: pointer; transition: transform 0.3s; }
+                            .card:hover { transform: scale(1.05); }
+                            .card img { 
+                                width: 100%;
+                                border-radius: 8px;
+                                border: 2px solid #22c55e;
+                            }
+                            .card-title {
+                                margin-top: 0.5rem;
+                                font-size: 0.75rem;
+                                text-align: center;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                color: #e2e8f0;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${collectionName}</h1>
+                        <div class="grid">
+                            ${items.Items ? items.Items.map(item => `
+                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
+                                    <img src="${item.ImageTags?.Primary ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300` : `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`}">
+                                    <div class="card-title">${item.Name}</div>
+                                </div>
+                            `).join('') : '<p>No items</p>'}
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                // Add loaded class after short delay (onload doesn't fire reliably for srcdoc)
+                setTimeout(() => {
+                    frame.classList.add('loaded');
+                    
+                    // Hide overlay
+                    if (overlay && overlay.parentNode) {
+                        overlay.style.animation = 'fadeOut 0.2s ease';
+                        setTimeout(() => overlay.remove(), 200);
                     }
-                };
+                }, 300); // 300ms delay for content to render
                 
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'collection'}, '', '#collection');
-            };
+            } catch (error) {
+                frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
+                frame.classList.add('loaded'); // Make error visible
+                if (overlay && overlay.parentNode) {
+                    setTimeout(() => overlay.remove(), 300);
+                }
+            }
         }
         
         function showSpaceWelcome() {
-            // Create overlay
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position: fixed;
@@ -3811,7 +4718,7 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                animation: fadeIn 0.5s ease;
+                animation: fadeIn 0.2s ease;
             `;
             overlay.innerHTML = `
                 <h1 style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem; animation: glow 1.5s ease-in-out infinite;">
@@ -3820,94 +4727,238 @@
                 <p style="font-size: 1.5rem; color: white;">Welcome to FLM Television Network</p>
             `;
             document.body.appendChild(overlay);
-            
-            // Auto-remove after 2 seconds
-            setTimeout(() => {
-                overlay.style.animation = 'fadeOut 0.5s ease';
-                setTimeout(() => overlay.remove(), 500);
-            }, 2000);
+            return overlay;
         }
         
-        // Inject FLM TV branding into Jellyfin iframe
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
-            // Auto-login: Click Public user if on login page
-            setTimeout(() => {
+            // Fast auto-login - try immediately and repeatedly
+            const autoLogin = () => {
                 try {
-                    // Find and click Public user card
                     const publicUser = doc.querySelector('.card-usercard');
                     if (publicUser && publicUser.textContent.includes('Public')) {
                         publicUser.click();
                         console.log('✅ Auto-clicked Public user');
                         
-                        // Wait and click Manual Login button
                         setTimeout(() => {
                             const manualLoginBtn = doc.querySelector('.button-submit');
                             if (manualLoginBtn) {
                                 manualLoginBtn.click();
                                 console.log('✅ Auto-submitted login');
                             }
-                        }, 100);
+                        }, 50);
+                        return true;
                     }
+                    return false;
                 } catch (e) {
-                    console.log('Auto-login not needed or failed:', e);
+                    return false;
                 }
-            }, 500);
+            };
+            
+            // Try immediately
+            autoLogin();
+            
+            // Keep trying every 100ms for 3 seconds
+            let attempts = 0;
+            const loginInterval = setInterval(() => {
+                attempts++;
+                if (autoLogin() || attempts >= 30) {
+                    clearInterval(loginInterval);
+                }
+            }, 100);
             
             const style = doc.createElement('style');
             style.textContent = `
-                /* Hide Jellyfin logo and replace with FLM TV branding */
-                .headerLogo { display: none !important; }
-                .headerRight::before {
-                    content: 'FLM TV';
-                    font-size: 2rem;
-                    font-weight: 900;
-                    background: linear-gradient(135deg, #fcd116 0%, #0038a8 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
-                    margin-right: 2rem;
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  HIDE JELLYFIN HEADER                                           */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                .skinHeader,
+                .skinHeader-withBackground,
+                .headerTop,
+                .headerLeft,
+                .headerRight,
+                .headerTabs,
+                .headerUser,
+                .headerUserButton,
+                .headerBackButton,
+                .headerCastButton,
+                .headerSearchButton,
+                .headerButton,
+                .headerHomeButton,
+                .headerLogo,
+                .logoLibraryMenuButton,
+                .btnNotifications,
+                .mdl-layout__header,
+                .viewMenuBar {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    opacity: 0 !important;
                 }
                 
-                /* Filipino Flag Colors */
-                .skinHeader { background: #0038a8 !important; }
-                .button-submit, .raised { background: #ce1126 !important; }
-                .listItem:hover { background: rgba(252, 209, 22, 0.1) !important; }
-                .itemSelectionPanel { border-color: #22c55e !important; }
-                
-                /* Login page customization */
-                .loginPage { background: #0f172a !important; }
-                .readOnlyContent { color: #e2e8f0 !important; }
-                .inputContainer { background: rgba(255, 255, 255, 0.05) !important; }
-                
-                /* Buttons */
-                .emby-button { 
-                    background: linear-gradient(135deg, #0038a8 0%, #fcd116 100%) !important;
-                    border: none !important;
+                .mainDrawer,
+                .navDrawer,
+                .mdl-layout__drawer {
+                    display: none !important;
                 }
-                .emby-button:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(252, 209, 22, 0.3);
+                
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  HIDE LOGIN PAGE ONLY IF IT EXISTS                              */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                /* Hide login page elements but keep them functional */
+                .loginPage .readOnlyContent,
+                .loginPage .visualLoginForm,
+                .loginPage .manualLoginForm {
+                    opacity: 0 !important;
+                    transition: none !important;
+                }
+                
+                /* Show loading message on login page only */
+                .loginPage::before {
+                    content: 'Loading...' !important;
+                    position: fixed !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    font-size: 1.5rem !important;
+                    color: #fcd116 !important;
+                    opacity: 1 !important;
+                }
+                
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  ENSURE ALL CONTENT IS VISIBLE                                  */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                /* Remove top spacing */
+                .mainAnimatedPages,
+                .view,
+                .page,
+                body {
+                    padding-top: 0 !important;
+                    margin-top: 0 !important;
+                }
+                
+                /* ALL detail page content must be visible */
+                .itemBackdrop,
+                .detailImageContainer,
+                .detailPagePrimaryContainer,
+                .detailPageContent,
+                .itemName,
+                .overview,
+                .detailButton,
+                .sections,
+                .itemsContainer,
+                .card,
+                .listItem,
+                .emby-button,
+                .btnPlay,
+                .btnResume,
+                .detailButtons,
+                .episodesContainer,
+                .emby-tab-button,
+                .videoPlayerContainer,
+                video,
+                .osdControls {
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+                
+                /* ═══════════════════════════════════════════════════════════════ */
+                /*  STYLING                                                         */
+                /* ═══════════════════════════════════════════════════════════════ */
+                
+                body {
+                    background: #0f172a !important;
+                }
+                
+                .button-submit,
+                .raised,
+                .btnPlay {
+                    background: linear-gradient(135deg, #ce1126 0%, #fcd116 100%) !important;
+                    color: white !important;
+                }
+                
+                .card {
+                    background: #1e293b !important;
+                }
+                
+                .card:hover {
+                    border-color: #22c55e !important;
                 }
             `;
             doc.head.appendChild(style);
+            
+            console.log('✅ FLM TV branding applied');
         }
         
+        // ═══════════════════════════════════════════════════════════════
+        //  FLM AUTH MODAL HELPERS (Fallback if flmAuth not loaded)
+        // ═══════════════════════════════════════════════════════════════
+        
+        window.closeFlmModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        };
+        
+        window.openFlmModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        };
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  CLOSE VIEWER
+        // ═══════════════════════════════════════════════════════════════
+        
         function closeViewer() {
+            console.log('🔙 Closing viewer...');
+            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
+            const contentContainer = document.getElementById('contentContainer');
+            const heroBanner = document.getElementById('heroBanner');
+            const loadingOverlay = document.getElementById('jellyfinLoadingOverlay');
+            
+            // Hide loading overlay
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'none';
+            }
+            
+            // Remove loaded class first
+            frame.classList.remove('loaded');
+            
+            // Clear both src and srcdoc
+            frame.src = '';
+            frame.removeAttribute('srcdoc');
+            
+            // Remove viewer classes
             viewer.classList.remove('active');
-            // Header stays visible (removed viewing-movie class)
-            frame.src = ''; // Clear the iframe
-            document.body.style.overflow = ''; // Restore scrolling
+            viewer.classList.remove('viewing-movie');
+            
+            // Restore page scroll and visibility
+            document.body.style.overflow = '';
             document.body.classList.remove('video-playing');
+            
+            // Make sure content is visible
+            if (contentContainer) contentContainer.style.display = 'block';
+            if (heroBanner) heroBanner.style.display = 'block';
             
             // Close any open panels
             document.querySelectorAll('.side-panel').forEach(panel => {
                 panel.classList.remove('active');
             });
             document.body.classList.remove('panel-active');
+            
+            console.log('✅ Viewer closed and content restored!');
         }
         
         // ═══════════════════════════════════════════════════════════════
@@ -4363,42 +5414,100 @@
         let hls = null;
         
         // Toggle preview video volume
-        function togglePreviewVolume() {
-            const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('volumeToggleBtn');
-            const icon = btn.querySelector('i');
-            
-            if (video.muted) {
-                video.muted = false;
-                icon.className = 'fas fa-volume-up';
-                btn.classList.add('unmuted');
-                btn.title = 'Mute';
-                console.log('🔊 Preview audio unmuted');
-            } else {
-                video.muted = true;
-                icon.className = 'fas fa-volume-mute';
-                btn.classList.remove('unmuted');
-                btn.title = 'Unmute';
-                console.log('🔇 Preview audio muted');
-            }
-        }
+        // togglePreviewVolume already defined at top of script
         
         function openLiveStream() {
-            console.log('Opening Live Channel 26.5...');
+            console.log('🔴 Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            if (!modal || !video) {
+                console.warn('Live stream modal/video element not found.');
+                return;
+            }
+
+            // ✅ Public HTTPS HLS URL (served by Caddy -> Python HLS)
+            const streamUrl = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+
             modal.classList.add('active');
-            // Add to browser history so back button works
-            history.pushState({modal: 'stream'}, '', '#stream');
+
+            // Clean previous playback
+            try { video.pause(); } catch(e) {}
+            video.removeAttribute('src');
+            try { video.load(); } catch(e) {}
+
+            // Destroy previous HLS instance if any
+            if (window.__flmHls) {
+                try { window.__flmHls.destroy(); } catch(e) {}
+                window.__flmHls = null;
+            }
+
+            // iOS Safari supports native HLS
+            const canPlayNative = video.canPlayType('application/vnd.apple.mpegurl') || video.canPlayType('application/x-mpegURL');
+            if (canPlayNative) {
+                video.src = streamUrl;
+                video.play().catch(() => {});
+            } else if (window.Hls && Hls.isSupported()) {
+                const hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600,
+                    startLevel: -1,
+                    debug: false
+                });
+                window.__flmHls = hls;
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play().catch(() => {});
+                });
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    console.warn('HLS error', data);
+                });
+            } else {
+                // Fallback: direct src (some browsers might still attempt)
+                video.src = streamUrl;
+                video.play().catch(() => {});
+            }
+
+            // Add #stream to history so Back works
+            if (window.location.hash !== '#stream') {
+                history.pushState({ page: 'stream' }, '', '#stream');
+            }
         }
         
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // CRITICAL: Actually STOP the video!
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+                video.removeAttribute('src');
+                video.load(); // Reset video element
+            }
+            
+            // Destroy HLS instance if exists
+            if (window.__flmHls) {
+                try {
+                    window.__flmHls.destroy();
+                } catch(e) {
+                    console.log('HLS cleanup:', e);
+                }
+                window.__flmHls = null;
+            }
+            
             modal.classList.remove('active');
+            
             // Remove from history
             if (window.location.hash === '#stream') {
                 history.back();
             }
+            
+            console.log('✅ Stream stopped and modal closed');
         }
         
         // Handle browser back button
@@ -4408,15 +5517,35 @@
             
             // Close video modal if open
             if (videoModal && videoModal.classList.contains('active')) {
+                event.preventDefault();
+                const video = document.getElementById('liveStreamVideo');
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                    video.removeAttribute('src');
+                    video.load();
+                }
+                
+                // Destroy HLS
+                if (window.__flmHls) {
+                    try { window.__flmHls.destroy(); } catch(e) {}
+                    window.__flmHls = null;
+                }
+                
                 videoModal.classList.remove('active');
+                return; // Don't navigate back
             }
             
             // Close Jellyfin viewer if open
             if (jellyfinViewer && jellyfinViewer.classList.contains('active')) {
-                jellyfinViewer.classList.remove('active');
-                const frame = document.getElementById('jellyfinFrame');
-                if (frame) frame.src = '';
+                event.preventDefault();
+                closeViewer();
+                return; // Don't navigate back
             }
+            
+            // If nothing is open, prevent going to blank page - stay on current page
+            event.preventDefault();
+            console.log('🚫 Browser back button pressed - staying on page');
         });
         
         // ═══════════════════════════════════════════════════════════════
@@ -4453,65 +5582,192 @@ function openCollectionInline(collectionId, collectionName) {
   loadCollectionPage(collectionId, activeCollectionName);
 }
 
-window.addEventListener('popstate', (e) => {
-  const params = new URLSearchParams(location.search);
-  const cid = params.get('collectionId');
-  if (cid) {
-    loadCollectionPage(cid, activeCollectionName || 'Collection');
-  } else {
-    // back to normal browse
-    activeCollectionId = null;
-    activeCollectionName = null;
-    if (typeof renderAllRows === 'function') renderAllRows();
-  }
+// DUPLICATE POPSTATE HANDLER REMOVED - Causes blank pages
+// Only using the main popstate handler above
+
+// REMOVED: async function loadCollectionPage(collectionId, title) {
+// REMOVED:   // You should already have a main grid/container; we reuse the existing "allMoviesGrid" if present
+// REMOVED:   const grid = document.getElementById('allMoviesGrid') || document.getElementById('moviesGrid') || document.querySelector('.movies-grid');
+// REMOVED:   const heading = document.getElementById('pageTitle') || document.querySelector('h1') || null;
+// REMOVED: 
+// REMOVED:   if (heading) heading.textContent = title || 'Collection';
+// REMOVED:   if (!grid) { console.warn('No grid found to render collection'); return; }
+// REMOVED: 
+// REMOVED:   grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">Loading ${title || 'collection'}…</div>`;
+// REMOVED: 
+// REMOVED:   try {
+// REMOVED:     const url = `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${encodeURIComponent(collectionId)}&Recursive=true&IncludeItemTypes=Movie,Series,Episode&Fields=PrimaryImageAspectRatio,PremiereDate,ProductionYear,RunTimeTicks,Overview&SortBy=SortName&SortOrder=Ascending`;
+// REMOVED:     const data = await jellyfinFetch(url);
+// REMOVED: 
+// REMOVED:     const items = (data && data.Items) ? data.Items : [];
+// REMOVED: 
+// REMOVED: // Debug: Check what's in AWESOME TV collection
+// REMOVED: if (collectionId === '7e2a5d7fd8bd73b8768e302be39536df') {
+// REMOVED:     console.log('🔍 AWESOME TV & FILMS Debug:');
+// REMOVED:     console.log('Total items:', items.length);
+// REMOVED:     if (items.length > 0) {
+// REMOVED:         console.log('First item:', items[0]);
+// REMOVED:         console.log('Has ImageTags?', items[0].ImageTags);
+// REMOVED:         console.log('Has SeriesPrimaryImageTag?', items[0].SeriesPrimaryImageTag);
+// REMOVED:         console.log('Has BackdropImageTags?', items[0].BackdropImageTags);
+// REMOVED:     }
+// REMOVED: }
+// REMOVED: 
+// REMOVED:     if (!items.length) {
+// REMOVED:       grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">No items found in this collection.</div>`;
+// REMOVED:       return;
+// REMOVED:     }
+// REMOVED: 
+// REMOVED:     // Reuse your existing card renderer if you have one
+// REMOVED:     if (typeof createMovieCard === 'function') {
+// REMOVED:       grid.innerHTML = '';
+// REMOVED:       items.forEach(item => grid.appendChild(createMovieCard(item)));
+// REMOVED:       return;
+// REMOVED:     }
+// REMOVED: 
+// REMOVED:     // Fallback simple renderer
+// REMOVED:     grid.innerHTML = items.map(item => {
+// REMOVED:       const name = (item.Name || 'Untitled').replace(/"/g,'&quot;');
+// REMOVED:      // Try multiple image sources (for TV shows and movies)
+// REMOVED:       let img = '';
+// REMOVED:       if (item.ImageTags && item.ImageTags.Primary) {
+// REMOVED:         // Standard primary image
+// REMOVED:         img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+// REMOVED:       } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
+// REMOVED:         // For TV episodes, use series image
+// REMOVED:         img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?tag=${item.SeriesPrimaryImageTag}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+// REMOVED:       } else if (item.BackdropImageTags && item.BackdropImageTags.length > 0) {
+// REMOVED:         // Fallback to backdrop
+// REMOVED:         img = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop/0?tag=${item.BackdropImageTags[0]}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+// REMOVED:       }
+// REMOVED: 
+// REMOVED:       return `
+// REMOVED:         <div style="width:180px;margin:10px;display:inline-block;vertical-align:top;">
+// REMOVED:           <div style="width:180px;height:270px;border-radius:12px;overflow:hidden;background:#111827;border:1px solid rgba(255,255,255,.08);">
+// REMOVED:             ${img ? `<img src="${img}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">` : ''}
+// REMOVED:           </div>
+// REMOVED:           <div style="margin-top:8px;color:#e2e8f0;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
+// REMOVED:         </div>`;
+// REMOVED:     }).join('');
+// REMOVED:   } catch (err) {
+// REMOVED:     console.error(err);
+// REMOVED:     grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
+// REMOVED:   }
+// REMOVED: }
+// REMOVED: 
+// REMOVED: // ═══════════════════════════════════════════════════════════════
+// REMOVED: //  BROWSER BACK BUTTON FIX
+// REMOVED: // ═══════════════════════════════════════════════════════════════
+// REMOVED: 
+// REMOVED: // Function to update browser history when navigating
+// REMOVED: function navigateWithHistory(pageName, pageData) {
+// REMOVED:     // Push state to browser history
+// REMOVED:     history.pushState(
+// REMOVED:         { page: pageName, data: pageData }, 
+// REMOVED:         pageName, 
+// REMOVED:         `#${pageName}`
+// REMOVED:     );
+// REMOVED: }
+// REMOVED: 
+// REMOVED: // Listen for browser back/forward button
+// REMOVED: window.addEventListener('popstate', function(event) {
+// REMOVED:     if (event.state) {
+// REMOVED:         // User clicked back button - restore previous page
+// REMOVED:         const previousPage = event.state.page;
+// REMOVED:         const previousData = event.state.data;
+// REMOVED:         
+// REMOVED:         console.log('Back button clicked, restoring:', previousPage);
+// REMOVED:         
+// REMOVED:         // Handle different page types
+// REMOVED:         if (previousPage === 'home' || previousPage === 'browse') {
+// REMOVED:             // Go back to main browse view
+// REMOVED:             loadMainCategories();
+// REMOVED:         } else if (previousPage.startsWith('category-')) {
+// REMOVED:             // Go back to category view
+// REMOVED:             const categoryId = previousData.categoryId;
+// REMOVED:             loadCategory(categoryId);
+// REMOVED:         } else if (previousPage.startsWith('movie-')) {
+// REMOVED:             // Go back to movie view
+// REMOVED:             const movieId = previousData.movieId;
+// REMOVED:             loadMovieDetails(movieId);
+// REMOVED:         }
+// REMOVED:     } else {
+// REMOVED:         // No state, go to home
+// REMOVED:         loadMainCategories();
+// REMOVED:     }
+// REMOVED: });
+// REMOVED: 
+// REMOVED: // Update your existing navigation functions to use history
+// REMOVED: // Example: When loading a category
+// REMOVED: function loadCategory(categoryId, categoryName) {
+// REMOVED:     // Your existing category loading code here...
+// REMOVED:     
+// REMOVED:     // Add this line to update browser history:
+// REMOVED:     navigateWithHistory(`category-${categoryId}`, { 
+// REMOVED:         categoryId: categoryId, 
+// REMOVED:         categoryName: categoryName 
+// REMOVED:     });
+// REMOVED: }
+// REMOVED: 
+// REMOVED: // Example: When loading a movie
+// REMOVED: function loadMovieDetails(movieId, movieTitle) {
+// REMOVED:     // Your existing movie loading code here...
+// REMOVED:     
+// REMOVED:     // Add this line to update browser history:
+// REMOVED:     navigateWithHistory(`movie-${movieId}`, { 
+// REMOVED:         movieId: movieId, 
+// REMOVED:         movieTitle: movieTitle 
+// REMOVED:     });
+// REMOVED: }
+// REMOVED: 
+// REMOVED: // Example: When going back to main browse
+// REMOVED: function loadMainCategories() {
+// REMOVED:     // Your existing browse loading code here...
+// REMOVED:     
+// REMOVED:     // Add this line:
+// REMOVED:     navigateWithHistory('browse', {});
+// REMOVED: }
+// REMOVED: 
+// Initialize: Set initial state when page loads
+window.addEventListener('load', function() {
+    if (!history.state) {
+        history.replaceState({ page: 'home' }, 'Home', '#home');
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // AGGRESSIVE MUTING OF PREVIEW VIDEO
+    // ═══════════════════════════════════════════════════════════════
+    setTimeout(() => {
+        const previewVideo = document.getElementById('previewVideo');
+        if (previewVideo) {
+            previewVideo.muted = true;
+            previewVideo.volume = 0;
+            previewVideo.defaultMuted = true;
+            console.log('🔇 PREVIEW VIDEO FORCE MUTED ON LOAD');
+        }
+    }, 100);
+    
+    // Keep checking and muting every second for first 5 seconds
+    let mutingAttempts = 0;
+    const mutingInterval = setInterval(() => {
+        const previewVideo = document.getElementById('previewVideo');
+        if (previewVideo && !previewVideo.dataset.userUnmuted) {
+            previewVideo.muted = true;
+            previewVideo.volume = 0;
+            console.log(`🔇 Muting attempt #${mutingAttempts + 1}`);
+        }
+        
+        mutingAttempts++;
+        if (mutingAttempts >= 5) {
+            clearInterval(mutingInterval);
+            console.log('✅ Muting checks complete');
+        }
+    }, 1000);
 });
+</script>
 
-async function loadCollectionPage(collectionId, title) {
-  // You should already have a main grid/container; we reuse the existing "allMoviesGrid" if present
-  const grid = document.getElementById('allMoviesGrid') || document.getElementById('moviesGrid') || document.querySelector('.movies-grid');
-  const heading = document.getElementById('pageTitle') || document.querySelector('h1') || null;
-
-  if (heading) heading.textContent = title || 'Collection';
-  if (!grid) { console.warn('No grid found to render collection'); return; }
-
-  grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">Loading ${title || 'collection'}…</div>`;
-
-  try {
-    const url = `/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${encodeURIComponent(collectionId)}&Recursive=true&IncludeItemTypes=Movie,Series,Episode&Fields=PrimaryImageAspectRatio,PremiereDate,ProductionYear,RunTimeTicks,Overview&SortBy=SortName&SortOrder=Ascending`;
-    const data = await jellyfinFetch(url);
-
-    const items = (data && data.Items) ? data.Items : [];
-    if (!items.length) {
-      grid.innerHTML = `<div style="padding:20px;color:#94a3b8;">No items found in this collection.</div>`;
-      return;
-    }
-
-    // Reuse your existing card renderer if you have one
-    if (typeof createMovieCard === 'function') {
-      grid.innerHTML = '';
-      items.forEach(item => grid.appendChild(createMovieCard(item)));
-      return;
-    }
-
-    // Fallback simple renderer
-    grid.innerHTML = items.map(item => {
-      const name = (item.Name || 'Untitled').replace(/"/g,'&quot;');
-      const img = item.ImageTags && item.ImageTags.Primary
-        ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
-        : '';
-      return `
-        <div style="width:180px;margin:10px;display:inline-block;vertical-align:top;">
-          <div style="width:180px;height:270px;border-radius:12px;overflow:hidden;background:#111827;border:1px solid rgba(255,255,255,.08);">
-            ${img ? `<img src="${img}" alt="${name}" style="width:100%;height:100%;object-fit:cover;">` : ''}
-          </div>
-          <div style="margin-top:8px;color:#e2e8f0;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</div>
-        </div>`;
-    }).join('');
-  } catch (err) {
-    console.error(err);
-    grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
-  }
-}
+<!-- FLM TV Custom Authentication System -->
+<script src="flm-auth-system.js"></script>
 
 </script>
 
@@ -4528,13 +5784,13 @@ async function loadCollectionPage(collectionId, title) {
         <i class="fas fa-comments"></i>
         <span>Chat</span>
     </button>
+    <button class="bottom-nav-item" onclick="openPanel('aiPanel')">
+        <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="nav-avatar">
+        <span>Zaina AI</span>
+    </button>
     <button class="bottom-nav-item" onclick="openLiveStream()">
         <i class="fas fa-tv"></i>
         <span>Live TV</span>
-    </button>
-    <button class="bottom-nav-item" onclick="openPanel('aiPanel')">
-        <i class="fas fa-robot"></i>
-        <span>Zaina AI</span>
     </button>
 </nav>
 
