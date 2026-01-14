@@ -611,9 +611,9 @@
     </div>
 
     <!-- Content -->
-    <div class="content-wrapper">
-        <!-- Poster Sidebar -->
-        <div class="poster-section">
+    <div class="content-wrapper" style="display: block; grid-template-columns: 1fr; max-width: 1400px; margin: 0 auto; padding: 2rem;">
+        <!-- HIDDEN: Poster/Info (Jellyfin shows this in iframe) -->
+        <div class="poster-section" style="display: none;">
             <img id="poster" class="poster" src="https://via.placeholder.com/300x450" alt="Poster">
             
             <div class="action-buttons">
@@ -626,31 +626,33 @@
             </button>
         </div>
 
-        <!-- Info Section -->
+        <!-- Info Section - HIDDEN (shown in Jellyfin iframe) -->
         <div class="info-section">
-            <h1 id="movieTitle">Loading...</h1>
-            
-            <div class="meta-info">
-                <span id="year">-</span>
-                <span id="runtime">-</span>
-                <span id="rating">-</span>
+            <div style="display: none;">
+                <h1 id="movieTitle">Loading...</h1>
+                
+                <div class="meta-info">
+                    <span id="year">-</span>
+                    <span id="runtime">-</span>
+                    <span id="rating">-</span>
+                </div>
+
+                <p class="overview" id="overview">Loading description...</p>
+
+                <div class="detail-row">
+                    <div class="detail-label">Genres:</div>
+                    <div class="detail-value" id="genres">-</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Directed by:</div>
+                    <div class="detail-value" id="director">-</div>
+                </div>
+
+                <!-- Cast -->
+                <h2 class="section-title">Starring</h2>
+                <div class="cast-grid" id="castGrid"></div>
             </div>
-
-            <p class="overview" id="overview">Loading description...</p>
-
-            <div class="detail-row">
-                <div class="detail-label">Genres:</div>
-                <div class="detail-value" id="genres">-</div>
-            </div>
-
-            <div class="detail-row">
-                <div class="detail-label">Directed by:</div>
-                <div class="detail-value" id="director">-</div>
-            </div>
-
-            <!-- Cast -->
-            <h2 class="section-title">Starring</h2>
-            <div class="cast-grid" id="castGrid"></div>
 
             <!-- Episodes -->
             <div class="episodes-section" id="episodesSection" style="display: none;">
@@ -1338,11 +1340,11 @@
                     console.log('Auth error:', authError);
                 }
                 
-                // Try loading JUST the video player (no info page)
+                // Load Jellyfin details/info page in iframe
                 const iframe = document.getElementById('jellyfinPlayerFrame');
-                const playerUrl = `${JELLYFIN.SERVER}/web/videoosd.html?id=${movieId}&serverId=db6bb6388c8c4c70825698639853ede6`;
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&serverId=db6bb6388c8c4c70825698639853ede6`;
                 iframe.src = playerUrl;
-                console.log('🎬 Loading Jellyfin video player only');
+                console.log('🎬 Loading Jellyfin details page');
 
                 // Poster
                 if (item.ImageTags?.Primary) {
