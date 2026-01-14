@@ -601,14 +601,18 @@
     </header>
 
     <!-- Video Player -->
-    <div class="player-section" style="position: relative;">
-        <!-- Jellyfin's player iframe -->
-        <iframe 
-            id="jellyfinPlayerFrame"
-            style="width: 100%; height: 100%; border: none; background: #000;"
-            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-            allowfullscreen
-        ></iframe>
+    <div class="player-section">
+        <!-- Simple HTML5 video - users can unmute with native controls -->
+        <video 
+            id="videoPlayer" 
+            controls 
+            controlsList="nodownload" 
+            playsinline 
+            webkit-playsinline
+            style="width: 100%; height: 100%; background: #000;"
+        >
+            Your browser doesn't support video playback.
+        </video>
     </div>
 
     <!-- Content -->
@@ -1287,6 +1291,32 @@
         */
         // End deprecated functions
 
+        async function authenticateJellyfin() {
+            try {
+                // Authenticate as public user (no password)
+                const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0"`
+                    },
+                    body: JSON.stringify({
+                        Username: 'Public',
+                        Pw: ''
+                    })
+                });
+                
+                if (authResponse.ok) {
+                    const authData = await authResponse.json();
+                    console.log('✅ Authenticated as Public user');
+                    return authData.AccessToken;
+                }
+            } catch (error) {
+                console.error('❌ Auth failed:', error);
+            }
+            return null;
+        }
+
         async function loadMovie() {
             console.log('🎬 loadMovie() called with ID:', movieId);
             
@@ -1297,6 +1327,9 @@
             }
             
             try {
+                // First, authenticate
+                const accessToken = await authenticateJellyfin();
+                
                 console.log('📡 Fetching movie data from Jellyfin...');
                 const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${movieId}?Fields=People&api_key=${JELLYFIN.API_KEY}`);
                 
@@ -1307,43 +1340,20 @@
                 const item = await r.json();
                 console.log('✅ Movie data loaded:', item.Name);
 
-                // Authenticate with Jellyfin as Public user
-                try {
-                    const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-player-${Date.now()}", Version="1.0.0"`
-                        },
-                        body: JSON.stringify({
-                            Username: 'Public',
-                            Pw: ''
-                        })
-                    });
-                    
-                    if (authResponse.ok) {
-                        const authData = await authResponse.json();
-                        console.log('✅ Authenticated as Public');
-                        
-                        // Store credentials for Jellyfin iframe
-                        localStorage.setItem('jellyfin-credentials', JSON.stringify({
-                            Servers: [{
-                                AccessToken: authData.AccessToken,
-                                UserId: authData.User.Id,
-                                Id: 'db6bb6388c8c4c70825698639853ede6',
-                                address: JELLYFIN.SERVER
-                            }]
-                        }));
-                    }
-                } catch (authError) {
-                    console.log('Auth error:', authError);
+                // Simple video setup
+                const video = document.getElementById('videoPlayer');
+                
+                // Build stream URL with access token if we have it
+                let streamUrl = `${JELLYFIN.SERVER}/Videos/${movieId}/stream?Static=true`;
+                if (accessToken) {
+                    streamUrl += `&api_key=${accessToken}`;
+                } else {
+                    streamUrl += `&api_key=${JELLYFIN.API_KEY}`;
                 }
                 
-                // Load Jellyfin player in iframe
-                const iframe = document.getElementById('jellyfinPlayerFrame');
-                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&serverId=db6bb6388c8c4c70825698639853ede6`;
-                iframe.src = playerUrl;
-                console.log('🎬 Loading Jellyfin player');
+                video.src = streamUrl;
+                
+                console.log('🎬 Video source set:', streamUrl);
 
                 // Poster
                 if (item.ImageTags?.Primary) {
