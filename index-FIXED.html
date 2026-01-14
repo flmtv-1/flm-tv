@@ -868,11 +868,6 @@
             right: 450px;
         }
         
-        /* Spinner animation */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
         .viewer-header {
             background: rgba(15, 23, 42, 0.98);
             padding: 0.75rem 1rem;
@@ -2778,19 +2773,6 @@
                 </button>
             </div>
         </div>
-        
-        <!-- Loading overlay that auto-hides after 3 seconds -->
-        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
-            <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
-                <h2 style="color: #ffd700; margin-bottom: 1rem;">Loading Player...</h2>
-                <p style="color: #94a3b8; font-size: 1.1rem; max-width: 400px;">If you see a "Public" button, click it once to continue</p>
-                <div style="margin-top: 2rem;">
-                    <div style="width: 50px; height: 50px; border: 4px solid #333; border-top-color: #ffd700; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-                </div>
-            </div>
-        </div>
-        
         <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
     
@@ -3521,21 +3503,6 @@
             
             frame.src = detailUrl;
             
-            // Show loading overlay
-            const overlay = document.getElementById('jellyfinLoadingOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
-            }
-            
-            // Auto-hide loading overlay after 4 seconds
-            setTimeout(() => {
-                if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.style.display = 'none', 500);
-                }
-            }, 4000);
-            
             // Inject FLM TV branding after iframe loads
             frame.onload = function() {
                 try {
@@ -3546,7 +3513,7 @@
             };
             
             viewer.classList.add('active');
-            // KEEP FLM TV header visible (removed viewing-movie class)
+            viewer.classList.add('viewing-movie'); // Add this class to hide FLM TV header
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
@@ -3874,7 +3841,7 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             viewer.classList.remove('active');
-            // Header stays visible (removed viewing-movie class)
+            viewer.classList.remove('viewing-movie'); // Remove the class when closing
             frame.src = ''; // Clear the iframe
             document.body.style.overflow = ''; // Restore scrolling
             document.body.classList.remove('video-playing');

@@ -3521,15 +3521,9 @@
             
             frame.src = detailUrl;
             
-            // Show loading overlay
-            const overlay = document.getElementById('jellyfinLoadingOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
-            }
-            
             // Auto-hide loading overlay after 4 seconds
             setTimeout(() => {
+                const overlay = document.getElementById('jellyfinLoadingOverlay');
                 if (overlay) {
                     overlay.style.opacity = '0';
                     setTimeout(() => overlay.style.display = 'none', 500);
@@ -3546,7 +3540,7 @@
             };
             
             viewer.classList.add('active');
-            // KEEP FLM TV header visible (removed viewing-movie class)
+            viewer.classList.add('viewing-movie'); // Add this class to hide FLM TV header
             document.body.style.overflow = 'hidden';
             document.body.classList.add('video-playing');
             
@@ -3874,7 +3868,7 @@
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             viewer.classList.remove('active');
-            // Header stays visible (removed viewing-movie class)
+            viewer.classList.remove('viewing-movie'); // Remove the class when closing
             frame.src = ''; // Clear the iframe
             document.body.style.overflow = ''; // Restore scrolling
             document.body.classList.remove('video-playing');
