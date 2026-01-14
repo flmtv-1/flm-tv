@@ -34,6 +34,7 @@
             overflow: hidden;
         }
 
+        /* Main Container */
         .player-container {
             position: fixed;
             top: 0;
@@ -151,7 +152,7 @@
             display: block;
         }
 
-        /* Big Play Button */
+        /* Big Play Button Overlay */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -161,19 +162,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.6);
             cursor: pointer;
             z-index: 2;
+            transition: opacity 0.3s ease;
+        }
+
+        .play-overlay:hover {
+            background: rgba(0, 0, 0, 0.7);
         }
 
         .play-overlay.hidden {
             display: none !important;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .play-btn-big {
             width: 100px;
             height: 100px;
-            background: var(--neon-green);
+            background: rgba(34, 197, 94, 0.9);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -186,9 +194,10 @@
 
         .play-overlay:hover .play-btn-big {
             transform: scale(1.1);
+            background: rgba(34, 197, 94, 1);
         }
 
-        /* Video Info */
+        /* Video Info Overlay */
         .video-info {
             position: absolute;
             bottom: 100px;
@@ -201,6 +210,11 @@
             transition: opacity 0.3s ease;
             pointer-events: none;
             z-index: 1;
+            max-height: 150px;
+        }
+
+        video:hover ~ .video-info {
+            opacity: 1;
         }
 
         .video-wrapper:hover .video-info {
@@ -213,6 +227,7 @@
             color: var(--accent);
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
         }
 
         .video-meta {
@@ -224,7 +239,13 @@
             flex-wrap: wrap;
         }
 
-        /* Loading */
+        .video-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Loading State */
         .loading {
             position: absolute;
             top: 50%;
@@ -307,7 +328,7 @@
             overflow-y: auto;
         }
 
-        /* Chat */
+        /* Chat Styles */
         .chat-messages {
             flex: 1;
             padding: 1rem;
@@ -389,61 +410,41 @@
             background-color: #16a34a;
         }
 
-        /* Mobile */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .player-header {
-                padding: 0.5rem 0.75rem;
-                overflow-x: auto;
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-            }
-
-            .player-header::-webkit-scrollbar {
-                display: none;
-            }
-
-            .player-controls-top {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-            }
-
-            .player-controls-top::-webkit-scrollbar {
-                display: none;
+                padding: 0.5rem 1rem;
             }
 
             .player-logo span {
-                font-size: 1rem;
-                white-space: nowrap;
+                font-size: 1.2rem;
             }
 
             .player-logo img {
-                height: 28px;
+                height: 32px;
             }
 
             .btn-header {
                 padding: 0.5rem 1rem;
-                font-size: 0.85rem;
-                white-space: nowrap;
-                flex-shrink: 0;
+                font-size: 0.9rem;
             }
 
             .btn-close {
-                width: 36px;
-                height: 36px;
-                font-size: 1rem;
-                flex-shrink: 0;
+                width: 40px;
+                height: 40px;
             }
 
-            /* Hide video info overlay on mobile */
-            .video-info {
-                display: none;
+            .video-title {
+                font-size: 1.5rem;
+            }
+
+            .video-meta {
+                font-size: 0.9rem;
+                flex-wrap: wrap;
             }
 
             .side-panel {
-                width: 100%;
+                width: 90%;
             }
 
             body.panel-active .video-wrapper {
@@ -489,6 +490,7 @@
                 <div style="color: var(--primary); font-size: 1.2rem;">Loading video...</div>
             </div>
             
+            <!-- BIG PLAY BUTTON -->
             <div class="play-overlay hidden" id="playOverlay" onclick="startPlayback()">
                 <div class="play-btn-big">
                     <i class="fas fa-play"></i>
@@ -499,6 +501,7 @@
                 Your browser does not support the video tag.
             </video>
 
+            <!-- Video Info Overlay -->
             <div class="video-info">
                 <h1 class="video-title" id="videoTitle">Loading...</h1>
                 <div class="video-meta" id="videoMeta">
@@ -544,7 +547,7 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" style="overflow-y: auto;">
             <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
                 <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
                 <div>
@@ -555,30 +558,33 @@
             
             <div id="aiMessages" class="chat-messages" style="background-color: #1a1a1a; border-radius: 8px; padding: 1rem; min-height: 200px; max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
                 <div class="message received">
-                    <div class="message-bubble">👋 Hi! I'm Zaina AI. Ask me anything!</div>
+                    <div class="message-bubble">👋 Hi! I'm Zaina AI. Ask me anything about movies, TV shows, or entertainment!</div>
                 </div>
             </div>
         </div>
         
         <div class="chat-input-area">
-            <textarea id="aiChatInput" class="chat-input" placeholder="Ask Zaina AI..."></textarea>
+            <textarea id="aiChatInput" class="chat-input" placeholder="Ask Zaina AI anything..."></textarea>
             <button id="aiSendBtn" class="chat-btn" style="background-color: var(--accent); color: #000;">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
     </div>
 
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <script>
+        // Jellyfin Config
         const JELLYFIN_CONFIG = {
             SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
         };
 
+        // Firebase Config
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyD871FYC8vGc7JAAw-2rGMZBB_h4sI0HpQ",
             authDomain: "flmtv-site-counter.firebaseapp.com",
@@ -589,15 +595,20 @@
             appId: "1:354930172302:web:3176dfff3d81ce823404df"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(FIREBASE_CONFIG);
         const auth = firebase.auth();
         const database = firebase.database();
+        
         let fallbackUserId = 'user_' + Math.random().toString(36).substring(7);
-        auth.signInAnonymously().catch(err => console.log('Fallback mode'));
+        
+        auth.signInAnonymously().catch(err => console.log('Using fallback mode'));
 
+        // Get movie ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const movieId = urlParams.get('id');
 
+        // Panel Functions
         function openPanel(panelId) {
             document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
             document.getElementById(panelId).classList.add('active');
@@ -618,19 +629,27 @@
             window.location.href = 'index.html';
         }
 
+        // Chat Functions
         function sendMessage() {
             const messageText = document.getElementById('chatInput').value.trim();
+            const sendBtn = document.getElementById('sendBtn');
+            
             if (!messageText) return;
             
             const usernameInput = document.getElementById('chatUsernameInput');
             let username = usernameInput.value.trim();
             
             if (!username) {
+                usernameInput.focus();
+                usernameInput.style.border = '2px solid #ce1126';
+                setTimeout(() => usernameInput.style.border = '1px solid #444', 2000);
                 alert('Please enter your name first!');
                 return;
             }
             
             document.getElementById('chatInput').value = '';
+            sendBtn.disabled = true;
+            
             localStorage.setItem('flmtvChatUsername', username);
             const userId = auth.currentUser ? auth.currentUser.uid : fallbackUserId;
             
@@ -639,7 +658,21 @@
                 username: username,
                 userId: userId,
                 timestamp: Date.now()
+            }).then(() => {
+                sendBtn.disabled = false;
+            }).catch(() => {
+                sendBtn.disabled = false;
+                addMessage('sent', messageText);
             });
+        }
+
+        function addMessage(sender, text) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+            messageDiv.innerHTML = `<div class="message-bubble">${escapeHtml(text)}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         function escapeHtml(text) {
@@ -648,6 +681,7 @@
             return div.innerHTML;
         }
 
+        // Listen to Firebase messages
         const displayedMessages = new Set();
         database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
             const messageId = snapshot.key;
@@ -676,6 +710,7 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         });
 
+        // Event Listeners
         document.getElementById('chatInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -685,6 +720,7 @@
 
         document.getElementById('sendBtn').addEventListener('click', sendMessage);
 
+        // Format Runtime
         function formatRuntime(ticks) {
             if (!ticks) return 'N/A';
             const minutes = Math.floor(ticks / 600000000);
@@ -693,6 +729,7 @@
             return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
         }
 
+        // Load Movie
         async function loadMovie() {
             if (!movieId) {
                 alert('No movie ID provided');
@@ -701,67 +738,71 @@
             }
 
             try {
-                // Fetch item details from Jellyfin
                 const itemUrl = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${movieId}?api_key=${JELLYFIN_CONFIG.API_KEY}`;
                 const response = await fetch(itemUrl);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch item details');
-                }
-                
                 const item = await response.json();
-                
-                console.log('Item loaded:', item.Name, 'Type:', item.Type);
 
-                // Update page info with correct title
-                document.getElementById('videoTitle').textContent = item.Name || 'Unknown Title';
+                // Update UI
+                document.getElementById('videoTitle').textContent = item.Name;
                 document.getElementById('videoYear').textContent = item.ProductionYear || 'N/A';
                 document.getElementById('videoRuntime').textContent = formatRuntime(item.RunTimeTicks);
                 document.getElementById('videoGenres').textContent = item.Genres?.join(', ') || 'N/A';
                 document.title = `${item.Name} - FLM TV`;
 
-                // Get stream URL - works for both movies and TV episodes
+                // Get stream URL
                 const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${movieId}/stream?Static=true&api_key=${JELLYFIN_CONFIG.API_KEY}`;
                 
                 const video = document.getElementById('videoPlayer');
+                
+                // CRITICAL: Set audio properties BEFORE loading
+                video.muted = false;
+                video.volume = 1.0;
+                video.controls = true;
+                video.preload = 'metadata';
+                
                 video.src = streamUrl;
                 video.load();
 
-                // Hide loading, show video
+                // Hide loading, show video and play button
                 document.getElementById('loading').style.display = 'none';
                 video.style.display = 'block';
                 document.getElementById('playOverlay').classList.remove('hidden');
 
-                console.log('✅ Video ready to play');
+                console.log('✅ Video ready - click play button');
 
             } catch (error) {
-                console.error('❌ Error loading video:', error);
-                document.getElementById('loading').innerHTML = `
-                    <div style="color: #ef4444; font-size: 1.2rem;">
-                        <i class="fas fa-exclamation-triangle"></i><br>
-                        Failed to load video<br>
-                        <button onclick="goBack()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--neon-green); border: none; border-radius: 8px; color: white; cursor: pointer;">
-                            Back to Browse
-                        </button>
-                    </div>
-                `;
+                console.error('Error:', error);
+                alert('Failed to load video');
+                goBack();
             }
         }
 
+        // Start Playback (fixes audio on mobile)
         function startPlayback() {
             const video = document.getElementById('videoPlayer');
             const overlay = document.getElementById('playOverlay');
             
+            // Ensure unmuted with full volume
             video.muted = false;
             video.volume = 1.0;
+            
+            // IMMEDIATELY hide overlay so controls are visible
             overlay.style.display = 'none';
             
-            video.play().catch(err => {
-                console.error('Playback error:', err);
-                alert('Tap the play button on the video controls to start.');
-            });
+            // Play video
+            video.play()
+                .then(() => {
+                    console.log('✅ Playback started with audio');
+                })
+                .catch(err => {
+                    console.error('❌ Playback error:', err);
+                    // Show controls even if autoplay fails
+                    video.controls = true;
+                    alert('Click the play button on the video to start.');
+                });
         }
 
+        // Load movie on page load
         loadMovie();
     </script>
 </body>
