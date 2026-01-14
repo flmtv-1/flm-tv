@@ -1199,36 +1199,38 @@
             // Hide play overlay
             overlay.classList.add('hidden');
             
-            // DON'T force mute - let browser handle it
-            // Desktop will play with sound
-            // Mobile will auto-mute if needed
+            // For MOBILE: Start muted (required by iOS/Android)
+            // For DESKTOP: Will work with sound immediately
+            video.muted = true;
             
             console.log('Starting playback...');
             
-            // Start playing
+            // Start playing (muted)
             video.play().then(() => {
-                console.log('✅ Video playing');
+                console.log('✅ Video playing (muted)');
                 hasStarted = true;
                 
-                // On MOBILE: Show unmute button if video is muted
-                if (isMobile && video.muted) {
+                // On MOBILE: Show unmute button immediately
+                if (isMobile) {
                     console.log('📱 Mobile detected - showing unmute button');
                     unmuteOverlay.classList.add('show');
-                } else if (!video.muted) {
-                    console.log('✅ Playing with sound');
+                } else {
+                    // On DESKTOP: Try to unmute automatically
+                    console.log('💻 Desktop - attempting auto-unmute');
+                    setTimeout(() => {
+                        video.muted = false;
+                        video.volume = 1.0;
+                        
+                        // Check if it worked
+                        if (!video.muted) {
+                            console.log('✅ Desktop unmuted successfully');
+                        }
+                    }, 100);
                 }
                 
             }).catch(e => {
                 console.error('❌ Play failed:', e);
-                // Try again muted as fallback
-                video.muted = true;
-                video.play().then(() => {
-                    if (isMobile) {
-                        unmuteOverlay.classList.add('show');
-                    }
-                }).catch(err => {
-                    alert('Cannot play video. Please refresh and try again.');
-                });
+                alert('Cannot play video. Please refresh and try again.');
             });
         }
         
