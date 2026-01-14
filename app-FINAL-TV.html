@@ -3513,41 +3513,68 @@
             
             try {
                 // Fetch item to check type
-                const item = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}`);
+                const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
+                const item = await response.json();
                 
-                // MUTE PREVIEW VIDEO
-                const previewVideo = document.getElementById('previewVideo');
-                if (previewVideo) {
-                    previewVideo.muted = true;
-                    previewVideo.volume = 0;
-                }
-                
-                // Redirect based on type
-                if (item.Type === 'Movie') {
-                    window.location.href = `movie-detail.html?id=${itemId}`;
-                } else if (item.Type === 'Series') {
+                if (item.Type === 'Series') {
+                    // TV Series go to custom page
+                    console.log('📺 Redirecting to TV detail page:', item.Name);
                     window.location.href = `tv-detail.html?id=${itemId}`;
+                    return;
                 } else if (item.Type === 'Episode') {
+                    // Episodes go to series custom page
+                    console.log('📺 Redirecting to series page');
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
-                } else {
-                    window.location.href = `movie-detail.html?id=${itemId}`;
+                    return;
                 }
+                
+                // Movies and everything else open in Jellyfin viewer (current behavior)
+                console.log('🎬 Opening in viewer:', item.Name);
                 
             } catch (error) {
-                console.error('Error:', error);
-                window.location.href = `movie-detail.html?id=${itemId}`;
+                console.error('Error fetching item:', error);
             }
-        }
-        
-        // Helper function for API calls
-        async function jellyfinFetch(endpoint, params = {}) {
-            const url = new URL(`${JELLYFIN_CONFIG.SERVER}${endpoint}`);
-            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-            url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
             
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return await response.json();
+            // Open in Jellyfin viewer iframe
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            
+            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            
+            console.log('🔗 Loading URL:', detailUrl);
+            
+            frame.src = detailUrl;
+            
+            // Show loading overlay
+            const overlay = document.getElementById('jellyfinLoadingOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.style.opacity = '1';
+            }
+            
+            // Auto-hide loading overlay after 4 seconds
+            setTimeout(() => {
+                if (overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 500);
+                }
+            }, 4000);
+            
+            // Inject FLM TV branding after iframe loads
+            frame.onload = function() {
+                try {
+                    injectCustomBranding(frame);
+                } catch (e) {
+                    console.log('Could not inject branding (CORS):', e);
+                }
+            };
+            
+            viewer.classList.add('active');
+            // KEEP FLM TV header visible (removed viewing-movie class)
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('video-playing');
+            
+            history.pushState({modal: 'movie'}, '', '#movie');
         }
         
         async function openJellyfinCollection(collectionId) {

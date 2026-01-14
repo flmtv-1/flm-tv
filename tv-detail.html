@@ -589,7 +589,10 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="logo" onclick="window.location.href='index.html'">FLM TV</div>
+        <button class="header-btn" onclick="history.back()" style="background: none; border: 2px solid #22c55e; padding: 0.5rem 1rem; margin-right: 1rem;">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <div class="logo" onclick="window.location.href='app.html'">FLM TV</div>
         <div class="header-btns">
             <button class="header-btn" onclick="openPanel('chatPanel')">
                 <i class="fas fa-comments"></i> CHAT
@@ -660,9 +663,11 @@
                 <div class="episodes-grid" id="episodesGrid"></div>
             </div>
 
-            <!-- Recommendations -->
-            <h2 class="section-title">You May Also Like</h2>
-            <div class="movies-grid" id="similarMovies"></div>
+            <!-- Recommendations - HIDDEN (Jellyfin shows this) -->
+            <div style="display: none;">
+                <h2 class="section-title">You May Also Like</h2>
+                <div class="movies-grid" id="similarMovies"></div>
+            </div>
         </div>
     </div>
 
@@ -1339,9 +1344,9 @@
                     console.log('Auth error:', authError);
                 }
                 
-                // Load Jellyfin player in iframe with API key (no Public button!)
+                // Load Jellyfin player in iframe
                 const iframe = document.getElementById('jellyfinPlayerFrame');
-                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&serverId=db6bb6388c8c4c70825698639853ede6`;
                 iframe.src = playerUrl;
                 console.log('🎬 Loading Jellyfin player');
                 
