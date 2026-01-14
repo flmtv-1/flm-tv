@@ -600,26 +600,14 @@
         </div>
     </header>
 
-    <!-- Video Player -->
+    <!-- Video Player - Jellyfin iframe -->
     <div class="player-section" style="position: relative;">
-        <video 
-            id="videoPlayer" 
-            controls 
-            controlsList="nodownload" 
-            playsinline 
-            webkit-playsinline
-            preload="metadata"
-            style="width: 100%; height: 100%; background: #000;"
-        >
-            Your browser doesn't support video playback.
-        </video>
-        
-        <!-- Play button overlay to start video -->
-        <div id="playButtonOverlay" style="position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10;">
-            <div style="width: 100px; height: 100px; background: #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #000; padding-left: 8px;">
-                ▶
-            </div>
-        </div>
+        <iframe 
+            id="jellyfinPlayerFrame"
+            style="width: 100%; height: 100%; border: none; background: #000;"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            allowfullscreen
+        ></iframe>
     </div>
 
     <!-- Content -->
@@ -1199,36 +1187,38 @@
             // Hide play overlay
             overlay.classList.add('hidden');
             
-            // DON'T force mute - let browser handle it
-            // Desktop will play with sound
-            // Mobile will auto-mute if needed
+            // For MOBILE: Start muted (required by iOS/Android)
+            // For DESKTOP: Will work with sound immediately
+            video.muted = true;
             
             console.log('Starting playback...');
             
-            // Start playing
+            // Start playing (muted)
             video.play().then(() => {
-                console.log('✅ Video playing');
+                console.log('✅ Video playing (muted)');
                 hasStarted = true;
                 
-                // On MOBILE: Show unmute button if video is muted
-                if (isMobile && video.muted) {
+                // On MOBILE: Show unmute button immediately
+                if (isMobile) {
                     console.log('📱 Mobile detected - showing unmute button');
                     unmuteOverlay.classList.add('show');
-                } else if (!video.muted) {
-                    console.log('✅ Playing with sound');
+                } else {
+                    // On DESKTOP: Try to unmute automatically
+                    console.log('💻 Desktop - attempting auto-unmute');
+                    setTimeout(() => {
+                        video.muted = false;
+                        video.volume = 1.0;
+                        
+                        // Check if it worked
+                        if (!video.muted) {
+                            console.log('✅ Desktop unmuted successfully');
+                        }
+                    }, 100);
                 }
                 
             }).catch(e => {
                 console.error('❌ Play failed:', e);
-                // Try again muted as fallback
-                video.muted = true;
-                video.play().then(() => {
-                    if (isMobile) {
-                        unmuteOverlay.classList.add('show');
-                    }
-                }).catch(err => {
-                    alert('Cannot play video. Please refresh and try again.');
-                });
+                alert('Cannot play video. Please refresh and try again.');
             });
         }
         
@@ -1316,43 +1306,43 @@
                 const item = await r.json();
                 console.log('✅ Movie data loaded:', item.Name);
 
-                // Simple direct stream - no login needed!
-                const video = document.getElementById('videoPlayer');
-                const streamUrl = `${JELLYFIN.SERVER}/Videos/${movieId}/stream?Static=true&api_key=${JELLYFIN.API_KEY}`;
-                
-                video.src = streamUrl;
-                video.load();
-                
-                // Add play button click handler to prevent Jellyfin redirect
-                const playButton = document.getElementById('playButtonOverlay');
-                if (playButton) {
-                    playButton.onclick = function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                // Authenticate with Jellyfin as Public user
+                try {
+                    const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-player-${Date.now()}", Version="1.0.0"`
+                        },
+                        body: JSON.stringify({
+                            Username: 'Public',
+                            Pw: ''
+                        })
+                    });
+                    
+                    if (authResponse.ok) {
+                        const authData = await authResponse.json();
+                        console.log('✅ Authenticated as Public');
                         
-                        console.log('▶️ Play button clicked');
-                        
-                        // Hide overlay
-                        playButton.style.display = 'none';
-                        
-                        // Start video playback directly
-                        video.play().catch(error => {
-                            console.error('Play error:', error);
-                            // If play fails, show native controls and let user try
-                            alert('Please click the play button on the video controls');
-                        });
-                    };
+                        // Store credentials for Jellyfin iframe
+                        localStorage.setItem('jellyfin-credentials', JSON.stringify({
+                            Servers: [{
+                                AccessToken: authData.AccessToken,
+                                UserId: authData.User.Id,
+                                Id: 'db6bb6388c8c4c70825698639853ede6',
+                                address: JELLYFIN.SERVER
+                            }]
+                        }));
+                    }
+                } catch (authError) {
+                    console.log('Auth error:', authError);
                 }
                 
-                // Hide overlay when video starts playing
-                video.addEventListener('playing', () => {
-                    const overlay = document.getElementById('playButtonOverlay');
-                    if (overlay) {
-                        overlay.style.display = 'none';
-                    }
-                }, { once: true });
-                
-                console.log('🎬 Video loaded with direct stream');
+                // Try loading JUST the video player (no info page)
+                const iframe = document.getElementById('jellyfinPlayerFrame');
+                const playerUrl = `${JELLYFIN.SERVER}/web/videoosd.html?id=${movieId}&serverId=db6bb6388c8c4c70825698639853ede6`;
+                iframe.src = playerUrl;
+                console.log('🎬 Loading Jellyfin video player only');
 
                 // Poster
                 if (item.ImageTags?.Primary) {
