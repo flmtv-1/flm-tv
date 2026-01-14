@@ -430,8 +430,8 @@
 
     <!-- Video Player -->
     <div class="player-section">
-        <video id="videoPlayer" controls controlsList="nodownload" playsinline webkit-playsinline></video>
-        <div class="play-overlay" id="playOverlay" onclick="startPlay()" ontouchend="startPlay()">
+        <video id="videoPlayer" controls controlsList="nodownload"></video>
+        <div class="play-overlay" id="playOverlay" onclick="startPlay()">
             <div class="play-btn">▶</div>
         </div>
     </div>
@@ -543,28 +543,6 @@
 
         const movieId = new URLSearchParams(window.location.search).get('id');
         let hasStarted = false;
-        
-        // Detect if mobile device
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        console.log('📱 Device type:', isMobile ? 'Mobile' : 'Desktop');
-        
-        // iOS Audio Context unlock (required for iOS sound)
-        if (isMobile) {
-            const unlockAudio = () => {
-                const video = document.getElementById('videoPlayer');
-                video.play().then(() => {
-                    video.pause();
-                    console.log('🔓 iOS Audio unlocked');
-                }).catch(() => {});
-                
-                // Remove listeners after first interaction
-                document.removeEventListener('touchstart', unlockAudio);
-                document.removeEventListener('click', unlockAudio);
-            };
-            
-            document.addEventListener('touchstart', unlockAudio, { once: true });
-            document.addEventListener('click', unlockAudio, { once: true });
-        }
 
         function openPanel(id) {
             document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
@@ -579,75 +557,24 @@
             const video = document.getElementById('videoPlayer');
             const overlay = document.getElementById('playOverlay');
             
-            console.log('🎬 Play button clicked');
-            
             // Hide overlay
             overlay.classList.add('hidden');
             
-            // Mobile fix: Set playsinline attribute
-            video.setAttribute('playsinline', '');
-            video.setAttribute('webkit-playsinline', '');
-            
-            // CRITICAL: Must unmute BEFORE calling play() on mobile
+            // THIS IS THE KEY FIX: Unmute and play AFTER user clicks
             video.muted = false;
             video.volume = 1.0;
             
-            // Log state before playing
-            console.log('Before play - muted:', video.muted, 'volume:', video.volume);
-            
-            // Attempt to play
-            const playPromise = video.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('✅ Playing!');
-                    hasStarted = true;
-                    
-                    // Force unmute again after play starts (mobile fix)
-                    video.muted = false;
-                    video.volume = 1.0;
-                    
-                    console.log('After play - muted:', video.muted, 'volume:', video.volume);
-                    
-                    // Triple-check for mobile devices
-                    setTimeout(() => {
-                        if (video.muted || video.volume === 0) {
-                            console.log('⚠️ Video muted after play, forcing unmute...');
-                            video.muted = false;
-                            video.volume = 1.0;
-                        }
-                    }, 100);
-                    
-                    // One more check after 500ms
-                    setTimeout(() => {
-                        if (video.muted || video.volume === 0) {
-                            console.log('⚠️ Still muted, showing alert');
-                            alert('Please tap the volume icon to enable sound');
-                        } else {
-                            console.log('✅ Sound confirmed working!');
-                        }
-                    }, 500);
-                    
-                }).catch(e => {
-                    console.error('❌ Play failed:', e.name, e.message);
-                    
-                    // If unmuted play fails, try one more time muted
-                    video.muted = true;
-                    video.play().then(() => {
-                        console.log('Started muted as fallback');
-                        
-                        // Immediately try to unmute
-                        setTimeout(() => {
-                            video.muted = false;
-                            video.volume = 1.0;
-                            console.log('Attempted unmute after muted start');
-                        }, 100);
-                    }).catch(err => {
-                        console.error('❌ Cannot play:', err);
-                        alert('Cannot play video. Please refresh and try again.');
-                    });
+            video.play().then(() => {
+                console.log('✅ Playing with sound!');
+                hasStarted = true;
+            }).catch(e => {
+                console.error('❌ Play error:', e);
+                // Fallback: if it fails, try muted first
+                video.muted = true;
+                video.play().then(() => {
+                    alert('Click the unmute button to hear audio');
                 });
-            }
+            });
         }
 
         // Show overlay again if video is paused
@@ -662,47 +589,11 @@
                 const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${movieId}?Fields=People&api_key=${JELLYFIN.API_KEY}`);
                 const item = await r.json();
 
-                // Video - Mobile-optimized setup
+                // Video - START MUTED (browsers require this)
                 const video = document.getElementById('videoPlayer');
-                
-                // Set mobile-friendly attributes
-                video.setAttribute('playsinline', '');
-                video.setAttribute('webkit-playsinline', '');
-                video.preload = 'auto'; // Changed to 'auto' for better mobile support
-                
-                // Build stream URL with mobile-friendly settings
-                const streamUrl = `${JELLYFIN.SERVER}/Videos/${movieId}/stream?` + 
-                    `Static=true&` +
-                    `MediaSourceId=${movieId}&` +
-                    `api_key=${JELLYFIN.API_KEY}`;
-                
-                video.src = streamUrl;
+                video.src = `${JELLYFIN.SERVER}/Videos/${movieId}/stream?Static=true&api_key=${JELLYFIN.API_KEY}`;
                 video.muted = true; // Start muted - will unmute on play button click
-                
-                // Add event listener to detect when video can play
-                video.addEventListener('canplay', () => {
-                    console.log('📺 Video ready to play');
-                }, { once: true });
-                
-                // Add listener for when video actually starts playing
-                video.addEventListener('playing', () => {
-                    console.log('▶️ Video playing, muted:', video.muted);
-                    
-                    // Force unmute when playing starts (mobile fix)
-                    if (hasStarted) {
-                        video.muted = false;
-                        video.volume = 1.0;
-                    }
-                }, { once: true });
-                
                 video.load();
-                
-                // Log for debugging
-                console.log('📱 Video loaded:', {
-                    isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
-                    src: streamUrl,
-                    muted: video.muted
-                });
 
                 // Poster
                 if (item.ImageTags?.Primary) {
@@ -754,7 +645,7 @@
 
             } catch (e) {
                 console.error('Error loading movie:', e);
-                alert('Error loading video. Please check your connection and try again.');
+                alert('Error loading video. Please try again.');
             }
         }
 
