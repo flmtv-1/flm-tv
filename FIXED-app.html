@@ -441,12 +441,6 @@
             color: var(--accent);
         }
         
-        @media (max-width: 768px) {
-            .category-title {
-                font-size: 1.2rem;
-            }
-        }
-        
         .view-all-btn {
             color: var(--neon-green);
             text-decoration: none;
@@ -1888,8 +1882,8 @@
             }
             
             .view-all-btn {
-                font-size: 1rem !important;
-                padding: 0.4rem 0.8rem !important;
+                font-size: 0.85rem !important;
+                padding: 0.3rem 0.6rem !important;
             }
             
             /* MOVIE CARDS - Horizontal Scroll (Tubi size!) */
@@ -1998,8 +1992,8 @@
             }
             
             .view-all-btn {
-                font-size: 1rem !important;
-                padding: 0.4rem 0.8rem !important;
+                font-size: 0.7rem !important;
+                padding: 0.25rem 0.5rem !important;
             }
             
             .movie-year {
@@ -2786,7 +2780,7 @@
         </div>
         
         <!-- Loading overlay that auto-hides after 3 seconds -->
-        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
+        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
             <div style="text-align: center; padding: 2rem;">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
                 <h2 style="color: #ffd700; margin-bottom: 1rem;">Loading Player...</h2>
@@ -4392,6 +4386,25 @@
         function openLiveStream() {
             console.log('Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // Initialize HLS.js for m3u8 playback
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource('http://10.0.0.4:8080/FLMTV.m3u8');
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                    console.log('✅ HLS stream loaded and playing');
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                video.src = 'http://10.0.0.4:8080/FLMTV.m3u8';
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            }
+            
             modal.classList.add('active');
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
