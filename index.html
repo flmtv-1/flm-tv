@@ -443,7 +443,8 @@
         
         @media (max-width: 768px) {
             .category-title {
-                font-size: 1.2rem;
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
             }
         }
         
@@ -1888,8 +1889,8 @@
             }
             
             .view-all-btn {
-                font-size: 1rem !important;
-                padding: 0.4rem 0.8rem !important;
+                font-size: 1.1rem !important;
+                padding: 0.5rem 1rem !important;
             }
             
             /* MOVIE CARDS - Horizontal Scroll (Tubi size!) */
@@ -1998,8 +1999,8 @@
             }
             
             .view-all-btn {
-                font-size: 1rem !important;
-                padding: 0.4rem 0.8rem !important;
+                font-size: 1.1rem !important;
+                padding: 0.5rem 1rem !important;
             }
             
             .movie-year {
@@ -3592,6 +3593,13 @@
             if (!viewer || !frame) {
                 console.error('❌ Viewer or frame element not found');
                 return;
+            }
+            
+            // IMPORTANT: Hide the loading overlay (it was shown for movies, don't need it for collections)
+            const overlay = document.getElementById('jellyfinLoadingOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+                overlay.style.opacity = '0';
             }
             
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
