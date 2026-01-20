@@ -3533,21 +3533,55 @@
                     console.log('📺 Redirecting to series page');
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
-                } else if (item.Type === 'Movie') {
-                    // Movies go to custom movie-detail.html page
-                    console.log('🎬 Redirecting to movie detail page:', item.Name);
-                    window.location.href = `movie-detail.html?id=${itemId}`;
-                    return;
                 }
                 
-                // Everything else - log and alert
-                console.log('📄 Unknown type:', item.Type, item.Name);
-                alert(`Content type "${item.Type}" is not yet supported.`);
+                // Movies and everything else open in Jellyfin viewer (current behavior)
+                console.log('🎬 Opening in viewer:', item.Name);
                 
             } catch (error) {
                 console.error('Error fetching item:', error);
-                alert('Error loading content. Please try again.');
             }
+            
+            // Open in Jellyfin viewer iframe
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            
+            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            
+            console.log('🔗 Loading URL:', detailUrl);
+            
+            frame.src = detailUrl;
+            
+            // Show loading overlay
+            const overlay = document.getElementById('jellyfinLoadingOverlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.style.opacity = '1';
+            }
+            
+            // Auto-hide loading overlay after 4 seconds
+            setTimeout(() => {
+                if (overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.style.display = 'none', 500);
+                }
+            }, 4000);
+            
+            // Inject FLM TV branding after iframe loads
+            frame.onload = function() {
+                try {
+                    injectCustomBranding(frame);
+                } catch (e) {
+                    console.log('Could not inject branding (CORS):', e);
+                }
+            };
+            
+            viewer.classList.add('active');
+            // KEEP FLM TV header visible (removed viewing-movie class)
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('video-playing');
+            
+            history.pushState({modal: 'movie'}, '', '#movie');
         }
         
         async function openJellyfinCollection(collectionId) {

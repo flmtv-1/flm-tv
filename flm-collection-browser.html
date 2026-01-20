@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV - Collection Browser</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0f1a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ffd700;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .back-btn {
+            background: #22c55e;
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+        
+        .collection-header {
+            padding: 2rem;
+            background: linear-gradient(to bottom, rgba(26, 31, 46, 0.8), transparent);
+        }
+        
+        .collection-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .collection-info {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .movie-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+        }
+        
+        .movie-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #1a1f2e;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 8px;
+        }
+        
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .movie-info {
+            padding: 0.75rem 0.25rem;
+        }
+        
+        .movie-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .movie-year {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #1a1f2e;
+            border-top-color: #22c55e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Jellyfin Player Overlay */
+        .player-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .player-overlay.active {
+            display: flex;
+        }
+        
+        .player-header {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .close-player {
+            background: #ce1126;
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .close-player:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(206, 17, 38, 0.4);
+        }
+        
+        #playerFrame {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 0.75rem 1rem;
+            }
+            
+            .collection-title {
+                font-size: 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+        <div class="logo-text">FLM TV</div>
+    </div>
+    
+    <!-- Collection Header -->
+    <div class="collection-header">
+        <h1 class="collection-title" id="collectionTitle">Loading...</h1>
+        <div class="collection-info" id="collectionInfo">Loading collection...</div>
+    </div>
+    
+    <!-- Content Grid -->
+    <div class="content-grid" id="contentGrid">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>Loading collection...</div>
+        </div>
+    </div>
+    
+    <!-- Jellyfin Player Overlay -->
+    <div class="player-overlay" id="playerOverlay">
+        <div class="player-header">
+            <div class="logo-text">FLM TV</div>
+            <button class="close-player" onclick="closePlayer()">
+                <i class="fas fa-times"></i> Close Player
+            </button>
+        </div>
+        <iframe id="playerFrame" allow="autoplay; fullscreen; encrypted-media"></iframe>
+    </div>
+    
+    <script>
+        // JELLYFIN CONFIG
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+        
+        // Get collection ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const collectionId = urlParams.get('id');
+        const collectionName = urlParams.get('name') || 'Collection';
+        
+        async function loadCollection() {
+            if (!collectionId) {
+                document.getElementById('contentGrid').innerHTML = 
+                    '<div class="loading">No collection specified</div>';
+                return;
+            }
+            
+            try {
+                // Fetch collection items
+                const response = await fetch(
+                    `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${collectionId}&Recursive=true&IncludeItemTypes=Movie,Series,Episode&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                );
+                const data = await response.json();
+                
+                // Update header
+                document.getElementById('collectionTitle').textContent = collectionName;
+                document.getElementById('collectionInfo').textContent = 
+                    `${data.Items?.length || 0} items`;
+                
+                // Render items
+                const grid = document.getElementById('contentGrid');
+                grid.innerHTML = '';
+                
+                if (data.Items && data.Items.length > 0) {
+                    data.Items.forEach(item => {
+                        const card = createMovieCard(item);
+                        grid.appendChild(card);
+                    });
+                } else {
+                    grid.innerHTML = '<div class="loading">No items in this collection</div>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading collection:', error);
+                document.getElementById('contentGrid').innerHTML = 
+                    '<div class="loading">Error loading collection</div>';
+            }
+        }
+        
+        function createMovieCard(item) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.onclick = () => playInJellyfin(item.Id, item.Name);
+            
+            const imageUrl = item.ImageTags?.Primary
+                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxHeight=450`
+                : 'https://placehold.co/200x300?text=No+Image';
+            
+            card.innerHTML = `
+                <div style="position: relative;">
+                    <img src="${imageUrl}" alt="${item.Name}" class="movie-poster" loading="lazy">
+                    <div class="play-overlay">
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">${item.Name}</div>
+                    <div class="movie-year">
+                        ${item.ProductionYear || ''} 
+                        ${item.OfficialRating ? '• ' + item.OfficialRating : ''}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function playInJellyfin(itemId, itemName) {
+            console.log('🎬 Opening Jellyfin player for:', itemName);
+            
+            const overlay = document.getElementById('playerOverlay');
+            const frame = document.getElementById('playerFrame');
+            
+            // Use Jellyfin's native player - this ALWAYS works!
+            const playerUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6`;
+            
+            frame.src = playerUrl;
+            overlay.classList.add('active');
+            
+            // Add to browser history for back button
+            history.pushState({modal: 'player'}, '', '#playing');
+        }
+        
+        function closePlayer() {
+            const overlay = document.getElementById('playerOverlay');
+            const frame = document.getElementById('playerFrame');
+            
+            frame.src = '';
+            overlay.classList.remove('active');
+            
+            if (window.location.hash === '#playing') {
+                history.back();
+            }
+        }
+        
+        function goBack() {
+            window.history.back();
+        }
+        
+        // Handle browser back button
+        window.addEventListener('popstate', function(event) {
+            const overlay = document.getElementById('playerOverlay');
+            if (overlay.classList.contains('active')) {
+                closePlayer();
+            }
+        });
+        
+        // Load collection on page load
+        loadCollection();
+    </script>
+</body>
+</html>
