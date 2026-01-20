@@ -128,7 +128,7 @@
         .player-section {
             position: relative;
             width: 100%;
-            height: calc(100vh - 70px); /* Full screen minus header */
+            height: calc(100vh - 70px); /* Full height minus header */
             background: #000;
         }
 
@@ -465,7 +465,48 @@
             overflow-y: auto;
         }
 
-        /* Footer CSS removed - no footer needed */
+        /* Footer */
+        .footer {
+            background: #0d1117;
+            border-top: 2px solid #ffd700;
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            line-height: 2;
+        }
+
+        .footer-links a:hover { color: #ffd700; }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,215,0,0.2);
+            text-align: center;
+            color: #94a3b8;
+        }
 
         /* Mobile */
         @media (max-width: 768px) {
@@ -479,11 +520,7 @@
             }
             
             .player-section {
-                height: calc(100vh - 60px); /* Full screen on mobile */
-            }
-            
-            body {
-                overflow-y: auto;
+                height: 50vh;
             }
             
             .content-wrapper {
@@ -745,9 +782,24 @@
     </div>
 
     <!-- Footer -->
-    <!-- Tiny footer - 1 inch or less -->
-    <footer style="background: #0d1117; border-top: 1px solid #ffd700; padding: 0.5rem 1rem; text-align: center;">
-        <span style="color: #94a3b8; font-size: 0.75rem;">© 2025 FLM Television Network</span>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>FLM TV</h3>
+                <p style="color: #94a3b8;">Channel 26.5 Las Vegas • Global Streaming</p>
+            </div>
+            <div class="footer-section">
+                <h3>Browse</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">TV Shows</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 FLM Television Network</p>
+        </div>
     </footer>
 
     <!-- Firebase SDK -->
