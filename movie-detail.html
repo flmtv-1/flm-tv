@@ -16,6 +16,59 @@
             color: #fff;
         }
 
+        /* Loading Overlay - Covers Jellyfin logo flash */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 215, 0, 0.2);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 1.5rem;
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
         /* Header */
         .header {
             position: sticky;
@@ -550,6 +603,13 @@
     </style>
 </head>
 <body>
+    <!-- Loading Overlay - Hides Jellyfin logo flash -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <img src="assets/logos/flm-logo.png" alt="FLM TV" class="loading-logo">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <button class="header-btn" onclick="window.location.href='index.html'" style="background: transparent; border-color: #ffd700; color: #ffd700;">
@@ -557,6 +617,9 @@
         </button>
         <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">FLM TV</div>
         <div class="header-btns">
+            <a href="https://7RealmsTV.com" target="_blank" class="header-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;" title="7RealmsTV.com">
+                <i class="fas fa-globe"></i>
+            </a>
             <button class="header-btn" onclick="openPanel('chatPanel')">
                 <i class="fas fa-comments"></i> CHAT
             </button>
@@ -758,6 +821,15 @@
     <script>
         console.log('🎬 PLAYER.HTML LOADED - Script starting...');
         console.log('📍 Current URL:', window.location.href);
+        
+        // Hide loading overlay after 3 seconds to cover Jellyfin logo flash
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.remove(), 500); // Remove after fade
+            }
+        }, 1000); // 1 second
         
         const JELLYFIN = {
             SERVER: 'https://flmtv26.duckdns.org:8920',

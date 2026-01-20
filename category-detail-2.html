@@ -253,10 +253,10 @@ async function loadCategory() {
                     if (item.Type === 'Series') {
                         window.location.href = `tv-detail.html?id=${item.Id}`;
                     } else if (item.Type === 'Movie') {
-                        window.location.href = `movie-detail.html?id=${item.Id}`;
+                        window.location.href = `player.html?id=${item.Id}`;
                     } else {
-                        // Default to movie-detail
-                        window.location.href = `movie-detail.html?id=${item.Id}`;
+                        // Default to player
+                        window.location.href = `player.html?id=${item.Id}`;
                     }
                 };
                 

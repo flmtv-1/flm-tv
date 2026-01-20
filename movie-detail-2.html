@@ -16,6 +16,59 @@
             color: #fff;
         }
 
+        /* Loading Overlay - Covers Jellyfin logo flash */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 215, 0, 0.2);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 1.5rem;
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
         /* Header */
         .header {
             position: sticky;
@@ -128,7 +181,7 @@
         .player-section {
             position: relative;
             width: 100%;
-            height: calc(100vh - 70px); /* Full height minus header */
+            height: calc(100vh - 70px); /* Full screen minus header */
             background: #000;
         }
 
@@ -465,48 +518,7 @@
             overflow-y: auto;
         }
 
-        /* Footer */
-        .footer {
-            background: #0d1117;
-            border-top: 2px solid #ffd700;
-            padding: 3rem 2rem 1rem;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h3 {
-            color: #ffd700;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            line-height: 2;
-        }
-
-        .footer-links a:hover { color: #ffd700; }
-
-        .footer-bottom {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,215,0,0.2);
-            text-align: center;
-            color: #94a3b8;
-        }
+        /* Footer CSS removed - no footer needed */
 
         /* Mobile */
         @media (max-width: 768px) {
@@ -520,7 +532,11 @@
             }
             
             .player-section {
-                height: 50vh;
+                height: calc(100vh - 60px); /* Full screen on mobile */
+            }
+            
+            body {
+                overflow-y: auto;
             }
             
             .content-wrapper {
@@ -587,10 +603,23 @@
     </style>
 </head>
 <body>
+    <!-- Loading Overlay - Hides Jellyfin logo flash -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <img src="assets/logos/flm-logo.png" alt="FLM TV" class="loading-logo">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
     <!-- Header -->
     <header class="header">
-        <div class="logo" onclick="window.location.href='index.html'">FLM TV</div>
+        <button class="header-btn" onclick="window.location.href='index.html'" style="background: transparent; border-color: #ffd700; color: #ffd700;">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">FLM TV</div>
         <div class="header-btns">
+            <a href="https://7RealmsTV.com" target="_blank" class="header-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;" title="7RealmsTV.com">
+                <i class="fas fa-globe"></i>
+            </a>
             <button class="header-btn" onclick="openPanel('chatPanel')">
                 <i class="fas fa-comments"></i> CHAT
             </button>
@@ -779,24 +808,9 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>FLM TV</h3>
-                <p style="color: #94a3b8;">Channel 26.5 Las Vegas • Global Streaming</p>
-            </div>
-            <div class="footer-section">
-                <h3>Browse</h3>
-                <ul class="footer-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#">Movies</a></li>
-                    <li><a href="#">TV Shows</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 FLM Television Network</p>
-        </div>
+    <!-- Tiny footer - 1 inch or less -->
+    <footer style="background: #0d1117; border-top: 1px solid #ffd700; padding: 0.5rem 1rem; text-align: center;">
+        <span style="color: #94a3b8; font-size: 0.75rem;">© 2025 FLM Television Network</span>
     </footer>
 
     <!-- Firebase SDK -->
@@ -807,6 +821,15 @@
     <script>
         console.log('🎬 PLAYER.HTML LOADED - Script starting...');
         console.log('📍 Current URL:', window.location.href);
+        
+        // Hide loading overlay after 3 seconds to cover Jellyfin logo flash
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.remove(), 500); // Remove after fade
+            }
+        }, 1000); // 1 second
         
         const JELLYFIN = {
             SERVER: 'https://flmtv26.duckdns.org:8920',
