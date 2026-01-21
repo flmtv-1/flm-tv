@@ -1326,38 +1326,7 @@
         }
         
         /* Volume Toggle Button */
-        .preview-volume-btn {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(252, 209, 22, 0.8);
-            border-radius: 50%;
-            color: #fcd116;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
         
-        .preview-volume-btn:hover {
-            background: rgba(252, 209, 22, 0.2);
-            transform: scale(1.1);
-        }
-        
-        .preview-volume-btn.unmuted {
-            background: rgba(252, 209, 22, 0.3);
-            border-color: #fcd116;
-        }
-        
-        .preview-volume-btn i {
-            pointer-events: none;
-        }
         
         
             50% { opacity: 0.5; transform: scale(1.2); }
@@ -2329,22 +2298,8 @@
             }
             
             .movies-grid, .content-grid {
-                /* HORIZONTAL SCROLLING ON MOBILE */
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
+                grid-template-columns: repeat(3, 1fr) !important;
                 gap: 1rem !important;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 10px;
-            }
-            
-            .movies-grid .movie-card,
-            .content-grid .movie-card {
-                flex: 0 0 45% !important; /* Each card takes 45% width */
-                min-width: 45%;
-                scroll-snap-align: start;
             }
             
             .side-panel {
@@ -2541,41 +2496,19 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted defaultmuted autoplay loop playsinline
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; volume: 0;">
+                        <video id="previewVideo" muted autoplay loop playsinline
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
-                        <!-- IMMEDIATE MUTE SCRIPT - Runs BEFORE DOMContentLoaded -->
-                        <script>
-                            (function() {
-                                const vid = document.getElementById('previewVideo');
-                                if (vid) {
-                                    // Force mute immediately
-                                    vid.muted = true;
-                                    vid.volume = 0;
-                                    vid.defaultMuted = true;
-                                    
-                                    // Also force mute when it starts loading
-                                    vid.addEventListener('loadstart', function() {
-                                        this.muted = true;
-                                        this.volume = 0;
-                                    }, { once: false });
-                                    
-                                    console.log('🔇 INLINE: Preview video forced mute on page load');
-                                }
-                            })();
-                        </script>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
                                 <span> LIVE</span>
                             </div>
-                            <div class="live-channel-name">Channel 26.5 Live</div>
+                            <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button class="preview-volume-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
-                            <i class="fas fa-volume-mute"></i>
-                        </button>
+                        
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -3444,59 +3377,20 @@
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
-                // AGGRESSIVE muting - do it multiple times
-                function forceMute() {
-                    previewVideo.muted = true;
-                    previewVideo.volume = 0;
-                    previewVideo.setAttribute('muted', 'muted');
-                    previewVideo.setAttribute('playsinline', 'playsinline');
-                }
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
                 
-                // Mute immediately
-                forceMute();
-                
-                // Mute again after 100ms (in case browser delays)
-                setTimeout(forceMute, 100);
-                
-                // Mute again after 500ms
-                setTimeout(forceMute, 500);
-                
-                // Mute again after 1 second
-                setTimeout(forceMute, 1000);
-                
-                // Mute again after 2 seconds
-                setTimeout(forceMute, 2000);
+                // Extra enforcement for mobile
+                previewVideo.setAttribute('muted', 'muted');
+                previewVideo.setAttribute('playsinline', 'playsinline');
                 
                 // Prevent any unmute attempts
                 previewVideo.addEventListener('volumechange', function() {
                     if (!this.muted) {
                         console.log('🔇 Preview tried to unmute, forcing muted again');
-                        forceMute();
+                        this.muted = true;
+                        this.volume = 0;
                     }
-                });
-                
-                // ALSO force mute before ANY play attempt
-                previewVideo.addEventListener('play', function() {
-                    forceMute();
-                    console.log('🔇 Play event - forcing mute');
-                });
-                
-                // Force mute when metadata loads
-                previewVideo.addEventListener('loadedmetadata', function() {
-                    forceMute();
-                    console.log('🔇 Metadata loaded - forcing mute');
-                });
-                
-                // Force mute when video can play
-                previewVideo.addEventListener('canplay', function() {
-                    forceMute();
-                    console.log('🔇 Can play - forcing mute');
-                });
-                
-                // Force mute when video actually starts playing
-                previewVideo.addEventListener('playing', function() {
-                    forceMute();
-                    console.log('🔇 Playing - forcing mute');
                 });
                 
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
@@ -4454,24 +4348,19 @@
         let hls = null;
         
         // Toggle preview video volume
-        function togglePreviewVolume(event) {
-            // Stop the event from opening the live stream modal
-            event.stopPropagation();
-            
+        function togglePreviewVolume() {
             const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('previewVolumeBtn');
+            const btn = document.getElementById('volumeToggleBtn');
             const icon = btn.querySelector('i');
             
             if (video.muted) {
                 video.muted = false;
-                video.volume = 1.0;
                 icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
                 btn.title = 'Mute';
                 console.log('🔊 Preview audio unmuted');
             } else {
                 video.muted = true;
-                video.volume = 0;
                 icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
