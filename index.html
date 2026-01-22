@@ -2751,7 +2751,7 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls autoplay 
+            <video id="liveStreamVideo" controls muted
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
@@ -3408,6 +3408,15 @@
                 });
                 
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
+            }
+            
+            // ALSO mute the live stream video player on page load
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            if (liveStreamVideo) {
+                liveStreamVideo.muted = true;
+                liveStreamVideo.volume = 0;
+                liveStreamVideo.defaultMuted = true;
+                console.log('🔇 Live stream video LOCKED muted on load');
             }
             
             // Auto-authenticate in background
@@ -4332,6 +4341,16 @@
         function openLiveStream() {
             console.log('Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // FORCE MUTED and START PLAYING when modal opens
+            if (video) {
+                video.muted = true;
+                video.volume = 0;
+                video.play().catch(err => console.log('Play error:', err));
+                console.log('🔇 Live stream opened MUTED and playing');
+            }
+            
             modal.classList.add('active');
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
@@ -4340,6 +4359,14 @@
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // STOP playing when modal closes
+            if (video) {
+                video.pause();
+                console.log('⏸️ Live stream paused');
+            }
+            
             modal.classList.remove('active');
             // Remove from history
             if (window.location.hash === '#stream') {
