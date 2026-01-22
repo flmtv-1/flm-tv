@@ -441,6 +441,13 @@
             color: var(--accent);
         }
         
+        @media (max-width: 768px) {
+            .category-title {
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+            }
+        }
+        
         .view-all-btn {
             color: var(--neon-green);
             text-decoration: none;
@@ -1882,8 +1889,8 @@
             }
             
             .view-all-btn {
-                font-size: 0.85rem !important;
-                padding: 0.3rem 0.6rem !important;
+                font-size: 1.1rem !important;
+                padding: 0.5rem 1rem !important;
             }
             
             /* MOVIE CARDS - Horizontal Scroll (Tubi size!) */
@@ -1992,8 +1999,8 @@
             }
             
             .view-all-btn {
-                font-size: 0.7rem !important;
-                padding: 0.25rem 0.5rem !important;
+                font-size: 1.1rem !important;
+                padding: 0.5rem 1rem !important;
             }
             
             .movie-year {
@@ -2440,6 +2447,10 @@
                     <i class="fas fa-home"></i>
                 </button>
                 
+                <a href="https://7RealmsTV.com" target="_blank" class="btn-icon" title="7RealmsTV.com - Corporate Site" style="text-decoration: none;">
+                    <i class="fas fa-globe"></i>
+                </a>
+                
                 <button class="btn-icon-text" onclick="openPanel('chatPanel')" title="Chat">
                     <i class="fas fa-comments"></i> Chat
                 </button>
@@ -2497,7 +2508,12 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        
+                        <button class="preview-mute-btn" id="previewMuteBtn" onclick="event.stopPropagation(); togglePreviewAudio();" 
+                                style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; 
+                                       color: #ffd700; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; 
+                                       justify-content: center; cursor: pointer; z-index: 10; font-size: 18px;">
+                            <i class="fas fa-volume-mute"></i>
+                        </button>
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -2735,7 +2751,7 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls autoplay 
+            <video id="liveStreamVideo" controls autoplay muted
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
@@ -2780,7 +2796,7 @@
         </div>
         
         <!-- Loading overlay that auto-hides after 3 seconds -->
-        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
+        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
             <div style="text-align: center; padding: 2rem;">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
                 <h2 style="color: #ffd700; margin-bottom: 1rem;">Loading Player...</h2>
@@ -2843,6 +2859,7 @@
         { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
         { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
         { id: 'a2347f687b9669054c8d2abbfd50889f', name: '07 GOLDEN CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=a2347f687b9669054c8d2abbfd50889f&collectionType=movies' },
+        { id: '933e8b4060c2005da692c9a74ff52d69', name: '07-B TIMELESS CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=933e8b4060c2005da692c9a74ff52d69&collectionType=movies' },
         { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
         { id: '9eb72a50280cf3ef5599f4c43a383611', name: '08-B TAGALOG ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=9eb72a50280cf3ef5599f4c43a383611&collectionType=movies' },
         { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
@@ -3365,23 +3382,41 @@
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
+                // CRITICAL: Set muted BEFORE any play attempts
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
+                previewVideo.defaultMuted = true;
                 
                 // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', 'muted');
-                previewVideo.setAttribute('playsinline', 'playsinline');
+                previewVideo.setAttribute('muted', '');
+                previewVideo.setAttribute('playsinline', '');
                 
-                // Prevent any unmute attempts
-                previewVideo.addEventListener('volumechange', function() {
-                    if (!this.muted) {
-                        console.log('🔇 Preview tried to unmute, forcing muted again');
+                // Re-enforce mute on play (mobile browsers sometimes reset)
+                previewVideo.addEventListener('play', function() {
+                    // Only enforce mute on first play, not when user manually unmutes
+                    if (!this.hasAttribute('data-user-unmuted')) {
                         this.muted = true;
                         this.volume = 0;
+                        console.log('🔇 Preview playing - enforced muted state');
                     }
                 });
                 
+                // Re-enforce mute on any interaction
+                previewVideo.addEventListener('loadedmetadata', function() {
+                    this.muted = true;
+                    this.volume = 0;
+                });
+                
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
+            }
+            
+            // ALSO mute the live stream video player on page load
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            if (liveStreamVideo) {
+                liveStreamVideo.muted = true;
+                liveStreamVideo.volume = 0;
+                liveStreamVideo.defaultMuted = true;
+                console.log('🔇 Live stream video LOCKED muted on load');
             }
             
             // Auto-authenticate in background
@@ -3526,143 +3561,33 @@
                     console.log('📺 Redirecting to series page');
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
+                } else if (item.Type === 'Movie') {
+                    // Movies go to custom movie-detail.html page
+                    console.log('🎬 Redirecting to movie detail page:', item.Name);
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                    return;
                 }
                 
-                // Movies and everything else open in Jellyfin viewer (current behavior)
-                console.log('🎬 Opening in viewer:', item.Name);
+                // Everything else - log and alert
+                console.log('📄 Unknown type:', item.Type, item.Name);
+                alert(`Content type "${item.Type}" is not yet supported.`);
                 
             } catch (error) {
                 console.error('Error fetching item:', error);
+                alert('Error loading content. Please try again.');
             }
-            
-            // Open in Jellyfin viewer iframe
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading URL:', detailUrl);
-            
-            frame.src = detailUrl;
-            
-            // Show loading overlay
-            const overlay = document.getElementById('jellyfinLoadingOverlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
-            }
-            
-            // Auto-hide loading overlay after 4 seconds
-            setTimeout(() => {
-                if (overlay) {
-                    overlay.style.opacity = '0';
-                    setTimeout(() => overlay.style.display = 'none', 500);
-                }
-            }, 4000);
-            
-            // Inject FLM TV branding after iframe loads
-            frame.onload = function() {
-                try {
-                    injectCustomBranding(frame);
-                } catch (e) {
-                    console.log('Could not inject branding (CORS):', e);
-                }
-            };
-            
-            viewer.classList.add('active');
-            // KEEP FLM TV header visible (removed viewing-movie class)
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'movie'}, '', '#movie');
         }
         
         async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening Jellyfin collection page for:', collectionId);
-            
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame element not found');
-                return;
-            }
+            console.log('📂 Opening category:', collectionId);
             
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
+            console.log('📂 Category Name:', collectionName);
             
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
-            try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
-            
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
-                ? collection.url 
-                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Fix URL format - change #/ to #!/ if needed
-            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
-            
-            // Ensure the URL keeps the :8920 port (not :8096)
-            collectionUrl = collectionUrl.replace(':8096', ':8920');
-            
-            // IMPORTANT: For hash-based URLs, API key must go BEFORE the hash!
-            // Split at the hash
-            const hashIndex = collectionUrl.indexOf('#');
-            if (hashIndex > -1) {
-                const baseUrl = collectionUrl.substring(0, hashIndex);
-                const hashPart = collectionUrl.substring(hashIndex);
-                
-                // Add api_key to base URL (before hash)
-                if (!baseUrl.includes('api_key=')) {
-                    const separator = baseUrl.includes('?') ? '&' : '?';
-                    collectionUrl = baseUrl + separator + `api_key=${JELLYFIN_CONFIG.API_KEY}` + hashPart;
-                }
-            } else {
-                // No hash, add normally
-                if (!collectionUrl.includes('api_key=')) {
-                    collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                }
-            }
-            
-            console.log('🔗 Final URL we are loading:', collectionUrl);
-            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
-            console.log('🔗 API key check:', collectionUrl.includes('api_key=') ? '✅ Has API key' : '❌ NO API KEY!');
-            
-            // Special handling for "00 Collections" - show Enter overlay
-            if (collectionName === '00 Collections') {
-                showCollectionsEnterOverlay(collectionUrl, collectionName);
-            } else {
-                // Load normally for other collections
-                frame.src = collectionUrl;
-                
-                // Inject FLM TV branding after iframe loads
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
-                    }
-                };
-                
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'collection'}, '', '#collection');
-            }
+            // Redirect to custom category page - NO IFRAME, NO SIGN-IN!
+            window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
         }
         
         function showCollectionsEnterOverlay(collectionUrl, collectionName) {
@@ -4383,28 +4308,39 @@
             }
         }
         
+        // New function for preview mute button
+        function togglePreviewAudio() {
+            const video = document.getElementById('previewVideo');
+            const btn = document.getElementById('previewMuteBtn');
+            
+            if (!video || !btn) return;
+            
+            const icon = btn.querySelector('i');
+            
+            if (video.muted) {
+                // User wants to unmute
+                video.muted = false;
+                video.volume = 1;
+                video.setAttribute('data-user-unmuted', 'true');
+                icon.className = 'fas fa-volume-up';
+                btn.style.borderColor = '#22c55e';
+                btn.style.color = '#22c55e';
+                console.log('🔊 Channel 26 audio unmuted by user');
+            } else {
+                // User wants to mute
+                video.muted = true;
+                video.volume = 0;
+                video.removeAttribute('data-user-unmuted');
+                icon.className = 'fas fa-volume-mute';
+                btn.style.borderColor = '#ffd700';
+                btn.style.color = '#ffd700';
+                console.log('🔇 Channel 26 audio muted by user');
+            }
+        }
+        
         function openLiveStream() {
             console.log('Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            
-            // Initialize HLS.js for m3u8 playback
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource('http://10.0.0.4:8080/FLMTV.m3u8');
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
-                    console.log('✅ HLS stream loaded and playing');
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Native HLS support (Safari)
-                video.src = 'http://10.0.0.4:8080/FLMTV.m3u8';
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
-            }
-            
             modal.classList.add('active');
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
@@ -4413,6 +4349,14 @@
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // STOP playing when modal closes
+            if (video) {
+                video.pause();
+                console.log('⏸️ Live stream paused');
+            }
+            
             modal.classList.remove('active');
             // Remove from history
             if (window.location.hash === '#stream') {

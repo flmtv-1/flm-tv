@@ -3,7 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - Part 2: Visual Categories</title>
+    <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="FLM TV is OUT OF THIS WORLD! 🌟 Stream FREE movies, TV classics, and LIVE Channel 26.5 Las Vegas. Featuring Filipino & Asian content, international programming, and interactive entertainment you won't find anywhere else. Part of the 7 Realms TV universe.">
+    <meta name="keywords" content="FLM TV, Channel 26.5 Las Vegas, Filipino movies, Asian content, international programming, free streaming, classic films, interactive TV, 7 Realms TV, live entertainment, out of this world">
+    <meta name="author" content="7 Realms TV - FLM Channel 26.5">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FLM TV - OUT OF THIS WORLD Streaming Experience">
+    <meta property="og:description" content="Experience FREE streaming like never before! Filipino & Asian cinema, international classics, LIVE Channel 26.5, and interactive content that's truly OUT OF THIS WORLD. 🌟 Powered by 7 Realms TV.">
+    <meta property="og:url" content="https://flmtv.com">
+    <meta property="og:site_name" content="FLM TV Channel 26.5 Las Vegas">
+    <meta property="og:image" content="https://flmtv.com/assets/logos/flm-logo.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FLM TV - OUT OF THIS WORLD Streaming">
+    <meta name="twitter:description" content="Filipino & Asian content, international classics, LIVE TV - all FREE! FLM TV is OUT OF THIS WORLD! 🌟">
+    
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1326,34 +1345,6 @@
         }
         
         /* Volume Toggle Button */
-        .preview-volume-btn {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(252, 209, 22, 0.8);
-            border-radius: 50%;
-            color: #fcd116;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .preview-volume-btn:hover {
-            background: rgba(252, 209, 22, 0.2);
-            transform: scale(1.1);
-        }
-        
-        .preview-volume-btn.unmuted {
-            background: rgba(252, 209, 22, 0.3);
-            border-color: #fcd116;
-        }
         
         
         
@@ -2326,21 +2317,8 @@
             }
             
             .movies-grid, .content-grid {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
+                grid-template-columns: repeat(3, 1fr) !important;
                 gap: 1rem !important;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 10px;
-            }
-            
-            .movies-grid .movie-card,
-            .content-grid .movie-card {
-                flex: 0 0 45% !important;
-                min-width: 45%;
-                scroll-snap-align: start;
             }
             
             .side-panel {
@@ -2537,54 +2515,22 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted defaultmuted autoplay loop playsinline
+                        <video id="previewVideo" muted autoplay loop playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
-                       <script>
-    (function() {
-        const vid = document.getElementById('previewVideo');
-        if (vid) {
-            vid.muted = true;
-            vid.volume = 0;
-            vid.defaultMuted = true;
-            
-            vid.addEventListener('volumechange', function(e) {
-                if (!this.muted || this.volume > 0) {
-                    this.muted = true;
-                    this.volume = 0;
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            }, true);
-            
-            vid.addEventListener('loadedmetadata', function() {
-                this.muted = true;
-                this.volume = 0;
-            });
-            
-            vid.addEventListener('play', function() {
-                this.muted = true;
-                this.volume = 0;
-            });
-            
-            setTimeout(() => {
-                vid.muted = true;
-                vid.volume = 0;
-                vid.play().catch(e => console.log('Preview autoplay blocked:', e));
-            }, 100);
-        }
-    })();
-</script>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
                                 <span> LIVE</span>
                             </div>
-                            <div class="live-channel-name">Channel 26.5 Live</div>
+                            <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button class="preview-volume-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
+                        <button class="preview-mute-btn" id="previewMuteBtn" onclick="event.stopPropagation(); togglePreviewAudio();" 
+                                style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; 
+                                       color: #ffd700; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; 
+                                       justify-content: center; cursor: pointer; z-index: 10; font-size: 18px;">
                             <i class="fas fa-volume-mute"></i>
                         </button>
                     </div>
@@ -2824,10 +2770,10 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls autoplay 
+            <video id="liveStreamVideo" controls autoplay muted
                 width="100%" 
                 height="100%"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10;">
                 <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
@@ -3455,23 +3401,41 @@
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
+                // CRITICAL: Set muted BEFORE any play attempts
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
+                previewVideo.defaultMuted = true;
                 
                 // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', 'muted');
-                previewVideo.setAttribute('playsinline', 'playsinline');
+                previewVideo.setAttribute('muted', '');
+                previewVideo.setAttribute('playsinline', '');
                 
-                // Prevent any unmute attempts
-                previewVideo.addEventListener('volumechange', function() {
-                    if (!this.muted) {
-                        console.log('🔇 Preview tried to unmute, forcing muted again');
+                // Re-enforce mute on play (mobile browsers sometimes reset)
+                previewVideo.addEventListener('play', function() {
+                    // Only enforce mute on first play, not when user manually unmutes
+                    if (!this.hasAttribute('data-user-unmuted')) {
                         this.muted = true;
                         this.volume = 0;
+                        console.log('🔇 Preview playing - enforced muted state');
                     }
                 });
                 
+                // Re-enforce mute on any interaction
+                previewVideo.addEventListener('loadedmetadata', function() {
+                    this.muted = true;
+                    this.volume = 0;
+                });
+                
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
+            }
+            
+            // ALSO mute the live stream video player on page load
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            if (liveStreamVideo) {
+                liveStreamVideo.muted = true;
+                liveStreamVideo.volume = 0;
+                liveStreamVideo.defaultMuted = true;
+                console.log('🔇 Live stream video LOCKED muted on load');
             }
             
             // Auto-authenticate in background
@@ -3598,18 +3562,10 @@
             }, 5000);
         }
         
-       async function playJellyfinItem(itemId) {
-    console.log('🎬 Checking item type for:', itemId);
-    
-    // PAUSE preview video when playing other content
-    const previewVideo = document.getElementById('previewVideo');
-    if (previewVideo) {
-        previewVideo.pause();
-        previewVideo.muted = true;
-        previewVideo.volume = 0;
-    }
-    
-    try {
+        async function playJellyfinItem(itemId) {
+            console.log('🎬 Checking item type for:', itemId);
+            
+            try {
                 // Fetch item to check type
                 const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
                 const item = await response.json();
@@ -3642,106 +3598,21 @@
         }
         
         async function openJellyfinCollection(collectionId) {
-    console.log('📂 Opening Jellyfin collection page for:', collectionId);
-    
-    // PAUSE preview video when opening collection
-    const previewVideo = document.getElementById('previewVideo');
-    if (previewVideo) {
-        previewVideo.pause();
-        previewVideo.muted = true;
-        previewVideo.volume = 0;
-    }
-    
-    const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame element not found');
-                return;
-            }
-            
-            // IMPORTANT: Hide the loading overlay (it was shown for movies, don't need it for collections)
-            const overlay = document.getElementById('jellyfinLoadingOverlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-                overlay.style.opacity = '0';
-            }
+            console.log('📂 Opening category:', collectionId);
             
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
+            console.log('📂 Category Name:', collectionName);
             
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
-            try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
-            
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
-                ? collection.url 
-                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Fix URL format - change #/ to #!/ if needed
-            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
-            
-            // Ensure the URL keeps the :8920 port (not :8096)
-            collectionUrl = collectionUrl.replace(':8096', ':8920');
-            
-            // IMPORTANT: For hash-based URLs, API key must go BEFORE the hash!
-            // Split at the hash
-            const hashIndex = collectionUrl.indexOf('#');
-            if (hashIndex > -1) {
-                const baseUrl = collectionUrl.substring(0, hashIndex);
-                const hashPart = collectionUrl.substring(hashIndex);
-                
-                // Add api_key to base URL (before hash)
-                if (!baseUrl.includes('api_key=')) {
-                    const separator = baseUrl.includes('?') ? '&' : '?';
-                    collectionUrl = baseUrl + separator + `api_key=${JELLYFIN_CONFIG.API_KEY}` + hashPart;
-                }
-            } else {
-                // No hash, add normally
-                if (!collectionUrl.includes('api_key=')) {
-                    collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                }
-            }
-            
-            console.log('🔗 Final URL we are loading:', collectionUrl);
-            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
-            console.log('🔗 API key check:', collectionUrl.includes('api_key=') ? '✅ Has API key' : '❌ NO API KEY!');
-            
-            // Special handling for "00 Collections" - show Enter overlay
+            // Special case: "00 Collections" goes to collections browser
             if (collectionName === '00 Collections') {
-                showCollectionsEnterOverlay(collectionUrl, collectionName);
-            } else {
-                // Load normally for other collections
-                frame.src = collectionUrl;
-                
-                // Inject FLM TV branding after iframe loads
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
-                    }
-                };
-                
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'collection'}, '', '#collection');
+                window.location.href = 'collections-browser.html';
+                return;
             }
+            
+            // Redirect to custom category page - NO IFRAME, NO SIGN-IN!
+            window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
         }
         
         function showCollectionsEnterOverlay(collectionUrl, collectionName) {
@@ -3911,57 +3782,28 @@
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
-            console.log('🎨 Injecting branding and auto-login...');
-            
-            // IMMEDIATELY hide sign-in page while we auto-login
-            const hideStyle = doc.createElement('style');
-            hideStyle.id = 'temp-hide';
-            hideStyle.textContent = `
-                .loginPage, .selectUserPage { opacity: 0.01 !important; }
-            `;
-            doc.head.appendChild(hideStyle);
-            
-            // Auto-login with multiple attempts
-            function tryAutoLogin(attempt = 1) {
+            // Auto-login: Click Public user if on login page
+            setTimeout(() => {
                 try {
-                    console.log(`🔐 Auto-login attempt #${attempt}`);
+                    // Find and click Public user card
                     const publicUser = doc.querySelector('.card-usercard');
                     if (publicUser && publicUser.textContent.includes('Public')) {
-                        console.log('✅ Found Public user, clicking...');
                         publicUser.click();
+                        console.log('✅ Auto-clicked Public user');
                         
+                        // Wait and click Manual Login button
                         setTimeout(() => {
                             const manualLoginBtn = doc.querySelector('.button-submit');
                             if (manualLoginBtn) {
-                                console.log('✅ Clicking login button...');
                                 manualLoginBtn.click();
-                                
-                                // After successful login, completely hide sign-in
-                                setTimeout(() => {
-                                    const completeHide = doc.createElement('style');
-                                    completeHide.textContent = `
-                                        .loginPage, .selectUserPage { display: none !important; }
-                                    `;
-                                    doc.head.appendChild(completeHide);
-                                    const tempHide = doc.getElementById('temp-hide');
-                                    if (tempHide) tempHide.remove();
-                                    console.log('✅ Sign-in hidden!');
-                                }, 500);
+                                console.log('✅ Auto-submitted login');
                             }
                         }, 100);
-                        return true;
                     }
-                    return false;
                 } catch (e) {
-                    console.log('⚠️ Auto-login attempt failed:', e);
-                    return false;
+                    console.log('Auto-login not needed or failed:', e);
                 }
-            }
-            
-            // Try immediately and retry up to 3 times
-            setTimeout(() => tryAutoLogin(1), 50);
-            setTimeout(() => tryAutoLogin(2), 200);
-            setTimeout(() => tryAutoLogin(3), 500);
+            }, 500);
             
             const style = doc.createElement('style');
             style.textContent = `
@@ -4471,39 +4313,68 @@
         let hls = null;
         
         // Toggle preview video volume
-        function togglePreviewVolume(event) {
-            event.stopPropagation();
+        function togglePreviewVolume() {
             const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('previewVolumeBtn');
+            const btn = document.getElementById('volumeToggleBtn');
             const icon = btn.querySelector('i');
             
             if (video.muted) {
                 video.muted = false;
-                video.volume = 1.0;
                 icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
                 btn.title = 'Mute';
+                console.log('🔊 Preview audio unmuted');
             } else {
                 video.muted = true;
-                video.volume = 0;
                 icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
+                console.log('🔇 Preview audio muted');
+            }
+        }
+        
+        // New function for preview mute button
+        function togglePreviewAudio() {
+            const video = document.getElementById('previewVideo');
+            const btn = document.getElementById('previewMuteBtn');
+            
+            if (!video || !btn) return;
+            
+            const icon = btn.querySelector('i');
+            
+            if (video.muted) {
+                // User wants to unmute
+                video.muted = false;
+                video.volume = 1;
+                video.setAttribute('data-user-unmuted', 'true');
+                icon.className = 'fas fa-volume-up';
+                btn.style.borderColor = '#22c55e';
+                btn.style.color = '#22c55e';
+                console.log('🔊 Channel 26 audio unmuted by user');
+            } else {
+                // User wants to mute
+                video.muted = true;
+                video.volume = 0;
+                video.removeAttribute('data-user-unmuted');
+                icon.className = 'fas fa-volume-mute';
+                btn.style.borderColor = '#ffd700';
+                btn.style.color = '#ffd700';
+                console.log('🔇 Channel 26 audio muted by user');
             }
         }
         
         function openLiveStream() {
-    console.log('Opening Live Channel 26.5...');
-    
-    // PAUSE and MUTE preview video
-    const previewVideo = document.getElementById('previewVideo');
-    if (previewVideo) {
-        previewVideo.pause();
-        previewVideo.muted = true;
-        previewVideo.volume = 0;
-    }
-    
-    const modal = document.getElementById('videoModal');
+            console.log('Opening Live Channel 26.5...');
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // Make sure video plays when modal opens
+            if (video) {
+                video.muted = true; // Keep muted
+                video.play().catch(err => console.log('Play error:', err));
+                console.log('📺 Starting live stream (muted)');
+            }
+            
             modal.classList.add('active');
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
@@ -4512,6 +4383,14 @@
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // STOP playing when modal closes
+            if (video) {
+                video.pause();
+                console.log('⏸️ Live stream paused');
+            }
+            
             modal.classList.remove('active');
             // Remove from history
             if (window.location.hash === '#stream') {

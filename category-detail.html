@@ -217,9 +217,9 @@ async function loadCategory() {
             document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
         }
         
-        // Load items in category
-        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName`;
-        console.log('Loading category:', itemsUrl);
+        // Load items in category - OPTIMIZED for speed
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary`;
+        console.log('Loading category (optimized):', itemsUrl);
         
         const itemsRes = await fetch(itemsUrl, { headers });
         const itemsData = await itemsRes.json();
@@ -261,7 +261,7 @@ async function loadCategory() {
                 };
                 
                 const posterUrl = item.ImageTags && item.ImageTags.Primary
-                    ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=400`
+                    ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=300&quality=90`
                     : '';
                 
                 card.innerHTML = `
