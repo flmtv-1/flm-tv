@@ -1958,24 +1958,29 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Horizontal scroll like Tubi */
+            /* MOVIE CARDS - Horizontal scroll like Tubi/Netflix on mobile */
             .content-carousel {
                 display: flex !important;
                 gap: 0.5rem !important;
                 padding: 0.5rem !important;
                 overflow-x: auto !important;
                 overflow-y: hidden !important;
-                scroll-snap-type: x mandatory !important;
-                -webkit-overflow-scrolling: touch !important;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x proximity;
+                scrollbar-width: none;
+            }
+            
+            .content-carousel::-webkit-scrollbar {
+                display: none;
             }
             
             .movie-card,
             .content-card {
-                flex: 0 0 120px !important;
-                min-width: 120px !important;
-                max-width: 120px !important;
-                width: 120px !important;
-                scroll-snap-align: start;
+                flex: none !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                scroll-snap-align: none;
                 margin-bottom: 0;
                 position: relative !important;
             }
@@ -2048,23 +2053,20 @@
                 font-size: 0.65rem !important;
             }
             
-            /* Grid Views - ALSO horizontal scroll on mobile */
+            /* Grid Views (if used) */
             .movies-grid,
             .content-grid {
-                display: flex !important;
-                gap: 0.5rem !important;
-                padding: 0.5rem !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                scroll-snap-type: x mandatory !important;
-                -webkit-overflow-scrolling: touch !important;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.75rem !important;
+                padding: 0 0.75rem !important;
             }
             
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: 0 0 120px !important;
-                min-width: 120px !important;
-                max-width: 120px !important;
+                flex: none !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
             }
             
             /* Video Modal - Full Screen */

@@ -2048,23 +2048,20 @@
                 font-size: 0.65rem !important;
             }
             
-            /* Grid Views - ALSO horizontal scroll on mobile */
+            /* Grid Views (if used) */
             .movies-grid,
             .content-grid {
-                display: flex !important;
-                gap: 0.5rem !important;
-                padding: 0.5rem !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                scroll-snap-type: x mandatory !important;
-                -webkit-overflow-scrolling: touch !important;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.75rem !important;
+                padding: 0 0.75rem !important;
             }
             
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: 0 0 120px !important;
-                min-width: 120px !important;
-                max-width: 120px !important;
+                flex: none !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
             }
             
             /* Video Modal - Full Screen */
