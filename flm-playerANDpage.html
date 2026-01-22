@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Now - FLM TV</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffd700;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 900; color: #ffd700; }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: #22c55e; }
+
+        /* Video Player */
+        .player-section {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+
+        .play-overlay.hidden { display: none; }
+
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #1a1a2e;
+        }
+
+        /* Content Layout */
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .poster-section {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .poster {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-like { background: rgba(255,255,255,0.1); color: white; }
+        .btn-like:hover { background: rgba(255,255,255,0.2); }
+        
+        .btn-list {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .btn-list:hover { background: rgba(255,255,255,0.2); }
+
+        /* Info Section */
+        .info-section h1 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            color: #94a3b8;
+            flex-wrap: wrap;
+        }
+
+        .overview {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #e2e8f0;
+        }
+
+        .detail-row {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: #94a3b8;
+            min-width: 150px;
+        }
+
+        .detail-value {
+            color: #e2e8f0;
+        }
+
+        /* Recommendations */
+        .recommendations {
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #ffd700;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .movie-card {
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover { transform: scale(1.05); }
+
+        .movie-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .movie-card-title {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            border-top: 2px solid #ffd700;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #ffd700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover { color: #22c55e; }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #64748b;
+        }
+
+        /* Episodes Section */
+        .episodes-section {
+            margin-top: 3rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .season-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .season-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .season-btn.active {
+            border-color: #22c55e;
+            background: #22c55e;
+        }
+
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .episode-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .episode-card:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.02);
+        }
+
+        .episode-card.playing {
+            border: 2px solid #22c55e;
+        }
+
+        .episode-thumb {
+            width: 100%;
+            height: 150px;
+            background: #000;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            object-fit: cover;
+        }
+
+        .episode-number {
+            color: #ffd700;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .poster-section {
+                position: relative;
+                top: 0;
+            }
+
+            .player-section { height: 40vh; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">🎬 FLM TV</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Browse</a></li>
+                <li><a href="index.html#movies">Movies</a></li>
+                <li><a href="index.html#tv">TV Shows</a></li>
+                <li><a href="index.html#live">Live TV</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Video Player -->
+    <div class="player-section">
+        <div class="play-overlay" id="playOverlay" onclick="startPlay()">
+            <div class="play-btn">
+                <i class="fas fa-play"></i>
+            </div>
+        </div>
+        <video id="videoPlayer" controls playsinline preload="auto"></video>
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <!-- Left: Poster & Actions -->
+        <div class="poster-section">
+            <img src="https://via.placeholder.com/300x450" alt="Poster" class="poster" id="poster">
+            
+            <div class="action-buttons">
+                <button class="btn btn-like">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>
+                <button class="btn btn-like">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>
+            </div>
+            
+            <button class="btn btn-list">
+                <i class="fas fa-plus"></i> Add to My List
+            </button>
+        </div>
+
+        <!-- Right: Info -->
+        <div class="info-section">
+            <h1 id="movieTitle">Loading...</h1>
+            
+            <div class="meta-info">
+                <span id="year">2024</span>
+                <span>•</span>
+                <span id="runtime">2h 15m</span>
+                <span>•</span>
+                <span id="rating">PG-13</span>
+            </div>
+
+            <div class="overview" id="overview">Loading description...</div>
+
+            <div class="detail-row">
+                <div class="detail-label">Audio Languages:</div>
+                <div class="detail-value" id="audioLang">English</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Subtitles:</div>
+                <div class="detail-value" id="subtitles">English</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Starring:</div>
+                <div class="detail-value" id="cast">Loading...</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Directed by:</div>
+                <div class="detail-value" id="director">Loading...</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Genres:</div>
+                <div class="detail-value" id="genres">Loading...</div>
+            </div>
+
+            <!-- Episodes (TV Shows Only) -->
+            <div class="episodes-section" id="episodesSection" style="display: none;">
+                <h2 class="section-title">Episodes</h2>
+                <div class="season-selector" id="seasonSelector"></div>
+                <div class="episodes-grid" id="episodesGrid"></div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations">
+                <h2 class="section-title">You May Also Like</h2>
+                <div class="movies-grid" id="similarMovies"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About FLM TV</h3>
+                <p style="color: #94a3b8; line-height: 1.6;">
+                    Channel 26.5 Las Vegas • Streaming worldwide
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3>Browse</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">TV Shows</a></li>
+                    <li><a href="#">Live TV</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 FLM Television Network. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const JELLYFIN = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+
+        const movieId = new URLSearchParams(window.location.search).get('id');
+
+        function startPlay() {
+            document.getElementById('playOverlay').classList.add('hidden');
+            document.getElementById('videoPlayer').play();
+        }
+
+        async function loadMovie() {
+            try {
+                const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${movieId}?Fields=People&api_key=${JELLYFIN.API_KEY}`);
+                const item = await r.json();
+
+                // Video
+                document.getElementById('videoPlayer').src = `${JELLYFIN.SERVER}/Videos/${movieId}/stream?Static=true&api_key=${JELLYFIN.API_KEY}`;
+
+                // Poster
+                if (item.ImageTags?.Primary) {
+                    document.getElementById('poster').src = `${JELLYFIN.SERVER}/Items/${movieId}/Images/Primary?api_key=${JELLYFIN.API_KEY}`;
+                }
+
+                // Info
+                document.getElementById('movieTitle').textContent = item.Name;
+                document.getElementById('year').textContent = item.ProductionYear || 'N/A';
+                document.getElementById('runtime').textContent = formatTime(item.RunTimeTicks);
+                document.getElementById('rating').textContent = item.OfficialRating || 'NR';
+                document.getElementById('overview').textContent = item.Overview || 'No description available.';
+                document.getElementById('genres').textContent = item.Genres?.join(', ') || 'N/A';
+
+                // Cast
+                const cast = item.People?.filter(p => p.Type === 'Actor').slice(0, 5).map(p => p.Name).join(', ');
+                document.getElementById('cast').textContent = cast || 'N/A';
+
+                // Director
+                const director = item.People?.find(p => p.Type === 'Director')?.Name;
+                document.getElementById('director').textContent = director || 'N/A';
+
+                document.title = `${item.Name} - FLM TV`;
+
+                // Episodes for TV shows
+                if (item.Type === 'Series' || item.Type === 'Episode') {
+                    const seriesId = item.Type === 'Series' ? item.Id : item.SeriesId;
+                    await loadSeasons(seriesId);
+                    document.getElementById('episodesSection').style.display = 'block';
+                }
+
+                loadSimilar(item.ParentId);
+
+            } catch (e) {
+                console.error(e);
+                alert('Error loading video');
+            }
+        }
+
+        async function loadSeasons(seriesId) {
+            const r = await fetch(`${JELLYFIN.SERVER}/Shows/${seriesId}/Seasons?userId=${JELLYFIN.USER_ID}&api_key=${JELLYFIN.API_KEY}`);
+            const data = await r.json();
+            
+            const selector = document.getElementById('seasonSelector');
+            data.Items?.forEach((season, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'season-btn' + (i === 0 ? ' active' : '');
+                btn.textContent = season.Name;
+                btn.onclick = () => {
+                    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadEpisodes(season.Id);
+                };
+                selector.appendChild(btn);
+            });
+            
+            if (data.Items?.[0]) loadEpisodes(data.Items[0].Id);
+        }
+
+        async function loadEpisodes(seasonId) {
+            const r = await fetch(`${JELLYFIN.SERVER}/Shows/${seasonId}/Episodes?userId=${JELLYFIN.USER_ID}&api_key=${JELLYFIN.API_KEY}`);
+            const data = await r.json();
+            
+            const grid = document.getElementById('episodesGrid');
+            grid.innerHTML = '';
+            
+            data.Items?.forEach(ep => {
+                const card = document.createElement('div');
+                card.className = 'episode-card';
+                if (ep.Id === movieId) card.classList.add('playing');
+                card.onclick = () => window.location.href = `player.html?id=${ep.Id}`;
+                
+                const thumb = ep.ImageTags?.Primary 
+                    ? `${JELLYFIN.SERVER}/Items/${ep.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
+                    : 'https://via.placeholder.com/300x150';
+                
+                card.innerHTML = `
+                    <img src="${thumb}" class="episode-thumb">
+                    <div class="episode-number">Episode ${ep.IndexNumber}</div>
+                    <div style="font-weight: 600;">${ep.Name}</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 0.5rem;">${(ep.Overview || '').substring(0, 80)}...</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function loadSimilar(parentId) {
+            const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items?ParentId=${parentId}&Limit=6&api_key=${JELLYFIN.API_KEY}`);
+            const data = await r.json();
+            
+            const grid = document.getElementById('similarMovies');
+            data.Items?.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.onclick = () => window.location.href = `player.html?id=${item.Id}`;
+                
+                const img = item.ImageTags?.Primary 
+                    ? `${JELLYFIN.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
+                    : 'https://via.placeholder.com/180x270';
+                
+                card.innerHTML = `
+                    <img src="${img}" alt="${item.Name}">
+                    <div class="movie-card-title">${item.Name}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function formatTime(ticks) {
+            if (!ticks) return 'N/A';
+            const mins = Math.floor(ticks / 600000000);
+            const hrs = Math.floor(mins / 60);
+            return hrs > 0 ? `${hrs}h ${mins % 60}m` : `${mins}m`;
+        }
+
+        loadMovie();
+    </script>
+</body>
+</html>

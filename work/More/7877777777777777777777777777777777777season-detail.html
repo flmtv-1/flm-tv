@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Season - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ffd700;
+            --neon-green: #22c55e;
+            --secondary: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+        
+        .header {
+            background: var(--bg-light);
+            padding: 6rem 2rem 2rem;
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .season-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .show-title {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-bottom: 100px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .episodes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .episode-card {
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .episode-card:hover {
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+        
+        .episode-thumbnail {
+            width: 300px;
+            height: 169px;
+            object-fit: cover;
+            background: #1a1a1a;
+            flex-shrink: 0;
+        }
+        
+        .episode-info {
+            padding: 1.5rem;
+            flex: 1;
+        }
+        
+        .episode-number {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .episode-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .episode-overview {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .episode-runtime {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        #loading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            z-index: 9999;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Mobile Footer */
+        .bottom-nav {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .episode-card {
+                flex-direction: column;
+            }
+            .episode-thumbnail {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+            }
+            .season-title { font-size: 1.8rem; }
+            .back-btn { top: 10px; left: 10px; padding: 8px 16px; font-size: 0.9rem; }
+            
+            body { padding-bottom: 70px !important; }
+            
+            .bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(10, 15, 26, 0.98);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 0.5rem 1rem;
+                gap: 1rem;
+                z-index: 1000;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            
+            .bottom-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                min-width: 70px;
+                gap: 0.25rem;
+                padding: 0.5rem 1rem;
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.6);
+                text-decoration: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .bottom-nav-item i {
+                font-size: 1.25rem;
+            }
+            
+            .nav-avatar {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid rgba(34,197,94,.9);
+                box-shadow: 0 0 14px rgba(34,197,94,.45);
+                margin-bottom: 4px;
+            }
+            
+            .bottom-nav-item span {
+                font-size: 0.5rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .bottom-nav-item.active {
+                color: var(--neon-green);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="history.back()">← Back</button>
+
+<div id="loading"><div class="spinner"></div></div>
+
+<div class="header">
+    <div class="header-content">
+        <h2 class="show-title" id="showTitle">Loading...</h2>
+        <h1 class="season-title" id="seasonTitle">Loading...</h1>
+    </div>
+</div>
+
+<div class="content">
+    <h2 class="section-title">Episodes</h2>
+    <div class="episodes-list" id="episodesList"></div>
+</div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav">
+    <a href="home.html" class="bottom-nav-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+    <button class="bottom-nav-item" onclick="alert('Chat coming soon!')">
+        <i class="fas fa-comments"></i>
+        <span>Chat</span>
+    </button>
+    <button class="bottom-nav-item" onclick="alert('Zaina AI coming soon!')">
+        <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" class="nav-avatar">
+        <span>Zaina AI</span>
+    </button>
+    <button class="bottom-nav-item" onclick="alert('Live TV coming soon!')">
+        <i class="fas fa-tv"></i>
+        <span>Live TV</span>
+    </button>
+</nav>
+
+<script>
+const CONFIG = {
+    SERVER: 'https://flmtv26.duckdns.org:8920',
+    API_KEY: '24674385633844efbe3a1367b8f63d43',
+    USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37'
+};
+
+const seasonId = new URLSearchParams(window.location.search).get('id');
+const showId = new URLSearchParams(window.location.search).get('showId');
+
+async function authenticate() {
+    try {
+        const response = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
+            },
+            body: JSON.stringify({ Username: 'Public', Pw: '' })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            CONFIG.ACCESS_TOKEN = data.AccessToken;
+            CONFIG.USER_ID = data.User.Id;
+            return true;
+        }
+    } catch (error) {
+        console.error('Auth error:', error);
+    }
+    return false;
+}
+
+async function loadSeason() {
+    try {
+        await authenticate();
+        
+        const headers = {
+            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
+        };
+        
+        const seasonUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${seasonId}`;
+        const seasonRes = await fetch(seasonUrl, { headers });
+        const season = await seasonRes.json();
+        
+        if (showId) {
+            const showUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${showId}`;
+            const showRes = await fetch(showUrl, { headers });
+            const show = await showRes.json();
+            document.getElementById('showTitle').textContent = show.Name;
+        }
+        
+        document.getElementById('seasonTitle').textContent = season.Name;
+        
+        const episodesUrl = `${CONFIG.SERVER}/Shows/${showId}/Episodes?seasonId=${seasonId}&userId=${CONFIG.USER_ID}`;
+        const episodesRes = await fetch(episodesUrl, { headers });
+        const episodesData = await episodesRes.json();
+        
+        const episodesList = document.getElementById('episodesList');
+        episodesList.innerHTML = '';
+        
+        if (episodesData.Items && episodesData.Items.length > 0) {
+            episodesData.Items.forEach(episode => {
+                const card = document.createElement('div');
+                card.className = 'episode-card';
+                card.onclick = () => {
+                    window.location.href = `player.html?id=${episode.Id}`;
+                };
+                
+                const thumbnailUrl = episode.ImageTags && episode.ImageTags.Primary
+                    ? `${CONFIG.SERVER}/Items/${episode.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${episode.ImageTags.Primary}&maxWidth=600`
+                    : '';
+                
+                const runtime = episode.RunTimeTicks ? Math.round(episode.RunTimeTicks / 600000000) : 0;
+                
+                card.innerHTML = `
+                    ${thumbnailUrl ? `<img src="${thumbnailUrl}" alt="Episode ${episode.IndexNumber}" class="episode-thumbnail" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="episode-thumbnail"></div>'}
+                    <div class="episode-info">
+                        <div class="episode-number">Episode ${episode.IndexNumber || '?'}</div>
+                        <div class="episode-title">${episode.Name || 'Untitled'}</div>
+                        <div class="episode-overview">${episode.Overview || 'No description available.'}</div>
+                        ${runtime ? `<div class="episode-runtime">${runtime} min</div>` : ''}
+                    </div>
+                `;
+                
+                episodesList.appendChild(card);
+            });
+        } else {
+            episodesList.innerHTML = '<p style="color: var(--text-secondary);">No episodes found</p>';
+        }
+        
+        document.getElementById('loading').style.display = 'none';
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error loading season');
+        document.getElementById('loading').style.display = 'none';
+    }
+}
+
+if (!seasonId) {
+    alert('No season ID');
+    history.back();
+} else {
+    loadSeason();
+}
+</script>
+
+</body>
+</html>

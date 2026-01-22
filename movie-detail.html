@@ -1485,7 +1485,7 @@
                 const card = document.createElement('div');
                 card.className = 'episode-card';
                 if (ep.Id === movieId) card.classList.add('playing');
-                card.onclick = () => window.location.href = `player.html?id=${ep.Id}`;
+                card.onclick = () => window.location.href = `movie-detail.html?id=${ep.Id}`;
                 
                 const thumb = ep.ImageTags?.Primary 
                     ? `${JELLYFIN.SERVER}/Items/${ep.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
@@ -1509,7 +1509,7 @@
             data.Items?.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.onclick = () => window.location.href = `player.html?id=${item.Id}`;
+                card.onclick = () => window.location.href = `movie-detail.html?id=${item.Id}`;
                 
                 const img = item.ImageTags?.Primary 
                     ? `${JELLYFIN.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`

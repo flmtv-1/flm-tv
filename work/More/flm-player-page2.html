@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing - FLM TV</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0a0f1a;
+            color: #fff;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffd700;
+            z-index: 100;
+        }
+
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            color: #ffd700;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #22c55e;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .header-btn:hover {
+            background: #22c55e;
+        }
+
+        /* Video Player Section */
+        .player-section {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            cursor: pointer;
+        }
+
+        .play-overlay.hidden { display: none; }
+
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        /* Content Section - SCROLLABLE */
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .movie-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            color: #94a3b8;
+        }
+
+        .overview {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffd700;
+            margin: 2rem 0 1rem;
+        }
+
+        .cast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .cast-card {
+            background: #1a1f2e;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .cast-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+            object-fit: cover;
+        }
+
+        .similar-movies {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .movie-card {
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* Episode Selector */
+        .episodes-section {
+            background: #1a1f2e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .season-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+
+        .season-btn {
+            background: #2a2f3e;
+            border: 2px solid transparent;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .season-btn.active {
+            border-color: #22c55e;
+            background: #22c55e;
+        }
+
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .episode-card {
+            background: #2a2f3e;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .episode-card:hover {
+            transform: scale(1.02);
+            background: #3a3f4e;
+        }
+
+        .episode-card.playing {
+            border: 2px solid #22c55e;
+        }
+
+        .episode-thumb {
+            width: 100%;
+            height: 150px;
+            background: #000;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            object-fit: cover;
+        }
+
+        .episode-number {
+            color: #ffd700;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .episode-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .player-section { height: 40vh; }
+            .movie-title { font-size: 1.5rem; }
+            .content-section { padding: 1rem; }
+            .episodes-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">🎬 FLM TV</div>
+        <div>
+            <button class="header-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+    </div>
+
+    <!-- Video Player -->
+    <div class="player-section">
+        <div class="play-overlay" id="playOverlay" onclick="startPlay()">
+            <div class="play-btn">
+                <i class="fas fa-play"></i>
+            </div>
+        </div>
+        <video id="videoPlayer" controls playsinline preload="auto"></video>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="content-section">
+        <h1 class="movie-title" id="movieTitle">Loading...</h1>
+        
+        <div class="movie-meta">
+            <span id="year">2024</span>
+            <span>•</span>
+            <span id="runtime">2h 15m</span>
+            <span>•</span>
+            <span id="genres">Action, Drama</span>
+        </div>
+
+        <div class="overview" id="overview">
+            Loading movie details...
+        </div>
+
+        <!-- Episodes Section (only shows for TV shows) -->
+        <div class="episodes-section" id="episodesSection" style="display: none;">
+            <h2 class="section-title">Episodes</h2>
+            <div class="season-selector" id="seasonSelector"></div>
+            <div class="episodes-grid" id="episodesGrid"></div>
+        </div>
+
+        <h2 class="section-title">Cast & Crew</h2>
+        <div class="cast-grid" id="castGrid">
+            <div class="cast-card">
+                <div style="width: 80px; height: 80px; background: #333; border-radius: 50%; margin: 0 auto 0.5rem;"></div>
+                <div>Loading...</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">More Like This</h2>
+        <div class="similar-movies" id="similarMovies">
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <script>
+        const JELLYFIN = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+
+        const movieId = new URLSearchParams(window.location.search).get('id');
+        let currentItem = null;
+        let currentSeason = 1;
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function startPlay() {
+            const video = document.getElementById('videoPlayer');
+            document.getElementById('playOverlay').classList.add('hidden');
+            video.play();
+        }
+
+        async function loadMovie() {
+            try {
+                const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${movieId}?api_key=${JELLYFIN.API_KEY}`);
+                const item = await r.json();
+                currentItem = item;
+
+                // Set video
+                const video = document.getElementById('videoPlayer');
+                video.src = `${JELLYFIN.SERVER}/Videos/${movieId}/stream?Static=true&api_key=${JELLYFIN.API_KEY}`;
+
+                // Update info
+                document.getElementById('movieTitle').textContent = item.Name;
+                document.getElementById('year').textContent = item.ProductionYear || 'N/A';
+                document.getElementById('runtime').textContent = formatTime(item.RunTimeTicks);
+                document.getElementById('genres').textContent = item.Genres?.join(', ') || 'N/A';
+                document.getElementById('overview').textContent = item.Overview || 'No description available.';
+                document.title = `${item.Name} - FLM TV`;
+
+                // If it's a TV show (Series or Episode), load episodes
+                if (item.Type === 'Series' || item.Type === 'Episode') {
+                    const seriesId = item.Type === 'Series' ? item.Id : item.SeriesId;
+                    await loadSeasons(seriesId);
+                    document.getElementById('episodesSection').style.display = 'block';
+                }
+
+                // Load cast
+                loadCast(movieId);
+                
+                // Load similar
+                loadSimilar(item.ParentId);
+
+            } catch (e) {
+                console.error(e);
+                alert('Error loading');
+                goBack();
+            }
+        }
+
+        async function loadCast(id) {
+            try {
+                const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${id}?Fields=People&api_key=${JELLYFIN.API_KEY}`);
+                const item = await r.json();
+                
+                const castGrid = document.getElementById('castGrid');
+                castGrid.innerHTML = '';
+                
+                if (item.People && item.People.length > 0) {
+                    item.People.slice(0, 6).forEach(person => {
+                        const card = document.createElement('div');
+                        card.className = 'cast-card';
+                        card.innerHTML = `
+                            <img src="${person.PrimaryImageTag ? `${JELLYFIN.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}` : 'https://via.placeholder.com/80'}" alt="${person.Name}">
+                            <div style="font-weight: 600;">${person.Name}</div>
+                            <div style="font-size: 0.8rem; color: #94a3b8;">${person.Role || person.Type}</div>
+                        `;
+                        castGrid.appendChild(card);
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function loadSimilar(parentId) {
+            try {
+                const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items?ParentId=${parentId}&Limit=6&api_key=${JELLYFIN.API_KEY}`);
+                const data = await r.json();
+                
+                const grid = document.getElementById('similarMovies');
+                grid.innerHTML = '';
+                
+                data.Items?.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'movie-card';
+                    card.onclick = () => window.location.href = `player.html?id=${item.Id}`;
+                    card.innerHTML = `
+                        <img src="${item.ImageTags?.Primary ? `${JELLYFIN.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}` : 'https://via.placeholder.com/150x225'}" alt="${item.Name}">
+                        <div style="margin-top: 0.5rem; font-size: 0.9rem;">${item.Name}</div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function formatTime(ticks) {
+            if (!ticks) return 'N/A';
+            const mins = Math.floor(ticks / 600000000);
+            const hrs = Math.floor(mins / 60);
+            const m = mins % 60;
+            return hrs > 0 ? `${hrs}h ${m}m` : `${m}m`;
+        }
+
+        // TV Show Functions
+        async function loadSeasons(seriesId) {
+            try {
+                const r = await fetch(`${JELLYFIN.SERVER}/Shows/${seriesId}/Seasons?userId=${JELLYFIN.USER_ID}&api_key=${JELLYFIN.API_KEY}`);
+                const data = await r.json();
+                
+                const selector = document.getElementById('seasonSelector');
+                selector.innerHTML = '';
+                
+                data.Items?.forEach((season, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'season-btn' + (index === 0 ? ' active' : '');
+                    btn.textContent = season.Name;
+                    btn.onclick = () => {
+                        document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        loadEpisodes(season.Id);
+                    };
+                    selector.appendChild(btn);
+                });
+                
+                // Load first season
+                if (data.Items?.length > 0) {
+                    loadEpisodes(data.Items[0].Id);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function loadEpisodes(seasonId) {
+            try {
+                const r = await fetch(`${JELLYFIN.SERVER}/Shows/${seasonId}/Episodes?userId=${JELLYFIN.USER_ID}&api_key=${JELLYFIN.API_KEY}`);
+                const data = await r.json();
+                
+                const grid = document.getElementById('episodesGrid');
+                grid.innerHTML = '';
+                
+                data.Items?.forEach(ep => {
+                    const card = document.createElement('div');
+                    card.className = 'episode-card';
+                    if (ep.Id === movieId) card.classList.add('playing');
+                    
+                    card.onclick = () => {
+                        window.location.href = `player.html?id=${ep.Id}`;
+                    };
+                    
+                    const thumb = ep.ImageTags?.Primary 
+                        ? `${JELLYFIN.SERVER}/Items/${ep.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
+                        : 'https://via.placeholder.com/300x150';
+                    
+                    card.innerHTML = `
+                        <img src="${thumb}" class="episode-thumb" alt="Episode ${ep.IndexNumber}">
+                        <div class="episode-number">Episode ${ep.IndexNumber}</div>
+                        <div class="episode-title">${ep.Name}</div>
+                        <div class="episode-overview">${(ep.Overview || 'No description').substring(0, 100)}...</div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        loadMovie();
+    </script>
+</body>
+</html>

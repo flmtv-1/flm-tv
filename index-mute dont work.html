@@ -3391,14 +3391,20 @@
                 previewVideo.setAttribute('muted', '');
                 previewVideo.setAttribute('playsinline', '');
                 
-                // Re-enforce mute on play (mobile browsers sometimes reset)
-                previewVideo.addEventListener('play', function() {
-                    // Only enforce mute on first play, not when user manually unmutes
-                    if (!this.hasAttribute('data-user-unmuted')) {
+                // Prevent any unmute attempts
+                previewVideo.addEventListener('volumechange', function() {
+                    if (!this.muted) {
+                        console.log('🔇 Preview tried to unmute, forcing muted again');
                         this.muted = true;
                         this.volume = 0;
-                        console.log('🔇 Preview playing - enforced muted state');
                     }
+                });
+                
+                // Re-enforce mute on play (mobile browsers sometimes reset)
+                previewVideo.addEventListener('play', function() {
+                    this.muted = true;
+                    this.volume = 0;
+                    console.log('🔇 Preview playing - enforced muted state');
                 });
                 
                 // Re-enforce mute on any interaction
@@ -4309,23 +4315,19 @@
             const icon = btn.querySelector('i');
             
             if (video.muted) {
-                // User wants to unmute
                 video.muted = false;
                 video.volume = 1;
-                video.setAttribute('data-user-unmuted', 'true');
                 icon.className = 'fas fa-volume-up';
                 btn.style.borderColor = '#22c55e';
                 btn.style.color = '#22c55e';
-                console.log('🔊 Channel 26 audio unmuted by user');
+                console.log('🔊 Channel 26 audio unmuted');
             } else {
-                // User wants to mute
                 video.muted = true;
                 video.volume = 0;
-                video.removeAttribute('data-user-unmuted');
                 icon.className = 'fas fa-volume-mute';
                 btn.style.borderColor = '#ffd700';
                 btn.style.color = '#ffd700';
-                console.log('🔇 Channel 26 audio muted by user');
+                console.log('🔇 Channel 26 audio muted');
             }
         }
         
