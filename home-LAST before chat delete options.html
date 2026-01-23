@@ -1958,7 +1958,7 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Keep normal on mobile, just enable horizontal scroll */
+            /* MOVIE CARDS - Horizontal scroll like Tubi */
             .content-carousel {
                 display: flex !important;
                 gap: 0.5rem !important;
@@ -1971,10 +1971,13 @@
             
             .movie-card,
             .content-card {
-                flex: 0 0 140px !important;
-                min-width: 140px !important;
+                flex: 0 0 120px !important;
+                min-width: 120px !important;
+                max-width: 120px !important;
+                width: 120px !important;
                 scroll-snap-align: start;
                 margin-bottom: 0;
+                position: relative !important;
             }
             
             /* HIDE ALL TEXT on mobile - just show poster images! */
@@ -2658,30 +2661,6 @@
             <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
                    style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
                    maxlength="20">
-        </div>
-        
-        <!-- Message Selection Controls - Hidden by default -->
-        <div id="selectionControls" style="padding: 0.5rem 0.75rem; background: #1f1f1f; border-bottom: 1px solid #333; display: none; align-items: center; gap: 0.75rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; color: #b3b3b3;">
-                <input type="checkbox" id="selectAllMessages" style="cursor: pointer; width: 16px; height: 16px;">
-                Select All
-            </label>
-            <button id="deleteSelectedBtn" onclick="deleteSelectedMessages()" 
-                    style="background: rgba(206, 17, 38, 0.8); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; opacity: 0.5; pointer-events: none;">
-                <i class="fas fa-trash-alt"></i> Delete Selected
-            </button>
-            <button onclick="cancelSelection()" 
-                    style="background: rgba(100, 100, 100, 0.5); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                Cancel
-            </button>
-        </div>
-        
-        <!-- Select Button -->
-        <div style="padding: 0.5rem 0.75rem; background: #1f1f1f; border-bottom: 1px solid #333;">
-            <button id="selectModeBtn" onclick="toggleSelectMode()" 
-                    style="background: var(--secondary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                <i class="fas fa-check-square"></i> Select Messages
-            </button>
         </div>
         
         <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
@@ -3895,17 +3874,6 @@
         const chatMessages = document.getElementById('chatMessages');
         const emojiBtn = document.getElementById('emojiBtn');
         const emojiPicker = document.getElementById('emojiPicker');
-        const chatUsernameInput = document.getElementById('chatUsernameInput');
-        const selectAllCheckbox = document.getElementById('selectAllMessages');
-        
-        // Select All checkbox listener
-        selectAllCheckbox.addEventListener('change', toggleSelectAll);
-        
-        // Load saved username if exists
-        const savedUsername = localStorage.getItem('flmtvChatUsername');
-        if (savedUsername) {
-            chatUsernameInput.value = savedUsername;
-        }
         
         // AI Panel elements
         const aiChatInput = document.getElementById('aiChatInput');
@@ -3992,123 +3960,6 @@
             aiMessages.scrollTop = aiMessages.scrollHeight;
         }
 
-        // DELETE MESSAGE FUNCTION - Local hide only (for all users)
-        function deleteMessage(messageId, messageElement) {
-            messageElement.remove();
-            localStorage.setItem('hidden_' + messageId, 'true');
-            console.log('🙈 Message hidden locally');
-        }
-        
-        // Check if message is hidden locally
-        function isMessageHidden(messageId) {
-            return localStorage.getItem('hidden_' + messageId) === 'true';
-        }
-        
-        // TOGGLE SELECT MODE - Show/hide checkboxes
-        function toggleSelectMode() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const selectionControls = document.getElementById('selectionControls');
-            const selectModeBtn = document.getElementById('selectModeBtn');
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Show checkboxes
-            checkboxes.forEach(checkbox => {
-                checkbox.style.display = 'block';
-            });
-            
-            // Add padding to messages when checkboxes visible
-            const messageElements = chatMessages.querySelectorAll('.message');
-            messageElements.forEach(msg => {
-                msg.style.paddingLeft = '35px';
-            });
-            
-            // Show selection controls, hide Select button
-            selectionControls.style.display = 'flex';
-            selectModeBtn.parentElement.style.display = 'none';
-        }
-        
-        // CANCEL SELECTION MODE
-        function cancelSelection() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const selectionControls = document.getElementById('selectionControls');
-            const selectModeBtn = document.getElementById('selectModeBtn');
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Hide checkboxes
-            checkboxes.forEach(checkbox => {
-                checkbox.style.display = 'none';
-                checkbox.checked = false;
-            });
-            
-            // Remove padding from messages
-            const messageElements = chatMessages.querySelectorAll('.message');
-            messageElements.forEach(msg => {
-                msg.style.paddingLeft = '0';
-            });
-            
-            // Hide selection controls, show Select button
-            selectionControls.style.display = 'none';
-            selectModeBtn.parentElement.style.display = 'block';
-            
-            // Uncheck Select All
-            document.getElementById('selectAllMessages').checked = false;
-            updateDeleteButton();
-        }
-        
-        // UPDATE DELETE BUTTON STATE
-        function updateDeleteButton() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            
-            if (checkedBoxes.length > 0) {
-                deleteBtn.style.opacity = '1';
-                deleteBtn.style.pointerEvents = 'auto';
-                deleteBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Delete Selected (${checkedBoxes.length})`;
-            } else {
-                deleteBtn.style.opacity = '0.5';
-                deleteBtn.style.pointerEvents = 'none';
-                deleteBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Delete Selected`;
-            }
-        }
-        
-        // SELECT ALL MESSAGES
-        function toggleSelectAll() {
-            const selectAllCheckbox = document.getElementById('selectAllMessages');
-            const messageCheckboxes = document.querySelectorAll('.message-checkbox');
-            
-            messageCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-            
-            updateDeleteButton();
-        }
-        
-        // DELETE SELECTED MESSAGES
-        function deleteSelectedMessages() {
-            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-            
-            if (checkedBoxes.length === 0) return;
-            
-            if (confirm(`Hide ${checkedBoxes.length} message(s) from your view?`)) {
-                checkedBoxes.forEach(checkbox => {
-                    const messageId = checkbox.dataset.messageId;
-                    const messageElement = checkbox.closest('.message');
-                    
-                    if (messageElement) {
-                        messageElement.remove();
-                        localStorage.setItem('hidden_' + messageId, 'true');
-                    }
-                });
-                
-                console.log(`🙈 ${checkedBoxes.length} messages hidden locally`);
-                
-                // Exit select mode
-                cancelSelection();
-            }
-        }
-        
-        // CLEAR ALL CHAT FUNCTION (Admin only - password protected)
         function sendMessage() {
             const messageText = chatInput.value.trim();
             const sendBtn = document.getElementById('sendBtn');
@@ -4353,11 +4204,6 @@
             const messageId = snapshot.key;
             const msg = snapshot.val();
             
-            // Skip if message is hidden locally
-            if (isMessageHidden(messageId)) {
-                return;
-            }
-            
             // Prevent duplicate messages
             if (displayedMessages.has(messageId)) {
                 return;
@@ -4406,26 +4252,6 @@
                         </div>
                         <div>${escapeHtml(msg.text)}</div>
                     `;
-                    
-                    // Add checkbox for message selection (hidden by default)
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'message-checkbox';
-                    checkbox.dataset.messageId = messageId;
-                    checkbox.style.cssText = `
-                        position: absolute;
-                        top: 8px;
-                        left: 8px;
-                        width: 18px;
-                        height: 18px;
-                        cursor: pointer;
-                        z-index: 10;
-                        display: none;
-                    `;
-                    checkbox.onchange = updateDeleteButton;
-                    
-                    messageDiv.style.position = 'relative';
-                    messageDiv.insertBefore(checkbox, messageDiv.firstChild);
                     
                     messageDiv.appendChild(messageBubble);
                     messagesContainer.appendChild(messageDiv);

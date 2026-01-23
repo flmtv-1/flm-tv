@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV Admin Dashboard - Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --danger: #ce1126;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* TOP BAR */
+        .topbar {
+            background: var(--bg-light);
+            padding: 0.75rem 1.5rem;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .topbar h1 {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .topbar-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            background: var(--secondary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger { background: var(--danger); }
+        .btn-small { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+        
+        /* MAIN LAYOUT - 3 PANELS */
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        
+        /* LEFT PANEL */
+        .left-panel {
+            width: 280px;
+            background: var(--bg-light);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .menu-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .menu-section h3 {
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+        }
+        
+        .menu-btn {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .menu-btn:hover, .menu-btn.active {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--secondary);
+        }
+        
+        .menu-btn i {
+            width: 20px;
+        }
+        
+        /* CENTER PANEL - LIVE PREVIEW */
+        .center-panel {
+            flex: 1;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .preview-header {
+            background: var(--bg-light);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-header h3 {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+        
+        .preview-iframe {
+            flex: 1;
+            border: none;
+            width: 100%;
+        }
+        
+        /* RIGHT PANEL - CONTENT */
+        .right-panel {
+            width: 350px;
+            background: var(--bg-light);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        
+        .panel-content {
+            display: none;
+        }
+        
+        .panel-content.active {
+            display: block;
+        }
+        
+        .section-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card h4 {
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* CODE EDITOR */
+        .code-editor {
+            background: var(--bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #22c55e;
+            min-height: 300px;
+            resize: vertical;
+            overflow: auto;
+        }
+        
+        /* MESSAGES LIST */
+        .messages-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .message-user {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .message-text {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .message-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+        }
+        
+        .message-actions {
+            margin-top: 0.5rem;
+        }
+        
+        /* ALERT */
+        .alert {
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+        
+        .alert-danger {
+            background: rgba(206, 17, 38, 0.1);
+            border: 1px solid rgba(206, 17, 38, 0.3);
+            color: var(--danger);
+        }
+        
+        /* STATUS */
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .status-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .status-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+        }
+        
+        .status-value {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .status-online { color: var(--secondary); }
+        .status-offline { color: var(--danger); }
+        
+        /* RESIZE HANDLES */
+        .resize-handle {
+            width: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: ew-resize;
+            transition: background 0.3s;
+        }
+        
+        .resize-handle:hover {
+            background: var(--primary);
+        }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <h1><i class="fas fa-shield-alt"></i> FLM TV Admin Dashboard</h1>
+    <div class="topbar-actions">
+        <button class="btn" onclick="refreshPreview()">
+            <i class="fas fa-sync"></i> Refresh Preview
+        </button>
+        <button class="btn" onclick="window.open('https://flmtv.com', '_blank')">
+            <i class="fas fa-external-link-alt"></i> Open Live Site
+        </button>
+        <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">Admin: <strong>Zaina</strong></span>
+        <button class="btn btn-danger" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+    <!-- LEFT PANEL - MENU -->
+    <div class="left-panel">
+        <div class="menu-section">
+            <h3>Dashboard</h3>
+            <button class="menu-btn active" onclick="showPanel('overview')">
+                <i class="fas fa-home"></i> Overview
+            </button>
+        </div>
+        
+        <div class="menu-section">
+            <h3>Content</h3>
+            <button class="menu-btn" onclick="showPanel('slideshow')">
+                <i class="fas fa-images"></i> Hero Slideshow
+            </button>
+            <button class="menu-btn" onclick="showPanel('featured')">
+                <i class="fas fa-star"></i> Featured Content
+            </button>
+            <button class="menu-btn" onclick="showPanel('jellyfin')">
+                <i class="fas fa-film"></i> Jellyfin Media
+            </button>
+        </div>
+        
+        <div class="menu-section">
+            <h3>Moderation</h3>
+            <button class="menu-btn" onclick="showPanel('chat')">
+                <i class="fas fa-comments"></i> Chat Moderation
+            </button>
+        </div>
+        
+        <div class="menu-section">
+            <h3>System</h3>
+            <button class="menu-btn" onclick="showPanel('services')">
+                <i class="fas fa-server"></i> Services
+            </button>
+            <button class="menu-btn" onclick="showPanel('settings')">
+                <i class="fas fa-cog"></i> App Settings
+            </button>
+        </div>
+        
+        <div class="menu-section">
+            <h3>Advanced</h3>
+            <button class="menu-btn" onclick="showPanel('code-editor')">
+                <i class="fas fa-code"></i> Code Editor 🔒
+            </button>
+        </div>
+    </div>
+    
+    <!-- RESIZE HANDLE -->
+    <div class="resize-handle"></div>
+    
+    <!-- CENTER PANEL - LIVE PREVIEW -->
+    <div class="center-panel">
+        <div class="preview-header">
+            <h3><i class="fas fa-eye"></i> Live Preview</h3>
+            <div>
+                <button class="btn btn-small" onclick="setPreviewSize('desktop')">Desktop</button>
+                <button class="btn btn-small" onclick="setPreviewSize('mobile')">Mobile</button>
+            </div>
+        </div>
+        <iframe id="previewFrame" class="preview-iframe" src="https://flmtv.com"></iframe>
+    </div>
+    
+    <!-- RESIZE HANDLE -->
+    <div class="resize-handle"></div>
+    
+    <!-- RIGHT PANEL - CONTENT -->
+    <div class="right-panel">
+        <!-- OVERVIEW -->
+        <div class="panel-content active" id="overview">
+            <h2 class="section-title">Dashboard Overview</h2>
+            
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-icon status-online"><i class="fas fa-signal"></i></div>
+                    <div class="status-label">App Status</div>
+                    <div class="status-value status-online">Online</div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-icon status-online"><i class="fas fa-database"></i></div>
+                    <div class="status-label">Jellyfin</div>
+                    <div class="status-value status-online">Active</div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-icon status-online"><i class="fas fa-fire"></i></div>
+                    <div class="status-label">Firebase</div>
+                    <div class="status-value status-online">Active</div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-icon"><i class="fas fa-users"></i></div>
+                    <div class="status-label">Active Users</div>
+                    <div class="status-value" id="activeUsers">-</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h4>Quick Stats</h4>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <strong>Total Messages:</strong> <span id="totalMessages">-</span>
+                </p>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+                    <strong>Last Updated:</strong> <span id="lastUpdate">Just now</span>
+                </p>
+            </div>
+        </div>
+        
+        <!-- HERO SLIDESHOW EDITOR -->
+        <div class="panel-content" id="slideshow">
+            <h2 class="section-title">Hero Slideshow</h2>
+            
+            <div class="alert alert-warning">
+                <strong><i class="fas fa-info-circle"></i> Coming Soon:</strong> Edit slideshow images and order
+            </div>
+            
+            <div class="card">
+                <h4>Current Slides</h4>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                    Slideshow editing will allow you to add, remove, and reorder hero slides without touching code.
+                </p>
+            </div>
+        </div>
+        
+        <!-- FEATURED CONTENT -->
+        <div class="panel-content" id="featured">
+            <h2 class="section-title">Featured Content</h2>
+            
+            <div class="alert alert-warning">
+                <strong><i class="fas fa-info-circle"></i> Coming Soon:</strong> Pin content to homepage
+            </div>
+            
+            <div class="card">
+                <h4>Staff Picks</h4>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+                    Manually curate featured movies and shows that appear at the top of the homepage.
+                </p>
+            </div>
+        </div>
+        
+        <!-- JELLYFIN -->
+        <div class="panel-content" id="jellyfin">
+            <h2 class="section-title">Jellyfin Media</h2>
+            
+            <div class="card">
+                <h4>Server Access</h4>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 1rem;">
+                    Server: <strong style="color: var(--primary);">flmtv26.duckdns.org:8920</strong>
+                </p>
+                <button class="btn" style="width: 100%; margin-bottom: 0.5rem;" onclick="window.open('https://flmtv26.duckdns.org:8920/web/#!/dashboard.html', '_blank')">
+                    <i class="fas fa-tachometer-alt"></i> Open Dashboard
+                </button>
+                <button class="btn" style="width: 100%;" onclick="window.open('https://flmtv26.duckdns.org:8920/web/#!/useredit.html?userId=0407d4609a0346f99c09e0d7ddc9ccd1', '_blank')">
+                    <i class="fas fa-user-cog"></i> Manage Public User
+                </button>
+            </div>
+        </div>
+        
+        <!-- CHAT MODERATION -->
+        <div class="panel-content" id="chat">
+            <h2 class="section-title">Chat Moderation</h2>
+            
+            <div class="card">
+                <h4>Controls</h4>
+                <button class="btn" style="width: 100%; margin-bottom: 0.5rem;" onclick="loadMessages()">
+                    <i class="fas fa-sync"></i> Refresh Messages
+                </button>
+                <button class="btn btn-danger" style="width: 100%;" onclick="clearAllMessages()">
+                    <i class="fas fa-trash-alt"></i> Clear All Messages
+                </button>
+            </div>
+            
+            <div class="card">
+                <h4>Recent Messages</h4>
+                <div class="messages-list" id="messagesList">
+                    <p style="text-align: center; color: rgba(255,255,255,0.5); font-size: 0.9rem;">
+                        Click "Refresh Messages" to load
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SERVICES -->
+        <div class="panel-content" id="services">
+            <h2 class="section-title">Services Control</h2>
+            
+            <div class="alert alert-danger">
+                <strong><i class="fas fa-exclamation-triangle"></i> Warning:</strong> Only use when instructed
+            </div>
+            
+            <div class="card">
+                <h4>Caddy Server</h4>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 0.75rem;">
+                    📍 <strong>Desktop → start-caddy.bat</strong>
+                </p>
+                <button class="btn" style="width: 100%;" onclick="alert('Instructions:\n\n1. Go to Desktop\n2. Double-click start-caddy.bat\n3. Wait for confirmation\n4. DO NOT close the window')">
+                    <i class="fas fa-book"></i> How to Start
+                </button>
+            </div>
+            
+            <div class="card">
+                <h4>vMix Streaming</h4>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 0.75rem;">
+                    📍 <strong>Open vMix → Click Stream</strong>
+                </p>
+                <button class="btn" style="width: 100%;" onclick="alert('Instructions:\n\n1. Open vMix application\n2. Click Stream button\n3. Verify green LIVE indicator\n4. Channel 26.5 is now streaming')">
+                    <i class="fas fa-book"></i> How to Start
+                </button>
+            </div>
+        </div>
+        
+        <!-- APP SETTINGS -->
+        <div class="panel-content" id="settings">
+            <h2 class="section-title">App Settings</h2>
+            
+            <div class="card">
+                <h4>Theme Colors</h4>
+                <div class="form-group">
+                    <label>Primary Color</label>
+                    <input type="color" value="#ffd700" id="primaryColor">
+                </div>
+                <div class="form-group">
+                    <label>Secondary Color</label>
+                    <input type="color" value="#22c55e" id="secondaryColor">
+                </div>
+                <button class="btn" style="width: 100%;" onclick="alert('Coming Soon: Save theme colors to Firebase')">
+                    <i class="fas fa-save"></i> Save Theme
+                </button>
+            </div>
+            
+            <div class="card">
+                <h4>Chat Settings</h4>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" checked> Enable Live Chat
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" checked> Enable Zaina AI
+                    </label>
+                </div>
+                <button class="btn" style="width: 100%;" onclick="alert('Coming Soon: Save chat settings')">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+        
+        <!-- CODE EDITOR -->
+        <div class="panel-content" id="code-editor">
+            <h2 class="section-title">Code Editor 🔒</h2>
+            
+            <div class="alert alert-danger">
+                <strong><i class="fas fa-exclamation-triangle"></i> Advanced:</strong> Changes affect live site!
+            </div>
+            
+            <div class="card">
+                <h4>Edit Mode</h4>
+                <button class="btn btn-danger" style="width: 100%; margin-bottom: 0.75rem;" onclick="unlockCodeEditor()">
+                    <i class="fas fa-unlock"></i> Unlock Editor (Password Required)
+                </button>
+                
+                <div id="codeEditorContent" style="display: none;">
+                    <div class="form-group">
+                        <label>File to Edit</label>
+                        <select id="fileSelect">
+                            <option>home.html</option>
+                            <option>custom-css.css</option>
+                            <option>app-settings.js</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Code</label>
+                        <textarea class="code-editor" id="codeContent" rows="15">
+// Load file content here...
+// This feature connects to GitHub API
+// to edit files remotely
+                        </textarea>
+                    </div>
+                    
+                    <button class="btn" style="width: 100%;">
+                        <i class="fas fa-save"></i> Save & Deploy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+// Firebase Config
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyB-w-zzfEzKtRFPRyHV9Z0MK1XDFO0KLe4",
+    authDomain: "flmtv-site-counter.firebaseapp.com",
+    databaseURL: "https://flmtv-site-counter-default-rtdb.firebaseio.com",
+    projectId: "flmtv-site-counter",
+    storageBucket: "flmtv-site-counter.firebasestorage.app",
+    messagingSenderId: "906671731945",
+    appId: "1:906671731945:web:8d5a74d15c7a39a17a28f7"
+};
+
+firebase.initializeApp(FIREBASE_CONFIG);
+const database = firebase.database();
+
+// Navigation
+function showPanel(panelId) {
+    document.querySelectorAll('.panel-content').forEach(p => p.classList.remove('active'));
+    document.getElementById(panelId).classList.add('active');
+    
+    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    if (panelId === 'chat') {
+        loadMessages();
+    }
+}
+
+// Preview Controls
+function refreshPreview() {
+    document.getElementById('previewFrame').src = document.getElementById('previewFrame').src;
+}
+
+function setPreviewSize(size) {
+    const frame = document.getElementById('previewFrame');
+    if (size === 'mobile') {
+        frame.style.width = '375px';
+        frame.style.margin = '0 auto';
+    } else {
+        frame.style.width = '100%';
+        frame.style.margin = '0';
+    }
+}
+
+// Chat Moderation
+function loadMessages() {
+    const messagesList = document.getElementById('messagesList');
+    messagesList.innerHTML = '<p style="text-align:center; color: rgba(255,255,255,0.5);">Loading...</p>';
+    
+    database.ref('messages').limitToLast(20).once('value', (snapshot) => {
+        messagesList.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+            messagesList.innerHTML = '<p style="text-align:center; color: rgba(255,255,255,0.5); font-size: 0.9rem;">No messages yet</p>';
+            return;
+        }
+        
+        const messages = [];
+        snapshot.forEach((child) => {
+            messages.push({ id: child.key, ...child.val() });
+        });
+        
+        messages.reverse();
+        
+        messages.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = 'message-item';
+            div.innerHTML = `
+                <div class="message-user">${escapeHtml(msg.username || 'Anonymous')}</div>
+                <div class="message-text">${escapeHtml(msg.text)}</div>
+                <div class="message-time">${new Date(msg.timestamp).toLocaleString()}</div>
+                <div class="message-actions">
+                    <button class="btn btn-danger btn-small" onclick="deleteMessage('${msg.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            messagesList.appendChild(div);
+        });
+        
+        document.getElementById('totalMessages').textContent = messages.length;
+    });
+}
+
+function deleteMessage(msgId) {
+    if (confirm('Delete this message for ALL users?')) {
+        database.ref('messages/' + msgId).remove()
+            .then(() => { alert('Deleted'); loadMessages(); })
+            .catch(err => alert('Error: ' + err.message));
+    }
+}
+
+function clearAllMessages() {
+    const password = prompt('Enter admin password:');
+    if (password === 'FLM2025') {
+        if (confirm('DELETE ALL MESSAGES? Cannot be undone!')) {
+            database.ref('messages').remove()
+                .then(() => { alert('All messages cleared'); loadMessages(); })
+                .catch(err => alert('Error: ' + err.message));
+        }
+    } else if (password) {
+        alert('Wrong password');
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Code Editor
+function unlockCodeEditor() {
+    const password = prompt('Enter admin password for code editor:');
+    if (password === 'FLM2025') {
+        document.getElementById('codeEditorContent').style.display = 'block';
+        alert('✅ Code editor unlocked!\n\nWARNING: Changes affect live site.');
+    } else if (password) {
+        alert('❌ Wrong password');
+    }
+}
+
+// System
+function logout() {
+    if (confirm('Logout?')) {
+        window.location.href = 'admin-login.html';
+    }
+}
+
+// Initialize
+setTimeout(() => {
+    document.getElementById('activeUsers').textContent = '12';
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+}, 1000);
+</script>
+
+</body>
+</html>

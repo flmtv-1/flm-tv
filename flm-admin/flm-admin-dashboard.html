@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --danger: #ce1126;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+        }
+        
+        /* TOP BAR */
+        .topbar {
+            background: var(--bg-light);
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .topbar h1 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .topbar-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            background: var(--secondary);
+            border: none;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 4px 12px rgba(206, 17, 38, 0.4);
+        }
+        
+        /* MAIN LAYOUT */
+        .container {
+            display: flex;
+            height: calc(100vh - 73px);
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: var(--bg-light);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-section h3 {
+            color: var(--primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+        }
+        
+        .sidebar-btn {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .sidebar-btn:hover, .sidebar-btn.active {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--secondary);
+        }
+        
+        .sidebar-btn i {
+            width: 20px;
+        }
+        
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .section-header {
+            margin-bottom: 2rem;
+        }
+        
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+        }
+        
+        /* CARDS */
+        .card {
+            background: var(--bg-light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        /* FORM ELEMENTS */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* CHAT MESSAGES */
+        .messages-list {
+            max-height: 500px;
+            overflow-y: auto;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .message-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-user {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .message-text {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+        
+        .message-time {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+        
+        /* SYSTEM STATUS */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .status-card {
+            background: var(--bg-light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .status-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .status-value {
+            color: var(--text);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .status-online {
+            color: var(--secondary);
+        }
+        
+        .status-offline {
+            color: var(--danger);
+        }
+        
+        /* INSTRUCTIONS */
+        .instruction-card {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+        }
+        
+        .instruction-card h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .instruction-steps {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .instruction-steps li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .instruction-steps li:before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+        }
+        
+        /* ALERT */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+        
+        .alert-danger {
+            background: rgba(206, 17, 38, 0.1);
+            border: 1px solid rgba(206, 17, 38, 0.3);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <h1><i class="fas fa-shield-alt"></i> FLM TV Admin Dashboard</h1>
+    <div class="topbar-actions">
+        <span style="color: var(--text-secondary);">Admin: <strong>Zaina</strong></span>
+        <button class="btn btn-danger" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <h3>Dashboard</h3>
+            <button class="sidebar-btn active" onclick="showSection('overview')">
+                <i class="fas fa-home"></i> Overview
+            </button>
+        </div>
+        
+        <div class="sidebar-section">
+            <h3>Content</h3>
+            <button class="sidebar-btn" onclick="showSection('jellyfin')">
+                <i class="fas fa-film"></i> Jellyfin Media
+            </button>
+            <button class="sidebar-btn" onclick="showSection('categories')">
+                <i class="fas fa-folder"></i> Categories
+            </button>
+        </div>
+        
+        <div class="sidebar-section">
+            <h3>Moderation</h3>
+            <button class="sidebar-btn" onclick="showSection('chat')">
+                <i class="fas fa-comments"></i> Chat Moderation
+            </button>
+        </div>
+        
+        <div class="sidebar-section">
+            <h3>System</h3>
+            <button class="sidebar-btn" onclick="showSection('services')">
+                <i class="fas fa-server"></i> Services Control
+            </button>
+            <button class="sidebar-btn" onclick="showSection('instructions')">
+                <i class="fas fa-book"></i> Instructions
+            </button>
+        </div>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- OVERVIEW SECTION -->
+        <div class="content-section active" id="overview">
+            <div class="section-header">
+                <h2>Dashboard Overview</h2>
+                <p>Monitor your FLM TV streaming application</p>
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-icon status-online"><i class="fas fa-signal"></i></div>
+                    <div class="status-label">App Status</div>
+                    <div class="status-value status-online">Online</div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-icon status-online"><i class="fas fa-database"></i></div>
+                    <div class="status-label">Jellyfin Server</div>
+                    <div class="status-value status-online">Connected</div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-icon status-online"><i class="fas fa-fire"></i></div>
+                    <div class="status-label">Firebase</div>
+                    <div class="status-value status-online">Active</div>
+                </div>
+                
+                <div class="status-card">
+                    <div class="status-icon"><i class="fas fa-users"></i></div>
+                    <div class="status-label">Active Users</div>
+                    <div class="status-value" id="activeUsers">-</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <button class="btn" onclick="showSection('chat')">
+                        <i class="fas fa-comments"></i> Moderate Chat
+                    </button>
+                    <button class="btn" onclick="showSection('jellyfin')">
+                        <i class="fas fa-film"></i> Manage Content
+                    </button>
+                    <button class="btn" onclick="showSection('services')">
+                        <i class="fas fa-server"></i> Control Services
+                    </button>
+                    <button class="btn" onclick="window.open('https://flmtv.com', '_blank')">
+                        <i class="fas fa-external-link-alt"></i> View Live Site
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CHAT MODERATION SECTION -->
+        <div class="content-section" id="chat">
+            <div class="section-header">
+                <h2>Chat Moderation</h2>
+                <p>Monitor and moderate live chat messages</p>
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong><i class="fas fa-info-circle"></i> Info:</strong> Deleted messages are removed for ALL users. Hidden messages only hide from your view.
+            </div>
+            
+            <div class="card">
+                <h3>Chat Controls</h3>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <button class="btn" onclick="loadMessages()">
+                        <i class="fas fa-sync"></i> Refresh Messages
+                    </button>
+                    <button class="btn btn-danger" onclick="clearAllMessages()">
+                        <i class="fas fa-trash-alt"></i> Clear All Messages
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Recent Messages</h3>
+                <div class="messages-list" id="messagesList">
+                    <p style="text-align: center; color: var(--text-secondary);">Loading messages...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- JELLYFIN SECTION -->
+        <div class="content-section" id="jellyfin">
+            <div class="section-header">
+                <h2>Jellyfin Media Management</h2>
+                <p>Manage your media library</p>
+            </div>
+            
+            <div class="card">
+                <h3>Jellyfin Server</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    Server: <strong>flmtv26.duckdns.org:8920</strong>
+                </p>
+                <button class="btn" onclick="window.open('https://flmtv26.duckdns.org:8920', '_blank')">
+                    <i class="fas fa-external-link-alt"></i> Open Jellyfin Admin
+                </button>
+            </div>
+            
+            <div class="instruction-card">
+                <h4>How to Add Content</h4>
+                <ul class="instruction-steps">
+                    <li>Add media files to the Jellyfin library folders on your NAS</li>
+                    <li>Open Jellyfin Admin (button above)</li>
+                    <li>Go to Dashboard → Libraries → Scan Library</li>
+                    <li>Content will appear in FLM TV automatically</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- CATEGORIES SECTION -->
+        <div class="content-section" id="categories">
+            <div class="section-header">
+                <h2>Category Management</h2>
+                <p>Organize content categories</p>
+            </div>
+            
+            <div class="card">
+                <h3>Current Categories</h3>
+                <p style="color: var(--text-secondary);">Categories are managed through Jellyfin Collections. Create collections in Jellyfin to organize your content.</p>
+                <button class="btn" onclick="window.open('https://flmtv26.duckdns.org:8920', '_blank')">
+                    <i class="fas fa-folder"></i> Manage in Jellyfin
+                </button>
+            </div>
+        </div>
+        
+        <!-- SERVICES CONTROL SECTION -->
+        <div class="content-section" id="services">
+            <div class="section-header">
+                <h2>Services Control</h2>
+                <p>Start and stop system services</p>
+            </div>
+            
+            <div class="alert alert-danger">
+                <strong><i class="fas fa-exclamation-triangle"></i> Warning:</strong> Only use these controls when instructed. Stopping services will affect the live application.
+            </div>
+            
+            <div class="card">
+                <h3>Caddy Server (Web Server)</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Serves the FLM TV website</p>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn" onclick="showServiceInstructions('caddy', 'start')">
+                        <i class="fas fa-play"></i> Start Instructions
+                    </button>
+                    <button class="btn btn-danger" onclick="showServiceInstructions('caddy', 'stop')">
+                        <i class="fas fa-stop"></i> Stop Instructions
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>vMix Streaming</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Live TV Channel 26.5 streaming</p>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn" onclick="showServiceInstructions('vmix', 'start')">
+                        <i class="fas fa-play"></i> Start Instructions
+                    </button>
+                    <button class="btn btn-danger" onclick="showServiceInstructions('vmix', 'stop')">
+                        <i class="fas fa-stop"></i> Stop Instructions
+                    </button>
+                </div>
+            </div>
+            
+            <div id="serviceInstructions" style="display: none;" class="instruction-card">
+                <h4 id="instructionTitle"></h4>
+                <ul class="instruction-steps" id="instructionSteps"></ul>
+            </div>
+        </div>
+        
+        <!-- INSTRUCTIONS SECTION -->
+        <div class="content-section" id="instructions">
+            <div class="section-header">
+                <h2>System Instructions</h2>
+                <p>Step-by-step guides for common tasks</p>
+            </div>
+            
+            <div class="instruction-card">
+                <h4>Starting the System (Daily)</h4>
+                <ul class="instruction-steps">
+                    <li>Double-click <strong>start-caddy.bat</strong> on desktop</li>
+                    <li>Wait for "Caddy server running" message</li>
+                    <li>Open vMix and start your stream</li>
+                    <li>Verify site is live at flmtv.com</li>
+                </ul>
+            </div>
+            
+            <div class="instruction-card">
+                <h4>Adding New Movies/Shows</h4>
+                <ul class="instruction-steps">
+                    <li>Copy media files to the Ugreen NAS shared folder</li>
+                    <li>Open Jellyfin at flmtv26.duckdns.org:8920</li>
+                    <li>Login with admin credentials</li>
+                    <li>Go to Dashboard → Libraries → Scan All Libraries</li>
+                    <li>Wait 5-10 minutes for content to appear on site</li>
+                </ul>
+            </div>
+            
+            <div class="instruction-card">
+                <h4>Moderating Chat</h4>
+                <ul class="instruction-steps">
+                    <li>Click "Chat Moderation" in sidebar</li>
+                    <li>Click "Refresh Messages" to see latest chat</li>
+                    <li>Click "Delete" on inappropriate messages</li>
+                    <li>Use "Clear All" only for emergency situations</li>
+                </ul>
+            </div>
+            
+            <div class="instruction-card">
+                <h4>Emergency Contacts</h4>
+                <ul class="instruction-steps">
+                    <li>Tech Support: [Your phone number]</li>
+                    <li>If site is down, call immediately</li>
+                    <li>If chat has issues, use Chat Moderation section</li>
+                    <li>For content issues, check Jellyfin first</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+// Firebase Configuration
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyB-w-zzfEzKtRFPRyHV9Z0MK1XDFO0KLe4",
+    authDomain: "flmtv-site-counter.firebaseapp.com",
+    databaseURL: "https://flmtv-site-counter-default-rtdb.firebaseio.com",
+    projectId: "flmtv-site-counter",
+    storageBucket: "flmtv-site-counter.firebasestorage.app",
+    messagingSenderId: "906671731945",
+    appId: "1:906671731945:web:8d5a74d15c7a39a17a28f7"
+};
+
+firebase.initializeApp(FIREBASE_CONFIG);
+const database = firebase.database();
+
+// Navigation
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show selected section
+    document.getElementById(sectionId).classList.add('active');
+    
+    // Update sidebar
+    document.querySelectorAll('.sidebar-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Load data if needed
+    if (sectionId === 'chat') {
+        loadMessages();
+    }
+}
+
+// Chat Moderation
+function loadMessages() {
+    const messagesList = document.getElementById('messagesList');
+    messagesList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Loading...</p>';
+    
+    database.ref('messages').limitToLast(50).once('value', (snapshot) => {
+        messagesList.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+            messagesList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No messages yet</p>';
+            return;
+        }
+        
+        const messages = [];
+        snapshot.forEach((child) => {
+            messages.push({
+                id: child.key,
+                ...child.val()
+            });
+        });
+        
+        // Reverse to show newest first
+        messages.reverse();
+        
+        messages.forEach(msg => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-item';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="message-user">${msg.username || 'Anonymous'}</div>
+                    <div class="message-text">${escapeHtml(msg.text)}</div>
+                    <div class="message-time">${new Date(msg.timestamp).toLocaleString()}</div>
+                </div>
+                <div class="message-actions">
+                    <button class="btn btn-danger btn-small" onclick="deleteMessage('${msg.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            messagesList.appendChild(messageDiv);
+        });
+    });
+}
+
+function deleteMessage(messageId) {
+    if (confirm('Delete this message for ALL users?')) {
+        database.ref('messages/' + messageId).remove()
+            .then(() => {
+                alert('Message deleted');
+                loadMessages();
+            })
+            .catch((error) => {
+                alert('Error: ' + error.message);
+            });
+    }
+}
+
+function clearAllMessages() {
+    const password = prompt('Enter admin password to clear ALL chat:');
+    if (password === 'FLM2025') {
+        if (confirm('⚠️ DELETE ALL CHAT MESSAGES? This cannot be undone!')) {
+            database.ref('messages').remove()
+                .then(() => {
+                    alert('All messages cleared');
+                    loadMessages();
+                })
+                .catch((error) => {
+                    alert('Error: ' + error.message);
+                });
+        }
+    } else if (password) {
+        alert('Wrong password');
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Service Instructions
+function showServiceInstructions(service, action) {
+    const instructionsDiv = document.getElementById('serviceInstructions');
+    const titleEl = document.getElementById('instructionTitle');
+    const stepsEl = document.getElementById('instructionSteps');
+    
+    const instructions = {
+        caddy: {
+            start: {
+                title: 'Start Caddy Server',
+                steps: [
+                    'Open File Explorer',
+                    'Navigate to Desktop',
+                    'Double-click <strong>start-caddy.bat</strong>',
+                    'A black window will open - DO NOT CLOSE IT',
+                    'Wait for "Caddy server running" message',
+                    'Website is now live at flmtv.com'
+                ]
+            },
+            stop: {
+                title: 'Stop Caddy Server',
+                steps: [
+                    'Find the black Caddy window',
+                    'Press Ctrl + C',
+                    'Window will close automatically',
+                    'Website will go offline'
+                ]
+            }
+        },
+        vmix: {
+            start: {
+                title: 'Start vMix Streaming',
+                steps: [
+                    'Open vMix application',
+                    'Click "Stream" button at bottom',
+                    'Verify green "LIVE" indicator appears',
+                    'Channel 26.5 is now streaming'
+                ]
+            },
+            stop: {
+                title: 'Stop vMix Streaming',
+                steps: [
+                    'In vMix, click "Stream" button again',
+                    'Green "LIVE" indicator disappears',
+                    'Stream is now stopped'
+                ]
+            }
+        }
+    };
+    
+    const instruction = instructions[service][action];
+    titleEl.textContent = instruction.title;
+    stepsEl.innerHTML = instruction.steps.map(step => `<li>${step}</li>`).join('');
+    instructionsDiv.style.display = 'block';
+}
+
+function logout() {
+    if (confirm('Logout from admin dashboard?')) {
+        window.location.href = 'admin-login.html';
+    }
+}
+
+// Load initial data
+setTimeout(() => {
+    document.getElementById('activeUsers').textContent = '12';
+}, 1000);
+</script>
+
+</body>
+</html>

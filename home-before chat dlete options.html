@@ -1958,7 +1958,7 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Keep normal on mobile, just enable horizontal scroll */
+            /* MOVIE CARDS - Horizontal scroll like Tubi */
             .content-carousel {
                 display: flex !important;
                 gap: 0.5rem !important;
@@ -1971,10 +1971,13 @@
             
             .movie-card,
             .content-card {
-                flex: 0 0 140px !important;
-                min-width: 140px !important;
+                flex: 0 0 120px !important;
+                min-width: 120px !important;
+                max-width: 120px !important;
+                width: 120px !important;
                 scroll-snap-align: start;
                 margin-bottom: 0;
+                position: relative !important;
             }
             
             /* HIDE ALL TEXT on mobile - just show poster images! */
