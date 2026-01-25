@@ -863,67 +863,6 @@
             overflow-y: auto;
         }
         
-        /* Selection mode styles */
-        .selection-controls {
-            display: none;
-            gap: 0.5rem;
-            padding: 0.75rem;
-            background: rgba(255, 215, 0, 0.1);
-            border-bottom: 1px solid var(--primary);
-            flex-wrap: wrap;
-        }
-        
-        .selection-controls.active {
-            display: flex;
-        }
-        
-        .selection-controls button {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--primary);
-            background: rgba(255, 215, 0, 0.1);
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .selection-controls button:hover:not(:disabled) {
-            background: var(--primary);
-            color: var(--bg);
-        }
-        
-        .selection-controls button.delete-btn {
-            border-color: #ef4444;
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-        }
-        
-        .selection-controls button.delete-btn:hover:not(:disabled) {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .selection-controls button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .message-checkbox {
-            display: none;
-            width: 18px;
-            height: 18px;
-            margin-right: 0.75rem;
-            cursor: pointer;
-            accent-color: var(--primary);
-            flex-shrink: 0;
-        }
-        
-        .selection-mode .message-checkbox {
-            display: inline-block;
-        }
-        
         /* ═══════════════════════════════════════════════════════════════ */
         /*  FLOATING BUTTONS (Chat & AI)                                   */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -2705,11 +2644,9 @@
        <span id="chatRoomTitle">Live Chat</span>
    </h3>
    <p id="chatRoomIndicator" style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">💬 FLM TV Lobby</p>
+                <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
             </div>
             <div style="display: flex; gap: 0.5rem;">
-                <button class="btn-icon" onclick="toggleSelectionMode()" title="Select Messages" style="width: 36px; height: 36px; font-size: 0.9rem;">
-                    <i class="fas fa-check-square"></i>
-                </button>
                 <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
                     <i class="fas fa-expand"></i>
                 </button>
@@ -2717,13 +2654,6 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-        </div>
-        
-        <!-- Selection Controls (hidden by default) -->
-        <div class="selection-controls" id="selectionControls">
-            <button onclick="selectAllMessages()">Select All</button>
-            <button class="delete-btn" id="deleteSelectedBtn" onclick="deleteSelectedMessages()" disabled>Delete Selected (0)</button>
-            <button onclick="cancelSelectionMode()">Cancel</button>
         </div>
         
         <!-- Simple Username Input -->
@@ -4811,7 +4741,6 @@ function switchChatRoom(roomType, movieId, movieName) {
             if (messagesContainer) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
-                messageDiv.setAttribute('data-message-id', messageId);
                 messageDiv.style.marginBottom = '0.75rem';
                 messageDiv.style.display = 'flex';
                 messageDiv.style.flexDirection = 'column';
@@ -4828,114 +4757,19 @@ function switchChatRoom(roomType, movieId, movieName) {
                 messageBubble.style.color = 'white';
                 messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
                 messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
-                messageBubble.style.display = 'flex';
-                messageBubble.style.alignItems = 'flex-start';
-                messageBubble.style.gap = '0.5rem';
                 
-                // Add checkbox (hidden by default)
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.className = 'message-checkbox';
-                checkbox.setAttribute('data-message-id', messageId);
-                checkbox.onchange = updateSelectionCount;
-                
-                // Content div
-                const contentDiv = document.createElement('div');
-                contentDiv.style.flex = '1';
-                contentDiv.innerHTML = `
+                messageBubble.innerHTML = `
                     <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
                         ${username}
                     </div>
                     <div>${escapeHtml(msg.text)}</div>
                 `;
                 
-                messageBubble.appendChild(checkbox);
-                messageBubble.appendChild(contentDiv);
                 messageDiv.appendChild(messageBubble);
                 messagesContainer.appendChild(messageDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
-    });
-}
-
-// Selection mode functions
-let selectionModeActive = false;
-
-function toggleSelectionMode() {
-    selectionModeActive = !selectionModeActive;
-    const chatMessages = document.getElementById('chatMessages');
-    const selectionControls = document.getElementById('selectionControls');
-    
-    if (selectionModeActive) {
-        chatMessages.classList.add('selection-mode');
-        selectionControls.classList.add('active');
-        console.log('✅ Selection mode enabled');
-    } else {
-        chatMessages.classList.remove('selection-mode');
-        selectionControls.classList.remove('active');
-        document.querySelectorAll('.message-checkbox').forEach(cb => cb.checked = false);
-        updateSelectionCount();
-        console.log('❌ Selection mode disabled');
-    }
-}
-
-function cancelSelectionMode() {
-    toggleSelectionMode();
-}
-
-function selectAllMessages() {
-    const checkboxes = document.querySelectorAll('.message-checkbox');
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    checkboxes.forEach(cb => cb.checked = !allChecked);
-    updateSelectionCount();
-}
-
-function updateSelectionCount() {
-    const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-    const deleteBtn = document.getElementById('deleteSelectedBtn');
-    const count = checkedBoxes.length;
-    if (deleteBtn) {
-        deleteBtn.textContent = `Delete Selected (${count})`;
-        deleteBtn.disabled = count === 0;
-    }
-}
-
-function deleteSelectedMessages() {
-    const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-    if (checkedBoxes.length === 0) return;
-    if (!confirm(`Delete ${checkedBoxes.length} message(s)?`)) return;
-    
-    const deleteBtn = document.getElementById('deleteSelectedBtn');
-    deleteBtn.disabled = true;
-    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-    
-    let deletedCount = 0;
-    const totalToDelete = checkedBoxes.length;
-    
-    checkedBoxes.forEach(checkbox => {
-        const messageId = checkbox.getAttribute('data-message-id');
-        const messageDiv = checkbox.closest('.message');
-        
-        currentMessagesRef.child(messageId).remove()
-            .then(() => {
-                if (messageDiv) messageDiv.remove();
-                displayedMessages.delete(messageId);
-                deletedCount++;
-                if (deletedCount === totalToDelete) {
-                    updateSelectionCount();
-                    deleteBtn.innerHTML = 'Delete Selected (0)';
-                    console.log(`✅ Deleted ${deletedCount} messages`);
-                }
-            })
-            .catch(err => {
-                console.error('❌ Error deleting:', err);
-                deletedCount++;
-                if (deletedCount === totalToDelete) {
-                    updateSelectionCount();
-                    deleteBtn.innerHTML = 'Delete Selected (0)';
-                }
-            });
     });
 }
 </script>

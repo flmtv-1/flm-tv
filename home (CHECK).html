@@ -863,7 +863,10 @@
             overflow-y: auto;
         }
         
-        /* Selection mode styles */
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  CHAT SELECTION MODE                                            */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
         .selection-controls {
             display: none;
             gap: 0.5rem;
@@ -2700,11 +2703,11 @@
     <div class="side-panel" id="chatPanel">
         <div class="panel-header">
             <div>
-               <h3 class="panel-title" style="margin-bottom: 0.25rem;">
-       <i class="fas fa-comments"></i> 
-       <span id="chatRoomTitle">Live Chat</span>
-   </h3>
-   <p id="chatRoomIndicator" style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">💬 FLM TV Lobby</p>
+                <h3 class="panel-title" style="margin-bottom: 0.25rem;">
+                    <i class="fas fa-comments"></i> 
+                    <span id="chatRoomTitle">Live Chat</span>
+                </h3>
+                <p id="chatRoomIndicator" style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">💬 FLM TV Lobby</p>
             </div>
             <div style="display: flex; gap: 0.5rem;">
                 <button class="btn-icon" onclick="toggleSelectionMode()" title="Select Messages" style="width: 36px; height: 36px; font-size: 0.9rem;">
@@ -4183,69 +4186,99 @@
         }
         
         // CLEAR ALL CHAT FUNCTION (Admin only - password protected)
+        // ═══════════════════════════════════════════════════════════════
+        //  CHAT ROOM MANAGEMENT
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentChatRoom = 'lobby';
+        let currentMovieId = null;
+        let currentMovieName = null;
+        let messagesRef = null;
+        
+        function switchChatRoom(roomType, movieId = null, movieName = null) {
+            console.log(`🔄 Switching chat room: ${roomType}`, movieId);
+            
+            if (messagesRef) {
+                messagesRef.off('child_added');
+            }
+            
+            const chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                chatMessages.innerHTML = '';
+            }
+            displayedMessages.clear();
+            
+            currentChatRoom = roomType;
+            currentMovieId = movieId;
+            currentMovieName = movieName;
+            
+            const roomIndicator = document.getElementById('chatRoomIndicator');
+            const roomTitle = document.getElementById('chatRoomTitle');
+            
+            if (roomType === 'lobby') {
+                messagesRef = database.ref('messages');
+                if (roomIndicator) roomIndicator.textContent = '💬 FLM TV Lobby';
+                if (roomTitle) roomTitle.textContent = 'Live Chat';
+                console.log('📍 Joined FLM TV Lobby (old location)');
+            } else {
+                messagesRef = database.ref(`chat-rooms/movie-${movieId}/messages`);
+                if (roomIndicator) roomIndicator.textContent = `🎬 ${movieName || 'Movie Chat'}`;
+                if (roomTitle) roomTitle.textContent = 'Movie Chat';
+                console.log(`📍 Joined movie room: ${movieName}`);
+            }
+            
+            loadChatMessages();
+        }
+        
         function sendMessage() {
             const messageText = chatInput.value.trim();
             const sendBtn = document.getElementById('sendBtn');
             
             if (messageText !== '') {
-                // Clear input immediately
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
                 
-                // Get username from input field
                 const usernameInput = document.getElementById('chatUsernameInput');
                 let username = usernameInput.value.trim();
                 
-                // If no username entered, require it
                 if (!username) {
                     usernameInput.focus();
-                    usernameInput.style.border = '2px solid #ce1126'; // Red border
+                    usernameInput.style.border = '2px solid #ce1126';
                     setTimeout(() => {
                         usernameInput.style.border = '1px solid #444';
                     }, 2000);
                     alert('Please enter your name first!');
-                    chatInput.value = messageText; // Restore message
+                    chatInput.value = messageText;
                     return;
                 }
                 
-                // Show sending state
                 sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                 sendBtn.disabled = true;
                 sendBtn.style.opacity = '0.6';
                 
-                // Save username to localStorage
                 localStorage.setItem('flmtvChatUsername', username);
                 
-                // Get user ID (Firebase or fallback)
                 const user = auth.currentUser;
                 const userId = user ? user.uid : fallbackUserId;
                 
-                // Send to Firebase with username
-                console.log('📤 Sending message to Firebase...');
-                console.log('Username:', username);
-                console.log('Message:', messageText);
-                console.log('Firebase Database URL:', database.ref().toString());
+                console.log('📤 Sending message to:', currentChatRoom);
                 
-                database.ref('messages').push({
+                messagesRef.push({
                     text: messageText,
                     username: username,
                     userId: userId,
                     timestamp: Date.now()
                 }).then(() => {
                     console.log('✅ Message sent successfully!');
-                    // Reset button
                     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
                     sendBtn.disabled = false;
                     sendBtn.style.opacity = '1';
                 }).catch((error) => {
                     console.error('❌ Firebase error:', error);
                     alert('Chat error: ' + error.message);
-                    // Reset button
                     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
                     sendBtn.disabled = false;
                     sendBtn.style.opacity = '1';
-                    // Show message locally as fallback
-                    addMessage('sent', messageText);
                 });
             }
         }
@@ -4422,95 +4455,176 @@
         // Track displayed messages to prevent duplicates
         const displayedMessages = new Set();
         
-        // Listen to Firebase chat messages - YOUTUBE STYLE (everyone sees everything)
-        currentMessagesRef.limitToLast(50).on('child_added', (snapshot) => {
-            const messageId = snapshot.key;
-            const msg = snapshot.val();
+        function loadChatMessages() {
+            if (!messagesRef) return;
             
-            // Skip if message is hidden locally
-            if (isMessageHidden(messageId)) {
+            messagesRef.limitToLast(50).on('child_added', (snapshot) => {
+                const messageId = snapshot.key;
+                const msg = snapshot.val();
+                
+                if (displayedMessages.has(messageId)) {
+                    return;
+                }
+                displayedMessages.add(messageId);
+                
+                if (msg && msg.text) {
+                    const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+                    
+                    let isOwnMessage = false;
+                    const savedUsername = localStorage.getItem('flmtvChatUsername');
+                    if (savedUsername && msg.username === savedUsername) {
+                        isOwnMessage = true;
+                    } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
+                        isOwnMessage = true;
+                    }
+                    
+                    const messagesContainer = document.getElementById('chatMessages');
+                    if (messagesContainer) {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+                        messageDiv.setAttribute('data-message-id', messageId);
+                        messageDiv.style.marginBottom = '0.75rem';
+                        messageDiv.style.display = 'flex';
+                        messageDiv.style.flexDirection = 'column';
+                        messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
+                        
+                        const messageBubble = document.createElement('div');
+                        messageBubble.className = 'message-bubble';
+                        messageBubble.style.maxWidth = '80%';
+                        messageBubble.style.padding = '0.6rem 0.9rem';
+                        messageBubble.style.borderRadius = '1rem';
+                        messageBubble.style.lineHeight = '1.4';
+                        messageBubble.style.wordWrap = 'break-word';
+                        messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
+                        messageBubble.style.color = 'white';
+                        messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
+                        messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
+                        messageBubble.style.display = 'flex';
+                        messageBubble.style.alignItems = 'flex-start';
+                        messageBubble.style.gap = '0.5rem';
+                        
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'message-checkbox';
+                        checkbox.setAttribute('data-message-id', messageId);
+                        checkbox.onchange = updateSelectionCount;
+                        
+                        const contentDiv = document.createElement('div');
+                        contentDiv.style.flex = '1';
+                        contentDiv.innerHTML = `
+                            <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
+                                ${username}
+                            </div>
+                            <div>${escapeHtml(msg.text)}</div>
+                        `;
+                        
+                        messageBubble.appendChild(checkbox);
+                        messageBubble.appendChild(contentDiv);
+                        messageDiv.appendChild(messageBubble);
+                        messagesContainer.appendChild(messageDiv);
+                        
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        
+                        console.log('💬 Message displayed:', username, msg.text);
+                    }
+                }
+            });
+        }
+        
+        let selectionModeActive = false;
+        
+        function toggleSelectionMode() {
+            selectionModeActive = !selectionModeActive;
+            const chatMessages = document.getElementById('chatMessages');
+            const selectionControls = document.getElementById('selectionControls');
+            
+            if (selectionModeActive) {
+                chatMessages.classList.add('selection-mode');
+                selectionControls.classList.add('active');
+                console.log('✅ Selection mode enabled');
+            } else {
+                chatMessages.classList.remove('selection-mode');
+                selectionControls.classList.remove('active');
+                document.querySelectorAll('.message-checkbox').forEach(cb => cb.checked = false);
+                updateSelectionCount();
+                console.log('❌ Selection mode disabled');
+            }
+        }
+        
+        function cancelSelectionMode() {
+            toggleSelectionMode();
+        }
+        
+        function selectAllMessages() {
+            const checkboxes = document.querySelectorAll('.message-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+            
+            updateSelectionCount();
+        }
+        
+        function updateSelectionCount() {
+            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            const count = checkedBoxes.length;
+            
+            if (deleteBtn) {
+                deleteBtn.textContent = `Delete Selected (${count})`;
+                deleteBtn.disabled = count === 0;
+            }
+        }
+        
+        function deleteSelectedMessages() {
+            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
+            
+            if (checkedBoxes.length === 0) return;
+            
+            if (!confirm(`Delete ${checkedBoxes.length} message(s)?`)) {
                 return;
             }
             
-            // Prevent duplicate messages
-            if (displayedMessages.has(messageId)) {
-                return;
-            }
-            displayedMessages.add(messageId);
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
             
-            // Show ALL messages to EVERYONE (like YouTube live chat)
-            if (msg && msg.text) {
-                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+            let deletedCount = 0;
+            const totalToDelete = checkedBoxes.length;
+            
+            checkedBoxes.forEach(checkbox => {
+                const messageId = checkbox.getAttribute('data-message-id');
+                const messageDiv = checkbox.closest('.message');
                 
-                // Check if this is from current user
-                let isOwnMessage = false;
-                const savedUsername = localStorage.getItem('flmtvChatUsername');
-                if (savedUsername && msg.username === savedUsername) {
-                    isOwnMessage = true;
-                } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
-                    isOwnMessage = true;
-                }
-                
-                // Add message with username
-                const messagesContainer = document.getElementById('chatMessages');
-                if (messagesContainer) {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
-                    messageDiv.style.marginBottom = '0.75rem';
-                    messageDiv.style.display = 'flex';
-                    messageDiv.style.flexDirection = 'column';
-                    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
-                    
-                    const messageBubble = document.createElement('div');
-                    messageBubble.className = 'message-bubble';
-                    messageBubble.style.maxWidth = '80%';
-                    messageBubble.style.padding = '0.6rem 0.9rem';
-                    messageBubble.style.borderRadius = '1rem';
-                    messageBubble.style.lineHeight = '1.4';
-                    messageBubble.style.wordWrap = 'break-word';
-                    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
-                    messageBubble.style.color = 'white';
-                    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
-                    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
-                    
-                    // Show username for all messages (YouTube style)
-                    messageBubble.innerHTML = `
-                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
-                            ${username}
-                        </div>
-                        <div>${escapeHtml(msg.text)}</div>
-                    `;
-                    
-                    // Add checkbox for message selection (hidden by default)
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'message-checkbox';
-                    checkbox.dataset.messageId = messageId;
-                    checkbox.style.cssText = `
-                        position: absolute;
-                        top: 8px;
-                        left: 8px;
-                        width: 18px;
-                        height: 18px;
-                        cursor: pointer;
-                        z-index: 10;
-                        display: none;
-                    `;
-                    checkbox.onchange = updateDeleteButton;
-                    
-                    messageDiv.style.position = 'relative';
-                    messageDiv.insertBefore(checkbox, messageDiv.firstChild);
-                    
-                    messageDiv.appendChild(messageBubble);
-                    messagesContainer.appendChild(messageDiv);
-                    
-                    // Auto-scroll to bottom (like YouTube)
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    
-                    console.log('💬 Message displayed:', username, msg.text);
-                }
-            }
-        });
+                messagesRef.child(messageId).remove()
+                    .then(() => {
+                        if (messageDiv) {
+                            messageDiv.remove();
+                        }
+                        displayedMessages.delete(messageId);
+                        
+                        deletedCount++;
+                        
+                        if (deletedCount === totalToDelete) {
+                            updateSelectionCount();
+                            deleteBtn.innerHTML = 'Delete Selected (0)';
+                            console.log(`✅ Deleted ${deletedCount} messages`);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('❌ Error deleting message:', err);
+                        deletedCount++;
+                        
+                        if (deletedCount === totalToDelete) {
+                            updateSelectionCount();
+                            deleteBtn.innerHTML = 'Delete Selected (0)';
+                        }
+                    });
+            });
+        }
+        
+        switchChatRoom('lobby');
         
         // Helper function to escape HTML
         function escapeHtml(text) {
@@ -4763,181 +4877,6 @@ async function loadCollectionPage(collectionId, title) {
   }
 }
 
-// Per-movie chat room system
-let currentMessagesRef = database.ref('messages');
-
-function switchChatRoom(roomType, movieId, movieName) {
-    console.log('🔄 Switching to:', roomType, movieName);
-    
-    // Unsubscribe from old room
-    currentMessagesRef.off('child_added');
-    
-    // Clear display
-    const chatMessages = document.getElementById('chatMessages');
-    if (chatMessages) chatMessages.innerHTML = '';
-    
-    // Switch to new room
-    if (roomType === 'lobby') {
-        currentMessagesRef = database.ref('messages');
-        document.getElementById('chatRoomIndicator').textContent = '💬 FLM TV Lobby';
-        document.getElementById('chatRoomTitle').textContent = 'Live Chat';
-    } else {
-        currentMessagesRef = database.ref(`chat-rooms/movie-${movieId}/messages`);
-        document.getElementById('chatRoomIndicator').textContent = `🎬 ${movieName}`;
-        document.getElementById('chatRoomTitle').textContent = 'Movie Chat';
-    }
-    
-    // Reload messages from new room
-    currentMessagesRef.limitToLast(50).on('child_added', (snapshot) => {
-        const messageId = snapshot.key;
-        const msg = snapshot.val();
-        
-        if (isMessageHidden(messageId)) return;
-        if (displayedMessages.has(messageId)) return;
-        displayedMessages.add(messageId);
-        
-        if (msg && msg.text) {
-            const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
-            
-            let isOwnMessage = false;
-            const savedUsername = localStorage.getItem('flmtvChatUsername');
-            if (savedUsername && msg.username === savedUsername) {
-                isOwnMessage = true;
-            } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
-                isOwnMessage = true;
-            }
-            
-            const messagesContainer = document.getElementById('chatMessages');
-            if (messagesContainer) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
-                messageDiv.setAttribute('data-message-id', messageId);
-                messageDiv.style.marginBottom = '0.75rem';
-                messageDiv.style.display = 'flex';
-                messageDiv.style.flexDirection = 'column';
-                messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
-                
-                const messageBubble = document.createElement('div');
-                messageBubble.className = 'message-bubble';
-                messageBubble.style.maxWidth = '80%';
-                messageBubble.style.padding = '0.6rem 0.9rem';
-                messageBubble.style.borderRadius = '1rem';
-                messageBubble.style.lineHeight = '1.4';
-                messageBubble.style.wordWrap = 'break-word';
-                messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
-                messageBubble.style.color = 'white';
-                messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
-                messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
-                messageBubble.style.display = 'flex';
-                messageBubble.style.alignItems = 'flex-start';
-                messageBubble.style.gap = '0.5rem';
-                
-                // Add checkbox (hidden by default)
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.className = 'message-checkbox';
-                checkbox.setAttribute('data-message-id', messageId);
-                checkbox.onchange = updateSelectionCount;
-                
-                // Content div
-                const contentDiv = document.createElement('div');
-                contentDiv.style.flex = '1';
-                contentDiv.innerHTML = `
-                    <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
-                        ${username}
-                    </div>
-                    <div>${escapeHtml(msg.text)}</div>
-                `;
-                
-                messageBubble.appendChild(checkbox);
-                messageBubble.appendChild(contentDiv);
-                messageDiv.appendChild(messageBubble);
-                messagesContainer.appendChild(messageDiv);
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-        }
-    });
-}
-
-// Selection mode functions
-let selectionModeActive = false;
-
-function toggleSelectionMode() {
-    selectionModeActive = !selectionModeActive;
-    const chatMessages = document.getElementById('chatMessages');
-    const selectionControls = document.getElementById('selectionControls');
-    
-    if (selectionModeActive) {
-        chatMessages.classList.add('selection-mode');
-        selectionControls.classList.add('active');
-        console.log('✅ Selection mode enabled');
-    } else {
-        chatMessages.classList.remove('selection-mode');
-        selectionControls.classList.remove('active');
-        document.querySelectorAll('.message-checkbox').forEach(cb => cb.checked = false);
-        updateSelectionCount();
-        console.log('❌ Selection mode disabled');
-    }
-}
-
-function cancelSelectionMode() {
-    toggleSelectionMode();
-}
-
-function selectAllMessages() {
-    const checkboxes = document.querySelectorAll('.message-checkbox');
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    checkboxes.forEach(cb => cb.checked = !allChecked);
-    updateSelectionCount();
-}
-
-function updateSelectionCount() {
-    const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-    const deleteBtn = document.getElementById('deleteSelectedBtn');
-    const count = checkedBoxes.length;
-    if (deleteBtn) {
-        deleteBtn.textContent = `Delete Selected (${count})`;
-        deleteBtn.disabled = count === 0;
-    }
-}
-
-function deleteSelectedMessages() {
-    const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-    if (checkedBoxes.length === 0) return;
-    if (!confirm(`Delete ${checkedBoxes.length} message(s)?`)) return;
-    
-    const deleteBtn = document.getElementById('deleteSelectedBtn');
-    deleteBtn.disabled = true;
-    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-    
-    let deletedCount = 0;
-    const totalToDelete = checkedBoxes.length;
-    
-    checkedBoxes.forEach(checkbox => {
-        const messageId = checkbox.getAttribute('data-message-id');
-        const messageDiv = checkbox.closest('.message');
-        
-        currentMessagesRef.child(messageId).remove()
-            .then(() => {
-                if (messageDiv) messageDiv.remove();
-                displayedMessages.delete(messageId);
-                deletedCount++;
-                if (deletedCount === totalToDelete) {
-                    updateSelectionCount();
-                    deleteBtn.innerHTML = 'Delete Selected (0)';
-                    console.log(`✅ Deleted ${deletedCount} messages`);
-                }
-            })
-            .catch(err => {
-                console.error('❌ Error deleting:', err);
-                deletedCount++;
-                if (deletedCount === totalToDelete) {
-                    updateSelectionCount();
-                    deleteBtn.innerHTML = 'Delete Selected (0)';
-                }
-            });
-    });
-}
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
