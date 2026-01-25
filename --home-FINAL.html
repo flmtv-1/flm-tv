@@ -27,6 +27,9 @@
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Parental Controls -->
+    <script src="parental-controls.js"></script>
+    
     <style>
         /* ═══════════════════════════════════════════════════════════════ */
         /*  VARIABLES - Filipino Flag Colors                               */
@@ -861,70 +864,6 @@
             flex: 1;
             padding: 1.5rem;
             overflow-y: auto;
-        }
-        
-        /* ═══════════════════════════════════════════════════════════════ */
-        /*  CHAT SELECTION MODE                                            */
-        /* ═══════════════════════════════════════════════════════════════ */
-        
-        .selection-controls {
-            display: none;
-            gap: 0.5rem;
-            padding: 0.75rem;
-            background: rgba(255, 215, 0, 0.1);
-            border-bottom: 1px solid var(--primary);
-            flex-wrap: wrap;
-        }
-        
-        .selection-controls.active {
-            display: flex;
-        }
-        
-        .selection-controls button {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--primary);
-            background: rgba(255, 215, 0, 0.1);
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .selection-controls button:hover:not(:disabled) {
-            background: var(--primary);
-            color: var(--bg);
-        }
-        
-        .selection-controls button.delete-btn {
-            border-color: #ef4444;
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-        }
-        
-        .selection-controls button.delete-btn:hover:not(:disabled) {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .selection-controls button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .message-checkbox {
-            display: none;
-            width: 18px;
-            height: 18px;
-            margin-right: 0.75rem;
-            cursor: pointer;
-            accent-color: var(--primary);
-            flex-shrink: 0;
-        }
-        
-        .selection-mode .message-checkbox {
-            display: inline-block;
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -2706,16 +2645,10 @@
     <div class="side-panel" id="chatPanel">
         <div class="panel-header">
             <div>
-                <h3 class="panel-title" style="margin-bottom: 0.25rem;">
-                    <i class="fas fa-comments"></i> 
-                    <span id="chatRoomTitle">Live Chat</span>
-                </h3>
-                <p id="chatRoomIndicator" style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">💬 FLM TV Lobby</p>
+                <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-comments"></i> Live Chat</h3>
+                <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
             </div>
             <div style="display: flex; gap: 0.5rem;">
-                <button class="btn-icon" onclick="toggleSelectionMode()" title="Select Messages" style="width: 36px; height: 36px; font-size: 0.9rem;">
-                    <i class="fas fa-check-square"></i>
-                </button>
                 <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
                     <i class="fas fa-expand"></i>
                 </button>
@@ -2723,13 +2656,6 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-        </div>
-        
-        <!-- Selection Controls (hidden by default) -->
-        <div class="selection-controls" id="selectionControls">
-            <button onclick="selectAllMessages()">Select All</button>
-            <button class="delete-btn" id="deleteSelectedBtn" onclick="deleteSelectedMessages()" disabled>Delete Selected (0)</button>
-            <button onclick="cancelSelectionMode()">Cancel</button>
         </div>
         
         <!-- Simple Username Input -->
@@ -4037,57 +3963,6 @@
             aiMessages.scrollTop = aiMessages.scrollHeight;
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        //  CHAT ROOM MANAGEMENT
-        // ═══════════════════════════════════════════════════════════════
-        
-        let currentChatRoom = 'lobby'; // 'lobby' or 'movie-{id}'
-        let currentMovieId = null;
-        let currentMovieName = null;
-        let messagesRef = null;
-        
-        function switchChatRoom(roomType, movieId = null, movieName = null) {
-            console.log(`🔄 Switching chat room: ${roomType}`, movieId);
-            
-            // Unsubscribe from previous room
-            if (messagesRef) {
-                messagesRef.off('child_added');
-            }
-            
-            // Clear messages display
-            const chatMessages = document.getElementById('chatMessages');
-            if (chatMessages) {
-                chatMessages.innerHTML = '';
-            }
-            displayedMessages.clear();
-            
-            // Update room state
-            currentChatRoom = roomType;
-            currentMovieId = movieId;
-            currentMovieName = movieName;
-            
-            // Update UI indicators
-            const roomIndicator = document.getElementById('chatRoomIndicator');
-            const roomTitle = document.getElementById('chatRoomTitle');
-            
-            if (roomType === 'lobby') {
-                // LOBBY: Use old database location for existing messages
-                messagesRef = database.ref('messages');
-                if (roomIndicator) roomIndicator.textContent = '💬 FLM TV Lobby';
-                if (roomTitle) roomTitle.textContent = 'Live Chat';
-                console.log('📍 Joined FLM TV Lobby (old location)');
-            } else {
-                // MOVIE ROOM: Use new database structure
-                messagesRef = database.ref(`chat-rooms/movie-${movieId}/messages`);
-                if (roomIndicator) roomIndicator.textContent = `🎬 ${movieName || 'Movie Chat'}`;
-                if (roomTitle) roomTitle.textContent = 'Movie Chat';
-                console.log(`📍 Joined movie room: ${movieName}`);
-            }
-            
-            // Load messages from new room
-            loadChatMessages();
-        }
-        
         function sendMessage() {
             const messageText = chatInput.value.trim();
             const sendBtn = document.getElementById('sendBtn');
@@ -4125,12 +4000,13 @@
                 const user = auth.currentUser;
                 const userId = user ? user.uid : fallbackUserId;
                 
-                // Send to appropriate room
-                console.log('📤 Sending message to:', currentChatRoom);
+                // Send to Firebase with username
+                console.log('📤 Sending message to Firebase...');
                 console.log('Username:', username);
                 console.log('Message:', messageText);
+                console.log('Firebase Database URL:', database.ref().toString());
                 
-                messagesRef.push({
+                database.ref('messages').push({
                     text: messageText,
                     username: username,
                     userId: userId,
@@ -4148,6 +4024,8 @@
                     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
                     sendBtn.disabled = false;
                     sendBtn.style.opacity = '1';
+                    // Show message locally as fallback
+                    addMessage('sent', messageText);
                 });
             }
         }
@@ -4324,194 +4202,70 @@
         // Track displayed messages to prevent duplicates
         const displayedMessages = new Set();
         
-        // Load chat messages from current room
-        function loadChatMessages() {
-            if (!messagesRef) return;
+        // Listen to Firebase chat messages - YOUTUBE STYLE (everyone sees everything)
+        database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+            const messageId = snapshot.key;
+            const msg = snapshot.val();
             
-            // Listen to Firebase chat messages - last 50
-            messagesRef.limitToLast(50).on('child_added', (snapshot) => {
-                const messageId = snapshot.key;
-                const msg = snapshot.val();
-                
-                // Prevent duplicate messages
-                if (displayedMessages.has(messageId)) {
-                    return;
-                }
-                displayedMessages.add(messageId);
-                
-                // Show ALL messages to EVERYONE (like YouTube live chat)
-                if (msg && msg.text) {
-                    const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
-                    
-                    // Check if this is from current user
-                    let isOwnMessage = false;
-                    const savedUsername = localStorage.getItem('flmtvChatUsername');
-                    if (savedUsername && msg.username === savedUsername) {
-                        isOwnMessage = true;
-                    } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
-                        isOwnMessage = true;
-                    }
-                    
-                    // Add message with username
-                    const messagesContainer = document.getElementById('chatMessages');
-                    if (messagesContainer) {
-                        const messageDiv = document.createElement('div');
-                        messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
-                        messageDiv.setAttribute('data-message-id', messageId);
-                        messageDiv.style.marginBottom = '0.75rem';
-                        messageDiv.style.display = 'flex';
-                        messageDiv.style.flexDirection = 'column';
-                        messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
-                        
-                        const messageBubble = document.createElement('div');
-                        messageBubble.className = 'message-bubble';
-                        messageBubble.style.maxWidth = '80%';
-                        messageBubble.style.padding = '0.6rem 0.9rem';
-                        messageBubble.style.borderRadius = '1rem';
-                        messageBubble.style.lineHeight = '1.4';
-                        messageBubble.style.wordWrap = 'break-word';
-                        messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
-                        messageBubble.style.color = 'white';
-                        messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
-                        messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
-                        messageBubble.style.display = 'flex';
-                        messageBubble.style.alignItems = 'flex-start';
-                        messageBubble.style.gap = '0.5rem';
-                        
-                        // Add checkbox (hidden by default)
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.className = 'message-checkbox';
-                        checkbox.setAttribute('data-message-id', messageId);
-                        checkbox.onchange = updateSelectionCount;
-                        
-                        // Show username for all messages (YouTube style)
-                        const contentDiv = document.createElement('div');
-                        contentDiv.style.flex = '1';
-                        contentDiv.innerHTML = `
-                            <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
-                                ${username}
-                            </div>
-                            <div>${escapeHtml(msg.text)}</div>
-                        `;
-                        
-                        messageBubble.appendChild(checkbox);
-                        messageBubble.appendChild(contentDiv);
-                        messageDiv.appendChild(messageBubble);
-                        messagesContainer.appendChild(messageDiv);
-                        
-                        // Auto-scroll to bottom (like YouTube)
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        
-                        console.log('💬 Message displayed:', username, msg.text);
-                    }
-                }
-            });
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
-        //  SELECTION MODE FUNCTIONS
-        // ═══════════════════════════════════════════════════════════════
-        
-        let selectionModeActive = false;
-        
-        function toggleSelectionMode() {
-            selectionModeActive = !selectionModeActive;
-            const chatMessages = document.getElementById('chatMessages');
-            const selectionControls = document.getElementById('selectionControls');
-            
-            if (selectionModeActive) {
-                chatMessages.classList.add('selection-mode');
-                selectionControls.classList.add('active');
-                console.log('✅ Selection mode enabled');
-            } else {
-                chatMessages.classList.remove('selection-mode');
-                selectionControls.classList.remove('active');
-                // Uncheck all
-                document.querySelectorAll('.message-checkbox').forEach(cb => cb.checked = false);
-                updateSelectionCount();
-                console.log('❌ Selection mode disabled');
-            }
-        }
-        
-        function cancelSelectionMode() {
-            toggleSelectionMode();
-        }
-        
-        function selectAllMessages() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-            
-            checkboxes.forEach(cb => {
-                cb.checked = !allChecked;
-            });
-            
-            updateSelectionCount();
-        }
-        
-        function updateSelectionCount() {
-            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            const count = checkedBoxes.length;
-            
-            if (deleteBtn) {
-                deleteBtn.textContent = `Delete Selected (${count})`;
-                deleteBtn.disabled = count === 0;
-            }
-        }
-        
-        function deleteSelectedMessages() {
-            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-            
-            if (checkedBoxes.length === 0) return;
-            
-            if (!confirm(`Delete ${checkedBoxes.length} message(s)?`)) {
+            // Prevent duplicate messages
+            if (displayedMessages.has(messageId)) {
                 return;
             }
+            displayedMessages.add(messageId);
             
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            deleteBtn.disabled = true;
-            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-            
-            let deletedCount = 0;
-            const totalToDelete = checkedBoxes.length;
-            
-            checkedBoxes.forEach(checkbox => {
-                const messageId = checkbox.getAttribute('data-message-id');
-                const messageDiv = checkbox.closest('.message');
+            // Show ALL messages to EVERYONE (like YouTube live chat)
+            if (msg && msg.text) {
+                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
                 
-                // Delete from Firebase
-                messagesRef.child(messageId).remove()
-                    .then(() => {
-                        // Remove from UI
-                        if (messageDiv) {
-                            messageDiv.remove();
-                        }
-                        displayedMessages.delete(messageId);
-                        
-                        deletedCount++;
-                        
-                        // Reset UI when all done
-                        if (deletedCount === totalToDelete) {
-                            updateSelectionCount();
-                            deleteBtn.innerHTML = 'Delete Selected (0)';
-                            console.log(`✅ Deleted ${deletedCount} messages`);
-                        }
-                    })
-                    .catch(err => {
-                        console.error('❌ Error deleting message:', err);
-                        deletedCount++;
-                        
-                        if (deletedCount === totalToDelete) {
-                            updateSelectionCount();
-                            deleteBtn.innerHTML = 'Delete Selected (0)';
-                        }
-                    });
-            });
-        }
-        
-        // Initialize chat in lobby mode
-        switchChatRoom('lobby');
+                // Check if this is from current user
+                let isOwnMessage = false;
+                const savedUsername = localStorage.getItem('flmtvChatUsername');
+                if (savedUsername && msg.username === savedUsername) {
+                    isOwnMessage = true;
+                } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
+                    isOwnMessage = true;
+                }
+                
+                // Add message with username
+                const messagesContainer = document.getElementById('chatMessages');
+                if (messagesContainer) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+                    messageDiv.style.marginBottom = '0.75rem';
+                    messageDiv.style.display = 'flex';
+                    messageDiv.style.flexDirection = 'column';
+                    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
+                    
+                    const messageBubble = document.createElement('div');
+                    messageBubble.className = 'message-bubble';
+                    messageBubble.style.maxWidth = '80%';
+                    messageBubble.style.padding = '0.6rem 0.9rem';
+                    messageBubble.style.borderRadius = '1rem';
+                    messageBubble.style.lineHeight = '1.4';
+                    messageBubble.style.wordWrap = 'break-word';
+                    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
+                    messageBubble.style.color = 'white';
+                    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
+                    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
+                    
+                    // Show username for all messages (YouTube style)
+                    messageBubble.innerHTML = `
+                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
+                            ${username}
+                        </div>
+                        <div>${escapeHtml(msg.text)}</div>
+                    `;
+                    
+                    messageDiv.appendChild(messageBubble);
+                    messagesContainer.appendChild(messageDiv);
+                    
+                    // Auto-scroll to bottom (like YouTube)
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    console.log('💬 Message displayed:', username, msg.text);
+                }
+            }
+        });
         
         // Helper function to escape HTML
         function escapeHtml(text) {

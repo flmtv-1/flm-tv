@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parental Controls - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --danger: #ce1126;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--bg-light);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+        
+        .card {
+            background: var(--bg-light);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .form-group input[type="password"],
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        .pin-input {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .pin-input input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background: var(--bg);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: var(--text);
+        }
+        
+        .pin-input input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .toggle-switch label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .switch.active {
+            background: var(--secondary);
+        }
+        
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s;
+        }
+        
+        .switch.active::after {
+            left: 33px;
+        }
+        
+        .btn {
+            background: var(--secondary);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 4px 12px rgba(206, 17, 38, 0.4);
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: var(--secondary);
+        }
+        
+        .alert-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+        
+        .category-list {
+            display: grid;
+            gap: 0.75rem;
+        }
+        
+        .rating-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .rating-option {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .rating-option.selected {
+            border-color: var(--primary);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .rating-option:hover {
+            border-color: var(--primary);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-enabled {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--secondary);
+        }
+        
+        .status-disabled {
+            background: rgba(206, 17, 38, 0.2);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="window.location.href='index.html'">
+    <i class="fas fa-arrow-left"></i> Back to Home
+</button>
+
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-shield-alt"></i> Parental Controls</h1>
+        <p>Manage content restrictions and protect your family</p>
+    </div>
+    
+    <!-- CURRENT STATUS -->
+    <div class="card">
+        <h2><i class="fas fa-info-circle"></i> Current Status</h2>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <span class="status-badge" id="pinStatus">PIN: Not Set</span>
+            <span class="status-badge" id="kidsModeStatus">Kids Mode: Off</span>
+            <span class="status-badge" id="restrictionStatus">Max Rating: R</span>
+        </div>
+    </div>
+    
+    <!-- PIN SETUP -->
+    <div class="card">
+        <h2><i class="fas fa-lock"></i> PIN Code</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">
+            Set a 4-digit PIN to restrict access to mature content
+        </p>
+        
+        <div class="form-group">
+            <label>Enter New PIN (4 digits)</label>
+            <div class="pin-input">
+                <input type="password" maxlength="1" id="pin1" oninput="moveTo(this, 'pin2')">
+                <input type="password" maxlength="1" id="pin2" oninput="moveTo(this, 'pin3')">
+                <input type="password" maxlength="1" id="pin3" oninput="moveTo(this, 'pin4')">
+                <input type="password" maxlength="1" id="pin4">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Secret Question (for PIN recovery)</label>
+            <select id="secretQuestion">
+                <option>What is your mother's maiden name?</option>
+                <option>What was your first pet's name?</option>
+                <option>What city were you born in?</option>
+                <option>What is your favorite movie?</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Answer</label>
+            <input type="text" id="secretAnswer" placeholder="Your answer">
+        </div>
+        
+        <button class="btn" onclick="savePIN()">
+            <i class="fas fa-save"></i> Save PIN
+        </button>
+    </div>
+    
+    <!-- KIDS MODE -->
+    <div class="card">
+        <h2><i class="fas fa-child"></i> Kids Mode</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">
+            When enabled, only shows G, PG, and PG-13 rated content
+        </p>
+        
+        <div class="toggle-switch">
+            <label>
+                <i class="fas fa-baby"></i>
+                <span>Enable Kids Mode</span>
+            </label>
+            <div class="switch" id="kidsModeSwitch" onclick="toggleKidsMode()"></div>
+        </div>
+        
+        <div class="alert alert-warning" id="kidsModeAlert" style="display: none;">
+            <strong><i class="fas fa-exclamation-triangle"></i> Kids Mode Active</strong><br>
+            Mature content is currently hidden. Requires PIN to disable.
+        </div>
+    </div>
+    
+    <!-- RATING RESTRICTIONS -->
+    <div class="card">
+        <h2><i class="fas fa-star-half-alt"></i> Maximum Rating Allowed</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">
+            Content above this rating will require PIN to watch
+        </p>
+        
+        <div class="rating-options">
+            <div class="rating-option" onclick="selectRating('G')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">G</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">General</div>
+            </div>
+            <div class="rating-option" onclick="selectRating('PG')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">PG</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Parental Guidance</div>
+            </div>
+            <div class="rating-option" onclick="selectRating('PG-13')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">PG-13</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">13+</div>
+            </div>
+            <div class="rating-option selected" onclick="selectRating('R')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">R</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Restricted</div>
+            </div>
+            <div class="rating-option" onclick="selectRating('NC-17')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">NC-17</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Adults Only</div>
+            </div>
+        </div>
+        
+        <button class="btn" onclick="saveRating()" style="margin-top: 1rem;">
+            <i class="fas fa-save"></i> Save Rating Limit
+        </button>
+    </div>
+    
+    <!-- CATEGORY FILTERING -->
+    <div class="card">
+        <h2><i class="fas fa-filter"></i> Category Filtering</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">
+            Choose which categories are visible on the home page
+        </p>
+        
+        <div class="category-list" id="categoryList">
+            <!-- Categories will be loaded here -->
+        </div>
+        
+        <button class="btn" onclick="saveCategories()" style="margin-top: 1rem;">
+            <i class="fas fa-save"></i> Save Category Settings
+        </button>
+    </div>
+    
+    <!-- RESET -->
+    <div class="card">
+        <h2><i class="fas fa-redo"></i> Reset All Settings</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">
+            This will remove all parental controls and restore defaults
+        </p>
+        
+        <button class="btn btn-danger" onclick="resetAll()">
+            <i class="fas fa-exclamation-triangle"></i> Reset Everything
+        </button>
+    </div>
+</div>
+
+<script>
+// PARENTAL CONTROL CONFIGURATION
+const PC_CONFIG_KEY = 'flmtv_parental_controls';
+
+// Load existing settings
+function loadSettings() {
+    const settings = JSON.parse(localStorage.getItem(PC_CONFIG_KEY) || '{}');
+    
+    // Update status badges
+    document.getElementById('pinStatus').textContent = settings.pin ? 'PIN: Set ✓' : 'PIN: Not Set';
+    document.getElementById('pinStatus').className = settings.pin ? 'status-badge status-enabled' : 'status-badge status-disabled';
+    
+    document.getElementById('kidsModeStatus').textContent = settings.kidsMode ? 'Kids Mode: On' : 'Kids Mode: Off';
+    document.getElementById('kidsModeStatus').className = settings.kidsMode ? 'status-badge status-enabled' : 'status-badge status-disabled';
+    
+    document.getElementById('restrictionStatus').textContent = `Max Rating: ${settings.maxRating || 'R'}`;
+    
+    // Set kids mode switch
+    if (settings.kidsMode) {
+        document.getElementById('kidsModeSwitch').classList.add('active');
+        document.getElementById('kidsModeAlert').style.display = 'block';
+    }
+    
+    // Set rating selection
+    document.querySelectorAll('.rating-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    const selectedRating = settings.maxRating || 'R';
+    document.querySelectorAll('.rating-option').forEach(option => {
+        if (option.textContent.includes(selectedRating)) {
+            option.classList.add('selected');
+        }
+    });
+    
+    // Load categories
+    loadCategories(settings);
+}
+
+function moveTo(current, nextId) {
+    if (current.value.length === 1) {
+        document.getElementById(nextId)?.focus();
+    }
+}
+
+function savePIN() {
+    const pin1 = document.getElementById('pin1').value;
+    const pin2 = document.getElementById('pin2').value;
+    const pin3 = document.getElementById('pin3').value;
+    const pin4 = document.getElementById('pin4').value;
+    const question = document.getElementById('secretQuestion').value;
+    const answer = document.getElementById('secretAnswer').value.trim();
+    
+    if (!pin1 || !pin2 || !pin3 || !pin4) {
+        alert('❌ Please enter all 4 PIN digits');
+        return;
+    }
+    
+    if (!answer) {
+        alert('❌ Please provide an answer to the secret question');
+        return;
+    }
+    
+    const pin = pin1 + pin2 + pin3 + pin4;
+    
+    const settings = JSON.parse(localStorage.getItem(PC_CONFIG_KEY) || '{}');
+    settings.pin = pin;
+    settings.secretQuestion = question;
+    settings.secretAnswer = answer.toLowerCase();
+    
+    localStorage.setItem(PC_CONFIG_KEY, JSON.stringify(settings));
+    
+    alert('✅ PIN saved successfully!');
+    
+    // Clear inputs
+    document.getElementById('pin1').value = '';
+    document.getElementById('pin2').value = '';
+    document.getElementById('pin3').value = '';
+    document.getElementById('pin4').value = '';
+    document.getElementById('secretAnswer').value = '';
+    
+    loadSettings();
+}
+
+function toggleKidsMode() {
+    const settings = JSON.parse(localStorage.getItem(PC_CONFIG_KEY) || '{}');
+    
+    // If trying to disable Kids Mode, require PIN
+    if (settings.kidsMode) {
+        if (settings.pin) {
+            const enteredPin = prompt('Enter PIN to disable Kids Mode:');
+            if (enteredPin !== settings.pin) {
+                alert('❌ Incorrect PIN');
+                return;
+            }
+        }
+    }
+    
+    settings.kidsMode = !settings.kidsMode;
+    localStorage.setItem(PC_CONFIG_KEY, JSON.stringify(settings));
+    
+    document.getElementById('kidsModeSwitch').classList.toggle('active');
+    document.getElementById('kidsModeAlert').style.display = settings.kidsMode ? 'block' : 'none';
+    
+    loadSettings();
+}
+
+let selectedRatingValue = 'R';
+
+function selectRating(rating) {
+    selectedRatingValue = rating;
+    document.querySelectorAll('.rating-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    event.target.closest('.rating-option').classList.add('selected');
+}
+
+function saveRating() {
+    const settings = JSON.parse(localStorage.getItem(PC_CONFIG_KEY) || '{}');
+    settings.maxRating = selectedRatingValue;
+    localStorage.setItem(PC_CONFIG_KEY, JSON.stringify(settings));
+    
+    alert('✅ Rating limit saved!');
+    loadSettings();
+}
+
+function loadCategories(settings) {
+    const categoryList = document.getElementById('categoryList');
+    
+    // Common categories - you can customize this
+    const categories = [
+        { id: 'action', name: 'Action & Adventure', icon: 'fa-bolt' },
+        { id: 'comedy', name: 'Comedy', icon: 'fa-laugh' },
+        { id: 'drama', name: 'Drama', icon: 'fa-theater-masks' },
+        { id: 'horror', name: 'Horror', icon: 'fa-ghost' },
+        { id: 'romance', name: 'Romance', icon: 'fa-heart' },
+        { id: 'scifi', name: 'Sci-Fi & Fantasy', icon: 'fa-robot' },
+        { id: 'thriller', name: 'Thriller', icon: 'fa-user-secret' },
+        { id: 'kids', name: 'Kids & Family', icon: 'fa-child' },
+        { id: 'documentary', name: 'Documentary', icon: 'fa-book' },
+        { id: 'anime', name: 'Anime', icon: 'fa-dragon' }
+    ];
+    
+    categoryList.innerHTML = '';
+    
+    categories.forEach(cat => {
+        const isVisible = settings.hiddenCategories ? !settings.hiddenCategories.includes(cat.id) : true;
+        
+        const div = document.createElement('div');
+        div.className = 'toggle-switch';
+        div.innerHTML = `
+            <label>
+                <i class="fas ${cat.icon}"></i>
+                <span>${cat.name}</span>
+            </label>
+            <div class="switch ${isVisible ? 'active' : ''}" onclick="toggleCategory('${cat.id}')" id="cat-${cat.id}"></div>
+        `;
+        categoryList.appendChild(div);
+    });
+}
+
+function toggleCategory(categoryId) {
+    document.getElementById('cat-' + categoryId).classList.toggle('active');
+}
+
+function saveCategories() {
+    const settings = JSON.parse(localStorage.getItem(PC_CONFIG_KEY) || '{}');
+    settings.hiddenCategories = [];
+    
+    document.querySelectorAll('.category-list .switch').forEach(sw => {
+        if (!sw.classList.contains('active')) {
+            const catId = sw.id.replace('cat-', '');
+            settings.hiddenCategories.push(catId);
+        }
+    });
+    
+    localStorage.setItem(PC_CONFIG_KEY, JSON.stringify(settings));
+    alert('✅ Category settings saved!');
+}
+
+function resetAll() {
+    if (confirm('⚠️ This will remove ALL parental controls. Continue?')) {
+        const settings = JSON.parse(localStorage.getItem(PC_CONFIG_KEY) || '{}');
+        
+        if (settings.pin) {
+            const enteredPin = prompt('Enter PIN to reset:');
+            if (enteredPin !== settings.pin) {
+                alert('❌ Incorrect PIN');
+                return;
+            }
+        }
+        
+        localStorage.removeItem(PC_CONFIG_KEY);
+        alert('✅ All parental controls reset!');
+        location.reload();
+    }
+}
+
+// Initialize on load
+loadSettings();
+</script>
+
+</body>
+</html>
