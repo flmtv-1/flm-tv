@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category - FLM TV</title>
+    <title>TV Show - FLM TV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -23,7 +23,6 @@
             background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
-            padding-bottom: 0;
         }
         
         .back-btn {
@@ -47,27 +46,54 @@
             color: #000;
         }
         
-        .header {
-            background: var(--bg-light);
-            padding: 6rem 2rem 2rem;
-            border-bottom: 3px solid var(--primary);
+        .hero {
+            position: relative;
+            height: 60vh;
+            display: flex;
+            align-items: flex-end;
+            padding: 2rem;
+            background-size: cover;
+            background-position: center;
         }
         
-        .header-content {
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(10, 15, 26, 0.8) 60%, var(--bg) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
             max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
         }
         
-        .category-title {
+        .show-title {
             font-size: 3rem;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 1rem;
         }
         
-        .category-count {
-            font-size: 1.2rem;
+        .show-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .show-meta span {
             color: var(--text-secondary);
+        }
+        
+        .show-overview {
+            max-width: 800px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text);
         }
         
         .content {
@@ -77,13 +103,20 @@
             padding-bottom: 100px;
         }
         
-        .items-grid {
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .seasons-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1.5rem;
         }
         
-        .item-card {
+        .season-card {
             background: var(--bg-light);
             border: 2px solid transparent;
             border-radius: 12px;
@@ -92,35 +125,30 @@
             transition: all 0.3s;
         }
         
-        .item-card:hover {
+        .season-card:hover {
             border-color: var(--primary);
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
         }
         
-        .item-poster {
+        .season-poster {
             width: 100%;
             aspect-ratio: 2/3;
             object-fit: cover;
             background: #1a1a1a;
         }
         
-        .item-info {
+        .season-info {
             padding: 1rem;
         }
         
-        .item-title {
-            font-size: 1rem;
+        .season-name {
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text);
-            margin-bottom: 0.25rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            margin-bottom: 0.5rem;
         }
         
-        .item-year {
+        .season-episodes {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
@@ -146,19 +174,17 @@
         
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* Mobile Footer Navigation */
+        /* Mobile Footer */
         .bottom-nav {
             display: none;
         }
         
         @media (max-width: 768px) {
-            .category-title { font-size: 2rem; }
-            .items-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+            .show-title { font-size: 2rem; }
+            .seasons-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
             .back-btn { top: 10px; left: 10px; padding: 8px 16px; font-size: 0.9rem; }
             
-            body {
-                padding-bottom: 70px !important;
-            }
+            body { padding-bottom: 70px !important; }
             
             .bottom-nav {
                 position: fixed;
@@ -225,19 +251,21 @@
 </head>
 <body>
 
-<button class="back-btn" onclick="window.location.href='home.html'">← Back</button>
+<button class="back-btn" onclick="history.back()">← Back</button>
 
 <div id="loading"><div class="spinner"></div></div>
 
-<div class="header">
-    <div class="header-content">
-        <h1 class="category-title" id="categoryTitle">Loading...</h1>
-        <div class="category-count" id="categoryCount"></div>
+<div class="hero" id="hero">
+    <div class="hero-content">
+        <h1 class="show-title" id="showTitle">Loading...</h1>
+        <div class="show-meta" id="showMeta"></div>
+        <p class="show-overview" id="showOverview"></p>
     </div>
 </div>
 
 <div class="content">
-    <div class="items-grid" id="itemsGrid"></div>
+    <h2 class="section-title">Seasons</h2>
+    <div class="seasons-grid" id="seasonsGrid"></div>
 </div>
 
 <!-- Mobile Bottom Navigation -->
@@ -263,12 +291,11 @@
 <script>
 const CONFIG = {
     SERVER: 'https://flmtv26.duckdns.org:8920',
-    API_KEY: '62131ee22c0141c6b651be75a7444350',
-    USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+    API_KEY: '24674385633844efbe3a1367b8f63d43',
+    USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37'
 };
 
-const categoryId = new URLSearchParams(window.location.search).get('id');
-const categoryName = new URLSearchParams(window.location.search).get('name');
+const showId = new URLSearchParams(window.location.search).get('id');
 
 async function authenticate() {
     try {
@@ -278,10 +305,7 @@ async function authenticate() {
                 'Content-Type': 'application/json',
                 'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
             },
-            body: JSON.stringify({
-                Username: 'Public',
-                Pw: ''
-            })
+            body: JSON.stringify({ Username: 'Public', Pw: '' })
         });
         
         if (response.ok) {
@@ -296,7 +320,7 @@ async function authenticate() {
     return false;
 }
 
-async function loadCategory() {
+async function loadShow() {
     try {
         await authenticate();
         
@@ -304,76 +328,72 @@ async function loadCategory() {
             'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
         };
         
-        if (categoryName) {
-            document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
+        const showUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${showId}`;
+        const showRes = await fetch(showUrl, { headers });
+        const show = await showRes.json();
+        
+        if (show.BackdropImageTags && show.BackdropImageTags.length > 0) {
+            const backdropUrl = `${CONFIG.SERVER}/Items/${showId}/Images/Backdrop?api_key=${CONFIG.API_KEY}&tag=${show.BackdropImageTags[0]}&maxWidth=1920`;
+            document.getElementById('hero').style.backgroundImage = `url(${backdropUrl})`;
         }
         
-        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName`;
-        const itemsRes = await fetch(itemsUrl, { headers });
-        const itemsData = await itemsRes.json();
+        document.getElementById('showTitle').textContent = show.Name;
         
-        document.getElementById('categoryCount').textContent = `${itemsData.TotalRecordCount || itemsData.Items.length} items`;
+        const metaHTML = [];
+        if (show.ProductionYear) metaHTML.push(`<span>${show.ProductionYear}</span>`);
+        if (show.OfficialRating) metaHTML.push(`<span>${show.OfficialRating}</span>`);
+        if (show.CommunityRating) metaHTML.push(`<span>⭐ ${show.CommunityRating.toFixed(1)}</span>`);
+        document.getElementById('showMeta').innerHTML = metaHTML.join(' • ');
         
-        if (!categoryName && itemsData.Items.length > 0) {
-            try {
-                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}`;
-                const parentRes = await fetch(parentUrl, { headers });
-                const parent = await parentRes.json();
-                document.getElementById('categoryTitle').textContent = parent.Name || 'Category';
-            } catch (e) {
-                document.getElementById('categoryTitle').textContent = 'Category';
-            }
-        }
+        document.getElementById('showOverview').textContent = show.Overview || 'No description available.';
         
-        const itemsGrid = document.getElementById('itemsGrid');
-        itemsGrid.innerHTML = '';
+        const seasonsUrl = `${CONFIG.SERVER}/Shows/${showId}/Seasons?userId=${CONFIG.USER_ID}`;
+        const seasonsRes = await fetch(seasonsUrl, { headers });
+        const seasonsData = await seasonsRes.json();
         
-        if (itemsData.Items && itemsData.Items.length > 0) {
-            itemsData.Items.forEach(item => {
+        const seasonsGrid = document.getElementById('seasonsGrid');
+        seasonsGrid.innerHTML = '';
+        
+        if (seasonsData.Items && seasonsData.Items.length > 0) {
+            seasonsData.Items.forEach(season => {
                 const card = document.createElement('div');
-                card.className = 'item-card';
+                card.className = 'season-card';
                 card.onclick = () => {
-                    if (item.Type === 'Series') {
-                        window.location.href = `tv-detail.html?id=${item.Id}`;
-                    } else if (item.Type === 'Movie') {
-                        window.location.href = `movie-detail.html?id=${item.Id}`;
-                    } else {
-                        window.location.href = `movie-detail.html?id=${item.Id}`;
-                    }
+                    window.location.href = `season-detail.html?id=${season.Id}&showId=${showId}`;
                 };
                 
-                const posterUrl = item.ImageTags && item.ImageTags.Primary
-                    ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=400`
-                    : '';
+                const posterUrl = season.ImageTags && season.ImageTags.Primary
+                    ? `${CONFIG.SERVER}/Items/${season.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${season.ImageTags.Primary}&maxWidth=400`
+                    : `${CONFIG.SERVER}/Items/${showId}/Images/Primary?api_key=${CONFIG.API_KEY}&maxWidth=400`;
                 
                 card.innerHTML = `
-                    ${posterUrl ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="item-poster"></div>'}
-                    <div class="item-info">
-                        <div class="item-title">${item.Name}</div>
-                        ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
+                    <img src="${posterUrl}" alt="${season.Name}" class="season-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">
+                    <div class="season-info">
+                        <div class="season-name">${season.Name}</div>
+                        <div class="season-episodes">${season.ChildCount || 0} Episodes</div>
                     </div>
                 `;
                 
-                itemsGrid.appendChild(card);
+                seasonsGrid.appendChild(card);
             });
         } else {
-            itemsGrid.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">No items found</p>';
+            seasonsGrid.innerHTML = '<p style="color: var(--text-secondary);">No seasons found</p>';
         }
         
         document.getElementById('loading').style.display = 'none';
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Error loading category');
+        alert('Error loading show');
         document.getElementById('loading').style.display = 'none';
     }
 }
 
-if (!categoryId) {
-    alert('No category ID');
-    window.location.href = 'home.html';
+if (!showId) {
+    alert('No show ID');
+    history.back();
 } else {
-    loadCategory();
+    loadShow();
 }
 </script>
 

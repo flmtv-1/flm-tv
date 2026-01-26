@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV - Category</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        .category-title {
+            font-size: 36px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 15, 26, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255, 215, 0, 0.1);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 20px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .loading-count {
+            font-size: 16px;
+            color: var(--primary);
+            margin-top: 10px;
+        }
+
+        /* Movies Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .movies-grid.loaded {
+            opacity: 1;
+        }
+
+        .movie-card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3);
+            border-color: var(--primary);
+        }
+
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .movie-info {
+            padding: 16px;
+        }
+
+        .movie-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+        }
+
+        .movie-year {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .movie-type {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 80px;
+            margin-bottom: 24px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 16px;
+            }
+
+            .category-title {
+                font-size: 28px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            body {
+                padding: 12px;
+            }
+
+            .category-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading movies...</div>
+        <div class="loading-count" id="loadingCount"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+            <h1 class="category-title" id="categoryTitle">Category</h1>
+        </div>
+
+        <div id="moviesGrid" class="movies-grid"></div>
+        
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-film"></i>
+            <h3>No items found</h3>
+            <p>This category appears to be empty</p>
+        </div>
+    </div>
+
+    <script>
+        // Jellyfin Configuration
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+
+        let categoryId = '';
+        let categoryName = '';
+
+        // Get URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            categoryId = params.get('id');
+            categoryName = params.get('name') || 'Category';
+            
+            console.log('📂 Category ID:', categoryId);
+            console.log('📂 Category Name:', categoryName);
+            
+            document.getElementById('categoryTitle').textContent = categoryName;
+        }
+
+        // Jellyfin API Helper
+        async function jellyfinFetch(endpoint, params = {}) {
+            const url = new URL(JELLYFIN_CONFIG.SERVER + endpoint);
+            
+            Object.keys(params).forEach(key => {
+                if (params[key] !== undefined && params[key] !== null) {
+                    url.searchParams.append(key, params[key]);
+                }
+            });
+            
+            url.searchParams.append('api_key', JELLYFIN_CONFIG.API_KEY);
+            
+            console.log('🔍 Fetching:', url.toString());
+            
+            const response = await fetch(url.toString());
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            return await response.json();
+        }
+
+        // Fetch all items from category
+        async function fetchCategoryItems() {
+            try {
+                updateLoadingText('Connecting to server...');
+                
+                const data = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    ParentId: categoryId,
+                    SortBy: 'SortName',
+                    SortOrder: 'Ascending',
+                    Fields: 'PrimaryImageAspectRatio,ProductionYear,SeriesId',
+                    Recursive: true
+                });
+
+                console.log('✅ Fetched items:', data.Items.length);
+                console.log('✅ Total record count:', data.TotalRecordCount);
+
+                return data.Items || [];
+            } catch (error) {
+                console.error('❌ Error fetching items:', error);
+                alert('Error loading category: ' + error.message);
+                return [];
+            }
+        }
+
+        // Update loading text
+        function updateLoadingText(text) {
+            const loadingText = document.querySelector('.loading-text');
+            if (loadingText) {
+                loadingText.textContent = text;
+            }
+        }
+
+        // Update loading count
+        function updateLoadingCount(current, total) {
+            const loadingCount = document.getElementById('loadingCount');
+            if (loadingCount) {
+                loadingCount.textContent = `Loaded ${current} of ${total} items`;
+            }
+        }
+
+        // Create movie card element
+        function createMovieCard(item) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+
+            // Determine item type
+            const itemType = item.Type === 'Series' ? 'TV Show' : 
+                           item.Type === 'Episode' ? 'Episode' : 
+                           'Movie';
+
+            // Get poster image
+            let posterUrl = 'https://via.placeholder.com/300x450?text=No+Image';
+            
+            if (item.ImageTags?.Primary) {
+                posterUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&format=webp&maxHeight=450`;
+            } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
+                posterUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&format=webp&maxHeight=450`;
+            }
+
+            // Get year
+            const year = item.ProductionYear || '';
+
+            card.innerHTML = `
+                <div class="movie-type">${itemType}</div>
+                <img src="${posterUrl}" alt="${item.Name}" class="movie-poster" loading="lazy">
+                <div class="movie-info">
+                    <div class="movie-title">${item.Name}</div>
+                    ${year ? `<div class="movie-year">${year}</div>` : ''}
+                </div>
+            `;
+
+            // Click handler
+            card.addEventListener('click', () => {
+                if (item.Type === 'Series') {
+                    window.location.href = `tv-detail.html?id=${item.Id}`;
+                } else if (item.Type === 'Episode') {
+                    window.location.href = `movie-detail.html?id=${item.Id}`;
+                } else {
+                    window.location.href = `movie-detail.html?id=${item.Id}`;
+                }
+            });
+
+            return card;
+        }
+
+        // Display items
+        function displayItems(items) {
+            const grid = document.getElementById('moviesGrid');
+            const emptyState = document.getElementById('emptyState');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            if (items.length === 0) {
+                emptyState.style.display = 'block';
+                loadingOverlay.style.display = 'none';
+                return;
+            }
+
+            updateLoadingText('Rendering movies...');
+
+            // Add items to grid
+            items.forEach((item, index) => {
+                const card = createMovieCard(item);
+                grid.appendChild(card);
+                
+                // Update progress every 10 items
+                if (index % 10 === 0) {
+                    updateLoadingCount(index + 1, items.length);
+                }
+            });
+
+            updateLoadingCount(items.length, items.length);
+
+            // Show grid with fade-in
+            setTimeout(() => {
+                grid.classList.add('loaded');
+                loadingOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 300);
+        }
+
+        // Initialize
+        async function init() {
+            getUrlParams();
+
+            updateLoadingText('Loading category...');
+
+            const items = await fetchCategoryItems();
+
+            displayItems(items);
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

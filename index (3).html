@@ -3,26 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="FLM TV is OUT OF THIS WORLD! 🌟 Stream FREE movies, TV classics, and LIVE Channel 26.5 Las Vegas. Featuring Filipino & Asian content, international programming, and interactive entertainment you won't find anywhere else. Part of the 7 Realms TV universe.">
-    <meta name="keywords" content="FLM TV, Channel 26.5 Las Vegas, Filipino movies, Asian content, international programming, free streaming, classic films, interactive TV, 7 Realms TV, live entertainment, out of this world">
-    <meta name="author" content="7 Realms TV - FLM Channel 26.5">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="FLM TV - OUT OF THIS WORLD Streaming Experience">
-    <meta property="og:description" content="Experience FREE streaming like never before! Filipino & Asian cinema, international classics, LIVE Channel 26.5, and interactive content that's truly OUT OF THIS WORLD. 🌟 Powered by 7 Realms TV.">
-    <meta property="og:url" content="https://flmtv.com">
-    <meta property="og:site_name" content="FLM TV Channel 26.5 Las Vegas">
-    <meta property="og:image" content="https://flmtv.com/assets/logos/flm-logo.png">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FLM TV - OUT OF THIS WORLD Streaming">
-    <meta name="twitter:description" content="Filipino & Asian content, international classics, LIVE TV - all FREE! FLM TV is OUT OF THIS WORLD! 🌟">
-    
+    <title>FLM TV - Part 2: Visual Categories</title>
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1958,29 +1939,22 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Horizontal scroll like Tubi/Netflix on mobile */
+            /* MOVIE CARDS - Portrait/vertical for better movie poster visibility */
             .content-carousel {
-                display: flex !important;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
                 gap: 0.5rem !important;
                 padding: 0.5rem !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                -webkit-overflow-scrolling: touch;
-                scroll-snap-type: x proximity;
-                scrollbar-width: none;
-            }
-            
-            .content-carousel::-webkit-scrollbar {
-                display: none;
+                overflow-x: visible !important;
             }
             
             .movie-card,
             .content-card {
                 flex: none !important;
-                min-width: 95px !important;
-                max-width: 110px !important;
-                width: 100px !important;
-                scroll-snap-align: start;
+                min-width: 100% !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                scroll-snap-align: none;
                 margin-bottom: 0;
                 position: relative !important;
             }
@@ -2004,7 +1978,7 @@
                 aspect-ratio: 2 / 3 !important; /* PORTRAIT - taller than wide! */
                 border-radius: 6px !important;
                 object-fit: cover;
-                max-height: 150px !important;
+                max-height: 180px !important;
             }
             
             /* CATEGORY CARDS - Keep landscape/horizontal */
@@ -2534,12 +2508,7 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button class="preview-mute-btn" id="previewMuteBtn" onclick="event.stopPropagation(); togglePreviewAudio();" 
-                                style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; 
-                                       color: #ffd700; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; 
-                                       justify-content: center; cursor: pointer; z-index: 10; font-size: 18px;">
-                            <i class="fas fa-volume-mute"></i>
-                        </button>
+                        
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -2777,10 +2746,10 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls autoplay muted
+            <video id="liveStreamVideo" controls autoplay 
                 width="100%" 
                 height="100%"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10;">
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
                 <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
@@ -2822,11 +2791,10 @@
         </div>
         
         <!-- Loading overlay that auto-hides after 3 seconds -->
-        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
+        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
             <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
-                <h2 style="color: #ffd700; margin-bottom: 1rem;">Loading Player...</h2>
-                <p style="color: #94a3b8; font-size: 1.1rem; max-width: 400px;">If you see a "Public" button, click it once to continue</p>
+                <img src="assets/logos/flm-logo.png" alt="FLM TV" style="width: 150px; height: 150px; margin-bottom: 1.5rem; animation: pulse 2s ease-in-out infinite;" onerror="this.style.display='none'">
+                <h2 style="color: #ffd700; margin-bottom: 1rem;">Loading...</h2>
                 <div style="margin-top: 2rem;">
                     <div style="width: 50px; height: 50px; border: 4px solid #333; border-top-color: #ffd700; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
                 </div>
@@ -3408,41 +3376,23 @@
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
-                // CRITICAL: Set muted BEFORE any play attempts
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
-                previewVideo.defaultMuted = true;
                 
                 // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', '');
-                previewVideo.setAttribute('playsinline', '');
+                previewVideo.setAttribute('muted', 'muted');
+                previewVideo.setAttribute('playsinline', 'playsinline');
                 
-                // Re-enforce mute on play (mobile browsers sometimes reset)
-                previewVideo.addEventListener('play', function() {
-                    // Only enforce mute on first play, not when user manually unmutes
-                    if (!this.hasAttribute('data-user-unmuted')) {
+                // Prevent any unmute attempts
+                previewVideo.addEventListener('volumechange', function() {
+                    if (!this.muted) {
+                        console.log('🔇 Preview tried to unmute, forcing muted again');
                         this.muted = true;
                         this.volume = 0;
-                        console.log('🔇 Preview playing - enforced muted state');
                     }
                 });
                 
-                // Re-enforce mute on any interaction
-                previewVideo.addEventListener('loadedmetadata', function() {
-                    this.muted = true;
-                    this.volume = 0;
-                });
-                
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
-            }
-            
-            // ALSO mute the live stream video player on page load
-            const liveStreamVideo = document.getElementById('liveStreamVideo');
-            if (liveStreamVideo) {
-                liveStreamVideo.muted = true;
-                liveStreamVideo.volume = 0;
-                liveStreamVideo.defaultMuted = true;
-                console.log('🔇 Live stream video LOCKED muted on load');
             }
             
             // Auto-authenticate in background
@@ -3605,20 +3555,13 @@
         }
         
         async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening category:', collectionId);
+            console.log('📂 Opening collection:', collectionId);
             
+            // Find collection name
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Category Name:', collectionName);
-            
-            // Special case: "00 Collections" goes to collections browser
-            if (collectionName === '00 Collections') {
-                window.location.href = 'collections-browser.html';
-                return;
-            }
-            
-            // Redirect to custom category page - NO IFRAME, NO SIGN-IN!
+            // Redirect to custom collection page (uses API, not Jellyfin iframe)
             window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
         }
         
@@ -4340,48 +4283,9 @@
             }
         }
         
-        // New function for preview mute button
-        function togglePreviewAudio() {
-            const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('previewMuteBtn');
-            
-            if (!video || !btn) return;
-            
-            const icon = btn.querySelector('i');
-            
-            if (video.muted) {
-                // User wants to unmute
-                video.muted = false;
-                video.volume = 1;
-                video.setAttribute('data-user-unmuted', 'true');
-                icon.className = 'fas fa-volume-up';
-                btn.style.borderColor = '#22c55e';
-                btn.style.color = '#22c55e';
-                console.log('🔊 Channel 26 audio unmuted by user');
-            } else {
-                // User wants to mute
-                video.muted = true;
-                video.volume = 0;
-                video.removeAttribute('data-user-unmuted');
-                icon.className = 'fas fa-volume-mute';
-                btn.style.borderColor = '#ffd700';
-                btn.style.color = '#ffd700';
-                console.log('🔇 Channel 26 audio muted by user');
-            }
-        }
-        
         function openLiveStream() {
             console.log('Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            
-            // Make sure video plays when modal opens
-            if (video) {
-                video.muted = true; // Keep muted
-                video.play().catch(err => console.log('Play error:', err));
-                console.log('📺 Starting live stream (muted)');
-            }
-            
             modal.classList.add('active');
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
@@ -4390,14 +4294,6 @@
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            
-            // STOP playing when modal closes
-            if (video) {
-                video.pause();
-                console.log('⏸️ Live stream paused');
-            }
-            
             modal.classList.remove('active');
             // Remove from history
             if (window.location.hash === '#stream') {

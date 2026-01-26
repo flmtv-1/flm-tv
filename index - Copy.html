@@ -3,26 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="FLM TV is OUT OF THIS WORLD! 🌟 Stream FREE movies, TV classics, and LIVE Channel 26.5 Las Vegas. Featuring Filipino & Asian content, international programming, and interactive entertainment you won't find anywhere else. Part of the 7 Realms TV universe.">
-    <meta name="keywords" content="FLM TV, Channel 26.5 Las Vegas, Filipino movies, Asian content, international programming, free streaming, classic films, interactive TV, 7 Realms TV, live entertainment, out of this world">
-    <meta name="author" content="7 Realms TV - FLM Channel 26.5">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="FLM TV - OUT OF THIS WORLD Streaming Experience">
-    <meta property="og:description" content="Experience FREE streaming like never before! Filipino & Asian cinema, international classics, LIVE Channel 26.5, and interactive content that's truly OUT OF THIS WORLD. 🌟 Powered by 7 Realms TV.">
-    <meta property="og:url" content="https://flmtv.com">
-    <meta property="og:site_name" content="FLM TV Channel 26.5 Las Vegas">
-    <meta property="og:image" content="https://flmtv.com/assets/logos/flm-logo.png">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FLM TV - OUT OF THIS WORLD Streaming">
-    <meta name="twitter:description" content="Filipino & Asian content, international classics, LIVE TV - all FREE! FLM TV is OUT OF THIS WORLD! 🌟">
-    
+    <title>FLM TV - Part 2: Visual Categories</title>
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1958,24 +1939,22 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Horizontal scroll like Tubi */
+            /* MOVIE CARDS - Portrait/vertical for better movie poster visibility */
             .content-carousel {
-                display: flex !important;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
                 gap: 0.5rem !important;
                 padding: 0.5rem !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                scroll-snap-type: x mandatory !important;
-                -webkit-overflow-scrolling: touch !important;
+                overflow-x: visible !important;
             }
             
             .movie-card,
             .content-card {
-                flex: 0 0 120px !important;
-                min-width: 120px !important;
-                max-width: 120px !important;
-                width: 120px !important;
-                scroll-snap-align: start;
+                flex: none !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                scroll-snap-align: none;
                 margin-bottom: 0;
                 position: relative !important;
             }
@@ -2048,23 +2027,20 @@
                 font-size: 0.65rem !important;
             }
             
-            /* Grid Views - ALSO horizontal scroll on mobile */
+            /* Grid Views (if used) */
             .movies-grid,
             .content-grid {
-                display: flex !important;
-                gap: 0.5rem !important;
-                padding: 0.5rem !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
-                scroll-snap-type: x mandatory !important;
-                -webkit-overflow-scrolling: touch !important;
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.75rem !important;
+                padding: 0 0.75rem !important;
             }
             
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: 0 0 120px !important;
-                min-width: 120px !important;
-                max-width: 120px !important;
+                flex: none !important;
+                min-width: 100% !important;
+                max-width: 100% !important;
             }
             
             /* Video Modal - Full Screen */
@@ -2532,12 +2508,7 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button class="preview-mute-btn" id="previewMuteBtn" onclick="event.stopPropagation(); togglePreviewAudio();" 
-                                style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; 
-                                       color: #ffd700; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; 
-                                       justify-content: center; cursor: pointer; z-index: 10; font-size: 18px;">
-                            <i class="fas fa-volume-mute"></i>
-                        </button>
+                        
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -2663,30 +2634,6 @@
                    maxlength="20">
         </div>
         
-        <!-- Message Selection Controls - Hidden by default -->
-        <div id="selectionControls" style="padding: 0.5rem 0.75rem; background: #1f1f1f; border-bottom: 1px solid #333; display: none; align-items: center; gap: 0.75rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; color: #b3b3b3;">
-                <input type="checkbox" id="selectAllMessages" style="cursor: pointer; width: 16px; height: 16px;">
-                Select All
-            </label>
-            <button id="deleteSelectedBtn" onclick="deleteSelectedMessages()" 
-                    style="background: rgba(206, 17, 38, 0.8); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; opacity: 0.5; pointer-events: none;">
-                <i class="fas fa-trash-alt"></i> Delete Selected
-            </button>
-            <button onclick="cancelSelection()" 
-                    style="background: rgba(100, 100, 100, 0.5); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                Cancel
-            </button>
-        </div>
-        
-        <!-- Select Button -->
-        <div style="padding: 0.5rem 0.75rem; background: #1f1f1f; border-bottom: 1px solid #333;">
-            <button id="selectModeBtn" onclick="toggleSelectMode()" 
-                    style="background: var(--secondary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                <i class="fas fa-check-square"></i> Select Messages
-            </button>
-        </div>
-        
         <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
         </div>
         
@@ -2799,10 +2746,10 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls autoplay muted
+            <video id="liveStreamVideo" controls autoplay 
                 width="100%" 
                 height="100%"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10;">
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
                 <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                 Your browser does not support HLS playback.
             </video>
@@ -3430,41 +3377,23 @@
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
-                // CRITICAL: Set muted BEFORE any play attempts
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
-                previewVideo.defaultMuted = true;
                 
                 // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', '');
-                previewVideo.setAttribute('playsinline', '');
+                previewVideo.setAttribute('muted', 'muted');
+                previewVideo.setAttribute('playsinline', 'playsinline');
                 
-                // Re-enforce mute on play (mobile browsers sometimes reset)
-                previewVideo.addEventListener('play', function() {
-                    // Only enforce mute on first play, not when user manually unmutes
-                    if (!this.hasAttribute('data-user-unmuted')) {
+                // Prevent any unmute attempts
+                previewVideo.addEventListener('volumechange', function() {
+                    if (!this.muted) {
+                        console.log('🔇 Preview tried to unmute, forcing muted again');
                         this.muted = true;
                         this.volume = 0;
-                        console.log('🔇 Preview playing - enforced muted state');
                     }
                 });
                 
-                // Re-enforce mute on any interaction
-                previewVideo.addEventListener('loadedmetadata', function() {
-                    this.muted = true;
-                    this.volume = 0;
-                });
-                
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
-            }
-            
-            // ALSO mute the live stream video player on page load
-            const liveStreamVideo = document.getElementById('liveStreamVideo');
-            if (liveStreamVideo) {
-                liveStreamVideo.muted = true;
-                liveStreamVideo.volume = 0;
-                liveStreamVideo.defaultMuted = true;
-                console.log('🔇 Live stream video LOCKED muted on load');
             }
             
             // Auto-authenticate in background
@@ -3633,12 +3562,6 @@
             const collectionName = collection ? collection.name : 'Collection';
             
             console.log('📂 Category Name:', collectionName);
-            
-            // Special case: "00 Collections" goes to collections browser
-            if (collectionName === '00 Collections') {
-                window.location.href = 'collections-browser.html';
-                return;
-            }
             
             // Redirect to custom category page - NO IFRAME, NO SIGN-IN!
             window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
@@ -3898,17 +3821,6 @@
         const chatMessages = document.getElementById('chatMessages');
         const emojiBtn = document.getElementById('emojiBtn');
         const emojiPicker = document.getElementById('emojiPicker');
-        const chatUsernameInput = document.getElementById('chatUsernameInput');
-        const selectAllCheckbox = document.getElementById('selectAllMessages');
-        
-        // Select All checkbox listener
-        selectAllCheckbox.addEventListener('change', toggleSelectAll);
-        
-        // Load saved username if exists
-        const savedUsername = localStorage.getItem('flmtvChatUsername');
-        if (savedUsername) {
-            chatUsernameInput.value = savedUsername;
-        }
         
         // AI Panel elements
         const aiChatInput = document.getElementById('aiChatInput');
@@ -3995,123 +3907,6 @@
             aiMessages.scrollTop = aiMessages.scrollHeight;
         }
 
-        // DELETE MESSAGE FUNCTION - Local hide only (for all users)
-        function deleteMessage(messageId, messageElement) {
-            messageElement.remove();
-            localStorage.setItem('hidden_' + messageId, 'true');
-            console.log('🙈 Message hidden locally');
-        }
-        
-        // Check if message is hidden locally
-        function isMessageHidden(messageId) {
-            return localStorage.getItem('hidden_' + messageId) === 'true';
-        }
-        
-        // TOGGLE SELECT MODE - Show/hide checkboxes
-        function toggleSelectMode() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const selectionControls = document.getElementById('selectionControls');
-            const selectModeBtn = document.getElementById('selectModeBtn');
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Show checkboxes
-            checkboxes.forEach(checkbox => {
-                checkbox.style.display = 'block';
-            });
-            
-            // Add padding to messages when checkboxes visible
-            const messageElements = chatMessages.querySelectorAll('.message');
-            messageElements.forEach(msg => {
-                msg.style.paddingLeft = '35px';
-            });
-            
-            // Show selection controls, hide Select button
-            selectionControls.style.display = 'flex';
-            selectModeBtn.parentElement.style.display = 'none';
-        }
-        
-        // CANCEL SELECTION MODE
-        function cancelSelection() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const selectionControls = document.getElementById('selectionControls');
-            const selectModeBtn = document.getElementById('selectModeBtn');
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Hide checkboxes
-            checkboxes.forEach(checkbox => {
-                checkbox.style.display = 'none';
-                checkbox.checked = false;
-            });
-            
-            // Remove padding from messages
-            const messageElements = chatMessages.querySelectorAll('.message');
-            messageElements.forEach(msg => {
-                msg.style.paddingLeft = '0';
-            });
-            
-            // Hide selection controls, show Select button
-            selectionControls.style.display = 'none';
-            selectModeBtn.parentElement.style.display = 'block';
-            
-            // Uncheck Select All
-            document.getElementById('selectAllMessages').checked = false;
-            updateDeleteButton();
-        }
-        
-        // UPDATE DELETE BUTTON STATE
-        function updateDeleteButton() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            
-            if (checkedBoxes.length > 0) {
-                deleteBtn.style.opacity = '1';
-                deleteBtn.style.pointerEvents = 'auto';
-                deleteBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Delete Selected (${checkedBoxes.length})`;
-            } else {
-                deleteBtn.style.opacity = '0.5';
-                deleteBtn.style.pointerEvents = 'none';
-                deleteBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Delete Selected`;
-            }
-        }
-        
-        // SELECT ALL MESSAGES
-        function toggleSelectAll() {
-            const selectAllCheckbox = document.getElementById('selectAllMessages');
-            const messageCheckboxes = document.querySelectorAll('.message-checkbox');
-            
-            messageCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-            
-            updateDeleteButton();
-        }
-        
-        // DELETE SELECTED MESSAGES
-        function deleteSelectedMessages() {
-            const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
-            
-            if (checkedBoxes.length === 0) return;
-            
-            if (confirm(`Hide ${checkedBoxes.length} message(s) from your view?`)) {
-                checkedBoxes.forEach(checkbox => {
-                    const messageId = checkbox.dataset.messageId;
-                    const messageElement = checkbox.closest('.message');
-                    
-                    if (messageElement) {
-                        messageElement.remove();
-                        localStorage.setItem('hidden_' + messageId, 'true');
-                    }
-                });
-                
-                console.log(`🙈 ${checkedBoxes.length} messages hidden locally`);
-                
-                // Exit select mode
-                cancelSelection();
-            }
-        }
-        
-        // CLEAR ALL CHAT FUNCTION (Admin only - password protected)
         function sendMessage() {
             const messageText = chatInput.value.trim();
             const sendBtn = document.getElementById('sendBtn');
@@ -4356,11 +4151,6 @@
             const messageId = snapshot.key;
             const msg = snapshot.val();
             
-            // Skip if message is hidden locally
-            if (isMessageHidden(messageId)) {
-                return;
-            }
-            
             // Prevent duplicate messages
             if (displayedMessages.has(messageId)) {
                 return;
@@ -4409,26 +4199,6 @@
                         </div>
                         <div>${escapeHtml(msg.text)}</div>
                     `;
-                    
-                    // Add checkbox for message selection (hidden by default)
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'message-checkbox';
-                    checkbox.dataset.messageId = messageId;
-                    checkbox.style.cssText = `
-                        position: absolute;
-                        top: 8px;
-                        left: 8px;
-                        width: 18px;
-                        height: 18px;
-                        cursor: pointer;
-                        z-index: 10;
-                        display: none;
-                    `;
-                    checkbox.onchange = updateDeleteButton;
-                    
-                    messageDiv.style.position = 'relative';
-                    messageDiv.insertBefore(checkbox, messageDiv.firstChild);
                     
                     messageDiv.appendChild(messageBubble);
                     messagesContainer.appendChild(messageDiv);
@@ -4515,48 +4285,9 @@
             }
         }
         
-        // New function for preview mute button
-        function togglePreviewAudio() {
-            const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('previewMuteBtn');
-            
-            if (!video || !btn) return;
-            
-            const icon = btn.querySelector('i');
-            
-            if (video.muted) {
-                // User wants to unmute
-                video.muted = false;
-                video.volume = 1;
-                video.setAttribute('data-user-unmuted', 'true');
-                icon.className = 'fas fa-volume-up';
-                btn.style.borderColor = '#22c55e';
-                btn.style.color = '#22c55e';
-                console.log('🔊 Channel 26 audio unmuted by user');
-            } else {
-                // User wants to mute
-                video.muted = true;
-                video.volume = 0;
-                video.removeAttribute('data-user-unmuted');
-                icon.className = 'fas fa-volume-mute';
-                btn.style.borderColor = '#ffd700';
-                btn.style.color = '#ffd700';
-                console.log('🔇 Channel 26 audio muted by user');
-            }
-        }
-        
         function openLiveStream() {
             console.log('Opening Live Channel 26.5...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            
-            // Make sure video plays when modal opens
-            if (video) {
-                video.muted = true; // Keep muted
-                video.play().catch(err => console.log('Play error:', err));
-                console.log('📺 Starting live stream (muted)');
-            }
-            
             modal.classList.add('active');
             // Add to browser history so back button works
             history.pushState({modal: 'stream'}, '', '#stream');
@@ -4565,14 +4296,6 @@
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            
-            // STOP playing when modal closes
-            if (video) {
-                video.pause();
-                console.log('⏸️ Live stream paused');
-            }
-            
             modal.classList.remove('active');
             // Remove from history
             if (window.location.hash === '#stream') {

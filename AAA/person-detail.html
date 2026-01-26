@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV - Actor Details</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #ffd700;
+            --secondary: #22c55e;
+            --bg: #0a0f1a;
+            --bg-light: #1a1f2e;
+            --text: #ffffff;
+            --text-secondary: #94a3b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* HEADER */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: var(--secondary);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* CONTENT */
+        .content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .person-header {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+        
+        .person-photo {
+            flex-shrink: 0;
+            width: 350px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(34, 197, 94, 0.4),
+                0 0 80px rgba(34, 197, 94, 0.2);
+        }
+        
+        .person-photo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .person-info {
+            flex: 1;
+        }
+        
+        .person-name {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .person-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .meta-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .meta-value {
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .person-bio {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 2rem;
+        }
+        
+        .external-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .external-link {
+            background: var(--bg-light);
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .external-link:hover {
+            background: var(--secondary);
+            color: #000;
+            transform: translateY(-2px);
+        }
+        
+        /* SECTIONS */
+        .section {
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 2rem;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        /* FILMOGRAPHY GRID */
+        .filmography-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .film-card {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .film-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .film-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            border: 2px solid var(--secondary);
+            position: relative;
+        }
+        
+        .film-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .film-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .film-card:hover .film-overlay {
+            opacity: 1;
+        }
+        
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #000;
+        }
+        
+        .film-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+        
+        .film-role {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        
+        /* LOADING */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .person-header {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .person-photo {
+                width: 250px;
+            }
+            
+            .person-name {
+                font-size: 2.5rem;
+                text-align: center;
+            }
+            
+            .person-meta {
+                justify-content: center;
+            }
+            
+            .filmography-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-text">FLM TV</div>
+            <button class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+    </header>
+    
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+        <i class="fas fa-spinner fa-spin"></i> Loading actor details...
+    </div>
+    
+    <!-- CONTENT -->
+    <div class="content" id="content" style="display: none;">
+        <!-- Person details will be inserted here -->
+    </div>
+    
+    <script>
+        // Get person ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const personId = urlParams.get('id');
+        
+        // Jellyfin config
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+        
+        async function jellyfinFetch(endpoint, params = {}) {
+            const queryString = new URLSearchParams({
+                api_key: JELLYFIN_CONFIG.API_KEY,
+                ...params
+            }).toString();
+            
+            const url = `${JELLYFIN_CONFIG.SERVER}${endpoint}?${queryString}`;
+            const response = await fetch(url);
+            return response.json();
+        }
+        
+        async function loadPersonDetails() {
+            try {
+                // Fetch person data
+                const person = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${personId}`);
+                
+                console.log('Person data:', person);
+                
+                // Build content
+                const content = document.getElementById('content');
+                content.innerHTML = `
+                    <div class="person-header">
+                        <div class="person-photo">
+                            ${person.ImageTags && person.ImageTags.Primary ? 
+                                `<img src="${JELLYFIN_CONFIG.SERVER}/Items/${personId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90" alt="${person.Name}">` :
+                                '<div style="width:100%;aspect-ratio:2/3;background:#1a1f2e;display:flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="font-size:5rem;color:#94a3b8;"></i></div>'
+                            }
+                        </div>
+                        
+                        <div class="person-info">
+                            <h1 class="person-name">${person.Name}</h1>
+                            
+                            <div class="person-meta">
+                                ${person.PremiereDate ? `
+                                    <div class="meta-item">
+                                        <div class="meta-label">Born</div>
+                                        <div class="meta-value">${new Date(person.PremiereDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} (${calculateAge(person.PremiereDate)} years old)</div>
+                                    </div>
+                                ` : ''}
+                                ${person.ProductionLocations && person.ProductionLocations.length ? `
+                                    <div class="meta-item">
+                                        <div class="meta-label">Birth Place</div>
+                                        <div class="meta-value">${person.ProductionLocations.join(', ')}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            ${person.Overview ? `
+                                <div class="person-bio">${person.Overview}</div>
+                            ` : ''}
+                            
+                            <div class="external-links">
+                                ${person.ProviderIds && person.ProviderIds.Imdb ? `
+                                    <a href="https://www.imdb.com/name/${person.ProviderIds.Imdb}" target="_blank" class="external-link">
+                                        <i class="fas fa-external-link-alt"></i> IMDb
+                                    </a>
+                                ` : ''}
+                                ${person.ProviderIds && person.ProviderIds.Tmdb ? `
+                                    <a href="https://www.themoviedb.org/person/${person.ProviderIds.Tmdb}" target="_blank" class="external-link">
+                                        <i class="fas fa-external-link-alt"></i> TMDb
+                                    </a>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">Movies & TV Shows</h2>
+                        <div class="filmography-grid" id="filmographyGrid"></div>
+                    </div>
+                `;
+                
+                // Load filmography
+                loadFilmography();
+                
+                // Hide loading, show content
+                document.getElementById('loading').style.display = 'none';
+                content.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading person:', error);
+                document.getElementById('loading').innerHTML = 
+                    '<i class="fas fa-exclamation-triangle"></i> Error loading actor details';
+            }
+        }
+        
+        function calculateAge(birthDate) {
+            const birth = new Date(birthDate);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+        
+        async function loadFilmography() {
+            try {
+                // Get all items where this person appears
+                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    PersonIds: personId,
+                    IncludeItemTypes: 'Movie,Series',
+                    Recursive: true,
+                    Fields: 'PrimaryImageAspectRatio',
+                    SortBy: 'SortName',
+                    SortOrder: 'Ascending'
+                });
+                
+                const filmographyGrid = document.getElementById('filmographyGrid');
+                
+                if (items.Items && items.Items.length > 0) {
+                    filmographyGrid.innerHTML = items.Items.map(item => {
+                        // Find this person's role in the item
+                        const itemType = item.Type === 'Movie' ? 'movie-detail.html' : 'tv-detail.html';
+                        
+                        return `
+                            <div class="film-card" onclick="window.location.href='${itemType}?id=${item.Id}'">
+                                <div class="film-poster">
+                                    ${item.ImageTags && item.ImageTags.Primary ? 
+                                        `<img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=400" alt="${item.Name}">` :
+                                        '<div style="width:100%;height:100%;background:#1a1f2e;display:flex;align-items:center;justify-content:center;"><i class="fas fa-film" style="font-size:3rem;color:#94a3b8;"></i></div>'
+                                    }
+                                    <div class="film-overlay">
+                                        <div class="play-icon">
+                                            <i class="fas fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="film-title">${item.Name}</div>
+                                <div class="film-role">${item.ProductionYear || ''}</div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    filmographyGrid.innerHTML = '<p style="color: var(--text-secondary);">No movies or TV shows found.</p>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading filmography:', error);
+            }
+        }
+        
+        // Load person on page load
+        if (personId) {
+            loadPersonDetails();
+        } else {
+            document.getElementById('loading').innerHTML = 
+                '<i class="fas fa-exclamation-triangle"></i> No person ID provided';
+        }
+    </script>
+    
+</body>
+</html>

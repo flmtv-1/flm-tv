@@ -27,6 +27,152 @@
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Parental Controls -->
+    <script src="parental-controls.js"></script>
+    
+    <!-- Chat Rooms System - EMBEDDED -->
+    <script>
+    // Chat Rooms System - Built-in
+    const ChatRooms = {
+        currentRoom: 'lobby',
+        currentRoomName: 'FLM TV Lobby',
+        database: null,
+        messagesRef: null,
+        viewerCountRef: null,
+        userId: null,
+        
+        init(database, userId) {
+            this.database = database;
+            this.userId = userId;
+            console.log('🎬 Chat Rooms initialized');
+        },
+        
+        joinRoom(roomId, roomName, movieData = null) {
+            if (this.currentRoom) {
+                this.leaveRoom();
+            }
+            
+            this.currentRoom = roomId;
+            this.currentRoomName = roomName;
+            
+            console.log(`🚪 Joining room: ${roomName} (${roomId})`);
+            
+            this.messagesRef = this.database.ref(`chat-rooms/${roomId}/messages`);
+            this.viewerCountRef = this.database.ref(`chat-rooms/${roomId}/viewers`);
+            
+            this.registerViewer(movieData);
+            this.updateRoomDisplay();
+            
+            return this.messagesRef;
+        },
+        
+        leaveRoom() {
+            if (this.viewerCountRef && this.userId) {
+                this.viewerCountRef.child(this.userId).remove();
+                console.log(`👋 Left room: ${this.currentRoomName}`);
+            }
+        },
+        
+        registerViewer(movieData) {
+            if (!this.viewerCountRef || !this.userId) return;
+            
+            const viewerData = {
+                joinedAt: Date.now(),
+                userId: this.userId
+            };
+            
+            if (movieData) {
+                viewerData.movieId = movieData.id;
+                viewerData.movieTitle = movieData.title;
+            }
+            
+            const viewerRef = this.viewerCountRef.child(this.userId);
+            viewerRef.set(viewerData);
+            viewerRef.onDisconnect().remove();
+        },
+        
+        getViewerCount(callback) {
+            if (!this.viewerCountRef) return;
+            
+            this.viewerCountRef.on('value', (snapshot) => {
+                const count = snapshot.numChildren();
+                callback(count);
+            });
+        },
+        
+        updateRoomDisplay() {
+            const roomIndicator = document.getElementById('chatRoomIndicator');
+            const viewerCount = document.getElementById('viewerCount');
+            
+            if (roomIndicator) {
+                let emoji = '💬';
+                if (this.currentRoom.startsWith('movie-')) emoji = '🎬';
+                if (this.currentRoom.startsWith('episode-')) emoji = '📺';
+                if (this.currentRoom === 'live-stream') emoji = '🔴';
+                
+                roomIndicator.innerHTML = `${emoji} ${this.currentRoomName}`;
+            }
+            
+            if (viewerCount) {
+                this.getViewerCount((count) => {
+                    if (this.currentRoom === 'lobby') {
+                        viewerCount.textContent = `${count} online`;
+                    } else {
+                        viewerCount.textContent = `${count} watching`;
+                    }
+                });
+            }
+        },
+        
+        sendMessage(username, message, avatar) {
+            if (!this.messagesRef) {
+                console.error('❌ No room joined');
+                return;
+            }
+            
+            this.messagesRef.push({
+                username: username,
+                message: message,
+                avatar: avatar || '👤',
+                timestamp: Date.now(),
+                room: this.currentRoom
+            });
+        },
+        
+        listenToRoom(callback, limit = 50) {
+            if (!this.messagesRef) return;
+            
+            console.log(`👂 Listening to room: ${this.currentRoomName}`);
+            
+            this.messagesRef.limitToLast(limit).on('child_added', (snapshot) => {
+                const messageData = snapshot.val();
+                messageData.id = snapshot.key;
+                callback(messageData);
+            });
+        },
+        
+        getRoomIdFromContent(contentType, contentId) {
+            return `${contentType}-${contentId}`;
+        },
+        
+        clearRoom(password) {
+            if (password !== 'FLM2025') {
+                alert('❌ Incorrect password');
+                return;
+            }
+            
+            if (!this.messagesRef) return;
+            
+            if (confirm(`Clear all messages in "${this.currentRoomName}"?`)) {
+                this.messagesRef.remove();
+                alert('✅ Room cleared');
+            }
+        }
+    };
+    
+    console.log('🎬 Chat Rooms system loaded (embedded)');
+    </script>
+    
     <style>
         /* ═══════════════════════════════════════════════════════════════ */
         /*  VARIABLES - Filipino Flag Colors                               */
@@ -1958,22 +2104,24 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Portrait/vertical for better movie poster visibility */
+            /* MOVIE CARDS - Horizontal scroll like Tubi */
             .content-carousel {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
+                display: flex !important;
                 gap: 0.5rem !important;
                 padding: 0.5rem !important;
-                overflow-x: visible !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                scroll-snap-type: x mandatory !important;
+                -webkit-overflow-scrolling: touch !important;
             }
             
             .movie-card,
             .content-card {
-                flex: none !important;
-                min-width: 100% !important;
-                max-width: 100% !important;
-                width: 100% !important;
-                scroll-snap-align: none;
+                flex: 0 0 120px !important;
+                min-width: 120px !important;
+                max-width: 120px !important;
+                width: 120px !important;
+                scroll-snap-align: start;
                 margin-bottom: 0;
                 position: relative !important;
             }
@@ -2046,20 +2194,23 @@
                 font-size: 0.65rem !important;
             }
             
-            /* Grid Views (if used) */
+            /* Grid Views - ALSO horizontal scroll on mobile */
             .movies-grid,
             .content-grid {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.75rem !important;
-                padding: 0 0.75rem !important;
+                display: flex !important;
+                gap: 0.5rem !important;
+                padding: 0.5rem !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                scroll-snap-type: x mandatory !important;
+                -webkit-overflow-scrolling: touch !important;
             }
             
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: none !important;
-                min-width: 100% !important;
-                max-width: 100% !important;
+                flex: 0 0 120px !important;
+                min-width: 120px !important;
+                max-width: 120px !important;
             }
             
             /* Video Modal - Full Screen */
@@ -2638,7 +2789,9 @@
         <div class="panel-header">
             <div>
                 <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-comments"></i> Live Chat</h3>
-                <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
+                <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">
+                    <span id="chatRoomIndicator">💬 FLM TV Lobby</span> · <span id="viewerCount">0 online</span>
+                </p>
             </div>
             <div style="display: flex; gap: 0.5rem;">
                 <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
@@ -2656,6 +2809,31 @@
             <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
                    style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
                    maxlength="20">
+        </div>
+        
+        <!-- Selection Controls (Hidden by default) -->
+        <div id="selectionControls" style="display: none; padding: 0.5rem 0.75rem; background: #1f1f1f; border-bottom: 1px solid #333; gap: 0.5rem; align-items: center;">
+            <input type="checkbox" id="selectAllMessages" onclick="toggleSelectAll()" 
+                   style="cursor: pointer;">
+            <label for="selectAllMessages" style="cursor: pointer; font-size: 0.85rem; flex: 1;">
+                Select All
+            </label>
+            <button id="deleteSelectedBtn" onclick="deleteSelectedMessages()" 
+                    style="background: rgba(206, 17, 38, 0.8); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; opacity: 0.5; pointer-events: none;">
+                <i class="fas fa-trash-alt"></i> Delete Selected
+            </button>
+            <button onclick="cancelSelection()" 
+                    style="background: rgba(100, 100, 100, 0.5); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                Cancel
+            </button>
+        </div>
+        
+        <!-- Select Button -->
+        <div style="padding: 0.5rem 0.75rem; background: #1f1f1f; border-bottom: 1px solid #333;">
+            <button id="selectModeBtn" onclick="toggleSelectMode()" 
+                    style="background: var(--secondary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-check-square"></i> Select Messages
+            </button>
         </div>
         
         <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
@@ -2940,9 +3118,18 @@
             if (user) {
                 console.log('✅ User authenticated:', user.uid.substring(0, 8));
                 isAuthReady = true;
+                
+                // Initialize Chat Rooms
+                ChatRooms.init(database, user.uid);
+                // Join lobby by default
+                ChatRooms.joinRoom('lobby', 'FLM TV Lobby');
             } else {
                 console.log('⚠️ Using fallback user ID');
                 isAuthReady = true; // Allow fallback mode
+                
+                // Initialize with fallback
+                ChatRooms.init(database, fallbackUserId);
+                ChatRooms.joinRoom('lobby', 'FLM TV Lobby');
             }
         });
         
@@ -3992,33 +4179,27 @@
                 const user = auth.currentUser;
                 const userId = user ? user.uid : fallbackUserId;
                 
-                // Send to Firebase with username
-                console.log('📤 Sending message to Firebase...');
+                // Send to current chat room
+                console.log('📤 Sending message to room:', ChatRooms.currentRoomName);
                 console.log('Username:', username);
                 console.log('Message:', messageText);
-                console.log('Firebase Database URL:', database.ref().toString());
                 
-                database.ref('messages').push({
-                    text: messageText,
-                    username: username,
-                    userId: userId,
-                    timestamp: Date.now()
-                }).then(() => {
+                try {
+                    ChatRooms.sendMessage(username, messageText, '👤');
                     console.log('✅ Message sent successfully!');
+                    
                     // Reset button
                     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
                     sendBtn.disabled = false;
                     sendBtn.style.opacity = '1';
-                }).catch((error) => {
-                    console.error('❌ Firebase error:', error);
+                } catch (error) {
+                    console.error('❌ Chat error:', error);
                     alert('Chat error: ' + error.message);
                     // Reset button
                     sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
                     sendBtn.disabled = false;
                     sendBtn.style.opacity = '1';
-                    // Show message locally as fallback
-                    addMessage('sent', messageText);
-                });
+                }
             }
         }
         
@@ -4194,10 +4375,9 @@
         // Track displayed messages to prevent duplicates
         const displayedMessages = new Set();
         
-        // Listen to Firebase chat messages - YOUTUBE STYLE (everyone sees everything)
-        database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
-            const messageId = snapshot.key;
-            const msg = snapshot.val();
+        // Listen to Firebase chat messages - PER-ROOM (like YouTube per-video chat)
+        ChatRooms.listenToRoom((msg) => {
+            const messageId = msg.id;
             
             // Prevent duplicate messages
             if (displayedMessages.has(messageId)) {
@@ -4205,9 +4385,14 @@
             }
             displayedMessages.add(messageId);
             
-            // Show ALL messages to EVERYONE (like YouTube live chat)
-            if (msg && msg.text) {
-                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+            // Check if message was hidden by user
+            if (localStorage.getItem('hidden_' + messageId) === 'true') {
+                return; // Skip this message
+            }
+            
+            // Show messages in current room
+            if (msg && msg.message) {
+                const username = msg.username || `Viewer`;
                 
                 // Check if this is from current user
                 let isOwnMessage = false;
@@ -4245,8 +4430,27 @@
                         <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
                             ${username}
                         </div>
-                        <div>${escapeHtml(msg.text)}</div>
+                        <div>${escapeHtml(msg.message)}</div>
                     `;
+                    
+                    // Add checkbox for selection
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'message-checkbox';
+                    checkbox.dataset.messageId = messageId;
+                    checkbox.style.cssText = `
+                        display: none;
+                        position: absolute;
+                        left: 8px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                        width: 18px;
+                        height: 18px;
+                    `;
+                    checkbox.onchange = updateDeleteButton;
+                    messageDiv.appendChild(checkbox);
+                    messageDiv.style.position = 'relative';
                     
                     messageDiv.appendChild(messageBubble);
                     messagesContainer.appendChild(messageDiv);
@@ -4254,10 +4458,10 @@
                     // Auto-scroll to bottom (like YouTube)
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     
-                    console.log('💬 Message displayed:', username, msg.text);
+                    console.log('💬 Message displayed:', username, msg.message);
                 }
             }
-        });
+        }, 50); // Load last 50 messages
         
         // Helper function to escape HTML
         function escapeHtml(text) {
@@ -4508,6 +4712,99 @@ async function loadCollectionPage(collectionId, title) {
     console.error(err);
     grid.innerHTML = `<div style="padding:20px;color:#f87171;">Error loading collection.</div>`;
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SELECT MODE FUNCTIONS FOR CHAT
+// ═══════════════════════════════════════════════════════════════
+
+function toggleSelectMode() {
+    const checkboxes = document.querySelectorAll('.message-checkbox');
+    const selectionControls = document.getElementById('selectionControls');
+    const selectModeBtn = document.getElementById('selectModeBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.style.display = 'block';
+    });
+    
+    const messageElements = chatMessages.querySelectorAll('.message');
+    messageElements.forEach(msg => {
+        msg.style.paddingLeft = '35px';
+    });
+    
+    selectionControls.style.display = 'flex';
+    selectModeBtn.parentElement.style.display = 'none';
+}
+
+function cancelSelection() {
+    const checkboxes = document.querySelectorAll('.message-checkbox');
+    const selectionControls = document.getElementById('selectionControls');
+    const selectModeBtn = document.getElementById('selectModeBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.style.display = 'none';
+        checkbox.checked = false;
+    });
+    
+    const messageElements = chatMessages.querySelectorAll('.message');
+    messageElements.forEach(msg => {
+        msg.style.paddingLeft = '0';
+    });
+    
+    selectionControls.style.display = 'none';
+    selectModeBtn.parentElement.style.display = 'block';
+    
+    document.getElementById('selectAllMessages').checked = false;
+    updateDeleteButton();
+}
+
+function updateDeleteButton() {
+    const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
+    const deleteBtn = document.getElementById('deleteSelectedBtn');
+    
+    if (checkedBoxes.length > 0) {
+        deleteBtn.style.opacity = '1';
+        deleteBtn.style.pointerEvents = 'auto';
+        deleteBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Delete Selected (${checkedBoxes.length})`;
+    } else {
+        deleteBtn.style.opacity = '0.5';
+        deleteBtn.style.pointerEvents = 'none';
+        deleteBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Delete Selected`;
+    }
+}
+
+function toggleSelectAll() {
+    const selectAllCheckbox = document.getElementById('selectAllMessages');
+    const messageCheckboxes = document.querySelectorAll('.message-checkbox');
+    
+    messageCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+    
+    updateDeleteButton();
+}
+
+function deleteSelectedMessages() {
+    const checkedBoxes = document.querySelectorAll('.message-checkbox:checked');
+    
+    if (checkedBoxes.length === 0) return;
+    
+    if (confirm(`Hide ${checkedBoxes.length} message(s) from your view?`)) {
+        checkedBoxes.forEach(checkbox => {
+            const messageId = checkbox.dataset.messageId;
+            const messageElement = checkbox.closest('.message');
+            
+            if (messageElement) {
+                messageElement.remove();
+                localStorage.setItem('hidden_' + messageId, 'true');
+            }
+        });
+        
+        console.log(`🙈 ${checkedBoxes.length} messages hidden locally`);
+        cancelSelection();
+    }
 }
 
 </script>

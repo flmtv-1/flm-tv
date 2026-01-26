@@ -2508,12 +2508,7 @@
                             <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button class="preview-mute-btn" id="previewMuteBtn" onclick="event.stopPropagation(); togglePreviewAudio();" 
-                                style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; 
-                                       color: #ffd700; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; 
-                                       justify-content: center; cursor: pointer; z-index: 10; font-size: 18px;">
-                            <i class="fas fa-volume-mute"></i>
-                        </button>
+                        
                     </div>
                     <!-- Category cards will be dynamically added here -->
                 </div>
@@ -3382,14 +3377,12 @@
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
-                // CRITICAL: Set muted BEFORE any play attempts
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
-                previewVideo.defaultMuted = true;
                 
                 // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', '');
-                previewVideo.setAttribute('playsinline', '');
+                previewVideo.setAttribute('muted', 'muted');
+                previewVideo.setAttribute('playsinline', 'playsinline');
                 
                 // Prevent any unmute attempts
                 previewVideo.addEventListener('volumechange', function() {
@@ -3398,19 +3391,6 @@
                         this.muted = true;
                         this.volume = 0;
                     }
-                });
-                
-                // Re-enforce mute on play (mobile browsers sometimes reset)
-                previewVideo.addEventListener('play', function() {
-                    this.muted = true;
-                    this.volume = 0;
-                    console.log('🔇 Preview playing - enforced muted state');
-                });
-                
-                // Re-enforce mute on any interaction
-                previewVideo.addEventListener('loadedmetadata', function() {
-                    this.muted = true;
-                    this.volume = 0;
                 });
                 
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
@@ -4302,32 +4282,6 @@
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
                 console.log('🔇 Preview audio muted');
-            }
-        }
-        
-        // New function for preview mute button
-        function togglePreviewAudio() {
-            const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('previewMuteBtn');
-            
-            if (!video || !btn) return;
-            
-            const icon = btn.querySelector('i');
-            
-            if (video.muted) {
-                video.muted = false;
-                video.volume = 1;
-                icon.className = 'fas fa-volume-up';
-                btn.style.borderColor = '#22c55e';
-                btn.style.color = '#22c55e';
-                console.log('🔊 Channel 26 audio unmuted');
-            } else {
-                video.muted = true;
-                video.volume = 0;
-                icon.className = 'fas fa-volume-mute';
-                btn.style.borderColor = '#ffd700';
-                btn.style.color = '#ffd700';
-                console.log('🔇 Channel 26 audio muted');
             }
         }
         
