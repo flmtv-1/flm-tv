@@ -643,7 +643,7 @@
     <!-- Content - HIDDEN because Jellyfin iframe shows movie details -->
     <div class="content-wrapper" style="display: none;">
         <!-- Poster Sidebar -->
-        <div class="poster-section" style="display: none;">
+        <div class="poster-section">
             <img id="poster" class="poster" src="https://via.placeholder.com/300x450" alt="Poster">
             
             <div class="action-buttons">
@@ -1330,13 +1330,8 @@
                 const item = await r.json();
                 console.log('✅ Movie data loaded:', item.Name);
 
-                console.log('🔍 Starting authentication process...');
-                console.log('Server:', JELLYFIN.SERVER);
-                console.log('API Key present:', !!JELLYFIN.API_KEY);
-                
-                // Authenticate with Jellyfin as Public user FIRST
+                // Authenticate with Jellyfin as Public user
                 try {
-                    console.log('📡 Sending auth request...');
                     const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
                         method: 'POST',
                         headers: {
@@ -1349,53 +1344,29 @@
                         })
                     });
                     
-                    console.log('📡 Auth response status:', authResponse.status);
-                    
                     if (authResponse.ok) {
                         const authData = await authResponse.json();
                         console.log('✅ Authenticated as Public');
-                        console.log('User ID:', authData.User?.Id);
-                        console.log('Server ID:', authData.ServerId);
-                        console.log('Access Token:', authData.AccessToken ? 'Present' : 'Missing');
                         
-                        // Store credentials BEFORE loading iframe
-                        const credentials = {
+                        // Store credentials for Jellyfin iframe
+                        localStorage.setItem('jellyfin-credentials', JSON.stringify({
                             Servers: [{
                                 AccessToken: authData.AccessToken,
                                 UserId: authData.User.Id,
-                                Id: authData.ServerId,
+                                Id: 'db6bb6388c8c4c70825698639853ede6',
                                 address: JELLYFIN.SERVER
                             }]
-                        };
-                        
-                        localStorage.setItem('jellyfin-credentials', JSON.stringify(credentials));
-                        console.log('💾 Credentials stored to localStorage');
-                        console.log('Stored data:', credentials);
-                        
-                        // CRITICAL: Wait for localStorage to save
-                        await new Promise(resolve => setTimeout(resolve, 300));
-                        console.log('⏳ Waited 300ms for localStorage');
-                        
-                        // Verify storage
-                        const stored = localStorage.getItem('jellyfin-credentials');
-                        console.log('✅ Verification - credentials in storage:', !!stored);
-                        
-                        // NOW load Jellyfin player - ADD API KEY so it doesn't need localStorage
-                        const iframe = document.getElementById('jellyfinPlayerFrame');
-                        const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
-                        console.log('🎬 Loading Jellyfin iframe with API key:', playerUrl);
-                        iframe.src = playerUrl;
-                    } else {
-                        const errorText = await authResponse.text();
-                        console.error('❌ Authentication failed!');
-                        console.error('Status:', authResponse.status);
-                        console.error('Response:', errorText);
-                        alert('Authentication failed: ' + authResponse.status + '\n\nCheck console for details.');
+                        }));
                     }
                 } catch (authError) {
-                    console.error('❌ Auth error:', authError);
-                    alert('Authentication error: ' + authError.message);
+                    console.log('Auth error:', authError);
                 }
+                
+                // Load Jellyfin player in iframe with API key (no Public button!)
+                const iframe = document.getElementById('jellyfinPlayerFrame');
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                iframe.src = playerUrl;
+                console.log('🎬 Loading Jellyfin player');
                 
                 // Try to auto-click Public button when iframe loads
                 iframe.addEventListener('load', () => {

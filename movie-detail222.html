@@ -629,8 +629,13 @@
         </div>
     </header>
 
-    <!-- Video Player -->
-    <div class="player-section" style="position: relative;">
+    <!-- Video Player - HIDDEN INITIALLY -->
+    <div class="player-section" id="playerSection" style="display: none; position: fixed; inset: 0; z-index: 9999; background: #000;">
+        <!-- Back button overlay -->
+        <button id="backFromPlayer" style="position: absolute; top: 20px; left: 20px; z-index: 10000; background: rgba(0,0,0,0.8); border: 2px solid #ffd700; color: #ffd700; padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-arrow-left"></i> Back to Details
+        </button>
+        
         <!-- Jellyfin's player iframe -->
         <iframe 
             id="jellyfinPlayerFrame"
@@ -640,11 +645,16 @@
         ></iframe>
     </div>
 
-    <!-- Content - HIDDEN because Jellyfin iframe shows movie details -->
-    <div class="content-wrapper" style="display: none;">
-        <!-- Poster Sidebar -->
-        <div class="poster-section" style="display: none;">
+    <!-- Custom Movie Details - SHOWN BY DEFAULT -->
+    <div class="content-wrapper" id="detailsSection">
+        <!-- Big Play Button Overlay on Poster -->
+        <div class="poster-section" style="position: relative;">
             <img id="poster" class="poster" src="https://via.placeholder.com/300x450" alt="Poster">
+            
+            <!-- Play Button Overlay -->
+            <button id="playButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 215, 0, 0.95); border: none; color: #000; width: 80px; height: 80px; border-radius: 50%; cursor: pointer; font-size: 2rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5); transition: all 0.3s ease;">
+                <i class="fas fa-play" style="margin-left: 5px;"></i>
+            </button>
             
             <div class="action-buttons">
                 <button class="btn btn-like"><i class="fas fa-thumbs-up"></i></button>
@@ -1330,13 +1340,8 @@
                 const item = await r.json();
                 console.log('✅ Movie data loaded:', item.Name);
 
-                console.log('🔍 Starting authentication process...');
-                console.log('Server:', JELLYFIN.SERVER);
-                console.log('API Key present:', !!JELLYFIN.API_KEY);
-                
-                // Authenticate with Jellyfin as Public user FIRST
+                // Pre-authenticate (but don't load player yet!)
                 try {
-                    console.log('📡 Sending auth request...');
                     const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
                         method: 'POST',
                         headers: {
@@ -1349,70 +1354,31 @@
                         })
                     });
                     
-                    console.log('📡 Auth response status:', authResponse.status);
-                    
                     if (authResponse.ok) {
                         const authData = await authResponse.json();
-                        console.log('✅ Authenticated as Public');
-                        console.log('User ID:', authData.User?.Id);
+                        console.log('✅ Pre-authenticated as Public (ready for play button)');
                         console.log('Server ID:', authData.ServerId);
-                        console.log('Access Token:', authData.AccessToken ? 'Present' : 'Missing');
                         
-                        // Store credentials BEFORE loading iframe
-                        const credentials = {
+                        // Store credentials in EXACT format Jellyfin expects
+                        localStorage.setItem('jellyfin-credentials', JSON.stringify({
                             Servers: [{
                                 AccessToken: authData.AccessToken,
                                 UserId: authData.User.Id,
-                                Id: authData.ServerId,
+                                Id: authData.ServerId,  // Use actual server ID from response
                                 address: JELLYFIN.SERVER
                             }]
-                        };
+                        }));
                         
-                        localStorage.setItem('jellyfin-credentials', JSON.stringify(credentials));
-                        console.log('💾 Credentials stored to localStorage');
-                        console.log('Stored data:', credentials);
-                        
-                        // CRITICAL: Wait for localStorage to save
-                        await new Promise(resolve => setTimeout(resolve, 300));
-                        console.log('⏳ Waited 300ms for localStorage');
-                        
-                        // Verify storage
-                        const stored = localStorage.getItem('jellyfin-credentials');
-                        console.log('✅ Verification - credentials in storage:', !!stored);
-                        
-                        // NOW load Jellyfin player - ADD API KEY so it doesn't need localStorage
-                        const iframe = document.getElementById('jellyfinPlayerFrame');
-                        const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
-                        console.log('🎬 Loading Jellyfin iframe with API key:', playerUrl);
-                        iframe.src = playerUrl;
-                    } else {
-                        const errorText = await authResponse.text();
-                        console.error('❌ Authentication failed!');
-                        console.error('Status:', authResponse.status);
-                        console.error('Response:', errorText);
-                        alert('Authentication failed: ' + authResponse.status + '\n\nCheck console for details.');
+                        // Give localStorage time to save
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                        console.log('✅ Credentials stored - ready to play');
+                        console.log('Stored credentials:', JSON.parse(localStorage.getItem('jellyfin-credentials')));
                     }
                 } catch (authError) {
-                    console.error('❌ Auth error:', authError);
-                    alert('Authentication error: ' + authError.message);
+                    console.warn('⚠️ Pre-auth failed:', authError);
                 }
                 
-                // Try to auto-click Public button when iframe loads
-                iframe.addEventListener('load', () => {
-                    console.log('📺 Iframe loaded');
-                    setTimeout(() => {
-                        try {
-                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                            const publicBtn = iframeDoc.querySelector('.card.itemAction, [data-username="Public"]');
-                            if (publicBtn) {
-                                console.log('✅ Auto-clicking Public button');
-                                publicBtn.click();
-                            }
-                        } catch (e) {
-                            console.log('⚠️ Cannot auto-click (CORS blocked)');
-                        }
-                    }, 500);
-                });
+                // DON'T load player yet - wait for play button click!
 
                 // Poster
                 if (item.ImageTags?.Primary) {
@@ -1461,6 +1427,129 @@
                 }
 
                 loadSimilar(item.ParentId);
+                
+                // Setup play button handler
+                const playButton = document.getElementById('playButton');
+                const backButton = document.getElementById('backFromPlayer');
+                
+                if (playButton) {
+                    playButton.onclick = () => {
+                        console.log('▶️ Play button clicked - loading player');
+                        
+                        // Hide details, show player
+                        document.getElementById('detailsSection').style.display = 'none';
+                        const playerSection = document.getElementById('playerSection');
+                        playerSection.style.display = 'block';
+                        
+                        // Create loading overlay to cover login screen
+                        const loadingOverlay = document.createElement('div');
+                        loadingOverlay.id = 'playerLoadingOverlay';
+                        loadingOverlay.style.cssText = `
+                            position: absolute;
+                            inset: 0;
+                            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 9998;
+                            transition: opacity 0.5s ease;
+                        `;
+                        loadingOverlay.innerHTML = `
+                            <img src="assets/logos/flm-logo.png" alt="FLM TV" style="width: 150px; height: 150px; margin-bottom: 2rem; animation: pulse 2s ease-in-out infinite;">
+                            <h2 style="color: #ffd700; font-size: 1.5rem; margin-bottom: 1rem;">Loading Player...</h2>
+                            <div style="width: 50px; height: 50px; border: 4px solid rgba(255,215,0,0.2); border-top-color: #ffd700; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                            <style>
+                                @keyframes spin { to { transform: rotate(360deg); } }
+                                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+                            </style>
+                        `;
+                        playerSection.appendChild(loadingOverlay);
+                        
+                        // Load Jellyfin player (credentials already stored)
+                        const iframe = document.getElementById('jellyfinPlayerFrame');
+                        const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}`;
+                        iframe.src = playerUrl;
+                        
+                        console.log('✅ Player loading with auto-login...');
+                        
+                        // Wait for iframe to load, then try to auto-click Public button
+                        iframe.onload = () => {
+                            console.log('📺 Iframe loaded, attempting auto-click...');
+                            
+                            // Try multiple times because of CORS and timing
+                            let attempts = 0;
+                            const maxAttempts = 10;
+                            
+                            const tryAutoClick = setInterval(() => {
+                                attempts++;
+                                
+                                try {
+                                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                                    const publicBtn = iframeDoc.querySelector('.card.itemAction[data-username="Public"], .card.itemAction, button[data-id*="Public"]');
+                                    
+                                    if (publicBtn) {
+                                        console.log('✅ Found Public button - clicking!');
+                                        publicBtn.click();
+                                        clearInterval(tryAutoClick);
+                                        
+                                        // Hide loading overlay after click
+                                        setTimeout(() => {
+                                            if (loadingOverlay) {
+                                                loadingOverlay.style.opacity = '0';
+                                                setTimeout(() => loadingOverlay.remove(), 500);
+                                            }
+                                        }, 1000);
+                                    } else if (attempts >= maxAttempts) {
+                                        console.warn('⚠️ Could not find Public button (CORS blocked or already logged in)');
+                                        clearInterval(tryAutoClick);
+                                        
+                                        // Hide overlay anyway after 3 seconds
+                                        setTimeout(() => {
+                                            if (loadingOverlay) {
+                                                loadingOverlay.style.opacity = '0';
+                                                setTimeout(() => loadingOverlay.remove(), 500);
+                                            }
+                                        }, 3000);
+                                    }
+                                } catch (e) {
+                                    // CORS block - can't access iframe content
+                                    if (attempts >= maxAttempts) {
+                                        console.log('⚠️ CORS prevented auto-click, but credentials should auto-login');
+                                        clearInterval(tryAutoClick);
+                                        
+                                        // Hide overlay after 3 seconds
+                                        setTimeout(() => {
+                                            if (loadingOverlay) {
+                                                loadingOverlay.style.opacity = '0';
+                                                setTimeout(() => loadingOverlay.remove(), 500);
+                                            }
+                                        }, 3000);
+                                    }
+                                }
+                            }, 500); // Try every 500ms
+                        };
+                    };
+                    
+                    // Add hover effect
+                    playButton.onmouseenter = () => {
+                        playButton.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                        playButton.style.boxShadow = '0 6px 30px rgba(255, 215, 0, 0.7)';
+                    };
+                    playButton.onmouseleave = () => {
+                        playButton.style.transform = 'translate(-50%, -50%) scale(1)';
+                        playButton.style.boxShadow = '0 4px 20px rgba(255, 215, 0, 0.5)';
+                    };
+                }
+                
+                // Setup back button
+                if (backButton) {
+                    backButton.onclick = () => {
+                        console.log('⬅️ Back button clicked');
+                        document.getElementById('playerSection').style.display = 'none';
+                        document.getElementById('detailsSection').style.display = 'flex';
+                    };
+                }
 
             } catch (e) {
                 console.error('Error loading movie:', e);

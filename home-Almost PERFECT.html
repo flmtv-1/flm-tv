@@ -3870,7 +3870,7 @@
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
                 } else if (item.Type === 'Movie') {
-                    // Movies go to custom movie-detail.html page (shows info, then has play button)
+                    // Movies go to custom movie-detail.html page
                     console.log('🎬 Redirecting to movie detail page:', item.Name);
                     window.location.href = `movie-detail.html?id=${itemId}`;
                     return;
@@ -3883,75 +3883,6 @@
             } catch (error) {
                 console.error('Error fetching item:', error);
                 alert('Error loading content. Please try again.');
-            }
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
-        //  INLINE MOVIE PLAYER (No Jellyfin Web Interface Login)
-        // ═══════════════════════════════════════════════════════════════
-        
-        async function openMoviePlayer(movieId, movieTitle) {
-            console.log('🎬 Opening inline player for:', movieTitle);
-            
-            // Switch to movie chat room
-            switchChatRoom('movie', movieId, movieTitle);
-            
-            // Pause preview video
-            const previewVideo = document.getElementById('previewVideo');
-            if (previewVideo) {
-                previewVideo.pause();
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
-            }
-            
-            // Get the viewer and frame
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            if (!viewer || !frame) {
-                console.error('❌ Viewer elements not found');
-                return;
-            }
-            
-            // First, authenticate as Public user if not already authenticated
-            try {
-                const authResponse = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID}", Version="1.0.0"`
-                    },
-                    body: JSON.stringify({
-                        Username: 'Public',
-                        Pw: ''
-                    })
-                });
-                
-                if (authResponse.ok) {
-                    const authData = await authResponse.json();
-                    const accessToken = authData.AccessToken;
-                    console.log('✅ Authenticated as Public user');
-                    
-                    // Build URL with access token for auto-login
-                    const playerUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/item?id=${movieId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&X-Emby-Token=${accessToken}`;
-                    
-                    console.log('🎬 Loading player with authentication');
-                    
-                    // Load player in iframe
-                    frame.src = playerUrl;
-                    
-                    // Show viewer
-                    viewer.classList.add('active');
-                    history.pushState({modal: 'movie', id: movieId}, '', `#movie-${movieId}`);
-                    
-                    console.log('✅ Movie player opened');
-                } else {
-                    console.error('❌ Authentication failed');
-                    alert('Unable to play movie. Please try again.');
-                }
-            } catch (error) {
-                console.error('❌ Error authenticating:', error);
-                alert('Error loading player. Please try again.');
             }
         }
         

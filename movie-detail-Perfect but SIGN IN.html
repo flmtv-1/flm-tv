@@ -629,9 +629,11 @@
         </div>
     </header>
 
-    <!-- Video Player -->
-    <div class="player-section" style="position: relative;">
-        <!-- Jellyfin's player iframe -->
+    <!-- Video Player - Initially hidden -->
+    <div class="player-section" id="playerSection" style="display: none; position: fixed; inset: 0; z-index: 9999; background: #000;">
+        <button id="backButton" style="position: absolute; top: 20px; left: 20px; z-index: 10001; background: rgba(0,0,0,0.8); border: 2px solid #ffd700; color: #ffd700; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+            ← Back
+        </button>
         <iframe 
             id="jellyfinPlayerFrame"
             style="width: 100%; height: 100%; border: none; background: #000;"
@@ -640,11 +642,16 @@
         ></iframe>
     </div>
 
-    <!-- Content - HIDDEN because Jellyfin iframe shows movie details -->
-    <div class="content-wrapper" style="display: none;">
+    <!-- Custom Content - SHOW FIRST -->
+    <div class="content-wrapper" style="display: flex;">
         <!-- Poster Sidebar -->
-        <div class="poster-section" style="display: none;">
+        <div class="poster-section" style="position: relative;">
             <img id="poster" class="poster" src="https://via.placeholder.com/300x450" alt="Poster">
+            
+            <!-- BIG PLAY BUTTON on poster -->
+            <button id="playButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border-radius: 50%; background: rgba(255,215,0,0.95); border: none; color: #000; font-size: 2.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,215,0,0.5); transition: all 0.3s;">
+                <i class="fas fa-play" style="margin-left: 8px;"></i>
+            </button>
             
             <div class="action-buttons">
                 <button class="btn btn-like"><i class="fas fa-thumbs-up"></i></button>
@@ -1330,13 +1337,8 @@
                 const item = await r.json();
                 console.log('✅ Movie data loaded:', item.Name);
 
-                console.log('🔍 Starting authentication process...');
-                console.log('Server:', JELLYFIN.SERVER);
-                console.log('API Key present:', !!JELLYFIN.API_KEY);
-                
-                // Authenticate with Jellyfin as Public user FIRST
+                // Authenticate with Jellyfin as Public user
                 try {
-                    console.log('📡 Sending auth request...');
                     const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
                         method: 'POST',
                         headers: {
@@ -1349,53 +1351,29 @@
                         })
                     });
                     
-                    console.log('📡 Auth response status:', authResponse.status);
-                    
                     if (authResponse.ok) {
                         const authData = await authResponse.json();
                         console.log('✅ Authenticated as Public');
-                        console.log('User ID:', authData.User?.Id);
-                        console.log('Server ID:', authData.ServerId);
-                        console.log('Access Token:', authData.AccessToken ? 'Present' : 'Missing');
                         
-                        // Store credentials BEFORE loading iframe
-                        const credentials = {
+                        // Store credentials for Jellyfin iframe
+                        localStorage.setItem('jellyfin-credentials', JSON.stringify({
                             Servers: [{
                                 AccessToken: authData.AccessToken,
                                 UserId: authData.User.Id,
-                                Id: authData.ServerId,
+                                Id: 'db6bb6388c8c4c70825698639853ede6',
                                 address: JELLYFIN.SERVER
                             }]
-                        };
-                        
-                        localStorage.setItem('jellyfin-credentials', JSON.stringify(credentials));
-                        console.log('💾 Credentials stored to localStorage');
-                        console.log('Stored data:', credentials);
-                        
-                        // CRITICAL: Wait for localStorage to save
-                        await new Promise(resolve => setTimeout(resolve, 300));
-                        console.log('⏳ Waited 300ms for localStorage');
-                        
-                        // Verify storage
-                        const stored = localStorage.getItem('jellyfin-credentials');
-                        console.log('✅ Verification - credentials in storage:', !!stored);
-                        
-                        // NOW load Jellyfin player - ADD API KEY so it doesn't need localStorage
-                        const iframe = document.getElementById('jellyfinPlayerFrame');
-                        const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
-                        console.log('🎬 Loading Jellyfin iframe with API key:', playerUrl);
-                        iframe.src = playerUrl;
-                    } else {
-                        const errorText = await authResponse.text();
-                        console.error('❌ Authentication failed!');
-                        console.error('Status:', authResponse.status);
-                        console.error('Response:', errorText);
-                        alert('Authentication failed: ' + authResponse.status + '\n\nCheck console for details.');
+                        }));
                     }
                 } catch (authError) {
-                    console.error('❌ Auth error:', authError);
-                    alert('Authentication error: ' + authError.message);
+                    console.log('Auth error:', authError);
                 }
+                
+                // Load Jellyfin player in iframe with API key (no Public button!)
+                const iframe = document.getElementById('jellyfinPlayerFrame');
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                iframe.src = playerUrl;
+                console.log('🎬 Loading Jellyfin player');
                 
                 // Try to auto-click Public button when iframe loads
                 iframe.addEventListener('load', () => {
@@ -1461,6 +1439,35 @@
                 }
 
                 loadSimilar(item.ParentId);
+                
+                // Setup PLAY button
+                document.getElementById('playButton').onclick = function() {
+                    console.log('▶️ PLAY clicked - loading Jellyfin player');
+                    
+                    // Hide custom details
+                    document.querySelector('.content-wrapper').style.display = 'none';
+                    
+                    // Show player
+                    document.getElementById('playerSection').style.display = 'block';
+                    
+                    // Load Jellyfin player with video page (should skip detail page)
+                    const iframe = document.getElementById('jellyfinPlayerFrame');
+                    const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/video?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                    iframe.src = playerUrl;
+                    
+                    console.log('🎬 Loading:', playerUrl);
+                };
+                
+                // Setup BACK button
+                document.getElementById('backButton').onclick = function() {
+                    document.getElementById('playerSection').style.display = 'none';
+                    document.querySelector('.content-wrapper').style.display = 'flex';
+                };
+                
+                // Add hover effect to play button
+                const playBtn = document.getElementById('playButton');
+                playBtn.onmouseenter = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                playBtn.onmouseleave = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1)';
 
             } catch (e) {
                 console.error('Error loading movie:', e);
