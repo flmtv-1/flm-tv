@@ -2569,23 +2569,18 @@
             vid.volume = 0;
             vid.defaultMuted = true;
             
-            vid.addEventListener('volumechange', function(e) {
-                if (!this.muted || this.volume > 0) {
-                    this.muted = true;
-                    this.volume = 0;
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            }, true);
-            
+            // Start muted on load/play, but allow button to control it
             vid.addEventListener('loadedmetadata', function() {
                 this.muted = true;
                 this.volume = 0;
             });
             
             vid.addEventListener('play', function() {
-                this.muted = true;
-                this.volume = 0;
+                // Only force mute on initial play, not always
+                if (!this.hasAttribute('data-user-controlled')) {
+                    this.muted = true;
+                    this.volume = 0;
+                }
             });
             
             setTimeout(() => {
@@ -4745,25 +4740,60 @@
         
         let hls = null;
         
+        // AGGRESSIVE ENFORCEMENT: Keep vMix stream disconnected when modal is hidden
+        setInterval(() => {
+            const videoModal = document.getElementById('videoModal');
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            
+            // If modal is NOT visible, force stream to be paused and muted
+            if (videoModal && liveStreamVideo && !videoModal.classList.contains('active')) {
+                if (!liveStreamVideo.paused || !liveStreamVideo.muted || liveStreamVideo.volume > 0) {
+                    liveStreamVideo.pause();
+                    liveStreamVideo.muted = true;
+                    liveStreamVideo.volume = 0;
+                    console.log('🔇 Hidden vMix stream force-stopped by interval');
+                }
+            }
+        }, 200); // Check every 200ms
+        
         // Toggle preview video volume
         function togglePreviewVolume(event) {
             event.stopPropagation();
-            const video = document.getElementById('previewVideo');
+            const previewVideo = document.getElementById('previewVideo');
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
             const btn = document.getElementById('previewVolumeBtn');
             const icon = btn.querySelector('i');
             
-            if (video.muted) {
-                video.muted = false;
-                video.volume = 1.0;
+            if (previewVideo.muted) {
+                // UNMUTE both preview and live stream
+                previewVideo.muted = false;
+                previewVideo.volume = 1.0;
+                previewVideo.setAttribute('data-user-controlled', 'true');
+                
+                if (liveStreamVideo) {
+                    liveStreamVideo.muted = false;
+                    liveStreamVideo.volume = 1.0;
+                }
+                
                 icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
                 btn.title = 'Mute';
+                console.log('🔊 Preview & vMix stream UNMUTED by button');
             } else {
-                video.muted = true;
-                video.volume = 0;
+                // MUTE both preview and live stream
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
+                previewVideo.removeAttribute('data-user-controlled');
+                
+                if (liveStreamVideo) {
+                    liveStreamVideo.muted = true;
+                    liveStreamVideo.volume = 0;
+                }
+                
                 icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
+                console.log('🔇 Preview & vMix stream MUTED by button');
             }
         }
         
@@ -4784,12 +4814,25 @@
     // Load the SRT stream source and start playing
     const liveStreamVideo = document.getElementById('liveStreamVideo');
     if (liveStreamVideo) {
+        // FORCE MUTED before doing anything
+        liveStreamVideo.muted = true;
+        liveStreamVideo.volume = 0;
+        
         // Set the source
         liveStreamVideo.innerHTML = '<source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">';
         liveStreamVideo.load(); // Reload with new source
-        liveStreamVideo.muted = true; // Start muted
-        liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
-        console.log('📺 SRT stream loaded and started (muted)');
+        
+        // FORCE MUTED again after loading
+        liveStreamVideo.muted = true;
+        liveStreamVideo.volume = 0;
+        
+        // Start playing (still muted)
+        liveStreamVideo.play().then(() => {
+            // Triple-check it's muted after play starts
+            liveStreamVideo.muted = true;
+            liveStreamVideo.volume = 0;
+            console.log('📺 vMix stream playing MUTED');
+        }).catch(e => console.log('Stream play error:', e));
     }
     
     // Add to browser history so back button works

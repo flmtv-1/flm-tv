@@ -3,32 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="FLM TV is OUT OF THIS WORLD! 🌟 Stream FREE movies, TV classics, and LIVE Channel 26.5 Las Vegas. Featuring Filipino & Asian content, international programming, and interactive entertainment you won't find anywhere else. Part of the 7 Realms TV universe.">
-    <meta name="keywords" content="FLM TV, Channel 26.5 Las Vegas, Filipino movies, Asian content, international programming, free streaming, classic films, interactive TV, 7 Realms TV, live entertainment, out of this world">
-    <meta name="author" content="7 Realms TV - FLM Channel 26.5">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="FLM TV - OUT OF THIS WORLD Streaming Experience">
-    <meta property="og:description" content="Experience FREE streaming like never before! Filipino & Asian cinema, international classics, LIVE Channel 26.5, and interactive content that's truly OUT OF THIS WORLD. 🌟 Powered by 7 Realms TV.">
-    <meta property="og:url" content="https://flmtv.com">
-    <meta property="og:site_name" content="FLM TV Channel 26.5 Las Vegas">
-    <meta property="og:image" content="https://flmtv.com/assets/logos/flm-logo.png">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FLM TV - OUT OF THIS WORLD Streaming">
-    <meta name="twitter:description" content="Filipino & Asian content, international classics, LIVE TV - all FREE! FLM TV is OUT OF THIS WORLD! 🌟">
-    
+    <title>FLM TV - Part 2: Visual Categories</title>
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-
         /* ═══════════════════════════════════════════════════════════════ */
         /*  VARIABLES - Filipino Flag Colors                               */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -2569,23 +2549,18 @@
             vid.volume = 0;
             vid.defaultMuted = true;
             
-            vid.addEventListener('volumechange', function(e) {
-                if (!this.muted || this.volume > 0) {
-                    this.muted = true;
-                    this.volume = 0;
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            }, true);
-            
+            // Allow manual unmute via the button, but keep muted on load
             vid.addEventListener('loadedmetadata', function() {
                 this.muted = true;
                 this.volume = 0;
             });
             
             vid.addEventListener('play', function() {
-                this.muted = true;
-                this.volume = 0;
+                // Start muted, but allow user to unmute via button
+                if (!this.hasAttribute('data-user-unmuted')) {
+                    this.muted = true;
+                    this.volume = 0;
+                }
             });
             
             setTimeout(() => {
@@ -2866,7 +2841,8 @@
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <!-- Source will be added dynamically when modal opens -->
+                <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                Your browser does not support HLS playback.
             </video>
         </div>
     </div>
@@ -3709,6 +3685,41 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
             
+            // FORCE vMix stream to be muted and paused on load
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            if (liveStreamVideo) {
+                liveStreamVideo.pause();
+                liveStreamVideo.muted = true;
+                liveStreamVideo.volume = 0;
+                console.log('🔇 vMix stream initialized: PAUSED and MUTED');
+            }
+            
+            // Force mute when page becomes visible
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden && liveStreamVideo) {
+                    const videoModal = document.getElementById('videoModal');
+                    if (!videoModal.classList.contains('active')) {
+                        liveStreamVideo.pause();
+                        liveStreamVideo.muted = true;
+                        liveStreamVideo.volume = 0;
+                        console.log('🔇 Page visible - stream force-muted');
+                    }
+                }
+            });
+            
+            // Force mute on window focus
+            window.addEventListener('focus', () => {
+                if (liveStreamVideo) {
+                    const videoModal = document.getElementById('videoModal');
+                    if (!videoModal.classList.contains('active')) {
+                        liveStreamVideo.pause();
+                        liveStreamVideo.muted = true;
+                        liveStreamVideo.volume = 0;
+                        console.log('🔇 Window focused - stream force-muted');
+                    }
+                }
+            });
+            
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
@@ -3719,16 +3730,7 @@
                 previewVideo.setAttribute('muted', 'muted');
                 previewVideo.setAttribute('playsinline', 'playsinline');
                 
-                // Prevent any unmute attempts
-                previewVideo.addEventListener('volumechange', function() {
-                    if (!this.muted) {
-                        console.log('🔇 Preview tried to unmute, forcing muted again');
-                        this.muted = true;
-                        this.volume = 0;
-                    }
-                });
-                
-                console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
+                console.log('🔇 Preview video initialized muted');
             }
             
             // Auto-authenticate in background
@@ -4745,6 +4747,22 @@
         
         let hls = null;
         
+        // AGGRESSIVE ENFORCEMENT: Keep vMix stream paused and muted when modal is hidden
+        setInterval(() => {
+            const videoModal = document.getElementById('videoModal');
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            
+            // If modal is NOT visible, force the stream to be paused and muted
+            if (videoModal && liveStreamVideo && !videoModal.classList.contains('active')) {
+                if (!liveStreamVideo.paused || !liveStreamVideo.muted) {
+                    liveStreamVideo.pause();
+                    liveStreamVideo.muted = true;
+                    liveStreamVideo.volume = 0;
+                    console.log('🔇 Hidden vMix stream force-stopped');
+                }
+            }
+        }, 200); // Check every 200ms (more frequent)
+        
         // Toggle preview video volume
         function togglePreviewVolume(event) {
             event.stopPropagation();
@@ -4755,15 +4773,19 @@
             if (video.muted) {
                 video.muted = false;
                 video.volume = 1.0;
+                video.setAttribute('data-user-unmuted', 'true'); // Mark as user unmuted
                 icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
                 btn.title = 'Mute';
+                console.log('🔊 Preview unmuted by user');
             } else {
                 video.muted = true;
                 video.volume = 0;
+                video.removeAttribute('data-user-unmuted');
                 icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
+                console.log('🔇 Preview muted by user');
             }
         }
         
@@ -4781,15 +4803,12 @@
     const modal = document.getElementById('videoModal');
     modal.classList.add('active');
     
-    // Load the SRT stream source and start playing
+    // Start playing the vMix stream (muted by default)
     const liveStreamVideo = document.getElementById('liveStreamVideo');
     if (liveStreamVideo) {
-        // Set the source
-        liveStreamVideo.innerHTML = '<source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">';
-        liveStreamVideo.load(); // Reload with new source
         liveStreamVideo.muted = true; // Start muted
         liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
-        console.log('📺 SRT stream loaded and started (muted)');
+        console.log('📺 vMix stream started (muted - user can unmute via controls)');
     }
     
     // Add to browser history so back button works
@@ -4801,16 +4820,12 @@
             const modal = document.getElementById('videoModal');
             modal.classList.remove('active');
             
-            // COMPLETELY DISCONNECT the SRT stream by removing source
+            // PAUSE and MUTE the vMix stream
             const liveStreamVideo = document.getElementById('liveStreamVideo');
             if (liveStreamVideo) {
                 liveStreamVideo.pause();
                 liveStreamVideo.muted = true;
-                liveStreamVideo.volume = 0;
-                liveStreamVideo.removeAttribute('src'); // Remove src attribute
-                liveStreamVideo.innerHTML = ''; // Clear all source elements
-                liveStreamVideo.load(); // Force reload with no source (disconnects stream)
-                console.log('🔇 SRT stream DISCONNECTED');
+                console.log('🔇 vMix stream paused and muted');
             }
             
             // Remove from history
@@ -4825,14 +4840,11 @@
             const jellyfinViewer = document.getElementById('jellyfinViewer');
             const liveStreamVideo = document.getElementById('liveStreamVideo');
             
-            // DISCONNECT SRT stream completely
+            // PAUSE and MUTE vMix stream when navigating back
             if (liveStreamVideo) {
                 liveStreamVideo.pause();
                 liveStreamVideo.muted = true;
-                liveStreamVideo.removeAttribute('src');
-                liveStreamVideo.innerHTML = '';
-                liveStreamVideo.load();
-                console.log('🔇 SRT stream disconnected on back navigation');
+                console.log('🔇 vMix stream paused on back navigation');
             }
             
             // Close video modal if open

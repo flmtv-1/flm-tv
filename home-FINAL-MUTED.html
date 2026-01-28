@@ -3,32 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="FLM TV is OUT OF THIS WORLD! 🌟 Stream FREE movies, TV classics, and LIVE Channel 26.5 Las Vegas. Featuring Filipino & Asian content, international programming, and interactive entertainment you won't find anywhere else. Part of the 7 Realms TV universe.">
-    <meta name="keywords" content="FLM TV, Channel 26.5 Las Vegas, Filipino movies, Asian content, international programming, free streaming, classic films, interactive TV, 7 Realms TV, live entertainment, out of this world">
-    <meta name="author" content="7 Realms TV - FLM Channel 26.5">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="FLM TV - OUT OF THIS WORLD Streaming Experience">
-    <meta property="og:description" content="Experience FREE streaming like never before! Filipino & Asian cinema, international classics, LIVE Channel 26.5, and interactive content that's truly OUT OF THIS WORLD. 🌟 Powered by 7 Realms TV.">
-    <meta property="og:url" content="https://flmtv.com">
-    <meta property="og:site_name" content="FLM TV Channel 26.5 Las Vegas">
-    <meta property="og:image" content="https://flmtv.com/assets/logos/flm-logo.png">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FLM TV - OUT OF THIS WORLD Streaming">
-    <meta name="twitter:description" content="Filipino & Asian content, international classics, LIVE TV - all FREE! FLM TV is OUT OF THIS WORLD! 🌟">
-    
+    <title>FLM TV - Part 2: Visual Categories</title>
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-
         /* ═══════════════════════════════════════════════════════════════ */
         /*  VARIABLES - Filipino Flag Colors                               */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -2866,7 +2846,8 @@
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <!-- Source will be added dynamically when modal opens -->
+                <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                Your browser does not support HLS playback.
             </video>
         </div>
     </div>
@@ -3708,6 +3689,15 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
+            
+            // FORCE live stream video to start muted and paused
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            if (liveStreamVideo) {
+                liveStreamVideo.muted = true;
+                liveStreamVideo.volume = 0;
+                liveStreamVideo.pause();
+                console.log('🔇 Live stream initialized: MUTED and PAUSED');
+            }
             
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
@@ -4781,15 +4771,12 @@
     const modal = document.getElementById('videoModal');
     modal.classList.add('active');
     
-    // Load the SRT stream source and start playing
+    // Start playing the live stream (it will be muted by default until user unmutes)
     const liveStreamVideo = document.getElementById('liveStreamVideo');
     if (liveStreamVideo) {
-        // Set the source
-        liveStreamVideo.innerHTML = '<source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">';
-        liveStreamVideo.load(); // Reload with new source
-        liveStreamVideo.muted = true; // Start muted
-        liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
-        console.log('📺 SRT stream loaded and started (muted)');
+        liveStreamVideo.muted = true; // Keep muted initially
+        liveStreamVideo.play().catch(e => console.log('Autoplay blocked:', e));
+        console.log('📺 Live stream started (muted - user can unmute manually)');
     }
     
     // Add to browser history so back button works
@@ -4801,16 +4788,14 @@
             const modal = document.getElementById('videoModal');
             modal.classList.remove('active');
             
-            // COMPLETELY DISCONNECT the SRT stream by removing source
+            // STOP and MUTE the live stream
             const liveStreamVideo = document.getElementById('liveStreamVideo');
             if (liveStreamVideo) {
                 liveStreamVideo.pause();
                 liveStreamVideo.muted = true;
                 liveStreamVideo.volume = 0;
-                liveStreamVideo.removeAttribute('src'); // Remove src attribute
-                liveStreamVideo.innerHTML = ''; // Clear all source elements
-                liveStreamVideo.load(); // Force reload with no source (disconnects stream)
-                console.log('🔇 SRT stream DISCONNECTED');
+                liveStreamVideo.currentTime = 0; // Reset to beginning
+                console.log('🔇 Live stream stopped and muted');
             }
             
             // Remove from history
@@ -4823,16 +4808,14 @@
         window.addEventListener('popstate', function(event) {
             const videoModal = document.getElementById('videoModal');
             const jellyfinViewer = document.getElementById('jellyfinViewer');
-            const liveStreamVideo = document.getElementById('liveStreamVideo');
             
-            // DISCONNECT SRT stream completely
+            // STOP the live stream player
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
             if (liveStreamVideo) {
                 liveStreamVideo.pause();
                 liveStreamVideo.muted = true;
-                liveStreamVideo.removeAttribute('src');
-                liveStreamVideo.innerHTML = '';
-                liveStreamVideo.load();
-                console.log('🔇 SRT stream disconnected on back navigation');
+                liveStreamVideo.volume = 0;
+                console.log('🔇 Live stream stopped on back navigation');
             }
             
             // Close video modal if open

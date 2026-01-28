@@ -7,9 +7,6 @@
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- PARENTAL CONTROLS -->
-    <script src="parental-controls.js"></script>
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -615,10 +612,10 @@
 
     <!-- Header -->
     <header class="header">
-        <button class="header-btn" onclick="window.location.href='home.html'" style="background: transparent; border-color: #ffd700; color: #ffd700;">
+        <button class="header-btn" onclick="window.location.href='index.html'" style="background: transparent; border-color: #ffd700; color: #ffd700;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
-        <div class="logo" onclick="window.location.href='home.html'" style="cursor: pointer;">FLM TV</div>
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">FLM TV</div>
         <div class="header-btns">
             <a href="https://7RealmsTV.com" target="_blank" class="header-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;" title="7RealmsTV.com">
                 <i class="fas fa-globe"></i>
@@ -632,9 +629,11 @@
         </div>
     </header>
 
-    <!-- Video Player -->
-    <div class="player-section" style="position: relative;">
-        <!-- Jellyfin's player iframe -->
+    <!-- Video Player - Initially hidden -->
+    <div class="player-section" id="playerSection" style="display: none; position: fixed; inset: 0; z-index: 9999; background: #000;">
+        <button id="backButton" style="position: absolute; top: 20px; left: 20px; z-index: 10001; background: rgba(0,0,0,0.8); border: 2px solid #ffd700; color: #ffd700; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+            ← Back
+        </button>
         <iframe 
             id="jellyfinPlayerFrame"
             style="width: 100%; height: 100%; border: none; background: #000;"
@@ -643,11 +642,16 @@
         ></iframe>
     </div>
 
-    <!-- Content - HIDDEN because Jellyfin iframe shows movie details -->
-    <div class="content-wrapper" style="display: none;">
+    <!-- Custom Content - SHOW FIRST -->
+    <div class="content-wrapper" style="display: flex;">
         <!-- Poster Sidebar -->
-        <div class="poster-section">
+        <div class="poster-section" style="position: relative;">
             <img id="poster" class="poster" src="https://via.placeholder.com/300x450" alt="Poster">
+            
+            <!-- BIG PLAY BUTTON on poster -->
+            <button id="playButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border-radius: 50%; background: rgba(255,215,0,0.95); border: none; color: #000; font-size: 2.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,215,0,0.5); transition: all 0.3s;">
+                <i class="fas fa-play" style="margin-left: 8px;"></i>
+            </button>
             
             <div class="action-buttons">
                 <button class="btn btn-like"><i class="fas fa-thumbs-up"></i></button>
@@ -841,26 +845,12 @@
         };
 
         const movieId = new URLSearchParams(window.location.search).get('id');
-        console.log('═══════════════════════════════════════════════════════');
-        console.log('🚀 MOVIE DETAIL PAGE LOADING');
-        console.log('🎬 Movie ID from URL:', movieId);
-        console.log('🌐 Jellyfin Server:', JELLYFIN.SERVER);
-        console.log('🔑 API Key present:', JELLYFIN.API_KEY ? 'YES' : 'NO');
-        console.log('═══════════════════════════════════════════════════════');
+        console.log('🎬 Movie ID:', movieId);
         
         if (!movieId) {
             console.error('❌ NO MOVIE ID IN URL!');
             alert('Error: No movie ID provided in URL');
         }
-        
-        // FAILSAFE: Hide loading screen after 10 seconds no matter what
-        setTimeout(() => {
-            const overlay = document.getElementById('loadingOverlay');
-            if (overlay && !overlay.classList.contains('hidden')) {
-                console.warn('⚠️ Failsafe triggered - hiding loading screen after 10 seconds');
-                overlay.classList.add('hidden');
-            }
-        }, 10000);
         
         let hasStarted = false;
         
@@ -910,48 +900,10 @@
         console.log('✅ Firebase initialized!');
         
         // ═══════════════════════════════════════════════════════════════
-        //  CHAT ROOM SYSTEM FOR MOVIE PAGES
+        //  FIREBASE CHAT LISTENER
         // ═══════════════════════════════════════════════════════════════
         
-        let currentChatRoom = 'lobby';
-        let currentChatListener = null;
-        let currentMovieId = null;
-        let currentMovieTitle = null;
-        
-        function switchToMovieChat(movieId, movieTitle) {
-            console.log(`🎬 Switching to movie chat: ${movieTitle}`);
-            
-            // Remove old listener
-            if (currentChatListener) {
-                currentChatListener.off();
-            }
-            
-            // Clear messages
-            displayedMessages.clear();
-            const chatMessages = document.getElementById('chatMessages');
-            if (chatMessages) {
-                chatMessages.innerHTML = '';
-            }
-            
-            // Set up new movie room
-            currentChatRoom = `movie-${movieId}`;
-            currentMovieId = movieId;
-            currentMovieTitle = movieTitle;
-            currentChatListener = database.ref(`chat-rooms/movie-${movieId}/messages`);
-            
-            // Update chat title if element exists
-            const chatTitle = document.querySelector('.chat-header h3');
-            if (chatTitle) {
-                chatTitle.innerHTML = `<i class="fas fa-film"></i> ${movieTitle}`;
-            }
-            
-            // Start listening
-            currentChatListener.limitToLast(50).on('child_added', handleChatMessage);
-            
-            console.log(`✅ Now chatting in: ${movieTitle}`);
-        }
-        
-        function handleChatMessage(snapshot) {
+        database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
             const messageId = snapshot.key;
             const msg = snapshot.val();
             
@@ -1171,12 +1123,7 @@
             // Send to Firebase
             console.log('📤 Sending message to Firebase...');
             
-            // Send to current chat room (movie-specific or lobby)
-            const chatRef = currentChatRoom === 'lobby' 
-                ? database.ref('messages') 
-                : database.ref(`chat-rooms/${currentChatRoom}/messages`);
-            
-            chatRef.push({
+            database.ref('messages').push({
                 text: messageText,
                 username: username,
                 userId: userId,
@@ -1389,40 +1336,8 @@
                 
                 const item = await r.json();
                 console.log('✅ Movie data loaded:', item.Name);
-                
-                // Switch to movie-specific chat room
-                switchToMovieChat(movieId, item.Name);
 
-                // ═══════════════════════════════════════════════════════════════
-                // 🛡️ PARENTAL CONTROL CHECK (Optional - won't block if disabled)
-                // ═══════════════════════════════════════════════════════════════
-                const movieRating = item.OfficialRating || 'NR';
-                const movieTitle = item.Name;
-                
-                console.log(`🛡️ Checking parental controls for "${movieTitle}" (${movieRating})`);
-                
-                // Check if ParentalControls is available
-                if (typeof ParentalControls !== 'undefined' && ParentalControls.canWatchContent) {
-                    try {
-                        const canWatch = await ParentalControls.canWatchContent(movieTitle, movieRating);
-                        
-                        if (!canWatch) {
-                            console.log('❌ Access denied by parental controls');
-                            alert('⚠️ Access Denied\n\nThis content is restricted by parental controls.');
-                            window.location.href = 'index.html';
-                            return;
-                        }
-                        console.log('✅ Parental control check passed');
-                    } catch (error) {
-                        console.warn('⚠️ Parental controls error:', error);
-                        console.log('✅ Continuing without parental controls');
-                    }
-                } else {
-                    console.log('ℹ️ Parental controls not enabled - skipping check');
-                }
-                // ═══════════════════════════════════════════════════════════════
-
-                // Authenticate with Jellyfin as Public user FIRST
+                // Authenticate with Jellyfin as Public user
                 try {
                     const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
                         method: 'POST',
@@ -1440,7 +1355,7 @@
                         const authData = await authResponse.json();
                         console.log('✅ Authenticated as Public');
                         
-                        // CRITICAL: Store credentials BEFORE loading iframe
+                        // Store credentials for Jellyfin iframe
                         localStorage.setItem('jellyfin-credentials', JSON.stringify({
                             Servers: [{
                                 AccessToken: authData.AccessToken,
@@ -1449,38 +1364,33 @@
                                 address: JELLYFIN.SERVER
                             }]
                         }));
-                        
-                        // Give localStorage time to save (important!)
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                        
-                        console.log('✅ Credentials stored in localStorage');
-                        
-                        // NOW load Jellyfin player - it will find credentials and skip login!
-                        const iframe = document.getElementById('jellyfinPlayerFrame');
-                        const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}`;
-                        
-                        console.log('🎬 Loading Jellyfin player with pre-authenticated session');
-                        iframe.src = playerUrl;
-                        
-                        // Hide loading overlay after 2 seconds
-                        setTimeout(() => {
-                            const overlay = document.getElementById('loadingOverlay');
-                            if (overlay) {
-                                overlay.classList.add('hidden');
-                                setTimeout(() => overlay.remove(), 500);
-                            }
-                        }, 2000);
-                        
-                    } else {
-                        console.error('❌ Authentication failed');
-                        alert('Unable to authenticate. Please try again.');
-                        window.location.href = 'index.html';
                     }
                 } catch (authError) {
-                    console.error('Auth error:', authError);
-                    alert('Connection error. Please try again.');
-                    window.location.href = 'index.html';
+                    console.log('Auth error:', authError);
                 }
+                
+                // Load Jellyfin player in iframe with API key (no Public button!)
+                const iframe = document.getElementById('jellyfinPlayerFrame');
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                iframe.src = playerUrl;
+                console.log('🎬 Loading Jellyfin player');
+                
+                // Try to auto-click Public button when iframe loads
+                iframe.addEventListener('load', () => {
+                    console.log('📺 Iframe loaded');
+                    setTimeout(() => {
+                        try {
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            const publicBtn = iframeDoc.querySelector('.card.itemAction, [data-username="Public"]');
+                            if (publicBtn) {
+                                console.log('✅ Auto-clicking Public button');
+                                publicBtn.click();
+                            }
+                        } catch (e) {
+                            console.log('⚠️ Cannot auto-click (CORS blocked)');
+                        }
+                    }, 500);
+                });
 
                 // Poster
                 if (item.ImageTags?.Primary) {
@@ -1530,24 +1440,55 @@
 
                 loadSimilar(item.ParentId);
                 
-                // HIDE LOADING OVERLAY - Movie loaded successfully!
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                if (loadingOverlay) {
-                    setTimeout(() => {
-                        loadingOverlay.classList.add('hidden');
-                        console.log('✅ Loading overlay hidden');
-                    }, 500);
-                }
+                // Setup PLAY button
+                document.getElementById('playButton').onclick = function() {
+                    console.log('▶️ PLAY clicked - loading Jellyfin player');
+                    
+                    // Hide custom details
+                    document.querySelector('.content-wrapper').style.display = 'none';
+                    
+                    // Show player
+                    document.getElementById('playerSection').style.display = 'block';
+                    
+                    // Load Jellyfin player with video page (should skip detail page)
+                    const iframe = document.getElementById('jellyfinPlayerFrame');
+                    // Setup PLAY button
+document.getElementById('playButton').onclick = async function() {
+    console.log('▶️ PLAY clicked - loading Jellyfin player');
+    
+    // Hide custom details
+    document.querySelector('.content-wrapper').style.display = 'none';
+    
+    // Show player
+    document.getElementById('playerSection').style.display = 'block';
+    
+    // Load Jellyfin player with correct video playback URL
+    const iframe = document.getElementById('jellyfinPlayerFrame');
+    const serverId = 'db6bb6388c8c4c70825698639853ede6';
+    const playerUrl = `${JELLYFIN.SERVER}/web/index.html?serverId=${serverId}#/video?id=${movieId}&serverId=${serverId}&api_key=${JELLYFIN.API_KEY}`;
+    iframe.src = playerUrl;
+    
+    console.log('🎬 Loading:', playerUrl);
+};
+                    iframe.src = playerUrl;
+                    
+                    console.log('🎬 Loading:', playerUrl);
+                };
+                
+                // Setup BACK button
+                document.getElementById('backButton').onclick = function() {
+                    document.getElementById('playerSection').style.display = 'none';
+                    document.querySelector('.content-wrapper').style.display = 'flex';
+                };
+                
+                // Add hover effect to play button
+                const playBtn = document.getElementById('playButton');
+                playBtn.onmouseenter = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                playBtn.onmouseleave = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1)';
 
             } catch (e) {
                 console.error('Error loading movie:', e);
                 alert('Error loading video. Please check your connection and try again.');
-                
-                // Hide loading overlay even on error
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                if (loadingOverlay) {
-                    loadingOverlay.classList.add('hidden');
-                }
             }
         }
 

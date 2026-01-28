@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-
         /* ═══════════════════════════════════════════════════════════════ */
         /*  VARIABLES - Filipino Flag Colors                               */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -1346,34 +1345,6 @@
         }
         
         /* Volume Toggle Button */
-        .preview-volume-btn {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(252, 209, 22, 0.8);
-            border-radius: 50%;
-            color: #fcd116;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .preview-volume-btn:hover {
-            background: rgba(252, 209, 22, 0.2);
-            transform: scale(1.1);
-        }
-        
-        .preview-volume-btn.unmuted {
-            background: rgba(252, 209, 22, 0.3);
-            border-color: #fcd116;
-        }
         
         
         
@@ -1987,22 +1958,29 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Portrait/vertical for better movie poster visibility */
+            /* MOVIE CARDS - Horizontal scroll like Tubi/Netflix on mobile */
             .content-carousel {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
+                display: flex !important;
                 gap: 0.5rem !important;
                 padding: 0.5rem !important;
-                overflow-x: visible !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x proximity;
+                scrollbar-width: none;
+            }
+            
+            .content-carousel::-webkit-scrollbar {
+                display: none;
             }
             
             .movie-card,
             .content-card {
                 flex: none !important;
-                min-width: 100% !important;
-                max-width: 100% !important;
-                width: 100% !important;
-                scroll-snap-align: none;
+                min-width: 95px !important;
+                max-width: 110px !important;
+                width: 100px !important;
+                scroll-snap-align: start;
                 margin-bottom: 0;
                 position: relative !important;
             }
@@ -2026,7 +2004,7 @@
                 aspect-ratio: 2 / 3 !important; /* PORTRAIT - taller than wide! */
                 border-radius: 6px !important;
                 object-fit: cover;
-                max-height: 180px !important;
+                max-height: 150px !important;
             }
             
             /* CATEGORY CARDS - Keep landscape/horizontal */
@@ -2346,21 +2324,8 @@
             }
             
             .movies-grid, .content-grid {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-                overflow-y: hidden !important;
+                grid-template-columns: repeat(3, 1fr) !important;
                 gap: 1rem !important;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 10px;
-            }
-            
-            .movies-grid .movie-card,
-            .content-grid .movie-card {
-                flex: 0 0 45% !important;
-                min-width: 45%;
-                scroll-snap-align: start;
             }
             
             .side-panel {
@@ -2557,54 +2522,22 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted defaultmuted autoplay loop playsinline
+                        <video id="previewVideo" muted autoplay loop playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
                             <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
-                       <script>
-    (function() {
-        const vid = document.getElementById('previewVideo');
-        if (vid) {
-            vid.muted = true;
-            vid.volume = 0;
-            vid.defaultMuted = true;
-            
-            vid.addEventListener('volumechange', function(e) {
-                if (!this.muted || this.volume > 0) {
-                    this.muted = true;
-                    this.volume = 0;
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            }, true);
-            
-            vid.addEventListener('loadedmetadata', function() {
-                this.muted = true;
-                this.volume = 0;
-            });
-            
-            vid.addEventListener('play', function() {
-                this.muted = true;
-                this.volume = 0;
-            });
-            
-            setTimeout(() => {
-                vid.muted = true;
-                vid.volume = 0;
-                vid.play().catch(e => console.log('Preview autoplay blocked:', e));
-            }, 100);
-        }
-    })();
-</script>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
                                 <span> LIVE</span>
                             </div>
-                            <div class="live-channel-name">Channel 26.5 Live</div>
+                            <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button class="preview-volume-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
+                        <button class="preview-mute-btn" id="previewMuteBtn" onclick="event.stopPropagation(); togglePreviewAudio();" 
+                                style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; 
+                                       color: #ffd700; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; 
+                                       justify-content: center; cursor: pointer; z-index: 10; font-size: 18px;">
                             <i class="fas fa-volume-mute"></i>
                         </button>
                     </div>
@@ -2711,15 +2644,10 @@
     <div class="side-panel" id="chatPanel">
         <div class="panel-header">
             <div>
-                <h3 class="panel-title" id="chatRoomTitle" style="margin-bottom: 0.25rem;">
-                    <i class="fas fa-comments"></i> <span id="chatRoomName">💬 FLM TV Lobby</span>
-                </h3>
+                <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-comments"></i> Live Chat</h3>
                 <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
             </div>
             <div style="display: flex; gap: 0.5rem;">
-                <button id="selectionModeBtn" class="panel-toggle" onclick="toggleSelectionMode()" title="Select Messages" style="display: none;">
-                    <i class="fas fa-check-square"></i>
-                </button>
                 <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
                     <i class="fas fa-expand"></i>
                 </button>
@@ -2735,19 +2663,6 @@
             <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
                    style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
                    maxlength="20">
-        </div>
-        
-        <!-- Selection Mode Toolbar -->
-        <div id="selectionToolbar" style="display: none; padding: 0.75rem; background: #1f2937; border-bottom: 1px solid #374151; gap: 0.5rem; flex-wrap: wrap;">
-            <button onclick="selectAllMessages()" style="padding: 0.5rem 1rem; background: #4b5563; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
-                <i class="fas fa-check-double"></i> Select All
-            </button>
-            <button id="deleteSelectedBtn" onclick="deleteSelectedMessages()" style="padding: 0.5rem 1rem; background: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: none;">
-                <i class="fas fa-trash"></i> Delete Selected (<span id="selectedCount">0</span>)
-            </button>
-            <button onclick="toggleSelectionMode()" style="padding: 0.5rem 1rem; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
-                <i class="fas fa-times"></i> Cancel
-            </button>
         </div>
         
         <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
@@ -2862,11 +2777,12 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls muted
+            <video id="liveStreamVideo" controls autoplay muted
                 width="100%" 
                 height="100%"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <!-- Source will be added dynamically when modal opens -->
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10;">
+                <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
+                Your browser does not support HLS playback.
             </video>
         </div>
     </div>
@@ -3038,226 +2954,6 @@
         });
         
         console.log('✅ Firebase initialized!');
-        
-        // ═══════════════════════════════════════════════════════════════
-        //  CHAT ROOM SYSTEM
-        // ═══════════════════════════════════════════════════════════════
-        
-        let currentChatRoom = 'lobby'; // 'lobby' or 'movie-{movieId}'
-        let currentChatRoomName = '💬 FLM TV Lobby';
-        let currentChatListener = null;
-        
-        function switchChatRoom(type, id = null, name = null) {
-            console.log(`🔄 Switching chat room: ${type}`, id, name);
-            
-            // Remove old listener
-            if (currentChatListener) {
-                currentChatListener.off();
-                currentChatListener = null;
-            }
-            
-            // Clear messages
-            const chatMessages = document.getElementById('chatMessages');
-            if (chatMessages) {
-                chatMessages.innerHTML = '';
-                displayedMessages.clear();
-            }
-            
-            // Update room info
-            if (type === 'lobby') {
-                currentChatRoom = 'lobby';
-                currentChatRoomName = '💬 FLM TV Lobby';
-                currentChatListener = database.ref('messages');
-            } else if (type === 'movie' && id) {
-                currentChatRoom = `movie-${id}`;
-                currentChatRoomName = `🎬 ${name || 'Movie Chat'}`;
-                currentChatListener = database.ref(`chat-rooms/movie-${id}/messages`);
-            }
-            
-            // Update UI
-            const roomNameEl = document.getElementById('chatRoomName');
-            if (roomNameEl) {
-                roomNameEl.textContent = currentChatRoomName;
-            }
-            
-            // Start listening to new room
-            if (currentChatListener) {
-                currentChatListener.limitToLast(50).on('child_added', handleIncomingMessage);
-            }
-            
-            console.log(`✅ Switched to: ${currentChatRoomName}`);
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
-        //  SELECTION MODE FOR MESSAGE DELETION
-        // ═══════════════════════════════════════════════════════════════
-        
-        let selectionMode = false;
-        let selectedMessages = new Set();
-        
-        function toggleSelectionMode() {
-            selectionMode = !selectionMode;
-            selectedMessages.clear();
-            
-            const toolbar = document.getElementById('selectionToolbar');
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            const countSpan = document.getElementById('selectedCount');
-            const selectionBtn = document.getElementById('selectionModeBtn');
-            
-            if (selectionMode) {
-                toolbar.style.display = 'flex';
-                selectionBtn.style.background = 'var(--secondary)';
-                // Add checkboxes to all messages
-                document.querySelectorAll('.message').forEach(msg => {
-                    if (!msg.querySelector('.message-checkbox')) {
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.className = 'message-checkbox';
-                        checkbox.style.cssText = 'margin-right: 8px; cursor: pointer; width: 18px; height: 18px;';
-                        checkbox.dataset.messageId = msg.dataset.messageId;
-                        checkbox.onclick = () => updateSelection();
-                        msg.insertBefore(checkbox, msg.firstChild);
-                    }
-                });
-            } else {
-                toolbar.style.display = 'none';
-                selectionBtn.style.background = '';
-                deleteBtn.style.display = 'none';
-                // Remove all checkboxes
-                document.querySelectorAll('.message-checkbox').forEach(cb => cb.remove());
-            }
-            
-            updateSelection();
-        }
-        
-        function updateSelection() {
-            selectedMessages.clear();
-            document.querySelectorAll('.message-checkbox:checked').forEach(cb => {
-                selectedMessages.add(cb.dataset.messageId);
-            });
-            
-            const count = selectedMessages.size;
-            const deleteBtn = document.getElementById('deleteSelectedBtn');
-            const countSpan = document.getElementById('selectedCount');
-            
-            if (countSpan) countSpan.textContent = count;
-            if (deleteBtn) {
-                deleteBtn.style.display = count > 0 ? 'inline-block' : 'none';
-            }
-        }
-        
-        function selectAllMessages() {
-            const checkboxes = document.querySelectorAll('.message-checkbox');
-            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-            checkboxes.forEach(cb => cb.checked = !allChecked);
-            updateSelection();
-        }
-        
-        function deleteSelectedMessages() {
-            if (selectedMessages.size === 0) return;
-            
-            if (!confirm(`Delete ${selectedMessages.size} message(s)?`)) return;
-            
-            const refPath = currentChatRoom === 'lobby' 
-                ? 'messages' 
-                : `chat-rooms/${currentChatRoom}/messages`;
-            
-            const promises = Array.from(selectedMessages).map(messageId => 
-                database.ref(`${refPath}/${messageId}`).remove()
-            );
-            
-            Promise.all(promises).then(() => {
-                console.log('✅ Deleted messages:', selectedMessages.size);
-                selectedMessages.clear();
-                toggleSelectionMode(); // Exit selection mode
-            }).catch(err => {
-                console.error('❌ Error deleting messages:', err);
-                alert('Error deleting messages: ' + err.message);
-            });
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
-        //  FIREBASE CHAT LISTENERS
-        // ═══════════════════════════════════════════════════════════════
-        
-        // Initialize lobby chat
-        currentChatListener = database.ref('messages');
-        
-        function handleIncomingMessage(snapshot) {
-            const messageId = snapshot.key;
-            const msg = snapshot.val();
-            
-            // Prevent duplicate messages
-            if (displayedMessages.has(messageId)) {
-                return;
-            }
-            displayedMessages.add(messageId);
-            
-            // Show ALL messages to EVERYONE (like YouTube live chat)
-            if (msg && msg.text) {
-                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
-                
-                // Check if this is from current user
-                let isOwnMessage = false;
-                const savedUsername = localStorage.getItem('flmtvChatUsername');
-                if (savedUsername && msg.username === savedUsername) {
-                    isOwnMessage = true;
-                } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
-                    isOwnMessage = true;
-                }
-                
-                // Add message with username
-                const messagesContainer = document.getElementById('chatMessages');
-                if (messagesContainer) {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
-                    messageDiv.dataset.messageId = messageId; // Store for deletion
-                    messageDiv.style.marginBottom = '0.75rem';
-                    messageDiv.style.display = 'flex';
-                    messageDiv.style.flexDirection = 'column';
-                    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
-                    
-                    // Add checkbox if in selection mode
-                    if (selectionMode) {
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.className = 'message-checkbox';
-                        checkbox.style.cssText = 'margin-right: 8px; cursor: pointer; width: 18px; height: 18px;';
-                        checkbox.dataset.messageId = messageId;
-                        checkbox.onclick = () => updateSelection();
-                        messageDiv.appendChild(checkbox);
-                    }
-                    
-                    const messageBubble = document.createElement('div');
-                    messageBubble.className = 'message-bubble';
-                    messageBubble.style.maxWidth = '80%';
-                    messageBubble.style.padding = '0.6rem 0.9rem';
-                    messageBubble.style.borderRadius = '1rem';
-                    messageBubble.style.lineHeight = '1.4';
-                    messageBubble.style.wordWrap = 'break-word';
-                    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
-                    messageBubble.style.color = 'white';
-                    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
-                    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
-                    
-                    // Show username for all messages (YouTube style)
-                    messageBubble.innerHTML = `
-                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
-                            ${username}
-                        </div>
-                        <div>${msg.text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                    `;
-                    
-                    messageDiv.appendChild(messageBubble);
-                    messagesContainer.appendChild(messageDiv);
-                    
-                    // Auto-scroll to bottom (like YouTube)
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    
-                    console.log('💬 Message displayed:', username, msg.text);
-                }
-            }
-        }
         
         // ═══════════════════════════════════════════════════════════════
         //  HELPER FUNCTIONS
@@ -3712,23 +3408,41 @@
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
+                // CRITICAL: Set muted BEFORE any play attempts
                 previewVideo.muted = true;
                 previewVideo.volume = 0;
+                previewVideo.defaultMuted = true;
                 
                 // Extra enforcement for mobile
-                previewVideo.setAttribute('muted', 'muted');
-                previewVideo.setAttribute('playsinline', 'playsinline');
+                previewVideo.setAttribute('muted', '');
+                previewVideo.setAttribute('playsinline', '');
                 
-                // Prevent any unmute attempts
-                previewVideo.addEventListener('volumechange', function() {
-                    if (!this.muted) {
-                        console.log('🔇 Preview tried to unmute, forcing muted again');
+                // Re-enforce mute on play (mobile browsers sometimes reset)
+                previewVideo.addEventListener('play', function() {
+                    // Only enforce mute on first play, not when user manually unmutes
+                    if (!this.hasAttribute('data-user-unmuted')) {
                         this.muted = true;
                         this.volume = 0;
+                        console.log('🔇 Preview playing - enforced muted state');
                     }
                 });
                 
+                // Re-enforce mute on any interaction
+                previewVideo.addEventListener('loadedmetadata', function() {
+                    this.muted = true;
+                    this.volume = 0;
+                });
+                
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
+            }
+            
+            // ALSO mute the live stream video player on page load
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            if (liveStreamVideo) {
+                liveStreamVideo.muted = true;
+                liveStreamVideo.volume = 0;
+                liveStreamVideo.defaultMuted = true;
+                console.log('🔇 Live stream video LOCKED muted on load');
             }
             
             // Auto-authenticate in background
@@ -3770,13 +3484,6 @@
                 });
                 
                 console.log('✅ AI panel ready');
-            }
-            
-            // Show selection mode button (for deleting messages)
-            const selectionBtn = document.getElementById('selectionModeBtn');
-            if (selectionBtn) {
-                selectionBtn.style.display = 'inline-flex';
-                console.log('✅ Selection mode button enabled');
             }
             
             // DEBUG: Log screen size for mobile testing
@@ -3862,18 +3569,10 @@
             }, 5000);
         }
         
-       async function playJellyfinItem(itemId) {
-    console.log('🎬 Checking item type for:', itemId);
-    
-    // PAUSE preview video when playing other content
-    const previewVideo = document.getElementById('previewVideo');
-    if (previewVideo) {
-        previewVideo.pause();
-        previewVideo.muted = true;
-        previewVideo.volume = 0;
-    }
-    
-    try {
+        async function playJellyfinItem(itemId) {
+            console.log('🎬 Checking item type for:', itemId);
+            
+            try {
                 // Fetch item to check type
                 const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
                 const item = await response.json();
@@ -3889,7 +3588,7 @@
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
                 } else if (item.Type === 'Movie') {
-                    // Movies go to custom movie-detail.html page (shows info, then has play button)
+                    // Movies go to custom movie-detail.html page
                     console.log('🎬 Redirecting to movie detail page:', item.Name);
                     window.location.href = `movie-detail.html?id=${itemId}`;
                     return;
@@ -3905,176 +3604,22 @@
             }
         }
         
-        // ═══════════════════════════════════════════════════════════════
-        //  INLINE MOVIE PLAYER (No Jellyfin Web Interface Login)
-        // ═══════════════════════════════════════════════════════════════
-        
-        async function openMoviePlayer(movieId, movieTitle) {
-            console.log('🎬 Opening inline player for:', movieTitle);
-            
-            // Switch to movie chat room
-            switchChatRoom('movie', movieId, movieTitle);
-            
-            // Pause preview video
-            const previewVideo = document.getElementById('previewVideo');
-            if (previewVideo) {
-                previewVideo.pause();
-                previewVideo.muted = true;
-                previewVideo.volume = 0;
-            }
-            
-            // Get the viewer and frame
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            if (!viewer || !frame) {
-                console.error('❌ Viewer elements not found');
-                return;
-            }
-            
-            // First, authenticate as Public user if not already authenticated
-            try {
-                const authResponse = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID}", Version="1.0.0"`
-                    },
-                    body: JSON.stringify({
-                        Username: 'Public',
-                        Pw: ''
-                    })
-                });
-                
-                if (authResponse.ok) {
-                    const authData = await authResponse.json();
-                    const accessToken = authData.AccessToken;
-                    console.log('✅ Authenticated as Public user');
-                    
-                    // Build URL with access token for auto-login
-                    const playerUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/item?id=${movieId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&X-Emby-Token=${accessToken}`;
-                    
-                    console.log('🎬 Loading player with authentication');
-                    
-                    // Load player in iframe
-                    frame.src = playerUrl;
-                    
-                    // Show viewer
-                    viewer.classList.add('active');
-                    history.pushState({modal: 'movie', id: movieId}, '', `#movie-${movieId}`);
-                    
-                    console.log('✅ Movie player opened');
-                } else {
-                    console.error('❌ Authentication failed');
-                    alert('Unable to play movie. Please try again.');
-                }
-            } catch (error) {
-                console.error('❌ Error authenticating:', error);
-                alert('Error loading player. Please try again.');
-            }
-        }
-        
         async function openJellyfinCollection(collectionId) {
-    console.log('📂 Opening Jellyfin collection page for:', collectionId);
-    
-    // PAUSE preview video when opening collection
-    const previewVideo = document.getElementById('previewVideo');
-    if (previewVideo) {
-        previewVideo.pause();
-        previewVideo.muted = true;
-        previewVideo.volume = 0;
-    }
-    
-    const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            if (!viewer || !frame) {
-                console.error('❌ Viewer or frame element not found');
-                return;
-            }
-            
-            // IMPORTANT: Hide the loading overlay (it was shown for movies, don't need it for collections)
-            const overlay = document.getElementById('jellyfinLoadingOverlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-                overlay.style.opacity = '0';
-            }
+            console.log('📂 Opening category:', collectionId);
             
             const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
             const collectionName = collection ? collection.name : 'Collection';
             
-            console.log('📂 Collection found:', collectionName);
-            console.log('📂 Collection ID from config:', collectionId);
-            console.log('📂 Collection URL from config:', collection?.url);
+            console.log('📂 Category Name:', collectionName);
             
-            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
-            try {
-                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
-                console.log('📂 Jellyfin says collection exists:', collectionInfo);
-                console.log('📂 Collection Type:', collectionInfo.CollectionType);
-                console.log('📂 Child Count:', collectionInfo.ChildCount);
-            } catch (error) {
-                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
-                console.error('❌ This collection ID might be invalid or deleted!');
-            }
-            
-            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
-            let collectionUrl = collection && collection.url 
-                ? collection.url 
-                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
-            
-            // Fix URL format - change #/ to #!/ if needed
-            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
-            
-            // Ensure the URL keeps the :8920 port (not :8096)
-            collectionUrl = collectionUrl.replace(':8096', ':8920');
-            
-            // IMPORTANT: For hash-based URLs, API key must go BEFORE the hash!
-            // Split at the hash
-            const hashIndex = collectionUrl.indexOf('#');
-            if (hashIndex > -1) {
-                const baseUrl = collectionUrl.substring(0, hashIndex);
-                const hashPart = collectionUrl.substring(hashIndex);
-                
-                // Add api_key to base URL (before hash)
-                if (!baseUrl.includes('api_key=')) {
-                    const separator = baseUrl.includes('?') ? '&' : '?';
-                    collectionUrl = baseUrl + separator + `api_key=${JELLYFIN_CONFIG.API_KEY}` + hashPart;
-                }
-            } else {
-                // No hash, add normally
-                if (!collectionUrl.includes('api_key=')) {
-                    collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                }
-            }
-            
-            console.log('🔗 Final URL we are loading:', collectionUrl);
-            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
-            console.log('🔗 API key check:', collectionUrl.includes('api_key=') ? '✅ Has API key' : '❌ NO API KEY!');
-            
-            // Special handling for "00 Collections" - show Enter overlay
+            // Special case: "00 Collections" goes to collections browser
             if (collectionName === '00 Collections') {
-                showCollectionsEnterOverlay(collectionUrl, collectionName);
-            } else {
-                // Load normally for other collections
-                frame.src = collectionUrl;
-                
-                // Inject FLM TV branding after iframe loads
-                frame.onload = function() {
-                    console.log('✅ Iframe loaded');
-                    try {
-                        injectCustomBranding(frame);
-                    } catch (e) {
-                        console.log('Could not inject branding (CORS):', e);
-                    }
-                };
-                
-                viewer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.body.classList.add('video-playing');
-                
-                history.pushState({modal: 'collection'}, '', '#collection');
+                window.location.href = 'collections-browser.html';
+                return;
             }
+            
+            // Redirect to custom category page - NO IFRAME, NO SIGN-IN!
+            window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
         }
         
         function showCollectionsEnterOverlay(collectionUrl, collectionName) {
@@ -4244,57 +3789,28 @@
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
-            console.log('🎨 Injecting branding and auto-login...');
-            
-            // IMMEDIATELY hide sign-in page while we auto-login
-            const hideStyle = doc.createElement('style');
-            hideStyle.id = 'temp-hide';
-            hideStyle.textContent = `
-                .loginPage, .selectUserPage { opacity: 0.01 !important; }
-            `;
-            doc.head.appendChild(hideStyle);
-            
-            // Auto-login with multiple attempts
-            function tryAutoLogin(attempt = 1) {
+            // Auto-login: Click Public user if on login page
+            setTimeout(() => {
                 try {
-                    console.log(`🔐 Auto-login attempt #${attempt}`);
+                    // Find and click Public user card
                     const publicUser = doc.querySelector('.card-usercard');
                     if (publicUser && publicUser.textContent.includes('Public')) {
-                        console.log('✅ Found Public user, clicking...');
                         publicUser.click();
+                        console.log('✅ Auto-clicked Public user');
                         
+                        // Wait and click Manual Login button
                         setTimeout(() => {
                             const manualLoginBtn = doc.querySelector('.button-submit');
                             if (manualLoginBtn) {
-                                console.log('✅ Clicking login button...');
                                 manualLoginBtn.click();
-                                
-                                // After successful login, completely hide sign-in
-                                setTimeout(() => {
-                                    const completeHide = doc.createElement('style');
-                                    completeHide.textContent = `
-                                        .loginPage, .selectUserPage { display: none !important; }
-                                    `;
-                                    doc.head.appendChild(completeHide);
-                                    const tempHide = doc.getElementById('temp-hide');
-                                    if (tempHide) tempHide.remove();
-                                    console.log('✅ Sign-in hidden!');
-                                }, 500);
+                                console.log('✅ Auto-submitted login');
                             }
                         }, 100);
-                        return true;
                     }
-                    return false;
                 } catch (e) {
-                    console.log('⚠️ Auto-login attempt failed:', e);
-                    return false;
+                    console.log('Auto-login not needed or failed:', e);
                 }
-            }
-            
-            // Try immediately and retry up to 3 times
-            setTimeout(() => tryAutoLogin(1), 50);
-            setTimeout(() => tryAutoLogin(2), 200);
-            setTimeout(() => tryAutoLogin(3), 500);
+            }, 500);
             
             const style = doc.createElement('style');
             style.textContent = `
@@ -4483,17 +3999,13 @@
                 const user = auth.currentUser;
                 const userId = user ? user.uid : fallbackUserId;
                 
-                // Send to Firebase with username - use current chat room
+                // Send to Firebase with username
                 console.log('📤 Sending message to Firebase...');
                 console.log('Username:', username);
                 console.log('Message:', messageText);
-                console.log('Chat Room:', currentChatRoom);
+                console.log('Firebase Database URL:', database.ref().toString());
                 
-                const refPath = currentChatRoom === 'lobby' 
-                    ? 'messages' 
-                    : `chat-rooms/${currentChatRoom}/messages`;
-                
-                database.ref(refPath).push({
+                database.ref('messages').push({
                     text: messageText,
                     username: username,
                     userId: userId,
@@ -4689,8 +4201,70 @@
         // Track displayed messages to prevent duplicates
         const displayedMessages = new Set();
         
-        // Start listening to lobby chat on page load
-        currentChatListener.limitToLast(50).on('child_added', handleIncomingMessage);
+        // Listen to Firebase chat messages - YOUTUBE STYLE (everyone sees everything)
+        database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+            const messageId = snapshot.key;
+            const msg = snapshot.val();
+            
+            // Prevent duplicate messages
+            if (displayedMessages.has(messageId)) {
+                return;
+            }
+            displayedMessages.add(messageId);
+            
+            // Show ALL messages to EVERYONE (like YouTube live chat)
+            if (msg && msg.text) {
+                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+                
+                // Check if this is from current user
+                let isOwnMessage = false;
+                const savedUsername = localStorage.getItem('flmtvChatUsername');
+                if (savedUsername && msg.username === savedUsername) {
+                    isOwnMessage = true;
+                } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
+                    isOwnMessage = true;
+                }
+                
+                // Add message with username
+                const messagesContainer = document.getElementById('chatMessages');
+                if (messagesContainer) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+                    messageDiv.style.marginBottom = '0.75rem';
+                    messageDiv.style.display = 'flex';
+                    messageDiv.style.flexDirection = 'column';
+                    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
+                    
+                    const messageBubble = document.createElement('div');
+                    messageBubble.className = 'message-bubble';
+                    messageBubble.style.maxWidth = '80%';
+                    messageBubble.style.padding = '0.6rem 0.9rem';
+                    messageBubble.style.borderRadius = '1rem';
+                    messageBubble.style.lineHeight = '1.4';
+                    messageBubble.style.wordWrap = 'break-word';
+                    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
+                    messageBubble.style.color = 'white';
+                    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
+                    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
+                    
+                    // Show username for all messages (YouTube style)
+                    messageBubble.innerHTML = `
+                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
+                            ${username}
+                        </div>
+                        <div>${escapeHtml(msg.text)}</div>
+                    `;
+                    
+                    messageDiv.appendChild(messageBubble);
+                    messagesContainer.appendChild(messageDiv);
+                    
+                    // Auto-scroll to bottom (like YouTube)
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    console.log('💬 Message displayed:', username, msg.text);
+                }
+            }
+        });
         
         // Helper function to escape HTML
         function escapeHtml(text) {
@@ -4746,73 +4320,85 @@
         let hls = null;
         
         // Toggle preview video volume
-        function togglePreviewVolume(event) {
-            event.stopPropagation();
+        function togglePreviewVolume() {
             const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('previewVolumeBtn');
+            const btn = document.getElementById('volumeToggleBtn');
             const icon = btn.querySelector('i');
             
             if (video.muted) {
                 video.muted = false;
-                video.volume = 1.0;
                 icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
                 btn.title = 'Mute';
+                console.log('🔊 Preview audio unmuted');
             } else {
                 video.muted = true;
-                video.volume = 0;
                 icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
+                console.log('🔇 Preview audio muted');
+            }
+        }
+        
+        // New function for preview mute button
+        function togglePreviewAudio() {
+            const video = document.getElementById('previewVideo');
+            const btn = document.getElementById('previewMuteBtn');
+            
+            if (!video || !btn) return;
+            
+            const icon = btn.querySelector('i');
+            
+            if (video.muted) {
+                // User wants to unmute
+                video.muted = false;
+                video.volume = 1;
+                video.setAttribute('data-user-unmuted', 'true');
+                icon.className = 'fas fa-volume-up';
+                btn.style.borderColor = '#22c55e';
+                btn.style.color = '#22c55e';
+                console.log('🔊 Channel 26 audio unmuted by user');
+            } else {
+                // User wants to mute
+                video.muted = true;
+                video.volume = 0;
+                video.removeAttribute('data-user-unmuted');
+                icon.className = 'fas fa-volume-mute';
+                btn.style.borderColor = '#ffd700';
+                btn.style.color = '#ffd700';
+                console.log('🔇 Channel 26 audio muted by user');
             }
         }
         
         function openLiveStream() {
-    console.log('Opening Live Channel 26.5...');
-    
-    // PAUSE and MUTE preview video
-    const previewVideo = document.getElementById('previewVideo');
-    if (previewVideo) {
-        previewVideo.pause();
-        previewVideo.muted = true;
-        previewVideo.volume = 0;
-    }
-    
-    const modal = document.getElementById('videoModal');
-    modal.classList.add('active');
-    
-    // Load the SRT stream source and start playing
-    const liveStreamVideo = document.getElementById('liveStreamVideo');
-    if (liveStreamVideo) {
-        // Set the source
-        liveStreamVideo.innerHTML = '<source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">';
-        liveStreamVideo.load(); // Reload with new source
-        liveStreamVideo.muted = true; // Start muted
-        liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
-        console.log('📺 SRT stream loaded and started (muted)');
-    }
-    
-    // Add to browser history so back button works
-    history.pushState({modal: 'stream'}, '', '#stream');
-}
+            console.log('Opening Live Channel 26.5...');
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('liveStreamVideo');
+            
+            // Make sure video plays when modal opens
+            if (video) {
+                video.muted = true; // Keep muted
+                video.play().catch(err => console.log('Play error:', err));
+                console.log('📺 Starting live stream (muted)');
+            }
+            
+            modal.classList.add('active');
+            // Add to browser history so back button works
+            history.pushState({modal: 'stream'}, '', '#stream');
+        }
         
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
-            modal.classList.remove('active');
+            const video = document.getElementById('liveStreamVideo');
             
-            // COMPLETELY DISCONNECT the SRT stream by removing source
-            const liveStreamVideo = document.getElementById('liveStreamVideo');
-            if (liveStreamVideo) {
-                liveStreamVideo.pause();
-                liveStreamVideo.muted = true;
-                liveStreamVideo.volume = 0;
-                liveStreamVideo.removeAttribute('src'); // Remove src attribute
-                liveStreamVideo.innerHTML = ''; // Clear all source elements
-                liveStreamVideo.load(); // Force reload with no source (disconnects stream)
-                console.log('🔇 SRT stream DISCONNECTED');
+            // STOP playing when modal closes
+            if (video) {
+                video.pause();
+                console.log('⏸️ Live stream paused');
             }
             
+            modal.classList.remove('active');
             // Remove from history
             if (window.location.hash === '#stream') {
                 history.back();
@@ -4823,17 +4409,6 @@
         window.addEventListener('popstate', function(event) {
             const videoModal = document.getElementById('videoModal');
             const jellyfinViewer = document.getElementById('jellyfinViewer');
-            const liveStreamVideo = document.getElementById('liveStreamVideo');
-            
-            // DISCONNECT SRT stream completely
-            if (liveStreamVideo) {
-                liveStreamVideo.pause();
-                liveStreamVideo.muted = true;
-                liveStreamVideo.removeAttribute('src');
-                liveStreamVideo.innerHTML = '';
-                liveStreamVideo.load();
-                console.log('🔇 SRT stream disconnected on back navigation');
-            }
             
             // Close video modal if open
             if (videoModal && videoModal.classList.contains('active')) {

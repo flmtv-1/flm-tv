@@ -612,10 +612,10 @@
 
     <!-- Header -->
     <header class="header">
-        <button class="header-btn" onclick="window.location.href='home.html'" style="background: transparent; border-color: #ffd700; color: #ffd700;">
+        <button class="header-btn" onclick="window.location.href='index.html'" style="background: transparent; border-color: #ffd700; color: #ffd700;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
-        <div class="logo" onclick="window.location.href='home.html'" style="cursor: pointer;">FLM TV</div>
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">FLM TV</div>
         <div class="header-btns">
             <a href="https://7RealmsTV.com" target="_blank" class="header-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;" title="7RealmsTV.com">
                 <i class="fas fa-globe"></i>
@@ -842,7 +842,7 @@
         
         if (!movieId) {
             console.error('❌ NO MOVIE ID IN URL!');
-            alert('Error: No movie ID provided in URL');
+            window.location.href = 'home.html'; // Redirect to home instead of alert
         }
         
         let hasStarted = false;
@@ -1242,7 +1242,7 @@
                 
             }).catch(e => {
                 console.error('❌ Play failed:', e);
-                alert('Cannot play video. Please refresh and try again.');
+                // Auto-play blocked - user will need to click play manually
             });
         }
         
@@ -1315,7 +1315,8 @@
             
             if (!movieId) {
                 console.error('❌ Cannot load movie - no ID');
-                alert('Error: No movie ID');
+                // Redirect to home if no movie ID
+                window.location.href = 'home.html';
                 return;
             }
             
@@ -1330,13 +1331,13 @@
                 const item = await r.json();
                 console.log('✅ Movie data loaded:', item.Name);
 
-                // Authenticate with Jellyfin as Public user
+                // Authenticate with Jellyfin as Public user FIRST
                 try {
                     const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-player-${Date.now()}", Version="1.0.0"`
+                            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web-${Date.now()}", Version="1.0.0"`
                         },
                         body: JSON.stringify({
                             Username: 'Public',
@@ -1346,44 +1347,73 @@
                     
                     if (authResponse.ok) {
                         const authData = await authResponse.json();
-                        console.log('✅ Authenticated as Public');
+                        console.log('✅ Authenticated as Public:', authData);
                         
-                        // Store credentials for Jellyfin iframe
-                        localStorage.setItem('jellyfin-credentials', JSON.stringify({
+                        // Store credentials for Jellyfin iframe - CRITICAL FORMAT
+                        const credentials = {
                             Servers: [{
                                 AccessToken: authData.AccessToken,
                                 UserId: authData.User.Id,
                                 Id: 'db6bb6388c8c4c70825698639853ede6',
-                                address: JELLYFIN.SERVER
+                                address: JELLYFIN.SERVER,
+                                Name: 'FLM TV Server'
                             }]
-                        }));
+                        };
+                        
+                        localStorage.setItem('jellyfin-credentials', JSON.stringify(credentials));
+                        console.log('💾 Credentials stored in localStorage');
+                        
+                        // WAIT a moment to ensure localStorage is written
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    } else {
+                        console.error('❌ Auth failed:', authResponse.status);
                     }
                 } catch (authError) {
-                    console.log('Auth error:', authError);
+                    console.error('Auth error:', authError);
                 }
                 
-                // Load Jellyfin player in iframe with API key (no Public button!)
+                // Load Jellyfin player in iframe
                 const iframe = document.getElementById('jellyfinPlayerFrame');
-                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&serverId=db6bb6388c8c4c70825698639853ede6`;
                 iframe.src = playerUrl;
-                console.log('🎬 Loading Jellyfin player');
+                console.log('🎬 Loading Jellyfin player:', playerUrl);
                 
-                // Try to auto-click Public button when iframe loads
-                iframe.addEventListener('load', () => {
-                    console.log('📺 Iframe loaded');
-                    setTimeout(() => {
-                        try {
-                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                            const publicBtn = iframeDoc.querySelector('.card.itemAction, [data-username="Public"]');
-                            if (publicBtn) {
-                                console.log('✅ Auto-clicking Public button');
-                                publicBtn.click();
-                            }
-                        } catch (e) {
-                            console.log('⚠️ Cannot auto-click (CORS blocked)');
+                // Continuously check for and auto-click Public button
+                const autoLoginInterval = setInterval(() => {
+                    try {
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        
+                        // Look for the Public user card
+                        const publicCard = iframeDoc.querySelector('.card.itemAction');
+                        
+                        if (publicCard) {
+                            console.log('✅ Found Public button - clicking...');
+                            publicCard.click();
+                            
+                            // After clicking, wait a moment then check for any submit/enter buttons
+                            setTimeout(() => {
+                                try {
+                                    const submitBtn = iframeDoc.querySelector('button[type="submit"], .raised.submit, button.submit');
+                                    if (submitBtn) {
+                                        console.log('✅ Clicking submit button...');
+                                        submitBtn.click();
+                                        clearInterval(autoLoginInterval); // Stop checking once we've clicked submit
+                                    }
+                                } catch (e) {
+                                    // Silently fail
+                                }
+                            }, 500);
                         }
-                    }, 500);
-                });
+                    } catch (e) {
+                        // CORS blocks access - this is expected and normal
+                    }
+                }, 300); // Check every 300ms
+                
+                // Stop trying after 10 seconds (safety timeout)
+                setTimeout(() => {
+                    clearInterval(autoLoginInterval);
+                    console.log('⏱️ Auto-login timeout - user will need to click manually if not already logged in');
+                }, 10000);
 
                 // Poster
                 if (item.ImageTags?.Primary) {
@@ -1432,25 +1462,10 @@
                 }
 
                 loadSimilar(item.ParentId);
-                
-                // HIDE LOADING OVERLAY - Movie loaded successfully!
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                if (loadingOverlay) {
-                    setTimeout(() => {
-                        loadingOverlay.classList.add('hidden');
-                        console.log('✅ Loading overlay hidden');
-                    }, 500);
-                }
 
             } catch (e) {
                 console.error('Error loading movie:', e);
-                alert('Error loading video. Please check your connection and try again.');
-                
-                // Hide loading overlay even on error
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                if (loadingOverlay) {
-                    loadingOverlay.classList.add('hidden');
-                }
+                // Error logged to console - no popup shown
             }
         }
 
@@ -1485,7 +1500,7 @@
                 const card = document.createElement('div');
                 card.className = 'episode-card';
                 if (ep.Id === movieId) card.classList.add('playing');
-                card.onclick = () => window.location.href = `movie-detail.html?id=${ep.Id}`;
+                card.onclick = () => window.location.href = `player.html?id=${ep.Id}`;
                 
                 const thumb = ep.ImageTags?.Primary 
                     ? `${JELLYFIN.SERVER}/Items/${ep.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
@@ -1509,7 +1524,7 @@
             data.Items?.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.onclick = () => window.location.href = `movie-detail.html?id=${item.Id}`;
+                card.onclick = () => window.location.href = `player.html?id=${item.Id}`;
                 
                 const img = item.ImageTags?.Primary 
                     ? `${JELLYFIN.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
