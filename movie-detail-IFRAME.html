@@ -629,11 +629,9 @@
         </div>
     </header>
 
-    <!-- Video Player - Initially hidden -->
-    <div class="player-section" id="playerSection" style="display: none; position: fixed; inset: 0; z-index: 9999; background: #000;">
-        <button id="backButton" style="position: absolute; top: 20px; left: 20px; z-index: 10001; background: rgba(0,0,0,0.8); border: 2px solid #ffd700; color: #ffd700; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
-            ← Back
-        </button>
+    <!-- Video Player -->
+    <div class="player-section" style="position: relative;">
+        <!-- Jellyfin's player iframe -->
         <iframe 
             id="jellyfinPlayerFrame"
             style="width: 100%; height: 100%; border: none; background: #000;"
@@ -642,16 +640,11 @@
         ></iframe>
     </div>
 
-    <!-- Custom Content - SHOW FIRST -->
-    <div class="content-wrapper" style="display: flex;">
+    <!-- Content - HIDDEN because Jellyfin iframe shows movie details -->
+    <div class="content-wrapper" style="display: none;">
         <!-- Poster Sidebar -->
-        <div class="poster-section" style="position: relative;">
+        <div class="poster-section">
             <img id="poster" class="poster" src="https://via.placeholder.com/300x450" alt="Poster">
-            
-            <!-- BIG PLAY BUTTON on poster -->
-            <button id="playButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border-radius: 50%; background: rgba(255,215,0,0.95); border: none; color: #000; font-size: 2.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,215,0,0.5); transition: all 0.3s;">
-                <i class="fas fa-play" style="margin-left: 8px;"></i>
-            </button>
             
             <div class="action-buttons">
                 <button class="btn btn-like"><i class="fas fa-thumbs-up"></i></button>
@@ -1439,40 +1432,6 @@
                 }
 
                 loadSimilar(item.ParentId);
-                
-                // Setup PLAY button
-                document.getElementById('playButton').onclick = function() {
-                    console.log('▶️ PLAY clicked - loading Jellyfin player');
-                    
-                    // Hide custom details
-                    document.querySelector('.content-wrapper').style.display = 'none';
-                    
-                    // Show player
-                    document.getElementById('playerSection').style.display = 'block';
-                    
-                    // Load Jellyfin player with video page (should skip detail page)
-                    const iframe = document.getElementById('jellyfinPlayerFrame');
-                    // Setup PLAY button
-document.getElementById('playButton').onclick = function() {
-    console.log('▶️ PLAY clicked - redirecting to auth page');
-    // Redirect to intermediate page that authenticates then goes to Jellyfin
-    window.location.href = `play-redirect.html?id=${movieId}`;
-};
-                    iframe.src = playerUrl;
-                    
-                    console.log('🎬 Loading:', playerUrl);
-                };
-                
-                // Setup BACK button
-                document.getElementById('backButton').onclick = function() {
-                    document.getElementById('playerSection').style.display = 'none';
-                    document.querySelector('.content-wrapper').style.display = 'flex';
-                };
-                
-                // Add hover effect to play button
-                const playBtn = document.getElementById('playButton');
-                playBtn.onmouseenter = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1.1)';
-                playBtn.onmouseleave = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1)';
 
             } catch (e) {
                 console.error('Error loading movie:', e);

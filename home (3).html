@@ -3975,7 +3975,7 @@
         }
         
         async function openJellyfinCollection(collectionId) {
-    console.log('📂 Opening collection/category:', collectionId);
+    console.log('📂 Opening:', collectionId);
     
     // PAUSE preview video when navigating away
     const previewVideo = document.getElementById('previewVideo');
@@ -3997,6 +3997,95 @@
     
     // All other items are CATEGORIES - redirect to category-detail.html
     window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
+        }
+            
+            if (!viewer || !frame) {
+                console.error('❌ Viewer or frame element not found');
+                return;
+            }
+            
+            // IMPORTANT: Hide the loading overlay (it was shown for movies, don't need it for collections)
+            const overlay = document.getElementById('jellyfinLoadingOverlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+                overlay.style.opacity = '0';
+            }
+            
+            const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
+            const collectionName = collection ? collection.name : 'Collection';
+            
+            console.log('📂 Collection found:', collectionName);
+            console.log('📂 Collection ID from config:', collectionId);
+            console.log('📂 Collection URL from config:', collection?.url);
+            
+            // DIAGNOSTIC: Try fetching collection info from Jellyfin to verify it exists
+            try {
+                const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collectionId}`, {});
+                console.log('📂 Jellyfin says collection exists:', collectionInfo);
+                console.log('📂 Collection Type:', collectionInfo.CollectionType);
+                console.log('📂 Child Count:', collectionInfo.ChildCount);
+            } catch (error) {
+                console.error('❌ ERROR: Cannot fetch collection from Jellyfin!', error);
+                console.error('❌ This collection ID might be invalid or deleted!');
+            }
+            
+            // Load Jellyfin's native collection page with API key - NO SIGN-IN!
+            let collectionUrl = collection && collection.url 
+                ? collection.url 
+                : `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/list.html?parentId=${collectionId}`;
+            
+            // Fix URL format - change #/ to #!/ if needed
+            collectionUrl = collectionUrl.replace('/web/#/', '/web/index.html#!/');
+            
+            // Ensure the URL keeps the :8920 port (not :8096)
+            collectionUrl = collectionUrl.replace(':8096', ':8920');
+            
+            // IMPORTANT: For hash-based URLs, API key must go BEFORE the hash!
+            // Split at the hash
+            const hashIndex = collectionUrl.indexOf('#');
+            if (hashIndex > -1) {
+                const baseUrl = collectionUrl.substring(0, hashIndex);
+                const hashPart = collectionUrl.substring(hashIndex);
+                
+                // Add api_key to base URL (before hash)
+                if (!baseUrl.includes('api_key=')) {
+                    const separator = baseUrl.includes('?') ? '&' : '?';
+                    collectionUrl = baseUrl + separator + `api_key=${JELLYFIN_CONFIG.API_KEY}` + hashPart;
+                }
+            } else {
+                // No hash, add normally
+                if (!collectionUrl.includes('api_key=')) {
+                    collectionUrl += (collectionUrl.includes('?') ? '&' : '?') + `api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                }
+            }
+            
+            console.log('🔗 Final URL we are loading:', collectionUrl);
+            console.log('🔗 Port check:', collectionUrl.includes(':8920') ? '✅ Correct port' : '❌ Wrong port!');
+            console.log('🔗 API key check:', collectionUrl.includes('api_key=') ? '✅ Has API key' : '❌ NO API KEY!');
+            
+            // Special handling for "00 Collections" - show Enter overlay
+            if (collectionName === '00 Collections') {
+                showCollectionsEnterOverlay(collectionUrl, collectionName);
+            } else {
+                // Load normally for other collections
+                frame.src = collectionUrl;
+                
+                // Inject FLM TV branding after iframe loads
+                frame.onload = function() {
+                    console.log('✅ Iframe loaded');
+                    try {
+                        injectCustomBranding(frame);
+                    } catch (e) {
+                        console.log('Could not inject branding (CORS):', e);
+                    }
+                };
+                
+                viewer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('video-playing');
+                
+                history.pushState({modal: 'collection'}, '', '#collection');
+            }
         }
         
         function showCollectionsEnterOverlay(collectionUrl, collectionName) {

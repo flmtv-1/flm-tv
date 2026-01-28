@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category - FLM TV</title>
+    <title>Collection - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #ffd700;
@@ -55,14 +56,14 @@
             margin: 0 auto;
         }
         
-        .category-title {
+        .collection-title {
             font-size: 3rem;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 1rem;
         }
         
-        .category-count {
+        .collection-count {
             font-size: 1.2rem;
             color: var(--text-secondary);
         }
@@ -77,6 +78,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         
         .item-card {
@@ -86,6 +88,7 @@
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
         
         .item-card:hover {
@@ -94,11 +97,40 @@
             box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
         }
         
+        .item-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
         .item-poster {
             width: 100%;
             aspect-ratio: 2/3;
             object-fit: cover;
             background: #1a1a1a;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
         }
         
         .item-info {
@@ -143,7 +175,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 768px) {
-            .category-title { font-size: 2rem; }
+            .collection-title { font-size: 2rem; }
             .items-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
         }
     </style>
@@ -156,8 +188,8 @@
 
 <div class="header">
     <div class="header-content">
-        <h1 class="category-title" id="categoryTitle">Loading...</h1>
-        <div class="category-count" id="categoryCount"></div>
+        <h1 class="collection-title" id="collectionTitle">Loading...</h1>
+        <div class="collection-count" id="collectionCount"></div>
     </div>
 </div>
 
@@ -168,14 +200,17 @@
 <script>
 const CONFIG = {
     SERVER: 'https://flmtv26.duckdns.org:8920',
-    API_KEY: '24674385633844efbe3a1367b8f63d43',
-    USER_ID: 'dd56bd60efbe4a64a4e6f866a50a6b37'
+    API_KEY: '62131ee22c0141c6b651be75a7444350',
+    USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
+    SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
 };
 
-const categoryId = new URLSearchParams(window.location.search).get('id');
-const categoryName = new URLSearchParams(window.location.search).get('name');
+const collectionId = new URLSearchParams(window.location.search).get('id');
+const collectionName = new URLSearchParams(window.location.search).get('name');
 
-// AUTHENTICATE FIRST
+let accessToken = null;
+
+// AUTHENTICATE FIRST - This gets us the token to bypass login
 async function authenticate() {
     try {
         const response = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
@@ -192,9 +227,20 @@ async function authenticate() {
         
         if (response.ok) {
             const data = await response.json();
-            CONFIG.ACCESS_TOKEN = data.AccessToken;
+            accessToken = data.AccessToken;
             CONFIG.USER_ID = data.User.Id;
-            console.log('✅ Authenticated');
+            
+            // Store in localStorage for Jellyfin iframe to use
+            localStorage.setItem('jellyfin-credentials', JSON.stringify({
+                Servers: [{
+                    AccessToken: accessToken,
+                    UserId: CONFIG.USER_ID,
+                    Id: CONFIG.SERVER_ID,
+                    address: CONFIG.SERVER
+                }]
+            }));
+            
+            console.log('✅ Authenticated as Public');
             return true;
         }
     } catch (error) {
@@ -203,95 +249,101 @@ async function authenticate() {
     return false;
 }
 
-async function loadCategory() {
+function createItemCard(item) {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    
+    // All items (movies, TV series, episodes) go to movie-detail.html
+    card.onclick = () => {
+        window.location.href = `movie-detail.html?id=${item.Id}`;
+    };
+    
+    const posterUrl = item.ImageTags && item.ImageTags.Primary
+        ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=400`
+        : '';
+    
+    card.innerHTML = `
+        <div style="position: relative;">
+            ${posterUrl ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="item-poster"></div>'}
+            <div class="play-overlay">
+                <div class="play-icon">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+        </div>
+        <div class="item-info">
+            <div class="item-title">${item.Name}</div>
+            ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
+        </div>
+    `;
+    
+    return card;
+}
+
+async function loadCollection() {
     try {
         // Authenticate first
         await authenticate();
         
         const headers = {
-            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
+            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${accessToken}"`
         };
         
-        // Set category name if provided
-        if (categoryName) {
-            document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
+        // Set collection name if provided
+        if (collectionName) {
+            document.getElementById('collectionTitle').textContent = decodeURIComponent(collectionName);
         }
         
-        // Load items in category
-        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName`;
-        console.log('Loading category:', itemsUrl);
+        // Load ALL items in collection
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${collectionId}&Recursive=true&SortBy=SortName&Limit=1000`;
+        console.log('Loading collection:', itemsUrl);
         
         const itemsRes = await fetch(itemsUrl, { headers });
         const itemsData = await itemsRes.json();
         
-        console.log('Category items:', itemsData);
+        console.log('Collection items:', itemsData);
+        
+        const allItems = itemsData.Items || [];
         
         // Update count
-        document.getElementById('categoryCount').textContent = `${itemsData.TotalRecordCount || itemsData.Items.length} items`;
+        document.getElementById('collectionCount').textContent = `${allItems.length} items`;
         
-        // If no name provided, try to get it from first item's parent
-        if (!categoryName && itemsData.Items.length > 0) {
+        // If no name provided, try to get it from parent
+        if (!collectionName && allItems.length > 0) {
             try {
-                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}`;
+                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${collectionId}`;
                 const parentRes = await fetch(parentUrl, { headers });
                 const parent = await parentRes.json();
-                document.getElementById('categoryTitle').textContent = parent.Name || 'Category';
+                document.getElementById('collectionTitle').textContent = parent.Name || 'Collection';
             } catch (e) {
-                document.getElementById('categoryTitle').textContent = 'Category';
+                document.getElementById('collectionTitle').textContent = 'Collection';
             }
-        }
-        
-        const itemsGrid = document.getElementById('itemsGrid');
-        itemsGrid.innerHTML = '';
-        
-        if (itemsData.Items && itemsData.Items.length > 0) {
-            itemsData.Items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'item-card';
-                card.onclick = () => {
-                    // Determine if this is a TV show or movie
-                    if (item.Type === 'Series') {
-                        window.location.href = `tv-detail.html?id=${item.Id}`;
-                    } else if (item.Type === 'Movie') {
-                        window.location.href = `movie-detail.html?id=${item.Id}`;
-                    } else {
-                        // Default to movie-detail
-                        window.location.href = `movie-detail.html?id=${item.Id}`;
-                    }
-                };
-                
-                const posterUrl = item.ImageTags && item.ImageTags.Primary
-                    ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=400`
-                    : '';
-                
-                card.innerHTML = `
-                    ${posterUrl ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="item-poster"></div>'}
-                    <div class="item-info">
-                        <div class="item-title">${item.Name}</div>
-                        ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
-                    </div>
-                `;
-                
-                itemsGrid.appendChild(card);
-            });
-        } else {
-            itemsGrid.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">No items found in this category</p>';
         }
         
         document.getElementById('loading').style.display = 'none';
         
+        const itemsGrid = document.getElementById('itemsGrid');
+        
+        if (allItems.length > 0) {
+            allItems.forEach(item => {
+                itemsGrid.appendChild(createItemCard(item));
+            });
+        } else {
+            itemsGrid.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">No items found in this collection</p>';
+        }
+        
     } catch (error) {
-        console.error('Error loading category:', error);
-        alert('Error loading category. Check console for details.');
+        console.error('Error loading collection:', error);
+        alert('Error loading collection. Check console for details.');
         document.getElementById('loading').style.display = 'none';
     }
 }
 
-if (!categoryId) {
-    alert('No category ID provided');
+if (!collectionId) {
+    alert('No collection ID provided');
     history.back();
 } else {
-    loadCategory();
+    loadCollection();
 }
 </script>
 

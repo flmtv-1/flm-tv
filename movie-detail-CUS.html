@@ -1355,25 +1355,34 @@
                         const authData = await authResponse.json();
                         console.log('✅ Authenticated as Public');
                         
-                        // Store credentials for Jellyfin iframe
-                        localStorage.setItem('jellyfin-credentials', JSON.stringify({
+                        // Store credentials for Jellyfin iframe - CORRECT FORMAT
+                        localStorage.setItem('jellyfin_credentials', JSON.stringify({
                             Servers: [{
                                 AccessToken: authData.AccessToken,
                                 UserId: authData.User.Id,
-                                Id: 'db6bb6388c8c4c70825698639853ede6',
-                                address: JELLYFIN.SERVER
+                                Id: authData.ServerId || 'db6bb6388c8c4c70825698639853ede6',
+                                ManualAddress: JELLYFIN.SERVER,
+                                LastConnectionMode: 2,
+                                Name: 'FLM TV Server',
+                                DateLastAccessed: new Date().getTime()
                             }]
                         }));
+                        
+                        // Also set individual keys that Jellyfin checks
+                        localStorage.setItem('jellyfin.serverId', authData.ServerId || 'db6bb6388c8c4c70825698639853ede6');
+                        localStorage.setItem('jellyfin.userId', authData.User.Id);
+                        localStorage.setItem('jellyfin.accessToken', authData.AccessToken);
                     }
                 } catch (authError) {
                     console.log('Auth error:', authError);
                 }
                 
-                // Load Jellyfin player in iframe with API key (no Public button!)
+                // Load Jellyfin VIDEO PLAYER directly (not detail page!)
                 const iframe = document.getElementById('jellyfinPlayerFrame');
-                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                const serverId = 'db6bb6388c8c4c70825698639853ede6';
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/video?id=${movieId}&serverId=${serverId}&api_key=${JELLYFIN.API_KEY}`;
                 iframe.src = playerUrl;
-                console.log('🎬 Loading Jellyfin player');
+                console.log('🎬 Loading Jellyfin VIDEO PLAYER directly - NO login screen!');
                 
                 // Try to auto-click Public button when iframe loads
                 iframe.addEventListener('load', () => {
@@ -1452,12 +1461,7 @@
                     
                     // Load Jellyfin player with video page (should skip detail page)
                     const iframe = document.getElementById('jellyfinPlayerFrame');
-                    // Setup PLAY button
-document.getElementById('playButton').onclick = function() {
-    console.log('▶️ PLAY clicked - redirecting to auth page');
-    // Redirect to intermediate page that authenticates then goes to Jellyfin
-    window.location.href = `play-redirect.html?id=${movieId}`;
-};
+                    const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/video?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
                     iframe.src = playerUrl;
                     
                     console.log('🎬 Loading:', playerUrl);

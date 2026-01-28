@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Player...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0f1a;
+            color: #ffd700;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .loading {
+            text-align: center;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,215,0,0.3);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading player...</p>
+    </div>
+
+    <script>
+        const JELLYFIN = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+
+        // Get movie ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('id');
+
+        async function authenticateAndRedirect() {
+            try {
+                // Authenticate as Public user
+                const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web-${Date.now()}", Version="1.0.0"`
+                    },
+                    body: JSON.stringify({
+                        Username: 'Public',
+                        Pw: ''
+                    })
+                });
+
+                if (authResponse.ok) {
+                    const authData = await authResponse.json();
+                    
+                    // Store credentials in localStorage
+                    localStorage.setItem('jellyfin_credentials', JSON.stringify({
+                        Servers: [{
+                            AccessToken: authData.AccessToken,
+                            UserId: authData.User.Id,
+                            Id: authData.ServerId || 'db6bb6388c8c4c70825698639853ede6',
+                            ManualAddress: JELLYFIN.SERVER,
+                            LastConnectionMode: 2,
+                            Name: 'FLM TV Server',
+                            DateLastAccessed: new Date().getTime()
+                        }]
+                    }));
+
+                    console.log('✅ Authenticated - redirecting to Jellyfin');
+
+                    // NOW redirect to Jellyfin's detail page
+                    const serverId = authData.ServerId || 'db6bb6388c8c4c70825698639853ede6';
+                    window.location.href = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&serverId=${serverId}`;
+                } else {
+                    // If auth fails, still try to redirect
+                    console.log('⚠️ Auth failed, redirecting anyway');
+                    window.location.href = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // On error, still redirect
+                window.location.href = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}`;
+            }
+        }
+
+        if (movieId) {
+            authenticateAndRedirect();
+        } else {
+            document.querySelector('.loading p').textContent = 'Error: No movie ID provided';
+        }
+    </script>
+</body>
+</html>

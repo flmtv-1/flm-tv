@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Now - FLM TV</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0f1a;
+            color: #fff;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffd700;
+            z-index: 100;
+        }
+
+        .header-btn {
+            background: transparent;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            background: #ffd700;
+            color: #000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #ffd700;
+        }
+
+        /* Video Player */
+        .player-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background: #000;
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.8);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .play-overlay.hidden { display: none; }
+
+        .play-btn {
+            width: 100px;
+            height: 100px;
+            background: #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .play-btn i {
+            font-size: 40px;
+            color: #000;
+            margin-left: 5px;
+        }
+
+        .movie-title-overlay {
+            margin-top: 2rem;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="header-btn" onclick="window.location.href='home.html'">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <div class="logo">FLM TV</div>
+        <div></div>
+    </header>
+
+    <!-- Video Player -->
+    <div class="player-container">
+        <video id="videoPlayer" controls controlsList="nodownload"></video>
+        
+        <div class="play-overlay" id="playOverlay">
+            <div class="play-btn" onclick="playVideo()">
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="movie-title-overlay" id="movieTitleOverlay">Loading...</div>
+        </div>
+
+        <div class="loading" id="loading" style="display:none;">
+            <i class="fas fa-spinner fa-spin"></i> Loading video...
+        </div>
+
+        <div class="error" id="error" style="display:none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        const JELLYFIN = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+        };
+
+        const movieId = new URLSearchParams(window.location.search).get('id');
+        let hls = null;
+        let movieData = null;
+
+        async function loadMovieData() {
+            try {
+                const response = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${movieId}?api_key=${JELLYFIN.API_KEY}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load movie data');
+                }
+                
+                movieData = await response.json();
+                document.getElementById('movieTitleOverlay').textContent = movieData.Name;
+                document.title = `${movieData.Name} - FLM TV`;
+                
+                console.log('✅ Movie data loaded:', movieData.Name);
+            } catch (error) {
+                console.error('Error loading movie data:', error);
+                showError('Failed to load movie information');
+            }
+        }
+
+        async function playVideo() {
+            const overlay = document.getElementById('playOverlay');
+            const loading = document.getElementById('loading');
+            const video = document.getElementById('videoPlayer');
+            
+            overlay.classList.add('hidden');
+            loading.style.display = 'block';
+            
+            try {
+                // Get the stream URL from Jellyfin API
+                const streamUrl = `${JELLYFIN.SERVER}/Videos/${movieId}/stream?Static=false&MediaSourceId=${movieId}&DeviceId=flmtv-web&api_key=${JELLYFIN.API_KEY}&UserId=${JELLYFIN.USER_ID}`;
+                
+                console.log('🎬 Stream URL:', streamUrl);
+                
+                if (Hls.isSupported()) {
+                    // Use HLS.js for browsers that don't natively support HLS (like Chrome/Edge)
+                    hls = new Hls({
+                        enableWorker: true,
+                        lowLatencyMode: false,
+                        backBufferLength: 90
+                    });
+                    
+                    hls.loadSource(streamUrl);
+                    hls.attachMedia(video);
+                    
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        loading.style.display = 'none';
+                        video.play().catch(e => {
+                            console.error('Autoplay failed:', e);
+                            showError('Click the video to start playback');
+                        });
+                        console.log('✅ Video ready to play');
+                    });
+                    
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        console.error('HLS Error:', data);
+                        if (data.fatal) {
+                            showError('Video playback error. Please try again.');
+                        }
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    // Native HLS support (Safari, iOS)
+                    video.src = streamUrl;
+                    video.addEventListener('loadedmetadata', function() {
+                        loading.style.display = 'none';
+                        video.play().catch(e => {
+                            console.error('Autoplay failed:', e);
+                            showError('Click the video to start playback');
+                        });
+                    });
+                } else {
+                    throw new Error('HLS not supported in this browser');
+                }
+                
+            } catch (error) {
+                console.error('Error playing video:', error);
+                showError('Failed to load video stream');
+                loading.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Load movie data when page loads
+        if (movieId) {
+            loadMovieData();
+        } else {
+            showError('No movie ID provided');
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (hls) {
+                hls.destroy();
+            }
+        });
+    </script>
+</body>
+</html>
