@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLM TV</title>
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * {
@@ -201,9 +202,50 @@
                 height: 24px;
             }
         }
+        
+        /* MUTE/UNMUTE BUTTON */
+        .mute-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+            color: #ffd700;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .mute-btn:hover {
+            background: #ffd700;
+            color: #000;
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .mute-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+                top: 15px;
+                right: 15px;
+            }
+        }
     </style>
 </head>
 <body>
+    
+    <!-- MUTE/UNMUTE BUTTON -->
+    <button class="mute-btn" id="muteBtn" title="Unmute">
+        <i class="fas fa-volume-mute"></i>
+    </button>
     
     <!-- VIDEO BACKGROUND -->
     <div class="video-bg">
@@ -270,6 +312,29 @@
         video.addEventListener('ended', function() {
             video.style.opacity = '0';
             console.log('✅ Video ended - Showing Alien Banner background');
+        });
+        
+        // MUTE/UNMUTE BUTTON FUNCTIONALITY
+        const muteBtn = document.getElementById('muteBtn');
+        let isMuted = true; // Starts muted
+        
+        // Set video volume to maximum
+        video.volume = 1.0;
+        
+        muteBtn.addEventListener('click', function() {
+            isMuted = !isMuted;
+            video.muted = isMuted;
+            
+            // Update button icon and title
+            if (isMuted) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                muteBtn.title = 'Unmute';
+                console.log('🔇 Video muted');
+            } else {
+                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                muteBtn.title = 'Mute';
+                console.log('🔊 Video unmuted - Volume at', video.volume);
+            }
         });
     </script>
     
