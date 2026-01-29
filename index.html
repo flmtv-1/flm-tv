@@ -110,7 +110,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 30px 20px;
+            padding: 20px 20px; /* Reduced padding */
             z-index: 10;
             background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
         }
@@ -120,7 +120,7 @@
             align-items: center;
             justify-content: center;
             gap: 50px;
-            margin-bottom: 15px;
+            margin-bottom: 10px; /* Reduced margin */
         }
         
         .footer-links a {
@@ -150,12 +150,24 @@
         /* MOBILE */
         @media (max-width: 768px) {
             .content {
-                padding: 20px 15px 140px;
+                padding: 0;
+                align-items: center;
+                justify-content: center; /* Center the button in the middle of screen */
             }
             
             .enter-btn {
                 padding: 12px 30px;
                 font-size: 20px;
+                margin-bottom: 550px; /* MAXIMUM height - push WAY up */
+            }
+            
+            .footer {
+                padding: 15px 20px; /* Smaller footer on mobile */
+            }
+            
+            .footer-links {
+                gap: 40px;
+                margin-bottom: 8px;
             }
             
             .footer-links img {
@@ -165,12 +177,24 @@
         
         @media (max-width: 480px) {
             .content {
-                padding: 15px 10px 120px;
+                padding: 0;
+                align-items: center;
+                justify-content: center;
             }
             
             .enter-btn {
                 padding: 10px 28px;
                 font-size: 18px;
+                margin-bottom: 580px; /* MAXIMUM - as high as possible */
+            }
+            
+            .footer {
+                padding: 12px 15px;
+            }
+            
+            .footer-links {
+                gap: 30px;
+                margin-bottom: 6px;
             }
             
             .footer-links img {
