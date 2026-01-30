@@ -4879,19 +4879,20 @@ async function loadCollectionPage(collectionId, title) {
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<!--  AUTO-OPEN CHAT & SWITCH ROOM (from video player)               -->
+<!--  AUTO-OPEN CHAT/AI & SWITCH ROOM (from video player)            -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <script>
-// Auto-open chat and switch room based on URL parameters from video player
+// Auto-open chat/AI and switch room based on URL parameters from video player
 (function() {
     // Parse URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const shouldOpenChat = urlParams.get('openChat') === 'true';
+    const shouldOpenAI = urlParams.get('openAI') === 'true';
     const movieId = urlParams.get('movieId');
     const movieTitle = urlParams.get('movieTitle');
     
-    console.log('🎬 Chat auto-switch check:', { shouldOpenChat, movieId, movieTitle });
+    console.log('🎬 Panel auto-open check:', { shouldOpenChat, shouldOpenAI, movieId, movieTitle });
     
     // Wait for page to fully load
     window.addEventListener('load', function() {
@@ -4911,6 +4912,16 @@ async function loadCollectionPage(collectionId, title) {
                 console.log('💬 Auto-opening chat panel');
                 if (typeof openPanel === 'function') {
                     openPanel('chatPanel');
+                } else {
+                    console.error('❌ openPanel function not found');
+                }
+            }
+            
+            // If openAI parameter is present, open the AI panel
+            if (shouldOpenAI) {
+                console.log('🤖 Auto-opening Zaina AI panel');
+                if (typeof openPanel === 'function') {
+                    openPanel('aiPanel');
                 } else {
                     console.error('❌ openPanel function not found');
                 }

@@ -4879,48 +4879,6 @@ async function loadCollectionPage(collectionId, title) {
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<!--  AUTO-OPEN CHAT & SWITCH ROOM (from video player)               -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-
-<script>
-// Auto-open chat and switch room based on URL parameters from video player
-(function() {
-    // Parse URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const shouldOpenChat = urlParams.get('openChat') === 'true';
-    const movieId = urlParams.get('movieId');
-    const movieTitle = urlParams.get('movieTitle');
-    
-    console.log('🎬 Chat auto-switch check:', { shouldOpenChat, movieId, movieTitle });
-    
-    // Wait for page to fully load
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            // If movieId is provided, switch to that movie's chat room
-            if (movieId && movieTitle) {
-                console.log(`🎬 Switching to movie chat: ${decodeURIComponent(movieTitle)}`);
-                if (typeof switchChatRoom === 'function') {
-                    switchChatRoom('movie', movieId, decodeURIComponent(movieTitle));
-                } else {
-                    console.error('❌ switchChatRoom function not found');
-                }
-            }
-            
-            // If openChat parameter is present, open the chat panel
-            if (shouldOpenChat) {
-                console.log('💬 Auto-opening chat panel');
-                if (typeof openPanel === 'function') {
-                    openPanel('chatPanel');
-                } else {
-                    console.error('❌ openPanel function not found');
-                }
-            }
-        }, 800); // Delay to ensure everything is initialized
-    });
-})();
-</script>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
 <!--  BOTTOM NAVIGATION (Mobile Only - Like Hulu)                    -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 

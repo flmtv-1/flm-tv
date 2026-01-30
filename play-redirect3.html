@@ -81,20 +81,20 @@
                         }]
                     }));
 
-                    console.log('✅ Authenticated - redirecting to Jellyfin VIDEO PLAYER');
+                    console.log('✅ Authenticated - redirecting to Jellyfin');
 
-                    // NOW redirect to Jellyfin's VIDEO PLAYER (skip detail page!)
+                    // NOW redirect to Jellyfin's detail page
                     const serverId = authData.ServerId || 'db6bb6388c8c4c70825698639853ede6';
-                    window.location.href = `${JELLYFIN.SERVER}/web/#/video?id=${movieId}&serverId=${serverId}`;
+                    window.location.href = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&serverId=${serverId}`;
                 } else {
-                    // If auth fails, still try to redirect to video player
+                    // If auth fails, still try to redirect
                     console.log('⚠️ Auth failed, redirecting anyway');
-                    window.location.href = `${JELLYFIN.SERVER}/web/#/video?id=${movieId}`;
+                    window.location.href = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}`;
                 }
             } catch (error) {
                 console.error('Error:', error);
-                // On error, still redirect to video player
-                window.location.href = `${JELLYFIN.SERVER}/web/#/video?id=${movieId}`;
+                // On error, still redirect
+                window.location.href = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}`;
             }
         }
 

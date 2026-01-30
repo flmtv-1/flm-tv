@@ -3721,6 +3721,34 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
             
+            // CHECK IF USER IS SIGNED IN - redirect to signin page if not
+            function isSignedIn() {
+                const creds = localStorage.getItem('jellyfin_credentials');
+                if (creds) {
+                    try {
+                        const parsed = JSON.parse(creds);
+                        if (parsed.Servers && parsed.Servers.length > 0) {
+                            const server = parsed.Servers[0];
+                            // Check if credentials are recent (less than 24 hours old)
+                            const hoursSinceAccess = (Date.now() - server.DateLastAccessed) / (1000 * 60 * 60);
+                            return hoursSinceAccess < 24;
+                        }
+                    } catch (e) {
+                        return false;
+                    }
+                }
+                return false;
+            }
+            
+            // If not signed in, redirect to signin page
+            if (!isSignedIn()) {
+                console.log('❌ Not signed in, redirecting to signin page');
+                window.location.href = 'signin.html';
+                return; // Stop execution
+            }
+            
+            console.log('✅ User is signed in, loading content');
+            
             // FORCE preview video to be muted (especially on mobile!)
             const previewVideo = document.getElementById('previewVideo');
             if (previewVideo) {
@@ -3901,9 +3929,9 @@
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
                 } else if (item.Type === 'Movie') {
-                    // Movies go to custom movie-detail.html page (shows info, then has play button)
-                    console.log('🎬 Redirecting to movie detail page:', item.Name);
-                    window.location.href = `movie-detail.html?id=${itemId}`;
+                    // Movies go DIRECTLY to Jellyfin detail page (user is already signed in!)
+                    console.log('🎬 Redirecting to Jellyfin for movie:', item.Name);
+                    window.location.href = `https://flmtv26.duckdns.org:8920/web/#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6`;
                     return;
                 }
                 
@@ -4876,48 +4904,6 @@ async function loadCollectionPage(collectionId, title) {
   }
 }
 
-</script>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!--  AUTO-OPEN CHAT & SWITCH ROOM (from video player)               -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-
-<script>
-// Auto-open chat and switch room based on URL parameters from video player
-(function() {
-    // Parse URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const shouldOpenChat = urlParams.get('openChat') === 'true';
-    const movieId = urlParams.get('movieId');
-    const movieTitle = urlParams.get('movieTitle');
-    
-    console.log('🎬 Chat auto-switch check:', { shouldOpenChat, movieId, movieTitle });
-    
-    // Wait for page to fully load
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            // If movieId is provided, switch to that movie's chat room
-            if (movieId && movieTitle) {
-                console.log(`🎬 Switching to movie chat: ${decodeURIComponent(movieTitle)}`);
-                if (typeof switchChatRoom === 'function') {
-                    switchChatRoom('movie', movieId, decodeURIComponent(movieTitle));
-                } else {
-                    console.error('❌ switchChatRoom function not found');
-                }
-            }
-            
-            // If openChat parameter is present, open the chat panel
-            if (shouldOpenChat) {
-                console.log('💬 Auto-opening chat panel');
-                if (typeof openPanel === 'function') {
-                    openPanel('chatPanel');
-                } else {
-                    console.error('❌ openPanel function not found');
-                }
-            }
-        }, 800); // Delay to ensure everything is initialized
-    });
-})();
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->

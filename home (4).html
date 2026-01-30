@@ -3901,9 +3901,33 @@
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
                 } else if (item.Type === 'Movie') {
-                    // Movies go to custom movie-detail.html page (shows info, then has play button)
-                    console.log('🎬 Redirecting to movie detail page:', item.Name);
-                    window.location.href = `movie-detail.html?id=${itemId}`;
+                    // Check if user is signed in to Jellyfin
+                    const jellyfinCreds = localStorage.getItem('jellyfin_credentials');
+                    let isJellyfinSignedIn = false;
+                    
+                    if (jellyfinCreds) {
+                        try {
+                            const parsed = JSON.parse(jellyfinCreds);
+                            if (parsed.Servers && parsed.Servers.length > 0) {
+                                const server = parsed.Servers[0];
+                                // Check if credentials are recent (less than 7 days old)
+                                const daysSinceAccess = (Date.now() - server.DateLastAccessed) / (1000 * 60 * 60 * 24);
+                                isJellyfinSignedIn = daysSinceAccess < 7;
+                            }
+                        } catch (e) {
+                            isJellyfinSignedIn = false;
+                        }
+                    }
+                    
+                    if (isJellyfinSignedIn) {
+                        // Already signed in - go directly to Jellyfin
+                        console.log('✅ Already signed in to Jellyfin, going directly to detail page');
+                        window.location.href = `https://flmtv26.duckdns.org:8920/web/#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6`;
+                    } else {
+                        // Not signed in - go to auth-page.html (auto-authentication page)
+                        console.log('🔑 Not signed in to Jellyfin, showing auth page');
+                        window.location.href = `auth-page.html?id=${itemId}`;
+                    }
                     return;
                 }
                 
@@ -4876,48 +4900,6 @@ async function loadCollectionPage(collectionId, title) {
   }
 }
 
-</script>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!--  AUTO-OPEN CHAT & SWITCH ROOM (from video player)               -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-
-<script>
-// Auto-open chat and switch room based on URL parameters from video player
-(function() {
-    // Parse URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const shouldOpenChat = urlParams.get('openChat') === 'true';
-    const movieId = urlParams.get('movieId');
-    const movieTitle = urlParams.get('movieTitle');
-    
-    console.log('🎬 Chat auto-switch check:', { shouldOpenChat, movieId, movieTitle });
-    
-    // Wait for page to fully load
-    window.addEventListener('load', function() {
-        setTimeout(() => {
-            // If movieId is provided, switch to that movie's chat room
-            if (movieId && movieTitle) {
-                console.log(`🎬 Switching to movie chat: ${decodeURIComponent(movieTitle)}`);
-                if (typeof switchChatRoom === 'function') {
-                    switchChatRoom('movie', movieId, decodeURIComponent(movieTitle));
-                } else {
-                    console.error('❌ switchChatRoom function not found');
-                }
-            }
-            
-            // If openChat parameter is present, open the chat panel
-            if (shouldOpenChat) {
-                console.log('💬 Auto-opening chat panel');
-                if (typeof openPanel === 'function') {
-                    openPanel('chatPanel');
-                } else {
-                    console.error('❌ openPanel function not found');
-                }
-            }
-        }, 800); // Delay to ensure everything is initialized
-    });
-})();
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->

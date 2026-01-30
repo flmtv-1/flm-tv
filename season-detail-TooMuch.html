@@ -96,8 +96,6 @@
             transition: all 0.3s;
             display: flex;
             gap: 1.5rem;
-            text-decoration: none;
-            color: inherit;
         }
         
         .episode-card:hover {
@@ -271,22 +269,13 @@ async function loadSeason() {
         
         if (episodesData.Items && episodesData.Items.length > 0) {
             episodesData.Items.forEach(episode => {
-                // Create an anchor tag instead of div
-                const card = document.createElement('a');
+                const card = document.createElement('div');
                 card.className = 'episode-card';
-                
-                // Link directly to Jellyfin's native episode detail page
-                const jellyfinUrl = `${CONFIG.SERVER}/web/#/details?id=${episode.Id}&serverId=${episode.ServerId || 'default'}`;
-                card.href = jellyfinUrl;
-                
-                // Handle click
-                card.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('🎬 Navigating to episode:', episode.Name);
-                    console.log('🎬 Jellyfin URL:', jellyfinUrl);
-                    // Go directly to Jellyfin's episode detail page
-                    window.location.href = jellyfinUrl;
-                });
+                card.onclick = () => {
+                    console.log('🎬 Clicking episode:', episode.Id, episode.Name);
+                    console.log('🎬 Redirecting to: movie-detail.html?id=' + episode.Id);
+                    window.location.href = `movie-detail.html?id=${episode.Id}`;
+                };
                 
                 const thumbnailUrl = episode.ImageTags && episode.ImageTags.Primary
                     ? `${CONFIG.SERVER}/Items/${episode.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${episode.ImageTags.Primary}&maxWidth=600`
