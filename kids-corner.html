@@ -6,8 +6,8 @@
     <title>Kids Corner - FLM TV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- PDF.js for reading books -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- EPUB.js for reading EPUB books -->
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
     
     <style>
         * {
@@ -549,7 +549,7 @@
 
     </div>
 
-    <!-- PDF Reader -->
+    <!-- EPUB Book Reader -->
     <div class="reader-overlay" id="readerOverlay">
         <div class="reader-header">
             <div class="reader-title" id="readerTitle">Book Title</div>
@@ -562,22 +562,17 @@
                 <i class="fas fa-chevron-left"></i>
             </button>
             
-            <canvas id="pdfCanvas"></canvas>
+            <div id="epubViewer" style="width: 80%; max-width: 800px; height: 80vh; background: white; border-radius: 15px; overflow: hidden;"></div>
             
             <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
                 <i class="fas fa-chevron-right"></i>
             </button>
             
-            <div class="page-counter" id="pageCounter">Page 1 of 1</div>
+            <div class="page-counter" id="pageCounter">Loading...</div>
         </div>
     </div>
 
     <script>
-        // PDF.js setup
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-        // ═══════════════════════════════════════════════════════════════
-        // CONFIGURATION - JELLYFIN API
         // ═══════════════════════════════════════════════════════════════
         
         const JELLYFIN_CONFIG = {
@@ -603,10 +598,7 @@
         // STATE
         // ═══════════════════════════════════════════════════════════════
         
-        let currentPdf = null;
-        let currentPage = 1;
-        let totalPages = 1;
-        let scale = 1.5;
+        // (EPUB state variables are defined in the EPUB BOOK READER section below)
 
         // ═══════════════════════════════════════════════════════════════
         // INITIALIZE
@@ -859,14 +851,50 @@
         // OPEN BOOK
         // ═══════════════════════════════════════════════════════════════
         
+        // ═══════════════════════════════════════════════════════════════
+        // EPUB BOOK READER
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentBook = null;
+        let rendition = null;
+
         async function openBook(index) {
             const book = BOOKS[index];
             
-            console.log('📖 Opening book:', book.name);
+            console.log('📖 Opening EPUB book:', book.name);
             
-            // Open in Jellyfin's native reader (works on TV/mobile/web for EPUB!)
-            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${book.id}`;
-            window.location.href = jellyfinUrl;
+            // Show overlay
+            const overlay = document.getElementById('readerOverlay');
+            const title = document.getElementById('readerTitle');
+            title.textContent = book.name;
+            overlay.classList.add('active');
+            
+            // Get EPUB file URL from Jellyfin
+            const epubUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${book.id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            
+            try {
+                // Create epub.js book
+                currentBook = ePub(epubUrl);
+                
+                // Render into viewer
+                rendition = currentBook.renderTo("epubViewer", {
+                    width: "100%",
+                    height: "100%",
+                    spread: "none"
+                });
+                
+                // Display first page
+                await rendition.display();
+                
+                // Update page counter
+                document.getElementById('pageCounter').textContent = 'Use arrows to turn pages';
+                
+                console.log('✅ EPUB loaded successfully!');
+            } catch (error) {
+                console.error('❌ Error loading EPUB:', error);
+                alert('Could not open this book. Please try another one!');
+                closeReader();
+            }
         }
 
         function openAudiobook(index) {
@@ -890,58 +918,36 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // RENDER PDF PAGE
-        // ═══════════════════════════════════════════════════════════════
-        
-        async function renderPage(pageNum) {
-            const page = await currentPdf.getPage(pageNum);
-            const viewport = page.getViewport({ scale: scale });
-            
-            const canvas = document.getElementById('pdfCanvas');
-            const context = canvas.getContext('2d');
-            
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            
-            await page.render({
-                canvasContext: context,
-                viewport: viewport
-            }).promise;
-            
-            currentPage = pageNum;
-            updatePageCounter();
-        }
-
-        // ═══════════════════════════════════════════════════════════════
-        // NAVIGATION
+        // EPUB NAVIGATION
         // ═══════════════════════════════════════════════════════════════
         
         function nextPage() {
-            if (currentPage < totalPages) {
-                renderPage(currentPage + 1);
+            if (rendition) {
+                rendition.next();
             }
         }
 
         function previousPage() {
-            if (currentPage > 1) {
-                renderPage(currentPage - 1);
+            if (rendition) {
+                rendition.prev();
             }
-        }
-
-        function updatePageCounter() {
-            const counter = document.getElementById('pageCounter');
-            const prevBtn = document.getElementById('prevPage');
-            const nextBtn = document.getElementById('nextPage');
-            
-            counter.textContent = `Page ${currentPage} of ${totalPages}`;
-            
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages;
         }
 
         function closeReader() {
             document.getElementById('readerOverlay').classList.remove('active');
-            currentPdf = null;
+            
+            // Destroy epub.js instance
+            if (rendition) {
+                rendition.destroy();
+                rendition = null;
+            }
+            if (currentBook) {
+                currentBook.destroy();
+                currentBook = null;
+            }
+            
+            // Clear viewer
+            document.getElementById('epubViewer').innerHTML = '';
         }
 
         // ═══════════════════════════════════════════════════════════════
