@@ -320,7 +320,7 @@
             cursor: pointer;
             font-size: 2rem;
             transition: all 0.3s ease;
-            z-index: 10;
+            z-index: 100;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
         }
 
@@ -354,6 +354,7 @@
             font-weight: 700;
             font-size: 1.2rem;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+            z-index: 100;
         }
 
         /* Loading */
@@ -394,6 +395,31 @@
                 font-size: 2rem;
             }
         }
+
+        /* Coloring App Styles */
+        .color-btn {
+            width: 50px;
+            height: 50px;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .color-btn.selected {
+            border: 5px solid #ffd700;
+            transform: scale(1.3);
+        }
+
+        #coloringSVG path, #coloringSVG polygon, #coloringSVG circle, #coloringSVG rect, #coloringSVG ellipse {
+            transition: fill 0.2s ease;
+        }
     </style>
 </head>
 <body>
@@ -418,6 +444,18 @@
                 <i class="fas fa-book"></i>
                 Books
             </button>
+            <button class="tab-btn" onclick="showSection('audiobooks')">
+                <i class="fas fa-headphones"></i>
+                Audiobooks
+            </button>
+            <button class="tab-btn" onclick="showSection('cartoons')">
+                <i class="fas fa-tv"></i>
+                Cartoons
+            </button>
+            <button class="tab-btn" onclick="showSection('coloring')">
+                <i class="fas fa-palette"></i>
+                Coloring
+            </button>
             <button class="tab-btn" onclick="showSection('games')">
                 <i class="fas fa-gamepad"></i>
                 Games
@@ -435,13 +473,76 @@
             </div>
         </div>
 
+        <!-- Audiobooks Section -->
+        <div id="audiobooks-section" class="section-content">
+            <h1 class="section-title">🎧 Choose an Audiobook to Listen</h1>
+            <div class="books-grid" id="audiobooksGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading audiobooks...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartoons Section -->
+        <div id="cartoons-section" class="section-content">
+            <h1 class="section-title">📺 Choose a Cartoon to Watch</h1>
+            <div class="books-grid" id="cartoonsGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading cartoons...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coloring Section -->
+        <div id="coloring-section" class="section-content">
+            <h1 class="section-title">🎨 Choose a Picture to Color</h1>
+            
+            <!-- Coloring Page Gallery -->
+            <div class="books-grid" id="coloringGallery" style="display: block;">
+                <!-- Gallery will be populated by JavaScript -->
+            </div>
+            
+            <!-- Coloring Canvas (hidden until page selected) -->
+            <div id="coloringCanvas" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <button class="back-btn" onclick="backToGallery()" style="display: inline-block; margin: 0 auto;">
+                        <i class="fas fa-arrow-left"></i> Choose Another Picture
+                    </button>
+                </div>
+                
+                <!-- Color Palette -->
+                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <button class="color-btn" onclick="selectColor('#FF0000')" style="background: #FF0000;" title="Red"></button>
+                    <button class="color-btn" onclick="selectColor('#FF6B00')" style="background: #FF6B00;" title="Orange"></button>
+                    <button class="color-btn" onclick="selectColor('#FFD700')" style="background: #FFD700;" title="Yellow"></button>
+                    <button class="color-btn" onclick="selectColor('#00FF00')" style="background: #00FF00;" title="Green"></button>
+                    <button class="color-btn" onclick="selectColor('#00BFFF')" style="background: #00BFFF;" title="Blue"></button>
+                    <button class="color-btn" onclick="selectColor('#8B00FF')" style="background: #8B00FF;" title="Purple"></button>
+                    <button class="color-btn" onclick="selectColor('#FF1493')" style="background: #FF1493;" title="Pink"></button>
+                    <button class="color-btn" onclick="selectColor('#8B4513')" style="background: #8B4513;" title="Brown"></button>
+                    <button class="color-btn" onclick="selectColor('#000000')" style="background: #000000;" title="Black"></button>
+                    <button class="color-btn" onclick="selectColor('#FFFFFF')" style="background: #FFFFFF; border: 2px solid #333;" title="White"></button>
+                    <button class="color-btn" onclick="clearColoring()" style="background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);" title="Clear All">
+                        <i class="fas fa-undo" style="color: white;"></i>
+                    </button>
+                </div>
+                
+                <!-- SVG Coloring Area -->
+                <div style="display: flex; justify-content: center;">
+                    <svg id="coloringSVG" width="600" height="600" style="background: white; border: 3px solid #ffd700; border-radius: 15px; cursor: pointer;"></svg>
+                </div>
+            </div>
+        </div>
+
         <!-- Games Section -->
         <div id="games-section" class="section-content">
             <h1 class="section-title">🎮 Choose a Game to Play</h1>
             <div class="games-grid" id="gamesGrid">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
-                    <p>Loading games...</p>
+                    <p>Games coming soon!</p>
                 </div>
             </div>
         </div>
@@ -483,15 +584,19 @@
             SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-            BOOKS_LIBRARY_ID: '0860f4c83857aa76268cc3c643530bb1',  // Books-Kids library
+            BOOKS_LIBRARY_ID: '467bd88b656c88ee6a423d8478e9e54a',      // TEXT BOOKS (EPUB)
+            AUDIOBOOKS_LIBRARY_ID: '17eace283c0eb2fcd9a3132a4fdf1819',  // AUDIO BOOKS-KIDS
+            CARTOONS_LIBRARY_ID: 'ca43f3291c81d4f007f2b33936d256e6',    // KIDS WORLD (Cartoons/TV)
             GAMES_LIBRARY_ID: null  // Add when games library is created
         };
 
         // ═══════════════════════════════════════════════════════════════
-        // BOOKS AND GAMES - LOADED FROM JELLYFIN
+        // BOOKS, AUDIOBOOKS, CARTOONS, AND GAMES - LOADED FROM JELLYFIN
         // ═══════════════════════════════════════════════════════════════
         
         let BOOKS = [];
+        let AUDIOBOOKS = [];
+        let CARTOONS = [];
         let GAMES = [];
 
         // ═══════════════════════════════════════════════════════════════
@@ -509,7 +614,8 @@
         
         window.addEventListener('load', () => {
             loadBooks();
-            loadGames();
+            loadAudiobooks();
+            loadCartoons();
         });
 
         // Keyboard navigation
@@ -595,6 +701,118 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
+        // LOAD AUDIOBOOKS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadAudiobooks() {
+            const grid = document.getElementById('audiobooksGrid');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Audio&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                AUDIOBOOKS = (data.Items || []).map(audio => ({
+                    id: audio.Id,
+                    name: audio.Name,
+                    type: 'AUDIO',
+                    imageUrl: audio.ImageTags && audio.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${audio.Id}/Images/Primary?maxHeight=400&quality=90&tag=${audio.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                displayAudiobooks();
+            } catch (error) {
+                console.error('Error loading audiobooks:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Could not load audiobooks</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayAudiobooks() {
+            const grid = document.getElementById('audiobooksGrid');
+            
+            if (AUDIOBOOKS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No audiobooks available yet!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = AUDIOBOOKS.map((audio, index) => `
+                <div class="book-card" onclick="openAudiobook(${index})">
+                    <div class="book-cover">
+                        ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}">` : '<i class="fas fa-headphones"></i>'}
+                    </div>
+                    <div class="book-title">${audio.name}</div>
+                    <span class="book-type">🎧 AUDIO</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD CARTOONS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadCartoons() {
+            const grid = document.getElementById('cartoonsGrid');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.CARTOONS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Series&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                CARTOONS = (data.Items || []).map(show => ({
+                    id: show.Id,
+                    name: show.Name,
+                    type: 'TV',
+                    imageUrl: show.ImageTags && show.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${show.Id}/Images/Primary?maxHeight=400&quality=90&tag=${show.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                displayCartoons();
+            } catch (error) {
+                console.error('Error loading cartoons:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Could not load cartoons</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayCartoons() {
+            const grid = document.getElementById('cartoonsGrid');
+            
+            if (CARTOONS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No cartoons available yet!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = CARTOONS.map((show, index) => `
+                <div class="book-card" onclick="openCartoon(${index})">
+                    <div class="book-cover">
+                        ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}">` : '<i class="fas fa-tv"></i>'}
+                    </div>
+                    <div class="book-title">${show.name}</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
         // LOAD GAMES
         // ═══════════════════════════════════════════════════════════════
         
@@ -628,21 +846,32 @@
         
         async function openBook(index) {
             const book = BOOKS[index];
-            const overlay = document.getElementById('readerOverlay');
-            const title = document.getElementById('readerTitle');
             
-            title.textContent = book.name;
-            overlay.classList.add('active');
+            console.log('📖 Opening book:', book.name);
             
-            try {
-                currentPdf = await pdfjsLib.getDocument(book.file).promise;
-                totalPages = currentPdf.numPages;
-                await renderPage(1);
-            } catch (error) {
-                console.error('Error loading PDF:', error);
-                alert('Oops! Could not load this book. Try another one!');
-                closeReader();
-            }
+            // Open in Jellyfin's native reader (works on TV/mobile/web for EPUB!)
+            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${book.id}`;
+            window.location.href = jellyfinUrl;
+        }
+
+        function openAudiobook(index) {
+            const audio = AUDIOBOOKS[index];
+            
+            console.log('🎧 Opening audiobook:', audio.name);
+            
+            // Open in Jellyfin's native audio player
+            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${audio.id}`;
+            window.location.href = jellyfinUrl;
+        }
+
+        function openCartoon(index) {
+            const show = CARTOONS[index];
+            
+            console.log('📺 Opening cartoon:', show.name);
+            
+            // Open in Jellyfin's native TV player
+            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${show.id}`;
+            window.location.href = jellyfinUrl;
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -709,6 +938,113 @@
             // Open game in new window/tab
             window.open(game.file, '_blank');
         }
+
+        // ═══════════════════════════════════════════════════════════════
+        // COLORING BOOK
+        // ═══════════════════════════════════════════════════════════════
+
+        let currentColor = '#FF0000'; // Default red
+        let currentPage = null;
+
+        // Coloring pages library (SVG paths)
+        const COLORING_PAGES = [
+            {
+                name: '🐱 Happy Cat',
+                svg: '<g><circle cx="300" cy="250" r="100" fill="white" stroke="black" stroke-width="3"/><circle cx="270" cy="230" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="330" cy="230" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="275" cy="235" r="5" fill="black"/><circle cx="325" cy="235" r="5" fill="black"/><path d="M 280 270 Q 300 280 320 270" fill="none" stroke="black" stroke-width="3"/><polygon points="250,180 230,150 260,200" fill="white" stroke="black" stroke-width="2"/><polygon points="350,180 370,150 340,200" fill="white" stroke="black" stroke-width="2"/><ellipse cx="300" cy="320" rx="60" ry="80" fill="white" stroke="black" stroke-width="3"/></g>'
+            },
+            {
+                name: '⭐ Big Star',
+                svg: '<polygon points="300,100 350,250 500,250 380,350 430,500 300,400 170,500 220,350 100,250 250,250" fill="white" stroke="black" stroke-width="4"/>'
+            },
+            {
+                name: '🦋 Butterfly',
+                svg: '<g><ellipse cx="300" cy="300" rx="20" ry="60" fill="white" stroke="black" stroke-width="3"/><circle cx="300" cy="250" r="25" fill="white" stroke="black" stroke-width="3"/><circle cx="295" cy="245" r="5" fill="black"/><circle cx="305" cy="245" r="5" fill="black"/><ellipse cx="230" cy="280" rx="70" ry="90" fill="white" stroke="black" stroke-width="3"/><ellipse cx="370" cy="280" rx="70" ry="90" fill="white" stroke="black" stroke-width="3"/><ellipse cx="230" cy="370" rx="50" ry="70" fill="white" stroke="black" stroke-width="3"/><ellipse cx="370" cy="370" rx="50" ry="70" fill="white" stroke="black" stroke-width="3"/><line x1="300" y1="230" x2="280" y2="200" stroke="black" stroke-width="2"/><line x1="300" y1="230" x2="320" y2="200" stroke="black" stroke-width="2"/></g>'
+            },
+            {
+                name: '🌸 Flower',
+                svg: '<g><circle cx="300" cy="300" r="40" fill="white" stroke="black" stroke-width="3"/><ellipse cx="300" cy="220" rx="35" ry="60" fill="white" stroke="black" stroke-width="3"/><ellipse cx="380" cy="300" rx="35" ry="60" fill="white" stroke="black" stroke-width="3" transform="rotate(90 380 300)"/><ellipse cx="300" cy="380" rx="35" ry="60" fill="white" stroke="black" stroke-width="3"/><ellipse cx="220" cy="300" rx="35" ry="60" fill="white" stroke="black" stroke-width="3" transform="rotate(90 220 300)"/><circle cx="300" cy="300" r="20" fill="yellow" stroke="black" stroke-width="2"/><rect x="295" y="350" width="10" height="150" fill="white" stroke="black" stroke-width="3"/><ellipse cx="270" cy="450" rx="30" ry="15" fill="white" stroke="black" stroke-width="2"/><ellipse cx="330" cy="470" rx="30" ry="15" fill="white" stroke="black" stroke-width="2"/></g>'
+            },
+            {
+                name: '🏠 Little House',
+                svg: '<g><rect x="200" y="300" width="200" height="200" fill="white" stroke="black" stroke-width="3"/><polygon points="300,200 450,300 150,300" fill="white" stroke="black" stroke-width="3"/><rect x="260" y="380" width="60" height="120" fill="white" stroke="black" stroke-width="2"/><circle cx="290" cy="440" r="5" fill="black"/><rect x="340" y="340" width="40" height="40" fill="white" stroke="black" stroke-width="2"/><line x1="360" y1="340" x2="360" y2="380" stroke="black" stroke-width="2"/><line x1="340" y1="360" x2="380" y2="360" stroke="black" stroke-width="2"/></g>'
+            },
+            {
+                name: '🐟 Fish',
+                svg: '<g><ellipse cx="300" cy="300" rx="120" ry="80" fill="white" stroke="black" stroke-width="3"/><polygon points="420,300 500,250 500,350" fill="white" stroke="black" stroke-width="3"/><circle cx="250" cy="280" r="12" fill="white" stroke="black" stroke-width="2"/><circle cx="250" cy="280" r="5" fill="black"/><path d="M 320 270 Q 340 260 360 270" fill="none" stroke="black" stroke-width="2"/><path d="M 320 300 Q 340 310 360 300" fill="none" stroke="black" stroke-width="2"/></g>'
+            }
+        ];
+
+        // Initialize coloring gallery
+        function initColoringGallery() {
+            const gallery = document.getElementById('coloringGallery');
+            
+            gallery.innerHTML = COLORING_PAGES.map((page, index) => `
+                <div class="book-card" onclick="openColoringPage(${index})">
+                    <div class="book-cover">
+                        <i class="fas fa-palette" style="font-size: 4rem; color: #ffd700;"></i>
+                    </div>
+                    <div class="book-title">${page.name}</div>
+                    <span class="book-type">🎨 COLOR ME!</span>
+                </div>
+            `).join('');
+        }
+
+        // Open a coloring page
+        function openColoringPage(index) {
+            currentPage = index;
+            const page = COLORING_PAGES[index];
+            
+            // Hide gallery, show canvas
+            document.getElementById('coloringGallery').style.display = 'none';
+            document.getElementById('coloringCanvas').style.display = 'block';
+            
+            // Load SVG
+            const svg = document.getElementById('coloringSVG');
+            svg.innerHTML = page.svg;
+            
+            // Add click handlers to all colorable elements
+            const colorableElements = svg.querySelectorAll('circle, rect, ellipse, polygon, path[fill]');
+            colorableElements.forEach(el => {
+                // Skip black elements (outlines)
+                if (el.getAttribute('fill') === 'black') return;
+                
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', function() {
+                    this.setAttribute('fill', currentColor);
+                });
+            });
+        }
+
+        // Select color
+        function selectColor(color) {
+            currentColor = color;
+            
+            // Update button selection
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.closest('.color-btn').classList.add('selected');
+        }
+
+        // Clear coloring
+        function clearColoring() {
+            if (currentPage === null) return;
+            
+            // Reload the page to reset
+            openColoringPage(currentPage);
+        }
+
+        // Back to gallery
+        function backToGallery() {
+            document.getElementById('coloringGallery').style.display = 'grid';
+            document.getElementById('coloringCanvas').style.display = 'none';
+            currentPage = null;
+        }
+
+        // Initialize coloring gallery on load
+        window.addEventListener('load', () => {
+            initColoringGallery();
+        });
     </script>
 
 </body>
