@@ -959,7 +959,7 @@
         // ═══════════════════════════════════════════════════════════════
 
         let currentColor = '#FF0000'; // Default red
-        let currentPage = null;
+        let currentColoringPage = null; // Renamed to avoid conflict
 
         // Coloring pages library (SVG paths)
         const COLORING_PAGES = [
@@ -1006,7 +1006,7 @@
 
         // Open a coloring page
         function openColoringPage(index) {
-            currentPage = index;
+            currentColoringPage = index;
             const page = COLORING_PAGES[index];
             
             // Hide gallery, show canvas
@@ -1043,17 +1043,17 @@
 
         // Clear coloring
         function clearColoring() {
-            if (currentPage === null) return;
+            if (currentColoringPage === null) return;
             
             // Reload the page to reset
-            openColoringPage(currentPage);
+            openColoringPage(currentColoringPage);
         }
 
         // Back to gallery
         function backToGallery() {
             document.getElementById('coloringGallery').style.display = 'grid';
             document.getElementById('coloringCanvas').style.display = 'none';
-            currentPage = null;
+            currentColoringPage = null;
         }
 
         // Initialize coloring gallery on load
