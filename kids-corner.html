@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Corner - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- PDF.js for reading books -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI Emoji', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .back-btn {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #1ea34a;
+            transform: scale(1.05);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Tabs */
+        .section-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 3px solid transparent;
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .tab-btn.active {
+            background: #ffd700;
+            color: #333;
+            border-color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Section Content */
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Books Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .book-cover i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-title {
+            font-size: 1rem;
+            color: #333;
+            text-align: center;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .book-type {
+            display: inline-block;
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .game-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .game-name {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* PDF Reader Overlay */
+        .reader-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10000;
+        }
+
+        .reader-overlay.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reader-header {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .reader-title {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+
+        .close-reader {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .close-reader:hover {
+            background: #dc2626;
+        }
+
+        .reader-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        #pdfCanvas {
+            max-width: 90%;
+            max-height: 80vh;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Navigation */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffd700;
+            color: #333;
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .nav-arrow:hover:not(:disabled) {
+            background: #ffed4e;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.left {
+            left: 2rem;
+        }
+
+        .nav-arrow.right {
+            right: 2rem;
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .page-counter {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffd700;
+            color: #333;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.5rem;
+        }
+
+        .loading i {
+            font-size: 4rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .nav-arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            Kids Corner
+        </div>
+        <a href="home.html" class="back-btn">
+            <i class="fas fa-home"></i> Back Home
+        </a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Section Tabs -->
+        <div class="section-tabs">
+            <button class="tab-btn active" onclick="showSection('books')">
+                <i class="fas fa-book"></i>
+                Books
+            </button>
+            <button class="tab-btn" onclick="showSection('games')">
+                <i class="fas fa-gamepad"></i>
+                Games
+            </button>
+        </div>
+
+        <!-- Books Section -->
+        <div id="books-section" class="section-content active">
+            <h1 class="section-title">📚 Choose a Book to Read</h1>
+            <div class="books-grid" id="booksGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading your books...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games Section -->
+        <div id="games-section" class="section-content">
+            <h1 class="section-title">🎮 Choose a Game to Play</h1>
+            <div class="games-grid" id="gamesGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading games...</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PDF Reader -->
+    <div class="reader-overlay" id="readerOverlay">
+        <div class="reader-header">
+            <div class="reader-title" id="readerTitle">Book Title</div>
+            <button class="close-reader" onclick="closeReader()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+        <div class="reader-content">
+            <button class="nav-arrow left" id="prevPage" onclick="previousPage()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <canvas id="pdfCanvas"></canvas>
+            
+            <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="page-counter" id="pageCounter">Page 1 of 1</div>
+        </div>
+    </div>
+
+    <script>
+        // PDF.js setup
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // ═══════════════════════════════════════════════════════════════
+        // CONFIGURATION - JELLYFIN API
+        // ═══════════════════════════════════════════════════════════════
+        
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
+            BOOKS_LIBRARY_ID: 'b1179837c889803ea1f56a0e343b4877',  // Kids Interactive Books
+            GAMES_LIBRARY_ID: null  // Add when games library is created
+        };
+
+        // ═══════════════════════════════════════════════════════════════
+        // BOOKS AND GAMES - LOADED FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        let BOOKS = [];
+        let GAMES = [];
+
+        // ═══════════════════════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentPdf = null;
+        let currentPage = 1;
+        let totalPages = 1;
+        let scale = 1.5;
+
+        // ═══════════════════════════════════════════════════════════════
+        // INITIALIZE
+        // ═══════════════════════════════════════════════════════════════
+        
+        window.addEventListener('load', () => {
+            loadBooks();
+            loadGames();
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('readerOverlay').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') previousPage();
+                if (e.key === 'ArrowRight') nextPage();
+                if (e.key === 'Escape') closeReader();
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // SECTION SWITCHING
+        // ═══════════════════════════════════════════════════════════════
+        
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(`${section}-section`).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD BOOKS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadBooks() {
+            const grid = document.getElementById('booksGrid');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.BOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                BOOKS = (data.Items || []).map(book => ({
+                    id: book.Id,
+                    name: book.Name,
+                    file: `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`,
+                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'PDF',
+                    imageUrl: book.ImageTags && book.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                displayBooks();
+            } catch (error) {
+                console.error('Error loading books:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Oops! Could not load books</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to check the connection!</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayBooks() {
+            const grid = document.getElementById('booksGrid');
+            
+            if (BOOKS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No books available yet!</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some books 📚</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = BOOKS.map((book, index) => `
+                <div class="book-card" onclick="openBook(${index})">
+                    <div class="book-cover">
+                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
+                    </div>
+                    <div class="book-title">${book.name}</div>
+                    <span class="book-type">${book.type}</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD GAMES
+        // ═══════════════════════════════════════════════════════════════
+        
+        function loadGames() {
+            const grid = document.getElementById('gamesGrid');
+            
+            if (GAMES.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No games available yet!</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some games 🎮</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = GAMES.map((game, index) => `
+                <div class="game-card" onclick="openGame(${index})">
+                    <div class="game-icon">
+                        <i class="fas fa-${game.icon}"></i>
+                    </div>
+                    <div class="game-name">${game.name}</div>
+                    <div class="game-description">${game.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // OPEN BOOK
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function openBook(index) {
+            const book = BOOKS[index];
+            const overlay = document.getElementById('readerOverlay');
+            const title = document.getElementById('readerTitle');
+            
+            title.textContent = book.name;
+            overlay.classList.add('active');
+            
+            try {
+                currentPdf = await pdfjsLib.getDocument(book.file).promise;
+                totalPages = currentPdf.numPages;
+                await renderPage(1);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                alert('Oops! Could not load this book. Try another one!');
+                closeReader();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // RENDER PDF PAGE
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function renderPage(pageNum) {
+            const page = await currentPdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: scale });
+            
+            const canvas = document.getElementById('pdfCanvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            await page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).promise;
+            
+            currentPage = pageNum;
+            updatePageCounter();
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // NAVIGATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        function nextPage() {
+            if (currentPage < totalPages) {
+                renderPage(currentPage + 1);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                renderPage(currentPage - 1);
+            }
+        }
+
+        function updatePageCounter() {
+            const counter = document.getElementById('pageCounter');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            
+            counter.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        function closeReader() {
+            document.getElementById('readerOverlay').classList.remove('active');
+            currentPdf = null;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // OPEN GAME
+        // ═══════════════════════════════════════════════════════════════
+        
+        function openGame(index) {
+            const game = GAMES[index];
+            // Open game in new window/tab
+            window.open(game.file, '_blank');
+        }
+    </script>
+
+</body>
+</html>
