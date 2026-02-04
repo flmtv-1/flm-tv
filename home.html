@@ -4123,6 +4123,12 @@
         return;
     }
     
+    // Special handling for "Kids Interactive Books" - redirect to custom book reader
+    if (collectionId === 'interactive-books') {
+        window.location.href = 'books.html';
+        return;
+    }
+    
     // All other items are CATEGORIES - redirect to category-detail.html
     window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
         }
