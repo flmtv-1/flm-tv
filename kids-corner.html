@@ -613,9 +613,11 @@
         // ═══════════════════════════════════════════════════════════════
         
         window.addEventListener('load', () => {
+            // Only load books initially (active tab)
             loadBooks();
-            loadAudiobooks();
-            loadCartoons();
+            // Initialize coloring gallery (lightweight)
+            initColoringGallery();
+            // Don't load audiobooks and cartoons until user clicks those tabs
         });
 
         // Keyboard navigation
@@ -628,8 +630,10 @@
         });
 
         // ═══════════════════════════════════════════════════════════════
-        // SECTION SWITCHING
+        // SECTION SWITCHING - WITH ON-DEMAND LOADING
         // ═══════════════════════════════════════════════════════════════
+        
+        let loadedSections = { books: true, coloring: true }; // Pre-loaded
         
         function showSection(section) {
             // Hide all sections
@@ -639,6 +643,17 @@
             // Show selected section
             document.getElementById(`${section}-section`).classList.add('active');
             event.target.closest('.tab-btn').classList.add('active');
+            
+            // Load content on-demand if not already loaded
+            if (!loadedSections[section]) {
+                if (section === 'audiobooks') {
+                    loadAudiobooks();
+                    loadedSections.audiobooks = true;
+                } else if (section === 'cartoons') {
+                    loadCartoons();
+                    loadedSections.cartoons = true;
+                }
+            }
         }
 
         // ═══════════════════════════════════════════════════════════════
