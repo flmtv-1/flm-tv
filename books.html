@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Interactive Books - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- PDF.js for proper PDF page navigation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0a0f1a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #ffd700;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: #1ea34a;
+        }
+
+        /* Book Grid */
+        .books-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem 4rem 2rem;
+        }
+
+        .books-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #ffd700;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 2rem;
+        }
+
+        .book-card {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 270px;
+            background: #1a1f2e;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-type-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .book-title {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #e2e8f0;
+            word-wrap: break-word;
+        }
+
+        /* Book Reader */
+        .reader-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10000;
+        }
+
+        .reader-overlay.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reader-header {
+            padding: 1rem 2rem;
+            background: rgba(26, 31, 46, 0.95);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffd700;
+            flex-shrink: 0;
+        }
+
+        .reader-title {
+            font-size: 1.2rem;
+            color: #ffd700;
+            flex: 1;
+        }
+
+        .reader-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .zoom-btn, .close-reader {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid #22c55e;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .zoom-btn:hover, .close-reader:hover {
+            background: #22c55e;
+        }
+
+        .close-reader {
+            border-color: #ef4444;
+        }
+
+        .close-reader:hover {
+            background: #ef4444;
+        }
+
+        .reader-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: auto;
+            padding: 2rem;
+        }
+
+        .page-canvas-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #pdfCanvas {
+            max-width: 100%;
+            max-height: calc(100vh - 200px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Navigation Arrows */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(34, 197, 94, 0.9);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-arrow:hover:not(:disabled) {
+            background: #22c55e;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+        }
+
+        .nav-arrow.left {
+            left: 2rem;
+        }
+
+        .nav-arrow.right {
+            right: 2rem;
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Page Counter */
+        .page-counter {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 31, 46, 0.95);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: 2px solid #ffd700;
+            font-weight: 600;
+            color: #ffd700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            color: #ffd700;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+
+            .book-cover {
+                height: 210px;
+            }
+
+            .nav-arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .nav-arrow.left {
+                left: 0.5rem;
+            }
+
+            .nav-arrow.right {
+                right: 0.5rem;
+            }
+
+            .reader-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .reader-title {
+                font-size: 1rem;
+            }
+
+            .zoom-controls {
+                display: none;
+            }
+
+            .page-counter {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">📖 Kids Interactive Books</div>
+        <a href="home.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <!-- Books Grid -->
+    <div class="books-container">
+        <h1 class="books-title">Choose a Book to Read</h1>
+        <div class="books-grid" id="booksGrid">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Loading books from library...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Reader Overlay -->
+    <div class="reader-overlay" id="readerOverlay">
+        <div class="reader-header">
+            <div class="reader-title" id="readerTitle">Book Title</div>
+            <div class="reader-controls">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                </div>
+                <button class="close-reader" onclick="closeReader()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+        <div class="reader-content">
+            <button class="nav-arrow left" id="prevPage" onclick="previousPage()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="page-canvas-container">
+                <canvas id="pdfCanvas"></canvas>
+            </div>
+            
+            <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <div class="page-counter" id="pageCounter">Page 1 of 1</div>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // JELLYFIN CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '8ac0d60f29fe49e9b0272c73c0a7e08e',
+            USER_ID: 'db6bb6388c8c4c70825698639853ede6',
+            LIBRARY_ID: 'b1179837c889803ea1f56a0e343b4877' // Kids Interactive Books library ID
+        };
+
+        // PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // ═══════════════════════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════════════════════
+        
+        let books = [];
+        let currentBook = null;
+        let currentPdf = null;
+        let currentPage = 1;
+        let totalPages = 1;
+        let scale = 1.5;
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD BOOKS ON PAGE LOAD
+        // ═══════════════════════════════════════════════════════════════
+        
+        window.addEventListener('load', loadBooks);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('readerOverlay').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') previousPage();
+                if (e.key === 'ArrowRight') nextPage();
+                if (e.key === 'Escape') closeReader();
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // FETCH BOOKS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadBooks() {
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                books = data.Items || [];
+                console.log(`📚 Loaded ${books.length} books from Jellyfin`);
+                
+                displayBooks();
+            } catch (error) {
+                console.error('Error loading books:', error);
+                document.getElementById('booksGrid').innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ef4444;">Error loading books from Jellyfin</p>
+                        <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">Make sure the library is still active in Jellyfin</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // DISPLAY BOOKS GRID
+        // ═══════════════════════════════════════════════════════════════
+        
+        function displayBooks() {
+            const grid = document.getElementById('booksGrid');
+            
+            if (books.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No books found in library</p>
+                        <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">
+                            Add PDF or CBZ files to:<br>
+                            Y:\\jellyfin-libraries\\Interactive-Books\\<br>
+                            Then scan the library in Jellyfin
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = books.map((book, index) => {
+                const imageUrl = book.ImageTags && book.ImageTags.Primary
+                    ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                    : null;
+                
+                const fileType = book.Path ? book.Path.split('.').pop().toUpperCase() : 'BOOK';
+                
+                return `
+                    <div class="book-card" onclick="openBook(${index})">
+                        <div class="book-cover">
+                            ${imageUrl ? `<img src="${imageUrl}" alt="${book.Name}">` : `<i class="fas fa-book" style="font-size: 4rem; color: #ffd700;"></i>`}
+                            <span class="book-type-badge">${fileType}</span>
+                        </div>
+                        <div class="book-title">${book.Name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // OPEN BOOK READER
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function openBook(index) {
+            currentBook = books[index];
+            currentPage = 1;
+            scale = 1.5;
+            
+            const overlay = document.getElementById('readerOverlay');
+            const title = document.getElementById('readerTitle');
+            
+            title.textContent = currentBook.Name;
+            overlay.classList.add('active');
+            
+            // Load PDF
+            if (currentBook.Path && currentBook.Path.toLowerCase().endsWith('.pdf')) {
+                await loadPDF();
+            } else {
+                alert('Only PDF books are currently supported. CBZ support coming soon!');
+                closeReader();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD PDF WITH PDF.JS
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadPDF() {
+            try {
+                const pdfUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${currentBook.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                currentPdf = await pdfjsLib.getDocument(pdfUrl).promise;
+                totalPages = currentPdf.numPages;
+                
+                console.log(`📖 PDF loaded: ${totalPages} pages`);
+                
+                await renderPage(1);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                alert('Error loading PDF. Please try another book.');
+                closeReader();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // RENDER PDF PAGE
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function renderPage(pageNum) {
+            const page = await currentPdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: scale });
+            
+            const canvas = document.getElementById('pdfCanvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            await page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).promise;
+            
+            currentPage = pageNum;
+            updatePageCounter();
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // NAVIGATION FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        
+        function nextPage() {
+            if (currentPage < totalPages) {
+                renderPage(currentPage + 1);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                renderPage(currentPage - 1);
+            }
+        }
+
+        function zoomIn() {
+            scale += 0.25;
+            renderPage(currentPage);
+        }
+
+        function zoomOut() {
+            if (scale > 0.5) {
+                scale -= 0.25;
+                renderPage(currentPage);
+            }
+        }
+
+        function updatePageCounter() {
+            const counter = document.getElementById('pageCounter');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            
+            counter.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        function closeReader() {
+            document.getElementById('readerOverlay').classList.remove('active');
+            currentBook = null;
+            currentPdf = null;
+        }
+    </script>
+
+</body>
+</html>
