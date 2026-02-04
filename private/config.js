@@ -8,3 +8,33 @@ const API_KEYS = {
     OMDB: '266aeb44',
     YOUTUBE: 'AIzaSyBJMZDXDPcVPUFhMKdYrABrke4PQZgRsT8'
 };
+
+// ================================================
+// Epic Kids Zone Configuration
+// ================================================
+
+const FLMTV_KIDS_CONFIG = {
+    // Your Jellyfin server URL
+    SERVER_URL: 'http://192.168.68.108:8096',
+    
+    // Jellyfin username (create a "Public" user with no password)
+    USERNAME: 'Public',
+    
+    // Password (leave blank for Public user)
+    PASSWORD: '',
+    
+    // ================================================
+    // HOW TO GET YOUR LIBRARY IDs:
+    // ================================================
+    // 1. Open Jellyfin: http://192.168.68.108:8096
+    // 2. Click on your Books library
+    // 3. Look at the URL in browser address bar
+    // 4. Find the part that says: parentId=abc123def456
+    // 5. Copy that ID (the abc123def456 part) and paste below
+    
+    // Library ID for audiobooks (your Books library)
+    AUDIOBOOKS_LIBRARY_ID: '',  // PASTE YOUR BOOKS LIBRARY ID HERE
+    
+    // Library ID for textbooks/PDFs (can be same as audiobooks)
+    TEXTBOOKS_LIBRARY_ID: '',   // PASTE YOUR BOOKS LIBRARY ID HERE
+};
