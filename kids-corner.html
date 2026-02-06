@@ -245,7 +245,7 @@
             color: #666;
         }
 
-        /* PDF Reader Overlay */
+        /* Book Reader Overlay */
         .reader-overlay {
             display: none;
             position: fixed;
@@ -298,12 +298,6 @@
             justify-content: center;
             position: relative;
             padding: 2rem;
-        }
-
-        #pdfCanvas {
-            max-width: 90%;
-            max-height: 80vh;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
         /* Navigation */
@@ -440,17 +434,13 @@
         
         <!-- Section Tabs -->
         <div class="section-tabs">
-            <button class="tab-btn active" onclick="showSection('books')">
-                <i class="fas fa-book"></i>
-                Books
+            <button class="tab-btn active" onclick="showSection('cartoons')">
+                <i class="fas fa-tv"></i>
+                Cartoons
             </button>
             <button class="tab-btn" onclick="showSection('audiobooks')">
                 <i class="fas fa-headphones"></i>
                 Audiobooks
-            </button>
-            <button class="tab-btn" onclick="showSection('cartoons')">
-                <i class="fas fa-tv"></i>
-                Cartoons
             </button>
             <button class="tab-btn" onclick="showSection('coloring')">
                 <i class="fas fa-palette"></i>
@@ -463,12 +453,13 @@
         </div>
 
         <!-- Books Section -->
-        <div id="books-section" class="section-content active">
-            <h1 class="section-title">📚 Choose a Book to Read</h1>
-            <div class="books-grid" id="booksGrid">
+        <!-- Cartoons Section -->
+        <div id="cartoons-section" class="section-content active">
+            <h1 class="section-title">📺 Choose a Cartoon to Watch</h1>
+            <div class="books-grid" id="cartoonsGrid">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
-                    <p>Loading your books...</p>
+                    <p>Loading cartoons...</p>
                 </div>
             </div>
         </div>
@@ -480,17 +471,6 @@
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
                     <p>Loading audiobooks...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cartoons Section -->
-        <div id="cartoons-section" class="section-content">
-            <h1 class="section-title">📺 Choose a Cartoon to Watch</h1>
-            <div class="books-grid" id="cartoonsGrid">
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <p>Loading cartoons...</p>
                 </div>
             </div>
         </div>
@@ -605,11 +585,11 @@
         // ═══════════════════════════════════════════════════════════════
         
         window.addEventListener('load', () => {
-            // Only load books initially (active tab)
-            loadBooks();
+            // Load cartoons initially (active tab)
+            loadCartoons();
             // Initialize coloring gallery (lightweight)
             initColoringGallery();
-            // Don't load audiobooks and cartoons until user clicks those tabs
+            // Don't load audiobooks until user clicks that tab
         });
 
         // Keyboard navigation
@@ -625,7 +605,7 @@
         // SECTION SWITCHING - WITH ON-DEMAND LOADING
         // ═══════════════════════════════════════════════════════════════
         
-        let loadedSections = { books: true, coloring: true }; // Pre-loaded
+        let loadedSections = { cartoons: true, coloring: true }; // Pre-loaded
         
         function showSection(section) {
             // Hide all sections
@@ -665,7 +645,7 @@
                     id: book.Id,
                     name: book.Name,
                     file: `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`,
-                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'PDF',
+                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'EPUB',
                     imageUrl: book.ImageTags && book.ImageTags.Primary
                         ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
                         : null
@@ -715,7 +695,7 @@
             const grid = document.getElementById('audiobooksGrid');
             
             try {
-                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Audio&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=AudioBook&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
                 
                 const response = await fetch(url);
                 const data = await response.json();
@@ -770,11 +750,18 @@
         async function loadCartoons() {
             const grid = document.getElementById('cartoonsGrid');
             
+            console.log('🎬 Starting to load cartoons...');
+            
             try {
                 const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.CARTOONS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Series&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
                 
+                console.log('📡 Fetching from:', url);
+                
                 const response = await fetch(url);
                 const data = await response.json();
+                
+                console.log('✅ Got response:', data);
+                console.log('📊 Number of items:', data.Items ? data.Items.length : 0);
                 
                 CARTOONS = (data.Items || []).map(show => ({
                     id: show.Id,
@@ -785,9 +772,11 @@
                         : null
                 }));
                 
+                console.log('🎬 Mapped CARTOONS:', CARTOONS);
+                
                 displayCartoons();
             } catch (error) {
-                console.error('Error loading cartoons:', error);
+                console.error('❌ Error loading cartoons:', error);
                 grid.innerHTML = `
                     <div class="loading">
                         <p style="color: #ff6b6b;">Could not load cartoons</p>
@@ -869,12 +858,36 @@
             title.textContent = book.name;
             overlay.classList.add('active');
             
-            // Get EPUB file URL from Jellyfin
+            // Get EPUB file URL from Jellyfin - use stream endpoint with proper authentication
             const epubUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${book.id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`;
             
+            console.log('📥 Fetching EPUB from:', epubUrl);
+            console.log('📋 Book details:', book);
+            
             try {
-                // Create epub.js book
-                currentBook = ePub(epubUrl);
+                // Fetch the EPUB file first to ensure we can access it
+                const response = await fetch(epubUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/epub+zip'
+                    }
+                });
+                
+                console.log('📡 Response status:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch EPUB: ${response.status} - ${response.statusText}`);
+                }
+                
+                const epubBlob = await response.blob();
+                console.log('📦 EPUB blob size:', epubBlob.size, 'bytes');
+                
+                const epubBlobUrl = URL.createObjectURL(epubBlob);
+                
+                console.log('✅ EPUB fetched successfully, creating reader...');
+                
+                // Create epub.js book from blob
+                currentBook = ePub(epubBlobUrl);
                 
                 // Render into viewer
                 rendition = currentBook.renderTo("epubViewer", {
@@ -902,7 +915,7 @@
             
             console.log('🎧 Opening audiobook:', audio.name);
             
-            // Open in Jellyfin's native audio player
+            // Open in Jellyfin's native audio player (no auth params needed)
             const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${audio.id}`;
             window.location.href = jellyfinUrl;
         }
@@ -912,7 +925,7 @@
             
             console.log('📺 Opening cartoon:', show.name);
             
-            // Open in Jellyfin's native TV player
+            // Open in Jellyfin's native TV player (no auth params needed)
             const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${show.id}`;
             window.location.href = jellyfinUrl;
         }

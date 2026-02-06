@@ -749,6 +749,38 @@
             color: white;
         }
         
+        .floating-btn-kids {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            animation: pulse-glow 2s ease-in-out infinite;
+            padding: 0;
+            overflow: hidden;
+            border: 3px solid #4A90E2;
+        }
+        
+        .floating-btn-kids img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(74, 144, 226, 0.8);
+                transform: scale(1.05);
+            }
+        }
+        
+        .floating-btn-kids:hover {
+            background: linear-gradient(135deg, #357ABD 0%, #4A90E2 100%);
+            transform: scale(1.15) !important;
+        }
+        
         .floating-btn-ai {
             background: linear-gradient(135deg, var(--neon-green) 0%, var(--accent) 100%);
             padding: 0;
@@ -3050,6 +3082,9 @@
     
     <!-- Floating Chat/AI buttons for main page -->
     <div class="floating-buttons">
+        <button class="floating-btn floating-btn-kids" onclick="window.location.href='kids-corner.html'" title="Kids Corner">
+            <img src="assets/images/kids-avatar.png" alt="Kids Corner">
+        </button>
         <button class="floating-btn floating-btn-chat" onclick="openPanel('chatPanel')" title="Chat">
             <i class="fas fa-comments"></i>
         </button>
@@ -3092,7 +3127,7 @@
         { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
         { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
-        { id: 'cf6b0d096a1b570653b5a9a572fefa9b', name: '03 AWESOME TV!', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=cf6b0d096a1b570653b5a9a572fefa9b&collectionType=tvshows' },
+        { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
         { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
         { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
         { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
