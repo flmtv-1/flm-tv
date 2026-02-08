@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kids Corner - FLM TV</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0c3fc 0%, #fbc2eb 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      color: #9333ea;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      font-size: 1.5rem;
+      color: #7e22ce;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .tab-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .tab-button.audiobooks {
+      color: #9333ea;
+    }
+
+    .tab-button.audiobooks.active {
+      background: #9333ea;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(147, 51, 234, 0.3);
+    }
+
+    .tab-button.storybooks {
+      color: #ec4899;
+    }
+
+    .tab-button.storybooks.active {
+      background: #ec4899;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(236, 72, 153, 0.3);
+    }
+
+    .content {
+      display: none;
+    }
+
+    .content.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #ddd6fe 0%, #fbcfe8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-image .icon {
+      font-size: 4rem;
+    }
+
+    .card-title {
+      padding: 1rem;
+      font-weight: bold;
+      color: #6b21a8;
+      text-align: center;
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 5rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 4rem;
+      height: 4rem;
+      border: 4px solid rgba(147, 51, 234, 0.3);
+      border-top-color: #9333ea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 5rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-state h3 {
+      font-size: 2rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+
+    .load-more {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .load-more button {
+      padding: 1rem 2rem;
+      background: #9333ea;
+      color: white;
+      border: none;
+      border-radius: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(147, 51, 234, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .load-more button:hover {
+      background: #7e22ce;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(147, 51, 234, 0.4);
+    }
+
+    .load-more button:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* PDF Reader Styles */
+    .pdf-reader {
+      position: fixed;
+      inset: 0;
+      background: black;
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+    }
+
+    .pdf-reader.active {
+      display: flex;
+    }
+
+    .pdf-header {
+      background: #9333ea;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pdf-header h2 {
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .pdf-close {
+      background: white;
+      color: #9333ea;
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .pdf-viewer {
+      flex: 1;
+      background: #1f2937;
+    }
+
+    .pdf-viewer iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .pdf-controls {
+      background: #9333ea;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .pdf-nav-btn {
+      background: white;
+      color: #9333ea;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pdf-nav-btn:disabled {
+      background: #9ca3af;
+      color: #6b7280;
+      cursor: not-allowed;
+    }
+
+    .pdf-page-info {
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🎨 Kids Corner 🎨</h1>
+      <p>Fun Stories and Audiobooks for Young Readers!</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-button audiobooks active" onclick="switchTab('audiobooks')">
+        🔊 Audiobooks
+      </button>
+      <button class="tab-button storybooks" onclick="switchTab('storybooks')">
+        📖 Story Books
+      </button>
+    </div>
+
+    <!-- Audiobooks Content -->
+    <div id="audiobooks-content" class="content active">
+      <div class="loading" id="audiobooks-loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 1rem; color: #7e22ce; font-size: 1.2rem; font-weight: bold;">Loading Audiobooks...</p>
+      </div>
+      <div class="grid" id="audiobooks-grid"></div>
+      <div class="load-more" id="audiobooks-load-more" style="display: none;">
+        <button onclick="loadMoreAudiobooks()">📚 Load More Audiobooks</button>
+      </div>
+    </div>
+
+    <!-- Story Books Content -->
+    <div id="storybooks-content" class="content">
+      <div class="loading" id="storybooks-loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 1rem; color: #ec4899; font-size: 1.2rem; font-weight: bold;">Loading Story Books...</p>
+      </div>
+      <div class="grid" id="storybooks-grid"></div>
+      <div class="load-more" id="storybooks-load-more" style="display: none;">
+        <button onclick="loadMoreStoryBooks()">📖 Load More Story Books</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF Reader -->
+  <div class="pdf-reader" id="pdf-reader">
+    <div class="pdf-header">
+      <h2 id="pdf-title"></h2>
+      <button class="pdf-close" onclick="closePdfReader()">✕ Close</button>
+    </div>
+    <div class="pdf-viewer">
+      <iframe id="pdf-iframe"></iframe>
+    </div>
+    <div class="pdf-controls">
+      <button class="pdf-nav-btn" id="pdf-prev" onclick="previousPage()">
+        ◀ Previous
+      </button>
+      <div class="pdf-page-info">
+        Page <span id="pdf-page">1</span>
+      </div>
+      <button class="pdf-nav-btn" id="pdf-next" onclick="nextPage()">
+        Next ▶
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const JELLYFIN_URL = 'http://192.168.1.147:8096';
+    const API_KEY = 'e5f995ad342742bebandb812a0b16502';
+    const AUDIOBOOKS_LIBRARY_ID = '1fa75ba339e9450fb6ee4b542d8fcd0e';
+    const STORYBOOKS_LIBRARY_ID = 'cd9fa11a14441d0f61e557525d3369d9';
+    const ITEMS_PER_PAGE = 30;
+
+    // State
+    let audiobooks = [];
+    let storyBooks = [];
+    let audiobooksStartIndex = 0;
+    let storyBooksStartIndex = 0;
+    let hasMoreAudiobooks = true;
+    let hasMoreStoryBooks = true;
+    let currentPdfPage = 1;
+    let currentPdfUrl = '';
+
+    // Switch Tabs
+    function switchTab(tab) {
+      // Update tab buttons
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`.tab-button.${tab}`).classList.add('active');
+
+      // Update content
+      document.querySelectorAll('.content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`${tab}-content`).classList.add('active');
+
+      // Load data if needed
+      if (tab === 'audiobooks' && audiobooks.length === 0) {
+        loadAudiobooks();
+      } else if (tab === 'storybooks' && storyBooks.length === 0) {
+        loadStoryBooks();
+      }
+    }
+
+    // Get Image URL
+    function getImageUrl(item) {
+      if (!item.ImageTags || !item.ImageTags.Primary) return null;
+      return `${JELLYFIN_URL}/Items/${item.Id}/Images/Primary?api_key=${API_KEY}&quality=90&maxWidth=400`;
+    }
+
+    // Load Audiobooks
+    async function loadAudiobooks(startIndex = 0) {
+      const loading = document.getElementById('audiobooks-loading');
+      const grid = document.getElementById('audiobooks-grid');
+      const loadMoreBtn = document.getElementById('audiobooks-load-more');
+
+      loading.style.display = 'block';
+
+      try {
+        const response = await fetch(
+          `${JELLYFIN_URL}/Items?` + new URLSearchParams({
+            ParentId: AUDIOBOOKS_LIBRARY_ID,
+            IncludeItemTypes: 'MusicAlbum',
+            Recursive: 'true',
+            Fields: 'PrimaryImageAspectRatio,Overview,Genres',
+            StartIndex: startIndex.toString(),
+            Limit: ITEMS_PER_PAGE.toString(),
+            api_key: API_KEY
+          })
+        );
+
+        const data = await response.json();
+        const items = data.Items || [];
+
+        if (startIndex === 0) {
+          audiobooks = items;
+          grid.innerHTML = '';
+        } else {
+          audiobooks = [...audiobooks, ...items];
+        }
+
+        // Render audiobooks
+        items.forEach(item => {
+          const card = createAudiobookCard(item);
+          grid.appendChild(card);
+        });
+
+        // Update pagination
+        hasMoreAudiobooks = items.length === ITEMS_PER_PAGE;
+        audiobooksStartIndex = startIndex + ITEMS_PER_PAGE;
+        loadMoreBtn.style.display = hasMoreAudiobooks ? 'block' : 'none';
+
+        // Show empty state if no items
+        if (audiobooks.length === 0) {
+          grid.innerHTML = '<div class="empty-state"><h3>No audiobooks found 😢</h3><p>Check back later!</p></div>';
+        }
+
+      } catch (error) {
+        console.error('Error loading audiobooks:', error);
+        grid.innerHTML = '<div class="empty-state"><h3>Error loading audiobooks</h3><p>Please try again later.</p></div>';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    // Load Story Books
+    async function loadStoryBooks(startIndex = 0) {
+      const loading = document.getElementById('storybooks-loading');
+      const grid = document.getElementById('storybooks-grid');
+      const loadMoreBtn = document.getElementById('storybooks-load-more');
+
+      loading.style.display = 'block';
+
+      try {
+        const response = await fetch(
+          `${JELLYFIN_URL}/Items?` + new URLSearchParams({
+            ParentId: STORYBOOKS_LIBRARY_ID,
+            IncludeItemTypes: 'Book',
+            Recursive: 'true',
+            Fields: 'PrimaryImageAspectRatio,Overview,Path',
+            StartIndex: startIndex.toString(),
+            Limit: ITEMS_PER_PAGE.toString(),
+            api_key: API_KEY
+          })
+        );
+
+        const data = await response.json();
+        const items = data.Items || [];
+
+        if (startIndex === 0) {
+          storyBooks = items;
+          grid.innerHTML = '';
+        } else {
+          storyBooks = [...storyBooks, ...items];
+        }
+
+        // Render story books
+        items.forEach(item => {
+          const card = createStoryBookCard(item);
+          grid.appendChild(card);
+        });
+
+        // Update pagination
+        hasMoreStoryBooks = items.length === ITEMS_PER_PAGE;
+        storyBooksStartIndex = startIndex + ITEMS_PER_PAGE;
+        loadMoreBtn.style.display = hasMoreStoryBooks ? 'block' : 'none';
+
+        // Show empty state if no items
+        if (storyBooks.length === 0) {
+          grid.innerHTML = '<div class="empty-state"><h3>No story books found 😢</h3><p>Check back later!</p></div>';
+        }
+
+      } catch (error) {
+        console.error('Error loading story books:', error);
+        grid.innerHTML = '<div class="empty-state"><h3>Error loading story books</h3><p>Please try again later.</p></div>';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    // Create Audiobook Card
+    function createAudiobookCard(item) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => playAudiobook(item);
+
+      const imageUrl = getImageUrl(item);
+      const imageHtml = imageUrl 
+        ? `<img src="${imageUrl}" alt="${item.Name}">`
+        : '<div class="icon">🔊</div>';
+
+      card.innerHTML = `
+        <div class="card-image">
+          ${imageHtml}
+        </div>
+        <div class="card-title">${item.Name}</div>
+      `;
+
+      return card;
+    }
+
+    // Create Story Book Card
+    function createStoryBookCard(item) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openPdfReader(item);
+
+      const imageUrl = getImageUrl(item);
+      const imageHtml = imageUrl 
+        ? `<img src="${imageUrl}" alt="${item.Name}">`
+        : '<div class="icon">📖</div>';
+
+      card.innerHTML = `
+        <div class="card-image">
+          ${imageHtml}
+        </div>
+        <div class="card-title">${item.Name}</div>
+      `;
+
+      return card;
+    }
+
+    // Play Audiobook
+    async function playAudiobook(album) {
+      try {
+        const response = await fetch(
+          `${JELLYFIN_URL}/Items?` + new URLSearchParams({
+            ParentId: album.Id,
+            IncludeItemTypes: 'Audio',
+            SortBy: 'SortName',
+            api_key: API_KEY
+          })
+        );
+
+        const data = await response.json();
+        if (data.Items && data.Items.length > 0) {
+          const firstChapter = data.Items[0];
+          const streamUrl = `${JELLYFIN_URL}/Audio/${firstChapter.Id}/stream?static=true&api_key=${API_KEY}`;
+          window.open(streamUrl, '_blank');
+        } else {
+          alert('No chapters found for this audiobook');
+        }
+      } catch (error) {
+        console.error('Error playing audiobook:', error);
+        alert('Failed to play audiobook');
+      }
+    }
+
+    // Open PDF Reader
+    function openPdfReader(book) {
+      currentPdfUrl = `${JELLYFIN_URL}/Items/${book.Id}/Download?api_key=${API_KEY}`;
+      currentPdfPage = 1;
+
+      document.getElementById('pdf-title').textContent = book.Name;
+      document.getElementById('pdf-iframe').src = `${currentPdfUrl}#page=${currentPdfPage}`;
+      document.getElementById('pdf-page').textContent = currentPdfPage;
+      document.getElementById('pdf-reader').classList.add('active');
+      
+      updatePdfButtons();
+    }
+
+    // Close PDF Reader
+    function closePdfReader() {
+      document.getElementById('pdf-reader').classList.remove('active');
+      document.getElementById('pdf-iframe').src = '';
+    }
+
+    // Previous Page
+    function previousPage() {
+      if (currentPdfPage > 1) {
+        currentPdfPage--;
+        document.getElementById('pdf-iframe').src = `${currentPdfUrl}#page=${currentPdfPage}`;
+        document.getElementById('pdf-page').textContent = currentPdfPage;
+        updatePdfButtons();
+      }
+    }
+
+    // Next Page
+    function nextPage() {
+      currentPdfPage++;
+      document.getElementById('pdf-iframe').src = `${currentPdfUrl}#page=${currentPdfPage}`;
+      document.getElementById('pdf-page').textContent = currentPdfPage;
+      updatePdfButtons();
+    }
+
+    // Update PDF Buttons
+    function updatePdfButtons() {
+      document.getElementById('pdf-prev').disabled = currentPdfPage <= 1;
+    }
+
+    // Load More Functions
+    function loadMoreAudiobooks() {
+      loadAudiobooks(audiobooksStartIndex);
+    }
+
+    function loadMoreStoryBooks() {
+      loadStoryBooks(storyBooksStartIndex);
+    }
+
+    // Initial Load
+    loadAudiobooks();
+  </script>
+</body>
+</html>

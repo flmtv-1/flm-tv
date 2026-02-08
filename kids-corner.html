@@ -340,18 +340,7 @@
         }
 
         .page-counter {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ffd700;
-            color: #333;
-            padding: 1rem 2rem;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
-            z-index: 100;
+            display: none;  /* Hide completely - don't block book pages */
         }
 
         /* Loading */
@@ -583,8 +572,8 @@
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
             BOOKS_LIBRARY_ID: '467bd88b656c88ee6a423d8478e9e54a',      // TEXT BOOKS (EPUB)
-            STORYBOOKS_LIBRARY_ID: 'cd9fa11a14441d0f61e557525d3369d9',  // TEXT-BOOKS-KIDS 01 (PDFs)
-            AUDIOBOOKS_LIBRARY_ID: '17eace283c0eb2fcd9a3132a4fdf1819',  // AUDIO BOOKS-KIDS
+            STORYBOOKS_LIBRARY_ID: 'cd9fa11a14441d0f61e557525d3369d9',  // TEXT-BOOKS-KIDS 01 (PDFs) ✅
+            AUDIOBOOKS_LIBRARY_ID: '1fa75ba339e9450fb6ee4b542d8fcd0e',  // AUDIO BOOKS-KIDS ✅ UPDATED
             CARTOONS_LIBRARY_ID: 'ca43f3291c81d4f007f2b33936d256e6',    // KIDS WORLD (Cartoons/TV)
             GAMES_LIBRARY_ID: null  // Add when games library is created
         };
@@ -788,7 +777,7 @@
             const grid = document.getElementById('audiobooksGrid');
             
             try {
-                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=AudioBook&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=MusicAlbum&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
                 
                 const response = await fetch(url);
                 const data = await response.json();
@@ -1029,7 +1018,11 @@
             console.log('📥 Loading PDF from:', pdfUrl);
             
             try {
-                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                // Load PDF with proper configuration to avoid auth issues
+                const loadingTask = pdfjsLib.getDocument({
+                    url: pdfUrl,
+                    withCredentials: false
+                });
                 currentPDF = await loadingTask.promise;
                 totalPDFPages = currentPDF.numPages;
                 currentPDFPage = 1;
@@ -1051,22 +1044,42 @@
             try {
                 const page = await currentPDF.getPage(pageNum);
                 const canvas = document.getElementById('pdfCanvas');
-                const ctx = canvas.getContext('2d');
+                const ctx = canvas.getContext('2d', { alpha: false });
+                
+                // CRISP TEXT RENDERING
+                ctx.imageSmoothingEnabled = false;
+                ctx.webkitImageSmoothingEnabled = false;
+                ctx.mozImageSmoothingEnabled = false;
+                
+                // HIGH QUALITY: Use device pixel ratio for retina displays
+                const devicePixelRatio = window.devicePixelRatio || 1;
                 
                 const viewport = page.getViewport({ scale: 1 });
-                const scale = Math.min(
+                
+                // Calculate base scale to fit screen
+                const baseScale = Math.min(
                     (window.innerWidth * 0.8) / viewport.width,
                     (window.innerHeight * 0.8) / viewport.height
                 );
                 
-                const scaledViewport = page.getViewport({ scale: scale });
+                // Render at 3x resolution for crystal clear sharp text
+                const qualityMultiplier = 3.0;
+                const renderScale = baseScale * qualityMultiplier * devicePixelRatio;
                 
+                const scaledViewport = page.getViewport({ scale: renderScale });
+                
+                // Set canvas to high resolution
                 canvas.width = scaledViewport.width;
                 canvas.height = scaledViewport.height;
                 
+                // Scale display size to fit screen
+                canvas.style.width = (scaledViewport.width / (qualityMultiplier * devicePixelRatio)) + 'px';
+                canvas.style.height = (scaledViewport.height / (qualityMultiplier * devicePixelRatio)) + 'px';
+                
                 await page.render({
                     canvasContext: ctx,
-                    viewport: scaledViewport
+                    viewport: scaledViewport,
+                    intent: 'print'  // Use print quality
                 }).promise;
                 
                 document.getElementById('pageCounter').textContent = `Page ${currentPDFPage} of ${totalPDFPages}`;
@@ -1074,7 +1087,7 @@
                 document.getElementById('prevPage').disabled = currentPDFPage === 1;
                 document.getElementById('nextPage').disabled = currentPDFPage === totalPDFPages;
                 
-                console.log(`✅ Rendered page ${currentPDFPage}`);
+                console.log(`✅ Rendered HIGH QUALITY page ${currentPDFPage}`);
             } catch (error) {
                 console.error('Error rendering PDF page:', error);
             }

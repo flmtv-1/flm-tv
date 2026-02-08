@@ -2646,8 +2646,8 @@
             
             <!-- RIGHT SIDE: Scrollable Buttons -->
             <div class="nav-actions">
-                <!-- Kids Corner Zone Button -->
-                <button class="btn-icon" onclick="window.location.href='kids-corner.html'" title="Kids Corner - Audiobooks & Story Books" style="border-color: var(--accent); color: var(--accent);">
+                <!-- Epic Kids Zone Button -->
+                <button class="btn-icon" onclick="window.location.href='epic-kids-with-pdf.html'" title="Epic Kids Zone - Audiobooks & Story Books" style="border-color: var(--accent); color: var(--accent);">
                     <i class="fas fa-child"></i>
                 </button>
                 
@@ -5091,9 +5091,9 @@ async function loadCollectionPage(collectionId, title) {
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <nav class="bottom-nav">
-    <a href="kids-corner.html" class="bottom-nav-item active">
+    <a href="epic-kids-with-pdf.html" class="bottom-nav-item active">
         <i class="fas fa-child"></i>
-        <span>Kids Corner</span>
+        <span>Epic Kids</span>
     </a>
     <button class="bottom-nav-item" onclick="openPanel('chatPanel')">
         <i class="fas fa-comments"></i>
