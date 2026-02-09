@@ -143,28 +143,10 @@
             margin-bottom: 3rem;
         }
 
-        /* Coloring Cards - SMALL SQUARES */
-        #coloringGallery.books-grid {
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 0.75rem;
-        }
-        
-        #coloringGallery .book-card {
-            padding: 0.4rem;
-        }
-        
-        #coloringGallery .book-cover {
-            height: 110px;
-            width: 100%;
-        }
-        
-        #coloringGallery .book-title {
-            font-size: 0.7rem;
-            margin-top: 0.3rem;
-        }
-        
-        #coloringGallery .book-type {
-            font-size: 0.65rem;
+        /* COLORING GALLERY - SMALLER GRID */
+        #coloringGallery {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
         }
 
         .book-card {
@@ -183,7 +165,7 @@
 
         .book-cover {
             width: 100%;
-            height: 280px;
+            height: 200px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
             display: flex;
@@ -194,8 +176,21 @@
         }
 
         .book-cover i {
-            font-size: 4rem;
+            font-size: 3rem;
             color: white;
+        }
+
+        /* COLORING PAGES - SMALLER CARDS */
+        #coloringGallery .book-card {
+            padding: 0.5rem;
+        }
+
+        #coloringGallery .book-cover {
+            height: 120px;
+        }
+
+        #coloringGallery .book-cover i {
+            font-size: 1.8rem;
         }
 
         .book-cover img {
@@ -522,7 +517,7 @@
             <h1 class="section-title">🎨 Choose a Picture to Color</h1>
             
             <!-- Coloring Page Gallery -->
-            <div class="books-grid" id="coloringGallery" style="display: grid;">
+            <div class="books-grid" id="coloringGallery" style="display: block;">
                 <!-- Gallery will be populated by JavaScript -->
             </div>
             
@@ -622,6 +617,13 @@
         let AUDIOBOOKS = [];
         let CARTOONS = [];
         let GAMES = [];
+
+        // Pagination settings
+        const ITEMS_PER_PAGE = 25;
+        let storybooksPage = 1;
+        let audiobooksPage = 1;
+        let cartoonsPage = 1;
+        let coloringPage = 1;
 
         // ═══════════════════════════════════════════════════════════════
         // STATE
@@ -793,7 +795,11 @@
                 return;
             }
 
-            grid.innerHTML = STORYBOOKS.map((book, index) => `
+            const itemsToShow = storybooksPage * ITEMS_PER_PAGE;
+            const visibleBooks = STORYBOOKS.slice(0, itemsToShow);
+            const hasMore = STORYBOOKS.length > itemsToShow;
+
+            grid.innerHTML = visibleBooks.map((book, index) => `
                 <div class="book-card" onclick="openStoryBook(${index})">
                     <div class="book-cover">
                         ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
@@ -801,7 +807,13 @@
                     <div class="book-title">${book.name}</div>
                     <span class="book-type">${book.type}</span>
                 </div>
-            `).join('');
+            `).join('') + (hasMore ? `
+                <div style="grid-column: 1 / -1; text-align: center; margin-top: 2rem;">
+                    <button onclick="storybooksPage++; displayStoryBooks();" style="background: #22c55e; color: white; border: none; padding: 1rem 3rem; border-radius: 50px; font-size: 1.2rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);">
+                        📚 Load More Books (${STORYBOOKS.length - itemsToShow} more)
+                    </button>
+                </div>
+            ` : '');
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -849,7 +861,11 @@
                 return;
             }
 
-            grid.innerHTML = AUDIOBOOKS.map((audio, index) => `
+            const itemsToShow = audiobooksPage * ITEMS_PER_PAGE;
+            const visibleAudiobooks = AUDIOBOOKS.slice(0, itemsToShow);
+            const hasMore = AUDIOBOOKS.length > itemsToShow;
+
+            grid.innerHTML = visibleAudiobooks.map((audio, index) => `
                 <div class="book-card" onclick="openAudiobook(${index})">
                     <div class="book-cover">
                         ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}">` : '<i class="fas fa-headphones"></i>'}
@@ -857,7 +873,13 @@
                     <div class="book-title">${audio.name}</div>
                     <span class="book-type">🎧 AUDIO</span>
                 </div>
-            `).join('');
+            `).join('') + (hasMore ? `
+                <div style="grid-column: 1 / -1; text-align: center; margin-top: 2rem;">
+                    <button onclick="audiobooksPage++; displayAudiobooks();" style="background: #ffd700; color: #000; border: none; padding: 1rem 3rem; border-radius: 50px; font-size: 1.2rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);">
+                        🎧 Load More Audiobooks (${AUDIOBOOKS.length - itemsToShow} more)
+                    </button>
+                </div>
+            ` : '');
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -914,7 +936,11 @@
                 return;
             }
 
-            grid.innerHTML = CARTOONS.map((show, index) => `
+            const itemsToShow = cartoonsPage * ITEMS_PER_PAGE;
+            const visibleCartoons = CARTOONS.slice(0, itemsToShow);
+            const hasMore = CARTOONS.length > itemsToShow;
+
+            grid.innerHTML = visibleCartoons.map((show, index) => `
                 <div class="book-card" onclick="openCartoon(${index})">
                     <div class="book-cover">
                         ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}">` : '<i class="fas fa-tv"></i>'}
@@ -922,7 +948,13 @@
                     <div class="book-title">${show.name}</div>
                     <span class="book-type">📺 TV</span>
                 </div>
-            `).join('');
+            `).join('') + (hasMore ? `
+                <div style="grid-column: 1 / -1; text-align: center; margin-top: 2rem;">
+                    <button onclick="cartoonsPage++; displayCartoons();" style="background: #8b5cf6; color: white; border: none; padding: 1rem 3rem; border-radius: 50px; font-size: 1.2rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);">
+                        📺 Load More Cartoons (${CARTOONS.length - itemsToShow} more)
+                    </button>
+                </div>
+            ` : '');
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -1207,25 +1239,25 @@
         let currentColor = '#FF0000'; // Default red
         let currentColoringPage = null; // Renamed to avoid conflict
 
-        // Coloring pages - ALL YOUR PNG FILES!
+        // Coloring pages library - YOUR SVG FILES
         const COLORING_PAGES = [
-            { name: 'Realistic Cute Dog', image: 'Coloring Pages/realistic-cute-dog-coloring-pages.png' },
-            { name: 'Princess Cute', image: 'Coloring Pages/princess-colouring-pages-cute.png' },
-            { name: 'Princess Kindergarten', image: 'Coloring Pages/princess-coloring-sheets-for-kindergarten.png' },
-            { name: 'Poodle Dog', image: 'Coloring Pages/poodle-dog-coloring-page.png' },
-            { name: 'Poodle Kids', image: 'Coloring Pages/poodle-coloring-pages-for-kids.png' },
-            { name: 'Valentine Heart', image: 'Coloring Pages/free-valentines-day-heart-coloring-pages.png' },
-            { name: 'Valentine Pages', image: 'Coloring Pages/free-valentine-coloring-pages.png' },
-            { name: 'Cute Puppy', image: 'Coloring Pages/cute-puppy-printable-realistic-dog-coloring-pages.png' },
-            { name: 'Boxer Print Free', image: 'Coloring Pages/boxer-dog-coloring-pages-to-print-free.png' },
-            { name: 'Boxer Toddlers', image: 'Coloring Pages/boxer-dog-coloring-pages-toddlers.png' },
-            { name: 'Boxer Toddler', image: 'Coloring Pages/boxer-dog-coloring-pages-toddler.png' },
-            { name: 'Boxer Adults', image: 'Coloring Pages/boxer-dog-coloring-pages-for-adults.png' },
-            { name: 'Boxer Flowers', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages.png' },
-            { name: 'Boxer Flowers Free', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-free.png' },
-            { name: 'Boxer Flowers Print', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-printable.png' },
-            { name: 'Baby Poodle', image: 'Coloring Pages/baby-poodle-coloring-page.png' },
-            { name: 'Baby Cute Dog', image: 'Coloring Pages/baby-cute-dog-coloring-pages.png' }
+            { name: '🐶 Baby Cute Dog', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/baby-cute-dog-coloring-pages.svg' },
+            { name: '🐩 Baby Poodle', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/baby-poodle-coloring-page.svg' },
+            { name: '🌸 Boxer & Flowers', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/boxer-dog-and-flowers-coloring-pages.svg' },
+            { name: '🌼 Boxer Flowers Free', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/boxer-dog-and-flowers-coloring-pages-free.svg' },
+            { name: '🖨️ Boxer Printable', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/boxer-dog-and-flowers-coloring-pages-printable.svg' },
+            { name: '🐕 Boxer Advanced', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/boxer-dog-coloring-pages-advanced.svg' },
+            { name: '👶 Boxer Toddler', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/boxer-dog-coloring-pages-toddler.svg' },
+            { name: '🧒 Boxer Toddler 2', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/boxer-dog-coloring-pages-toddler-2.svg' },
+            { name: '🐕 Boxer 2', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/boxer-dog-coloring-pages-2.svg' },
+            { name: '🐾 Cute Puppy', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/cute-puppy-printable-realistic-dog-coloring-pages.svg' },
+            { name: '💝 Valentine', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/free-valentine-coloring-pages.svg' },
+            { name: '💕 Valentine Heart', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/valentines-day-heart-coloring-pages.svg' },
+            { name: '🐩 Poodle Kids', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/poodle-coloring-pages-for-kids.svg' },
+            { name: '🦮 Poodle Dog', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/poodle-dog-coloring-page.svg' },
+            { name: '👸 Princess Kindergarten', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/princess-coloring-sheets-for-kindergarten.svg' },
+            { name: '👑 Princess Cute', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/princess-colouring-pages-cute.svg' },
+            { name: '🐕‍🦺 Realistic Dog', svgUrl: 'file:///C:/Users/Dale/Documents/GitHub/flm-tv/Coloring%20Pages/SVG-Output/realistic-cute-dog-coloring-pages.svg' }
         ];
 
         // Initialize coloring gallery
@@ -1235,7 +1267,7 @@
             gallery.innerHTML = COLORING_PAGES.map((page, index) => `
                 <div class="book-card" onclick="openColoringPage(${index})">
                     <div class="book-cover">
-                        <img src="${page.image}" style="width: 100%; height: 100%; object-fit: contain;" alt="${page.name}">
+                        <i class="fas fa-palette" style="font-size: 4rem; color: #ffd700;"></i>
                     </div>
                     <div class="book-title">${page.name}</div>
                     <span class="book-type">🎨 COLOR ME!</span>
@@ -1244,7 +1276,7 @@
         }
 
         // Open a coloring page
-        function openColoringPage(index) {
+        async function openColoringPage(index) {
             currentColoringPage = index;
             const page = COLORING_PAGES[index];
             
@@ -1252,9 +1284,39 @@
             document.getElementById('coloringGallery').style.display = 'none';
             document.getElementById('coloringCanvas').style.display = 'block';
             
-            // Load PNG image into SVG container
+            // Load SVG from URL
             const svg = document.getElementById('coloringSVG');
-            svg.innerHTML = `<image href="${page.image}" width="600" height="600" preserveAspectRatio="xMidYMid meet"/>`;
+            
+            try {
+                const response = await fetch(page.svgUrl);
+                const svgText = await response.text();
+                
+                // Parse the SVG
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.querySelector('svg');
+                
+                // Copy viewBox
+                if (svgElement.hasAttribute('viewBox')) {
+                    svg.setAttribute('viewBox', svgElement.getAttribute('viewBox'));
+                }
+                
+                svg.innerHTML = svgElement.innerHTML;
+                
+                // Add click handlers to all paths
+                const colorableElements = svg.querySelectorAll('path, polygon, circle, rect, ellipse');
+                colorableElements.forEach(el => {
+                    el.style.cursor = 'pointer';
+                    el.addEventListener('click', function() {
+                        this.setAttribute('fill', currentColor);
+                    });
+                });
+                
+                console.log('✅ Loaded:', page.name);
+            } catch (error) {
+                console.error('Error loading coloring page:', error);
+                alert('Could not load coloring page!');
+            }
         }
 
         // Select color

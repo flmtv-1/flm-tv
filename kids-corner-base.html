@@ -143,30 +143,6 @@
             margin-bottom: 3rem;
         }
 
-        /* Coloring Cards - SMALL SQUARES */
-        #coloringGallery.books-grid {
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 0.75rem;
-        }
-        
-        #coloringGallery .book-card {
-            padding: 0.4rem;
-        }
-        
-        #coloringGallery .book-cover {
-            height: 110px;
-            width: 100%;
-        }
-        
-        #coloringGallery .book-title {
-            font-size: 0.7rem;
-            margin-top: 0.3rem;
-        }
-        
-        #coloringGallery .book-type {
-            font-size: 0.65rem;
-        }
-
         .book-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -522,7 +498,7 @@
             <h1 class="section-title">🎨 Choose a Picture to Color</h1>
             
             <!-- Coloring Page Gallery -->
-            <div class="books-grid" id="coloringGallery" style="display: grid;">
+            <div class="books-grid" id="coloringGallery" style="display: block;">
                 <!-- Gallery will be populated by JavaScript -->
             </div>
             
@@ -1207,25 +1183,32 @@
         let currentColor = '#FF0000'; // Default red
         let currentColoringPage = null; // Renamed to avoid conflict
 
-        // Coloring pages - ALL YOUR PNG FILES!
+        // Coloring pages library (SVG paths)
         const COLORING_PAGES = [
-            { name: 'Realistic Cute Dog', image: 'Coloring Pages/realistic-cute-dog-coloring-pages.png' },
-            { name: 'Princess Cute', image: 'Coloring Pages/princess-colouring-pages-cute.png' },
-            { name: 'Princess Kindergarten', image: 'Coloring Pages/princess-coloring-sheets-for-kindergarten.png' },
-            { name: 'Poodle Dog', image: 'Coloring Pages/poodle-dog-coloring-page.png' },
-            { name: 'Poodle Kids', image: 'Coloring Pages/poodle-coloring-pages-for-kids.png' },
-            { name: 'Valentine Heart', image: 'Coloring Pages/free-valentines-day-heart-coloring-pages.png' },
-            { name: 'Valentine Pages', image: 'Coloring Pages/free-valentine-coloring-pages.png' },
-            { name: 'Cute Puppy', image: 'Coloring Pages/cute-puppy-printable-realistic-dog-coloring-pages.png' },
-            { name: 'Boxer Print Free', image: 'Coloring Pages/boxer-dog-coloring-pages-to-print-free.png' },
-            { name: 'Boxer Toddlers', image: 'Coloring Pages/boxer-dog-coloring-pages-toddlers.png' },
-            { name: 'Boxer Toddler', image: 'Coloring Pages/boxer-dog-coloring-pages-toddler.png' },
-            { name: 'Boxer Adults', image: 'Coloring Pages/boxer-dog-coloring-pages-for-adults.png' },
-            { name: 'Boxer Flowers', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages.png' },
-            { name: 'Boxer Flowers Free', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-free.png' },
-            { name: 'Boxer Flowers Print', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-printable.png' },
-            { name: 'Baby Poodle', image: 'Coloring Pages/baby-poodle-coloring-page.png' },
-            { name: 'Baby Cute Dog', image: 'Coloring Pages/baby-cute-dog-coloring-pages.png' }
+            {
+                name: '🐱 Happy Cat',
+                svg: '<g><circle cx="300" cy="250" r="100" fill="white" stroke="black" stroke-width="3"/><circle cx="270" cy="230" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="330" cy="230" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="275" cy="235" r="5" fill="black"/><circle cx="325" cy="235" r="5" fill="black"/><path d="M 280 270 Q 300 280 320 270" fill="none" stroke="black" stroke-width="3"/><polygon points="250,180 230,150 260,200" fill="white" stroke="black" stroke-width="2"/><polygon points="350,180 370,150 340,200" fill="white" stroke="black" stroke-width="2"/><ellipse cx="300" cy="320" rx="60" ry="80" fill="white" stroke="black" stroke-width="3"/></g>'
+            },
+            {
+                name: '⭐ Big Star',
+                svg: '<polygon points="300,100 350,250 500,250 380,350 430,500 300,400 170,500 220,350 100,250 250,250" fill="white" stroke="black" stroke-width="4"/>'
+            },
+            {
+                name: '🦋 Butterfly',
+                svg: '<g><ellipse cx="300" cy="300" rx="20" ry="60" fill="white" stroke="black" stroke-width="3"/><circle cx="300" cy="250" r="25" fill="white" stroke="black" stroke-width="3"/><circle cx="295" cy="245" r="5" fill="black"/><circle cx="305" cy="245" r="5" fill="black"/><ellipse cx="230" cy="280" rx="70" ry="90" fill="white" stroke="black" stroke-width="3"/><ellipse cx="370" cy="280" rx="70" ry="90" fill="white" stroke="black" stroke-width="3"/><ellipse cx="230" cy="370" rx="50" ry="70" fill="white" stroke="black" stroke-width="3"/><ellipse cx="370" cy="370" rx="50" ry="70" fill="white" stroke="black" stroke-width="3"/><line x1="300" y1="230" x2="280" y2="200" stroke="black" stroke-width="2"/><line x1="300" y1="230" x2="320" y2="200" stroke="black" stroke-width="2"/></g>'
+            },
+            {
+                name: '🌸 Flower',
+                svg: '<g><circle cx="300" cy="300" r="40" fill="white" stroke="black" stroke-width="3"/><ellipse cx="300" cy="220" rx="35" ry="60" fill="white" stroke="black" stroke-width="3"/><ellipse cx="380" cy="300" rx="35" ry="60" fill="white" stroke="black" stroke-width="3" transform="rotate(90 380 300)"/><ellipse cx="300" cy="380" rx="35" ry="60" fill="white" stroke="black" stroke-width="3"/><ellipse cx="220" cy="300" rx="35" ry="60" fill="white" stroke="black" stroke-width="3" transform="rotate(90 220 300)"/><circle cx="300" cy="300" r="20" fill="yellow" stroke="black" stroke-width="2"/><rect x="295" y="350" width="10" height="150" fill="white" stroke="black" stroke-width="3"/><ellipse cx="270" cy="450" rx="30" ry="15" fill="white" stroke="black" stroke-width="2"/><ellipse cx="330" cy="470" rx="30" ry="15" fill="white" stroke="black" stroke-width="2"/></g>'
+            },
+            {
+                name: '🏠 Little House',
+                svg: '<g><rect x="200" y="300" width="200" height="200" fill="white" stroke="black" stroke-width="3"/><polygon points="300,200 450,300 150,300" fill="white" stroke="black" stroke-width="3"/><rect x="260" y="380" width="60" height="120" fill="white" stroke="black" stroke-width="2"/><circle cx="290" cy="440" r="5" fill="black"/><rect x="340" y="340" width="40" height="40" fill="white" stroke="black" stroke-width="2"/><line x1="360" y1="340" x2="360" y2="380" stroke="black" stroke-width="2"/><line x1="340" y1="360" x2="380" y2="360" stroke="black" stroke-width="2"/></g>'
+            },
+            {
+                name: '🐟 Fish',
+                svg: '<g><ellipse cx="300" cy="300" rx="120" ry="80" fill="white" stroke="black" stroke-width="3"/><polygon points="420,300 500,250 500,350" fill="white" stroke="black" stroke-width="3"/><circle cx="250" cy="280" r="12" fill="white" stroke="black" stroke-width="2"/><circle cx="250" cy="280" r="5" fill="black"/><path d="M 320 270 Q 340 260 360 270" fill="none" stroke="black" stroke-width="2"/><path d="M 320 300 Q 340 310 360 300" fill="none" stroke="black" stroke-width="2"/></g>'
+            }
         ];
 
         // Initialize coloring gallery
@@ -1235,7 +1218,7 @@
             gallery.innerHTML = COLORING_PAGES.map((page, index) => `
                 <div class="book-card" onclick="openColoringPage(${index})">
                     <div class="book-cover">
-                        <img src="${page.image}" style="width: 100%; height: 100%; object-fit: contain;" alt="${page.name}">
+                        <i class="fas fa-palette" style="font-size: 4rem; color: #ffd700;"></i>
                     </div>
                     <div class="book-title">${page.name}</div>
                     <span class="book-type">🎨 COLOR ME!</span>
@@ -1252,9 +1235,21 @@
             document.getElementById('coloringGallery').style.display = 'none';
             document.getElementById('coloringCanvas').style.display = 'block';
             
-            // Load PNG image into SVG container
+            // Load SVG
             const svg = document.getElementById('coloringSVG');
-            svg.innerHTML = `<image href="${page.image}" width="600" height="600" preserveAspectRatio="xMidYMid meet"/>`;
+            svg.innerHTML = page.svg;
+            
+            // Add click handlers to all colorable elements
+            const colorableElements = svg.querySelectorAll('circle, rect, ellipse, polygon, path[fill]');
+            colorableElements.forEach(el => {
+                // Skip black elements (outlines)
+                if (el.getAttribute('fill') === 'black') return;
+                
+                el.style.cursor = 'pointer';
+                el.addEventListener('click', function() {
+                    this.setAttribute('fill', currentColor);
+                });
+            });
         }
 
         // Select color
