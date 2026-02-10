@@ -364,18 +364,13 @@
         }
 
         .page-counter {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
             background: #ffd700;
             color: #333;
-            padding: 1rem 2rem;
-            border-radius: 30px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
-            z-index: 100;
         }
 
         /* Loading */
@@ -473,10 +468,6 @@
                 <i class="fas fa-book-open"></i>
                 Story Books
             </button>
-            <button class="tab-btn" onclick="showSection('coloring')">
-                <i class="fas fa-palette"></i>
-                Coloring
-            </button>
             <button class="tab-btn" onclick="showSection('games')">
                 <i class="fas fa-gamepad"></i>
                 Games
@@ -517,54 +508,21 @@
             </div>
         </div>
 
-        <!-- Coloring Section -->
-        <div id="coloring-section" class="section-content">
-            <h1 class="section-title">🎨 Choose a Picture to Color</h1>
-            
-            <!-- Coloring Page Gallery -->
-            <div class="books-grid" id="coloringGallery" style="display: grid;">
-                <!-- Gallery will be populated by JavaScript -->
-            </div>
-            
-            <!-- Coloring Canvas (hidden until page selected) -->
-            <div id="coloringCanvas" style="display: none;">
-                <div style="text-align: center; margin-bottom: 1rem;">
-                    <button class="back-btn" onclick="backToGallery()" style="display: inline-block; margin: 0 auto;">
-                        <i class="fas fa-arrow-left"></i> Choose Another Picture
-                    </button>
-                </div>
-                
-                <!-- Color Palette -->
-                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                    <button class="color-btn" onclick="selectColor('#FF0000')" style="background: #FF0000;" title="Red"></button>
-                    <button class="color-btn" onclick="selectColor('#FF6B00')" style="background: #FF6B00;" title="Orange"></button>
-                    <button class="color-btn" onclick="selectColor('#FFD700')" style="background: #FFD700;" title="Yellow"></button>
-                    <button class="color-btn" onclick="selectColor('#00FF00')" style="background: #00FF00;" title="Green"></button>
-                    <button class="color-btn" onclick="selectColor('#00BFFF')" style="background: #00BFFF;" title="Blue"></button>
-                    <button class="color-btn" onclick="selectColor('#8B00FF')" style="background: #8B00FF;" title="Purple"></button>
-                    <button class="color-btn" onclick="selectColor('#FF1493')" style="background: #FF1493;" title="Pink"></button>
-                    <button class="color-btn" onclick="selectColor('#8B4513')" style="background: #8B4513;" title="Brown"></button>
-                    <button class="color-btn" onclick="selectColor('#000000')" style="background: #000000;" title="Black"></button>
-                    <button class="color-btn" onclick="selectColor('#FFFFFF')" style="background: #FFFFFF; border: 2px solid #333;" title="White"></button>
-                    <button class="color-btn" onclick="clearColoring()" style="background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);" title="Clear All">
-                        <i class="fas fa-undo" style="color: white;"></i>
-                    </button>
-                </div>
-                
-                <!-- SVG Coloring Area -->
-                <div style="display: flex; justify-content: center;">
-                    <svg id="coloringSVG" width="600" height="600" style="background: white; border: 3px solid #ffd700; border-radius: 15px; cursor: pointer;"></svg>
-                </div>
-            </div>
-        </div>
-
         <!-- Games Section -->
         <div id="games-section" class="section-content">
             <h1 class="section-title">🎮 Choose a Game to Play</h1>
-            <div class="games-grid" id="gamesGrid">
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <p>Games coming soon!</p>
+            
+            <!-- Coming Soon Message -->
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 3rem; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
+                    <i class="fas fa-gamepad" style="font-size: 5rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                    <h2 style="color: #667eea; font-size: 2.5rem; margin-bottom: 1rem;">Coming Soon!</h2>
+                    <p style="color: #333; font-size: 1.3rem; line-height: 1.6;">
+                        Awesome games are on the way! Check back soon for fun games to play.
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <i class="fas fa-trophy" style="font-size: 3rem; color: #764ba2;"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -575,6 +533,7 @@
     <div class="reader-overlay" id="readerOverlay">
         <div class="reader-header">
             <div class="reader-title" id="readerTitle">Book Title</div>
+            <div class="page-counter" id="pageCounter">Loading...</div>
             <button class="close-reader" onclick="closeReader()">
                 <i class="fas fa-times"></i> Close
             </button>
@@ -591,8 +550,6 @@
             <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
                 <i class="fas fa-chevron-right"></i>
             </button>
-            
-            <div class="page-counter" id="pageCounter">Loading...</div>
         </div>
     </div>
 
@@ -1200,93 +1157,6 @@
             window.open(game.file, '_blank');
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // COLORING BOOK
-        // ═══════════════════════════════════════════════════════════════
-
-        let currentColor = '#FF0000'; // Default red
-        let currentColoringPage = null; // Renamed to avoid conflict
-
-        // Coloring pages - ALL YOUR PNG FILES!
-        const COLORING_PAGES = [
-            { name: 'Realistic Cute Dog', image: 'Coloring Pages/realistic-cute-dog-coloring-pages.png' },
-            { name: 'Princess Cute', image: 'Coloring Pages/princess-colouring-pages-cute.png' },
-            { name: 'Princess Kindergarten', image: 'Coloring Pages/princess-coloring-sheets-for-kindergarten.png' },
-            { name: 'Poodle Dog', image: 'Coloring Pages/poodle-dog-coloring-page.png' },
-            { name: 'Poodle Kids', image: 'Coloring Pages/poodle-coloring-pages-for-kids.png' },
-            { name: 'Valentine Heart', image: 'Coloring Pages/free-valentines-day-heart-coloring-pages.png' },
-            { name: 'Valentine Pages', image: 'Coloring Pages/free-valentine-coloring-pages.png' },
-            { name: 'Cute Puppy', image: 'Coloring Pages/cute-puppy-printable-realistic-dog-coloring-pages.png' },
-            { name: 'Boxer Print Free', image: 'Coloring Pages/boxer-dog-coloring-pages-to-print-free.png' },
-            { name: 'Boxer Toddlers', image: 'Coloring Pages/boxer-dog-coloring-pages-toddlers.png' },
-            { name: 'Boxer Toddler', image: 'Coloring Pages/boxer-dog-coloring-pages-toddler.png' },
-            { name: 'Boxer Adults', image: 'Coloring Pages/boxer-dog-coloring-pages-for-adults.png' },
-            { name: 'Boxer Flowers', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages.png' },
-            { name: 'Boxer Flowers Free', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-free.png' },
-            { name: 'Boxer Flowers Print', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-printable.png' },
-            { name: 'Baby Poodle', image: 'Coloring Pages/baby-poodle-coloring-page.png' },
-            { name: 'Baby Cute Dog', image: 'Coloring Pages/baby-cute-dog-coloring-pages.png' }
-        ];
-
-        // Initialize coloring gallery
-        function initColoringGallery() {
-            const gallery = document.getElementById('coloringGallery');
-            
-            gallery.innerHTML = COLORING_PAGES.map((page, index) => `
-                <div class="book-card" onclick="openColoringPage(${index})">
-                    <div class="book-cover">
-                        <img src="${page.image}" style="width: 100%; height: 100%; object-fit: contain;" alt="${page.name}">
-                    </div>
-                    <div class="book-title">${page.name}</div>
-                    <span class="book-type">🎨 COLOR ME!</span>
-                </div>
-            `).join('');
-        }
-
-        // Open a coloring page
-        function openColoringPage(index) {
-            currentColoringPage = index;
-            const page = COLORING_PAGES[index];
-            
-            // Hide gallery, show canvas
-            document.getElementById('coloringGallery').style.display = 'none';
-            document.getElementById('coloringCanvas').style.display = 'block';
-            
-            // Load PNG image into SVG container
-            const svg = document.getElementById('coloringSVG');
-            svg.innerHTML = `<image href="${page.image}" width="600" height="600" preserveAspectRatio="xMidYMid meet"/>`;
-        }
-
-        // Select color
-        function selectColor(color) {
-            currentColor = color;
-            
-            // Update button selection
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.closest('.color-btn').classList.add('selected');
-        }
-
-        // Clear coloring
-        function clearColoring() {
-            if (currentColoringPage === null) return;
-            
-            // Reload the page to reset
-            openColoringPage(currentColoringPage);
-        }
-
-        // Back to gallery
-        function backToGallery() {
-            document.getElementById('coloringGallery').style.display = 'grid';
-            document.getElementById('coloringCanvas').style.display = 'none';
-            currentColoringPage = null;
-        }
-
-        // Initialize coloring gallery on load
-        window.addEventListener('load', () => {
-            initColoringGallery();
-        });
     </script>
 
 </body>

@@ -9,6 +9,9 @@
     <!-- EPUB.js for reading EPUB books -->
     <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
     
+    <!-- PDF.js for reading PDF books -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -138,6 +141,30 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
+        }
+
+        /* Coloring Cards - SMALL SQUARES */
+        #coloringGallery.books-grid {
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        #coloringGallery .book-card {
+            padding: 0.4rem;
+        }
+        
+        #coloringGallery .book-cover {
+            height: 110px;
+            width: 100%;
+        }
+        
+        #coloringGallery .book-title {
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+        }
+        
+        #coloringGallery .book-type {
+            font-size: 0.65rem;
         }
 
         .book-card {
@@ -337,8 +364,8 @@
         }
 
         .page-counter {
-            position: absolute;
-            bottom: 2rem;
+            position: fixed;
+            bottom: 1.5rem;
             left: 50%;
             transform: translateX(-50%);
             background: #ffd700;
@@ -348,7 +375,7 @@
             font-weight: 700;
             font-size: 1.2rem;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
-            z-index: 100;
+            z-index: 1000;
         }
 
         /* Loading */
@@ -442,9 +469,9 @@
                 <i class="fas fa-headphones"></i>
                 Audiobooks
             </button>
-            <button class="tab-btn" onclick="showSection('coloring')">
-                <i class="fas fa-palette"></i>
-                Coloring
+            <button class="tab-btn" onclick="showSection('storybooks')">
+                <i class="fas fa-book-open"></i>
+                Story Books
             </button>
             <button class="tab-btn" onclick="showSection('games')">
                 <i class="fas fa-gamepad"></i>
@@ -475,43 +502,13 @@
             </div>
         </div>
 
-        <!-- Coloring Section -->
-        <div id="coloring-section" class="section-content">
-            <h1 class="section-title">🎨 Choose a Picture to Color</h1>
-            
-            <!-- Coloring Page Gallery -->
-            <div class="books-grid" id="coloringGallery" style="display: block;">
-                <!-- Gallery will be populated by JavaScript -->
-            </div>
-            
-            <!-- Coloring Canvas (hidden until page selected) -->
-            <div id="coloringCanvas" style="display: none;">
-                <div style="text-align: center; margin-bottom: 1rem;">
-                    <button class="back-btn" onclick="backToGallery()" style="display: inline-block; margin: 0 auto;">
-                        <i class="fas fa-arrow-left"></i> Choose Another Picture
-                    </button>
-                </div>
-                
-                <!-- Color Palette -->
-                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                    <button class="color-btn" onclick="selectColor('#FF0000')" style="background: #FF0000;" title="Red"></button>
-                    <button class="color-btn" onclick="selectColor('#FF6B00')" style="background: #FF6B00;" title="Orange"></button>
-                    <button class="color-btn" onclick="selectColor('#FFD700')" style="background: #FFD700;" title="Yellow"></button>
-                    <button class="color-btn" onclick="selectColor('#00FF00')" style="background: #00FF00;" title="Green"></button>
-                    <button class="color-btn" onclick="selectColor('#00BFFF')" style="background: #00BFFF;" title="Blue"></button>
-                    <button class="color-btn" onclick="selectColor('#8B00FF')" style="background: #8B00FF;" title="Purple"></button>
-                    <button class="color-btn" onclick="selectColor('#FF1493')" style="background: #FF1493;" title="Pink"></button>
-                    <button class="color-btn" onclick="selectColor('#8B4513')" style="background: #8B4513;" title="Brown"></button>
-                    <button class="color-btn" onclick="selectColor('#000000')" style="background: #000000;" title="Black"></button>
-                    <button class="color-btn" onclick="selectColor('#FFFFFF')" style="background: #FFFFFF; border: 2px solid #333;" title="White"></button>
-                    <button class="color-btn" onclick="clearColoring()" style="background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);" title="Clear All">
-                        <i class="fas fa-undo" style="color: white;"></i>
-                    </button>
-                </div>
-                
-                <!-- SVG Coloring Area -->
-                <div style="display: flex; justify-content: center;">
-                    <svg id="coloringSVG" width="600" height="600" style="background: white; border: 3px solid #ffd700; border-radius: 15px; cursor: pointer;"></svg>
+        <!-- Story Books Section -->
+        <div id="storybooks-section" class="section-content">
+            <h1 class="section-title">📖 Choose a Story Book to Read</h1>
+            <div class="books-grid" id="storybooksGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading story books...</p>
                 </div>
             </div>
         </div>
@@ -519,10 +516,18 @@
         <!-- Games Section -->
         <div id="games-section" class="section-content">
             <h1 class="section-title">🎮 Choose a Game to Play</h1>
-            <div class="games-grid" id="gamesGrid">
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <p>Games coming soon!</p>
+            
+            <!-- Coming Soon Message -->
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 3rem; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
+                    <i class="fas fa-gamepad" style="font-size: 5rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                    <h2 style="color: #667eea; font-size: 2.5rem; margin-bottom: 1rem;">Coming Soon!</h2>
+                    <p style="color: #333; font-size: 1.3rem; line-height: 1.6;">
+                        Awesome games are on the way! Check back soon for fun games to play.
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <i class="fas fa-trophy" style="font-size: 3rem; color: #764ba2;"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -542,7 +547,9 @@
                 <i class="fas fa-chevron-left"></i>
             </button>
             
-            <div id="epubViewer" style="width: 80%; max-width: 800px; height: 80vh; background: white; border-radius: 15px; overflow: hidden;"></div>
+            <div id="epubViewer" style="width: 80%; max-width: 800px; height: 80vh; background: white; border-radius: 15px; overflow: hidden; display: none;"></div>
+            
+            <canvas id="pdfCanvas" style="max-width: 90%; max-height: 80vh; background: white; border-radius: 15px; display: none;"></canvas>
             
             <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
                 <i class="fas fa-chevron-right"></i>
@@ -554,13 +561,17 @@
 
     <script>
         // ═══════════════════════════════════════════════════════════════
+        // Configure PDF.js
+        // ═══════════════════════════════════════════════════════════════
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         
         const JELLYFIN_CONFIG = {
             SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
             BOOKS_LIBRARY_ID: '467bd88b656c88ee6a423d8478e9e54a',      // TEXT BOOKS (EPUB)
-            AUDIOBOOKS_LIBRARY_ID: '17eace283c0eb2fcd9a3132a4fdf1819',  // AUDIO BOOKS-KIDS
+            STORYBOOKS_LIBRARY_ID: 'cd9fa11a14441d0f61e557525d3369d9',  // TEXT-BOOKS-KIDS 01 (PDFs)
+            AUDIOBOOKS_LIBRARY_ID: 'eb2423cff03c7994638e891f33af209d',  // MUSIC LIBRARY
             CARTOONS_LIBRARY_ID: 'ca43f3291c81d4f007f2b33936d256e6',    // KIDS WORLD (Cartoons/TV)
             GAMES_LIBRARY_ID: null  // Add when games library is created
         };
@@ -570,6 +581,7 @@
         // ═══════════════════════════════════════════════════════════════
         
         let BOOKS = [];
+        let STORYBOOKS = [];
         let AUDIOBOOKS = [];
         let CARTOONS = [];
         let GAMES = [];
@@ -577,6 +589,12 @@
         // ═══════════════════════════════════════════════════════════════
         // STATE
         // ═══════════════════════════════════════════════════════════════
+        
+        // PDF reader state
+        let currentPDF = null;
+        let currentPDFPage = 1;
+        let totalPDFPages = 0;
+        let currentReaderType = null; // 'epub' or 'pdf'
         
         // (EPUB state variables are defined in the EPUB BOOK READER section below)
 
@@ -618,7 +636,10 @@
             
             // Load content on-demand if not already loaded
             if (!loadedSections[section]) {
-                if (section === 'audiobooks') {
+                if (section === 'storybooks') {
+                    loadStoryBooks();
+                    loadedSections.storybooks = true;
+                } else if (section === 'audiobooks') {
                     loadAudiobooks();
                     loadedSections.audiobooks = true;
                 } else if (section === 'cartoons') {
@@ -688,6 +709,65 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
+        // LOAD STORY BOOKS (PDFs) FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadStoryBooks() {
+            const grid = document.getElementById('storybooksGrid');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.STORYBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                STORYBOOKS = (data.Items || []).map(book => ({
+                    id: book.Id,
+                    name: book.Name,
+                    file: `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`,
+                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'PDF',
+                    imageUrl: book.ImageTags && book.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                displayStoryBooks();
+            } catch (error) {
+                console.error('Error loading story books:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Oops! Could not load books</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to check the connection!</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayStoryBooks() {
+            const grid = document.getElementById('storybooksGrid');
+            
+            if (STORYBOOKS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No story books available yet!</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some books 📚</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = STORYBOOKS.map((book, index) => `
+                <div class="book-card" onclick="openStoryBook(${index})">
+                    <div class="book-cover">
+                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
+                    </div>
+                    <div class="book-title">${book.name}</div>
+                    <span class="book-type">${book.type}</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
         // LOAD AUDIOBOOKS FROM JELLYFIN
         // ═══════════════════════════════════════════════════════════════
         
@@ -695,7 +775,7 @@
             const grid = document.getElementById('audiobooksGrid');
             
             try {
-                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=AudioBook&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=MusicAlbum&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
                 
                 const response = await fetch(url);
                 const data = await response.json();
@@ -910,6 +990,97 @@
             }
         }
 
+        // ═══════════════════════════════════════════════════════════════
+        // PDF STORY BOOK READER
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function openStoryBook(index) {
+            const book = STORYBOOKS[index];
+            
+            console.log('📖 Opening PDF book:', book.name);
+            
+            currentReaderType = 'pdf';
+            
+            // Show overlay
+            const overlay = document.getElementById('readerOverlay');
+            const title = document.getElementById('readerTitle');
+            title.textContent = book.name;
+            overlay.classList.add('active');
+            
+            // Hide EPUB viewer, show PDF canvas
+            document.getElementById('epubViewer').style.display = 'none';
+            document.getElementById('pdfCanvas').style.display = 'block';
+            
+            const pdfUrl = book.file;
+            
+            console.log('📥 Loading PDF from:', pdfUrl);
+            
+            try {
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                currentPDF = await loadingTask.promise;
+                totalPDFPages = currentPDF.numPages;
+                currentPDFPage = 1;
+                
+                console.log('✅ PDF loaded! Total pages:', totalPDFPages);
+                
+                await renderPDFPage(1);
+                
+            } catch (error) {
+                console.error('❌ Error loading PDF:', error);
+                alert('Could not open this book. Please try another one!');
+                closeReader();
+            }
+        }
+        
+        async function renderPDFPage(pageNum) {
+            if (!currentPDF) return;
+            
+            try {
+                const page = await currentPDF.getPage(pageNum);
+                const canvas = document.getElementById('pdfCanvas');
+                const ctx = canvas.getContext('2d', { alpha: false });
+                
+                // SUPER HIGH QUALITY RENDERING
+                ctx.imageSmoothingEnabled = false;
+                
+                const devicePixelRatio = window.devicePixelRatio || 1;
+                const viewport = page.getViewport({ scale: 1 });
+                
+                const baseScale = Math.min(
+                    (window.innerWidth * 0.8) / viewport.width,
+                    (window.innerHeight * 0.8) / viewport.height
+                );
+                
+                // 4x quality for crystal clear text
+                const qualityMultiplier = 4.0;
+                const renderScale = baseScale * qualityMultiplier * devicePixelRatio;
+                
+                const scaledViewport = page.getViewport({ scale: renderScale });
+                
+                canvas.width = scaledViewport.width;
+                canvas.height = scaledViewport.height;
+                
+                // Display at normal size (quality stays high)
+                canvas.style.width = (scaledViewport.width / (qualityMultiplier * devicePixelRatio)) + 'px';
+                canvas.style.height = (scaledViewport.height / (qualityMultiplier * devicePixelRatio)) + 'px';
+                
+                await page.render({
+                    canvasContext: ctx,
+                    viewport: scaledViewport,
+                    intent: 'print'
+                }).promise;
+                
+                document.getElementById('pageCounter').textContent = `Page ${currentPDFPage} of ${totalPDFPages}`;
+                
+                document.getElementById('prevPage').disabled = currentPDFPage === 1;
+                document.getElementById('nextPage').disabled = currentPDFPage === totalPDFPages;
+                
+                console.log(`✅ Rendered ULTRA HIGH QUALITY page ${currentPDFPage}`);
+            } catch (error) {
+                console.error('Error rendering PDF page:', error);
+            }
+        }
+
         function openAudiobook(index) {
             const audio = AUDIOBOOKS[index];
             
@@ -931,17 +1102,27 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // EPUB NAVIGATION
+        // BOOK READER NAVIGATION (EPUB & PDF)
         // ═══════════════════════════════════════════════════════════════
         
-        function nextPage() {
-            if (rendition) {
+        async function nextPage() {
+            if (currentReaderType === 'pdf' && currentPDF) {
+                if (currentPDFPage < totalPDFPages) {
+                    currentPDFPage++;
+                    await renderPDFPage(currentPDFPage);
+                }
+            } else if (rendition) {
                 rendition.next();
             }
         }
 
-        function previousPage() {
-            if (rendition) {
+        async function previousPage() {
+            if (currentReaderType === 'pdf' && currentPDF) {
+                if (currentPDFPage > 1) {
+                    currentPDFPage--;
+                    await renderPDFPage(currentPDFPage);
+                }
+            } else if (rendition) {
                 rendition.prev();
             }
         }
@@ -949,7 +1130,7 @@
         function closeReader() {
             document.getElementById('readerOverlay').classList.remove('active');
             
-            // Destroy epub.js instance
+            // Destroy EPUB instance
             if (rendition) {
                 rendition.destroy();
                 rendition = null;
@@ -959,8 +1140,17 @@
                 currentBook = null;
             }
             
-            // Clear viewer
+            // Clear EPUB viewer
             document.getElementById('epubViewer').innerHTML = '';
+            document.getElementById('epubViewer').style.display = 'none';
+            
+            // Clear PDF
+            currentPDF = null;
+            currentPDFPage = 1;
+            totalPDFPages = 0;
+            document.getElementById('pdfCanvas').style.display = 'none';
+            
+            currentReaderType = null;
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -973,112 +1163,6 @@
             window.open(game.file, '_blank');
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // COLORING BOOK
-        // ═══════════════════════════════════════════════════════════════
-
-        let currentColor = '#FF0000'; // Default red
-        let currentColoringPage = null; // Renamed to avoid conflict
-
-        // Coloring pages library (SVG paths)
-        const COLORING_PAGES = [
-            {
-                name: '🐱 Happy Cat',
-                svg: '<g><circle cx="300" cy="250" r="100" fill="white" stroke="black" stroke-width="3"/><circle cx="270" cy="230" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="330" cy="230" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="275" cy="235" r="5" fill="black"/><circle cx="325" cy="235" r="5" fill="black"/><path d="M 280 270 Q 300 280 320 270" fill="none" stroke="black" stroke-width="3"/><polygon points="250,180 230,150 260,200" fill="white" stroke="black" stroke-width="2"/><polygon points="350,180 370,150 340,200" fill="white" stroke="black" stroke-width="2"/><ellipse cx="300" cy="320" rx="60" ry="80" fill="white" stroke="black" stroke-width="3"/></g>'
-            },
-            {
-                name: '⭐ Big Star',
-                svg: '<polygon points="300,100 350,250 500,250 380,350 430,500 300,400 170,500 220,350 100,250 250,250" fill="white" stroke="black" stroke-width="4"/>'
-            },
-            {
-                name: '🦋 Butterfly',
-                svg: '<g><ellipse cx="300" cy="300" rx="20" ry="60" fill="white" stroke="black" stroke-width="3"/><circle cx="300" cy="250" r="25" fill="white" stroke="black" stroke-width="3"/><circle cx="295" cy="245" r="5" fill="black"/><circle cx="305" cy="245" r="5" fill="black"/><ellipse cx="230" cy="280" rx="70" ry="90" fill="white" stroke="black" stroke-width="3"/><ellipse cx="370" cy="280" rx="70" ry="90" fill="white" stroke="black" stroke-width="3"/><ellipse cx="230" cy="370" rx="50" ry="70" fill="white" stroke="black" stroke-width="3"/><ellipse cx="370" cy="370" rx="50" ry="70" fill="white" stroke="black" stroke-width="3"/><line x1="300" y1="230" x2="280" y2="200" stroke="black" stroke-width="2"/><line x1="300" y1="230" x2="320" y2="200" stroke="black" stroke-width="2"/></g>'
-            },
-            {
-                name: '🌸 Flower',
-                svg: '<g><circle cx="300" cy="300" r="40" fill="white" stroke="black" stroke-width="3"/><ellipse cx="300" cy="220" rx="35" ry="60" fill="white" stroke="black" stroke-width="3"/><ellipse cx="380" cy="300" rx="35" ry="60" fill="white" stroke="black" stroke-width="3" transform="rotate(90 380 300)"/><ellipse cx="300" cy="380" rx="35" ry="60" fill="white" stroke="black" stroke-width="3"/><ellipse cx="220" cy="300" rx="35" ry="60" fill="white" stroke="black" stroke-width="3" transform="rotate(90 220 300)"/><circle cx="300" cy="300" r="20" fill="yellow" stroke="black" stroke-width="2"/><rect x="295" y="350" width="10" height="150" fill="white" stroke="black" stroke-width="3"/><ellipse cx="270" cy="450" rx="30" ry="15" fill="white" stroke="black" stroke-width="2"/><ellipse cx="330" cy="470" rx="30" ry="15" fill="white" stroke="black" stroke-width="2"/></g>'
-            },
-            {
-                name: '🏠 Little House',
-                svg: '<g><rect x="200" y="300" width="200" height="200" fill="white" stroke="black" stroke-width="3"/><polygon points="300,200 450,300 150,300" fill="white" stroke="black" stroke-width="3"/><rect x="260" y="380" width="60" height="120" fill="white" stroke="black" stroke-width="2"/><circle cx="290" cy="440" r="5" fill="black"/><rect x="340" y="340" width="40" height="40" fill="white" stroke="black" stroke-width="2"/><line x1="360" y1="340" x2="360" y2="380" stroke="black" stroke-width="2"/><line x1="340" y1="360" x2="380" y2="360" stroke="black" stroke-width="2"/></g>'
-            },
-            {
-                name: '🐟 Fish',
-                svg: '<g><ellipse cx="300" cy="300" rx="120" ry="80" fill="white" stroke="black" stroke-width="3"/><polygon points="420,300 500,250 500,350" fill="white" stroke="black" stroke-width="3"/><circle cx="250" cy="280" r="12" fill="white" stroke="black" stroke-width="2"/><circle cx="250" cy="280" r="5" fill="black"/><path d="M 320 270 Q 340 260 360 270" fill="none" stroke="black" stroke-width="2"/><path d="M 320 300 Q 340 310 360 300" fill="none" stroke="black" stroke-width="2"/></g>'
-            }
-        ];
-
-        // Initialize coloring gallery
-        function initColoringGallery() {
-            const gallery = document.getElementById('coloringGallery');
-            
-            gallery.innerHTML = COLORING_PAGES.map((page, index) => `
-                <div class="book-card" onclick="openColoringPage(${index})">
-                    <div class="book-cover">
-                        <i class="fas fa-palette" style="font-size: 4rem; color: #ffd700;"></i>
-                    </div>
-                    <div class="book-title">${page.name}</div>
-                    <span class="book-type">🎨 COLOR ME!</span>
-                </div>
-            `).join('');
-        }
-
-        // Open a coloring page
-        function openColoringPage(index) {
-            currentColoringPage = index;
-            const page = COLORING_PAGES[index];
-            
-            // Hide gallery, show canvas
-            document.getElementById('coloringGallery').style.display = 'none';
-            document.getElementById('coloringCanvas').style.display = 'block';
-            
-            // Load SVG
-            const svg = document.getElementById('coloringSVG');
-            svg.innerHTML = page.svg;
-            
-            // Add click handlers to all colorable elements
-            const colorableElements = svg.querySelectorAll('circle, rect, ellipse, polygon, path[fill]');
-            colorableElements.forEach(el => {
-                // Skip black elements (outlines)
-                if (el.getAttribute('fill') === 'black') return;
-                
-                el.style.cursor = 'pointer';
-                el.addEventListener('click', function() {
-                    this.setAttribute('fill', currentColor);
-                });
-            });
-        }
-
-        // Select color
-        function selectColor(color) {
-            currentColor = color;
-            
-            // Update button selection
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.closest('.color-btn').classList.add('selected');
-        }
-
-        // Clear coloring
-        function clearColoring() {
-            if (currentColoringPage === null) return;
-            
-            // Reload the page to reset
-            openColoringPage(currentColoringPage);
-        }
-
-        // Back to gallery
-        function backToGallery() {
-            document.getElementById('coloringGallery').style.display = 'grid';
-            document.getElementById('coloringCanvas').style.display = 'none';
-            currentColoringPage = null;
-        }
-
-        // Initialize coloring gallery on load
-        window.addEventListener('load', () => {
-            initColoringGallery();
-        });
     </script>
 
 </body>
