@@ -2162,13 +2162,8 @@
                 position: relative !important;
             }
             
-            /* HIDE ALL TEXT on mobile - just show poster images! */
+            /* On mobile: hide overlays/badges but keep titles below poster */
             .content-card-overlay,
-            .movie-info,
-            .movie-title,
-            .content-card-title,
-            .movie-year,
-            .movie-rating,
             .content-card-info {
                 display: none !important;
             }
@@ -2237,18 +2232,55 @@
                 flex-wrap: nowrap !important;
                 overflow-x: auto !important;
                 overflow-y: hidden !important;
-                gap: 0.75rem !important;
-                padding: 0 0.75rem !important;
+                gap: 0.6rem !important;
+                padding: 0.25rem 0.75rem 0.5rem !important;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
             }
-            
+            .movies-grid::-webkit-scrollbar,
+            .content-grid::-webkit-scrollbar { display: none; }
+
+            /* Cards: show 2.3 at a time so users know to scroll */
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: 0 0 45% !important;
-                min-width: 45% !important;
-                max-width: 45% !important;
+                flex: 0 0 42% !important;
+                min-width: 42% !important;
+                max-width: 42% !important;
                 scroll-snap-align: start;
+                border-radius: 10px !important;
+                overflow: hidden;
+            }
+
+            /* Show movie title below poster on mobile */
+            .movie-title,
+            .content-card-title {
+                display: block !important;
+                font-size: 0.72rem !important;
+                font-weight: 700 !important;
+                line-height: 1.2 !important;
+                color: #e2e8f0 !important;
+                padding: 0.35rem 0.4rem 0.2rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                background: rgba(10,15,26,0.9) !important;
+            }
+
+            .movie-year,
+            .movie-rating {
+                display: block !important;
+                font-size: 0.62rem !important;
+                color: #94a3b8 !important;
+                padding: 0 0.4rem 0.3rem !important;
+                background: rgba(10,15,26,0.9) !important;
+            }
+
+            .movie-info {
+                display: block !important;
+                padding: 0 !important;
+                background: rgba(10,15,26,0.9) !important;
             }
             
             /* Video Modal - Full Screen */
@@ -2615,7 +2647,65 @@
                 scroll-behavior: auto !important;
             }
         }
-        
+
+        /* ── EXTRA MOBILE POLISH (max 480px / small phones) ── */
+        @media only screen and (max-width: 480px) {
+
+            /* Search bar full width with proper padding */
+            .search-wrapper {
+                padding: 0 0.75rem;
+                max-width: 100%;
+            }
+            .search-input {
+                font-size: 0.85rem !important;
+                padding: 0.65rem 2.75rem 0.65rem 1rem !important;
+            }
+
+            /* Section headers */
+            .collection-header,
+            .section-header {
+                padding: 0 0.75rem !important;
+            }
+            .collection-header h2,
+            .section-header h2,
+            .section-title {
+                font-size: 1rem !important;
+                font-weight: 800 !important;
+            }
+
+            /* Cards slightly wider on very small screens to show 2 */
+            .movies-grid .movie-card,
+            .content-grid .movie-card {
+                flex: 0 0 44% !important;
+                min-width: 44% !important;
+                max-width: 44% !important;
+            }
+
+            /* Poster image height cap for small screens */
+            .movie-poster,
+            .content-card-image {
+                max-height: 160px !important;
+            }
+
+            /* Bottom nav labels slightly smaller */
+            .bottom-nav-item span {
+                font-size: 0.62rem !important;
+            }
+
+            /* Hero banner compact */
+            .hero-banner {
+                min-height: 220px !important;
+                max-height: 320px !important;
+            }
+            .hero-title { font-size: 1.2rem !important; }
+            .hero-description { font-size: 0.8rem !important; }
+
+            /* Panels full width */
+            .side-panel {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2723,31 +2813,41 @@
                        <script>
     (function() {
         const vid = document.getElementById('previewVideo');
-        const url = '/hls/FLMTV.m3u8';
+        const previewStreamUrl = 'http://10.0.0.4:8080/FLMTV.m3u8';
+        let previewHls = null;
 
-        function init() {
+        function startPreview() {
             vid.muted = true;
             vid.volume = 0;
             vid.defaultMuted = true;
+
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                var h = new Hls();
-                h.loadSource(url);
-                h.attachMedia(vid);
-                h.on(Hls.Events.MANIFEST_PARSED, function() {
+                previewHls = new Hls({ autoStartLoad: true });
+                previewHls.loadSource(previewStreamUrl);
+                previewHls.attachMedia(vid);
+                previewHls.on(Hls.Events.MANIFEST_PARSED, function() {
                     vid.muted = true;
-                    vid.play().catch(function(){});
+                    vid.play().catch(e => console.log('Preview autoplay blocked:', e));
                 });
             } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
-                vid.src = url;
-                vid.play().catch(function(){});
+                vid.src = previewStreamUrl;
+                vid.play().catch(e => console.log('Preview autoplay blocked:', e));
             }
-            vid.addEventListener('volumechange', function() {
-                if (!this.muted || this.volume > 0) { this.muted = true; this.volume = 0; }
-            }, true);
         }
 
-        if (typeof Hls !== 'undefined') { init(); }
-        else { window.addEventListener('load', init); }
+        // Wait for HLS.js to be ready
+        if (typeof Hls !== 'undefined') {
+            startPreview();
+        } else {
+            window.addEventListener('load', startPreview);
+        }
+
+        vid.addEventListener('volumechange', function(e) {
+            if (!this.muted || this.volume > 0) {
+                this.muted = true;
+                this.volume = 0;
+            }
+        }, true);
     })();
 </script>
                         <div class="live-channel-content">
@@ -4876,7 +4976,7 @@
     modal.classList.add('active');
     
     const liveStreamVideo = document.getElementById('liveStreamVideo');
-    const streamUrl = '/hls/FLMTV.m3u8';
+    const streamUrl = 'http://10.0.0.4:8080/FLMTV.m3u8';
 
     if (liveStreamVideo) {
         // Destroy any existing HLS instance

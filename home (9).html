@@ -2723,31 +2723,42 @@
                        <script>
     (function() {
         const vid = document.getElementById('previewVideo');
-        const url = '/hls/FLMTV.m3u8';
+        const streamUrl = '/hls/FLMTV.m3u8';
 
-        function init() {
+        function initPreview() {
             vid.muted = true;
             vid.volume = 0;
             vid.defaultMuted = true;
+
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                var h = new Hls();
-                h.loadSource(url);
-                h.attachMedia(vid);
-                h.on(Hls.Events.MANIFEST_PARSED, function() {
+                // HLS.js - works in Chrome AND Edge
+                const previewHls = new Hls();
+                previewHls.loadSource(streamUrl);
+                previewHls.attachMedia(vid);
+                previewHls.on(Hls.Events.MANIFEST_PARSED, function() {
                     vid.muted = true;
-                    vid.play().catch(function(){});
+                    vid.play().catch(e => console.log('Preview autoplay blocked:', e));
                 });
             } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
-                vid.src = url;
-                vid.play().catch(function(){});
+                // Safari native HLS
+                vid.src = streamUrl;
+                vid.play().catch(e => console.log('Preview autoplay blocked:', e));
             }
-            vid.addEventListener('volumechange', function() {
-                if (!this.muted || this.volume > 0) { this.muted = true; this.volume = 0; }
+
+            vid.addEventListener('volumechange', function(e) {
+                if (!this.muted || this.volume > 0) {
+                    this.muted = true;
+                    this.volume = 0;
+                }
             }, true);
         }
 
-        if (typeof Hls !== 'undefined') { init(); }
-        else { window.addEventListener('load', init); }
+        // Wait for HLS.js script to load
+        if (typeof Hls !== 'undefined') {
+            initPreview();
+        } else {
+            window.addEventListener('load', initPreview);
+        }
     })();
 </script>
                         <div class="live-channel-content">

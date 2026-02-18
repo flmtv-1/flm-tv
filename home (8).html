@@ -224,29 +224,26 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         .search-container {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 86px;
-            z-index: 99;
+            background: transparent;
+            padding: 2rem 2rem 1.5rem;
+            position: relative;
+            z-index: 10;
         }
         
         .search-wrapper {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             position: relative;
         }
         
         .search-input {
             width: 100%;
-            padding: 0.9rem 3.5rem 0.9rem 1.2rem;
+            padding: 0.75rem 3rem 0.75rem 1rem;
             background: rgba(255, 255, 255, 0.05);
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
             border-radius: 50px;
             color: var(--text);
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
         
@@ -254,20 +251,21 @@
             outline: none;
             border-color: var(--neon-green);
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
         }
         
         .search-input::placeholder {
             color: var(--text-secondary);
+            font-size: 0.85rem;
         }
         
         .search-icon {
             position: absolute;
-            right: 1.2rem;
+            right: 1rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--neon-green);
-            font-size: 1.2rem;
+            font-size: 1rem;
             pointer-events: none;
         }
         
@@ -279,7 +277,7 @@
             background: rgba(15, 23, 42, 0.98);
             border: 2px solid var(--neon-green);
             border-radius: 12px;
-            max-height: 500px;
+            max-height: 400px;
             overflow-y: auto;
             display: none;
             z-index: 1000;
@@ -291,12 +289,12 @@
         }
         
         .search-result-item {
-            padding: 1rem;
+            padding: 0.75rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             align-items: center;
         }
         
@@ -305,33 +303,40 @@
         }
         
         .search-result-img {
-            width: 60px;
-            height: 90px;
+            width: 50px;
+            height: 75px;
             object-fit: cover;
             border-radius: 6px;
             background: var(--bg-card);
+            flex-shrink: 0;
         }
         
         .search-result-info {
             flex: 1;
+            min-width: 0;
         }
         
         .search-result-title {
             color: var(--text);
             font-weight: 600;
+            font-size: 0.9rem;
             margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
         .search-result-type {
             color: var(--neon-green);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 500;
         }
         
         .search-no-results {
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
             color: var(--text-secondary);
+            font-size: 0.9rem;
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -742,6 +747,38 @@
         .floating-btn-chat {
             background: var(--neon-green);
             color: white;
+        }
+        
+        .floating-btn-kids {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            animation: pulse-glow 2s ease-in-out infinite;
+            padding: 0;
+            overflow: hidden;
+            border: 3px solid #4A90E2;
+        }
+        
+        .floating-btn-kids img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(74, 144, 226, 0.8);
+                transform: scale(1.05);
+            }
+        }
+        
+        .floating-btn-kids:hover {
+            background: linear-gradient(135deg, #357ABD 0%, #4A90E2 100%);
+            transform: scale(1.15) !important;
         }
         
         .floating-btn-ai {
@@ -2125,13 +2162,8 @@
                 position: relative !important;
             }
             
-            /* HIDE ALL TEXT on mobile - just show poster images! */
+            /* On mobile: hide overlays/badges but keep titles below poster */
             .content-card-overlay,
-            .movie-info,
-            .movie-title,
-            .content-card-title,
-            .movie-year,
-            .movie-rating,
             .content-card-info {
                 display: none !important;
             }
@@ -2200,18 +2232,55 @@
                 flex-wrap: nowrap !important;
                 overflow-x: auto !important;
                 overflow-y: hidden !important;
-                gap: 0.75rem !important;
-                padding: 0 0.75rem !important;
+                gap: 0.6rem !important;
+                padding: 0.25rem 0.75rem 0.5rem !important;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
             }
-            
+            .movies-grid::-webkit-scrollbar,
+            .content-grid::-webkit-scrollbar { display: none; }
+
+            /* Cards: show 2.3 at a time so users know to scroll */
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: 0 0 45% !important;
-                min-width: 45% !important;
-                max-width: 45% !important;
+                flex: 0 0 42% !important;
+                min-width: 42% !important;
+                max-width: 42% !important;
                 scroll-snap-align: start;
+                border-radius: 10px !important;
+                overflow: hidden;
+            }
+
+            /* Show movie title below poster on mobile */
+            .movie-title,
+            .content-card-title {
+                display: block !important;
+                font-size: 0.72rem !important;
+                font-weight: 700 !important;
+                line-height: 1.2 !important;
+                color: #e2e8f0 !important;
+                padding: 0.35rem 0.4rem 0.2rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                background: rgba(10,15,26,0.9) !important;
+            }
+
+            .movie-year,
+            .movie-rating {
+                display: block !important;
+                font-size: 0.62rem !important;
+                color: #94a3b8 !important;
+                padding: 0 0.4rem 0.3rem !important;
+                background: rgba(10,15,26,0.9) !important;
+            }
+
+            .movie-info {
+                display: block !important;
+                padding: 0 !important;
+                background: rgba(10,15,26,0.9) !important;
             }
             
             /* Video Modal - Full Screen */
@@ -2578,7 +2647,65 @@
                 scroll-behavior: auto !important;
             }
         }
-        
+
+        /* ── EXTRA MOBILE POLISH (max 480px / small phones) ── */
+        @media only screen and (max-width: 480px) {
+
+            /* Search bar full width with proper padding */
+            .search-wrapper {
+                padding: 0 0.75rem;
+                max-width: 100%;
+            }
+            .search-input {
+                font-size: 0.85rem !important;
+                padding: 0.65rem 2.75rem 0.65rem 1rem !important;
+            }
+
+            /* Section headers */
+            .collection-header,
+            .section-header {
+                padding: 0 0.75rem !important;
+            }
+            .collection-header h2,
+            .section-header h2,
+            .section-title {
+                font-size: 1rem !important;
+                font-weight: 800 !important;
+            }
+
+            /* Cards slightly wider on very small screens to show 2 */
+            .movies-grid .movie-card,
+            .content-grid .movie-card {
+                flex: 0 0 44% !important;
+                min-width: 44% !important;
+                max-width: 44% !important;
+            }
+
+            /* Poster image height cap for small screens */
+            .movie-poster,
+            .content-card-image {
+                max-height: 160px !important;
+            }
+
+            /* Bottom nav labels slightly smaller */
+            .bottom-nav-item span {
+                font-size: 0.62rem !important;
+            }
+
+            /* Hero banner compact */
+            .hero-banner {
+                min-height: 220px !important;
+                max-height: 320px !important;
+            }
+            .hero-title { font-size: 1.2rem !important; }
+            .hero-description { font-size: 0.8rem !important; }
+
+            /* Panels full width */
+            .side-panel {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2609,9 +2736,9 @@
             
             <!-- RIGHT SIDE: Scrollable Buttons -->
             <div class="nav-actions">
-                <!-- Back to Gate Button -->
-                <button class="btn-icon" onclick="window.location.href='index.html'" title="Back to Home" style="border-color: var(--accent); color: var(--accent);">
-                    <i class="fas fa-home"></i>
+                <!-- Kids Corner Zone Button -->
+                <button class="btn-icon" onclick="window.location.href='kids-corner.html'" title="Kids Corner - Audiobooks & Story Books" style="border-color: var(--accent); color: var(--accent);">
+                    <i class="fas fa-child"></i>
                 </button>
                 
                 <a href="https://7RealmsTV.com" target="_blank" class="btn-icon" title="7RealmsTV.com - Corporate Site" style="text-decoration: none;">
@@ -2642,6 +2769,14 @@
     </header>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  HERO BANNER                                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <section class="hero-banner" id="heroBanner">
+        <!-- Slides will be dynamically inserted here -->
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  SEARCH BAR                                                     -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
@@ -2659,14 +2794,6 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  HERO BANNER                                                    -->
-    <!-- ═══════════════════════════════════════════════════════════════ -->
-    
-    <section class="hero-banner" id="heroBanner">
-        <!-- Slides will be dynamically inserted here -->
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  CATEGORY NAVIGATION                                            -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
@@ -2680,43 +2807,47 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted defaultmuted autoplay loop playsinline
+                        <video id="previewVideo" muted defaultmuted autoplay playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-                            <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                        <script>
     (function() {
         const vid = document.getElementById('previewVideo');
-        if (vid) {
+        const previewStreamUrl = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+        let previewHls = null;
+
+        function startPreview() {
             vid.muted = true;
             vid.volume = 0;
             vid.defaultMuted = true;
-            
-            vid.addEventListener('volumechange', function(e) {
-                if (!this.muted || this.volume > 0) {
-                    this.muted = true;
-                    this.volume = 0;
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            }, true);
-            
-            vid.addEventListener('loadedmetadata', function() {
-                this.muted = true;
-                this.volume = 0;
-            });
-            
-            vid.addEventListener('play', function() {
-                this.muted = true;
-                this.volume = 0;
-            });
-            
-            setTimeout(() => {
-                vid.muted = true;
-                vid.volume = 0;
+
+            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+                previewHls = new Hls({ autoStartLoad: true });
+                previewHls.loadSource(previewStreamUrl);
+                previewHls.attachMedia(vid);
+                previewHls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    vid.muted = true;
+                    vid.play().catch(e => console.log('Preview autoplay blocked:', e));
+                });
+            } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
+                vid.src = previewStreamUrl;
                 vid.play().catch(e => console.log('Preview autoplay blocked:', e));
-            }, 100);
+            }
         }
+
+        // Wait for HLS.js to be ready
+        if (typeof Hls !== 'undefined') {
+            startPreview();
+        } else {
+            window.addEventListener('load', startPreview);
+        }
+
+        vid.addEventListener('volumechange', function(e) {
+            if (!this.muted || this.volume > 0) {
+                this.muted = true;
+                this.volume = 0;
+            }
+        }, true);
     })();
 </script>
                         <div class="live-channel-content">
@@ -3045,6 +3176,9 @@
     
     <!-- Floating Chat/AI buttons for main page -->
     <div class="floating-buttons">
+        <button class="floating-btn floating-btn-kids" onclick="window.location.href='kids-corner.html'" title="Kids Corner">
+            <img src="assets/images/kids-avatar.png" alt="Kids Corner">
+        </button>
         <button class="floating-btn floating-btn-chat" onclick="openPanel('chatPanel')" title="Chat">
             <i class="fas fa-comments"></i>
         </button>
@@ -3087,24 +3221,22 @@
         { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
         { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
-        { id: '7e2a5d7fd8bd73b8768e302be39536df', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7e2a5d7fd8bd73b8768e302be39536df&collectionType=tvshows' },
+        { id: 'cf6b0d096a1b570653b5a9a572fefa9b', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=cf6b0d096a1b570653b5a9a572fefa9b&collectionType=tvshows' },
         { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
         { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
         { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
-        { id: 'a2347f687b9669054c8d2abbfd50889f', name: '07 GOLDEN CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=a2347f687b9669054c8d2abbfd50889f&collectionType=movies' },
-        { id: '933e8b4060c2005da692c9a74ff52d69', name: '07-B TIMELESS CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=933e8b4060c2005da692c9a74ff52d69&collectionType=movies' },
+        { id: 'e5da6f90a5fbe74163d22de1b0014943', name: '07 GOLDEN CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=e5da6f90a5fbe74163d22de1b0014943&collectionType=movies' },
         { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
         { id: '9eb72a50280cf3ef5599f4c43a383611', name: '08-B TAGALOG ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=9eb72a50280cf3ef5599f4c43a383611&collectionType=movies' },
         { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
         { id: '48d96f519acf2fce600d06a4365632f4', name: '10 FLM NEWS FILIPINA', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
-        { id: 'f412dea8334c1260f2bfd6cfa91dddf5', name: '11 ASIAN Animation', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=f412dea8334c1260f2bfd6cfa91dddf5&collectionType=tvshows' },
         { id: '5f2f2ace0732efb63f625d1346b9c766', name: '12 ZAINA ZONE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
         { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: '13 COMEDY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
         { id: '56f8dc1075207592d3248a09358c587a', name: '14 DOCUMENTARIES', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
         { id: '7a941a433e06ec0512b64b1d3b52c782', name: '15 MIDNIGHT CIRCUIT', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
         { id: 'c95ec3ddc1e8cf075ba24840d92ad9bd', name: 'BEYOND REALITY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c95ec3ddc1e8cf075ba24840d92ad9bd&collectionType=tvshows' },
-        { id: '4e985111ed7f570b595204d82adb02f3', name: 'Books', url: 'https://flmtv26.duckdns.org:8920/web/#/list?parentId=4e985111ed7f570b595204d82adb02f3&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: '8e596d67e544894b4502eba9aeb49b01', name: 'ESCAPE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=8e596d67e544894b4502eba9aeb49b01&collectionType=tvshows' },
+	{ id: 'kids-corner', name: '🌟 Kids Corner', url: 'kids-corner.html', hideFromCarousel: true },
         { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
         { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'https://flmtv26.duckdns.org:8920/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
         { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'https://flmtv26.duckdns.org:8920/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
@@ -3582,6 +3714,11 @@
             for (const collection of JELLYFIN_CONFIG.COLLECTIONS) {
                 // Skip 00 Collections - only show in category nav
                 if (collection.name === '00 Collections') {
+                    continue;
+                }
+                
+                // Skip Kids Corner from carousel if hideFromCarousel flag is set
+                if (collection.hideFromCarousel) {
                     continue;
                 }
                 
@@ -4115,6 +4252,18 @@
     // Special handling for "00 Collections" - redirect to collections browser
     if (collectionName === '00 Collections') {
         window.location.href = 'collections-browser.html';
+        return;
+    }
+    
+    // Special handling for "Kids Interactive Books" - redirect to custom book reader
+    if (collectionId === 'interactive-books') {
+        window.location.href = 'books.html';
+        return;
+    }
+    
+    // Special handling for "Kids Corner" - redirect to kids page
+    if (collectionId === 'kids-corner') {
+        window.location.href = 'kids-corner.html';
         return;
     }
     
@@ -4826,15 +4975,34 @@
     const modal = document.getElementById('videoModal');
     modal.classList.add('active');
     
-    // Load the SRT stream source and start playing
     const liveStreamVideo = document.getElementById('liveStreamVideo');
+    const streamUrl = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+
     if (liveStreamVideo) {
-        // Set the source
-        liveStreamVideo.innerHTML = '<source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">';
-        liveStreamVideo.load(); // Reload with new source
+        // Destroy any existing HLS instance
+        if (hls) {
+            hls.destroy();
+            hls = null;
+        }
+
+        liveStreamVideo.innerHTML = ''; // Clear any old <source> tags
         liveStreamVideo.muted = true; // Start muted
-        liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
-        console.log('📺 SRT stream loaded and started (muted)');
+
+        if (Hls.isSupported()) {
+            // Use HLS.js — works in Chrome, Edge, Firefox
+            hls = new Hls();
+            hls.loadSource(streamUrl);
+            hls.attachMedia(liveStreamVideo);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
+                console.log('📺 HLS.js stream loaded and started (muted)');
+            });
+        } else if (liveStreamVideo.canPlayType('application/vnd.apple.mpegurl')) {
+            // Native HLS (Safari)
+            liveStreamVideo.src = streamUrl;
+            liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
+            console.log('📺 Native HLS stream started (Safari)');
+        }
     }
     
     // Add to browser history so back button works
@@ -4846,16 +5014,22 @@
             const modal = document.getElementById('videoModal');
             modal.classList.remove('active');
             
-            // COMPLETELY DISCONNECT the SRT stream by removing source
             const liveStreamVideo = document.getElementById('liveStreamVideo');
             if (liveStreamVideo) {
                 liveStreamVideo.pause();
                 liveStreamVideo.muted = true;
                 liveStreamVideo.volume = 0;
-                liveStreamVideo.removeAttribute('src'); // Remove src attribute
-                liveStreamVideo.innerHTML = ''; // Clear all source elements
-                liveStreamVideo.load(); // Force reload with no source (disconnects stream)
-                console.log('🔇 SRT stream DISCONNECTED');
+            }
+            // Destroy HLS.js instance if it exists
+            if (hls) {
+                hls.destroy();
+                hls = null;
+                console.log('🔇 HLS.js stream DISCONNECTED');
+            }
+            if (liveStreamVideo) {
+                liveStreamVideo.removeAttribute('src');
+                liveStreamVideo.innerHTML = '';
+                liveStreamVideo.load();
             }
             
             // Remove from history
@@ -5036,9 +5210,9 @@ async function loadCollectionPage(collectionId, title) {
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <nav class="bottom-nav">
-    <a href="#home" class="bottom-nav-item active">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
+    <a href="kids-corner.html" class="bottom-nav-item active">
+        <i class="fas fa-child"></i>
+        <span>Kids Corner</span>
     </a>
     <button class="bottom-nav-item" onclick="openPanel('chatPanel')">
         <i class="fas fa-comments"></i>

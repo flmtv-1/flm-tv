@@ -2717,37 +2717,43 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted defaultmuted autoplay playsinline
+                        <video id="previewVideo" muted defaultmuted autoplay loop playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+                            <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
                        <script>
     (function() {
         const vid = document.getElementById('previewVideo');
-        const url = '/hls/FLMTV.m3u8';
-
-        function init() {
+        if (vid) {
             vid.muted = true;
             vid.volume = 0;
             vid.defaultMuted = true;
-            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                var h = new Hls();
-                h.loadSource(url);
-                h.attachMedia(vid);
-                h.on(Hls.Events.MANIFEST_PARSED, function() {
-                    vid.muted = true;
-                    vid.play().catch(function(){});
-                });
-            } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
-                vid.src = url;
-                vid.play().catch(function(){});
-            }
-            vid.addEventListener('volumechange', function() {
-                if (!this.muted || this.volume > 0) { this.muted = true; this.volume = 0; }
+            
+            vid.addEventListener('volumechange', function(e) {
+                if (!this.muted || this.volume > 0) {
+                    this.muted = true;
+                    this.volume = 0;
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
             }, true);
+            
+            vid.addEventListener('loadedmetadata', function() {
+                this.muted = true;
+                this.volume = 0;
+            });
+            
+            vid.addEventListener('play', function() {
+                this.muted = true;
+                this.volume = 0;
+            });
+            
+            setTimeout(() => {
+                vid.muted = true;
+                vid.volume = 0;
+                vid.play().catch(e => console.log('Preview autoplay blocked:', e));
+            }, 100);
         }
-
-        if (typeof Hls !== 'undefined') { init(); }
-        else { window.addEventListener('load', init); }
     })();
 </script>
                         <div class="live-channel-content">
@@ -4875,34 +4881,15 @@
     const modal = document.getElementById('videoModal');
     modal.classList.add('active');
     
+    // Load the SRT stream source and start playing
     const liveStreamVideo = document.getElementById('liveStreamVideo');
-    const streamUrl = '/hls/FLMTV.m3u8';
-
     if (liveStreamVideo) {
-        // Destroy any existing HLS instance
-        if (hls) {
-            hls.destroy();
-            hls = null;
-        }
-
-        liveStreamVideo.innerHTML = ''; // Clear any old <source> tags
+        // Set the source
+        liveStreamVideo.innerHTML = '<source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">';
+        liveStreamVideo.load(); // Reload with new source
         liveStreamVideo.muted = true; // Start muted
-
-        if (Hls.isSupported()) {
-            // Use HLS.js — works in Chrome, Edge, Firefox
-            hls = new Hls();
-            hls.loadSource(streamUrl);
-            hls.attachMedia(liveStreamVideo);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
-                console.log('📺 HLS.js stream loaded and started (muted)');
-            });
-        } else if (liveStreamVideo.canPlayType('application/vnd.apple.mpegurl')) {
-            // Native HLS (Safari)
-            liveStreamVideo.src = streamUrl;
-            liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
-            console.log('📺 Native HLS stream started (Safari)');
-        }
+        liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
+        console.log('📺 SRT stream loaded and started (muted)');
     }
     
     // Add to browser history so back button works
@@ -4914,22 +4901,16 @@
             const modal = document.getElementById('videoModal');
             modal.classList.remove('active');
             
+            // COMPLETELY DISCONNECT the SRT stream by removing source
             const liveStreamVideo = document.getElementById('liveStreamVideo');
             if (liveStreamVideo) {
                 liveStreamVideo.pause();
                 liveStreamVideo.muted = true;
                 liveStreamVideo.volume = 0;
-            }
-            // Destroy HLS.js instance if it exists
-            if (hls) {
-                hls.destroy();
-                hls = null;
-                console.log('🔇 HLS.js stream DISCONNECTED');
-            }
-            if (liveStreamVideo) {
-                liveStreamVideo.removeAttribute('src');
-                liveStreamVideo.innerHTML = '';
-                liveStreamVideo.load();
+                liveStreamVideo.removeAttribute('src'); // Remove src attribute
+                liveStreamVideo.innerHTML = ''; // Clear all source elements
+                liveStreamVideo.load(); // Force reload with no source (disconnects stream)
+                console.log('🔇 SRT stream DISCONNECTED');
             }
             
             // Remove from history

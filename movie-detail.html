@@ -68,7 +68,8 @@
     <script>
         const JELLYFIN = {
             SERVER: 'https://flmtv26.duckdns.org:8920',
-            SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
+            SERVER_ID: 'db6bb6388c8c4c70825698639853ede6',
+            API_KEY: '62131ee22c0141c6b651be75a7444350'
         };
 
         // Get movie ID from URL
@@ -78,7 +79,7 @@
         if (movieId) {
             // Redirect directly to Jellyfin detail page
             console.log('🎬 Redirecting to Jellyfin for movie:', movieId);
-            window.location.href = `${JELLYFIN.SERVER}/web/#!/details?id=${movieId}&serverId=${JELLYFIN.SERVER_ID}`;
+            window.location.href = `${JELLYFIN.SERVER}/web/index.html?api_key=${JELLYFIN.API_KEY}#!/details?id=${movieId}&serverId=${JELLYFIN.SERVER_ID}`;
         } else {
             // No movie ID - go back to home
             console.log('❌ No movie ID provided');
