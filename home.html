@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>FLM TV — Streaming MOVIES, TV & Beyond • International Content • Music & MORE “Out of this world” | Channel 26.5 Las Vegas & Global Streaming</title>
-    <!-- 🔖 SEO + Share Metadata -->
-    <meta name="description" content="FLM TV — Streaming MOVIES, TV SHOWS, CLASSICS, MUSIC & More. Live Channel 26.5 TV Las Vegas and global streaming.">
-
-    <meta property="og:title" content="FLM TV Is Out of This World">
-<meta property="og:description" content="Film, international content, music & live broadcasts. Watch FLM TV on Channel 26.5 Las Vegas and worldwide.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://flmtv.com/">
-<meta property="og:image" content="https://flmtv.com/assets/flm-banner-REAL-Z-1200x630.png">
-<meta property="og:image" content="https://flmtv.com/assets/flmtv-AlienBanner1-1200x630.png">
-
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-
+    <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="FLM TV is OUT OF THIS WORLD! 🌟 Stream FREE movies, TV classics, and LIVE Channel 26.5 Las Vegas. Featuring Filipino & Asian content, international programming, and interactive entertainment you won't find anywhere else. Part of the 7 Realms TV universe.">
+    <meta name="keywords" content="FLM TV, Channel 26.5 Las Vegas, Filipino movies, Asian content, international programming, free streaming, classic films, interactive TV, 7 Realms TV, live entertainment, out of this world">
+    <meta name="author" content="7 Realms TV - FLM Channel 26.5">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FLM TV - OUT OF THIS WORLD Streaming Experience">
+    <meta property="og:description" content="Experience FREE streaming like never before! Filipino & Asian cinema, international classics, LIVE Channel 26.5, and interactive content that's truly OUT OF THIS WORLD. 🌟 Powered by 7 Realms TV.">
+    <meta property="og:url" content="https://flmtv.com">
+    <meta property="og:site_name" content="FLM TV Channel 26.5 Las Vegas">
+    <meta property="og:image" content="https://flmtv.com/assets/logos/flm-logo.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FLM TV - OUT OF THIS WORLD Streaming">
+    <meta name="twitter:description" content="Filipino & Asian content, international classics, LIVE TV - all FREE! FLM TV is OUT OF THIS WORLD! 🌟">
+    
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+
         /* ═══════════════════════════════════════════════════════════════ */
         /*  VARIABLES - Filipino Flag Colors                               */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -211,6 +217,126 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  SEARCH BAR                                                     */
+        /* ═══════════════════════════════════════════════════════════════ */
+        
+        .search-container {
+            background: transparent;
+            padding: 2rem 2rem 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .search-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 3rem 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            color: var(--text);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+        }
+        
+        .search-input::placeholder {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neon-green);
+            font-size: 1rem;
+            pointer-events: none;
+        }
+        
+        .search-results {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.98);
+            border: 2px solid var(--neon-green);
+            border-radius: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        
+        .search-results.active {
+            display: block;
+        }
+        
+        .search-result-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .search-result-item:hover {
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .search-result-img {
+            width: 50px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 6px;
+            background: var(--bg-card);
+            flex-shrink: 0;
+        }
+        
+        .search-result-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .search-result-title {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .search-result-type {
+            color: var(--neon-green);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .search-no-results {
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
         
         /* ═══════════════════════════════════════════════════════════════ */
@@ -455,6 +581,13 @@
             color: var(--accent);
         }
         
+        @media (max-width: 768px) {
+            .category-title {
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+            }
+        }
+        
         .view-all-btn {
             color: var(--neon-green);
             text-decoration: none;
@@ -614,6 +747,38 @@
         .floating-btn-chat {
             background: var(--neon-green);
             color: white;
+        }
+        
+        .floating-btn-kids {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            animation: pulse-glow 2s ease-in-out infinite;
+            padding: 0;
+            overflow: hidden;
+            border: 3px solid #4A90E2;
+        }
+        
+        .floating-btn-kids img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(74, 144, 226, 0.8);
+                transform: scale(1.05);
+            }
+        }
+        
+        .floating-btn-kids:hover {
+            background: linear-gradient(135deg, #357ABD 0%, #4A90E2 100%);
+            transform: scale(1.15) !important;
         }
         
         .floating-btn-ai {
@@ -779,7 +944,7 @@
             height: 100vh;
             background: var(--bg-card);
             border-left: 3px solid var(--primary);
-            z-index: 9998;
+            z-index: 10000; /* ABOVE video player (9999) */
             transition: right 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -882,6 +1047,11 @@
             right: 450px;
         }
         
+        /* Spinner animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         .viewer-header {
             background: rgba(15, 23, 42, 0.98);
             padding: 0.75rem 1rem;
@@ -889,25 +1059,23 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary);
-            z-index: 99999;
-            position: absolute;
+            z-index: 10000;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
             pointer-events: auto;
             gap: 1rem;
             min-height: 60px;
             max-height: 60px;
         }
         
-        /* KEEP FLM TV header visible - we'll hide Jellyfin's header instead */
+        /* Hide FLM TV header when viewing movie to prevent double header and allow Jellyfin buttons to work */
         .jellyfin-viewer.viewing-movie .viewer-header {
-            display: flex; /* Keep it visible */
+            display: none;
         }
         
-        /* Account for FLM TV header height */
+        /* Make iframe full height when header is hidden */
         .jellyfin-viewer.viewing-movie iframe {
-            height: 100vh; /* Full height - header overlays on top */
+            height: 100vh;
         }
         
         .viewer-logo {
@@ -1330,6 +1498,34 @@
         }
         
         /* Volume Toggle Button */
+        .preview-volume-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(252, 209, 22, 0.8);
+            border-radius: 50%;
+            color: #fcd116;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .preview-volume-btn:hover {
+            background: rgba(252, 209, 22, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .preview-volume-btn.unmuted {
+            background: rgba(252, 209, 22, 0.3);
+            border-color: #fcd116;
+        }
         
         
         
@@ -1453,126 +1649,65 @@
             display: none; /* Hidden on desktop */
         }
         
-@media only screen and (max-width: 767px) {
-
-    /* 📱 Mobile: hide floating buttons (use bottom nav instead) */
-    .floating-buttons,
-    .floating-btn,
-    .floating-btn-chat,
-    .floating-btn-ai {
-        display: none !important;
-        pointer-events: none !important;
-    }
-
-    /* ✅ Bottom Navigation */
-    .bottom-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(10, 15, 26, 0.98);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        padding: 0.5rem 0;
-        z-index: 1000;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .bottom-nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.25rem;
-        padding: 0.5rem 1rem;
-        background: none;
-        border: none;
-        color: rgba(255, 255, 255, 0.6);
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-width: 70px;
-    }
-
-    .bottom-nav-item i {
-        font-size: 1.25rem;
-    }
-
-    /* 🎭 Bottom Nav: Zaina AI avatar icon */
-    .nav-avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid rgba(34,197,94,.9);
-        box-shadow: 0 0 14px rgba(34,197,94,.45);
-        margin-bottom: 4px;
-    }
-
-    .bottom-nav-item span {
-        font-size: 0.5rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .bottom-nav-item.active,
-    .bottom-nav-item:active {
-        color: var(--neon-green);
-    }
-
-    .bottom-nav-item:hover {
-        color: var(--primary);
-    }
-
-    /* Add padding to body to account for bottom nav */
-    body {
-        padding-bottom: 70px !important;
-    }
-
-    /* ✅ FIX LIVE TV CARD ON MOBILE */
-
-    /* ❌ Remove red dot + green dot completely */
-    .live-dot,
-    .live-indicator::before {
-        display: none !important;
-    }
-
-    /* Make LIVE indicator text smaller + aligned */
-    .live-indicator {
-        font-size: 0.65rem !important;
-        margin-bottom: 2px !important;
-        gap: 0 !important;
-        padding: 0 !important;
-        line-height: 1 !important;
-    }
-
-    /* Live channel title smaller and aligned */
-    .live-channel-name {
-        font-size: 0.75rem !important;
-        line-height: 1.1 !important;
-        white-space: normal !important;
-        text-align: left !important;
-    }
-
-    /* Shrink the red bar area on mobile */
-    .live-channel-content {
-        height: auto !important;
-        padding: 0.35rem 0.6rem !important;
-    }
-
-    /* Shrink mute button */
-    .volume-toggle-btn,
-    .mute-button,
-    .live-mute-btn {
-        transform: scale(0.75) !important;
-    }
-
-}
-
+        @media only screen and (max-width: 767px) {
+            .bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(10, 15, 26, 0.98);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: 0.5rem 0;
+                z-index: 1000;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+            }
+            
+            .bottom-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 0.25rem;
+                padding: 0.5rem 1rem;
+                background: none;
+                border: none;
+                color: rgba(255, 255, 255, 0.6);
+                text-decoration: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                min-width: 70px;
+            }
+            
+            .bottom-nav-item i {
+                font-size: 1.25rem;
+            }
+            
+            .bottom-nav-item span {
+                font-size: 0.7rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .bottom-nav-item.active,
+            .bottom-nav-item:active {
+                color: var(--neon-green);
+            }
+            
+            .bottom-nav-item:hover {
+                color: var(--primary);
+            }
+            
+            /* Add padding to body to account for bottom nav */
+            body {
+                padding-bottom: 70px !important;
+            }
+        }
+        
         /* ═══════════════════════════════════════════════════════════════ */
         /*  MOBILE PHONES - CONSOLIDATED (0-767px)                        */
         /* ═══════════════════════════════════════════════════════════════ */
@@ -1916,13 +2051,9 @@
             }
             
             .live-channel-name {
-    font-size: 0.48rem !important;
-    line-height: 1.05 !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
+                font-size: 0.7rem !important;
+                line-height: 1 !important;
+            }
             
             /* Category Cards */
             .category-card {
@@ -1958,8 +2089,8 @@
             }
             
             .view-all-btn {
-                font-size: 0.85rem !important;
-                padding: 0.3rem 0.6rem !important;
+                font-size: 1.1rem !important;
+                padding: 0.5rem 1rem !important;
             }
             
             /* MOVIE CARDS - Horizontal Scroll (Tubi size!) */
@@ -2008,22 +2139,25 @@
                 gap: 0.25rem !important;
             }
             
-            /* MOVIE CARDS - Portrait/vertical for better movie poster visibility */
+            /* MOVIE CARDS - HORIZONTAL SCROLL for better browsing */
             .content-carousel {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
                 gap: 0.5rem !important;
                 padding: 0.5rem !important;
-                overflow-x: visible !important;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
             }
             
             .movie-card,
             .content-card {
-                flex: none !important;
-                min-width: 100% !important;
-                max-width: 100% !important;
-                width: 100% !important;
-                scroll-snap-align: none;
+                flex: 0 0 45% !important;
+                min-width: 45% !important;
+                max-width: 45% !important;
+                width: auto !important;
+                scroll-snap-align: start;
                 margin-bottom: 0;
                 position: relative !important;
             }
@@ -2068,8 +2202,8 @@
             }
             
             .view-all-btn {
-                font-size: 0.7rem !important;
-                padding: 0.25rem 0.5rem !important;
+                font-size: 1.1rem !important;
+                padding: 0.5rem 1rem !important;
             }
             
             .movie-year {
@@ -2096,20 +2230,25 @@
                 font-size: 0.65rem !important;
             }
             
-            /* Grid Views (if used) */
+            /* Grid Views - HORIZONTAL SCROLL on mobile */
             .movies-grid,
             .content-grid {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
                 gap: 0.75rem !important;
                 padding: 0 0.75rem !important;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
             }
             
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: none !important;
-                min-width: 100% !important;
-                max-width: 100% !important;
+                flex: 0 0 45% !important;
+                min-width: 45% !important;
+                max-width: 45% !important;
+                scroll-snap-align: start;
             }
             
             /* Video Modal - Full Screen */
@@ -2212,30 +2351,22 @@
                 font-size: 16px !important; /* Prevents iOS zoom */
             }
             
-            /* Floating Buttons */
-            .floating-btn {
-                width: 56px !important;
-                height: 56px !important;
-                font-size: 1.3rem !important;
-            }
-            
-            .floating-btn-chat {
-                bottom: 150px !important;
-                right: 20px !important;
-            }
-            
-            .floating-btn-ai {
-                bottom: 80px !important;
-                right: 20px !important;
+            /* Hide floating buttons on mobile - use footer nav instead */
+            .floating-buttons {
+                display: none !important;
             }
         }
         
         /* LANDSCAPE ORIENTATION - Phone turned sideways */
         @media (max-width: 968px) and (orientation: landscape) {
-            /* Use more columns when phone is sideways */
+            /* Keep horizontal scroll, just adjust sizing */
             .content-carousel {
-                grid-template-columns: repeat(4, 1fr) !important;
                 gap: 0.4rem !important;
+            }
+            
+            .content-card {
+                flex: 0 0 30% !important;
+                min-width: 30% !important;
             }
             
             .movie-poster,
@@ -2254,18 +2385,9 @@
                 height: 50px !important;
             }
             
-            /* Floating buttons smaller */
-            .floating-btn {
-                width: 48px !important;
-                height: 48px !important;
-            }
-            
-            .floating-btn-chat {
-                bottom: 100px !important;
-            }
-            
-            .floating-btn-ai {
-                bottom: 50px !important;
+            /* Hide floating buttons on mobile landscape - use footer nav instead */
+            .floating-buttons {
+                display: none !important;
             }
         }
         
@@ -2367,8 +2489,21 @@
             }
             
             .movies-grid, .content-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
                 gap: 1rem !important;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 10px;
+            }
+            
+            .movies-grid .movie-card,
+            .content-grid .movie-card {
+                flex: 0 0 45% !important;
+                min-width: 45%;
+                scroll-snap-align: start;
             }
             
             .side-panel {
@@ -2481,116 +2616,6 @@
             }
         }
         
-        /* ═══════════════════════════════════════════════════════════════ */
-        /*  MOBILE IMPROVEMENTS - Better Layout & Draggable Panels         */
-        /* ═══════════════════════════════════════════════════════════════ */
-        
-        @media (max-width: 768px) {
-            /* Header - Stack properly on mobile */
-            header {
-                padding: 0.5rem 1rem !important;
-                min-height: 60px !important;
-            }
-            
-            .header-content {
-                flex-wrap: nowrap !important;
-                gap: 0.5rem !important;
-            }
-            
-            /* Logo smaller on mobile */
-            .logo {
-                font-size: 1.25rem !important;
-                white-space: nowrap !important;
-            }
-            
-            .logo img {
-                height: 30px !important;
-            }
-            
-            /* Viewer header - Better spacing */
-            .jellyfin-viewer.active header {
-                padding: 0.5rem 0.75rem !important;
-            }
-            
-            .viewer-back {
-                font-size: 0.9rem !important;
-                padding: 0.6rem 1rem !important;
-                white-space: nowrap !important;
-            }
-            
-            /* Side panels - Better mobile width */
-            .side-panel {
-                width: 85vw !important; /* Wider on mobile */
-                max-width: 400px !important;
-            }
-            
-            /* Adjust panel content spacing */
-            .panel-header {
-                padding-top: 1rem !important;
-            }
-            
-            /* Category grid - Better mobile spacing */
-            .movies-grid,
-            .category-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
-                gap: 0.75rem !important;
-                padding: 1rem !important;
-            }
-            
-            /* Category page heading */
-            .category-header,
-            h1 {
-                font-size: 1.5rem !important;
-                padding: 0.75rem 1rem !important;
-                margin: 0 !important;
-            }
-            
-            /* Movie cards on mobile */
-            .movie-card {
-                min-width: 120px !important;
-            }
-            
-            .movie-card img {
-                border-radius: 6px !important;
-            }
-            
-            /* Chat messages - Better mobile layout */
-            .chat-message {
-                max-width: 85% !important;
-                font-size: 0.9rem !important;
-                padding: 0.6rem 0.9rem !important;
-            }
-            
-            /* Input areas on mobile */
-            .chat-input-container input,
-            .chat-input-container textarea {
-                font-size: 16px !important; /* Prevents zoom on iOS */
-            }
-        }
-        
-        /* Extra small screens */
-        @media (max-width: 480px) {
-            .side-panel {
-                width: 90vw !important;
-                max-width: none !important;
-            }
-            
-            .logo {
-                font-size: 1.1rem !important;
-            }
-            
-            .viewer-back {
-                font-size: 0.85rem !important;
-                padding: 0.5rem 0.75rem !important;
-            }
-            
-            .movies-grid,
-            .category-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
-                gap: 0.5rem !important;
-            }
-        }
-        
     </style>
 </head>
 <body>
@@ -2613,7 +2638,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
-                        <li><a href="#" onclick="openLiveStream(); return false;">🔴 Live TV</a></li>
+                        <li><a href="#" onclick="openLiveStream(); return false;"> Live TV</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
                     </ul>
                 </nav>
@@ -2621,10 +2646,14 @@
             
             <!-- RIGHT SIDE: Scrollable Buttons -->
             <div class="nav-actions">
-                <!-- Back to Gate Button -->
-                <button class="btn-icon" onclick="window.location.href='index.html'" title="Back to Home" style="border-color: var(--accent); color: var(--accent);">
-                    <i class="fas fa-home"></i>
+                <!-- Kids Corner Zone Button -->
+                <button class="btn-icon" onclick="window.location.href='kids-corner.html'" title="Kids Corner - Audiobooks & Story Books" style="border-color: var(--accent); color: var(--accent);">
+                    <i class="fas fa-child"></i>
                 </button>
+                
+                <a href="https://7RealmsTV.com" target="_blank" class="btn-icon" title="7RealmsTV.com - Corporate Site" style="text-decoration: none;">
+                    <i class="fas fa-globe"></i>
+                </a>
                 
                 <button class="btn-icon-text" onclick="openPanel('chatPanel')" title="Chat">
                     <i class="fas fa-comments"></i> Chat
@@ -2658,6 +2687,23 @@
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  SEARCH BAR                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input 
+                type="text" 
+                class="search-input" 
+                id="searchInput"
+                placeholder="Search movies, TV shows, collections..."
+                autocomplete="off">
+            <i class="fas fa-search search-icon"></i>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  CATEGORY NAVIGATION                                            -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
@@ -2671,20 +2717,54 @@
                 <div class="category-nav-scroll" id="categoryNavScroll">
                     <!-- LIVE CHANNEL 26.5 - vMix Stream -->
                     <div class="live-channel-card" onclick="openLiveStream()">
-                        <video id="previewVideo" muted autoplay loop playsinline
+                        <video id="previewVideo" muted defaultmuted autoplay loop playsinline
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-                            <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
+                            <source src="http://10.0.0.4:8080/FLMTV.m3u8" type="application/x-mpegURL">
                         </video>
+                       <script>
+    (function() {
+        const vid = document.getElementById('previewVideo');
+        if (vid) {
+            vid.muted = true;
+            vid.volume = 0;
+            vid.defaultMuted = true;
+            
+            vid.addEventListener('volumechange', function(e) {
+                if (!this.muted || this.volume > 0) {
+                    this.muted = true;
+                    this.volume = 0;
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            }, true);
+            
+            vid.addEventListener('loadedmetadata', function() {
+                this.muted = true;
+                this.volume = 0;
+            });
+            
+            vid.addEventListener('play', function() {
+                this.muted = true;
+                this.volume = 0;
+            });
+            
+            setTimeout(() => {
+                vid.muted = true;
+                vid.volume = 0;
+                vid.play().catch(e => console.log('Preview autoplay blocked:', e));
+            }, 100);
+        }
+    })();
+</script>
                         <div class="live-channel-content">
                             <div class="live-indicator">
                                 <div class="live-dot"></div>
-                                <span>LIVE</span>
+                                <span> LIVE</span>
                             </div>
-                            <div class="live-channel-name">FLM Channel 26.5 Las Vegas</div>
+                            <div class="live-channel-name">Channel 26.5 Live</div>
                         </div>
                         <!-- Volume Toggle Button -->
-                        <button id="volumeToggleBtn" onclick="event.stopPropagation(); togglePreviewVolume()" 
-                            style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border: none; color: white; padding: 8px 12px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 1.2rem;">
+                        <button class="preview-volume-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
                             <i class="fas fa-volume-mute"></i>
                         </button>
                     </div>
@@ -2712,508 +2792,39 @@
     <!--  SIGN IN MODAL                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-   <!-- ═══════════════════════════════════════════════════════════════ -->
-<!--  FLM TV AUTHENTICATION MODALS                                   -->
-<!--  Beautiful, branded sign-in and sign-up modals                  -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-
-<!-- SIGN IN MODAL -->
-<div class="flm-modal-overlay" id="flmSignInModal" style="display: none;">
-    <div class="flm-modal-content">
-        <button class="flm-modal-close" onclick="flmAuth.closeModal('flmSignInModal')">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <div class="flm-modal-header">
-            <h2 style="color: var(--primary); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
-                Log In
-            </h2>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                Welcome back to FLM TV! 🎬
-            </p>
-        </div>
-        
-        <div class="flm-modal-body">
-            <!-- Error Message -->
-            <div id="flmSignInError" class="flm-error-message" style="display: none;">
-                Error message here
+    <div class="modal-overlay" id="signInModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: white;">Log In</h3>
+                <button class="modal-close" onclick="closeModal('signInModal')" style="background: none; border: none; color: white; font-size: 2rem; cursor: pointer; line-height: 1;">
+                    ✕
+                </button>
             </div>
-            
-            <!-- Success Message -->
-            <div id="flmSignInSuccess" class="flm-success-message" style="display: none;">
-                Success message here
-            </div>
-            
-            <!-- Email Input -->
-            <div class="flm-form-group">
-                <label for="flmSignInEmail" class="flm-form-label">Email Address</label>
-                <input 
-                    type="email" 
-                    id="flmSignInEmail" 
-                    class="flm-form-input" 
-                    placeholder="Enter your email"
-                    autocomplete="email"
-                >
-            </div>
-            
-            <!-- Password Input -->
-            <div class="flm-form-group">
-                <label for="flmSignInPassword" class="flm-form-label">Password</label>
-                <div class="flm-password-wrapper">
-                    <input 
-                        type="password" 
-                        id="flmSignInPassword" 
-                        class="flm-form-input" 
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                    >
-                    <button 
-                        type="button" 
-                        class="flm-password-toggle" 
-                        onclick="togglePasswordVisibility('flmSignInPassword')"
-                    >
+            <div class="modal-body" style="padding: 2rem;">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <input type="email" class="form-input" placeholder="Email Address" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: white; color: #333; font-size: 1rem;">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem; position: relative;">
+                    <input type="password" id="signInPassword" class="form-input" placeholder="Password" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: #3a3a3a; color: white; font-size: 1rem;">
+                    <button onclick="togglePassword('signInPassword')" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #999; cursor: pointer; font-size: 1.2rem;">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-            </div>
-            
-            <!-- Forgot Password Link -->
-            <div class="flm-form-links">
-                <a href="#" onclick="alert('Please contact support@flmtv.com for password reset'); return false;">
-                    Forgot Password?
-                </a>
-            </div>
-            
-            <!-- Sign In Button -->
-            <button id="flmSignInBtn" class="flm-btn flm-btn-primary">
-                <i class="fas fa-sign-in-alt"></i> Log In
-            </button>
-            
-            <!-- Sign Up Link -->
-            <div class="flm-form-footer">
-                Not a member? 
-                <a href="#" onclick="flmAuth.closeModal('flmSignInModal'); flmAuth.openModal('flmSignUpModal'); return false;">
-                    Sign Up
-                </a>
-            </div>
-            
-            <!-- Membership Button -->
-            <button class="flm-btn flm-btn-secondary" style="margin-top: 1rem;">
-                <i class="fas fa-crown"></i> Try Paid Membership
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- SIGN UP MODAL -->
-<div class="flm-modal-overlay" id="flmSignUpModal" style="display: none;">
-    <div class="flm-modal-content">
-        <button class="flm-modal-close" onclick="flmAuth.closeModal('flmSignUpModal')">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <div class="flm-modal-header">
-            <h2 style="color: var(--primary); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
-                Sign Up
-            </h2>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                Join FLM TV and start streaming! 🌟
-            </p>
-        </div>
-        
-        <div class="flm-modal-body">
-            <!-- Error Message -->
-            <div id="flmSignUpError" class="flm-error-message" style="display: none;">
-                Error message here
-            </div>
-            
-            <!-- Success Message -->
-            <div id="flmSignUpSuccess" class="flm-success-message" style="display: none;">
-                Success message here
-            </div>
-            
-            <!-- Email Input -->
-            <div class="flm-form-group">
-                <label for="flmSignUpEmail" class="flm-form-label">Email Address</label>
-                <input 
-                    type="email" 
-                    id="flmSignUpEmail" 
-                    class="flm-form-input" 
-                    placeholder="Enter your email"
-                    autocomplete="email"
-                >
-            </div>
-            
-            <!-- Password Input -->
-            <div class="flm-form-group">
-                <label for="flmSignUpPassword" class="flm-form-label">Password</label>
-                <div class="flm-password-wrapper">
-                    <input 
-                        type="password" 
-                        id="flmSignUpPassword" 
-                        class="flm-form-input" 
-                        placeholder="Create a password (min 6 characters)"
-                        autocomplete="new-password"
-                    >
-                    <button 
-                        type="button" 
-                        class="flm-password-toggle" 
-                        onclick="togglePasswordVisibility('flmSignUpPassword')"
-                    >
-                        <i class="fas fa-eye"></i>
-                    </button>
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <a href="#" style="color: #999; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
                 </div>
-            </div>
-            
-            <!-- Confirm Password Input -->
-            <div class="flm-form-group">
-                <label for="flmSignUpConfirmPassword" class="flm-form-label">Confirm Password</label>
-                <div class="flm-password-wrapper">
-                    <input 
-                        type="password" 
-                        id="flmSignUpConfirmPassword" 
-                        class="flm-form-input" 
-                        placeholder="Confirm your password"
-                        autocomplete="new-password"
-                    >
-                    <button 
-                        type="button" 
-                        class="flm-password-toggle" 
-                        onclick="togglePasswordVisibility('flmSignUpConfirmPassword')"
-                    >
-                        <i class="fas fa-eye"></i>
-                    </button>
+                <button class="btn-modal btn-modal-primary" style="width: 100%; padding: 1rem; background: var(--secondary); color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
+                    Log In
+                </button>
+                <div style="text-align: center; margin-bottom: 1.5rem; color: #999;">
+                    Not a member? <a href="#" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Sign Up</a>
                 </div>
-            </div>
-            
-            <!-- Sign Up Button -->
-            <button id="flmSignUpBtn" class="flm-btn flm-btn-primary">
-                <i class="fas fa-user-plus"></i> Create Account
-            </button>
-            
-            <!-- Sign In Link -->
-            <div class="flm-form-footer">
-                Already have an account? 
-                <a href="#" onclick="flmAuth.closeModal('flmSignUpModal'); flmAuth.openModal('flmSignInModal'); return false;">
-                    Sign In
-                </a>
-            </div>
-            
-            <!-- Terms & Conditions -->
-            <p style="color: var(--text-secondary); font-size: 0.75rem; text-align: center; margin-top: 1.5rem; line-height: 1.4;">
-                By signing up, you agree to our 
-                <a href="#" style="color: var(--primary);">Terms of Service</a> 
-                and 
-                <a href="#" style="color: var(--primary);">Privacy Policy</a>
-            </p>
-        </div>
-    </div>
-</div>
-
-<!-- USER PROFILE MODAL (When logged in) -->
-<div class="flm-modal-overlay" id="flmUserProfileModal" style="display: none;">
-    <div class="flm-modal-content">
-        <button class="flm-modal-close" onclick="flmAuth.closeModal('flmUserProfileModal')">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <div class="flm-modal-header">
-            <h2 style="color: var(--primary); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">
-                <i class="fas fa-user-circle"></i> My Account
-            </h2>
-        </div>
-        
-        <div class="flm-modal-body">
-            <div style="text-align: center; padding: 2rem 0;">
-                <div style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <h3 id="flmUserDisplayName" style="color: var(--text); font-size: 1.5rem; margin-bottom: 0.5rem;">
-                    User Name
-                </h3>
-                <p id="flmUserEmail" style="color: var(--text-secondary); margin-bottom: 2rem;">
-                    user@email.com
-                </p>
-                
-                <button id="flmSignOutBtn" class="flm-btn flm-btn-danger">
-                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                <button style="width: 100%; padding: 1rem; background: #666; color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    👑 Try Paid Membership
                 </button>
             </div>
         </div>
     </div>
-</div>
-
-<style>
-/* ═══════════════════════════════════════════════════════════════ */
-/*  FLM TV AUTHENTICATION MODAL STYLES                             */
-/* ═══════════════════════════════════════════════════════════════ */
-
-.flm-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    padding: 1rem;
-}
-
-.flm-modal-content {
-    background: linear-gradient(135deg, #1a1f2e 0%, #0a0f1a 100%);
-    border: 2px solid var(--primary);
-    border-radius: 20px;
-    max-width: 500px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
-    animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.flm-modal-close {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    background: none;
-    border: none;
-    color: var(--text);
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.flm-modal-close:hover {
-    background: rgba(255, 215, 0, 0.1);
-    color: var(--primary);
-    transform: rotate(90deg);
-}
-
-.flm-modal-header {
-    padding: 3rem 2rem 1rem 2rem;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-}
-
-.flm-modal-body {
-    padding: 2rem;
-}
-
-.flm-form-group {
-    margin-bottom: 1.5rem;
-}
-
-.flm-form-label {
-    display: block;
-    color: var(--text);
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.flm-form-input {
-    width: 100%;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.flm-form-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.1);
-}
-
-.flm-password-wrapper {
-    position: relative;
-}
-
-.flm-password-toggle {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-}
-
-.flm-password-toggle:hover {
-    color: var(--primary);
-}
-
-.flm-form-links {
-    text-align: right;
-    margin-bottom: 1.5rem;
-}
-
-.flm-form-links a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-}
-
-.flm-form-links a:hover {
-    color: var(--primary);
-}
-
-.flm-btn {
-    width: 100%;
-    padding: 1rem;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.flm-btn-primary {
-    background: linear-gradient(135deg, var(--secondary) 0%, #16a34a 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
-}
-
-.flm-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
-}
-
-.flm-btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.flm-btn-secondary {
-    background: linear-gradient(135deg, #666 0%, #444 100%);
-    color: white;
-}
-
-.flm-btn-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 102, 102, 0.4);
-}
-
-.flm-btn-danger {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-}
-
-.flm-btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
-}
-
-.flm-form-footer {
-    text-align: center;
-    margin-top: 1.5rem;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.flm-form-footer a {
-    color: var(--secondary);
-    text-decoration: none;
-    font-weight: 700;
-    transition: color 0.3s ease;
-}
-
-.flm-form-footer a:hover {
-    color: var(--primary);
-}
-
-.flm-error-message {
-    background: rgba(239, 68, 68, 0.1);
-    border: 2px solid #ef4444;
-    color: #ef4444;
-    padding: 1rem;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    animation: shake 0.5s ease-in-out;
-}
-
-.flm-success-message {
-    background: rgba(34, 197, 94, 0.1);
-    border: 2px solid #22c55e;
-    color: #22c55e;
-    padding: 1rem;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .flm-modal-content {
-        border-radius: 15px;
-        max-height: 95vh;
-    }
-    
-    .flm-modal-header {
-        padding: 2.5rem 1.5rem 1rem 1.5rem;
-    }
-    
-    .flm-modal-body {
-        padding: 1.5rem;
-    }
-}
-</style>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  PARENT LOCK MODAL                                              -->
@@ -3260,10 +2871,15 @@
     <div class="side-panel" id="chatPanel">
         <div class="panel-header">
             <div>
-                <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-comments"></i> Live Chat</h3>
+                <h3 class="panel-title" id="chatRoomTitle" style="margin-bottom: 0.25rem;">
+                    <i class="fas fa-comments"></i> <span id="chatRoomName">💬 FLM TV Lobby</span>
+                </h3>
                 <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
             </div>
             <div style="display: flex; gap: 0.5rem;">
+                <button id="selectionModeBtn" class="panel-toggle" onclick="toggleSelectionMode()" title="Select Messages" style="display: none;">
+                    <i class="fas fa-check-square"></i>
+                </button>
                 <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
                     <i class="fas fa-expand"></i>
                 </button>
@@ -3279,6 +2895,19 @@
             <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
                    style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
                    maxlength="20">
+        </div>
+        
+        <!-- Selection Mode Toolbar -->
+        <div id="selectionToolbar" style="display: none; padding: 0.75rem; background: #1f2937; border-bottom: 1px solid #374151; gap: 0.5rem; flex-wrap: wrap;">
+            <button onclick="selectAllMessages()" style="padding: 0.5rem 1rem; background: #4b5563; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                <i class="fas fa-check-double"></i> Select All
+            </button>
+            <button id="deleteSelectedBtn" onclick="deleteSelectedMessages()" style="padding: 0.5rem 1rem; background: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: none;">
+                <i class="fas fa-trash"></i> Delete Selected (<span id="selectedCount">0</span>)
+            </button>
+            <button onclick="toggleSelectionMode()" style="padding: 0.5rem 1rem; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                <i class="fas fa-times"></i> Cancel
+            </button>
         </div>
         
         <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
@@ -3393,12 +3022,11 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls autoplay 
+            <video id="liveStreamVideo" controls muted
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
-                <source src="https://flmtv26.duckdns.org/hls/FLMTV.m3u8" type="application/x-mpegURL">
-                Your browser does not support HLS playback.
+                <!-- Source will be added dynamically when modal opens -->
             </video>
         </div>
     </div>
@@ -3415,9 +3043,6 @@
             <div class="viewer-logo">
                 <img src="assets/logos/flm-logo.png" alt="FLM TV" onerror="this.style.display='none'">
                 <span>FLM TV</span>
-                <a href="https://7realmstv.com" target="_blank" style="margin-left: 1rem; color: #fcd116; text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: opacity 0.2s;" title="Visit 7RealmsTV">
-                    <i class="fas fa-globe"></i> 7RealmsTV
-                </a>
             </div>
             
             <button class="viewer-back" onclick="closeViewer()">
@@ -3439,11 +3064,27 @@
                 </button>
             </div>
         </div>
-        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"></iframe>
+        
+        <!-- Loading overlay that auto-hides after 3 seconds -->
+        <div id="jellyfinLoadingOverlay" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10001; transition: opacity 0.5s;">
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
+                <h2 style="color: #ffd700; margin-bottom: 1rem;">Loading Player...</h2>
+                <p style="color: #94a3b8; font-size: 1.1rem; max-width: 400px;">If you see a "Public" button, click it once to continue</p>
+                <div style="margin-top: 2rem;">
+                    <div style="width: 50px; height: 50px; border: 4px solid #333; border-top-color: #ffd700; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <iframe id="jellyfinFrame" src="" allow="autoplay; encrypted-media; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
     
     <!-- Floating Chat/AI buttons for main page -->
     <div class="floating-buttons">
+        <button class="floating-btn floating-btn-kids" onclick="window.location.href='kids-corner.html'" title="Kids Corner">
+            <img src="assets/images/kids-avatar.png" alt="Kids Corner">
+        </button>
         <button class="floating-btn floating-btn-chat" onclick="openPanel('chatPanel')" title="Chat">
             <i class="fas fa-comments"></i>
         </button>
@@ -3484,26 +3125,25 @@
     
     COLLECTIONS: [
         { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
-        { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: 'MOVIES', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
-        { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: 'More MOVIES', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
-        { id: 'cf6b0d096a1b570653b5a9a572fefa9b', name: 'AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=cf6b0d096a1b570653b5a9a572fefa9b&collectionType=tvshows' },
-        { id: '5ff2dc76882e099b56c555f868f29abe', name: 'ASIAN CINEMA', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
-        { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: 'CLASSIC TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
-        { id: 'ca43f3291c81d4f007f2b33936d256e6', name: 'KIDS WORLD', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
-        { id: 'a2347f687b9669054c8d2abbfd50889f', name: 'GOLDEN CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=a2347f687b9669054c8d2abbfd50889f&collectionType=movies' },
-        { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: 'FILIPINA-tv ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
-        { id: '9eb72a50280cf3ef5599f4c43a383611', name: 'TAGALOG ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=9eb72a50280cf3ef5599f4c43a383611&collectionType=movies' },
-        { id: 'c71a54b70069a28e508358fa66e2a286', name: 'INTERNATIONAL Films', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
-        { id: '48d96f519acf2fce600d06a4365632f4', name: 'FLM NEWS FILIPINA', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
-        { id: 'f412dea8334c1260f2bfd6cfa91dddf5', name: 'ASIAN Animation', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=f412dea8334c1260f2bfd6cfa91dddf5&collectionType=tvshows' },
-        { id: '5f2f2ace0732efb63f625d1346b9c766', name: 'ZAINA ZONE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
-        { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: 'COMEDY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
-        { id: '56f8dc1075207592d3248a09358c587a', name: 'DOCUMENTARIES', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
-        { id: '7a941a433e06ec0512b64b1d3b52c782', name: 'MIDNIGHT CIRCUIT', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
+        { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
+        { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
+        { id: 'cf6b0d096a1b570653b5a9a572fefa9b', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=cf6b0d096a1b570653b5a9a572fefa9b&collectionType=tvshows' },
+        { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
+        { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
+        { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
+        { id: 'e5da6f90a5fbe74163d22de1b0014943', name: '07 GOLDEN CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=e5da6f90a5fbe74163d22de1b0014943&collectionType=movies' },
+        { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
+        { id: '9eb72a50280cf3ef5599f4c43a383611', name: '08-B TAGALOG ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=9eb72a50280cf3ef5599f4c43a383611&collectionType=movies' },
+        { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
+        { id: '48d96f519acf2fce600d06a4365632f4', name: '10 FLM NEWS FILIPINA', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
+        { id: '5f2f2ace0732efb63f625d1346b9c766', name: '12 ZAINA ZONE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
+        { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: '13 COMEDY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
+        { id: '56f8dc1075207592d3248a09358c587a', name: '14 DOCUMENTARIES', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
+        { id: '7a941a433e06ec0512b64b1d3b52c782', name: '15 MIDNIGHT CIRCUIT', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
         { id: 'c95ec3ddc1e8cf075ba24840d92ad9bd', name: 'BEYOND REALITY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c95ec3ddc1e8cf075ba24840d92ad9bd&collectionType=tvshows' },
-        { id: '4e985111ed7f570b595204d82adb02f3', name: 'Books', url: 'https://flmtv26.duckdns.org:8920/web/#/list?parentId=4e985111ed7f570b595204d82adb02f3&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: '8e596d67e544894b4502eba9aeb49b01', name: 'ESCAPE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=8e596d67e544894b4502eba9aeb49b01&collectionType=tvshows' },
-	{ id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
+	{ id: 'kids-corner', name: '🌟 Kids Corner', url: 'kids-corner.html', hideFromCarousel: true },
+        { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
         { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'https://flmtv26.duckdns.org:8920/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
         { id: 'e2c00f297a5f80af390f52f72e782147', name: 'Music Videos', url: 'https://flmtv26.duckdns.org:8920/web/#/list?parentId=e2c00f297a5f80af390f52f72e782147&serverId=db6bb6388c8c4c70825698639853ede6' },
     ]
@@ -3559,6 +3199,226 @@
         });
         
         console.log('✅ Firebase initialized!');
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  CHAT ROOM SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentChatRoom = 'lobby'; // 'lobby' or 'movie-{movieId}'
+        let currentChatRoomName = '💬 FLM TV Lobby';
+        let currentChatListener = null;
+        
+        function switchChatRoom(type, id = null, name = null) {
+            console.log(`🔄 Switching chat room: ${type}`, id, name);
+            
+            // Remove old listener
+            if (currentChatListener) {
+                currentChatListener.off();
+                currentChatListener = null;
+            }
+            
+            // Clear messages
+            const chatMessages = document.getElementById('chatMessages');
+            if (chatMessages) {
+                chatMessages.innerHTML = '';
+                displayedMessages.clear();
+            }
+            
+            // Update room info
+            if (type === 'lobby') {
+                currentChatRoom = 'lobby';
+                currentChatRoomName = '💬 FLM TV Lobby';
+                currentChatListener = database.ref('messages');
+            } else if (type === 'movie' && id) {
+                currentChatRoom = `movie-${id}`;
+                currentChatRoomName = `🎬 ${name || 'Movie Chat'}`;
+                currentChatListener = database.ref(`chat-rooms/movie-${id}/messages`);
+            }
+            
+            // Update UI
+            const roomNameEl = document.getElementById('chatRoomName');
+            if (roomNameEl) {
+                roomNameEl.textContent = currentChatRoomName;
+            }
+            
+            // Start listening to new room
+            if (currentChatListener) {
+                currentChatListener.limitToLast(50).on('child_added', handleIncomingMessage);
+            }
+            
+            console.log(`✅ Switched to: ${currentChatRoomName}`);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  SELECTION MODE FOR MESSAGE DELETION
+        // ═══════════════════════════════════════════════════════════════
+        
+        let selectionMode = false;
+        let selectedMessages = new Set();
+        
+        function toggleSelectionMode() {
+            selectionMode = !selectionMode;
+            selectedMessages.clear();
+            
+            const toolbar = document.getElementById('selectionToolbar');
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            const countSpan = document.getElementById('selectedCount');
+            const selectionBtn = document.getElementById('selectionModeBtn');
+            
+            if (selectionMode) {
+                toolbar.style.display = 'flex';
+                selectionBtn.style.background = 'var(--secondary)';
+                // Add checkboxes to all messages
+                document.querySelectorAll('.message').forEach(msg => {
+                    if (!msg.querySelector('.message-checkbox')) {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'message-checkbox';
+                        checkbox.style.cssText = 'margin-right: 8px; cursor: pointer; width: 18px; height: 18px;';
+                        checkbox.dataset.messageId = msg.dataset.messageId;
+                        checkbox.onclick = () => updateSelection();
+                        msg.insertBefore(checkbox, msg.firstChild);
+                    }
+                });
+            } else {
+                toolbar.style.display = 'none';
+                selectionBtn.style.background = '';
+                deleteBtn.style.display = 'none';
+                // Remove all checkboxes
+                document.querySelectorAll('.message-checkbox').forEach(cb => cb.remove());
+            }
+            
+            updateSelection();
+        }
+        
+        function updateSelection() {
+            selectedMessages.clear();
+            document.querySelectorAll('.message-checkbox:checked').forEach(cb => {
+                selectedMessages.add(cb.dataset.messageId);
+            });
+            
+            const count = selectedMessages.size;
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            const countSpan = document.getElementById('selectedCount');
+            
+            if (countSpan) countSpan.textContent = count;
+            if (deleteBtn) {
+                deleteBtn.style.display = count > 0 ? 'inline-block' : 'none';
+            }
+        }
+        
+        function selectAllMessages() {
+            const checkboxes = document.querySelectorAll('.message-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            checkboxes.forEach(cb => cb.checked = !allChecked);
+            updateSelection();
+        }
+        
+        function deleteSelectedMessages() {
+            if (selectedMessages.size === 0) return;
+            
+            if (!confirm(`Delete ${selectedMessages.size} message(s)?`)) return;
+            
+            const refPath = currentChatRoom === 'lobby' 
+                ? 'messages' 
+                : `chat-rooms/${currentChatRoom}/messages`;
+            
+            const promises = Array.from(selectedMessages).map(messageId => 
+                database.ref(`${refPath}/${messageId}`).remove()
+            );
+            
+            Promise.all(promises).then(() => {
+                console.log('✅ Deleted messages:', selectedMessages.size);
+                selectedMessages.clear();
+                toggleSelectionMode(); // Exit selection mode
+            }).catch(err => {
+                console.error('❌ Error deleting messages:', err);
+                alert('Error deleting messages: ' + err.message);
+            });
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  FIREBASE CHAT LISTENERS
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Initialize lobby chat
+        currentChatListener = database.ref('messages');
+        
+        function handleIncomingMessage(snapshot) {
+            const messageId = snapshot.key;
+            const msg = snapshot.val();
+            
+            // Prevent duplicate messages
+            if (displayedMessages.has(messageId)) {
+                return;
+            }
+            displayedMessages.add(messageId);
+            
+            // Show ALL messages to EVERYONE (like YouTube live chat)
+            if (msg && msg.text) {
+                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+                
+                // Check if this is from current user
+                let isOwnMessage = false;
+                const savedUsername = localStorage.getItem('flmtvChatUsername');
+                if (savedUsername && msg.username === savedUsername) {
+                    isOwnMessage = true;
+                } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
+                    isOwnMessage = true;
+                }
+                
+                // Add message with username
+                const messagesContainer = document.getElementById('chatMessages');
+                if (messagesContainer) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+                    messageDiv.dataset.messageId = messageId; // Store for deletion
+                    messageDiv.style.marginBottom = '0.75rem';
+                    messageDiv.style.display = 'flex';
+                    messageDiv.style.flexDirection = 'column';
+                    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
+                    
+                    // Add checkbox if in selection mode
+                    if (selectionMode) {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'message-checkbox';
+                        checkbox.style.cssText = 'margin-right: 8px; cursor: pointer; width: 18px; height: 18px;';
+                        checkbox.dataset.messageId = messageId;
+                        checkbox.onclick = () => updateSelection();
+                        messageDiv.appendChild(checkbox);
+                    }
+                    
+                    const messageBubble = document.createElement('div');
+                    messageBubble.className = 'message-bubble';
+                    messageBubble.style.maxWidth = '80%';
+                    messageBubble.style.padding = '0.6rem 0.9rem';
+                    messageBubble.style.borderRadius = '1rem';
+                    messageBubble.style.lineHeight = '1.4';
+                    messageBubble.style.wordWrap = 'break-word';
+                    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
+                    messageBubble.style.color = 'white';
+                    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
+                    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
+                    
+                    // Show username for all messages (YouTube style)
+                    messageBubble.innerHTML = `
+                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
+                            ${username}
+                        </div>
+                        <div>${msg.text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                    `;
+                    
+                    messageDiv.appendChild(messageBubble);
+                    messagesContainer.appendChild(messageDiv);
+                    
+                    // Auto-scroll to bottom (like YouTube)
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    console.log('💬 Message displayed:', username, msg.text);
+                }
+            }
+        }
         
         // ═══════════════════════════════════════════════════════════════
         //  HELPER FUNCTIONS
@@ -3763,6 +3623,11 @@
                     continue;
                 }
                 
+                // Skip Kids Corner from carousel if hideFromCarousel flag is set
+                if (collection.hideFromCarousel) {
+                    continue;
+                }
+                
                 try {
                     loadedCount++;
                     
@@ -3808,20 +3673,15 @@
                     
                     // Add items to carousel or show empty message
                     if (items && items.Items && items.Items.length > 0) {
-                        items.Items.forEach(item => {
-                            // ONLY filter phantom images for "01 MOVIES 1" category
-                            if (collection.name === '01 MOVIES 1') {
-                                // Skip items that have NO image sources at all (likely TrickPlay orphans)
-                                if (!item.ImageTags?.Primary && 
-                                    !item.SeriesThumb && 
-                                    !item.SeriesPrimaryImageTag && 
-                                    !item.ParentThumbImageTag &&
-                                    !item.BackdropImageTags) {
-                                    console.log('⏭️ Skipping phantom item in Movie 1:', item.Name);
-                                    return; // Skip this item
-                                }
-                            }
-                            
+                        // FILTER: Only show items that have poster images
+                        const itemsWithImages = items.Items.filter(item => 
+                            item.ImageTags?.Primary || 
+                            item.SeriesThumb || 
+                            item.SeriesPrimaryImageTag || 
+                            item.ParentThumbImageTag
+                        );
+                        
+                        itemsWithImages.forEach(item => {
                             const card = document.createElement('div');
                             card.className = 'content-card';
                             card.onclick = () => playJellyfinItem(item.Id);
@@ -4025,6 +3885,14 @@
                 previewVideo.setAttribute('muted', 'muted');
                 previewVideo.setAttribute('playsinline', 'playsinline');
                 
+                // Prevent any unmute attempts
+                previewVideo.addEventListener('volumechange', function() {
+                    if (!this.muted) {
+                        console.log('🔇 Preview tried to unmute, forcing muted again');
+                        this.muted = true;
+                        this.volume = 0;
+                    }
+                });
                 
                 console.log('🔇 Preview video LOCKED muted on load (mobile safe)');
             }
@@ -4042,7 +3910,7 @@
             
             // Attach button click handlers
             document.getElementById('signInBtn').onclick = () => openModal('signInModal');
-            document.getElementById('parentLockBtn').onclick = () => openModal('parentLockModal');
+            document.getElementById('parentLockBtn').onclick = () => window.location.href = 'parental-controls.html';
             
             // Load content
             buildCategoryNav();
@@ -4070,6 +3938,13 @@
                 console.log('✅ AI panel ready');
             }
             
+            // Show selection mode button (for deleting messages)
+            const selectionBtn = document.getElementById('selectionModeBtn');
+            if (selectionBtn) {
+                selectionBtn.style.display = 'inline-flex';
+                console.log('✅ Selection mode button enabled');
+            }
+            
             // DEBUG: Log screen size for mobile testing
             console.log('📱 Screen width:', window.innerWidth);
             console.log('📱 Screen height:', window.innerHeight);
@@ -4089,7 +3964,7 @@
             slides.push({
                 image: 'assets/images/ZainaShowTheaterBanner.jpg',
                 title: 'The Zaina Juliette Show',
-                description: 'A Contemporary variety/talk show hosted by Multi-Award-Winning Entertainer, Recording Artist, Actress, CREATOR OF FLM TV, Zaina Juliette, featuring celebrity guests and upcoming talent. "A Gumbo of Entertainment."',
+                description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
                 link: null
             });
             
@@ -4153,89 +4028,273 @@
             }, 5000);
         }
         
-        function playJellyfinItem(itemId) {
-            console.log('🎬 Opening movie:', itemId);
+       async function playJellyfinItem(itemId) {
+    console.log('🎬 Checking item type for:', itemId);
+    
+    // PAUSE preview video when playing other content
+    const previewVideo = document.getElementById('previewVideo');
+    if (previewVideo) {
+        previewVideo.pause();
+        previewVideo.muted = true;
+        previewVideo.volume = 0;
+    }
+    
+    try {
+                // Fetch item to check type
+                const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
+                const item = await response.json();
+                
+                if (item.Type === 'Series') {
+                    // TV Series go to custom page
+                    console.log('📺 Redirecting to TV detail page:', item.Name);
+                    window.location.href = `tv-detail.html?id=${itemId}`;
+                    return;
+                } else if (item.Type === 'Episode') {
+                    // Episodes go to series custom page
+                    console.log('📺 Redirecting to series page');
+                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
+                    return;
+                } else if (item.Type === 'Movie') {
+                    // Movies go to custom movie-detail.html page (shows info, then has play button)
+                    console.log('🎬 Redirecting to movie detail page:', item.Name);
+                    window.location.href = `movie-detail.html?id=${itemId}`;
+                    return;
+                }
+                
+                // Everything else - log and alert
+                console.log('📄 Unknown type:', item.Type, item.Name);
+                alert(`Content type "${item.Type}" is not yet supported.`);
+                
+            } catch (error) {
+                console.error('Error fetching item:', error);
+                alert('Error loading content. Please try again.');
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  INLINE MOVIE PLAYER (No Jellyfin Web Interface Login)
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function openMoviePlayer(movieId, movieTitle) {
+            console.log('🎬 Opening inline player for:', movieTitle);
             
+            // Switch to movie chat room
+            switchChatRoom('movie', movieId, movieTitle);
+            
+            // Pause preview video
+            const previewVideo = document.getElementById('previewVideo');
+            if (previewVideo) {
+                previewVideo.pause();
+                previewVideo.muted = true;
+                previewVideo.volume = 0;
+            }
+            
+            // Get the viewer and frame
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
             if (!viewer || !frame) {
-                console.error('❌ Viewer or frame not found!');
+                console.error('❌ Viewer elements not found');
                 return;
             }
             
-            // Clear srcdoc first
-            frame.removeAttribute('srcdoc');
-            
-            // Load Jellyfin detail page
-            const detailUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-            
-            console.log('🔗 Loading:', detailUrl);
-            
-            frame.src = detailUrl;
-            
-            viewer.classList.add('active');
-            viewer.classList.add('viewing-movie');
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'movie'}, '', '#movie');
+            // First, authenticate as Public user if not already authenticated
+            try {
+                const authResponse = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID}", Version="1.0.0"`
+                    },
+                    body: JSON.stringify({
+                        Username: 'Public',
+                        Pw: ''
+                    })
+                });
+                
+                if (authResponse.ok) {
+                    const authData = await authResponse.json();
+                    const accessToken = authData.AccessToken;
+                    console.log('✅ Authenticated as Public user');
+                    
+                    // Build URL with access token for auto-login
+                    const playerUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/item?id=${movieId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&X-Emby-Token=${accessToken}`;
+                    
+                    console.log('🎬 Loading player with authentication');
+                    
+                    // Load player in iframe
+                    frame.src = playerUrl;
+                    
+                    // Show viewer
+                    viewer.classList.add('active');
+                    history.pushState({modal: 'movie', id: movieId}, '', `#movie-${movieId}`);
+                    
+                    console.log('✅ Movie player opened');
+                } else {
+                    console.error('❌ Authentication failed');
+                    alert('Unable to play movie. Please try again.');
+                }
+            } catch (error) {
+                console.error('❌ Error authenticating:', error);
+                alert('Error loading player. Please try again.');
+            }
         }
         
-        // Make function globally accessible for iframe - DO THIS IMMEDIATELY!
-        window.playJellyfinItem = playJellyfinItem;
+        async function openJellyfinCollection(collectionId) {
+    console.log('📂 Opening collection/category:', collectionId);
+    
+    // PAUSE preview video when navigating away
+    const previewVideo = document.getElementById('previewVideo');
+    if (previewVideo) {
+        previewVideo.pause();
+        previewVideo.muted = true;
+        previewVideo.volume = 0;
+    }
+    
+    // Get collection/category info from config
+    const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
+    const collectionName = collection ? collection.name : 'Category';
+    
+    // Special handling for "00 Collections" - redirect to collections browser
+    if (collectionName === '00 Collections') {
+        window.location.href = 'collections-browser.html';
+        return;
+    }
+    
+    // Special handling for "Kids Interactive Books" - redirect to custom book reader
+    if (collectionId === 'interactive-books') {
+        window.location.href = 'books.html';
+        return;
+    }
+    
+    // Special handling for "Kids Corner" - redirect to kids page
+    if (collectionId === 'kids-corner') {
+        window.location.href = 'kids-corner.html';
+        return;
+    }
+    
+    // All other items are CATEGORIES - redirect to category-detail.html
+    window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
+        }
         
-        // Test that it's accessible
-        console.log('✅ window.playJellyfinItem set:', typeof window.playJellyfinItem);
-        
-        function playVideoDirectly(itemId) {
+        function showCollectionsEnterOverlay(collectionUrl, collectionName) {
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
             
-            console.log('🎬 Playing video directly:', itemId);
-            
-            // DIRECT STREAM URL - bypasses ALL Jellyfin UI
-            const streamUrl = `${JELLYFIN_CONFIG.SERVER}/Videos/${itemId}/stream?api_key=${JELLYFIN_CONFIG.API_KEY}&Static=true`;
-            
-            // Create simple video player - NO JELLYFIN INTERFACE AT ALL
-            frame.srcdoc = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { margin: 0; background: #000; }
-                        video { width: 100vw; height: 100vh; }
-                    </style>
-                </head>
-                <body>
-                    <video controls autoplay src="${streamUrl}"></video>
-                </body>
-                </html>
+            // Create beautiful enter overlay
+            const overlay = document.createElement('div');
+            overlay.id = 'collectionsEnterOverlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0038a8 100%);
+                z-index: 99999;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                animation: fadeIn 0.5s ease;
             `;
             
-            viewer.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
+            overlay.innerHTML = `
+                <style>
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes glow {
+                        0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+                        50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+                    }
+                    #collectionsEnterOverlay h1 {
+                        font-size: 3rem;
+                        font-weight: 900;
+                        background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        margin-bottom: 1rem;
+                        text-align: center;
+                    }
+                    #collectionsEnterOverlay p {
+                        color: #e2e8f0;
+                        font-size: 1.25rem;
+                        margin-bottom: 3rem;
+                        text-align: center;
+                    }
+                    #collectionsEnterOverlay button {
+                        background: linear-gradient(135deg, #ffd700 0%, #22c55e 100%);
+                        border: none;
+                        color: #000;
+                        padding: 1.5rem 4rem;
+                        font-size: 1.5rem;
+                        font-weight: 900;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        animation: glow 2s infinite;
+                        text-transform: uppercase;
+                        letter-spacing: 2px;
+                    }
+                    #collectionsEnterOverlay button:hover {
+                        transform: scale(1.05);
+                        box-shadow: 0 0 50px rgba(255, 215, 0, 1);
+                    }
+                    @media (max-width: 768px) {
+                        #collectionsEnterOverlay h1 { font-size: 2rem; }
+                        #collectionsEnterOverlay p { font-size: 1rem; margin-bottom: 2rem; }
+                        #collectionsEnterOverlay button { 
+                            padding: 1rem 2.5rem; 
+                            font-size: 1.25rem; 
+                        }
+                    }
+                </style>
+                <h1>🌟 FLM TV Collections</h1>
+                <p>Discover Popular & Trending Content</p>
+                <button onclick="enterCollections()">ENTER COLLECTIONS</button>
+            `;
             
-            history.pushState({modal: 'movie'}, '', '#movie');
-        }
-        
-        async function showDetailPage(item) {
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
+            document.body.appendChild(overlay);
             
-            // If it's a Series, use Jellyfin's page with FLM TV frame
-            if (item.Type === 'Series') {
-                console.log('📺 Opening series page with Jellyfin UI');
+            // Make enter function globally accessible
+            window.enterCollections = function() {
+                // Remove overlay
+                overlay.remove();
                 
-                const seriesUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${item.Id}&serverId=${JELLYFIN_CONFIG.SERVER}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                // Load the Jellyfin collection page
+                frame.src = collectionUrl;
                 
-                frame.src = seriesUrl;
-                
-                // Inject FLM TV branding after iframe loads
+                // Inject FLM TV branding and auto-click Public user
                 frame.onload = function() {
+                    console.log('✅ Iframe loaded');
                     try {
                         injectCustomBranding(frame);
+                        
+                        // Auto-click Public user after a delay
+                        setTimeout(() => {
+                            try {
+                                const doc = frame.contentDocument || frame.contentWindow.document;
+                                const publicUser = doc.querySelector('.card-usercard');
+                                if (publicUser && publicUser.textContent.includes('Public')) {
+                                    publicUser.click();
+                                    console.log('✅ Auto-clicked Public user');
+                                    
+                                    // Click submit button
+                                    setTimeout(() => {
+                                        const submitBtn = doc.querySelector('.button-submit');
+                                        if (submitBtn) {
+                                            submitBtn.click();
+                                            console.log('✅ Auto-submitted login');
+                                        }
+                                    }, 200);
+                                }
+                            } catch (e) {
+                                console.log('Auto-login attempt:', e);
+                            }
+                        }, 1000);
                     } catch (e) {
                         console.log('Could not inject branding (CORS):', e);
                     }
@@ -4245,354 +4304,12 @@
                 document.body.style.overflow = 'hidden';
                 document.body.classList.add('video-playing');
                 
-                history.pushState({modal: 'series'}, '', '#series');
-                return;
-            }
-            
-            // For movies, use custom detail page
-            // Get backdrop image
-            const backdropUrl = item.BackdropImageTags && item.BackdropImageTags[0]
-                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`
-                : '';
-            
-            // Get poster image
-            const posterUrl = item.ImageTags?.Primary
-                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90`
-                : '';
-            
-            // Format runtime
-            const runtime = item.RunTimeTicks 
-                ? `${Math.floor(item.RunTimeTicks / 600000000)}h ${Math.floor((item.RunTimeTicks % 600000000) / 10000000)}m`
-                : '';
-            
-            // Fetch cast and similar items
-            let castHTML = '';
-            let similarHTML = '';
-            
-            try {
-                // Get people (cast & crew)
-                const people = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${item.Id}/People`);
-                if (people && people.length > 0) {
-                    castHTML = people.slice(0, 10).map(person => {
-                        const personImage = person.PrimaryImageTag
-                            ? `${JELLYFIN_CONFIG.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=200`
-                            : 'https://via.placeholder.com/200x300?text=No+Photo';
-                        
-                        return `
-                            <div style="text-align: center; min-width: 120px;">
-                                <img src="${personImage}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #22c55e;">
-                                <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; color: #ffd700;">${person.Name}</div>
-                                <div style="font-size: 0.75rem; color: #94a3b8;">${person.Role || person.Type}</div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-                
-                // Get similar items
-                const similar = await jellyfinFetch(`/Items/${item.Id}/Similar?userId=${JELLYFIN_CONFIG.USER_ID}&limit=10`);
-                if (similar && similar.Items && similar.Items.length > 0) {
-                    similarHTML = similar.Items.map(simItem => {
-                        const simPoster = simItem.ImageTags?.Primary
-                            ? `${JELLYFIN_CONFIG.SERVER}/Items/${simItem.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300`
-                            : 'https://via.placeholder.com/200x300?text=No+Image';
-                        
-                        return `
-                            <div onclick="parent.playJellyfinItem('${simItem.Id}')" style="cursor: pointer; min-width: 150px; transition: transform 0.3s;">
-                                <img src="${simPoster}" style="width: 150px; height: 225px; border-radius: 8px; border: 2px solid rgba(34, 197, 94, 0.3);">
-                                <div style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600;">${simItem.Name}</div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            } catch (err) {
-                console.error('Error fetching cast/similar:', err);
-            }
-            
-            // Build detail page HTML for movies
-            frame.srcdoc = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <style>
-                        * { margin: 0; padding: 0; box-sizing: border-box; }
-                        body {
-                            background: #0a0f1a;
-                            color: #fff;
-                            font-family: 'Inter', sans-serif;
-                            overflow-x: hidden;
-                        }
-                        .backdrop {
-                            width: 100%;
-                            height: 50vh;
-                            background: url('${backdropUrl}') center/cover;
-                            position: relative;
-                        }
-                        .backdrop::after {
-                            content: '';
-                            position: absolute;
-                            bottom: 0;
-                            left: 0;
-                            right: 0;
-                            height: 100%;
-                            background: linear-gradient(to bottom, transparent, #0a0f1a);
-                        }
-                        .content {
-                            position: relative;
-                            margin-top: -150px;
-                            padding: 0 2rem 2rem;
-                            z-index: 10;
-                        }
-                        .main-info {
-                            display: flex;
-                            gap: 2rem;
-                            margin-bottom: 2rem;
-                        }
-                        .poster {
-                            flex-shrink: 0;
-                        }
-                        .poster img {
-                            width: 300px;
-                            border-radius: 12px;
-                            border: 3px solid #22c55e;
-                            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-                        }
-                        .details {
-                            flex: 1;
-                        }
-                        .title {
-                            font-size: 3rem;
-                            font-weight: 900;
-                            color: #ffd700;
-                            margin-bottom: 1rem;
-                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-                        }
-                        .meta {
-                            display: flex;
-                            gap: 1.5rem;
-                            margin-bottom: 1.5rem;
-                            font-size: 1.1rem;
-                            color: #94a3b8;
-                        }
-                        .meta span {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                        }
-                        .play-btn {
-                            background: #22c55e;
-                            color: white;
-                            border: none;
-                            padding: 1rem 3rem;
-                            font-size: 1.25rem;
-                            font-weight: 700;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            display: inline-flex;
-                            align-items: center;
-                            gap: 0.75rem;
-                            transition: all 0.3s;
-                            margin-bottom: 1.5rem;
-                        }
-                        .play-btn:hover {
-                            background: #1ea34b;
-                            transform: translateY(-2px);
-                            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
-                        }
-                        .overview {
-                            font-size: 1.1rem;
-                            line-height: 1.8;
-                            color: #e2e8f0;
-                            margin-bottom: 1rem;
-                        }
-                        .section {
-                            margin-top: 3rem;
-                        }
-                        .section-title {
-                            font-size: 1.5rem;
-                            font-weight: 800;
-                            color: #ffd700;
-                            margin-bottom: 1.5rem;
-                        }
-                        .scroll-container {
-                            display: flex;
-                            gap: 1.5rem;
-                            overflow-x: auto;
-                            padding-bottom: 1rem;
-                            scrollbar-width: thin;
-                            scrollbar-color: #22c55e #1a1f2e;
-                        }
-                        .scroll-container::-webkit-scrollbar {
-                            height: 8px;
-                        }
-                        .scroll-container::-webkit-scrollbar-track {
-                            background: #1a1f2e;
-                        }
-                        .scroll-container::-webkit-scrollbar-thumb {
-                            background: #22c55e;
-                            border-radius: 4px;
-                        }
-                        
-                        @media (max-width: 768px) {
-                            .main-info { flex-direction: column; align-items: center; text-align: center; }
-                            .poster img { width: 200px; }
-                            .title { font-size: 2rem; }
-                            .content { padding: 0 1rem 2rem; margin-top: -100px; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="backdrop"></div>
-                    <div class="content">
-                        <div class="main-info">
-                            <div class="poster">
-                                <img src="${posterUrl}" alt="${item.Name}">
-                            </div>
-                            <div class="details">
-                                <h1 class="title">${item.Name}</h1>
-                                <div class="meta">
-                                    <span>📅 ${item.ProductionYear || 'N/A'}</span>
-                                    ${runtime ? `<span>⏱️ ${runtime}</span>` : ''}
-                                    ${item.OfficialRating ? `<span>🎬 ${item.OfficialRating}</span>` : ''}
-                                    ${item.CommunityRating ? `<span>⭐ ${item.CommunityRating.toFixed(1)}</span>` : ''}
-                                </div>
-                                <button class="play-btn" onclick="parent.playVideoDirectly('${item.Id}')">
-                                    ▶️ Play Now
-                                </button>
-                                <p class="overview">${item.Overview || 'No description available.'}</p>
-                                ${item.Genres ? `<p style="color: #ffd700; margin-top: 1rem;"><strong>Genre:</strong> ${item.Genres.join(', ')}</p>` : ''}
-                            </div>
-                        </div>
-                        
-                        ${castHTML ? `
-                            <div class="section">
-                                <h2 class="section-title">Cast & Crew</h2>
-                                <div class="scroll-container">
-                                    ${castHTML}
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        ${similarHTML ? `
-                            <div class="section">
-                                <h2 class="section-title">More Like This</h2>
-                                <div class="scroll-container">
-                                    ${similarHTML}
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                </body>
-                </html>
-            `;
-            
-            viewer.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            history.pushState({modal: 'detail'}, '', '#detail');
-        }
-        
-        // ═══════════════════════════════════════════════════════════════
-        //  CUSTOM CATEGORY VIEWER (Fast, No Flash!)
-        // ═══════════════════════════════════════════════════════════════
-        
-        async function openJellyfinCollection(collectionId) {
-            console.log('📂 Opening collection:', collectionId);
-            
-            const viewer = document.getElementById('jellyfinViewer');
-            const frame = document.getElementById('jellyfinFrame');
-            
-            // Show viewer FIRST
-            viewer.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.body.classList.add('video-playing');
-            
-            // Show overlay on top while content loads (FAST - 100ms)
-            const overlay = showSpaceWelcome();
-            
-            const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
-            const collectionName = collection ? collection.name : 'Collection';
-            
-            try {
-                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                    ParentId: collectionId,
-                    Limit: 100,
-                    SortBy: 'SortName',
-                    Recursive: true
-                });
-                
-                // Simple grid view - NO JELLYFIN UI
-                frame.srcdoc = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>
-                            * { margin: 0; padding: 0; box-sizing: border-box; }
-                            body { 
-                                background: #0a0f1a;
-                                color: #fff;
-                                font-family: 'Inter', sans-serif;
-                                padding: 2rem;
-                            }
-                            h1 { color: #ffd700; margin-bottom: 2rem; }
-                            .grid {
-                                display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                                gap: 1rem;
-                            }
-                            .card { cursor: pointer; transition: transform 0.3s; }
-                            .card:hover { transform: scale(1.05); }
-                            .card img { 
-                                width: 100%;
-                                border-radius: 8px;
-                                border: 2px solid #22c55e;
-                            }
-                            .card-title {
-                                margin-top: 0.5rem;
-                                font-size: 0.75rem;
-                                text-align: center;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                                color: #e2e8f0;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>${collectionName}</h1>
-                        <div class="grid">
-                            ${items.Items ? items.Items.map(item => `
-                                <div class="card" onclick="parent.playJellyfinItem('${item.Id}')">
-                                    <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&quality=90&maxWidth=300">
-                                    <div class="card-title">${item.Name}</div>
-                                </div>
-                            `).join('') : '<p>No items</p>'}
-                        </div>
-                    </body>
-                    </html>
-                `;
-                
-                // Wait for iframe to load, then hide overlay FAST (100ms)
-                frame.onload = () => {
-                    setTimeout(() => {
-                        if (overlay && overlay.parentNode) {
-                            overlay.style.animation = 'fadeOut 0.2s ease';
-                            setTimeout(() => overlay.remove(), 200);
-                        }
-                    }, 100); // FAST - only 100ms delay
-                };
-                
-            } catch (error) {
-                frame.srcdoc = '<body style="background:#0a0f1a;color:#fff;padding:2rem;"><h1 style="color:#ef4444;">Error loading collection</h1></body>';
-                if (overlay && overlay.parentNode) {
-                    setTimeout(() => overlay.remove(), 300);
-                }
-            }
+                history.pushState({modal: 'collection'}, '', '#collection');
+            };
         }
         
         function showSpaceWelcome() {
+            // Create overlay
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position: fixed;
@@ -4606,7 +4323,7 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                animation: fadeIn 0.2s ease;
+                animation: fadeIn 0.5s ease;
             `;
             overlay.innerHTML = `
                 <h1 style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem; animation: glow 1.5s ease-in-out infinite;">
@@ -4615,190 +4332,116 @@
                 <p style="font-size: 1.5rem; color: white;">Welcome to FLM Television Network</p>
             `;
             document.body.appendChild(overlay);
-            return overlay;
+            
+            // Auto-remove after 2 seconds
+            setTimeout(() => {
+                overlay.style.animation = 'fadeOut 0.5s ease';
+                setTimeout(() => overlay.remove(), 500);
+            }, 2000);
         }
         
+        // Inject FLM TV branding into Jellyfin iframe
         function injectCustomBranding(frame) {
             const doc = frame.contentDocument || frame.contentWindow.document;
             
-            // Fast auto-login - try immediately and repeatedly
-            const autoLogin = () => {
+            console.log('🎨 Injecting branding and auto-login...');
+            
+            // IMMEDIATELY hide sign-in page while we auto-login
+            const hideStyle = doc.createElement('style');
+            hideStyle.id = 'temp-hide';
+            hideStyle.textContent = `
+                .loginPage, .selectUserPage { opacity: 0.01 !important; }
+            `;
+            doc.head.appendChild(hideStyle);
+            
+            // Auto-login with multiple attempts
+            function tryAutoLogin(attempt = 1) {
                 try {
+                    console.log(`🔐 Auto-login attempt #${attempt}`);
                     const publicUser = doc.querySelector('.card-usercard');
                     if (publicUser && publicUser.textContent.includes('Public')) {
+                        console.log('✅ Found Public user, clicking...');
                         publicUser.click();
-                        console.log('✅ Auto-clicked Public user');
                         
                         setTimeout(() => {
                             const manualLoginBtn = doc.querySelector('.button-submit');
                             if (manualLoginBtn) {
+                                console.log('✅ Clicking login button...');
                                 manualLoginBtn.click();
-                                console.log('✅ Auto-submitted login');
+                                
+                                // After successful login, completely hide sign-in
+                                setTimeout(() => {
+                                    const completeHide = doc.createElement('style');
+                                    completeHide.textContent = `
+                                        .loginPage, .selectUserPage { display: none !important; }
+                                    `;
+                                    doc.head.appendChild(completeHide);
+                                    const tempHide = doc.getElementById('temp-hide');
+                                    if (tempHide) tempHide.remove();
+                                    console.log('✅ Sign-in hidden!');
+                                }, 500);
                             }
-                        }, 50);
+                        }, 100);
                         return true;
                     }
                     return false;
                 } catch (e) {
+                    console.log('⚠️ Auto-login attempt failed:', e);
                     return false;
                 }
-            };
+            }
             
-            // Try immediately
-            autoLogin();
-            
-            // Keep trying every 100ms for 3 seconds
-            let attempts = 0;
-            const loginInterval = setInterval(() => {
-                attempts++;
-                if (autoLogin() || attempts >= 30) {
-                    clearInterval(loginInterval);
-                }
-            }, 100);
+            // Try immediately and retry up to 3 times
+            setTimeout(() => tryAutoLogin(1), 50);
+            setTimeout(() => tryAutoLogin(2), 200);
+            setTimeout(() => tryAutoLogin(3), 500);
             
             const style = doc.createElement('style');
             style.textContent = `
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  HIDE JELLYFIN HEADER                                           */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                .skinHeader,
-                .skinHeader-withBackground,
-                .headerTop,
-                .headerLeft,
-                .headerRight,
-                .headerTabs,
-                .headerUser,
-                .headerUserButton,
-                .headerBackButton,
-                .headerCastButton,
-                .headerSearchButton,
-                .headerButton,
-                .headerHomeButton,
-                .headerLogo,
-                .logoLibraryMenuButton,
-                .btnNotifications,
-                .mdl-layout__header,
-                .viewMenuBar {
-                    display: none !important;
-                    visibility: hidden !important;
-                    height: 0 !important;
-                    opacity: 0 !important;
+                /* Hide Jellyfin logo and replace with FLM TV branding */
+                .headerLogo { display: none !important; }
+                .headerRight::before {
+                    content: 'FLM TV';
+                    font-size: 2rem;
+                    font-weight: 900;
+                    background: linear-gradient(135deg, #fcd116 0%, #0038a8 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    margin-right: 2rem;
                 }
                 
-                .mainDrawer,
-                .navDrawer,
-                .mdl-layout__drawer {
-                    display: none !important;
+                /* Filipino Flag Colors */
+                .skinHeader { background: #0038a8 !important; }
+                .button-submit, .raised { background: #ce1126 !important; }
+                .listItem:hover { background: rgba(252, 209, 22, 0.1) !important; }
+                .itemSelectionPanel { border-color: #22c55e !important; }
+                
+                /* Login page customization */
+                .loginPage { background: #0f172a !important; }
+                .readOnlyContent { color: #e2e8f0 !important; }
+                .inputContainer { background: rgba(255, 255, 255, 0.05) !important; }
+                
+                /* Buttons */
+                .emby-button { 
+                    background: linear-gradient(135deg, #0038a8 0%, #fcd116 100%) !important;
+                    border: none !important;
                 }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  HIDE LOGIN PAGE ONLY IF IT EXISTS                              */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                /* Hide login page elements but keep them functional */
-                .loginPage .readOnlyContent,
-                .loginPage .visualLoginForm,
-                .loginPage .manualLoginForm {
-                    opacity: 0 !important;
-                    transition: none !important;
-                }
-                
-                /* Show loading message on login page only */
-                .loginPage::before {
-                    content: 'Loading...' !important;
-                    position: fixed !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    transform: translate(-50%, -50%) !important;
-                    font-size: 1.5rem !important;
-                    color: #fcd116 !important;
-                    opacity: 1 !important;
-                }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  ENSURE ALL CONTENT IS VISIBLE                                  */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                /* Remove top spacing */
-                .mainAnimatedPages,
-                .view,
-                .page,
-                body {
-                    padding-top: 0 !important;
-                    margin-top: 0 !important;
-                }
-                
-                /* ALL detail page content must be visible */
-                .itemBackdrop,
-                .detailImageContainer,
-                .detailPagePrimaryContainer,
-                .detailPageContent,
-                .itemName,
-                .overview,
-                .detailButton,
-                .sections,
-                .itemsContainer,
-                .card,
-                .listItem,
-                .emby-button,
-                .btnPlay,
-                .btnResume,
-                .detailButtons,
-                .episodesContainer,
-                .emby-tab-button,
-                .videoPlayerContainer,
-                video,
-                .osdControls {
-                    display: block !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                }
-                
-                /* ═══════════════════════════════════════════════════════════════ */
-                /*  STYLING                                                         */
-                /* ═══════════════════════════════════════════════════════════════ */
-                
-                body {
-                    background: #0f172a !important;
-                }
-                
-                .button-submit,
-                .raised,
-                .btnPlay {
-                    background: linear-gradient(135deg, #ce1126 0%, #fcd116 100%) !important;
-                    color: white !important;
-                }
-                
-                .card {
-                    background: #1e293b !important;
-                }
-                
-                .card:hover {
-                    border-color: #22c55e !important;
+                .emby-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(252, 209, 22, 0.3);
                 }
             `;
             doc.head.appendChild(style);
-            
-            console.log('✅ FLM TV branding applied');
         }
         
         function closeViewer() {
-            console.log('🔙 Closing viewer...');
-            
             const viewer = document.getElementById('jellyfinViewer');
             const frame = document.getElementById('jellyfinFrame');
-            
-            // Clear both src and srcdoc
-            frame.src = '';
-            frame.removeAttribute('srcdoc');
-            
-            // Remove viewer classes
             viewer.classList.remove('active');
-            viewer.classList.remove('viewing-movie');
-            
-            // Restore page scroll
-            document.body.style.overflow = '';
+            // Header stays visible (removed viewing-movie class)
+            frame.src = ''; // Clear the iframe
+            document.body.style.overflow = ''; // Restore scrolling
             document.body.classList.remove('video-playing');
             
             // Close any open panels
@@ -4806,8 +4449,6 @@
                 panel.classList.remove('active');
             });
             document.body.classList.remove('panel-active');
-            
-            console.log('✅ Viewer closed!');
         }
         
         // ═══════════════════════════════════════════════════════════════
@@ -4942,13 +4583,17 @@
                 const user = auth.currentUser;
                 const userId = user ? user.uid : fallbackUserId;
                 
-                // Send to Firebase with username
+                // Send to Firebase with username - use current chat room
                 console.log('📤 Sending message to Firebase...');
                 console.log('Username:', username);
                 console.log('Message:', messageText);
-                console.log('Firebase Database URL:', database.ref().toString());
+                console.log('Chat Room:', currentChatRoom);
                 
-                database.ref('messages').push({
+                const refPath = currentChatRoom === 'lobby' 
+                    ? 'messages' 
+                    : `chat-rooms/${currentChatRoom}/messages`;
+                
+                database.ref(refPath).push({
                     text: messageText,
                     username: username,
                     userId: userId,
@@ -5144,70 +4789,8 @@
         // Track displayed messages to prevent duplicates
         const displayedMessages = new Set();
         
-        // Listen to Firebase chat messages - YOUTUBE STYLE (everyone sees everything)
-        database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
-            const messageId = snapshot.key;
-            const msg = snapshot.val();
-            
-            // Prevent duplicate messages
-            if (displayedMessages.has(messageId)) {
-                return;
-            }
-            displayedMessages.add(messageId);
-            
-            // Show ALL messages to EVERYONE (like YouTube live chat)
-            if (msg && msg.text) {
-                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
-                
-                // Check if this is from current user
-                let isOwnMessage = false;
-                const savedUsername = localStorage.getItem('flmtvChatUsername');
-                if (savedUsername && msg.username === savedUsername) {
-                    isOwnMessage = true;
-                } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
-                    isOwnMessage = true;
-                }
-                
-                // Add message with username
-                const messagesContainer = document.getElementById('chatMessages');
-                if (messagesContainer) {
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
-                    messageDiv.style.marginBottom = '0.75rem';
-                    messageDiv.style.display = 'flex';
-                    messageDiv.style.flexDirection = 'column';
-                    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
-                    
-                    const messageBubble = document.createElement('div');
-                    messageBubble.className = 'message-bubble';
-                    messageBubble.style.maxWidth = '80%';
-                    messageBubble.style.padding = '0.6rem 0.9rem';
-                    messageBubble.style.borderRadius = '1rem';
-                    messageBubble.style.lineHeight = '1.4';
-                    messageBubble.style.wordWrap = 'break-word';
-                    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
-                    messageBubble.style.color = 'white';
-                    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
-                    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
-                    
-                    // Show username for all messages (YouTube style)
-                    messageBubble.innerHTML = `
-                        <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
-                            ${username}
-                        </div>
-                        <div>${escapeHtml(msg.text)}</div>
-                    `;
-                    
-                    messageDiv.appendChild(messageBubble);
-                    messagesContainer.appendChild(messageDiv);
-                    
-                    // Auto-scroll to bottom (like YouTube)
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                    
-                    console.log('💬 Message displayed:', username, msg.text);
-                }
-            }
-        });
+        // Start listening to lobby chat on page load
+        currentChatListener.limitToLast(50).on('child_added', handleIncomingMessage);
         
         // Helper function to escape HTML
         function escapeHtml(text) {
@@ -5263,147 +4846,130 @@
         let hls = null;
         
         // Toggle preview video volume
-        function togglePreviewVolume() {
+        function togglePreviewVolume(event) {
+            event.stopPropagation();
             const video = document.getElementById('previewVideo');
-            const btn = document.getElementById('volumeToggleBtn');
+            const btn = document.getElementById('previewVolumeBtn');
             const icon = btn.querySelector('i');
             
             if (video.muted) {
                 video.muted = false;
+                video.volume = 1.0;
                 icon.className = 'fas fa-volume-up';
                 btn.classList.add('unmuted');
                 btn.title = 'Mute';
-                console.log('🔊 Preview audio unmuted');
             } else {
                 video.muted = true;
+                video.volume = 0;
                 icon.className = 'fas fa-volume-mute';
                 btn.classList.remove('unmuted');
                 btn.title = 'Unmute';
-                console.log('🔇 Preview audio muted');
             }
         }
         
         function openLiveStream() {
-            console.log('🔴 Opening Live Channel 26.5...');
-            const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            if (!modal || !video) {
-                console.warn('Live stream modal/video element not found.');
-                return;
-            }
+    console.log('Opening Live Channel 26.5...');
+    
+    // PAUSE and MUTE preview video
+    const previewVideo = document.getElementById('previewVideo');
+    if (previewVideo) {
+        previewVideo.pause();
+        previewVideo.muted = true;
+        previewVideo.volume = 0;
+    }
+    
+    const modal = document.getElementById('videoModal');
+    modal.classList.add('active');
+    
+    const liveStreamVideo = document.getElementById('liveStreamVideo');
+    const streamUrl = 'http://10.0.0.4:8080/FLMTV.m3u8';
 
-            // ✅ Public HTTPS HLS URL (served by Caddy -> Python HLS)
-            const streamUrl = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
-
-            modal.classList.add('active');
-
-            // Clean previous playback
-            try { video.pause(); } catch(e) {}
-            video.removeAttribute('src');
-            try { video.load(); } catch(e) {}
-
-            // Destroy previous HLS instance if any
-            if (window.__flmHls) {
-                try { window.__flmHls.destroy(); } catch(e) {}
-                window.__flmHls = null;
-            }
-
-            // iOS Safari supports native HLS
-            const canPlayNative = video.canPlayType('application/vnd.apple.mpegurl') || video.canPlayType('application/x-mpegURL');
-            if (canPlayNative) {
-                video.src = streamUrl;
-                video.play().catch(() => {});
-            } else if (window.Hls && Hls.isSupported()) {
-                const hls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90,
-                    maxBufferLength: 30,
-                    maxMaxBufferLength: 600,
-                    startLevel: -1,
-                    debug: false
-                });
-                window.__flmHls = hls;
-                hls.loadSource(streamUrl);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(() => {});
-                });
-                hls.on(Hls.Events.ERROR, (event, data) => {
-                    console.warn('HLS error', data);
-                });
-            } else {
-                // Fallback: direct src (some browsers might still attempt)
-                video.src = streamUrl;
-                video.play().catch(() => {});
-            }
-
-            // Add #stream to history so Back works
-            if (window.location.hash !== '#stream') {
-                history.pushState({ page: 'stream' }, '', '#stream');
-            }
+    if (liveStreamVideo) {
+        // Destroy any existing HLS instance
+        if (hls) {
+            hls.destroy();
+            hls = null;
         }
+
+        liveStreamVideo.innerHTML = ''; // Clear any old <source> tags
+        liveStreamVideo.muted = true; // Start muted
+
+        if (Hls.isSupported()) {
+            // Use HLS.js — works in Chrome, Edge, Firefox
+            hls = new Hls();
+            hls.loadSource(streamUrl);
+            hls.attachMedia(liveStreamVideo);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
+                console.log('📺 HLS.js stream loaded and started (muted)');
+            });
+        } else if (liveStreamVideo.canPlayType('application/vnd.apple.mpegurl')) {
+            // Native HLS (Safari)
+            liveStreamVideo.src = streamUrl;
+            liveStreamVideo.play().catch(e => console.log('Stream play error:', e));
+            console.log('📺 Native HLS stream started (Safari)');
+        }
+    }
+    
+    // Add to browser history so back button works
+    history.pushState({modal: 'stream'}, '', '#stream');
+}
         
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
-            const video = document.getElementById('liveStreamVideo');
-            
-            // CRITICAL: Actually STOP the video!
-            if (video) {
-                video.pause();
-                video.currentTime = 0;
-                video.removeAttribute('src');
-                video.load(); // Reset video element
-            }
-            
-            // Destroy HLS instance if exists
-            if (window.__flmHls) {
-                try {
-                    window.__flmHls.destroy();
-                } catch(e) {
-                    console.log('HLS cleanup:', e);
-                }
-                window.__flmHls = null;
-            }
-            
             modal.classList.remove('active');
+            
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            if (liveStreamVideo) {
+                liveStreamVideo.pause();
+                liveStreamVideo.muted = true;
+                liveStreamVideo.volume = 0;
+            }
+            // Destroy HLS.js instance if it exists
+            if (hls) {
+                hls.destroy();
+                hls = null;
+                console.log('🔇 HLS.js stream DISCONNECTED');
+            }
+            if (liveStreamVideo) {
+                liveStreamVideo.removeAttribute('src');
+                liveStreamVideo.innerHTML = '';
+                liveStreamVideo.load();
+            }
             
             // Remove from history
             if (window.location.hash === '#stream') {
                 history.back();
             }
-            
-            console.log('✅ Stream stopped and modal closed');
         }
         
         // Handle browser back button
         window.addEventListener('popstate', function(event) {
             const videoModal = document.getElementById('videoModal');
             const jellyfinViewer = document.getElementById('jellyfinViewer');
+            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            
+            // DISCONNECT SRT stream completely
+            if (liveStreamVideo) {
+                liveStreamVideo.pause();
+                liveStreamVideo.muted = true;
+                liveStreamVideo.removeAttribute('src');
+                liveStreamVideo.innerHTML = '';
+                liveStreamVideo.load();
+                console.log('🔇 SRT stream disconnected on back navigation');
+            }
             
             // Close video modal if open
             if (videoModal && videoModal.classList.contains('active')) {
-                const video = document.getElementById('liveStreamVideo');
-                if (video) {
-                    video.pause();
-                    video.currentTime = 0;
-                    video.removeAttribute('src');
-                    video.load();
-                }
-                
-                // Destroy HLS
-                if (window.__flmHls) {
-                    try { window.__flmHls.destroy(); } catch(e) {}
-                    window.__flmHls = null;
-                }
-                
                 videoModal.classList.remove('active');
             }
             
             // Close Jellyfin viewer if open
             if (jellyfinViewer && jellyfinViewer.classList.contains('active')) {
-                closeViewer();
+                jellyfinViewer.classList.remove('active');
+                const frame = document.getElementById('jellyfinFrame');
+                if (frame) frame.src = '';
             }
         });
         
@@ -5501,87 +5067,48 @@ async function loadCollectionPage(collectionId, title) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  BROWSER BACK BUTTON FIX
-// ═══════════════════════════════════════════════════════════════
-
-// Function to update browser history when navigating
-function navigateWithHistory(pageName, pageData) {
-    // Push state to browser history
-    history.pushState(
-        { page: pageName, data: pageData }, 
-        pageName, 
-        `#${pageName}`
-    );
-}
-
-// Listen for browser back/forward button
-window.addEventListener('popstate', function(event) {
-    if (event.state) {
-        // User clicked back button - restore previous page
-        const previousPage = event.state.page;
-        const previousData = event.state.data;
-        
-        console.log('Back button clicked, restoring:', previousPage);
-        
-        // Handle different page types
-        if (previousPage === 'home' || previousPage === 'browse') {
-            // Go back to main browse view
-            loadMainCategories();
-        } else if (previousPage.startsWith('category-')) {
-            // Go back to category view
-            const categoryId = previousData.categoryId;
-            loadCategory(categoryId);
-        } else if (previousPage.startsWith('movie-')) {
-            // Go back to movie view
-            const movieId = previousData.movieId;
-            loadMovieDetails(movieId);
-        }
-    } else {
-        // No state, go to home
-        loadMainCategories();
-    }
-});
-
-// Update your existing navigation functions to use history
-// Example: When loading a category
-function loadCategory(categoryId, categoryName) {
-    // Your existing category loading code here...
-    
-    // Add this line to update browser history:
-    navigateWithHistory(`category-${categoryId}`, { 
-        categoryId: categoryId, 
-        categoryName: categoryName 
-    });
-}
-
-// Example: When loading a movie
-function loadMovieDetails(movieId, movieTitle) {
-    // Your existing movie loading code here...
-    
-    // Add this line to update browser history:
-    navigateWithHistory(`movie-${movieId}`, { 
-        movieId: movieId, 
-        movieTitle: movieTitle 
-    });
-}
-
-// Example: When going back to main browse
-function loadMainCategories() {
-    // Your existing browse loading code here...
-    
-    // Add this line:
-    navigateWithHistory('browse', {});
-}
-
-// Initialize: Set initial state when page loads
-window.addEventListener('load', function() {
-    if (!history.state) {
-        history.replaceState({ page: 'home' }, 'Home', '#home');
-    }
-});
 </script>
 
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  AUTO-OPEN CHAT & SWITCH ROOM (from video player)               -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<script>
+// Auto-open chat and switch room based on URL parameters from video player
+(function() {
+    // Parse URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const shouldOpenChat = urlParams.get('openChat') === 'true';
+    const movieId = urlParams.get('movieId');
+    const movieTitle = urlParams.get('movieTitle');
+    
+    console.log('🎬 Chat auto-switch check:', { shouldOpenChat, movieId, movieTitle });
+    
+    // Wait for page to fully load
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            // If movieId is provided, switch to that movie's chat room
+            if (movieId && movieTitle) {
+                console.log(`🎬 Switching to movie chat: ${decodeURIComponent(movieTitle)}`);
+                if (typeof switchChatRoom === 'function') {
+                    switchChatRoom('movie', movieId, decodeURIComponent(movieTitle));
+                } else {
+                    console.error('❌ switchChatRoom function not found');
+                }
+            }
+            
+            // If openChat parameter is present, open the chat panel
+            if (shouldOpenChat) {
+                console.log('💬 Auto-opening chat panel');
+                if (typeof openPanel === 'function') {
+                    openPanel('chatPanel');
+                } else {
+                    console.error('❌ openPanel function not found');
+                }
+            }
+        }, 800); // Delay to ensure everything is initialized
+    });
+})();
 </script>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -5589,9 +5116,9 @@ window.addEventListener('load', function() {
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <nav class="bottom-nav">
-    <a href="#home" class="bottom-nav-item active">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
+    <a href="kids-corner.html" class="bottom-nav-item active">
+        <i class="fas fa-child"></i>
+        <span>Kids Corner</span>
     </a>
     <button class="bottom-nav-item" onclick="openPanel('chatPanel')">
         <i class="fas fa-comments"></i>
@@ -5602,11 +5129,98 @@ window.addEventListener('load', function() {
         <span>Live TV</span>
     </button>
     <button class="bottom-nav-item" onclick="openPanel('aiPanel')">
-        <img class="nav-avatar" src="assets/images/z-ai-avatar2.png" alt="Zaina AI">
+        <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--neon-green);">
         <span>Zaina AI</span>
     </button>
 </nav>
- <script src="flm-auth-system.js"></script>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  SEARCH FUNCTIONALITY                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<script>
+(function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    let searchTimeout;
+    
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+        
+        if (query.length < 2) {
+            searchResults.classList.remove('active');
+            return;
+        }
+        
+        searchTimeout = setTimeout(() => performSearch(query), 300);
+    });
+    
+    // Close results when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-wrapper')) {
+            searchResults.classList.remove('active');
+        }
+    });
+    
+    async function performSearch(query) {
+        try {
+            const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?searchTerm=${encodeURIComponent(query)}&Recursive=true&IncludeItemTypes=Movie,Series,BoxSet&Limit=20&api_key=${JELLYFIN_CONFIG.API_KEY}`);
+            
+            if (!response.ok) throw new Error('Search failed');
+            
+            const data = await response.json();
+            displayResults(data.Items || []);
+        } catch (error) {
+            console.error('Search error:', error);
+            searchResults.innerHTML = '<div class="search-no-results">Search error. Please try again.</div>';
+            searchResults.classList.add('active');
+        }
+    }
+    
+    function displayResults(items) {
+        if (items.length === 0) {
+            searchResults.innerHTML = '<div class="search-no-results">No results found</div>';
+            searchResults.classList.add('active');
+            return;
+        }
+        
+        const html = items.map(item => {
+            const imageUrl = item.ImageTags && item.ImageTags.Primary
+                ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?tag=${item.ImageTags.Primary}&maxHeight=200&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                : 'assets/images/placeholder.png';
+            
+            const type = item.Type === 'Movie' ? 'Movie' : item.Type === 'Series' ? 'TV Show' : 'Collection';
+            
+            return `
+                <div class="search-result-item" onclick="openItemDetail('${item.Id}', '${item.Type}')">
+                    <img src="${imageUrl}" alt="${item.Name}" class="search-result-img">
+                    <div class="search-result-info">
+                        <div class="search-result-title">${item.Name}</div>
+                        <div class="search-result-type">${type}${item.ProductionYear ? ' • ' + item.ProductionYear : ''}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        searchResults.innerHTML = html;
+        searchResults.classList.add('active');
+    }
+    
+    window.openItemDetail = function(itemId, itemType) {
+        searchResults.classList.remove('active');
+        searchInput.value = '';
+        
+        if (itemType === 'Movie' || itemType === 'Series') {
+            window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
+        } else if (itemType === 'BoxSet') {
+            // For collections, you might want to scroll to the collection on home page
+            // or open in Jellyfin - adjust as needed
+            window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
+        }
+    };
+})();
+</script>
 
 </body>
 </html>
