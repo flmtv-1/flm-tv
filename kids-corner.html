@@ -390,51 +390,15 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Small phones - still 2 cols but tighter */
-        @media (max-width: 400px) {
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-            }
-            .book-cover {
-                height: 120px;
-            }
-            .book-title {
-                font-size: 0.72rem;
-            }
-            .section-title {
-                font-size: 1.4rem;
-            }
-        }
-
         /* Mobile */
         @media (max-width: 768px) {
             .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
-            }
-
-            .book-cover {
-                height: 150px;
-            }
-
-            .book-card {
-                padding: 0.6rem;
-            }
-
-            .book-title {
-                font-size: 0.78rem;
-                margin-bottom: 0.25rem;
-            }
-
-            .book-type {
-                font-size: 0.65rem;
-                padding: 0.2rem 0.5rem;
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
             }
 
             .games-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
 
             .nav-arrow {
@@ -472,7 +436,96 @@
         #coloringSVG path, #coloringSVG polygon, #coloringSVG circle, #coloringSVG rect, #coloringSVG ellipse {
             transition: fill 0.2s ease;
         }
-    </style>
+    
+        /* ── MOBILE FIT FIX ── */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+            }
+
+            .header {
+                padding: 0.85rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 1rem 0.75rem;
+            }
+
+            .section-tabs {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .tab-btn {
+                padding: 0.65rem 0.5rem;
+                font-size: 0.85rem;
+                border-radius: 14px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .book-cover {
+                height: 160px;
+            }
+
+            .book-card {
+                padding: 0.6rem;
+            }
+
+            .book-title {
+                font-size: 0.78rem;
+            }
+
+            .book-type {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+            .back-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            .book-cover {
+                height: 130px;
+            }
+            .book-title {
+                font-size: 0.72rem;
+            }
+        }
+
+        </style>
 </head>
 <body>
 
