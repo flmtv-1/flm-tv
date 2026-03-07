@@ -390,15 +390,51 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Small phones - still 2 cols but tighter */
+        @media (max-width: 400px) {
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            .book-cover {
+                height: 120px;
+            }
+            .book-title {
+                font-size: 0.72rem;
+            }
+            .section-title {
+                font-size: 1.4rem;
+            }
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .books-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 1rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .book-cover {
+                height: 150px;
+            }
+
+            .book-card {
+                padding: 0.6rem;
+            }
+
+            .book-title {
+                font-size: 0.78rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .book-type {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
             }
 
             .games-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
             }
 
             .nav-arrow {
