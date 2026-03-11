@@ -3824,44 +3824,9 @@
         // ═══════════════════════════════════════════════════════════════
         
         async function autoAuthenticatePublic() {
-            try {
-                console.log('🔐 Auto-authenticating as Public user...');
-                
-                const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Emby-Authorization': `MediaBrowser Client="FLM Television Network", Device="Web Browser", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
-                    },
-                    body: JSON.stringify({
-                        Username: 'Public',
-                        Pw: ''
-                    })
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Auto-authenticated successfully!');
-                    
-                    // Store session in localStorage so Jellyfin web client can use it
-                    const authData = {
-                        AccessToken: data.AccessToken,
-                        UserId: data.User.Id,
-                        ServerId: JELLYFIN_CONFIG.SERVER
-                    };
-                    
-                    // Try to set localStorage for Jellyfin domain
-                    localStorage.setItem('jellyfin_credentials', JSON.stringify(authData));
-                    
-                    return true;
-                } else {
-                    console.log('⚠️ Auto-auth failed, user will need to login manually');
-                    return false;
-                }
-            } catch (error) {
-                console.log('⚠️ Auto-auth error:', error);
-                return false;
-            }
+            // Use API key directly - no username/password needed
+            console.log('✅ Using API key authentication - no login required');
+            return true;
         }
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -4051,11 +4016,16 @@
                     console.log('🎬 Redirecting to movie detail page:', item.Name);
                     window.location.href = `movie-detail.html?id=${itemId}`;
                     return;
+                } else if (item.Type === 'BoxSet') {
+                    // Collections - open in Jellyfin with API key
+                    console.log('📦 Opening BoxSet/Collection:', item.Name);
+                    window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
+                    return;
                 }
                 
-                // Everything else - log and alert
+                // Everything else - try opening as detail page
                 console.log('📄 Unknown type:', item.Type, item.Name);
-                alert(`Content type "${item.Type}" is not yet supported.`);
+                window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
                 
             } catch (error) {
                 console.error('Error fetching item:', error);
