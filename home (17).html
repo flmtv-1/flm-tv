@@ -4047,12 +4047,9 @@
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
                 } else if (item.Type === 'Movie') {
+                    // Movies go to custom movie-detail.html page (shows info, then has play button)
                     console.log('🎬 Redirecting to movie detail page:', item.Name);
                     window.location.href = `movie-detail.html?id=${itemId}`;
-                    return;
-                } else if (item.Type === 'BoxSet') {
-                    console.log('📦 Opening BoxSet/Collection:', item.Name);
-                    window.location.href = `collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`;
                     return;
                 } else if (item.Type === 'BoxSet') {
                     // Collections - open custom collection-detail page

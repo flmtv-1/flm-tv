@@ -4047,17 +4047,9 @@
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
                 } else if (item.Type === 'Movie') {
+                    // Movies go to custom movie-detail.html page (shows info, then has play button)
                     console.log('🎬 Redirecting to movie detail page:', item.Name);
                     window.location.href = `movie-detail.html?id=${itemId}`;
-                    return;
-                } else if (item.Type === 'BoxSet') {
-                    console.log('📦 Opening BoxSet/Collection:', item.Name);
-                    window.location.href = `collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`;
-                    return;
-                } else if (item.Type === 'BoxSet') {
-                    // Collections - open custom collection-detail page
-                    console.log('📦 Opening BoxSet/Collection:', item.Name);
-                    window.location.href = `collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`;
                     return;
                 }
                 
@@ -5245,7 +5237,9 @@ async function loadCollectionPage(collectionId, title) {
         if (itemType === 'Movie' || itemType === 'Series') {
             window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
         } else if (itemType === 'BoxSet') {
-            window.location.href = `collection-detail.html?id=${itemId}`;
+            // For collections, you might want to scroll to the collection on home page
+            // or open in Jellyfin - adjust as needed
+            window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
         }
     };
 })();

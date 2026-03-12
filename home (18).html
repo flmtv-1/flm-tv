@@ -4039,25 +4039,22 @@
                 if (item.Type === 'Series') {
                     // TV Series go to custom page
                     console.log('📺 Redirecting to TV detail page:', item.Name);
-                    window.location.href = `tv-detail.html?id=${itemId}`;
+                    openPage(`tv-detail.html?id=${itemId}`);
                     return;
                 } else if (item.Type === 'Episode') {
                     // Episodes go to series custom page
                     console.log('📺 Redirecting to series page');
-                    window.location.href = `tv-detail.html?id=${item.SeriesId}`;
+                    openPage(`tv-detail.html?id=${item.SeriesId}`);
                     return;
                 } else if (item.Type === 'Movie') {
+                    // Movies go to custom movie-detail.html page (shows info, then has play button)
                     console.log('🎬 Redirecting to movie detail page:', item.Name);
-                    window.location.href = `movie-detail.html?id=${itemId}`;
-                    return;
-                } else if (item.Type === 'BoxSet') {
-                    console.log('📦 Opening BoxSet/Collection:', item.Name);
-                    window.location.href = `collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`;
+                    openPage(`movie-detail.html?id=${itemId}`);
                     return;
                 } else if (item.Type === 'BoxSet') {
                     // Collections - open custom collection-detail page
                     console.log('📦 Opening BoxSet/Collection:', item.Name);
-                    window.location.href = `collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`;
+                    openPage(`collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`);
                     return;
                 }
                 
@@ -4157,7 +4154,7 @@
     
     // Special handling for "00 Collections" - redirect to collections browser
     if (collectionName === '00 Collections') {
-        window.location.href = 'collections-browser.html';
+        openPage('collections-browser.html');
         return;
     }
     
@@ -4174,7 +4171,7 @@
     }
     
     // All other items are CATEGORIES - redirect to category-detail.html
-    window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
+    openPage(`category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`);
         }
         
         function showCollectionsEnterOverlay(collectionUrl, collectionName) {
@@ -4449,6 +4446,17 @@
                 panel.classList.remove('active');
             });
             document.body.classList.remove('panel-active');
+        }
+
+        // Open any custom page inside the viewer iframe so home.html never reloads
+        function openPage(url) {
+            const viewer = document.getElementById('jellyfinViewer');
+            const frame = document.getElementById('jellyfinFrame');
+            const previewVideo = document.getElementById('previewVideo');
+            if (previewVideo) { previewVideo.pause(); previewVideo.muted = true; }
+            frame.src = url;
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
         
         // ═══════════════════════════════════════════════════════════════
@@ -5242,10 +5250,12 @@ async function loadCollectionPage(collectionId, title) {
         searchResults.classList.remove('active');
         searchInput.value = '';
         
-        if (itemType === 'Movie' || itemType === 'Series') {
-            window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
+        if (itemType === 'Movie') {
+            openPage(`movie-detail.html?id=${itemId}`);
+        } else if (itemType === 'Series') {
+            openPage(`tv-detail.html?id=${itemId}`);
         } else if (itemType === 'BoxSet') {
-            window.location.href = `collection-detail.html?id=${itemId}`;
+            openPage(`collection-detail.html?id=${itemId}`);
         }
     };
 })();
