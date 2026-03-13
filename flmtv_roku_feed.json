@@ -1,6 +1,6 @@
 {
   "providerName": "FLM Television Network",
-  "lastUpdated": "2026-02-25T12:14:32Z",
+  "lastUpdated": "2026-03-12T00:00:00Z",
   "language": "en",
   "rating": [
     {
@@ -15384,6 +15384,40 @@
             }
           ]
         }
+      ]
+    }
+  ],
+  "liveFeeds": [
+    {
+      "id": "flmtv-channel-265-live",
+      "title": "FLM TV Channel 26.5 Las Vegas — LIVE",
+      "shortDescription": "Watch Channel 26.5 Las Vegas LIVE — broadcasting 24/7 and streaming worldwide on FLM Television Network.",
+      "longDescription": "FLM Television Network's Channel 26.5 is Las Vegas's premier multicultural broadcast station, now streaming LIVE to the world 24 hours a day, 7 days a week. Powered by actress and recording artist Zaina Juliette, Channel 26.5 brings you Filipino and Asian programming, international cinema, entertainment, music, and more — live from Las Vegas, Nevada.",
+      "thumbnail": "https://flmtv26.duckdns.org:8920/Items/e86d6a1ec57fc16642ac116dc1829468/Images/Primary?api_key=62131ee22c0141c6b651be75a7444350&quality=90&width=800",
+      "branded": true,
+      "content": {
+        "dateAdded": "2026-03-12T00:00:00Z",
+        "videos": [
+          {
+            "url": "https://flmtv.com/hls/FLMTV.m3u8",
+            "quality": "FHD",
+            "videoType": "HLS"
+          }
+        ],
+        "language": "en"
+      },
+      "genres": [
+        "news",
+        "entertainment",
+        "multicultural"
+      ],
+      "tags": [
+        "live",
+        "Channel 26.5",
+        "Las Vegas",
+        "FLM TV",
+        "Filipino",
+        "Asian"
       ]
     }
   ]
