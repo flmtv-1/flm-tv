@@ -718,8 +718,16 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            z-index: 10001;
-            transition: right 0.3s ease;
+            z-index: 9500;
+            transition: right 0.3s ease, opacity 0.5s ease;
+        }
+
+        /* Fade out floating buttons when stream is active and user is idle */
+        .floating-buttons.stream-idle {
+            opacity: 0.15;
+        }
+        .floating-buttons.stream-idle:hover {
+            opacity: 1;
         }
         
         body.panel-active .floating-buttons {
@@ -1559,7 +1567,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 10000;
+            z-index: 9000;
             display: none;
             align-items: center;
             justify-content: center;
@@ -2162,8 +2170,13 @@
                 position: relative !important;
             }
             
-            /* On mobile: hide overlays/badges but keep titles below poster */
+            /* HIDE ALL TEXT on mobile - just show poster images! */
             .content-card-overlay,
+            .movie-info,
+            .movie-title,
+            .content-card-title,
+            .movie-year,
+            .movie-rating,
             .content-card-info {
                 display: none !important;
             }
@@ -2232,55 +2245,18 @@
                 flex-wrap: nowrap !important;
                 overflow-x: auto !important;
                 overflow-y: hidden !important;
-                gap: 0.6rem !important;
-                padding: 0.25rem 0.75rem 0.5rem !important;
+                gap: 0.75rem !important;
+                padding: 0 0.75rem !important;
                 scroll-snap-type: x mandatory;
                 -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
             }
-            .movies-grid::-webkit-scrollbar,
-            .content-grid::-webkit-scrollbar { display: none; }
-
-            /* Cards: show 2.3 at a time so users know to scroll */
+            
             .movies-grid .movie-card,
             .content-grid .movie-card {
-                flex: 0 0 42% !important;
-                min-width: 42% !important;
-                max-width: 42% !important;
+                flex: 0 0 45% !important;
+                min-width: 45% !important;
+                max-width: 45% !important;
                 scroll-snap-align: start;
-                border-radius: 10px !important;
-                overflow: hidden;
-            }
-
-            /* Show movie title below poster on mobile */
-            .movie-title,
-            .content-card-title {
-                display: block !important;
-                font-size: 0.72rem !important;
-                font-weight: 700 !important;
-                line-height: 1.2 !important;
-                color: #e2e8f0 !important;
-                padding: 0.35rem 0.4rem 0.2rem !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-                background: rgba(10,15,26,0.9) !important;
-            }
-
-            .movie-year,
-            .movie-rating {
-                display: block !important;
-                font-size: 0.62rem !important;
-                color: #94a3b8 !important;
-                padding: 0 0.4rem 0.3rem !important;
-                background: rgba(10,15,26,0.9) !important;
-            }
-
-            .movie-info {
-                display: block !important;
-                padding: 0 !important;
-                background: rgba(10,15,26,0.9) !important;
             }
             
             /* Video Modal - Full Screen */
@@ -2647,65 +2623,7 @@
                 scroll-behavior: auto !important;
             }
         }
-
-        /* ── EXTRA MOBILE POLISH (max 480px / small phones) ── */
-        @media only screen and (max-width: 480px) {
-
-            /* Search bar full width with proper padding */
-            .search-wrapper {
-                padding: 0 0.75rem;
-                max-width: 100%;
-            }
-            .search-input {
-                font-size: 0.85rem !important;
-                padding: 0.65rem 2.75rem 0.65rem 1rem !important;
-            }
-
-            /* Section headers */
-            .collection-header,
-            .section-header {
-                padding: 0 0.75rem !important;
-            }
-            .collection-header h2,
-            .section-header h2,
-            .section-title {
-                font-size: 1rem !important;
-                font-weight: 800 !important;
-            }
-
-            /* Cards slightly wider on very small screens to show 2 */
-            .movies-grid .movie-card,
-            .content-grid .movie-card {
-                flex: 0 0 44% !important;
-                min-width: 44% !important;
-                max-width: 44% !important;
-            }
-
-            /* Poster image height cap for small screens */
-            .movie-poster,
-            .content-card-image {
-                max-height: 160px !important;
-            }
-
-            /* Bottom nav labels slightly smaller */
-            .bottom-nav-item span {
-                font-size: 0.62rem !important;
-            }
-
-            /* Hero banner compact */
-            .hero-banner {
-                min-height: 220px !important;
-                max-height: 320px !important;
-            }
-            .hero-title { font-size: 1.2rem !important; }
-            .hero-description { font-size: 0.8rem !important; }
-
-            /* Panels full width */
-            .side-panel {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-        }
+        
     </style>
 </head>
 <body>
@@ -2813,41 +2731,20 @@
                        <script>
     (function() {
         const vid = document.getElementById('previewVideo');
-        const previewStreamUrl = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
-        let previewHls = null;
-
-        function startPreview() {
-            vid.muted = true;
-            vid.volume = 0;
-            vid.defaultMuted = true;
-
+        const url = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+        function init() {
+            vid.muted = true; vid.volume = 0; vid.defaultMuted = true;
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                previewHls = new Hls({ autoStartLoad: true });
-                previewHls.loadSource(previewStreamUrl);
-                previewHls.attachMedia(vid);
-                previewHls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    vid.muted = true;
-                    vid.play().catch(e => console.log('Preview autoplay blocked:', e));
-                });
+                var h = new Hls(); h.loadSource(url); h.attachMedia(vid);
+                h.on(Hls.Events.MANIFEST_PARSED, function() { vid.muted = true; vid.play().catch(function(){}); });
             } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
-                vid.src = previewStreamUrl;
-                vid.play().catch(e => console.log('Preview autoplay blocked:', e));
+                vid.src = url; vid.play().catch(function(){});
             }
+            vid.addEventListener('volumechange', function() {
+                if (!this.muted || this.volume > 0) { this.muted = true; this.volume = 0; }
+            }, true);
         }
-
-        // Wait for HLS.js to be ready
-        if (typeof Hls !== 'undefined') {
-            startPreview();
-        } else {
-            window.addEventListener('load', startPreview);
-        }
-
-        vid.addEventListener('volumechange', function(e) {
-            if (!this.muted || this.volume > 0) {
-                this.muted = true;
-                this.volume = 0;
-            }
-        }, true);
+        if (typeof Hls !== 'undefined') { init(); } else { window.addEventListener('load', init); }
     })();
 </script>
                         <div class="live-channel-content">
@@ -3218,22 +3115,23 @@
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
     
     COLLECTIONS: [
-        { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: '00 Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
-        { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: '01 MOVIES 1', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
-        { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: '02 MOVIES 2', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
-        { id: 'cf6b0d096a1b570653b5a9a572fefa9b', name: '03 AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=cf6b0d096a1b570653b5a9a572fefa9b&collectionType=tvshows' },
-        { id: '5ff2dc76882e099b56c555f868f29abe', name: '04 ASIAN CINEMA', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=5ff2dc76882e099b56c555f868f29abe&collectionType=movies' },
-        { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: '05 CLASSIC TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
-        { id: 'ca43f3291c81d4f007f2b33936d256e6', name: '06 KIDS WORLD', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
-        { id: 'e5da6f90a5fbe74163d22de1b0014943', name: '07 GOLDEN CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=e5da6f90a5fbe74163d22de1b0014943&collectionType=movies' },
-        { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: '08 FILIPINA-tv ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
-        { id: '9eb72a50280cf3ef5599f4c43a383611', name: '08-B TAGALOG ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=9eb72a50280cf3ef5599f4c43a383611&collectionType=movies' },
-        { id: 'c71a54b70069a28e508358fa66e2a286', name: '09 INTERNATIONAL Films', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
-        { id: '48d96f519acf2fce600d06a4365632f4', name: '10 FLM NEWS FILIPINA', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
-        { id: '5f2f2ace0732efb63f625d1346b9c766', name: '12 ZAINA ZONE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
-        { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: '13 COMEDY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
-        { id: '56f8dc1075207592d3248a09358c587a', name: '14 DOCUMENTARIES', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
-        { id: '7a941a433e06ec0512b64b1d3b52c782', name: '15 MIDNIGHT CIRCUIT', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
+        { id: 'ccb90a40ec8a4a2826f97a082fc18509', name: 'Collections', url: 'https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=ccb90a40ec8a4a2826f97a082fc18509&serverId=db6bb6388c8c4c70825698639853ede6' },
+        { id: 'adf5c3d30aa8572dcb64577f4ae6b105', name: 'MOVIES', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=adf5c3d30aa8572dcb64577f4ae6b105&collectionType=movies' },
+        { id: '6fcfa6221b9a5741d5fdcf30f78f946b', name: 'More MOVIES', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=6fcfa6221b9a5741d5fdcf30f78f946b&collectionType=movies' },
+        { id: 'cf6b0d096a1b570653b5a9a572fefa9b', name: 'AWESOME TV & FILMS', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=cf6b0d096a1b570653b5a9a572fefa9b&collectionType=tvshows' },
+        { id: '19116110a53a09d86550478370bfc335', name: 'ASIAN CINEMA', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=19116110a53a09d86550478370bfc335&collectionType=movies' },
+	{ id: '131eab8057d3d6c164acd5f90a827cb0', name: 'ASIAN TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=131eab8057d3d6c164acd5f90a827cb0&collectionType=tvshows' },
+        { id: 'ede598bcd27f80ea256af569dc7ac4a6', name: 'CLASSIC TV', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ede598bcd27f80ea256af569dc7ac4a6&collectionType=tvshows' },
+        { id: 'ca43f3291c81d4f007f2b33936d256e6', name: 'KIDS WORLD', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=ca43f3291c81d4f007f2b33936d256e6&collectionType=tvshows' },
+        { id: 'e5da6f90a5fbe74163d22de1b0014943', name: 'GOLDEN CLASSICS', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=e5da6f90a5fbe74163d22de1b0014943&collectionType=movies' },
+        { id: 'eaddf6d7a354f68f5f1c6ff947baf506', name: 'FILIPINA-tv ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=eaddf6d7a354f68f5f1c6ff947baf506&collectionType=tvshows' },
+        { id: '9eb72a50280cf3ef5599f4c43a383611', name: 'PINOY ☀️', url: 'https://flmtv26.duckdns.org:8920/web/#/movies?topParentId=9eb72a50280cf3ef5599f4c43a383611&collectionType=movies' },
+        { id: 'c71a54b70069a28e508358fa66e2a286', name: 'INTERNATIONAL Films', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c71a54b70069a28e508358fa66e2a286&collectionType=tvshows' },
+        { id: '48d96f519acf2fce600d06a4365632f4', name: 'FLM NEWS FILIPINA', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=48d96f519acf2fce600d06a4365632f4&collectionType=tvshows' },
+        { id: '5f2f2ace0732efb63f625d1346b9c766', name: 'ZAINA ZONE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5f2f2ace0732efb63f625d1346b9c766&collectionType=tvshows' },
+        { id: '5ed2753fb759a28245f2a4cb6dc2f4fd', name: 'COMEDY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=5ed2753fb759a28245f2a4cb6dc2f4fd&collectionType=tvshows' },
+        { id: '56f8dc1075207592d3248a09358c587a', name: 'DOCUMENTARIES', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=56f8dc1075207592d3248a09358c587a&collectionType=tvshows' },
+        { id: '7a941a433e06ec0512b64b1d3b52c782', name: 'MIDNIGHT CIRCUIT', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=7a941a433e06ec0512b64b1d3b52c782&collectionType=tvshows' },
         { id: 'c95ec3ddc1e8cf075ba24840d92ad9bd', name: 'BEYOND REALITY', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=c95ec3ddc1e8cf075ba24840d92ad9bd&collectionType=tvshows' },
         { id: '8e596d67e544894b4502eba9aeb49b01', name: 'ESCAPE', url: 'https://flmtv26.duckdns.org:8920/web/#/tv?topParentId=8e596d67e544894b4502eba9aeb49b01&collectionType=tvshows' },
 	{ id: 'kids-corner', name: '🌟 Kids Corner', url: 'kids-corner.html', hideFromCarousel: true },
@@ -4149,9 +4047,17 @@
                     window.location.href = `tv-detail.html?id=${item.SeriesId}`;
                     return;
                 } else if (item.Type === 'Movie') {
-                    // Movies go to custom movie-detail.html page (shows info, then has play button)
                     console.log('🎬 Redirecting to movie detail page:', item.Name);
                     window.location.href = `movie-detail.html?id=${itemId}`;
+                    return;
+                } else if (item.Type === 'BoxSet') {
+                    console.log('📦 Opening BoxSet/Collection:', item.Name);
+                    window.location.href = `collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`;
+                    return;
+                } else if (item.Type === 'BoxSet') {
+                    // Collections - open custom collection-detail page
+                    console.log('📦 Opening BoxSet/Collection:', item.Name);
+                    window.location.href = `collection-detail.html?id=${itemId}&name=${encodeURIComponent(item.Name)}`;
                     return;
                 }
                 
@@ -4971,6 +4877,17 @@
         previewVideo.muted = true;
         previewVideo.volume = 0;
     }
+
+    // Fade floating buttons after 3 seconds of watching
+    const floatingBtns = document.querySelector('.floating-buttons');
+    if (floatingBtns) {
+        clearTimeout(window._streamIdleTimer);
+        window._streamIdleTimer = setTimeout(() => {
+            floatingBtns.classList.add('stream-idle');
+        }, 3000);
+        // Show buttons again on mouse move
+        document.addEventListener('mousemove', _resetStreamIdle);
+    }
     
     const modal = document.getElementById('videoModal');
     modal.classList.add('active');
@@ -5009,10 +4926,30 @@
     history.pushState({modal: 'stream'}, '', '#stream');
 }
         
+        function _resetStreamIdle() {
+            const floatingBtns = document.querySelector('.floating-buttons');
+            if (floatingBtns) {
+                floatingBtns.classList.remove('stream-idle');
+                clearTimeout(window._streamIdleTimer);
+                window._streamIdleTimer = setTimeout(() => {
+                    // Only fade if stream is still open
+                    if (document.getElementById('videoModal').classList.contains('active')) {
+                        floatingBtns.classList.add('stream-idle');
+                    }
+                }, 3000);
+            }
+        }
+
         function closeLiveStream() {
             console.log('⏹️ Closing live stream...');
             const modal = document.getElementById('videoModal');
             modal.classList.remove('active');
+
+            // Restore floating buttons
+            const floatingBtns = document.querySelector('.floating-buttons');
+            if (floatingBtns) floatingBtns.classList.remove('stream-idle');
+            clearTimeout(window._streamIdleTimer);
+            document.removeEventListener('mousemove', _resetStreamIdle);
             
             const liveStreamVideo = document.getElementById('liveStreamVideo');
             if (liveStreamVideo) {
@@ -5308,9 +5245,7 @@ async function loadCollectionPage(collectionId, title) {
         if (itemType === 'Movie' || itemType === 'Series') {
             window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
         } else if (itemType === 'BoxSet') {
-            // For collections, you might want to scroll to the collection on home page
-            // or open in Jellyfin - adjust as needed
-            window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`;
+            window.location.href = `collection-detail.html?id=${itemId}`;
         }
     };
 })();
