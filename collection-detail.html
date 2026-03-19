@@ -245,10 +245,8 @@ function createItemCard(item) {
     card.onclick = () => {
         if (item.Type === 'Series') {
             window.location.href = `tv-detail.html?id=${item.Id}`;
-        } else if (item.Type === 'Movie') {
-            window.location.href = `movie-detail.html?id=${item.Id}`;
         } else {
-            window.location.href = `movie-detail.html?id=${item.Id}`;
+            window.location.href = `http://flmtv26.duckdns.org:8096/web/index.html#!/details?id=${item.Id}&serverId=db6bb6388c8c4c70825698639853ede6`;
         }
     };
     
