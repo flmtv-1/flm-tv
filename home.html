@@ -573,6 +573,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            gap: 1.5rem;
         }
         
         .category-title {
@@ -591,14 +592,21 @@
         .view-all-btn {
             color: var(--neon-green);
             text-decoration: none;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
+            border: 2px solid var(--neon-green);
+            padding: 0.4rem 1.2rem;
+            border-radius: 8px;
+            white-space: nowrap;
         }
         
         .view-all-btn:hover {
+            background: var(--neon-green);
+            color: #000;
             gap: 0.75rem;
         }
         
@@ -3549,7 +3557,7 @@
                     const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                         ParentId: collection.id,
                         Limit: 5,
-                        SortBy: 'Random',
+                        SortBy: 'DateCreated',
                         Recursive: true
                     });
                     
@@ -3601,21 +3609,17 @@
         //  LOAD CONTENT
         // ═══════════════════════════════════════════════════════════════
         
-        // Build a single collection section and append to container
-        async function loadCollectionSection(collection, container) {
+        // Fill a pre-existing section with items
+        async function loadCollectionSection(collection, section) {
             try {
                 const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                     ParentId: collection.id,
                     Limit: 20,
-                    SortBy: 'Random',
+                    SortBy: 'DateCreated',
                     Recursive: true
                 });
 
-                const section = document.createElement('section');
-                section.className = 'category-section';
-                section.id = `section-${collection.id}`;
-                section.setAttribute('data-collection-id', collection.id);
-
+                // Replace placeholder header with full header including View All
                 const header = document.createElement('div');
                 header.className = 'category-header';
                 header.innerHTML = `
@@ -3639,7 +3643,7 @@
                     itemsWithImages.forEach(item => {
                         const card = document.createElement('div');
                         card.className = 'content-card';
-                        card.onclick = () => playJellyfinItem(item.Id);
+                        card.onclick = () => playJellyfinItem(item.Id, item.Type);
 
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
                         if (item.ImageTags?.Primary) {
@@ -3672,9 +3676,10 @@
                     carousel.innerHTML = '<div style="padding: 2rem; color: #94a3b8;">No content available yet.</div>';
                 }
 
+                // Replace placeholder content with real content
+                section.innerHTML = '';
                 section.appendChild(header);
                 section.appendChild(carousel);
-                container.appendChild(section);
 
             } catch (error) {
                 console.error(`Error loading ${collection.name}:`, error);
@@ -3683,27 +3688,38 @@
 
         async function loadContent() {
             const container = document.getElementById('contentContainer');
-            container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><div class="loading-text">Loading...</div></div>';
+            container.innerHTML = '';
 
             // Filter collections to show in carousel
             const visibleCollections = JELLYFIN_CONFIG.COLLECTIONS.filter(c =>
                 c.name !== '00 Collections' && !c.hideFromCarousel
             );
 
-            // Load first 3 rows immediately so page feels instant
-            const firstBatch = visibleCollections.slice(0, 3);
-            const restBatch = visibleCollections.slice(3);
+            // Pre-create placeholder sections IN ORDER so order is always correct
+            const placeholders = visibleCollections.map(collection => {
+                const section = document.createElement('section');
+                section.className = 'category-section';
+                section.id = `section-${collection.id}`;
+                section.setAttribute('data-collection-id', collection.id);
+                section.innerHTML = `
+                    <div class="category-header">
+                        <h3 class="category-title">${collection.name}</h3>
+                    </div>
+                    <div class="content-carousel" style="min-height:200px;">
+                        <div style="display:flex;align-items:center;padding:2rem;color:#94a3b8;">
+                            <div class="spinner" style="width:24px;height:24px;border-width:3px;margin-right:1rem;"></div>
+                            Loading...
+                        </div>
+                    </div>
+                `;
+                container.appendChild(section);
+                return section;
+            });
 
-            // Clear spinner
-            container.innerHTML = '';
-
-            // Load first 3 in parallel — shows up fast
-            await Promise.all(firstBatch.map(c => loadCollectionSection(c, container)));
-
-            // Load the rest in background — page is already usable
-            for (const collection of restBatch) {
-                await loadCollectionSection(collection, container);
-            }
+            // Now load all in parallel — each fills its own pre-placed section
+            await Promise.all(visibleCollections.map((collection, i) =>
+                loadCollectionSection(collection, placeholders[i])
+            ));
 
             console.log('🎉 All content loaded!');
         }
@@ -3946,7 +3962,7 @@
             try {
                 const featured = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                     Limit: 4,
-                    SortBy: 'Random',
+                    SortBy: 'DateCreated',
                     Recursive: true,
                     IncludeItemTypes: 'Movie,Series',
                     ImageTypes: 'Backdrop'
@@ -4002,8 +4018,8 @@
             }, 5000);
         }
         
-       function playJellyfinItem(itemId) {
-    console.log('🎬 Opening Jellyfin detail page for:', itemId);
+       function playJellyfinItem(itemId, itemType) {
+    console.log('🎬 Opening detail page for:', itemId, itemType);
     
     // Pause preview video
     const previewVideo = document.getElementById('previewVideo');
@@ -4013,8 +4029,14 @@
         previewVideo.volume = 0;
     }
     
-    // Go directly to Jellyfin detail page — no extra API fetch, no spinning
-    window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+    // Route to correct custom page based on type
+    if (itemType === 'Series') {
+        window.location.href = `tv-detail.html?id=${itemId}`;
+    } else {
+        // Movies and everything else go to movie-detail.html
+        // which redirects to Jellyfin detail page with cast + play button
+        window.location.href = `movie-detail.html?id=${itemId}`;
+    }
 }
         
         // ═══════════════════════════════════════════════════════════════
