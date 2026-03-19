@@ -1,0 +1,1563 @@
+<!doctype html><html class="preload" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><link rel="manifest" href="manifest.json"><meta name="format-detection" content="telephone=no"><meta name="msapplication-tap-highlight" content="no"><meta http-equiv="X-UA-Compatibility" content="IE=Edge"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="application-name" content="Jellyfin"><meta name="robots" content="noindex, nofollow, noarchive"><meta name="referrer" content="no-referrer"><meta id="themeColor" name="theme-color" content="#202020"><link rel="apple-touch-icon" sizes="180x180" href="touchicon.f5bbb798cb2c65908633.png"><link rel="shortcut icon" href="favicon.bc8d51405ec040305a87.ico"><meta name="msapplication-TileImage" content="touchicon144.39209dd2362c0db7c673.png"><meta name="msapplication-TileColor" content="#333333"><title>Jellyfin</title>
+
+<!-- Firebase for Chat -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<style>.backgroundContainer-transparent:not(.withBackdrop),.transparentDocument{background:0 0!important;background-color:transparent!important}.layout-tv .mouseIdle,.layout-tv .mouseIdle a,.layout-tv .mouseIdle button,.layout-tv .mouseIdle input,.layout-tv .mouseIdle label,.layout-tv .mouseIdle select,.layout-tv .mouseIdle textarea,.screensaver-noScroll.mouseIdle,.screensaver-noScroll.mouseIdle a,.screensaver-noScroll.mouseIdle button,.screensaver-noScroll.mouseIdle input,.screensaver-noScroll.mouseIdle label,.screensaver-noScroll.mouseIdle select,.screensaver-noScroll.mouseIdle textarea,.transparentDocument .mouseIdle,.transparentDocument .mouseIdle a,.transparentDocument .mouseIdle button,.transparentDocument .mouseIdle input,.transparentDocument .mouseIdle label,.transparentDocument .mouseIdle select,.transparentDocument .mouseIdle textarea{cursor:none!important}.preload{background-color:#101010}.hide,.layout-desktop .hide-desktop,.layout-mobile .hide-mobile,.layout-tv .hide-tv,.mouseIdle .hide-mouse-idle,.mouseIdle-tv .hide-mouse-idle-tv{display:none!important}.mainDrawerHandle{position:fixed;top:0;bottom:0;z-index:1;width:.8em;padding-left:env(safe-area-inset-left);caret-color:transparent}[dir=ltr] .mainDrawerHandle{left:0}[dir=rtl] .mainDrawerHandle{left:0}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  SLIDE-IN PANEL SYSTEM (Chat & AI) - EXACT FROM HOME.HTML       */
+/* ═══════════════════════════════════════════════════════════════ */
+
+:root {
+    --primary: #ffd700;
+    --secondary: #22c55e;
+    --accent: #ffd700;
+    --neon-green: #22c55e;
+}
+
+/* Push Jellyfin content left when panel is open */
+body.panel-active {
+    padding-right: 450px;
+    transition: padding-right 0.3s ease;
+}
+
+/* Side panel */
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 450px;
+    height: 100vh;
+    background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+    border-left: 2px solid var(--neon-green);
+    z-index: 99999;
+    transition: right 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-panel.active {
+    right: 0;
+}
+
+/* Panel header */
+.panel-header {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--neon-green);
+    flex-shrink: 0;
+}
+
+.panel-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    margin: 0;
+}
+
+.panel-close {
+    background: transparent;
+    border: 2px solid #ef4444;
+    color: #ef4444;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.panel-close:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+.panel-toggle {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.panel-toggle:hover {
+    background: var(--accent);
+    color: #000;
+    transform: scale(1.1);
+}
+
+/* Panel body */
+.panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+/* Chat messages */
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: #1a1a1a;
+    flex-grow: 1;
+}
+
+.message {
+    margin-bottom: 0.75rem;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 0.6rem 0.9rem;
+    border-radius: 1rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.message.sent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.message.sent .message-bubble {
+    background-color: var(--secondary);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.message.received {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.message.received .message-bubble {
+    background-color: #333;
+    color: white;
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* Chat input area */
+.chat-input-area {
+    background-color: #282828;
+    padding: 1rem;
+    border-top: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: sticky;
+    bottom: 0;
+    flex-shrink: 0;
+}
+
+.chat-input {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border-radius: 1.5rem;
+    border: 1px solid #444;
+    background-color: #333;
+    color: white;
+    outline: none;
+    font-size: 1em;
+    resize: none;
+    min-height: 40px;
+    max-height: 100px;
+    overflow-y: auto;
+    font-family: inherit;
+}
+
+.chat-btn {
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2em;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.chat-btn:hover {
+    transform: scale(1.1);
+}
+
+.emoji-picker {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    background-color: #282828;
+    border-radius: 8px;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.4);
+    padding: 1rem;
+    display: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/*  MOBILE FIX - Hide Floating Buttons on Detail Pages ONLY        */
+/*  Video player uses integrated controls buttons instead          */
+/* ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Hide floating buttons ONLY on detail/info pages - NOT on video player */
+    #flm-floating-buttons.on-detail-page {
+        display: none !important;
+    }
+    
+    /* Video player buttons are now integrated into controls - no floating buttons needed */
+    
+    /* Make sure side panels work on mobile */
+    body.panel-active {
+        padding-right: 0 !important;
+    }
+    
+    .side-panel {
+        width: 100% !important;
+        right: -100% !important;
+    }
+    
+    .side-panel.active {
+        right: 0 !important;
+    }
+    
+    /* Ensure video control buttons are visible and properly sized on mobile */
+    #flm-video-controls-buttons {
+        display: flex !important;
+    }
+    
+    #flm-video-controls-buttons button {
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+}
+
+</style>
+<script defer="defer" src="runtime.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40jellyfin.sdk.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40mui.material.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40mui.system.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40mui.utils.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40mui.icons-material.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40tanstack.query-core.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.date-fns.esm.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.lodash-es.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.react-transition-group.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.core-js.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40popperjs.core.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.axios.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.react-dom.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.jquery.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.webcomponents.js.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.resize-observer-polyfill.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.regenerator-runtime.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.jellyfin-apiclient.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.intersection-observer.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.history.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.dompurify.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.react-router.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.react-router-dom.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.%40remix-run.router.bundle.js?eff83561951939a26276"></script><script defer="defer" src="node_modules.abortcontroller-polyfill.bundle.js?eff83561951939a26276"></script><script defer="defer" src="46967.bundle.js?eff83561951939a26276"></script><script defer="defer" src="main.jellyfin.bundle.js?eff83561951939a26276"></script><script defer="defer" src="serviceworker.js?eff83561951939a26276"></script><link href="46967.03edf3bb7ee048ee10be.css?eff83561951939a26276" rel="stylesheet"><link href="main.jellyfin.28c121270fe02d9f8014.css?eff83561951939a26276" rel="stylesheet"></head><body dir="ltr"><div id="reactRoot"><div class="splashLogo"></div></div>
+
+<!-- Auto-login as Public user - AGGRESSIVE VERSION -->
+<script>
+(function() {
+    'use strict';
+    
+    console.log('🔐 FLM TV Auto-Login Script Started');
+    
+    // Check if we're on login/select server page
+    function isLoginPage() {
+        const hash = window.location.hash;
+        return hash.includes('/login') || 
+               hash.includes('/selectserver') ||
+               hash.includes('/selectuser') ||
+               hash === '' || 
+               hash === '#' ||
+               hash === '#/';
+    }
+    
+    // Check if already logged in by looking for Jellyfin auth data
+    function isAlreadyLoggedIn() {
+        try {
+            const authData = localStorage.getItem('jellyfin_credentials');
+            if (authData) {
+                console.log('✅ Found existing Jellyfin credentials');
+                return true;
+            }
+        } catch(e) {
+            console.log('⚠️ Could not check credentials:', e);
+        }
+        return false;
+    }
+    
+    // Force redirect to home if already logged in
+    function redirectToHome() {
+        console.log('🏠 Redirecting to home page...');
+        window.location.hash = '#/home.html';
+    }
+    
+    // Hide login screens
+    function hideLoginForms() {
+        let hideStyle = document.getElementById('auto-login-style');
+        if (!hideStyle) {
+            hideStyle = document.createElement('style');
+            hideStyle.id = 'auto-login-style';
+            hideStyle.textContent = `
+                .loginForm, 
+                .manualLoginForm,
+                .selectServer,
+                .selectUserForm,
+                [data-mode="quickconnect"],
+                .visualLoginForm {
+                    display: none !important;
+                    opacity: 0 !important;
+                    visibility: hidden !important;
+                }
+                body {
+                    background: #101010 !important;
+                }
+            `;
+            document.head.appendChild(hideStyle);
+            console.log('🙈 Login forms hidden');
+        }
+    }
+    
+    // Try to click Public user button (multiple attempts)
+    function autoClickPublic() {
+        let attempts = 0;
+        const maxAttempts = 20;
+        
+        const tryClick = setInterval(() => {
+            attempts++;
+            
+            // First try: find by data-username attribute
+            let publicBtn = document.querySelector('.card[data-username="Public"]');
+            
+            // Second try: find by card text
+            if (!publicBtn) {
+                const cards = document.querySelectorAll('.card.itemAction, .card.cardContent');
+                for (let card of cards) {
+                    const text = card.querySelector('.cardText, .cardImageContainer + div');
+                    if (text && text.textContent.trim().toLowerCase() === 'public') {
+                        publicBtn = card;
+                        console.log('📍 Found Public button by text');
+                        break;
+                    }
+                }
+            }
+            
+            // Third try: find ANY card (if Public is the only user)
+            if (!publicBtn) {
+                publicBtn = document.querySelector('.card.itemAction, .card.cardContent');
+                if (publicBtn) {
+                    console.log('📍 Found single user card, assuming Public');
+                }
+            }
+            
+            if (publicBtn) {
+                console.log('🖱️ Clicking Public user button...');
+                publicBtn.click();
+                clearInterval(tryClick);
+                
+                // After clicking, wait and check if we need to redirect
+                setTimeout(() => {
+                    if (window.location.hash.includes('/login')) {
+                        console.log('⚠️ Still on login page, forcing redirect...');
+                        redirectToHome();
+                    }
+                }, 2000);
+                
+            } else if (attempts >= maxAttempts) {
+                console.log('❌ Could not find Public user button after', maxAttempts, 'attempts');
+                console.log('🔍 Trying force redirect to home...');
+                redirectToHome();
+                clearInterval(tryClick);
+            } else {
+                console.log('⏳ Attempt', attempts, '- Looking for Public button...');
+            }
+        }, 200);
+    }
+    
+    // Main auto-login function
+    function runAutoLogin() {
+        console.log('🚀 Running auto-login check...');
+        console.log('Current hash:', window.location.hash);
+        
+        // If already logged in, just go to home
+        if (isAlreadyLoggedIn() && isLoginPage()) {
+            console.log('✅ Already logged in, redirecting to home');
+            redirectToHome();
+            return;
+        }
+        
+        // If on login page, hide forms and click Public
+        if (isLoginPage()) {
+            console.log('🔐 On login page, attempting auto-login...');
+            hideLoginForms();
+            setTimeout(autoClickPublic, 500);
+        } else {
+            console.log('✅ Not on login page, no action needed');
+        }
+    }
+    
+    // Watch for hash changes
+    window.addEventListener('hashchange', function() {
+        console.log('🔄 Hash changed to:', window.location.hash);
+        runAutoLogin();
+    });
+    
+    // Run on page load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runAutoLogin);
+    } else {
+        runAutoLogin();
+    }
+    
+    // Also run after a short delay to catch late-loading content
+    setTimeout(runAutoLogin, 1000);
+    
+    console.log('✅ Auto-login script initialized');
+})();
+</script>
+
+<!-- Chat Panel HTML (EXACT FROM HOME.HTML) -->
+<div class="side-panel" id="chatPanel">
+    <div class="panel-header">
+        <div>
+            <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-comments"></i> Live Chat</h3>
+            <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
+                <i class="fas fa-expand"></i>
+            </button>
+            <button class="panel-close" onclick="closePanel('chatPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Username Input -->
+    <div style="padding: 0.75rem; background: #282828; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 0.5rem;">
+        <label style="font-size: 0.85rem; color: #b3b3b3; white-space: nowrap;">Name:</label>
+        <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
+               style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
+               maxlength="20">
+    </div>
+    
+    <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
+    </div>
+    
+    <div class="chat-input-area" style="background-color: #282828; padding: 1rem; border-top: 1px solid #333; display: flex; align-items: center; gap: 0.5rem; position: sticky; bottom: 0; flex-shrink: 0;">
+        <textarea id="chatInput" class="chat-input" placeholder="Type your message..." style="flex-grow: 1; padding: 0.75rem; border-radius: 1.5rem; border: 1px solid #444; background-color: #333; color: white; outline: none; font-size: 1em; resize: none; min-height: 40px; max-height: 100px; overflow-y: auto; font-family: inherit;"></textarea>
+        <button id="emojiBtn" class="chat-btn" style="background-color: var(--secondary); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">😀</button>
+        <button id="sendBtn" class="chat-btn" style="background-color: var(--secondary); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+        <div id="emojiPicker" class="emoji-picker" style="position: absolute; bottom: calc(100% + 10px); left: 0; right: 0; background-color: #282828; border-radius: 8px; box-shadow: 0 -5px 15px rgba(0,0,0,0.4); padding: 1rem; display: none; flex-wrap: wrap; gap: 0.5rem; max-height: 200px; overflow-y: auto; z-index: 10;"></div>
+    </div>
+</div>
+
+<!-- AI Panel HTML (EXACT FROM HOME.HTML) -->
+<div class="side-panel" id="aiPanel">
+    <div class="panel-header">
+        <h3 class="panel-title"><i class="fas fa-robot"></i> Zaina J AI</h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="panel-toggle" onclick="togglePanelFullscreen('aiPanel')" title="Expand Panel">
+                <i class="fas fa-expand"></i>
+            </button>
+            <button class="panel-close" onclick="closePanel('aiPanel')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="panel-body" style="padding: 1.5rem; overflow-y: auto; flex-grow: 1;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+            <div>
+                <h4 style="color: var(--accent); font-weight: 700; margin-bottom: 0.25rem;">Zaina J AI</h4>
+                <p style="color: #94a3b8; font-size: 0.875rem;">Your Entertainment Assistant</p>
+            </div>
+        </div>
+        
+        <!-- ZAINA AI Assistant Search (EXACT from working admin dashboard) -->
+        <div style="background: rgba(255, 215, 0, 0.05); border: 2px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+            <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.9rem;">
+                Search YouTube for trailers, auto-fill metadata, and preview posters.
+            </p>
+            <label style="color: white; font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                🎬 Search Film or Trailer:
+            </label>
+            <input id="lumaSearch" placeholder="Enter film title..." 
+                   onkeypress="if(event.key === 'Enter') searchYouTube()"
+                   style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); color: white; border: 2px solid rgba(255, 215, 0, 0.3); font-family: inherit; margin-bottom: 1rem;">
+            <button onclick="searchYouTube()" 
+                    style="width: 100%; background: var(--accent); color: #000; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1rem;">
+                🔍 Search YouTube
+            </button>
+            <div id="lumaResults" style="margin-top: 1.5rem;"></div>
+        </div>
+        
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: white;">
+            Search film info, trailers, actors...
+        </h3>
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+            <input type="text" id="aiSearchInput" placeholder="Search film..." 
+                   style="flex: 1; padding: 0.75rem; border-radius: 0.5rem; background: #333; color: white; border: 1px solid #444; font-family: inherit;">
+            <button id="aiSearchButton" 
+                    style="background: var(--secondary); color: white; padding: 0.75rem 1.25rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
+                <i class="fas fa-search"></i><span class="search-text"> Search</span>
+            </button>
+        </div>
+        
+        <!-- AI Chat Messages Area -->
+        <div style="border-top: 1px solid #333; padding-top: 1.5rem; margin-top: 1.5rem;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--neon-green);">
+                Chat with Zaina AI
+            </h3>
+            <div id="aiMessages" class="chat-messages" style="background-color: #1a1a1a; border-radius: 8px; padding: 1rem; min-height: 200px; max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                <div class="message received">
+                    <div class="message-bubble">👋 Hi! I'm Zaina AI. Ask me anything about movies, TV shows, or entertainment!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AI Chat Input Area -->
+    <div class="chat-input-area" style="background-color: #282828; padding: 1rem; border-top: 1px solid #333; display: flex; align-items: center; gap: 0.5rem;">
+        <textarea id="aiChatInput" class="chat-input" placeholder="Ask Zaina AI anything..." style="flex-grow: 1; padding: 0.75rem; border-radius: 1.5rem; border: 1px solid #444; background-color: #333; color: white; outline: none; font-size: 1em; resize: none; min-height: 40px; max-height: 100px; overflow-y: auto; font-family: inherit;"></textarea>
+        <button id="aiSendBtn" class="chat-btn" style="background-color: var(--accent); color: #000; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Firebase & Chat System (EXACT FROM HOME.HTML) -->
+<script>
+// Firebase Configuration
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyD871FYC8vGc7JAAw-2rGMZBB_h4sI0HpQ",
+    authDomain: "flmtv-site-counter.firebaseapp.com",
+    databaseURL: "https://flmtv-site-counter-default-rtdb.firebaseio.com",
+    projectId: "flmtv-site-counter",
+    storageBucket: "flmtv-site-counter.firebasestorage.app",
+    messagingSenderId: "354930172302",
+    appId: "1:354930172302:web:3176dfff3d81ce823404df"
+};
+
+// Initialize Firebase
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
+const database = firebase.database();
+
+// Sign in anonymously
+let isAuthReady = false;
+let fallbackUserId = 'user_' + Math.random().toString(36).substring(7);
+
+auth.signInAnonymously()
+    .then(() => {
+        console.log('✅ Firebase Auth: Signed in anonymously');
+        isAuthReady = true;
+    })
+    .catch(err => {
+        console.error('❌ Firebase Auth Error:', err);
+        console.log('⚠️ Using fallback mode');
+        isAuthReady = true;
+    });
+
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        console.log('✅ User authenticated:', user.uid.substring(0, 8));
+        isAuthReady = true;
+    } else {
+        console.log('⚠️ Using fallback user ID');
+        isAuthReady = true;
+    }
+});
+
+console.log('✅ Firebase initialized!');
+
+// Panel Functions
+function openPanel(panelId) {
+    console.log('🔥 Opening panel:', panelId);
+    
+    // Close other panels
+    document.querySelectorAll('.side-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    
+    const panel = document.getElementById(panelId);
+    if (panel) {
+        panel.classList.add('active');
+        console.log('✅ Panel opened:', panelId);
+        
+        // Load saved username for chat
+        if (panelId === 'chatPanel') {
+            const savedUsername = localStorage.getItem('flmtvChatUsername');
+            const usernameInput = document.getElementById('chatUsernameInput');
+            if (savedUsername && usernameInput) {
+                usernameInput.value = savedUsername;
+            }
+        }
+    } else {
+        console.error('❌ Panel not found:', panelId);
+    }
+    
+    // Push content left when panel opens
+    document.body.classList.add('panel-active');
+}
+
+function closePanel(panelId) {
+    const panel = document.getElementById(panelId);
+    if (panel) {
+        panel.classList.remove('active');
+        panel.classList.remove('panel-fullscreen');
+        
+        const toggleBtn = panel.querySelector('.panel-toggle i');
+        if (toggleBtn) {
+            toggleBtn.className = 'fas fa-expand';
+        }
+    }
+    
+    // Remove body padding when panel closes
+    document.body.classList.remove('panel-active');
+}
+
+function togglePanelFullscreen(panelId) {
+    const panel = document.getElementById(panelId);
+    const toggleBtn = panel.querySelector('.panel-toggle i');
+    
+    if (panel.classList.contains('panel-fullscreen')) {
+        panel.classList.remove('panel-fullscreen');
+        toggleBtn.className = 'fas fa-expand';
+        console.log('✅ Panel back to side mode:', panelId);
+    } else {
+        panel.classList.add('panel-fullscreen');
+        toggleBtn.className = 'fas fa-compress';
+        console.log('✅ Panel fullscreen mode:', panelId);
+    }
+}
+
+// Chat Functions
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const emojiBtn = document.getElementById('emojiBtn');
+const emojiPicker = document.getElementById('emojiPicker');
+const aiMessages = document.getElementById('aiMessages');
+const aiChatInput = document.getElementById('aiChatInput');
+const aiSendBtn = document.getElementById('aiSendBtn');
+
+// Emoji picker
+const emojis = ['😀','😂','😍','🥰','😎','🤔','👍','❤️','🎉','🔥','⭐','💯','🎬','🎥','📺','🍿','🎭','🎪','🎨','🎮'];
+emojis.forEach(emoji => {
+    const span = document.createElement('span');
+    span.textContent = emoji;
+    span.style.cursor = 'pointer';
+    span.style.fontSize = '1.5em';
+    span.onclick = () => insertEmoji(emoji);
+    emojiPicker.appendChild(span);
+});
+
+function insertEmoji(emoji) {
+    chatInput.value += emoji;
+    emojiPicker.style.display = 'none';
+    chatInput.focus();
+}
+
+function sendMessage() {
+    const messageText = chatInput.value.trim();
+    
+    if (messageText !== '') {
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        
+        const usernameInput = document.getElementById('chatUsernameInput');
+        let username = usernameInput.value.trim();
+        
+        if (!username) {
+            usernameInput.focus();
+            usernameInput.style.border = '2px solid #ef4444';
+            setTimeout(() => {
+                usernameInput.style.border = '1px solid #444';
+            }, 2000);
+            alert('Please enter your name first!');
+            chatInput.value = messageText;
+            return;
+        }
+        
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        sendBtn.disabled = true;
+        sendBtn.style.opacity = '0.6';
+        
+        localStorage.setItem('flmtvChatUsername', username);
+        
+        const user = auth.currentUser;
+        const userId = user ? user.uid : fallbackUserId;
+        
+        console.log('📤 Sending message to Firebase...');
+        
+        database.ref('messages').push({
+            text: messageText,
+            username: username,
+            userId: userId,
+            timestamp: Date.now()
+        }).then(() => {
+            console.log('✅ Message sent successfully!');
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            sendBtn.disabled = false;
+            sendBtn.style.opacity = '1';
+        }).catch((error) => {
+            console.error('❌ Firebase error:', error);
+            alert('Chat error: ' + error.message);
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            sendBtn.disabled = false;
+            sendBtn.style.opacity = '1';
+        });
+    }
+}
+
+// AI Functions
+function addAIMessage(sender, text) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message ' + sender;
+    messageDiv.style.marginBottom = '0.75rem';
+    messageDiv.style.display = 'flex';
+    messageDiv.style.alignItems = 'flex-start';
+    messageDiv.style.justifyContent = sender === 'sent' ? 'flex-end' : 'flex-start';
+    
+    const messageBubble = document.createElement('div');
+    messageBubble.className = 'message-bubble';
+    messageBubble.style.maxWidth = '80%';
+    messageBubble.style.padding = '0.6rem 0.9rem';
+    messageBubble.style.borderRadius = '1rem';
+    messageBubble.style.lineHeight = '1.4';
+    messageBubble.style.wordWrap = 'break-word';
+    messageBubble.style.backgroundColor = sender === 'sent' ? 'var(--secondary)' : '#333';
+    messageBubble.style.color = 'white';
+    messageBubble.style.borderBottomRightRadius = sender === 'sent' ? '0.25rem' : '1rem';
+    messageBubble.style.borderBottomLeftRadius = sender === 'received' ? '0.25rem' : '1rem';
+    
+    // Support HTML content for AI visual responses
+    if (text.includes('<div') || text.includes('<img')) {
+        messageBubble.innerHTML = text;
+    } else {
+        messageBubble.textContent = text;
+    }
+    
+    messageDiv.appendChild(messageBubble);
+    aiMessages.appendChild(messageDiv);
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+}
+
+function sendAIMessage() {
+    const messageText = aiChatInput.value.trim();
+    if (messageText !== '') {
+        addAIMessage('sent', messageText);
+        aiChatInput.value = '';
+        aiChatInput.style.height = 'auto';
+        
+        // Send to Zaina AI
+        handleAIMessage(messageText);
+    }
+}
+
+async function handleAIMessage(query) {
+    try {
+        console.log('🤖 Zaina AI (Coming Soon):', query);
+        
+        // TEMPORARY: Coming Soon message
+        addAIMessage('received', '🌟 Zaina AI is coming soon! We\'re working on bringing you the best AI assistant for FLM TV. In the meantime, feel free to use the live chat below to connect with other viewers! 💚');
+    } catch (err) {
+        console.error('❌ AI Error:', err);
+        addAIMessage('received', '🌟 Zaina AI is coming soon! 💚');
+    }
+}
+
+async function searchYouTube() {
+    const query = document.getElementById("lumaSearch").value;
+    const resultDiv = document.getElementById("lumaResults");
+    resultDiv.innerHTML = "🔎 Searching...";
+    const apiKey = "AIzaSyDTRN_H0Y6EjgqyRRvg_yMwHwPZTLxO-kE"; // YouTube API key from home.html
+
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=5&key=${apiKey}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    resultDiv.innerHTML = "";
+    if (data.items) {
+        data.items.forEach((item) => {
+            const videoId = item.id.videoId;
+            const title = item.snippet.title;
+            const thumb = item.snippet.thumbnails.medium.url;
+            const desc = item.snippet.description;
+
+            const div = document.createElement("div");
+            div.innerHTML = `
+                <div style='margin-bottom: 15px; padding: 10px; border: 1px solid #333; background: #1f1f1f; border-radius: 8px;'>
+                    <img src="${thumb}" style="width: 200px; float: left; margin-right: 15px; border-radius: 6px;">
+                    <strong style="color: var(--accent);">${title}</strong><br><br>
+                    <small style="color: #94a3b8;">${desc}</small><br><br>
+                    <a href="http://youtube.com/watch?v=${videoId}" target="_blank" style="color: var(--neon-green); text-decoration: none;">
+                        ▶ Watch on YouTube
+                    </a>
+                    <div style='clear:both;'></div>
+                </div>`;
+            resultDiv.appendChild(div);
+        });
+    } else {
+        resultDiv.innerHTML = "❌ No results found.";
+    }
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Event listeners
+if (emojiBtn && sendBtn && chatInput) {
+    emojiBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        emojiPicker.style.display = emojiPicker.style.display === 'flex' ? 'none' : 'flex';
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+            emojiPicker.style.display = 'none';
+        }
+    });
+    
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+    sendBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        sendMessage();
+    });
+}
+
+if (aiSendBtn && aiChatInput) {
+    aiChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendAIMessage();
+        }
+    });
+
+    aiSendBtn.addEventListener('click', sendAIMessage);
+    
+    console.log('✅ AI chat ready');
+}
+
+// AI Panel Search Functionality
+const aiButton = document.getElementById('aiSearchButton');
+const aiInput = document.getElementById('aiSearchInput');
+
+if (aiButton && aiInput) {
+    aiButton.addEventListener('click', () => {
+        const query = aiInput.value.trim();
+        if (query) {
+            alert(`AI Search: "${query}"\n\nAI functionality will be connected soon!\n\nFor now, this is a placeholder.`);
+            console.log('🤖 AI Search:', query);
+        }
+    });
+    
+    aiInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            aiButton.click();
+        }
+    });
+    
+    console.log('✅ AI panel search ready');
+}
+
+// Firebase message listener (EXACT FROM HOME.HTML)
+const displayedMessages = new Set();
+
+database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+    const messageId = snapshot.key;
+    const msg = snapshot.val();
+    
+    if (displayedMessages.has(messageId)) {
+        return;
+    }
+    displayedMessages.add(messageId);
+    
+    if (msg && msg.text) {
+        const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+        
+        let isOwnMessage = false;
+        const savedUsername = localStorage.getItem('flmtvChatUsername');
+        if (savedUsername && msg.username === savedUsername) {
+            isOwnMessage = true;
+        } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
+            isOwnMessage = true;
+        }
+        
+        const messagesContainer = document.getElementById('chatMessages');
+        if (messagesContainer) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+            messageDiv.style.marginBottom = '0.75rem';
+            messageDiv.style.display = 'flex';
+            messageDiv.style.flexDirection = 'column';
+            messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
+            
+            const messageBubble = document.createElement('div');
+            messageBubble.className = 'message-bubble';
+            messageBubble.style.maxWidth = '80%';
+            messageBubble.style.padding = '0.6rem 0.9rem';
+            messageBubble.style.borderRadius = '1rem';
+            messageBubble.style.lineHeight = '1.4';
+            messageBubble.style.wordWrap = 'break-word';
+            messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
+            messageBubble.style.color = 'white';
+            messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
+            messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
+            
+            messageBubble.innerHTML = `
+                <div style="font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; font-size: 0.85rem;">
+                    ${username}
+                </div>
+                <div>${escapeHtml(msg.text)}</div>
+            `;
+            
+            messageDiv.appendChild(messageBubble);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            console.log('💬 Message displayed:', username, msg.text);
+        }
+    }
+});
+
+console.log('✅ Firebase message listener active');
+</script>
+
+<!-- Add Chat and Zaina AI buttons to Jellyfin video player controls -->
+<script>
+(function() {
+    'use strict';
+    
+    // ═══════════════════════════════════════════════════════════════
+    // CONFIGURATION
+    // ═══════════════════════════════════════════════════════════════
+    
+    const FLM_HOME_URL = 'https://flmtv.com/home.html';
+    
+    // ═══════════════════════════════════════════════════════════════
+    // DETECT PAGE TYPE
+    // ═══════════════════════════════════════════════════════════════
+    
+    function isVideoPlayerPage() {
+        return window.location.hash.includes('/video') || 
+               document.querySelector('.videoPlayerContainer') !== null ||
+               document.querySelector('.videoOsdBottom') !== null;
+    }
+    
+    function isDetailPage() {
+        const hash = window.location.hash;
+        return hash.includes('/details?id=') || 
+               hash.includes('/item?id=') ||
+               document.querySelector('.detailPage') !== null ||
+               document.querySelector('.itemDetailPage') !== null;
+    }
+    
+    function shouldShowBackButton() {
+        return isDetailPage() && !isVideoPlayerPage(); // Only on detail pages, NOT on video player
+    }
+    
+    // Back button removed - only exists in player controls now
+    
+    // ═══════════════════════════════════════════════════════════════
+    // ADD CHAT & AI BUTTONS TO VIDEO PLAYER CONTROLS (Not Floating!)
+    // ═══════════════════════════════════════════════════════════════
+    
+    function addButtonsToVideoControls() {
+        // Check if we're on video player page
+        if (!isVideoPlayerPage()) return;
+        
+        // Wait for video controls to load
+        const controlsCheck = setInterval(() => {
+            const controlsContainer = document.querySelector('.videoOsdBottom');
+            
+            if (controlsContainer && !document.getElementById('flm-video-controls-buttons')) {
+                console.log('➕ Adding Chat & AI buttons to video controls...');
+                
+                // Create container for our buttons
+                const buttonContainer = document.createElement('div');
+                buttonContainer.id = 'flm-video-controls-buttons';
+                buttonContainer.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-left: auto;
+                    padding: 0 10px;
+                `;
+                
+                // Chat button
+                const chatBtn = document.createElement('button');
+                chatBtn.className = 'paper-icon-button-light videoOsdButton';
+                chatBtn.title = 'Open Chat';
+                chatBtn.innerHTML = `<i class="fa-solid fa-comments" style="font-size: 22px;"></i>`;
+                chatBtn.style.cssText = `
+                    color: #22c55e !important;
+                `;
+                chatBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    openPanel('chatPanel');
+                };
+                
+                // Zaina AI button
+                const aiBtn = document.createElement('button');
+                aiBtn.className = 'paper-icon-button-light videoOsdButton';
+                aiBtn.title = 'Open Zaina AI';
+                aiBtn.innerHTML = `<i class="fa-solid fa-robot" style="font-size: 22px;"></i>`;
+                aiBtn.style.cssText = `
+                    color: #ffd700 !important;
+                `;
+                aiBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    openPanel('aiPanel');
+                };
+                
+                // Back button (only on mobile)
+                const backBtn = document.createElement('button');
+                backBtn.className = 'paper-icon-button-light videoOsdButton';
+                backBtn.title = 'Back to FLM TV';
+                backBtn.innerHTML = `<i class="fa-solid fa-arrow-left" style="font-size: 22px;"></i>`;
+                backBtn.style.cssText = `
+                    color: #fff !important;
+                `;
+                backBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    window.location.href = FLM_HOME_URL;
+                };
+                
+                // Add buttons to container
+                buttonContainer.appendChild(backBtn);
+                buttonContainer.appendChild(chatBtn);
+                buttonContainer.appendChild(aiBtn);
+                
+                // Find the right place to insert (left side of controls, after play button area)
+                const leftControls = controlsContainer.querySelector('.osdControls');
+                if (leftControls) {
+                    leftControls.appendChild(buttonContainer);
+                    console.log('✅ Chat & AI buttons added to video controls');
+                    clearInterval(controlsCheck);
+                }
+            }
+        }, 500);
+        
+        // Stop checking after 10 seconds
+        setTimeout(() => clearInterval(controlsCheck), 10000);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // CREATE FLOATING BUTTONS FOR DETAIL PAGES (NOT Video Player)
+    // ═══════════════════════════════════════════════════════════════
+    
+    function createFloatingButtons() {
+        // Don't create floating buttons on video player - use integrated buttons instead
+        if (isVideoPlayerPage()) {
+            addButtonsToVideoControls();
+            return;
+        }
+        
+        // Check if buttons already exist
+        if (document.getElementById('flm-floating-buttons')) {
+            return;
+        }
+        
+        console.log('➕ Creating floating buttons for detail page...');
+        
+        const container = document.createElement('div');
+        container.id = 'flm-floating-buttons';
+        
+        // Add class to identify page type for mobile styling
+        container.classList.add('on-detail-page');
+        
+        container.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            right: 30px;
+            z-index: 99998;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            pointer-events: auto;
+        `;
+        
+        // Back button
+        const backBtn = document.createElement('button');
+        backBtn.title = 'Back to FLM TV';
+        backBtn.innerHTML = `
+            <i class="fas fa-arrow-left" style="font-size: 16px;"></i>
+        `;
+        backBtn.style.cssText = `
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #22c55e;
+            color: #22c55e;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+        `;
+        
+        backBtn.onmouseover = () => {
+            backBtn.style.background = '#22c55e';
+            backBtn.style.color = '#000';
+            backBtn.style.transform = 'scale(1.05)';
+            backBtn.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.5)';
+        };
+        
+        backBtn.onmouseout = () => {
+            backBtn.style.background = 'rgba(0, 0, 0, 0.7)';
+            backBtn.style.color = '#22c55e';
+            backBtn.style.transform = 'scale(1)';
+            backBtn.style.boxShadow = '0 2px 8px rgba(34, 197, 94, 0.3)';
+        };
+        
+        backBtn.onclick = () => {
+            console.log('🏠 Returning to FLM TV home...');
+            window.location.href = FLM_HOME_URL;
+        };
+        
+        // Chat button
+        const chatBtn = document.createElement('button');
+        chatBtn.title = 'Open Chat';
+        chatBtn.innerHTML = `
+            <i class="fas fa-comments" style="font-size: 24px;"></i>
+        `;
+        chatBtn.style.cssText = `
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #22c55e;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        `;
+        
+        chatBtn.onmouseover = () => {
+            chatBtn.style.transform = 'scale(1.1)';
+            chatBtn.style.boxShadow = '0 6px 20px rgba(34, 197, 94, 0.6)';
+        };
+        
+        chatBtn.onmouseout = () => {
+            chatBtn.style.transform = 'scale(1)';
+            chatBtn.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.4)';
+        };
+        
+        chatBtn.onclick = () => {
+            openPanel('chatPanel');
+        };
+        
+        // Zaina AI button with photo
+        const zainaBtn = document.createElement('button');
+        zainaBtn.title = 'Open Zaina AI';
+        zainaBtn.innerHTML = `
+            <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" 
+                 alt="Zaina AI" 
+                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"
+                 onerror="this.innerHTML='<i class=\\'fas fa-robot\\' style=\\'font-size: 24px;\\'></i>';">
+        `;
+        zainaBtn.style.cssText = `
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(26, 26, 42, 0.95);
+            border: 3px solid #ffd700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+            overflow: hidden;
+            padding: 0;
+        `;
+        
+        zainaBtn.onmouseover = () => {
+            zainaBtn.style.transform = 'scale(1.1)';
+            zainaBtn.style.boxShadow = '0 6px 20px rgba(255, 215, 0, 0.6)';
+        };
+        
+        zainaBtn.onmouseout = () => {
+            zainaBtn.style.transform = 'scale(1)';
+            zainaBtn.style.boxShadow = '0 4px 12px rgba(255, 215, 0, 0.4)';
+        };
+        
+        zainaBtn.onclick = () => {
+            openPanel('aiPanel');
+        };
+        
+        container.appendChild(backBtn);
+        container.appendChild(chatBtn);
+        container.appendChild(zainaBtn);
+        document.body.appendChild(container);
+        
+        console.log('✅ Floating buttons added (Back, Chat, AI)');
+    }
+    
+    function removeFloatingButtons() {
+        const container = document.getElementById('flm-floating-buttons');
+        if (container) {
+            container.remove();
+            console.log('🗑️ Floating buttons removed');
+        }
+    }
+    
+    
+    // ═══════════════════════════════════════════════════════════════
+    // PAGE DETECTION & BUTTON MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════
+    
+    function checkAndAddButtons() {
+        console.log('🔍 Checking page type...', window.location.hash);
+        
+        // Video player gets integrated control buttons
+        if (isVideoPlayerPage()) {
+            removeFloatingButtons(); // Remove any floating buttons
+            addButtonsToVideoControls(); // Add to control bar instead
+        } 
+        // Detail pages get floating buttons (hidden on mobile via CSS)
+        else if (isDetailPage()) {
+            createFloatingButtons();
+        } 
+        // Other pages - no buttons
+        else {
+            removeFloatingButtons();
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // SYNC FLOATING BUTTONS WITH VIDEO CONTROLS VISIBILITY
+    // ═══════════════════════════════════════════════════════════════
+    
+    function syncButtonsWithControls() {
+        const container = document.getElementById('flm-floating-buttons');
+        if (!container) return;
+        
+        // Watch for control visibility changes
+        const checkControlsVisibility = setInterval(() => {
+            const controls = document.querySelector('.videoOsdBottom');
+            const videoContainer = document.querySelector('.videoPlayerContainer');
+            
+            if (!videoContainer) {
+                clearInterval(checkControlsVisibility);
+                return;
+            }
+            
+            if (controls) {
+                // Check if controls are visible (not hidden by mouseIdle)
+                const isIdle = document.body.classList.contains('mouseIdle') || 
+                              videoContainer.classList.contains('mouseIdle');
+                
+                if (isIdle) {
+                    container.style.opacity = '0';
+                    container.style.pointerEvents = 'none';
+                } else {
+                    container.style.opacity = '1';
+                    container.style.pointerEvents = 'auto';
+                }
+            }
+        }, 100);
+        
+        // Clean up when leaving video player
+        const cleanup = () => {
+            if (!isVideoPlayerPage()) {
+                clearInterval(checkControlsVisibility);
+            }
+        };
+        
+        window.addEventListener('hashchange', cleanup);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // WATCH FOR PAGE CHANGES
+    // ═══════════════════════════════════════════════════════════════
+    
+    let lastUrl = location.href;
+    const observer = new MutationObserver(() => {
+        const url = location.href;
+        if (url !== lastUrl) {
+            lastUrl = url;
+            setTimeout(checkAndAddButtons, 1000);
+        }
+    });
+    observer.observe(document, {subtree: true, childList: true});
+    
+    window.addEventListener('hashchange', () => {
+        setTimeout(checkAndAddButtons, 1000);
+    });
+    
+    // Initial check
+    setTimeout(checkAndAddButtons, 2000);
+    
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  FLM TV - KIDS-SAFE "MORE LIKE THIS" FIX v2                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+
+    const JELLYFIN_SERVER = 'https://flmtv26.duckdns.org:8920';
+    const API_KEY         = '62131ee22c0141c6b651be75a7444350';
+    const USER_ID         = '0407d4609a0346f99c09e0d7ddc9ccd1';
+
+    const KIDS_LIBRARY_IDS = [
+        'ca43f3291c81d4f007f2b33936d256e6',
+        'cd9fa11a14441d0f61e557525d3369d9',
+        '1fa75ba339e9450fb6ee4b542d8fcd0e',
+    ];
+
+    const KIDS_GENRES  = ['animation','family','children','kids','cartoon','anime','disney'];
+    const KIDS_RATINGS = ['g','tv-y','tv-y7','tv-y7-fv','tv-g','pg'];
+
+    function getCurrentItemId() {
+        const match = window.location.hash.match(/[?&]id=([a-f0-9]+)/i);
+        return match ? match[1] : null;
+    }
+
+    function isKidsItem(item) {
+        const genres = (item.Genres || []).map(g => g.toLowerCase());
+        const rating = (item.OfficialRating || '').toLowerCase();
+        const inKidsLib = KIDS_LIBRARY_IDS.includes(item.TopParentId) ||
+                          KIDS_LIBRARY_IDS.includes(item.ParentId);
+        return inKidsLib ||
+               genres.some(g => KIDS_GENRES.includes(g)) ||
+               KIDS_RATINGS.includes(rating);
+    }
+
+    async function fetchKidsSimilar(itemId, genres) {
+        let results = [];
+
+        // Try Jellyfin similar endpoint, filter to kids-safe only
+        try {
+            const r = await fetch(
+                `${JELLYFIN_SERVER}/Items/${itemId}/Similar?UserId=${USER_ID}&Limit=30&Fields=Genres,OfficialRating,ImageTags,ParentId,TopParentId&api_key=${API_KEY}`
+            );
+            if (r.ok) {
+                const data = await r.json();
+                results.push(...(data.Items || []).filter(i => isKidsItem(i)));
+            }
+        } catch(e) {}
+
+        // Fill from kids libraries if not enough
+        if (results.length < 6) {
+            for (const libId of KIDS_LIBRARY_IDS) {
+                if (results.length >= 12) break;
+                try {
+                    const genreParam = genres.length
+                        ? '&Genres=' + encodeURIComponent(genres.slice(0,2).join(','))
+                        : '';
+                    const r = await fetch(
+                        `${JELLYFIN_SERVER}/Users/${USER_ID}/Items?ParentId=${libId}${genreParam}&Limit=20&Recursive=true&Fields=Genres,OfficialRating,ImageTags&SortBy=Random&api_key=${API_KEY}`
+                    );
+                    if (r.ok) {
+                        const data = await r.json();
+                        const fresh = (data.Items || []).filter(i => !results.find(x => x.Id === i.Id));
+                        results.push(...fresh);
+                    }
+                } catch(e) {}
+            }
+        }
+
+        return results.filter(i => i.Id !== itemId).slice(0, 12);
+    }
+
+    function buildCards(items) {
+        return items.map(item => {
+            const img = item.ImageTags?.Primary
+                ? `${JELLYFIN_SERVER}/Items/${item.Id}/Images/Primary?api_key=${API_KEY}&maxHeight=300`
+                : null;
+            return `
+                <div class="card overflowPortraitCard" style="cursor:pointer;display:inline-block;margin:4px;"
+                     onclick="window.location.hash='/details?id=${item.Id}'">
+                    <div class="cardBox">
+                        <div class="cardScalable">
+                            <div class="cardPadder cardPadder-portrait"></div>
+                            <div class="cardContent cardImageContainer">
+                                ${img
+                                    ? `<img class="cardImage" src="${img}" alt="${item.Name}">`
+                                    : `<div class="cardImage" style="background:#222;display:flex;align-items:center;justify-content:center;"><span style="color:#aaa;font-size:2rem;">🎬</span></div>`
+                                }
+                            </div>
+                        </div>
+                        <div class="cardFooter cardTextCentered">
+                            <div class="cardText" style="font-size:.85em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.Name}</div>
+                            <div class="cardText cardText-secondary" style="font-size:.75em;color:#aaa;">${item.ProductionYear || ''}</div>
+                        </div>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    // Track which item we already fixed so we don't run twice
+    let lastFixedId = null;
+    let sectionObserver = null;
+
+    async function fixMoreLikeThis() {
+        if (!window.location.hash.includes('/details')) return;
+
+        const itemId = getCurrentItemId();
+        if (!itemId || itemId === lastFixedId) return;
+
+        // Fetch item metadata
+        let item;
+        try {
+            const r = await fetch(
+                `${JELLYFIN_SERVER}/Users/${USER_ID}/Items/${itemId}?Fields=Genres,OfficialRating,ParentId,TopParentId&api_key=${API_KEY}`
+            );
+            if (!r.ok) return;
+            item = await r.json();
+        } catch(e) { return; }
+
+        if (!isKidsItem(item)) {
+            console.log('🎬 FLM: Adult content — leaving More Like This alone.');
+            return;
+        }
+
+        console.log('👧 FLM: Kids content! Will fix More Like This for:', item.Name);
+
+        // Pre-fetch the kids replacements
+        const kidsItems = await fetchKidsSimilar(itemId, item.Genres || []);
+        console.log(`👧 FLM: Got ${kidsItems.length} kids-safe replacements`);
+
+        // Now wait for Jellyfin to render the section, then replace + lock it
+        let attempts = 0;
+        const poller = setInterval(() => {
+            attempts++;
+            if (attempts > 60) { clearInterval(poller); return; }
+
+            // Find "More Like This" header
+            const allEls = Array.from(document.querySelectorAll('*'));
+            const header = allEls.find(el =>
+                el.children.length === 0 &&
+                el.textContent.trim().toLowerCase() === 'more like this'
+            );
+            if (!header) return;
+
+            // Find the scrolling card container near the header
+            // Jellyfin wraps it in a section > div.itemsContainer or similar
+            let section = header.closest('section') || header.parentElement;
+            let container = section
+                ? section.querySelector('[class*="itemsContainer"],[class*="cardList"],[class*="scrollSlider"],[class*="card-container"]')
+                : null;
+
+            // Fallback: look for first sibling that has cards
+            if (!container) {
+                let el = header.nextElementSibling;
+                for (let i = 0; i < 5; i++) {
+                    if (!el) break;
+                    if (el.querySelector('.card') || el.classList.contains('itemsContainer')) {
+                        container = el;
+                        break;
+                    }
+                    el = el.nextElementSibling;
+                }
+            }
+
+            if (!container) return;
+
+            clearInterval(poller);
+            lastFixedId = itemId;
+
+            if (kidsItems.length === 0) {
+                // Hide the whole section
+                const wrap = header.closest('section') || header.parentElement;
+                if (wrap) wrap.style.display = 'none';
+                else header.style.display = 'none';
+                console.log('👧 FLM: No kids items found — hiding section.');
+                return;
+            }
+
+            // REPLACE content and LOCK the container so Jellyfin can't overwrite it
+            container.innerHTML = buildCards(kidsItems);
+            container.setAttribute('data-flm-kids-locked', 'true');
+
+            // Disconnect old observer if any
+            if (sectionObserver) sectionObserver.disconnect();
+
+            // Watch for Jellyfin trying to add cards back in, and stop it
+            sectionObserver = new MutationObserver((mutations) => {
+                if (container.getAttribute('data-flm-kids-locked') !== 'true') return;
+                let jellyfin_added = false;
+                mutations.forEach(m => {
+                    m.addedNodes.forEach(node => {
+                        if (node.nodeType === 1 && !node.hasAttribute('data-flm-safe')) {
+                            jellyfin_added = true;
+                            node.remove(); // Remove anything Jellyfin tries to add back
+                        }
+                    });
+                });
+                if (jellyfin_added) {
+                    console.log('👧 FLM: Blocked Jellyfin from re-adding unsafe cards.');
+                }
+            });
+            sectionObserver.observe(container, { childList: true });
+
+            // Mark our cards as safe so the observer ignores them
+            container.querySelectorAll('.card').forEach(c => c.setAttribute('data-flm-safe', 'true'));
+
+            console.log(`👧 FLM: ✅ More Like This replaced with ${kidsItems.length} kids-safe titles!`);
+
+        }, 500);
+    }
+
+    // Reset on every page navigation
+    function onNavigate() {
+        lastFixedId = null;
+        if (sectionObserver) { sectionObserver.disconnect(); sectionObserver = null; }
+        setTimeout(fixMoreLikeThis, 1500);
+    }
+
+    window.addEventListener('hashchange', onNavigate);
+
+    let lastHash = location.hash;
+    new MutationObserver(() => {
+        if (location.hash !== lastHash) {
+            lastHash = location.hash;
+            onNavigate();
+        }
+    }).observe(document.body, { subtree: true, childList: true });
+
+    setTimeout(fixMoreLikeThis, 2500);
+
+})();
+</script>
+
+</body></html>
