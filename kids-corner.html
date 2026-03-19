@@ -1170,7 +1170,7 @@
             console.log('🎧 Opening audiobook:', audio.name);
             
             // Open in Jellyfin's native audio player (no auth params needed)
-            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${audio.id}`;
+            const jellyfinUrl = `http://flmtv26.duckdns.org:8096/web/index.html#!/details?id=${audio.id}&serverId=db6bb6388c8c4c70825698639853ede6`;
             window.location.href = jellyfinUrl;
         }
 
@@ -1180,7 +1180,7 @@
             console.log('📺 Opening cartoon:', show.name);
             
             // Open in Jellyfin's native TV player (no auth params needed)
-            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${show.id}`;
+            const jellyfinUrl = `http://flmtv26.duckdns.org:8096/web/index.html#!/details?id=${show.id}&serverId=db6bb6388c8c4c70825698639853ede6`;
             window.location.href = jellyfinUrl;
         }
 
