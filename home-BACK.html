@@ -3577,14 +3577,11 @@
         // Fill a pre-existing section with items
         async function loadCollectionSection(collection, section) {
             try {
-                // Collections row loads BoxSets faster with SortName
-                const isCollections = collection.name === 'Collections';
                 const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                     ParentId: collection.id,
                     Limit: 20,
-                    SortBy: isCollections ? 'SortName' : 'DateCreated',
-                    Recursive: true,
-                    IncludeItemTypes: isCollections ? 'BoxSet' : ''
+                    SortBy: 'DateCreated',
+                    Recursive: true
                 });
 
                 // Replace placeholder header with full header including View All
@@ -3993,8 +3990,8 @@
             }, 5000);
         }
         
-       async function playJellyfinItem(itemId, itemType) {
-    console.log('🎬 Opening detail page for:', itemId, itemType);
+       function playJellyfinItem(itemId, itemType) {
+    console.log('🎬 Opening Jellyfin detail page for:', itemId, itemType);
     
     // Pause preview video
     const previewVideo = document.getElementById('previewVideo');
@@ -4004,23 +4001,13 @@
         previewVideo.volume = 0;
     }
     
+    // Use token from auto-auth so Jellyfin skips login
     const token = JELLYFIN_CONFIG.ACCESS_TOKEN || JELLYFIN_CONFIG.API_KEY;
-
-    // If type not passed, fetch it
-    let type = itemType;
-    if (!type) {
-        try {
-            const res = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
-            const data = await res.json();
-            type = data.Type;
-        } catch(e) { type = 'Movie'; }
-    }
-
-    if (type === 'Series') {
-        // TV Shows go to custom seasons page
-        window.location.href = `tv-detail.html?id=${itemId}`;
+    
+    // Go straight to Jellyfin detail page — has cast, info, play button
+    if (itemType === 'Series') {
+        window.location.href = `${JELLYFIN_CONFIG.PLAYER_SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&api_key=${token}`;
     } else {
-        // Movies and everything else go straight to Jellyfin detail page
         window.location.href = `${JELLYFIN_CONFIG.PLAYER_SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&api_key=${token}`;
     }
 }
