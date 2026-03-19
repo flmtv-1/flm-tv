@@ -3118,7 +3118,7 @@
         // ═══════════════════════════════════════════════════════════════
         
       const JELLYFIN_CONFIG = {
-    SERVER: 'https://flmtv.com/jellyfin',
+    SERVER: 'https://flmtv26.duckdns.org:8920',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
     SERVER_ID: 'db6bb6388c8c4c70825698639853ede6',
@@ -3829,7 +3829,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Emby-Authorization': `MediaBrowser Client="FLM Television Network", Device="Web Browser", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
+                        'X-Emby-Authorization': `MediaBrowser Client="FLM Television Network", Device="Web Browser", DeviceId="flmtv-web", Version="1.0.0"`
                     },
                     body: JSON.stringify({
                         Username: 'Public',
@@ -3841,24 +3841,31 @@
                     const data = await response.json();
                     console.log('✅ Auto-authenticated successfully!');
                     
-                    // Store session in localStorage so Jellyfin web client can use it
-                    const authData = {
-                        AccessToken: data.AccessToken,
-                        UserId: data.User.Id,
-                        ServerId: JELLYFIN_CONFIG.SERVER
+                    // Store token in format Jellyfin web client actually reads
+                    const jellyfinAuth = {
+                        Servers: [{
+                            Id: JELLYFIN_CONFIG.SERVER_ID,
+                            Url: JELLYFIN_CONFIG.SERVER,
+                            AccessToken: data.AccessToken,
+                            UserId: data.User.Id,
+                            DateLastAccessed: Date.now()
+                        }]
                     };
+                    localStorage.setItem('jellyfin_credentials', JSON.stringify(jellyfinAuth));
                     
-                    // Try to set localStorage for Jellyfin domain
-                    localStorage.setItem('jellyfin_credentials', JSON.stringify(authData));
+                    // Also store token directly for our own use
+                    JELLYFIN_CONFIG.ACCESS_TOKEN = data.AccessToken;
+                    JELLYFIN_CONFIG.USER_ID = data.User.Id;
                     
-                    return true;
+                    console.log('✅ Token stored, ready for playback');
+                    return data.AccessToken;
                 } else {
-                    console.log('⚠️ Auto-auth failed, user will need to login manually');
-                    return false;
+                    console.log('⚠️ Auto-auth failed');
+                    return null;
                 }
             } catch (error) {
                 console.log('⚠️ Auto-auth error:', error);
-                return false;
+                return null;
             }
         }
         
@@ -4019,7 +4026,7 @@
         }
         
        function playJellyfinItem(itemId, itemType) {
-    console.log('🎬 Opening detail page for:', itemId, itemType);
+    console.log('🎬 Opening Jellyfin detail page for:', itemId, itemType);
     
     // Pause preview video
     const previewVideo = document.getElementById('previewVideo');
@@ -4029,13 +4036,14 @@
         previewVideo.volume = 0;
     }
     
-    // Route to correct custom page based on type
+    // Use token from auto-auth so Jellyfin skips login
+    const token = JELLYFIN_CONFIG.ACCESS_TOKEN || JELLYFIN_CONFIG.API_KEY;
+    
+    // Go straight to Jellyfin detail page — has cast, info, play button
     if (itemType === 'Series') {
-        window.location.href = `tv-detail.html?id=${itemId}`;
+        window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&api_key=${token}`;
     } else {
-        // Movies and everything else go to movie-detail.html
-        // which redirects to Jellyfin detail page with cast + play button
-        window.location.href = `movie-detail.html?id=${itemId}`;
+        window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&api_key=${token}`;
     }
 }
         
