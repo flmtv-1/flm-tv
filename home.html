@@ -2191,10 +2191,12 @@
             .content-card-title,
             .movie-year,
             .movie-rating,
-            .content-card-info,
             .content-card:hover .content-card-overlay {
+            opacity: 1;
+        }
+        
+        .content-card-info {
                 display: none !important;
-                opacity: 0 !important;
             }
             
             /* MOVIE POSTERS - VERTICAL/PORTRAIT like real movie posters! */
@@ -4017,28 +4019,8 @@
         return;
     }
 
-    // Get fresh Public user token so Jellyfin never shows login page
-    let token = JELLYFIN_CONFIG.ACCESS_TOKEN || '';
-    try {
-        const authResp = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID || 'flmtv-web'}", Version="1.0.0"`
-            },
-            body: JSON.stringify({ Username: 'Public', Pw: '' })
-        });
-        if (authResp.ok) {
-            const authData = await authResp.json();
-            token = authData.AccessToken;
-            JELLYFIN_CONFIG.ACCESS_TOKEN = token;
-            console.log('✅ Got fresh Public token');
-        }
-    } catch(e) {
-        token = JELLYFIN_CONFIG.API_KEY;
-    }
-
-    window.location.href = `${JELLYFIN_CONFIG.PLAYER_SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&X-Emby-Token=${token}`;
+    // Go to custom movie detail page on flmtv.com - stays secure!
+    window.location.href = `movie-detail.html?id=${itemId}`;
 }
         
         // ═══════════════════════════════════════════════════════════════
