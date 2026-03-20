@@ -551,11 +551,15 @@
             </button>
             <button class="tab-btn" onclick="showSection('audiobooks')">
                 <i class="fas fa-headphones"></i>
-                Audiobooks
+                Audio Stories
             </button>
             <button class="tab-btn" onclick="showSection('storybooks')">
                 <i class="fas fa-book-open"></i>
-                Story Books
+                Story Time
+            </button>
+            <button class="tab-btn" onclick="showSection('comics')">
+                <i class="fas fa-book"></i>
+                Big Kids Comics
             </button>
             <button class="tab-btn" onclick="showSection('games')">
                 <i class="fas fa-gamepad"></i>
@@ -575,7 +579,7 @@
             </div>
         </div>
 
-        <!-- Audiobooks Section -->
+        <!-- Audio Stories Section -->
         <div id="audiobooks-section" class="section-content">
             <h1 class="section-title">🎧 Choose an Audiobook to Listen</h1>
             <div class="books-grid" id="audiobooksGrid">
@@ -586,13 +590,24 @@
             </div>
         </div>
 
-        <!-- Story Books Section -->
+        <!-- Story Time Section -->
         <div id="storybooks-section" class="section-content">
             <h1 class="section-title">📖 Choose a Story Book to Read</h1>
             <div class="books-grid" id="storybooksGrid">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
                     <p>Loading story books...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Big Kids Comics Section -->
+        <div id="comics-section" class="section-content">
+            <h1 class="section-title">🦸 Big Kids Comics</h1>
+            <div class="books-grid" id="comicsGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading comics...</p>
                 </div>
             </div>
         </div>
@@ -652,10 +667,10 @@
             SERVER: 'https://flmtv.com/jellyfin',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-            BOOKS_LIBRARY_ID: '467bd88b656c88ee6a423d8478e9e54a',      // TEXT BOOKS (EPUB)
-            STORYBOOKS_LIBRARY_ID: 'cd9fa11a14441d0f61e557525d3369d9',  // TEXT-BOOKS-KIDS 01 (PDFs)
-            AUDIOBOOKS_LIBRARY_ID: 'eb2423cff03c7994638e891f33af209d',  // MUSIC LIBRARY
-            CARTOONS_LIBRARY_ID: 'ca43f3291c81d4f007f2b33936d256e6',    // KIDS WORLD (Cartoons/TV)
+            BOOKS_LIBRARY_ID: 'b1179837c889803ea1f56a0e343b4877',      // TEXT BOOKS (EPUB)
+            STORYBOOKS_LIBRARY_ID: '2bc01a0435b16f914579fc15f131978e',  // TEXT-BOOKS-KIDS 01 (PDFs)
+            AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054',  // MUSIC LIBRARY
+            CARTOONS_LIBRARY_ID: '721f4a924b7d17ff69c721701538b3be',    // KIDS WORLD (Cartoons/TV)
             GAMES_LIBRARY_ID: null  // Add when games library is created
         };
 
@@ -723,7 +738,7 @@
                     loadStoryBooks();
                     loadedSections.storybooks = true;
                 } else if (section === 'audiobooks') {
-                    loadAudiobooks();
+                    loadAudio Stories();
                     loadedSections.audiobooks = true;
                 } else if (section === 'cartoons') {
                     loadCartoons();
@@ -854,7 +869,7 @@
         // LOAD AUDIOBOOKS FROM JELLYFIN
         // ═══════════════════════════════════════════════════════════════
         
-        async function loadAudiobooks() {
+        async function loadAudio Stories() {
             const grid = document.getElementById('audiobooksGrid');
             
             try {
@@ -872,7 +887,7 @@
                         : null
                 }));
                 
-                displayAudiobooks();
+                displayAudio Stories();
             } catch (error) {
                 console.error('Error loading audiobooks:', error);
                 grid.innerHTML = `
@@ -883,7 +898,7 @@
             }
         }
         
-        function displayAudiobooks() {
+        function displayAudio Stories() {
             const grid = document.getElementById('audiobooksGrid');
             
             if (AUDIOBOOKS.length === 0) {
@@ -910,6 +925,33 @@
         // LOAD CARTOONS FROM JELLYFIN
         // ═══════════════════════════════════════════════════════════════
         
+        async function loadComics() {
+            const grid = document.getElementById('comicsGrid');
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.STORYBOOKS_LIBRARY_ID}&Recursive=true&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                const comics = data.Items || [];
+                if (comics.length === 0) {
+                    grid.innerHTML = '<div class="loading"><p>No comics available yet!</p></div>';
+                    return;
+                }
+                grid.innerHTML = comics.map(item => `
+                    <div class="book-card" onclick="window.location.href='${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${item.Id}&serverId=${JELLYFIN_CONFIG.SERVER_ID}'">
+                        <div class="book-cover">
+                            <img src="${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?maxHeight=400&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}" 
+                                 alt="${item.Name}" 
+                                 onerror="this.src='https://placehold.co/200x280?text=Comic'">
+                        </div>
+                        <div class="book-title">${item.Name}</div>
+                        <div class="book-type">CBR</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                grid.innerHTML = '<div class="loading"><p style="color:#ff6b6b;">Could not load comics</p></div>';
+            }
+        }
+
         async function loadCartoons() {
             const grid = document.getElementById('cartoonsGrid');
             

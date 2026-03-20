@@ -663,6 +663,8 @@
         }
         
         .content-card-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
             position: absolute;
             bottom: 0;
             left: 0;
@@ -678,6 +680,10 @@
             margin-bottom: 0.25rem;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .content-card:hover .content-card-overlay {
+            opacity: 1;
         }
         
         .content-card-info {
@@ -2185,7 +2191,11 @@
             .content-card-title,
             .movie-year,
             .movie-rating,
-            .content-card-info {
+            .content-card:hover .content-card-overlay {
+            opacity: 1;
+        }
+        
+        .content-card-info {
                 display: none !important;
             }
             
@@ -3132,8 +3142,8 @@
         { id: '2f65de6ca251bd9662f2a4f9a346f262', name: 'ASIAN Animation', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=2f65de6ca251bd9662f2a4f9a346f262&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: '166e859a8da3ffff474656b30a70835b', name: 'CLASSIC TV', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=166e859a8da3ffff474656b30a70835b&collectionType=tvshows' },
         { id: '721f4a924b7d17ff69c721701538b3be', name: 'KIDS WORLD', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=721f4a924b7d17ff69c721701538b3be&collectionType=tvshows' },
-        { id: '2bc01a0435b16f914579fc15f131978e', name: 'KIDS BOOKS', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=2bc01a0435b16f914579fc15f131978e&serverId=db6bb6388c8c4c70825698639853ede6' },
-        { id: '82157e90ee02c1ced8b2c9db574b0054', name: 'AUDIO BOOKS Kids', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=82157e90ee02c1ced8b2c9db574b0054&collectionType=music' },
+        { id: '2bc01a0435b16f914579fc15f131978e', name: 'Big Kids Comics', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=2bc01a0435b16f914579fc15f131978e&serverId=db6bb6388c8c4c70825698639853ede6' },
+        { id: '82157e90ee02c1ced8b2c9db574b0054', name: 'Audio Stories', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=82157e90ee02c1ced8b2c9db574b0054&collectionType=music' },
         { id: '1a174c52bb41600a050fba01721b7bd9', name: 'GOLDEN CLASSICS', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=1a174c52bb41600a050fba01721b7bd9&collectionType=movies' },
         { id: '3846a8e881ba4c2bb0ca8f2fb30fd18b', name: 'FILIPINA TV', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=3846a8e881ba4c2bb0ca8f2fb30fd18b&collectionType=tvshows' },
         { id: '558227e929d6dfe796f836ae5900c8d2', name: 'PINOY ☀️', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=558227e929d6dfe796f836ae5900c8d2&collectionType=movies' },
@@ -3143,6 +3153,7 @@
         { id: '1ac641863cec9162df01d2c2a751c932', name: 'ZAINA ZONE', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=1ac641863cec9162df01d2c2a751c932&collectionType=tvshows' },
         { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
         { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
+        { id: 'kids-corner', name: '🌟 Kids Corner', url: 'kids-corner.html', hideFromCarousel: true },
     ]
 };
         
@@ -3572,15 +3583,21 @@
         // Fill a pre-existing section with items
         async function loadCollectionSection(collection, section) {
             try {
-                // Collections row loads BoxSets faster with SortName
-                const isCollections = collection.name === 'Collections';
-                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                const params = {
                     ParentId: collection.id,
                     Limit: 20,
-                    SortBy: isCollections ? 'SortName' : 'DateCreated',
-                    Recursive: true,
-                    IncludeItemTypes: isCollections ? 'BoxSet' : ''
-                });
+                    SortBy: 'DateCreated',
+                    SortOrder: 'Descending',
+                    Fields: 'PrimaryImageAspectRatio,BasicSyncInfo',
+                    ImageTypeLimit: 1,
+                    EnableImageTypes: 'Primary,Thumb'
+                };
+                // Only use Recursive for non-collection rows
+                if (collection.name !== 'Collections') {
+                    params.Recursive = true;
+                    params.IncludeItemTypes = 'Movie,Series';
+                }
+                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, params);
 
                 // Replace placeholder header with full header including View All
                 const header = document.createElement('div');
