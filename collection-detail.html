@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collection - FLM TV</title>
+    <title>Category - FLM TV</title>
     <style>
         :root {
             --primary: #ffd700;
@@ -55,14 +55,14 @@
             margin: 0 auto;
         }
         
-        .collection-title {
+        .category-title {
             font-size: 3rem;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 1rem;
         }
         
-        .collection-count {
+        .category-count {
             font-size: 1.2rem;
             color: var(--text-secondary);
         }
@@ -172,7 +172,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 768px) {
-            .collection-title { font-size: 2rem; }
+            .category-title { font-size: 2rem; }
             .items-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
         }
     </style>
@@ -185,8 +185,8 @@
 
 <div class="header">
     <div class="header-content">
-        <h1 class="collection-title" id="collectionTitle">Loading...</h1>
-        <div class="collection-count" id="collectionCount"></div>
+        <h1 class="category-title" id="categoryTitle">Loading...</h1>
+        <div class="category-count" id="categoryCount"></div>
     </div>
 </div>
 
@@ -201,15 +201,16 @@
 const CONFIG = {
     SERVER: 'https://flmtv.com/jellyfin',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
-    USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+    USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4'
 };
 
-const collectionId = new URLSearchParams(window.location.search).get('id');
-const collectionName = new URLSearchParams(window.location.search).get('name');
+const categoryId = new URLSearchParams(window.location.search).get('id');
+const categoryName = new URLSearchParams(window.location.search).get('name');
 
-const ITEMS_PER_PAGE = 25; // Load 25 items at a time
+const ITEMS_PER_PAGE = 24; // Load 24 items at a time
 let currentIndex = 0;
-let allItems = [];
+let totalItemCount = 0;
+let hasMoreItems = true;
 
 // AUTHENTICATE FIRST
 async function authenticate() {
@@ -265,97 +266,107 @@ function createItemCard(item) {
     return card;
 }
 
-function loadMore() {
+async function loadMore() {
     const itemsGrid = document.getElementById('itemsGrid');
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     
     loadMoreBtn.disabled = true;
     loadMoreBtn.textContent = 'Loading...';
     
-    const endIndex = Math.min(currentIndex + ITEMS_PER_PAGE, allItems.length);
-    const itemsToLoad = allItems.slice(currentIndex, endIndex);
-    
-    itemsToLoad.forEach(item => {
-        itemsGrid.appendChild(createItemCard(item));
-    });
-    
-    currentIndex = endIndex;
-    
-    // Hide Load More button if all items are loaded
-    if (currentIndex >= allItems.length) {
-        document.getElementById('loadMoreContainer').style.display = 'none';
-    } else {
+    try {
+        const headers = {
+            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
+        };
+        
+        // Fetch only the next batch of items
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&StartIndex=${currentIndex}&Limit=${ITEMS_PER_PAGE}`;
+        
+        const itemsRes = await fetch(itemsUrl, { headers });
+        const itemsData = await itemsRes.json();
+        
+        const items = itemsData.Items || [];
+        totalItemCount = itemsData.TotalRecordCount || 0;
+        
+        // Add items to grid
+        items.forEach(item => {
+            itemsGrid.appendChild(createItemCard(item));
+        });
+        
+        currentIndex += items.length;
+        
+        // Hide Load More button if all items are loaded
+        if (currentIndex >= totalItemCount) {
+            document.getElementById('loadMoreContainer').style.display = 'none';
+        } else {
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = 'Load More';
+        }
+    } catch (error) {
+        console.error('Error loading more items:', error);
         loadMoreBtn.disabled = false;
         loadMoreBtn.textContent = 'Load More';
     }
 }
 
-async function loadCollection() {
+async function loadCategory() {
     try {
         // Authenticate first
         await authenticate();
         
+        // Set category name if provided
+        if (categoryName) {
+            document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
+        }
+        
+        // Get just the total count first (no items)
         const headers = {
             'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
         };
         
-        // Set collection name if provided
-        if (collectionName) {
-            document.getElementById('collectionTitle').textContent = decodeURIComponent(collectionName);
-        }
+        const countUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&Limit=0`;
+        const countRes = await fetch(countUrl, { headers });
+        const countData = await countRes.json();
         
-        // Load ALL items in collection
-        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${collectionId}&Recursive=true&SortBy=SortName&Limit=1000`;
-        console.log('Loading collection:', itemsUrl);
-        
-        const itemsRes = await fetch(itemsUrl, { headers });
-        const itemsData = await itemsRes.json();
-        
-        console.log('Collection items:', itemsData);
-        
-        allItems = itemsData.Items || [];
-        
-        // Update count
-        document.getElementById('collectionCount').textContent = `${allItems.length} items`;
+        totalItemCount = countData.TotalRecordCount || 0;
+        document.getElementById('categoryCount').textContent = `${totalItemCount} items`;
         
         // If no name provided, try to get it from parent
-        if (!collectionName && allItems.length > 0) {
+        if (!categoryName) {
             try {
-                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${collectionId}`;
+                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}`;
                 const parentRes = await fetch(parentUrl, { headers });
                 const parent = await parentRes.json();
-                document.getElementById('collectionTitle').textContent = parent.Name || 'Collection';
+                document.getElementById('categoryTitle').textContent = parent.Name || 'Category';
             } catch (e) {
-                document.getElementById('collectionTitle').textContent = 'Collection';
+                document.getElementById('categoryTitle').textContent = 'Category';
             }
         }
         
         document.getElementById('loading').style.display = 'none';
         
-        if (allItems.length > 0) {
-            // Load first batch
-            loadMore();
+        if (totalItemCount > 0) {
+            // Load first batch of items
+            await loadMore();
             
             // Show Load More button if there are more items
-            if (allItems.length > ITEMS_PER_PAGE) {
+            if (totalItemCount > ITEMS_PER_PAGE) {
                 document.getElementById('loadMoreContainer').style.display = 'flex';
             }
         } else {
-            document.getElementById('itemsGrid').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">No items found in this collection</p>';
+            document.getElementById('itemsGrid').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">No items found in this category</p>';
         }
         
     } catch (error) {
-        console.error('Error loading collection:', error);
-        alert('Error loading collection. Check console for details.');
+        console.error('Error loading category:', error);
         document.getElementById('loading').style.display = 'none';
     }
 }
 
-if (!collectionId) {
-    alert('No collection ID provided');
+if (!categoryId) {
+    alert('No category ID provided');
     history.back();
 } else {
-    loadCollection();
+    loadCategory();
 }
 </script>
 

@@ -276,10 +276,16 @@ async function loadSeason() {
                 card.className = 'episode-card';
                 
                 // Link directly to Jellyfin's native episode detail page
-                card.href = `movie-detail.html?id=${episode.Id}`;
+                const jellyfinUrl = `${CONFIG.SERVER}/web/index.html?api_key=${CONFIG.API_KEY}#!/details?id=${episode.Id}`;
+                card.href = jellyfinUrl;
+                
+                // Handle click
                 card.addEventListener('click', function(e) {
                     e.preventDefault();
-                    window.location.href = `movie-detail.html?id=${episode.Id}`;
+                    console.log('🎬 Navigating to episode:', episode.Name);
+                    console.log('🎬 Jellyfin URL:', jellyfinUrl);
+                    // Go directly to Jellyfin's episode detail page
+                    window.location.href = jellyfinUrl;
                 });
                 
                 const thumbnailUrl = episode.ImageTags && episode.ImageTags.Primary
