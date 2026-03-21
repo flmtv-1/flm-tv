@@ -2191,12 +2191,10 @@
             .content-card-title,
             .movie-year,
             .movie-rating,
+            .content-card-info,
             .content-card:hover .content-card-overlay {
-            opacity: 1;
-        }
-        
-        .content-card-info {
                 display: none !important;
+                opacity: 0 !important;
             }
             
             /* MOVIE POSTERS - VERTICAL/PORTRAIT like real movie posters! */
@@ -2662,7 +2660,7 @@
                 <nav>
                     <ul class="header-nav">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="#" onclick="scrollToCollection('d90d03c78404f7ea661bd134d6f74ed8'); return false;">Movies</a></li>
+                        <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
                         <li><a href="#" onclick="openLiveStream(); return false;"> Live TV</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
@@ -4015,7 +4013,7 @@
     }
 
     if (type === 'Series') {
-        window.location.href = `tv-detail.html?id=${itemId}`;
+        window.location.href = `movie-frame.html?id=${itemId}`;
         return;
     }
 
@@ -4040,7 +4038,11 @@
         token = JELLYFIN_CONFIG.API_KEY;
     }
 
-    window.location.href = `${JELLYFIN_CONFIG.PLAYER_SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&X-Emby-Token=${token}`;
+    if (itemType === 'Series') {
+        window.location.href = `movie-frame.html?id=${itemId}`;
+    } else {
+        window.location.href = `movie-frame.html?id=${itemId}`;
+    }
 }
         
         // ═══════════════════════════════════════════════════════════════
@@ -5215,7 +5217,7 @@ async function loadCollectionPage(collectionId, title) {
         searchInput.value = '';
         
         if (itemType === 'Movie' || itemType === 'Series') {
-            window.location.href = `${JELLYFIN_CONFIG.PLAYER_SERVER}/web/index.html#!/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            window.location.href = `movie-frame.html?id=${itemId}`;
         } else if (itemType === 'BoxSet') {
             window.location.href = `collection-detail.html?id=${itemId}`;
         }

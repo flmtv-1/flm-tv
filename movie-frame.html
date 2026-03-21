@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLM TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:  #FFD700;
+    --green: #00A550;
+    --red:   #CE1126;
+    --blue:  #0038A8;
+    --hdr:   56px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Oswald', sans-serif;
+  }
+
+  /* ═══ HEADER BAR ═══ */
+  #flmBar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--hdr);
+    background: linear-gradient(90deg, #0a0a0a 0%, #0f0f0f 100%);
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(90deg, var(--blue) 0%, var(--red) 33%, var(--gold) 66%, var(--green) 100%) 1;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 14px;
+    z-index: 9999;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.8);
+  }
+
+  /* ── Back button ── */
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.4);
+    color: var(--gold);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.18s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .back-btn:hover {
+    background: rgba(255,215,0,0.18);
+    border-color: var(--gold);
+    transform: translateX(-2px);
+  }
+  .back-btn svg { flex-shrink: 0; }
+
+  /* ── Logo ── */
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+  }
+  .logo-flag {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5px;
+  }
+  .logo-flag span {
+    display: block;
+    width: 22px;
+    height: 3px;
+    border-radius: 2px;
+  }
+  .logo-flag span:nth-child(1) { background: var(--blue); }
+  .logo-flag span:nth-child(2) { background: var(--red);  }
+  .logo-flag span:nth-child(3) { background: var(--gold); }
+
+  .logo-text { font-size: 17px; font-weight: 700; letter-spacing: 1.5px; }
+  .logo-text .flm { color: var(--gold); }
+  .logo-text .tv  { color: var(--green); }
+
+  /* ── Title (middle) ── */
+  #titleText {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* ── Home button (right) ── */
+  .home-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.45);
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.18s;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .home-btn:hover {
+    color: var(--gold);
+    border-color: rgba(255,215,0,0.35);
+    background: rgba(255,215,0,0.06);
+  }
+
+  /* ── HTTPS badge ── */
+  .secure-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(0,165,80,0.12);
+    border: 1px solid rgba(0,165,80,0.3);
+    color: var(--green);
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .secure-badge svg { flex-shrink: 0; }
+
+  /* ═══ IFRAME ═══ */
+  #jellyfinFrame {
+    position: fixed;
+    top: calc(var(--hdr) + 56px);  /* FLM bar + hidden Jellyfin nav */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100% - var(--hdr) - 56px);
+    border: none;
+    background: #0a0a0a;
+  }
+
+  /* ═══ CUSTOM NAV OVERLAY (covers Jellyfin's nav bar) ═══ */
+  #navBlocker {
+    position: fixed;
+    top: var(--hdr);
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: #111;
+    border-bottom: 1px solid rgba(255,215,0,0.1);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 10px;
+  }
+
+  .nav-custom-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+
+  /* ← Back — gold outline */
+  .nav-btn-back {
+    color: var(--gold);
+    border-color: rgba(255,215,0,0.35);
+    background: rgba(255,215,0,0.07);
+  }
+  .nav-btn-back:hover {
+    background: rgba(255,215,0,0.15);
+    border-color: var(--gold);
+  }
+
+  /* The Vault — green */
+  .nav-btn-vault {
+    color: var(--green);
+    border-color: rgba(0,165,80,0.35);
+    background: rgba(0,165,80,0.07);
+  }
+  .nav-btn-vault:hover {
+    background: rgba(0,165,80,0.15);
+    border-color: var(--green);
+  }
+
+  /* Spacer */
+  .nav-spacer { flex: 1; }
+
+  /* FLM TV Home — solid gold */
+  .nav-btn-home {
+    color: #000;
+    background: var(--gold);
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+  .nav-btn-home:hover {
+    background: #ffe033;
+  }
+  /* Loading overlay */
+  #loadOverlay {
+    position: fixed;
+    top: var(--hdr); left: 0; right: 0; bottom: 0;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 100;
+    transition: opacity 0.5s;
+    pointer-events: none;
+  }
+  #loadOverlay.done { opacity: 0; pointer-events: none; }
+
+  .spinner {
+    width: 52px; height: 52px;
+    border: 3px solid rgba(255,215,0,0.15);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .load-text { color: rgba(255,255,255,0.4); font-size: 13px; letter-spacing: 0.5px; }
+  .load-title { color: rgba(255,255,255,0.7); font-size: 16px; font-weight: 600; }
+
+  /* ── Responsive: hide title on tiny screens ── */
+  @media (max-width: 500px) {
+    #titleText { display: none; }
+    .secure-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ FLM TV TOP BAR ═══ -->
+<div id="flmBar">
+  <!-- Back -->
+  <a id="backBtn" class="back-btn" href="home.html">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Front Page
+  </a>
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-flag">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="logo-text">
+      <span class="flm">FLM</span> <span class="tv">TV</span>
+    </div>
+  </div>
+
+  <!-- Movie title -->
+  <div id="titleText"></div>
+
+  <!-- Home -->
+  <a class="home-btn" href="home.html">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    FLM TV Home
+  </a>
+</div>
+
+<!-- Loading overlay -->
+<div id="loadOverlay">
+  <div class="spinner"></div>
+  <div class="load-title" id="loadTitle">Loading…</div>
+  <div class="load-text">Powered by FLM TV</div>
+</div>
+
+<!-- ═══ CUSTOM NAV (covers + replaces Jellyfin's nav bar) ═══ -->
+<div id="navBlocker">
+
+  <!-- Back to category / previous page -->
+  <a id="navBackBtn" class="nav-custom-btn nav-btn-back" href="javascript:history.back()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+    Front Page
+  </a>
+
+  <!-- The Vault — links to categories page -->
+  <a class="nav-custom-btn nav-btn-vault" href="category-detail.html?id=&name=The+Vault">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    The Vault
+  </a>
+
+  <div class="nav-spacer"></div>
+
+  <!-- FLM TV Home -->
+  <a class="nav-custom-btn nav-btn-home" href="home.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    FLM TV Home
+  </a>
+
+</div>
+
+<!-- ═══ JELLYFIN DETAIL PAGE IN IFRAME ═══ -->
+<iframe
+  id="jellyfinFrame"
+  allowfullscreen
+  allow="autoplay; fullscreen; picture-in-picture"
+  title="FLM TV Content"
+></iframe>
+
+<script>
+// ═══ CONFIG ═══
+const CONFIG = {
+  // Use whichever server is reachable — PLAYER is the direct Jellyfin URL
+  PLAYER:  'http://flmtv26.duckdns.org:8096',
+  API_KEY: '62131ee22c0141c6b651be75a7444350',
+  USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4',
+  SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
+};
+
+// ── URL params ──
+const params   = new URLSearchParams(location.search);
+const ITEM_ID  = params.get('id')      || '';
+const TITLE    = decodeURIComponent(params.get('name') || params.get('title') || '');
+const BACK_URL = decodeURIComponent(params.get('back') || ''); // optional explicit back URL
+const CAT_ID   = params.get('catId')   || '';
+const CAT_NAME = decodeURIComponent(params.get('catName') || '');
+
+// ── Page title ──
+if (TITLE) {
+  document.getElementById('titleText').textContent = TITLE;
+  document.getElementById('loadTitle').textContent  = TITLE;
+  document.title = `FLM TV – ${TITLE}`;
+}
+
+// ── Back buttons (both bars) ──
+const backBtn    = document.getElementById('backBtn');
+const navBackBtn = document.getElementById('navBackBtn');
+
+function setupBack(btn) {
+  if (!btn) return;
+  if (BACK_URL) {
+    btn.href = BACK_URL;
+  } else if (CAT_ID) {
+    btn.href = `category-detail.html?id=${CAT_ID}&name=${encodeURIComponent(CAT_NAME)}`;
+  } else {
+    btn.href = '#';
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      window.history.length > 1 ? window.history.back() : location.href = 'home.html';
+    });
+  }
+}
+setupBack(backBtn);
+setupBack(navBackBtn);
+
+// Also fix The Vault link to point to categories home if no specific cat
+const vaultBtn = document.querySelector('.nav-btn-vault');
+if (vaultBtn && CAT_ID) {
+  vaultBtn.href = `category-detail.html?id=${CAT_ID}&name=${encodeURIComponent(CAT_NAME)}`;
+}
+
+// ── Load detail page directly with API key — no login screen ──
+function loadDetailPage() {
+  if (!ITEM_ID) {
+    document.getElementById('loadOverlay').innerHTML =
+      `<div style="color:#888;font-size:15px">No item specified. <a href="home.html" style="color:#FFD700">Go Home</a></div>`;
+    return;
+  }
+
+  // Use api_key directly in URL — Jellyfin accepts this without any login
+  const jellyfinUrl =
+    `${CONFIG.PLAYER}/web/index.html` +
+    `#/details?id=${ITEM_ID}` +
+    `&serverId=${CONFIG.SERVER_ID}` +
+    `&api_key=${CONFIG.API_KEY}`;
+
+  const frame = document.getElementById('jellyfinFrame');
+  frame.src = jellyfinUrl;
+
+  frame.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('loadOverlay').classList.add('done'), 600);
+  });
+  setTimeout(() => document.getElementById('loadOverlay').classList.add('done'), 8000);
+}
+
+loadDetailPage();
+</script>
+</body>
+</html>

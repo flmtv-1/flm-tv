@@ -8,353 +8,128 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #ffd700;
-            --green: #22c55e;
-            --bg: #0a0f1a;
-            --bg-light: #1a1f2e;
-            --text: #ffffff;
-            --text-secondary: #94a3b8;
+        body { background: #000; overflow: hidden; }
+
+        #jellyfinFrame {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+            z-index: 1;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
+
+        #flm-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
+
+        .flm-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 2px solid #22c55e;
+            background: rgba(0,0,0,0.85);
+            color: #22c55e;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .flm-btn:hover { background: #22c55e; color: #000; transform: scale(1.1); }
+        .flm-btn.gold { border-color: #ffd700; color: #ffd700; padding: 0; overflow: hidden; }
+        .flm-btn.gold:hover { background: rgba(255,215,0,0.2); }
+        .flm-btn.gold img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
         #loading {
             position: fixed; inset: 0;
-            background: var(--bg);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 9999;
+            background: #0a0f1a;
+            display: flex; align-items: center;
+            justify-content: center; z-index: 99999;
+            flex-direction: column; gap: 1rem;
         }
-        .loading-logo { width: 100px; margin-bottom: 1.5rem; animation: pulse 2s ease-in-out infinite; }
-        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.05);opacity:.8} }
         .spinner {
             width: 48px; height: 48px;
             border: 4px solid rgba(255,215,0,0.2);
-            border-top-color: var(--primary);
+            border-top-color: #ffd700;
             border-radius: 50%;
-            animation: spin .8s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .back-btn {
-            position: fixed; top: 20px; left: 20px;
-            background: rgba(0,0,0,0.75);
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            padding: 10px 20px; border-radius: 8px;
-            cursor: pointer; font-size: .95rem; font-weight: 600;
-            z-index: 100; transition: all .3s;
-            backdrop-filter: blur(8px);
-        }
-        .back-btn:hover { background: var(--primary); color: #000; }
-        .hero {
-            position: relative; min-height: 60vh;
-            display: flex; align-items: flex-end;
-            background-size: cover; background-position: center top;
-        }
-        .hero::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(to bottom, rgba(10,15,26,0.2) 0%, rgba(10,15,26,0.7) 60%, rgba(10,15,26,1) 100%);
-        }
-        .detail-wrapper {
-            position: relative; z-index: 1;
-            max-width: 1200px; margin: -180px auto 0;
-            padding: 0 2rem 4rem;
-            display: flex; gap: 2.5rem; align-items: flex-start;
-        }
-        .poster-col { flex-shrink: 0; }
-        .poster {
-            width: 220px; border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-            border: 3px solid rgba(255,215,0,0.3);
-            display: block;
-        }
-        .info-col { flex: 1; min-width: 0; padding-top: 1rem; }
-        .movie-title {
-            font-size: 2.8rem; font-weight: 900;
-            color: var(--primary); line-height: 1.1;
-            margin-bottom: .75rem;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-        }
-        .meta-row {
-            display: flex; flex-wrap: wrap;
-            gap: .75rem; margin-bottom: 1.25rem; font-size: .95rem;
-        }
-        .meta-badge {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 4px 12px; border-radius: 20px;
-            color: var(--text-secondary); font-weight: 500;
-        }
-        .meta-badge.rating { border-color: var(--primary); color: var(--primary); }
-        .meta-badge.score { border-color: var(--green); color: var(--green); }
-        .genres { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
-        .genre-tag {
-            background: rgba(255,215,0,0.1);
-            border: 1px solid rgba(255,215,0,0.3);
-            color: var(--primary); padding: 4px 12px;
-            border-radius: 20px; font-size: .85rem; font-weight: 600;
-        }
-        .overview {
-            font-size: 1.05rem; line-height: 1.7;
-            color: #e2e8f0; margin-bottom: 2rem; max-width: 700px;
-        }
-        .btn-play {
-            display: inline-flex; align-items: center; gap: .75rem;
-            background: linear-gradient(135deg, var(--primary), #f59e0b);
-            color: #000; border: none;
-            padding: 1rem 2.5rem; border-radius: 50px;
-            font-size: 1.2rem; font-weight: 800;
-            cursor: pointer; transition: all .3s;
-            box-shadow: 0 4px 20px rgba(255,215,0,0.4);
-            margin-bottom: 2rem;
-        }
-        .btn-play:hover { transform: scale(1.05); box-shadow: 0 8px 32px rgba(255,215,0,0.6); }
-        .section-title {
-            font-size: 1.4rem; font-weight: 700;
-            color: var(--primary); margin-bottom: 1rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.08);
-        }
-        .cast-row {
-            display: flex; gap: 1rem;
-            overflow-x: auto; padding-bottom: .75rem;
-            scrollbar-width: thin; scrollbar-color: var(--primary) transparent;
-        }
-        .cast-card { flex-shrink: 0; width: 100px; text-align: center; }
-        .cast-photo {
-            width: 80px; height: 80px; border-radius: 50%;
-            object-fit: cover; background: var(--bg-light);
-            border: 2px solid rgba(255,215,0,0.3);
-            margin: 0 auto .5rem; display: block;
-        }
-        .cast-name { font-size: .78rem; font-weight: 600; color: var(--text); margin-bottom: .2rem; }
-        .cast-role { font-size: .72rem; color: var(--text-secondary); }
-        .similar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 1rem;
-        }
-        .similar-card {
-            cursor: pointer; border-radius: 10px;
-            overflow: hidden; background: var(--bg-light);
-            border: 2px solid transparent; transition: all .3s;
-        }
-        .similar-card:hover { border-color: var(--primary); transform: translateY(-4px); }
-        .similar-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: #111; }
-        .similar-title {
-            padding: .5rem; font-size: .82rem; font-weight: 600;
-            color: var(--text); overflow: hidden;
-            text-overflow: ellipsis; white-space: nowrap;
-        }
-        @media (max-width: 768px) {
-            .detail-wrapper { flex-direction: column; gap: 1.5rem; margin-top: -80px; padding: 0 1rem 3rem; }
-            .poster { width: 140px; }
-            .movie-title { font-size: 1.8rem; }
-            .hero { min-height: 40vh; }
-        }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
     </style>
 </head>
 <body>
 
 <div id="loading">
-    <img src="assets/logos/flm-logo.png" alt="FLM TV" class="loading-logo">
+    <img src="assets/logos/flm-logo.png" alt="FLM TV" style="width:80px;animation:pulse 2s infinite;">
     <div class="spinner"></div>
 </div>
 
-<button class="back-btn" onclick="history.back()">← Back</button>
+<iframe id="jellyfinFrame" 
+        onload="frameLoaded()" 
+        allow="autoplay; fullscreen; encrypted-media; picture-in-picture">
+</iframe>
 
-<div class="hero" id="hero"></div>
-
-<div class="detail-wrapper">
-    <div class="poster-col">
-        <img id="poster" src="" alt="" class="poster">
-    </div>
-    <div class="info-col">
-        <h1 class="movie-title" id="title"></h1>
-        <div class="meta-row" id="metaRow"></div>
-        <div class="genres" id="genres"></div>
-        <p class="overview" id="overview"></p>
-
-        <button class="btn-play" onclick="playMovie()">
-            <i class="fas fa-play"></i> Play Now
-        </button>
-
-        <div id="castSection" style="display:none;">
-            <h2 class="section-title">Cast</h2>
-            <div class="cast-row" id="castRow"></div>
-        </div>
-
-        <div id="similarSection" style="display:none; margin-top:1rem;">
-            <h2 class="section-title">More Like This</h2>
-            <div class="similar-grid" id="similarGrid"></div>
-        </div>
-    </div>
+<!-- Floating Controls -->
+<div id="flm-controls">
+    <button class="flm-btn" onclick="window.location.href='home.html'" title="Back to FLM TV">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <button class="flm-btn" onclick="openChatPanel()" title="Live Chat">
+        <i class="fas fa-comments"></i>
+    </button>
+    <button class="flm-btn gold" onclick="openAIPanel()" title="Zaina AI">
+        <img src="assets/images/z-ai-avatar2.png" 
+             onerror="this.outerHTML='<i class=\'fas fa-robot\' style=\'color:#ffd700\'></i>'">
+    </button>
 </div>
 
 <script>
 const CONFIG = {
     SERVER: 'https://flmtv.com/jellyfin',
+    PLAYER: 'http://flmtv26.duckdns.org:8096',
     SERVER_ID: 'db6bb6388c8c4c70825698639853ede6',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4'
 };
 
-const movieId = new URLSearchParams(window.location.search).get('id');
-const urlToken = new URLSearchParams(window.location.search).get('token');
-// Use token from URL if available, otherwise use API key
-if (urlToken) { CONFIG.API_KEY = urlToken; }
+const itemId = new URLSearchParams(window.location.search).get('id');
 
-function playMovie() {
-    if (!movieId) return;
-    const token = CONFIG.API_KEY || '';
-    window.location.href = `http://flmtv26.duckdns.org:8096/web/index.html#!/details?id=${movieId}&serverId=${CONFIG.SERVER_ID}&X-Emby-Token=${token}`;
+async function init() {
+    if (!itemId) { window.location.href = 'home.html'; return; }
+    
+    // Load Jellyfin detail page directly in iframe with api_key
+    const url = `${CONFIG.PLAYER}/web/index.html#!/details?id=${itemId}&serverId=${CONFIG.SERVER_ID}&api_key=${CONFIG.API_KEY}`;
+    document.getElementById('jellyfinFrame').src = url;
 }
 
-async function apiGet(path) {
-    const sep = path.includes('?') ? '&' : '?';
-    const res = await fetch(`${CONFIG.SERVER}${path}${sep}api_key=${CONFIG.API_KEY}`);
-    if (!res.ok) throw new Error(`${res.status}`);
-    return res.json();
+function frameLoaded() {
+    document.getElementById('loading').style.display = 'none';
 }
 
-async function authenticate() {
-    try {
-        const authRes = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0"'
-            },
-            body: JSON.stringify({ Username: 'Public', Pw: '' })
-        });
-        if (authRes.ok) {
-            const data = await authRes.json();
-            CONFIG.API_KEY = data.AccessToken;
-            CONFIG.USER_ID = data.User.Id;
-            console.log('✅ Authenticated as Public');
-        }
-    } catch(e) {
-        console.warn('Auth failed, using API key fallback');
-    }
+function openChatPanel() {
+    // Post message to parent or open chat
+    window.open('home.html?openChat=true', '_self');
 }
 
-async function loadMovie() {
-    if (!movieId) { window.location.href = 'home.html'; return; }
-
-    // Authenticate first so Jellyfin does not block the request
-    await authenticate();
-
-    try {
-        const movie = await apiGet(`/Users/${CONFIG.USER_ID}/Items/${movieId}`);
-        document.title = `${movie.Name} - FLM TV`;
-
-        // Backdrop
-        if (movie.BackdropImageTags && movie.BackdropImageTags.length > 0) {
-            document.getElementById('hero').style.backgroundImage =
-                `url(${CONFIG.SERVER}/Items/${movieId}/Images/Backdrop?api_key=${CONFIG.API_KEY}&tag=${movie.BackdropImageTags[0]}&maxWidth=1920&quality=80)`;
-        }
-
-        // Poster
-        const posterEl = document.getElementById('poster');
-        if (movie.ImageTags && movie.ImageTags.Primary) {
-            posterEl.src = `${CONFIG.SERVER}/Items/${movieId}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${movie.ImageTags.Primary}&maxWidth=440`;
-            posterEl.alt = movie.Name;
-        } else {
-            posterEl.style.display = 'none';
-        }
-
-        // Title
-        document.getElementById('title').textContent = movie.Name;
-
-        // Meta
-        const meta = [];
-        if (movie.ProductionYear) meta.push(`<span class="meta-badge">${movie.ProductionYear}</span>`);
-        if (movie.OfficialRating) meta.push(`<span class="meta-badge rating">${movie.OfficialRating}</span>`);
-        if (movie.RunTimeTicks) {
-            const mins = Math.round(movie.RunTimeTicks / 600000000);
-            const h = Math.floor(mins/60), m = mins%60;
-            meta.push(`<span class="meta-badge">${h>0?h+'h ':''} ${m}m</span>`);
-        }
-        if (movie.CommunityRating) meta.push(`<span class="meta-badge score">⭐ ${movie.CommunityRating.toFixed(1)}</span>`);
-        document.getElementById('metaRow').innerHTML = meta.join('');
-
-        // Genres
-        if (movie.Genres && movie.Genres.length) {
-            document.getElementById('genres').innerHTML =
-                movie.Genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
-        }
-
-        // Overview
-        document.getElementById('overview').textContent = movie.Overview || 'No description available.';
-
-        // Hide loading — page is ready
-        document.getElementById('loading').style.display = 'none';
-
-        // Load cast + similar in background
-        loadCast();
-        loadSimilar();
-
-    } catch (err) {
-        console.error('Error:', err);
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('title').textContent = 'Error loading movie';
-    }
+function openAIPanel() {
+    window.open('home.html?openAI=true', '_self');
 }
 
-async function loadCast() {
-    try {
-        const data = await apiGet(`/Items/${movieId}/People?PersonTypes=Actor&Limit=15`);
-        const people = data.Items || [];
-        if (!people.length) return;
+// Hide loading after 6 seconds max
+setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+}, 6000);
 
-        const castRow = document.getElementById('castRow');
-        people.forEach(person => {
-            const photoUrl = person.PrimaryImageTag
-                ? `${CONFIG.SERVER}/Items/${person.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${person.PrimaryImageTag}&maxWidth=160`
-                : 'https://placehold.co/80x80?text=?';
-            const card = document.createElement('div');
-            card.className = 'cast-card';
-            card.innerHTML = `
-                <img src="${photoUrl}" alt="${person.Name}" class="cast-photo" onerror="this.src='https://placehold.co/80x80?text=?'">
-                <div class="cast-name">${person.Name}</div>
-                <div class="cast-role">${person.Role || 'Actor'}</div>
-            `;
-            castRow.appendChild(card);
-        });
-        document.getElementById('castSection').style.display = 'block';
-    } catch(e) { console.error('Cast:', e); }
-}
-
-async function loadSimilar() {
-    try {
-        const data = await apiGet(`/Users/${CONFIG.USER_ID}/Items?SimilarTo=${movieId}&Limit=8&IncludeItemTypes=Movie&Fields=PrimaryImageAspectRatio`);
-        const items = (data.Items || []).filter(i => i.Id !== movieId);
-        if (!items.length) return;
-
-        const grid = document.getElementById('similarGrid');
-        items.forEach(item => {
-            const posterUrl = item.ImageTags && item.ImageTags.Primary
-                ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=300`
-                : 'https://placehold.co/130x195?text=No+Image';
-            const card = document.createElement('div');
-            card.className = 'similar-card';
-            card.onclick = () => { window.location.href = `movie-detail.html?id=${item.Id}`; };
-            card.innerHTML = `
-                <img src="${posterUrl}" alt="${item.Name}" class="similar-poster" onerror="this.style.background='#1a1a1a'">
-                <div class="similar-title">${item.Name}</div>
-            `;
-            grid.appendChild(card);
-        });
-        document.getElementById('similarSection').style.display = 'block';
-    } catch(e) { console.error('Similar:', e); }
-}
-
-loadMovie();
+init();
 </script>
 </body>
 </html>
