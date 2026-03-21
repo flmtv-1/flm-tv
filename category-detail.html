@@ -201,7 +201,7 @@
 const CONFIG = {
     SERVER: 'https://flmtv.com/jellyfin',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
-    USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
+    USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4'
 };
 
 const categoryId = new URLSearchParams(window.location.search).get('id');
@@ -247,7 +247,7 @@ function createItemCard(item) {
         if (item.Type === 'Series') {
             window.location.href = `tv-detail.html?id=${item.Id}`;
         } else {
-            window.location.href = `https://flmtv.com/jellyfin/web/index.html#!/details?id=${item.Id}&api_key=62131ee22c0141c6b651be75a7444350`;
+            window.location.href = `http://flmtv26.duckdns.org:8096/web/index.html#!/details?id=${item.Id}&serverId=db6bb6388c8c4c70825698639853ede6`;
         }
     };
     
@@ -279,7 +279,7 @@ async function loadMore() {
         };
         
         // Fetch only the next batch of items
-        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&StartIndex=${currentIndex}&Limit=${ITEMS_PER_PAGE}`;
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&StartIndex=${currentIndex}&Limit=${ITEMS_PER_PAGE}&api_key=${CONFIG.API_KEY}`;
         
         const itemsRes = await fetch(itemsUrl, { headers });
         const itemsData = await itemsRes.json();
@@ -323,7 +323,7 @@ async function loadCategory() {
             'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
         };
         
-        const countUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&Limit=0`;
+        const countUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&Limit=0&api_key=${CONFIG.API_KEY}`;
         const countRes = await fetch(countUrl, { headers });
         const countData = await countRes.json();
         
@@ -333,7 +333,7 @@ async function loadCategory() {
         // If no name provided, try to get it from parent
         if (!categoryName) {
             try {
-                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}`;
+                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}?api_key=${CONFIG.API_KEY}`;
                 const parentRes = await fetch(parentUrl, { headers });
                 const parent = await parentRes.json();
                 document.getElementById('categoryTitle').textContent = parent.Name || 'Category';
