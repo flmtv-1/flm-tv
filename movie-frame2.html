@@ -80,30 +80,7 @@
   }
   .btn-home:hover { background: #ffe033; }
 
-/* ── Chat & AI buttons — overlaid on player controls ── */
-  .player-btns {
-    position: fixed;
-    bottom: 18px;
-    right: 80px;
-    display: flex;
-    gap: 10px;
-    z-index: 9999;
-  }
-  .player-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.85;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  .player-btn:hover { opacity: 1; transform: scale(1.1); }
-  .btn-chat { background: var(--green); }
-  .btn-ai   { background: var(--gold); }
+  /* ── IFRAME — fills everything below the bar ── */
   #jellyfinFrame {
     position: fixed;
     top: var(--hdr);
@@ -133,22 +110,12 @@
 
 </div>
 
-<!-- Chat & Zaina AI — overlaid on player controls bottom right -->
-<div class="player-btns">
-  <button class="player-btn btn-chat" title="Chat" onclick="document.getElementById('chatPanel').classList.toggle('open')">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-  </button>
-  <button class="player-btn btn-ai" title="Zaina AI" onclick="document.getElementById('aiPanel').classList.toggle('open')">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-  </button>
-</div>
-
 <!-- JELLYFIN IFRAME — full screen below bar -->
 <iframe id="jellyfinFrame" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" title="FLM TV"></iframe>
 
 <script>
 const CONFIG = {
-  PLAYER:    'https://flmtv26.duckdns.org:8920',
+  PLAYER:    'http://flmtv26.duckdns.org:8096',
   API_KEY:   '62131ee22c0141c6b651be75a7444350',
   SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
 };
