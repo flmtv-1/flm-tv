@@ -171,10 +171,9 @@ if (CAT_ID) {
 // Load Jellyfin detail page
 if (ITEM_ID) {
   document.getElementById('jellyfinFrame').src =
-    CONFIG.PLAYER + '/web/index.html' +
-    '#/details?id=' + ITEM_ID +
-    '&serverId=' + CONFIG.SERVER_ID +
-    '&api_key=' + CONFIG.API_KEY;
+    CONFIG.PLAYER + '/web/index.html?api_key=' + CONFIG.API_KEY +
+    '#!/details?id=' + ITEM_ID +
+    '&serverId=' + CONFIG.SERVER_ID;
 }
 </script>
 </body>
