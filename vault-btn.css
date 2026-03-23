@@ -1,0 +1,16 @@
+/* ── Rename Jellyfin home (house) button → VAULT ── */
+.headerHomeButton {
+  width: auto !important;
+  padding: 0 10px !important;
+}
+.headerHomeButton .material-icons {
+  display: none !important;
+}
+.headerHomeButton::after {
+  content: "⬡ VAULT";
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFD700;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+}

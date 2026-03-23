@@ -1,0 +1,85 @@
+<!-- ═══════════════════════════════════════════════════════════
+     FLM TV — JELLYFIN LINK INTERCEPTOR
+     Paste this entire block right before </body> in home.html
+     It catches any click going to Jellyfin and wraps it in the
+     FLM TV frame (movie-frame.html) so you never leave flmtv.com
+═══════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+
+  // ── The Jellyfin player base URL (no trailing slash) ──
+  const JELLYFIN_ORIGIN = 'http://flmtv26.duckdns.org:8096';
+
+  // ── Extract item ID from any Jellyfin details URL ──
+  function getItemId(url) {
+    try {
+      // Handles: #!/details?id=XXXX  or  ?id=XXXX  or  &id=XXXX
+      const match = url.match(/[?&#]id=([a-f0-9]{32})/i);
+      return match ? match[1] : null;
+    } catch(e) { return null; }
+  }
+
+  // ── Redirect to FLM TV frame instead of raw Jellyfin ──
+  function routeThroughFrame(jellyfinUrl, title) {
+    const itemId = getItemId(jellyfinUrl);
+    if (!itemId) return false;  // not a detail page link, let it go
+
+    const frameUrl = 'movie-frame.html' +
+      '?id=' + itemId +
+      (title ? '&name=' + encodeURIComponent(title) : '');
+
+    location.href = frameUrl;
+    return true;
+  }
+
+  // ── Intercept ALL clicks on the page ──
+  document.addEventListener('click', function(e) {
+    // Walk up from the clicked element to find an <a> tag
+    let el = e.target;
+    while (el && el.tagName !== 'A') el = el.parentElement;
+    if (!el) return;
+
+    const href = el.getAttribute('href') || '';
+    const fullHref = el.href || '';
+
+    // Check if the link goes to Jellyfin directly
+    const isJellyfinLink =
+      fullHref.includes('flmtv26.duckdns.org') ||
+      fullHref.includes(':8096') ||
+      href.includes('/web/index.html') ||
+      href.includes('#!/details');
+
+    if (!isJellyfinLink) return;  // not Jellyfin, ignore
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Try to grab a title from the card's text
+    const card = el.closest('[class*="card"], [class*="item"], [class*="movie"], [class*="poster"]');
+    const titleEl = card && (
+      card.querySelector('[class*="title"], [class*="name"], h3, h4, p') 
+    );
+    const title = titleEl ? titleEl.textContent.trim() : '';
+
+    routeThroughFrame(fullHref || href, title);
+  }, true); // capture phase so we catch it before Jellyfin's own handlers
+
+  // ── Also patch any programmatic navigation (iframes posting messages) ──
+  window.addEventListener('message', function(e) {
+    if (!e.data) return;
+    const msg = typeof e.data === 'string' ? e.data : JSON.stringify(e.data);
+
+    // If Jellyfin iframe is trying to navigate to a details page
+    if (msg.includes('#!/details') || msg.includes('"Type":"details"')) {
+      const itemId = getItemId(msg);
+      if (itemId) {
+        location.href = 'movie-frame.html?id=' + itemId;
+      }
+    }
+  });
+
+  console.log('✅ FLM TV: Jellyfin link interceptor active');
+
+})();
+</script>
+<!-- ═══════════════════════════════════════════════════════════ -->
