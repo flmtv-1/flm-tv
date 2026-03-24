@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLM TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:  #FFD700;
+    --green: #00A550;
+    --red:   #CE1126;
+    --blue:  #0038A8;
+    --hdr:   48px;
+    --bg:    #0a0a0a;
+    --bg2:   #111827;
+    --text:  #ffffff;
+    --muted: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { 
+    min-height: 100%; 
+    background: var(--bg); 
+    color: var(--text);
+    font-family: 'Oswald', sans-serif; 
+  }
+
+  /* ── FLM TV TOP BAR ── */
+  #flmBar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--hdr);
+    background: #0a0a0a;
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(90deg, var(--blue), var(--red), var(--gold), var(--green)) 1;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    z-index: 9999;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.8);
+  }
+
+  .flm-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: none;
+  }
+
+  .btn-front {
+    color: var(--gold);
+    border: 1px solid rgba(255,215,0,0.4) !important;
+    background: rgba(255,215,0,0.07);
+  }
+  .btn-front:hover { background: rgba(255,215,0,0.18); border-color: var(--gold) !important; }
+
+  .btn-vault {
+    color: var(--green);
+    border: 1px solid rgba(0,165,80,0.4) !important;
+    background: rgba(0,165,80,0.07);
+  }
+  .btn-vault:hover { background: rgba(0,165,80,0.18); }
+
+  .logo-wrap { display: flex; align-items: center; gap: 8px; }
+  .logo-flag { display: flex; flex-direction: column; gap: 2px; }
+  .logo-flag span { display: block; width: 20px; height: 2.5px; border-radius: 2px; }
+  .logo-flag span:nth-child(1) { background: var(--blue); }
+  .logo-flag span:nth-child(2) { background: var(--red); }
+  .logo-flag span:nth-child(3) { background: var(--gold); }
+  .logo-text { font-size: 16px; font-weight: 700; letter-spacing: 1.5px; }
+  .logo-text .flm { color: var(--gold); }
+  .logo-text .tv  { color: var(--green); }
+  .bar-spacer { flex: 1; }
+
+  /* ── LOADING ── */
+  #loading {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: var(--bg); z-index: 9998; gap: 1rem;
+    padding-top: var(--hdr);
+  }
+  .spinner {
+    width: 50px; height: 50px;
+    border: 4px solid rgba(255,255,255,0.1);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .loading-text { color: var(--gold); font-size: 1.2rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── VIDEO PLAYER ── */
+  #playerSection {
+    display: none;
+    position: fixed;
+    inset: 0;
+    padding-top: var(--hdr);
+    background: #000;
+    z-index: 100;
+  }
+
+  #videoPlayer {
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+
+  .player-close {
+    position: absolute;
+    top: calc(var(--hdr) + 12px);
+    right: 16px;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 200;
+  }
+
+  /* ── MOVIE DETAIL PAGE ── */
+  #detailSection {
+    display: none;
+    padding-top: calc(var(--hdr) + 0px);
+    min-height: 100vh;
+  }
+
+  /* HERO BACKDROP */
+  .hero-backdrop {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    min-height: 300px;
+    overflow: hidden;
+  }
+
+  .hero-backdrop img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, 
+      rgba(10,10,10,0.3) 0%, 
+      rgba(10,10,10,0.7) 60%,
+      rgba(10,10,10,1) 100%);
+  }
+
+  /* DETAIL CONTENT */
+  .detail-content {
+    max-width: 1100px;
+    margin: -80px auto 0;
+    padding: 0 2rem 4rem;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .poster-wrap {
+    flex-shrink: 0;
+    width: 200px;
+  }
+
+  .poster-wrap img {
+    width: 100%;
+    border-radius: 12px;
+    border: 3px solid var(--gold);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+  }
+
+  .poster-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: var(--bg2);
+    border-radius: 12px;
+    border: 3px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 3rem;
+  }
+
+  .info-wrap { flex: 1; min-width: 0; }
+
+  .movie-title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+  }
+
+  .movie-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .meta-badge {
+    background: rgba(255,255,255,0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .rating-badge {
+    background: var(--gold);
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .movie-overview {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #ccc;
+    margin-bottom: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+    max-width: 700px;
+  }
+
+  .genres-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .genre-tag {
+    background: rgba(0,56,168,0.3);
+    border: 1px solid var(--blue);
+    color: #7eb3ff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  /* PLAY BUTTON */
+  .play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 16px 36px;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+  }
+
+  .play-btn:hover {
+    background: #ffe033;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255,215,0,0.4);
+  }
+
+  .vault-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--green);
+    border: 2px solid var(--green);
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    text-decoration: none;
+    margin-bottom: 1rem;
+  }
+
+  .vault-btn:hover {
+    background: rgba(0,165,80,0.15);
+    transform: translateY(-2px);
+  }
+
+  /* ERROR STATE */
+  #errorSection {
+    display: none;
+    padding-top: calc(var(--hdr) + 4rem);
+    text-align: center;
+    color: var(--muted);
+  }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    .detail-content {
+      flex-direction: column;
+      align-items: center;
+      margin-top: -40px;
+      padding: 0 1rem 3rem;
+    }
+    .poster-wrap { width: 140px; }
+    .info-wrap { text-align: center; }
+    .movie-meta, .genres-wrap { justify-content: center; }
+    .hero-backdrop { height: 45vh; }
+  }
+</style>
+</head>
+<body>
+
+<!-- FLM TV BAR -->
+<div id="flmBar">
+  <a id="backBtn" class="flm-btn btn-front" href="home.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    ← Home
+  </a>
+
+  <div class="logo-wrap">
+    <div class="logo-flag"><span></span><span></span><span></span></div>
+    <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
+  </div>
+
+  <div class="bar-spacer"></div>
+
+  <a id="vaultBtn" class="flm-btn btn-vault" href="#" target="_blank">
+    🎬 The Vault
+  </a>
+</div>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading...</div>
+</div>
+
+<!-- ERROR -->
+<div id="errorSection">
+  <h2 style="color:var(--red); margin-bottom:1rem;">Could not load content</h2>
+  <p>Please check your connection and try again.</p>
+  <button onclick="history.back()" style="margin-top:2rem; padding:12px 24px; background:var(--gold); color:#000; border:none; border-radius:8px; font-size:1rem; cursor:pointer; font-family:'Oswald',sans-serif; font-weight:700;">← Go Back</button>
+</div>
+
+<!-- VIDEO PLAYER -->
+<div id="playerSection">
+  <button class="player-close" onclick="closePlayer()">✕ Close Player</button>
+  <video id="videoPlayer" controls autoplay playsinline>
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<!-- MOVIE DETAIL -->
+<div id="detailSection">
+  <div class="hero-backdrop">
+    <img id="backdropImg" src="" alt="" onerror="this.style.display='none'">
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="detail-content">
+    <div class="poster-wrap">
+      <img id="posterImg" src="" alt="" onerror="this.outerHTML='<div class=\'poster-placeholder\'>🎬</div>'">
+    </div>
+    <div class="info-wrap">
+      <h1 class="movie-title" id="movieTitle"></h1>
+      <div class="movie-meta" id="movieMeta"></div>
+      <p class="movie-overview" id="movieOverview"></p>
+      <div class="genres-wrap" id="genresWrap"></div>
+      <div>
+        <button class="play-btn" onclick="playMovie()">
+          ▶ Play Now
+        </button>
+        <a class="vault-btn" id="vaultLink" href="#" target="_blank">
+          🎬 The Vault
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  SERVER:    'https://flmtv26.duckdns.org:8920',
+  API_KEY:   '62131ee22c0141c6b651be75a7444350',
+  SERVER_ID: 'db6bb6388c8c4c70825698639853ede6',
+  USER_ID:   '0407d4609a0346f99c09e0d7ddc9ccd1'
+};
+
+const params  = new URLSearchParams(location.search);
+const ITEM_ID = params.get('id') || '';
+const CAT_ID  = params.get('catId') || '';
+const CAT_NAME = decodeURIComponent(params.get('catName') || '');
+
+let streamUrl = '';
+let accessToken = '';
+
+// Back button — go to category if came from one, else home
+const backBtn = document.getElementById('backBtn');
+if (CAT_ID) {
+  backBtn.href = `category-detail.html?id=${CAT_ID}&name=${encodeURIComponent(CAT_NAME)}`;
+}
+
+// Vault button — opens Jellyfin detail page in new tab
+const vaultUrl = `${CONFIG.SERVER}/web/index.html#!/details?id=${ITEM_ID}&serverId=${CONFIG.SERVER_ID}`;
+document.getElementById('vaultBtn').href = vaultUrl;
+document.getElementById('vaultLink').href = vaultUrl;
+
+async function authenticate() {
+  try {
+    const resp = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="flmtv-web-001", Version="1.0.0"'
+      },
+      body: JSON.stringify({ Username: 'Public', Pw: '' })
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      accessToken = data.AccessToken;
+      CONFIG.USER_ID = data.User.Id;
+      return true;
+    }
+  } catch(e) { console.log('Auth error:', e); }
+  return false;
+}
+
+async function loadMovie() {
+  if (!ITEM_ID) {
+    showError();
+    return;
+  }
+
+  try {
+    await authenticate();
+
+    const headers = {
+      'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="flmtv-web-001", Version="1.0.0"${accessToken ? ', Token="' + accessToken + '"' : ''}`
+    };
+
+    const resp = await fetch(
+      `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${ITEM_ID}?api_key=${CONFIG.API_KEY}`,
+      { headers }
+    );
+
+    if (!resp.ok) throw new Error('Failed to fetch item');
+    const item = await resp.json();
+
+    // Set page title
+    document.title = `FLM TV – ${item.Name || 'Movie'}`;
+
+    // Backdrop
+    if (item.BackdropImageTags && item.BackdropImageTags.length > 0) {
+      document.getElementById('backdropImg').src =
+        `${CONFIG.SERVER}/Items/${ITEM_ID}/Images/Backdrop?api_key=${CONFIG.API_KEY}&quality=80&maxWidth=1920`;
+    } else if (item.ImageTags && item.ImageTags.Primary) {
+      document.getElementById('backdropImg').src =
+        `${CONFIG.SERVER}/Items/${ITEM_ID}/Images/Primary?api_key=${CONFIG.API_KEY}&quality=80&maxWidth=1920`;
+    }
+
+    // Poster
+    if (item.ImageTags && item.ImageTags.Primary) {
+      document.getElementById('posterImg').src =
+        `${CONFIG.SERVER}/Items/${ITEM_ID}/Images/Primary?api_key=${CONFIG.API_KEY}&quality=90&maxWidth=400`;
+    }
+
+    // Title
+    document.getElementById('movieTitle').textContent = item.Name || 'Untitled';
+
+    // Meta
+    const meta = [];
+    if (item.ProductionYear) meta.push(`<span class="meta-badge">${item.ProductionYear}</span>`);
+    if (item.RunTimeTicks) {
+      const mins = Math.floor(item.RunTimeTicks / 600000000);
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      meta.push(`<span class="meta-badge">${h > 0 ? h + 'h ' : ''}${m}m</span>`);
+    }
+    if (item.OfficialRating) meta.push(`<span class="meta-badge">${item.OfficialRating}</span>`);
+    if (item.CommunityRating) meta.push(`<span class="rating-badge">★ ${item.CommunityRating.toFixed(1)}</span>`);
+    document.getElementById('movieMeta').innerHTML = meta.join('');
+
+    // Overview
+    document.getElementById('movieOverview').textContent = 
+      item.Overview || 'Available on FLM Television Network.';
+
+    // Genres
+    if (item.Genres && item.Genres.length > 0) {
+      document.getElementById('genresWrap').innerHTML = 
+        item.Genres.map(g => `<span class="genre-tag">${g}</span>`).join('');
+    }
+
+    // Build stream URL
+    streamUrl = `${CONFIG.SERVER}/Videos/${ITEM_ID}/stream?static=true&api_key=${CONFIG.API_KEY}`;
+
+    // Show detail section
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('detailSection').style.display = 'block';
+
+  } catch(e) {
+    console.error('Error loading movie:', e);
+    showError();
+  }
+}
+
+function playMovie() {
+  if (!streamUrl) return;
+  const video = document.getElementById('videoPlayer');
+  video.src = streamUrl;
+  document.getElementById('playerSection').style.display = 'block';
+  document.getElementById('detailSection').style.display = 'none';
+  video.play();
+}
+
+function closePlayer() {
+  const video = document.getElementById('videoPlayer');
+  video.pause();
+  video.src = '';
+  document.getElementById('playerSection').style.display = 'none';
+  document.getElementById('detailSection').style.display = 'block';
+}
+
+function showError() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('errorSection').style.display = 'block';
+}
+
+// Load movie on start
+loadMovie();
+</script>
+</body>
+</html>

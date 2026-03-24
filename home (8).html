@@ -3126,11 +3126,11 @@
         // ═══════════════════════════════════════════════════════════════
         
       const JELLYFIN_CONFIG = {
-    SERVER: 'https://flmtv.com/jellyfin',
+    SERVER: 'https://flmtv26.duckdns.org',
     API_KEY: '62131ee22c0141c6b651be75a7444350',
     USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4',
     SERVER_ID: 'db6bb6388c8c4c70825698639853ede6',
-    PLAYER_SERVER: 'https://flmtv.com/jellyfin',
+    PLAYER_SERVER: 'https://flmtv26.duckdns.org',
     
     COLLECTIONS: [
         { id: '689c3f2fb8ec0ad205e3d8a10f2374c3', name: 'MOVIES', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=689c3f2fb8ec0ad205e3d8a10f2374c3&collectionType=movies' },
@@ -3999,14 +3999,51 @@
         }
         
        async function playJellyfinItem(itemId, itemType) {
-    console.log('🎬 Opening Jellyfin directly for:', itemId, itemType);
+    console.log('🎬 Opening detail page for:', itemId, itemType);
 
     const previewVideo = document.getElementById('previewVideo');
     if (previewVideo) { previewVideo.pause(); previewVideo.muted = true; }
 
-    // ✅ FIX: Open directly in Jellyfin — works on mobile and desktop
-    const jellyfinUrl = `https://flmtv26.duckdns.org:8920/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6`;
-    window.location.href = jellyfinUrl;
+    let type = itemType;
+    if (!type) {
+        try {
+            const res = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`);
+            const data = await res.json();
+            type = data.Type;
+        } catch(e) { type = 'Movie'; }
+    }
+
+    if (type === 'Series') {
+        window.location.href = `movie-frame.html?id=${itemId}`;
+        return;
+    }
+
+    // Get fresh Public user token so Jellyfin never shows login page
+    let token = JELLYFIN_CONFIG.ACCESS_TOKEN || '';
+    try {
+        const authResp = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID || 'flmtv-web'}", Version="1.0.0"`
+            },
+            body: JSON.stringify({ Username: 'Public', Pw: '' })
+        });
+        if (authResp.ok) {
+            const authData = await authResp.json();
+            token = authData.AccessToken;
+            JELLYFIN_CONFIG.ACCESS_TOKEN = token;
+            console.log('✅ Got fresh Public token');
+        }
+    } catch(e) {
+        token = JELLYFIN_CONFIG.API_KEY;
+    }
+
+    if (itemType === 'Series') {
+        window.location.href = `movie-frame.html?id=${itemId}`;
+    } else {
+        window.location.href = `movie-frame.html?id=${itemId}`;
+    }
 }
         
         // ═══════════════════════════════════════════════════════════════
@@ -4112,15 +4149,7 @@
     }
     
     // All other items are CATEGORIES - redirect to category-detail.html
-    // ✅ FIX: Open collection directly in Jellyfin
-    const collectionData = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
-    if (collectionData && collectionData.url) {
-        // Convert internal URL to public HTTPS URL
-        const publicUrl = collectionData.url.replace('http://flmtv26.duckdns.org:8096', 'https://flmtv26.duckdns.org:8920');
-        window.location.href = publicUrl;
-    } else {
-        window.location.href = `https://flmtv26.duckdns.org:8920/web/index.html#!/list?parentId=${collectionId}&serverId=db6bb6388c8c4c70825698639853ede6`;
-    }
+    window.location.href = `category-detail.html?id=${collectionId}&name=${encodeURIComponent(collectionName)}`;
         }
         
         function showCollectionsEnterOverlay(collectionUrl, collectionName) {
@@ -5189,7 +5218,7 @@ async function loadCollectionPage(collectionId, title) {
         searchInput.value = '';
         
         if (itemType === 'Movie' || itemType === 'Series') {
-            window.location.href = `https://flmtv26.duckdns.org:8920/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6`;
+            window.location.href = `movie-frame.html?id=${itemId}`;
         } else if (itemType === 'BoxSet') {
             window.location.href = `collection-detail.html?id=${itemId}`;
         }
