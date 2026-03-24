@@ -280,42 +280,11 @@ let currentPage = 0;
 let totalItems = 0;
 let allItems = [];
 
-// AUTHENTICATE FIRST
-async function authenticate() {
-    try {
-        const response = await fetch(`${CONFIG.SERVER}/Users/AuthenticateByName`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-${Date.now()}", Version="1.0.0"`
-            },
-            body: JSON.stringify({
-                Username: 'Public',
-                Pw: ''
-            })
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            CONFIG.ACCESS_TOKEN = data.AccessToken;
-            CONFIG.USER_ID = data.User.Id;
-            console.log('✅ Authenticated');
-            return true;
-        }
-    } catch (error) {
-        console.error('Auth error:', error);
-    }
-    return false;
-}
+// Authentication skipped — using API key directly
 
 async function loadCategory() {
     try {
-        // Authenticate first
-        await authenticate();
-        
-        const headers = {
-            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
-        };
+        // Use API key directly — no auth needed
         
         // Set category name if provided
         if (categoryName) {
@@ -323,10 +292,10 @@ async function loadCategory() {
         }
         
         // LOAD FIRST PAGE ONLY - Much faster!
-        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}`;
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}&api_key=${CONFIG.API_KEY}`;
         console.log('Loading page', currentPage + 1, ':', itemsUrl);
         
-        const itemsRes = await fetch(itemsUrl, { headers });
+        const itemsRes = await fetch(itemsUrl);
         const itemsData = await itemsRes.json();
         
         console.log('Category items:', itemsData);
@@ -340,8 +309,8 @@ async function loadCategory() {
         // If no name provided, try to get it from category
         if (!categoryName) {
             try {
-                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}`;
-                const parentRes = await fetch(parentUrl, { headers });
+                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}?api_key=${CONFIG.API_KEY}`;
+                const parentRes = await fetch(parentUrl);
                 const parent = await parentRes.json();
                 document.getElementById('categoryTitle').textContent = parent.Name || 'Category';
             } catch (e) {
@@ -359,7 +328,6 @@ async function loadCategory() {
         
     } catch (error) {
         console.error('Error loading category:', error);
-        alert('Error loading category. Check console for details.');
         document.getElementById('loading').style.display = 'none';
     }
 }
@@ -417,14 +385,10 @@ async function loadMore() {
     document.getElementById('loadingMore').style.display = 'block';
     document.getElementById('loadMoreBtn').disabled = true;
     
-    const headers = {
-        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web", Version="1.0.0", Token="${CONFIG.ACCESS_TOKEN}"`
-    };
-    
-    const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}`;
+    const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}&api_key=${CONFIG.API_KEY}`;
     
     try {
-        const itemsRes = await fetch(itemsUrl, { headers });
+        const itemsRes = await fetch(itemsUrl);
         const itemsData = await itemsRes.json();
         
         displayItems(itemsData.Items);
@@ -432,7 +396,6 @@ async function loadMore() {
         
     } catch (error) {
         console.error('Error loading more:', error);
-        alert('Error loading more items');
     }
     
     document.getElementById('loadingMore').style.display = 'none';
@@ -456,7 +419,6 @@ async function previousPage() {
 }
 
 if (!categoryId) {
-    alert('No category ID provided');
     history.back();
 } else {
     loadCategory();
