@@ -36,9 +36,9 @@ const ITEM_ID = params.get('id') || '';
 if (ITEM_ID) {
   // Full URL with complete api_key — bypasses login, goes straight to detail page
   window.location.replace(
-    SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
-    '&serverId=' + SERVER_ID +
-    '&api_key=' + API_KEY
+    SERVER + '/web/index.html?api_key=' + API_KEY +
+    '#!/details?id=' + ITEM_ID +
+    '&serverId=' + SERVER_ID
   );
 } else {
   window.location.replace('home.html');
