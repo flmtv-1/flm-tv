@@ -149,54 +149,11 @@ if (CAT_ID) {
   backBtn.href = 'category-detail.html?id=' + CAT_ID + '&name=' + encodeURIComponent(CAT_NAME);
 }
 
-async function authenticate() {
-  // Check if already have a valid token stored
-  try {
-    var stored = localStorage.getItem('jellyfin_credentials');
-    if (stored) {
-      var creds = JSON.parse(stored);
-      if (creds.Servers && creds.Servers[0] && creds.Servers[0].AccessToken) {
-        return creds.Servers[0].AccessToken;
-      }
-    }
-  } catch(e) {}
-
-  // Authenticate as public user (no password)
-  try {
-    var resp = await fetch(CONFIG.SERVER + '/Users/AuthenticateByName', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Browser", DeviceId="flmtv001", Version="10.11.3"'
-      },
-      body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
-    });
-    var data = await resp.json();
-    if (data.AccessToken) {
-      localStorage.setItem('jellyfin_credentials', JSON.stringify({
-        Servers: [{
-          Id: CONFIG.SERVER_ID,
-          ManualAddress: CONFIG.SERVER,
-          UserId: data.User.Id,
-          AccessToken: data.AccessToken
-        }]
-      }));
-      return data.AccessToken;
-    }
-  } catch(e) { console.log('Auth error:', e); }
-  return null;
+if (ITEM_ID) {
+  document.getElementById('jellyfinFrame').src =
+    CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
+    '#!/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
 }
-
-async function loadPlayer() {
-  await authenticate();
-  if (ITEM_ID) {
-    var movieUrl = CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
-      '#!/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
-    document.getElementById('jellyfinFrame').src = movieUrl;
-  }
-}
-
-loadPlayer();
 </script>
 </body>
 </html>
