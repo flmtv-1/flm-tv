@@ -143,25 +143,24 @@
             margin-bottom: 3rem;
         }
 
-        /* Coloring Cards - FIXED SIZE SQUARES */
+        /* Coloring Cards - SMALL SQUARES */
         #coloringGallery.books-grid {
-            grid-template-columns: repeat(auto-fill, 120px);
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             gap: 0.75rem;
-            justify-content: start;
         }
         
         #coloringGallery .book-card {
-            padding: 0.5rem;
-            width: 120px;
+            padding: 0.4rem;
         }
         
         #coloringGallery .book-cover {
-            height: 120px;
-            width: 120px;
+            height: 110px;
+            width: 100%;
         }
         
         #coloringGallery .book-title {
             font-size: 0.7rem;
+            margin-top: 0.3rem;
         }
         
         #coloringGallery .book-type {
@@ -184,7 +183,7 @@
 
         .book-cover {
             width: 100%;
-            height: 280px;
+            aspect-ratio: 2/3;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
             display: flex;
@@ -365,18 +364,13 @@
         }
 
         .page-counter {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
             background: #ffd700;
             color: #333;
-            padding: 1rem 2rem;
-            border-radius: 30px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
-            z-index: 100;
         }
 
         /* Loading */
@@ -442,7 +436,96 @@
         #coloringSVG path, #coloringSVG polygon, #coloringSVG circle, #coloringSVG rect, #coloringSVG ellipse {
             transition: fill 0.2s ease;
         }
-    </style>
+    
+        /* ── MOBILE FIT FIX ── */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+            }
+
+            .header {
+                padding: 0.85rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 1rem 0.75rem;
+            }
+
+            .section-tabs {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .tab-btn {
+                padding: 0.65rem 0.5rem;
+                font-size: 0.85rem;
+                border-radius: 14px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .book-cover {
+                aspect-ratio: 2/3;
+            }
+
+            .book-card {
+                padding: 0.6rem;
+            }
+
+            .book-title {
+                font-size: 0.78rem;
+            }
+
+            .book-type {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+            .back-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            .book-cover {
+                height: 130px;
+            }
+            .book-title {
+                font-size: 0.72rem;
+            }
+        }
+
+        </style>
 </head>
 <body>
 
@@ -466,17 +549,17 @@
                 <i class="fas fa-tv"></i>
                 Cartoons
             </button>
-            <button class="tab-btn" onclick="showSection('audiobooks')">
-                <i class="fas fa-headphones"></i>
-                Audiobooks
+            <button class="tab-btn" onclick="showSection('comics')">
+                <i class="fas fa-book"></i>
+                Big Kids Comics
             </button>
             <button class="tab-btn" onclick="showSection('storybooks')">
                 <i class="fas fa-book-open"></i>
-                Story Books
+                Story Time
             </button>
-            <button class="tab-btn" onclick="showSection('coloring')">
-                <i class="fas fa-palette"></i>
-                Coloring
+            <button class="tab-btn" onclick="showSection('audiobooks')">
+                <i class="fas fa-headphones"></i>
+                Audio Stories
             </button>
             <button class="tab-btn" onclick="showSection('games')">
                 <i class="fas fa-gamepad"></i>
@@ -496,20 +579,20 @@
             </div>
         </div>
 
-        <!-- Audiobooks Section -->
-        <div id="audiobooks-section" class="section-content">
-            <h1 class="section-title">🎧 Choose an Audiobook to Listen</h1>
-            <div class="books-grid" id="audiobooksGrid">
+        <!-- Big Kids Comics Section -->
+        <div id="comics-section" class="section-content">
+            <h1 class="section-title">🦸 Big Kids Comics</h1>
+            <div class="books-grid" id="comicsGrid">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
-                    <p>Loading audiobooks...</p>
+                    <p>Loading comics...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Story Books Section -->
+        <!-- Story Time Section -->
         <div id="storybooks-section" class="section-content">
-            <h1 class="section-title">📖 Choose a Story Book to Read</h1>
+            <h1 class="section-title">📖 Story Time</h1>
             <div class="books-grid" id="storybooksGrid">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
@@ -518,43 +601,13 @@
             </div>
         </div>
 
-        <!-- Coloring Section -->
-        <div id="coloring-section" class="section-content">
-            <h1 class="section-title">🎨 Choose a Picture to Color</h1>
-            
-            <!-- Coloring Page Gallery -->
-            <div class="books-grid" id="coloringGallery" style="display: grid;">
-                <!-- Gallery will be populated by JavaScript -->
-            </div>
-            
-            <!-- Coloring Canvas (hidden until page selected) -->
-            <div id="coloringCanvas" style="display: none;">
-                <div style="text-align: center; margin-bottom: 1rem;">
-                    <button class="back-btn" onclick="backToGallery()" style="display: inline-block; margin: 0 auto;">
-                        <i class="fas fa-arrow-left"></i> Choose Another Picture
-                    </button>
-                </div>
-                
-                <!-- Color Palette -->
-                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                    <button class="color-btn" onclick="selectColor('#FF0000')" style="background: #FF0000;" title="Red"></button>
-                    <button class="color-btn" onclick="selectColor('#FF6B00')" style="background: #FF6B00;" title="Orange"></button>
-                    <button class="color-btn" onclick="selectColor('#FFD700')" style="background: #FFD700;" title="Yellow"></button>
-                    <button class="color-btn" onclick="selectColor('#00FF00')" style="background: #00FF00;" title="Green"></button>
-                    <button class="color-btn" onclick="selectColor('#00BFFF')" style="background: #00BFFF;" title="Blue"></button>
-                    <button class="color-btn" onclick="selectColor('#8B00FF')" style="background: #8B00FF;" title="Purple"></button>
-                    <button class="color-btn" onclick="selectColor('#FF1493')" style="background: #FF1493;" title="Pink"></button>
-                    <button class="color-btn" onclick="selectColor('#8B4513')" style="background: #8B4513;" title="Brown"></button>
-                    <button class="color-btn" onclick="selectColor('#000000')" style="background: #000000;" title="Black"></button>
-                    <button class="color-btn" onclick="selectColor('#FFFFFF')" style="background: #FFFFFF; border: 2px solid #333;" title="White"></button>
-                    <button class="color-btn" onclick="clearColoring()" style="background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);" title="Clear All">
-                        <i class="fas fa-undo" style="color: white;"></i>
-                    </button>
-                </div>
-                
-                <!-- SVG Coloring Area -->
-                <div style="display: flex; justify-content: center;">
-                    <svg id="coloringSVG" width="600" height="600" style="background: white; border: 3px solid #ffd700; border-radius: 15px; cursor: pointer;"></svg>
+        <!-- Audio Stories Section -->
+        <div id="audiobooks-section" class="section-content">
+            <h1 class="section-title">🎧 Audio Stories</h1>
+            <div class="books-grid" id="audiobooksGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading audio stories...</p>
                 </div>
             </div>
         </div>
@@ -562,10 +615,18 @@
         <!-- Games Section -->
         <div id="games-section" class="section-content">
             <h1 class="section-title">🎮 Choose a Game to Play</h1>
-            <div class="games-grid" id="gamesGrid">
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <p>Games coming soon!</p>
+            
+            <!-- Coming Soon Message -->
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 3rem; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
+                    <i class="fas fa-gamepad" style="font-size: 5rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                    <h2 style="color: #667eea; font-size: 2.5rem; margin-bottom: 1rem;">Coming Soon!</h2>
+                    <p style="color: #333; font-size: 1.3rem; line-height: 1.6;">
+                        Awesome games are on the way! Check back soon for fun games to play.
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <i class="fas fa-trophy" style="font-size: 3rem; color: #764ba2;"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -576,6 +637,7 @@
     <div class="reader-overlay" id="readerOverlay">
         <div class="reader-header">
             <div class="reader-title" id="readerTitle">Book Title</div>
+            <div class="page-counter" id="pageCounter">Loading...</div>
             <button class="close-reader" onclick="closeReader()">
                 <i class="fas fa-times"></i> Close
             </button>
@@ -592,8 +654,6 @@
             <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
                 <i class="fas fa-chevron-right"></i>
             </button>
-            
-            <div class="page-counter" id="pageCounter">Loading...</div>
         </div>
     </div>
 
@@ -604,13 +664,14 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         
         const JELLYFIN_CONFIG = {
-            SERVER: 'https://flmtv26.duckdns.org:8920',
+            SERVER: 'https://flmtv.com/jellyfin',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
-            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-            BOOKS_LIBRARY_ID: '467bd88b656c88ee6a423d8478e9e54a',      // TEXT BOOKS (EPUB)
-            STORYBOOKS_LIBRARY_ID: 'cd9fa11a14441d0f61e557525d3369d9',  // TEXT-BOOKS-KIDS 01 (PDFs)
-            AUDIOBOOKS_LIBRARY_ID: 'eb2423cff03c7994638e891f33af209d',  // MUSIC LIBRARY
-            CARTOONS_LIBRARY_ID: 'ca43f3291c81d4f007f2b33936d256e6',    // KIDS WORLD (Cartoons/TV)
+            USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4',
+            BOOKS_LIBRARY_ID: 'b1179837c889803ea1f56a0e343b4877',      // TEXT BOOKS (EPUB)
+            STORYBOOKS_LIBRARY_ID: 'c0008eeeb6b0a99b8450194800eb77d4',  // My Story Time (PDFs)
+            COMICS_LIBRARY_ID: '2bc01a0435b16f914579fc15f131978e',      // Big Kids Comics (CBR)
+            AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054',  // MUSIC LIBRARY
+            CARTOONS_LIBRARY_ID: '721f4a924b7d17ff69c721701538b3be',    // KIDS WORLD (Cartoons/TV)
             GAMES_LIBRARY_ID: null  // Add when games library is created
         };
 
@@ -680,6 +741,9 @@
                 } else if (section === 'audiobooks') {
                     loadAudiobooks();
                     loadedSections.audiobooks = true;
+                } else if (section === 'comics') {
+                    loadComics();
+                    loadedSections.comics = true;
                 } else if (section === 'cartoons') {
                     loadCartoons();
                     loadedSections.cartoons = true;
@@ -747,6 +811,36 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
+        // LOAD BIG KIDS COMICS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+
+        async function loadComics() {
+            const grid = document.getElementById('comicsGrid');
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.COMICS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                const comics = data.Items || [];
+                if (comics.length === 0) {
+                    grid.innerHTML = '<div class="loading"><p>No comics available yet!</p></div>';
+                    return;
+                }
+                grid.innerHTML = comics.map(book => {
+                    const imgUrl = book.ImageTags && book.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null;
+                    const frameUrl = `movie-frame.html?id=${book.Id}&name=${encodeURIComponent(book.Name)}`;
+                    return `<div class="book-card" onclick="window.location.href='${frameUrl}'">
+                        <div class="book-cover">${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}">` : '<i class="fas fa-book"></i>'}</div>
+                        <div class="book-title">${book.Name}</div>
+                        <span class="book-type">COMIC</span>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                grid.innerHTML = '<div class="loading"><p style="color:#ff6b6b;">Could not load comics</p></div>';
+            }
+        }
+
         // LOAD STORY BOOKS (PDFs) FROM JELLYFIN
         // ═══════════════════════════════════════════════════════════════
         
@@ -1123,20 +1217,13 @@
             const audio = AUDIOBOOKS[index];
             
             console.log('🎧 Opening audiobook:', audio.name);
-            
-            // Open in Jellyfin's native audio player (no auth params needed)
-            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${audio.id}`;
-            window.location.href = jellyfinUrl;
+            window.location.href = `movie-frame.html?id=${audio.id}&name=${encodeURIComponent(audio.name)}`;
         }
 
         function openCartoon(index) {
             const show = CARTOONS[index];
-            
             console.log('📺 Opening cartoon:', show.name);
-            
-            // Open in Jellyfin's native TV player (no auth params needed)
-            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${show.id}`;
-            window.location.href = jellyfinUrl;
+            window.location.href = `movie-frame.html?id=${show.id}&name=${encodeURIComponent(show.name)}`;
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -1201,136 +1288,6 @@
             window.open(game.file, '_blank');
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // COLORING BOOK
-        // ═══════════════════════════════════════════════════════════════
-
-        let currentColor = '#FF0000'; // Default red
-        let currentColoringPage = null; // Renamed to avoid conflict
-
-        // Coloring pages - ALL YOUR PNG FILES!
-        const COLORING_PAGES = [
-            { name: 'Realistic Cute Dog', image: 'Coloring Pages/realistic-cute-dog-coloring-pages.png' },
-            { name: 'Princess Cute', image: 'Coloring Pages/princess-colouring-pages-cute.png' },
-            { name: 'Princess Kindergarten', image: 'Coloring Pages/princess-coloring-sheets-for-kindergarten.png' },
-            { name: 'Poodle Dog', image: 'Coloring Pages/poodle-dog-coloring-page.png' },
-            { name: 'Poodle Kids', image: 'Coloring Pages/poodle-coloring-pages-for-kids.png' },
-            { name: 'Valentine Heart', image: 'Coloring Pages/free-valentines-day-heart-coloring-pages.png' },
-            { name: 'Valentine Pages', image: 'Coloring Pages/free-valentine-coloring-pages.png' },
-            { name: 'Cute Puppy', image: 'Coloring Pages/cute-puppy-printable-realistic-dog-coloring-pages.png' },
-            { name: 'Boxer Print Free', image: 'Coloring Pages/boxer-dog-coloring-pages-to-print-free.png' },
-            { name: 'Boxer Toddlers', image: 'Coloring Pages/boxer-dog-coloring-pages-toddlers.png' },
-            { name: 'Boxer Toddler', image: 'Coloring Pages/boxer-dog-coloring-pages-toddler.png' },
-            { name: 'Boxer Adults', image: 'Coloring Pages/boxer-dog-coloring-pages-for-adults.png' },
-            { name: 'Boxer Flowers', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages.png' },
-            { name: 'Boxer Flowers Free', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-free.png' },
-            { name: 'Boxer Flowers Print', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-printable.png' },
-            { name: 'Baby Poodle', image: 'Coloring Pages/baby-poodle-coloring-page.png' },
-            { name: 'Baby Cute Dog', image: 'Coloring Pages/baby-cute-dog-coloring-pages.png' }
-        ];
-
-        // Initialize coloring gallery
-        function initColoringGallery() {
-            const gallery = document.getElementById('coloringGallery');
-            
-            gallery.innerHTML = COLORING_PAGES.map((page, index) => `
-                <div class="book-card" onclick="openColoringPage(${index})">
-                    <div class="book-cover">
-                        <img src="${page.image}" style="width: 100%; height: 100%; object-fit: cover;" alt="${page.name}">
-                    </div>
-                    <div class="book-title">${page.name}</div>
-                    <span class="book-type">🎨 COLOR ME!</span>
-                </div>
-            `).join('');
-        }
-
-        // Open a coloring page
-        function openColoringPage(index) {
-            currentColoringPage = index;
-            const page = COLORING_PAGES[index];
-            
-            // Hide gallery, show canvas
-            document.getElementById('coloringGallery').style.display = 'none';
-            document.getElementById('coloringCanvas').style.display = 'block';
-            
-            // Load PNG image as background and create drawing canvas
-            const svg = document.getElementById('coloringSVG');
-            const img = new Image();
-            img.src = page.image;
-            
-            img.onload = function() {
-                // Clear SVG and create canvas for drawing
-                svg.innerHTML = '';
-                svg.style.background = `url('${page.image}') center/contain no-repeat`;
-                svg.style.cursor = 'crosshair';
-                
-                // Add drawing capability
-                let isDrawing = false;
-                
-                svg.addEventListener('mousedown', (e) => {
-                    isDrawing = true;
-                    const rect = svg.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', x);
-                    circle.setAttribute('cy', y);
-                    circle.setAttribute('r', '10');
-                    circle.setAttribute('fill', currentColor);
-                    svg.appendChild(circle);
-                });
-                
-                svg.addEventListener('mousemove', (e) => {
-                    if (!isDrawing) return;
-                    const rect = svg.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', x);
-                    circle.setAttribute('cy', y);
-                    circle.setAttribute('r', '10');
-                    circle.setAttribute('fill', currentColor);
-                    svg.appendChild(circle);
-                });
-                
-                svg.addEventListener('mouseup', () => {
-                    isDrawing = false;
-                });
-            };
-        }
-
-        // Select color
-        function selectColor(color) {
-            currentColor = color;
-            
-            // Update button selection
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.closest('.color-btn').classList.add('selected');
-        }
-
-        // Clear coloring
-        function clearColoring() {
-            if (currentColoringPage === null) return;
-            
-            // Reload the page to reset
-            openColoringPage(currentColoringPage);
-        }
-
-        // Back to gallery
-        function backToGallery() {
-            document.getElementById('coloringGallery').style.display = 'grid';
-            document.getElementById('coloringCanvas').style.display = 'none';
-            currentColoringPage = null;
-        }
-
-        // Initialize coloring gallery on load
-        window.addEventListener('load', () => {
-            initColoringGallery();
-        });
     </script>
 
 </body>
