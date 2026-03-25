@@ -141,6 +141,7 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 2rem;
             margin-bottom: 3rem;
+            align-items: start;
         }
 
         /* Coloring Cards - SMALL SQUARES */
@@ -183,7 +184,7 @@
 
         .book-cover {
             width: 100%;
-            aspect-ratio: 2/3;
+            aspect-ratio: 2 / 3;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
             display: flex;
@@ -198,6 +199,15 @@
             color: white;
         }
 
+
+        .book-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            background: #1a1a1a;
+            border-radius: 10px 10px 0 0;
+            display: block;
+        }
         .book-cover img {
             width: 100%;
             height: 100%;
@@ -364,13 +374,18 @@
         }
 
         .page-counter {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
             background: #ffd700;
             color: #333;
-            padding: 0.75rem 1.5rem;
-            border-radius: 20px;
+            padding: 1rem 2rem;
+            border-radius: 30px;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+            z-index: 100;
         }
 
         /* Loading */
@@ -392,23 +407,57 @@
 
         /* Mobile */
         @media (max-width: 768px) {
-            .books-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 1rem;
+            .header {
+                padding: 0.75rem 1rem;
             }
-
+            .logo {
+                font-size: 1.4rem;
+            }
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .section-tabs {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            .tab-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                border-radius: 14px;
+                flex: 0 1 auto;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+                align-items: start;
+            }
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
-
             .nav-arrow {
                 width: 50px;
                 height: 50px;
                 font-size: 1.5rem;
             }
+        }
 
-            .section-title {
-                font-size: 2rem;
+        @media (max-width: 400px) {
+            .tab-btn {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
             }
         }
 
@@ -436,96 +485,7 @@
         #coloringSVG path, #coloringSVG polygon, #coloringSVG circle, #coloringSVG rect, #coloringSVG ellipse {
             transition: fill 0.2s ease;
         }
-    
-        /* ── MOBILE FIT FIX ── */
-        @media (max-width: 768px) {
-            html, body {
-                overflow-x: hidden;
-                width: 100%;
-            }
-
-            .header {
-                padding: 0.85rem 1rem;
-            }
-
-            .logo {
-                font-size: 1.4rem;
-            }
-
-            .back-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .container {
-                padding: 1rem 0.75rem;
-            }
-
-            .section-tabs {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-                margin-bottom: 1.25rem;
-            }
-
-            .tab-btn {
-                padding: 0.65rem 0.5rem;
-                font-size: 0.85rem;
-                border-radius: 14px;
-                text-align: center;
-                justify-content: center;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
-            }
-
-            .book-cover {
-                aspect-ratio: 2/3;
-            }
-
-            .book-card {
-                padding: 0.6rem;
-            }
-
-            .book-title {
-                font-size: 0.78rem;
-            }
-
-            .book-type {
-                font-size: 0.65rem;
-                padding: 0.2rem 0.5rem;
-            }
-
-            .games-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .logo {
-                font-size: 1.2rem;
-            }
-            .back-btn {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.8rem;
-            }
-            .book-cover {
-                height: 130px;
-            }
-            .book-title {
-                font-size: 0.72rem;
-            }
-        }
-
-        </style>
+    </style>
 </head>
 <body>
 
@@ -553,13 +513,13 @@
                 <i class="fas fa-book"></i>
                 Big Kids Comics
             </button>
-            <button class="tab-btn" onclick="showSection('storybooks')">
-                <i class="fas fa-book-open"></i>
-                Story Time
-            </button>
             <button class="tab-btn" onclick="showSection('audiobooks')">
                 <i class="fas fa-headphones"></i>
-                Audio Stories
+                Audiobooks
+            </button>
+            <button class="tab-btn" onclick="showSection('storybooks')">
+                <i class="fas fa-book-open"></i>
+                Story Books
             </button>
             <button class="tab-btn" onclick="showSection('games')">
                 <i class="fas fa-gamepad"></i>
@@ -590,24 +550,24 @@
             </div>
         </div>
 
-        <!-- Story Time Section -->
-        <div id="storybooks-section" class="section-content">
-            <h1 class="section-title">📖 Story Time</h1>
-            <div class="books-grid" id="storybooksGrid">
+        <!-- Audiobooks Section -->
+        <div id="audiobooks-section" class="section-content">
+            <h1 class="section-title">🎧 Choose an Audiobook to Listen</h1>
+            <div class="books-grid" id="audiobooksGrid">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
-                    <p>Loading story books...</p>
+                    <p>Loading audiobooks...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Audio Stories Section -->
-        <div id="audiobooks-section" class="section-content">
-            <h1 class="section-title">🎧 Audio Stories</h1>
-            <div class="books-grid" id="audiobooksGrid">
+        <!-- Story Books Section -->
+        <div id="storybooks-section" class="section-content">
+            <h1 class="section-title">📖 Choose a Story Book to Read</h1>
+            <div class="books-grid" id="storybooksGrid">
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
-                    <p>Loading audio stories...</p>
+                    <p>Loading story books...</p>
                 </div>
             </div>
         </div>
@@ -637,7 +597,6 @@
     <div class="reader-overlay" id="readerOverlay">
         <div class="reader-header">
             <div class="reader-title" id="readerTitle">Book Title</div>
-            <div class="page-counter" id="pageCounter">Loading...</div>
             <button class="close-reader" onclick="closeReader()">
                 <i class="fas fa-times"></i> Close
             </button>
@@ -654,6 +613,8 @@
             <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
                 <i class="fas fa-chevron-right"></i>
             </button>
+            
+            <div class="page-counter" id="pageCounter">Loading...</div>
         </div>
     </div>
 
@@ -664,15 +625,14 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         
         const JELLYFIN_CONFIG = {
-            SERVER: 'https://flmtv.com/jellyfin',
+            SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
-            USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4',
-            BOOKS_LIBRARY_ID: 'b1179837c889803ea1f56a0e343b4877',      // TEXT BOOKS (EPUB)
-            STORYBOOKS_LIBRARY_ID: 'c0008eeeb6b0a99b8450194800eb77d4',  // My Story Time (PDFs)
-            COMICS_LIBRARY_ID: '2bc01a0435b16f914579fc15f131978e',      // Big Kids Comics (CBR)
-            AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054',  // MUSIC LIBRARY
-            CARTOONS_LIBRARY_ID: '721f4a924b7d17ff69c721701538b3be',    // KIDS WORLD (Cartoons/TV)
-            GAMES_LIBRARY_ID: null  // Add when games library is created
+            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
+            COMICS_LIBRARY_ID: '2bc01a0435b16f914579fc15f131978e',     // BIG KIDS COMICS (CBR - opens in Jellyfin)
+            STORYBOOKS_LIBRARY_ID: 'c0008eeeb6b0a99b8450194800eb77d4', // STORY TIME (PDFs - built-in reader)
+            AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054', // AUDIO STORIES
+            CARTOONS_LIBRARY_ID: '721f4a924b7d17ff69c721701538b3be',   // KIDS WORLD (Cartoons/TV)
+            GAMES_LIBRARY_ID: null
         };
 
         // ═══════════════════════════════════════════════════════════════
@@ -702,11 +662,7 @@
         // ═══════════════════════════════════════════════════════════════
         
         window.addEventListener('load', () => {
-            // Load cartoons initially (active tab)
             loadCartoons();
-            // Initialize coloring gallery (lightweight)
-            initColoringGallery();
-            // Don't load audiobooks until user clicks that tab
         });
 
         // Keyboard navigation
@@ -722,28 +678,24 @@
         // SECTION SWITCHING - WITH ON-DEMAND LOADING
         // ═══════════════════════════════════════════════════════════════
         
-        let loadedSections = { cartoons: true, coloring: true }; // Pre-loaded
+        let loadedSections = { cartoons: true };
         
         function showSection(section) {
-            // Hide all sections
             document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
-            // Show selected section
             document.getElementById(`${section}-section`).classList.add('active');
             event.target.closest('.tab-btn').classList.add('active');
             
-            // Load content on-demand if not already loaded
             if (!loadedSections[section]) {
-                if (section === 'storybooks') {
+                if (section === 'comics') {
+                    loadComics();
+                    loadedSections.comics = true;
+                } else if (section === 'storybooks') {
                     loadStoryBooks();
                     loadedSections.storybooks = true;
                 } else if (section === 'audiobooks') {
                     loadAudiobooks();
                     loadedSections.audiobooks = true;
-                } else if (section === 'comics') {
-                    loadComics();
-                    loadedSections.comics = true;
                 } else if (section === 'cartoons') {
                     loadCartoons();
                     loadedSections.cartoons = true;
@@ -752,68 +704,9 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // LOAD BOOKS FROM JELLYFIN
+        // LOAD BIG KIDS COMICS FROM JELLYFIN (CBR - opens in Jellyfin reader)
         // ═══════════════════════════════════════════════════════════════
         
-        async function loadBooks() {
-            const grid = document.getElementById('booksGrid');
-            
-            try {
-                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.BOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                BOOKS = (data.Items || []).map(book => ({
-                    id: book.Id,
-                    name: book.Name,
-                    file: `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`,
-                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'EPUB',
-                    imageUrl: book.ImageTags && book.ImageTags.Primary
-                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
-                        : null
-                }));
-                
-                displayBooks();
-            } catch (error) {
-                console.error('Error loading books:', error);
-                grid.innerHTML = `
-                    <div class="loading">
-                        <p style="color: #ff6b6b;">Oops! Could not load books</p>
-                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to check the connection!</p>
-                    </div>
-                `;
-            }
-        }
-        
-        function displayBooks() {
-            const grid = document.getElementById('booksGrid');
-            
-            if (BOOKS.length === 0) {
-                grid.innerHTML = `
-                    <div class="loading">
-                        <p>No books available yet!</p>
-                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some books 📚</p>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = BOOKS.map((book, index) => `
-                <div class="book-card" onclick="openBook(${index})">
-                    <div class="book-cover">
-                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
-                    </div>
-                    <div class="book-title">${book.name}</div>
-                    <span class="book-type">${book.type}</span>
-                </div>
-            `).join('');
-        }
-
-        // ═══════════════════════════════════════════════════════════════
-        // LOAD BIG KIDS COMICS FROM JELLYFIN
-        // ═══════════════════════════════════════════════════════════════
-
         async function loadComics() {
             const grid = document.getElementById('comicsGrid');
             try {
@@ -821,26 +714,30 @@
                 const response = await fetch(url);
                 const data = await response.json();
                 const comics = data.Items || [];
+                
                 if (comics.length === 0) {
                     grid.innerHTML = '<div class="loading"><p>No comics available yet!</p></div>';
                     return;
                 }
+                
                 grid.innerHTML = comics.map(book => {
                     const imgUrl = book.ImageTags && book.ImageTags.Primary
                         ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
                         : null;
-                    const frameUrl = `movie-frame.html?id=${book.Id}&name=${encodeURIComponent(book.Name)}`;
-                    return `<div class="book-card" onclick="window.location.href='${frameUrl}'">
-                        <div class="book-cover">${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}">` : '<i class="fas fa-book"></i>'}</div>
+                    const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${book.Id}`;
+                    return `<div class="book-card" onclick="window.location.href='${jellyfinUrl}'">
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book"></i></div>'}
                         <div class="book-title">${book.Name}</div>
-                        <span class="book-type">COMIC</span>
+                        <span class="book-type">📚 COMIC</span>
                     </div>`;
                 }).join('');
             } catch(e) {
+                console.error('Error loading comics:', e);
                 grid.innerHTML = '<div class="loading"><p style="color:#ff6b6b;">Could not load comics</p></div>';
             }
         }
 
+        // ═══════════════════════════════════════════════════════════════
         // LOAD STORY BOOKS (PDFs) FROM JELLYFIN
         // ═══════════════════════════════════════════════════════════════
         
@@ -890,9 +787,7 @@
 
             grid.innerHTML = STORYBOOKS.map((book, index) => `
                 <div class="book-card" onclick="openStoryBook(${index})">
-                    <div class="book-cover">
-                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
-                    </div>
+                    ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book-open"></i></div>'}
                     <div class="book-title">${book.name}</div>
                     <span class="book-type">${book.type}</span>
                 </div>
@@ -946,9 +841,7 @@
 
             grid.innerHTML = AUDIOBOOKS.map((audio, index) => `
                 <div class="book-card" onclick="openAudiobook(${index})">
-                    <div class="book-cover">
-                        ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}">` : '<i class="fas fa-headphones"></i>'}
-                    </div>
+                    ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-headphones"></i></div>'}
                     <div class="book-title">${audio.name}</div>
                     <span class="book-type">🎧 AUDIO</span>
                 </div>
@@ -1011,9 +904,7 @@
 
             grid.innerHTML = CARTOONS.map((show, index) => `
                 <div class="book-card" onclick="openCartoon(${index})">
-                    <div class="book-cover">
-                        ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}">` : '<i class="fas fa-tv"></i>'}
-                    </div>
+                    ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-tv"></i></div>'}
                     <div class="book-title">${show.name}</div>
                     <span class="book-type">📺 TV</span>
                 </div>
@@ -1217,13 +1108,20 @@
             const audio = AUDIOBOOKS[index];
             
             console.log('🎧 Opening audiobook:', audio.name);
-            window.location.href = `movie-frame.html?id=${audio.id}&name=${encodeURIComponent(audio.name)}`;
+            
+            // Open in Jellyfin's native audio player (no auth params needed)
+            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${audio.id}`;
+            window.location.href = jellyfinUrl;
         }
 
         function openCartoon(index) {
             const show = CARTOONS[index];
+            
             console.log('📺 Opening cartoon:', show.name);
-            window.location.href = `movie-frame.html?id=${show.id}&name=${encodeURIComponent(show.name)}`;
+            
+            // Open in Jellyfin's native TV player (no auth params needed)
+            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${show.id}`;
+            window.location.href = jellyfinUrl;
         }
 
         // ═══════════════════════════════════════════════════════════════
