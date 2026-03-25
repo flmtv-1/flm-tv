@@ -1,0 +1,52 @@
+FLM TV - Jellyfin Home Button Setup
+=====================================
+
+STEP 1 - Go to Jellyfin Dashboard → General → Custom CSS
+Paste this CSS:
+
+/* FLM TV Home Button */
+#flmHomeBtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 16px !important;
+    margin: 8px 12px 8px 0 !important;
+    background: rgba(255,215,0,0.07) !important;
+    border: 1px solid rgba(255,215,0,0.4) !important;
+    border-radius: 5px !important;
+    color: #FFD700 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    z-index: 9999 !important;
+}
+#flmHomeBtn:hover {
+    background: rgba(255,215,0,0.18) !important;
+    border-color: #FFD700 !important;
+}
+
+
+STEP 2 - Go to Jellyfin Dashboard → General → Custom JavaScript (or Plugins)
+Paste this JS:
+
+(function() {
+    function addHomeButton() {
+        if (document.getElementById('flmHomeBtn')) return;
+        const header = document.querySelector('.skinHeader-withBackground') 
+                    || document.querySelector('.skinHeader')
+                    || document.querySelector('header');
+        if (!header) return;
+        const btn = document.createElement('a');
+        btn.id = 'flmHomeBtn';
+        btn.href = 'https://flmtv.com/home.html';
+        btn.innerHTML = '&#8592; Home';
+        btn.title = 'Back to FLM TV';
+        header.insertBefore(btn, header.firstChild);
+    }
+    // Run on page load and route changes
+    addHomeButton();
+    window.addEventListener('popstate', addHomeButton);
+    setInterval(addHomeButton, 2000);
+})();

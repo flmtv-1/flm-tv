@@ -1,0 +1,2281 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///C:/Users/Dale/Documents/GitHub/flm-tv/kids-corner.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Corner - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- EPUB.js for reading EPUB books -->
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+    
+    <!-- PDF.js for reading PDF books -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Segoe UI Emoji', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .back-btn {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #1ea34a;
+            transform: scale(1.05);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Tabs */
+        .section-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 3px solid transparent;
+            padding: 1rem 2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .tab-btn.active {
+            background: #ffd700;
+            color: #333;
+            border-color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Section Content */
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Books Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Coloring Cards - SMALL SQUARES */
+        #coloringGallery.books-grid {
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        #coloringGallery .book-card {
+            padding: 0.4rem;
+        }
+        
+        #coloringGallery .book-cover {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        #coloringGallery .book-title {
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+        }
+        
+        #coloringGallery .book-type {
+            font-size: 0.65rem;
+        }
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .book-cover i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        .book-cover img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            background: #1a1a1a;
+            display: block;
+        }
+
+        .book-title {
+            font-size: 1rem;
+            color: #333;
+            text-align: center;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .book-type {
+            display: inline-block;
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .game-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .game-name {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Book Reader Overlay */
+        .reader-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10000;
+        }
+
+        .reader-overlay.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reader-header {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .reader-title {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+
+        .close-reader {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .close-reader:hover {
+            background: #dc2626;
+        }
+
+        .reader-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        /* Navigation */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffd700;
+            color: #333;
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .nav-arrow:hover:not(:disabled) {
+            background: #ffed4e;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.left {
+            left: 2rem;
+        }
+
+        .nav-arrow.right {
+            right: 2rem;
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .page-counter {
+            background: #ffd700;
+            color: #333;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.5rem;
+        }
+
+        .loading i {
+            font-size: 4rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .nav-arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Coloring App Styles */
+        .color-btn {
+            width: 50px;
+            height: 50px;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .color-btn.selected {
+            border: 5px solid #ffd700;
+            transform: scale(1.3);
+        }
+
+        #coloringSVG path, #coloringSVG polygon, #coloringSVG circle, #coloringSVG rect, #coloringSVG ellipse {
+            transition: fill 0.2s ease;
+        }
+    
+        /* ── MOBILE FIT FIX ── */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+            }
+
+            .header {
+                padding: 0.85rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                padding: 1rem 0.75rem;
+            }
+
+            .section-tabs {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .tab-btn {
+                padding: 0.65rem 0.5rem;
+                font-size: 0.85rem;
+                border-radius: 14px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .book-cover {
+                aspect-ratio: 2/3;
+            }
+
+            .book-card {
+                padding: 0.6rem;
+            }
+
+            .book-title {
+                font-size: 0.78rem;
+            }
+
+            .book-type {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 1.2rem;
+            }
+            .back-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            .book-cover {
+                height: 130px;
+            }
+            .book-title {
+                font-size: 0.72rem;
+            }
+        }
+
+        </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-star"></i>
+            Kids Corner
+        </div>
+        <a href="home.html" class="back-btn">
+            <i class="fas fa-home"></i> Back Home
+        </a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+        <!-- Section Tabs -->
+        <div class="section-tabs">
+            <button class="tab-btn active" onclick="showSection(&#39;cartoons&#39;)">
+                <i class="fas fa-tv"></i>
+                Cartoons
+            </button>
+            <button class="tab-btn" onclick="showSection(&#39;comics&#39;)">
+                <i class="fas fa-book"></i>
+                Big Kids Comics
+            </button>
+            <button class="tab-btn" onclick="showSection(&#39;storybooks&#39;)">
+                <i class="fas fa-book-open"></i>
+                Story Time
+            </button>
+            <button class="tab-btn" onclick="showSection(&#39;audiobooks&#39;)">
+                <i class="fas fa-headphones"></i>
+                Audio Stories
+            </button>
+            <button class="tab-btn" onclick="showSection(&#39;games&#39;)">
+                <i class="fas fa-gamepad"></i>
+                Games
+            </button>
+        </div>
+
+        <!-- Books Section -->
+        <!-- Cartoons Section -->
+        <div id="cartoons-section" class="section-content active">
+            <h1 class="section-title">📺 Choose a Cartoon to Watch</h1>
+            <div class="books-grid" id="cartoonsGrid">
+                <div class="book-card" onclick="openCartoon(0)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary" alt="The Adventures of Gamba">
+                    </div>
+                    <div class="book-title">The Adventures of Gamba</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(1)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(1)" alt="Alice in Wonderland">
+                    </div>
+                    <div class="book-title">Alice in Wonderland</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(2)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(2)" alt="The Amazing Digital Circus">
+                    </div>
+                    <div class="book-title">The Amazing Digital Circus</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(3)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(3)" alt="An American Tail">
+                    </div>
+                    <div class="book-title">An American Tail</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(4)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(4)" alt="America&#39;s Funniest Home Videos">
+                    </div>
+                    <div class="book-title">America's Funniest Home Videos</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(5)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(5)" alt="Andy Panda">
+                    </div>
+                    <div class="book-title">Andy Panda</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(6)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Animal Crossing: A Year in the Life</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(7)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(6)" alt="Arthur">
+                    </div>
+                    <div class="book-title">Arthur</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(8)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(7)" alt="The Booze Hangs High">
+                    </div>
+                    <div class="book-title">The Booze Hangs High</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(9)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(8)" alt="Caillou Mysteries">
+                    </div>
+                    <div class="book-title">Caillou Mysteries</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(10)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(9)" alt="Cartoon-Classics-vol-2-25-3-hours">
+                    </div>
+                    <div class="book-title">Cartoon-Classics-vol-2-25-3-hours</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(11)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(10)" alt="Charlie Chalk">
+                    </div>
+                    <div class="book-title">Charlie Chalk</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(12)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(11)" alt="A Child&#39;s Christmas">
+                    </div>
+                    <div class="book-title">A Child's Christmas</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(13)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(12)" alt="Chilling Adventures of Sabrina">
+                    </div>
+                    <div class="book-title">Chilling Adventures of Sabrina</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(14)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(13)" alt="Cinderella Story">
+                    </div>
+                    <div class="book-title">Cinderella Story</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(15)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(14)" alt="Clifford the Big Red Dog">
+                    </div>
+                    <div class="book-title">Clifford the Big Red Dog</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(16)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(15)" alt="Collection Walt Disney Vol 1-6">
+                    </div>
+                    <div class="book-title">Collection Walt Disney Vol 1-6</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(17)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(16)" alt="Count Duckula">
+                    </div>
+                    <div class="book-title">Count Duckula</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(18)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(17)" alt="Davey and Goliath">
+                    </div>
+                    <div class="book-title">Davey and Goliath</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(19)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">dinosaur-train-season-1</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(20)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(18)" alt="A Dog&#39;s Courage">
+                    </div>
+                    <div class="book-title">A Dog's Courage</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(21)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(19)" alt="Dragon Star Lord">
+                    </div>
+                    <div class="book-title">Dragon Star Lord</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(22)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(20)" alt="Elinor Wonders Why">
+                    </div>
+                    <div class="book-title">Elinor Wonders Why</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(23)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(21)" alt="Favorite Cartoons 3 Hours">
+                    </div>
+                    <div class="book-title">Favorite Cartoons 3 Hours</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(24)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(22)" alt="Garfield and Friends">
+                    </div>
+                    <div class="book-title">Garfield and Friends</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(25)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(23)" alt="Goof Troop">
+                    </div>
+                    <div class="book-title">Goof Troop</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(26)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(24)" alt="Gran">
+                    </div>
+                    <div class="book-title">Gran</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(27)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(25)" alt="The Great Adventures of Robin Hood">
+                    </div>
+                    <div class="book-title">The Great Adventures of Robin Hood</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(28)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(26)" alt="The Great Grape Ape Show">
+                    </div>
+                    <div class="book-title">The Great Grape Ape Show</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(29)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(27)" alt="Hello Kitty Collection">
+                    </div>
+                    <div class="book-title">Hello Kitty Collection</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(30)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(28)" alt="Hello Kitty in Snow White">
+                    </div>
+                    <div class="book-title">Hello Kitty in Snow White</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(31)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(29)" alt="Ice Age: Scrat Tales">
+                    </div>
+                    <div class="book-title">Ice Age: Scrat Tales</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(32)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(30)" alt="Jackie Chan Adventures">
+                    </div>
+                    <div class="book-title">Jackie Chan Adventures</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(33)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(31)" alt="The Jetsons">
+                    </div>
+                    <div class="book-title">The Jetsons</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(34)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">JJ Mystery of Bugs Series</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(35)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Kirby: Right Back At Ya!</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(36)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(32)" alt="LazyTown">
+                    </div>
+                    <div class="book-title">LazyTown</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(37)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Liberty Kids Series2002</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(38)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(33)" alt="Lippy the Lion &amp; Hardy Har Har">
+                    </div>
+                    <div class="book-title">Lippy the Lion &amp; Hardy Har Har</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(39)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Little People: Big Discoveries</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(40)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(34)" alt="The Looney Tunes Show">
+                    </div>
+                    <div class="book-title">The Looney Tunes Show</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(41)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(35)" alt="The Magic School Bus">
+                    </div>
+                    <div class="book-title">The Magic School Bus</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(42)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(36)" alt="Magilla Gorilla">
+                    </div>
+                    <div class="book-title">Magilla Gorilla</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(43)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(37)" alt="Martha Speaks">
+                    </div>
+                    <div class="book-title">Martha Speaks</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(44)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(38)" alt="Maya &amp; Miguel">
+                    </div>
+                    <div class="book-title">Maya &amp; Miguel</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(45)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(39)" alt="Merrie Melodies Classics">
+                    </div>
+                    <div class="book-title">Merrie Melodies Classics</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(46)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(40)" alt="A Miser Brothers&#39; Christmas">
+                    </div>
+                    <div class="book-title">A Miser Brothers' Christmas</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(47)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(41)" alt="Miss Spider&#39;s Sunny Patch Friends">
+                    </div>
+                    <div class="book-title">Miss Spider's Sunny Patch Friends</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(48)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(42)" alt="Molly of Denali">
+                    </div>
+                    <div class="book-title">Molly of Denali</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(49)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">mr-bean-the-animated-series-the-complete-series-3</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(50)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(43)" alt="A Muppet Family Christmas">
+                    </div>
+                    <div class="book-title">A Muppet Family Christmas</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(51)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(44)" alt="Nature Cat">
+                    </div>
+                    <div class="book-title">Nature Cat</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(52)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(45)" alt="The New Adventures of Winnie the Pooh">
+                    </div>
+                    <div class="book-title">The New Adventures of Winnie the Pooh</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(53)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(46)" alt="Noddy">
+                    </div>
+                    <div class="book-title">Noddy</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(54)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(47)" alt="One More Time Classic cartoon">
+                    </div>
+                    <div class="book-title">One More Time Classic cartoon</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(55)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">PFBTVSeries2004</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(56)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(48)" alt="The Phantom Tollbooth">
+                    </div>
+                    <div class="book-title">The Phantom Tollbooth</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(57)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Piglets Big Movie</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(58)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(49)" alt="Pinkalicious &amp; Peterrific">
+                    </div>
+                    <div class="book-title">Pinkalicious &amp; Peterrific</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(59)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Pippi Anamation</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(60)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Pippi Longstocking Collection</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(61)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">pippi-longstocking-song-lyrics-from</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(62)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">popeye-collection</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(63)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(50)" alt="Postcards from Buster">
+                    </div>
+                    <div class="book-title">Postcards from Buster</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(64)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Rakin-Bass Animations 2</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(65)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">ReadingRainbowTVSeries</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(66)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">return-to-oz-television-special-1964</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(67)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">RJGTVSeries</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(68)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(51)" alt="Rolie Polie Olie">
+                    </div>
+                    <div class="book-title">Rolie Polie Olie</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(69)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Rudolphs Shiny New Year</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(70)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">s-01-e-05 -the-booze-hangs-high-bosko-4-hd</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(71)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Santa Claus is Coming To Town (1970)</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(72)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(52)" alt="Sesame Street">
+                    </div>
+                    <div class="book-title">Sesame Street</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(73)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(53)" alt="Sesame Street (AE)">
+                    </div>
+                    <div class="book-title">Sesame Street (AE)</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(74)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Sesame Street: 3,2,1 Let's Go</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(75)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">sesame-street-mysterious-theater-circle</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(76)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(54)" alt="Sonic Boom">
+                    </div>
+                    <div class="book-title">Sonic Boom</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(77)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(55)" alt="Sonic Underground">
+                    </div>
+                    <div class="book-title">Sonic Underground</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(78)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">STSKTVSeries</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(79)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(56)" alt="Super Why!">
+                    </div>
+                    <div class="book-title">Super Why!</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(80)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">A Tale Of Two Cities</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(81)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">theberenstainbearscompleteseries</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(82)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">the-jetsons-meet-the-flintstones</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(83)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">the-road-runner-complete-collection</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(84)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">The Three Pigs in a Polka</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(85)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(57)" alt="The Three Stooges">
+                    </div>
+                    <div class="book-title">The Three Stooges</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(86)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">tna-of-winnie-the-pooh-s-04-m-02-boo-to-you-winnie-the-pooh</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(87)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Tom-and-Jerry-Cartoons-Complete-Collection</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(88)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(58)" alt="Tutenstein">
+                    </div>
+                    <div class="book-title">Tutenstein</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(89)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">'Twas the Night Before Christmas</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(90)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">Wackiki Wabbit (1943)</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(91)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(59)" alt="WAGs, Kids and World Cup Dreams">
+                    </div>
+                    <div class="book-title">WAGs, Kids and World Cup Dreams</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(92)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(60)" alt="Walter Lantz Toons">
+                    </div>
+                    <div class="book-title">Walter Lantz Toons</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(93)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(61)" alt="welcome-to-woodland-valley">
+                    </div>
+                    <div class="book-title">welcome-to-woodland-valley</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(94)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(62)" alt="What&#39;s New Scooby-Doo?">
+                    </div>
+                    <div class="book-title">What's New Scooby-Doo?</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(95)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">wild-kratts-season-1</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(96)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(63)" alt="The Wind in the Willows">
+                    </div>
+                    <div class="book-title">The Wind in the Willows</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(97)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">WinnieThe Pooh - Season of Giving</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(98)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(64)" alt="Winsome Witch">
+                    </div>
+                    <div class="book-title">Winsome Witch</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(99)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">WordGirlFullSeries</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(100)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(65)" alt="The World of Peter Rabbit and Friends">
+                    </div>
+                    <div class="book-title">The World of Peter Rabbit and Friends</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(101)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">WWTVSeries20072011</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(102)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(66)" alt="Xavier Riddle and the Secret Museum">
+                    </div>
+                    <div class="book-title">Xavier Riddle and the Secret Museum</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(103)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">The Year Without a Santa Claus (1974)</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(104)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">yippee-yappee-yahooey-complete</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(105)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(67)" alt="The Yogi Bear Show">
+                    </div>
+                    <div class="book-title">The Yogi Bear Show</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(106)">
+                    <div class="book-cover">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="book-title">You Don't Know What You're Doin</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(107)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(68)" alt="Your Friendly Neighborhood Spider-Man">
+                    </div>
+                    <div class="book-title">Your Friendly Neighborhood Spider-Man</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            
+                <div class="book-card" onclick="openCartoon(108)">
+                    <div class="book-cover">
+                        <img src="./Kids Corner - FLM TV_files/Primary(69)" alt="Yume wo Kanaeru Zo">
+                    </div>
+                    <div class="book-title">Yume wo Kanaeru Zo</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Big Kids Comics Section -->
+        <div id="comics-section" class="section-content">
+            <h1 class="section-title">🦸 Big Kids Comics</h1>
+            <div class="books-grid" id="comicsGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading comics...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story Time Section -->
+        <div id="storybooks-section" class="section-content">
+            <h1 class="section-title">📖 Story Time</h1>
+            <div class="books-grid" id="storybooksGrid">
+                <div class="book-card" onclick="openStoryBook(0)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">CHILDREN'S STORIES AND PICTURES - ENGLISH - V. SUTEEV</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(1)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">CHILDREN'S STORIES AND PICTURES - ENGLISH - V. SUTEEV_text</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(2)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">different-wheels-Text Book-Kids</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(3)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Disney's Lion King, The (USA)</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(4)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Disney's Lion King, The (USA)_text</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(5)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">goof-troop-usa-color</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(6)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">margarita-staraste-little-acorn-liesma-1985-Text Book-kids</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(7)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Mouse Goes For Water-Text Book-kids</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(8)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">preview</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(9)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Sakharnov S.-Who Lives in the Warm Sea</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(10)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Sakharnov S.-Who Lives in the Warm Sea_text</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(11)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">the-tale-of-brave-yatto-and-his-sister-teune-progress-1975-Text Book-kids</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(12)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Zootopia Magazine</div>
+                    <span class="book-type">EPUB</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(13)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Zootopia Magazine</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            
+                <div class="book-card" onclick="openStoryBook(14)">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="book-title">Zootopia Magazine_text</div>
+                    <span class="book-type">PDF</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audio Stories Section -->
+        <div id="audiobooks-section" class="section-content">
+            <h1 class="section-title">🎧 Audio Stories</h1>
+            <div class="books-grid" id="audiobooksGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading audio stories...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games Section -->
+        <div id="games-section" class="section-content">
+            <h1 class="section-title">🎮 Choose a Game to Play</h1>
+            
+            <!-- Coming Soon Message -->
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 3rem; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
+                    <i class="fas fa-gamepad" style="font-size: 5rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                    <h2 style="color: #667eea; font-size: 2.5rem; margin-bottom: 1rem;">Coming Soon!</h2>
+                    <p style="color: #333; font-size: 1.3rem; line-height: 1.6;">
+                        Awesome games are on the way! Check back soon for fun games to play.
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <i class="fas fa-trophy" style="font-size: 3rem; color: #764ba2;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- EPUB Book Reader -->
+    <div class="reader-overlay" id="readerOverlay">
+        <div class="reader-header">
+            <div class="reader-title" id="readerTitle">Book Title</div>
+            <div class="page-counter" id="pageCounter">Loading...</div>
+            <button class="close-reader" onclick="closeReader()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+        <div class="reader-content">
+            <button class="nav-arrow left" id="prevPage" onclick="previousPage()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div id="epubViewer" style="width: 80%; max-width: 800px; height: 80vh; background: white; border-radius: 15px; overflow: hidden; display: none;"></div>
+            
+            <canvas id="pdfCanvas" style="max-width: 90%; max-height: 80vh; background: white; border-radius: 15px; display: none;"></canvas>
+            
+            <button class="nav-arrow right" id="nextPage" onclick="nextPage()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // Configure PDF.js
+        // ═══════════════════════════════════════════════════════════════
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        const JELLYFIN_CONFIG = {
+            SERVER: 'https://flmtv.com/jellyfin',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4',
+            BOOKS_LIBRARY_ID: 'b1179837c889803ea1f56a0e343b4877',      // TEXT BOOKS (EPUB)
+            STORYBOOKS_LIBRARY_ID: 'c0008eeeb6b0a99b8450194800eb77d4',  // My Story Time (PDFs)
+            COMICS_LIBRARY_ID: '2bc01a0435b16f914579fc15f131978e',      // Big Kids Comics (CBR)
+            AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054',  // MUSIC LIBRARY
+            CARTOONS_LIBRARY_ID: '721f4a924b7d17ff69c721701538b3be',    // KIDS WORLD (Cartoons/TV)
+            GAMES_LIBRARY_ID: null  // Add when games library is created
+        };
+
+        // ═══════════════════════════════════════════════════════════════
+        // BOOKS, AUDIOBOOKS, CARTOONS, AND GAMES - LOADED FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        let BOOKS = [];
+        let STORYBOOKS = [];
+        let AUDIOBOOKS = [];
+        let CARTOONS = [];
+        let GAMES = [];
+
+        // ═══════════════════════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════════════════════
+        
+        // PDF reader state
+        let currentPDF = null;
+        let currentPDFPage = 1;
+        let totalPDFPages = 0;
+        let currentReaderType = null; // 'epub' or 'pdf'
+        
+        // (EPUB state variables are defined in the EPUB BOOK READER section below)
+
+        // ═══════════════════════════════════════════════════════════════
+        // INITIALIZE
+        // ═══════════════════════════════════════════════════════════════
+        
+        window.addEventListener('load', () => {
+            // Load cartoons initially (active tab)
+            loadCartoons();
+            // Initialize coloring gallery (lightweight)
+            initColoringGallery();
+            // Don't load audiobooks until user clicks that tab
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('readerOverlay').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') previousPage();
+                if (e.key === 'ArrowRight') nextPage();
+                if (e.key === 'Escape') closeReader();
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // SECTION SWITCHING - WITH ON-DEMAND LOADING
+        // ═══════════════════════════════════════════════════════════════
+        
+        let loadedSections = { cartoons: true, coloring: true }; // Pre-loaded
+        
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(`${section}-section`).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+            
+            // Load content on-demand if not already loaded
+            if (!loadedSections[section]) {
+                if (section === 'storybooks') {
+                    loadStoryBooks();
+                    loadedSections.storybooks = true;
+                } else if (section === 'audiobooks') {
+                    loadAudiobooks();
+                    loadedSections.audiobooks = true;
+                } else if (section === 'comics') {
+                    loadComics();
+                    loadedSections.comics = true;
+                } else if (section === 'cartoons') {
+                    loadCartoons();
+                    loadedSections.cartoons = true;
+                }
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD BOOKS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadBooks() {
+            const grid = document.getElementById('booksGrid');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.BOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                BOOKS = (data.Items || []).map(book => ({
+                    id: book.Id,
+                    name: book.Name,
+                    file: `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`,
+                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'EPUB',
+                    imageUrl: book.ImageTags && book.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                displayBooks();
+            } catch (error) {
+                console.error('Error loading books:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Oops! Could not load books</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to check the connection!</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayBooks() {
+            const grid = document.getElementById('booksGrid');
+            
+            if (BOOKS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No books available yet!</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some books 📚</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = BOOKS.map((book, index) => `
+                <div class="book-card" onclick="openBook(${index})">
+                    <div class="book-cover">
+                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
+                    </div>
+                    <div class="book-title">${book.name}</div>
+                    <span class="book-type">${book.type}</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD BIG KIDS COMICS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+
+        async function loadComics() {
+            const grid = document.getElementById('comicsGrid');
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.COMICS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                const comics = data.Items || [];
+                if (comics.length === 0) {
+                    grid.innerHTML = '<div class="loading"><p>No comics available yet!</p></div>';
+                    return;
+                }
+                grid.innerHTML = comics.map(book => {
+                    const imgUrl = book.ImageTags && book.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null;
+                    const frameUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${book.Id}`;
+                    return `<div class="book-card" onclick="window.location.href='${frameUrl}'">
+                        <div class="book-cover">${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}">` : '<i class="fas fa-book"></i>'}</div>
+                        <div class="book-title">${book.Name}</div>
+                        <span class="book-type">COMIC</span>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                grid.innerHTML = '<div class="loading"><p style="color:#ff6b6b;">Could not load comics</p></div>';
+            }
+        }
+
+        // LOAD STORY BOOKS (PDFs) FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadStoryBooks() {
+            const grid = document.getElementById('storybooksGrid');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.STORYBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                STORYBOOKS = (data.Items || []).map(book => ({
+                    id: book.Id,
+                    name: book.Name,
+                    file: `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`,
+                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'PDF',
+                    imageUrl: book.ImageTags && book.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                displayStoryBooks();
+            } catch (error) {
+                console.error('Error loading story books:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Oops! Could not load books</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to check the connection!</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayStoryBooks() {
+            const grid = document.getElementById('storybooksGrid');
+            
+            if (STORYBOOKS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No story books available yet!</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some books 📚</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = STORYBOOKS.map((book, index) => `
+                <div class="book-card" onclick="openStoryBook(${index})">
+                    <div class="book-cover">
+                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
+                    </div>
+                    <div class="book-title">${book.name}</div>
+                    <span class="book-type">${book.type}</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD AUDIOBOOKS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadAudiobooks() {
+            const grid = document.getElementById('audiobooksGrid');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.AUDIOBOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=MusicAlbum&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                AUDIOBOOKS = (data.Items || []).map(audio => ({
+                    id: audio.Id,
+                    name: audio.Name,
+                    type: 'AUDIO',
+                    imageUrl: audio.ImageTags && audio.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${audio.Id}/Images/Primary?maxHeight=400&quality=90&tag=${audio.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                displayAudiobooks();
+            } catch (error) {
+                console.error('Error loading audiobooks:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Could not load audiobooks</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayAudiobooks() {
+            const grid = document.getElementById('audiobooksGrid');
+            
+            if (AUDIOBOOKS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No audiobooks available yet!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = AUDIOBOOKS.map((audio, index) => `
+                <div class="book-card" onclick="openAudiobook(${index})">
+                    <div class="book-cover">
+                        ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}">` : '<i class="fas fa-headphones"></i>'}
+                    </div>
+                    <div class="book-title">${audio.name}</div>
+                    <span class="book-type">🎧 AUDIO</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD CARTOONS FROM JELLYFIN
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function loadCartoons() {
+            const grid = document.getElementById('cartoonsGrid');
+            
+            console.log('🎬 Starting to load cartoons...');
+            
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.CARTOONS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Series&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+                
+                console.log('📡 Fetching from:', url);
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                console.log('✅ Got response:', data);
+                console.log('📊 Number of items:', data.Items ? data.Items.length : 0);
+                
+                CARTOONS = (data.Items || []).map(show => ({
+                    id: show.Id,
+                    name: show.Name,
+                    type: 'TV',
+                    imageUrl: show.ImageTags && show.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${show.Id}/Images/Primary?fillWidth=300&fillHeight=450&quality=90&tag=${show.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null
+                }));
+                
+                console.log('🎬 Mapped CARTOONS:', CARTOONS);
+                
+                displayCartoons();
+            } catch (error) {
+                console.error('❌ Error loading cartoons:', error);
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ff6b6b;">Could not load cartoons</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayCartoons() {
+            const grid = document.getElementById('cartoonsGrid');
+            
+            if (CARTOONS.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No cartoons available yet!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = CARTOONS.map((show, index) => `
+                <div class="book-card" onclick="openCartoon(${index})">
+                    <div class="book-cover">
+                        ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}">` : '<i class="fas fa-tv"></i>'}
+                    </div>
+                    <div class="book-title">${show.name}</div>
+                    <span class="book-type">📺 TV</span>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LOAD GAMES
+        // ═══════════════════════════════════════════════════════════════
+        
+        function loadGames() {
+            const grid = document.getElementById('gamesGrid');
+            
+            if (GAMES.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading">
+                        <p>No games available yet!</p>
+                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some games 🎮</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = GAMES.map((game, index) => `
+                <div class="game-card" onclick="openGame(${index})">
+                    <div class="game-icon">
+                        <i class="fas fa-${game.icon}"></i>
+                    </div>
+                    <div class="game-name">${game.name}</div>
+                    <div class="game-description">${game.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // OPEN BOOK
+        // ═══════════════════════════════════════════════════════════════
+        
+        // ═══════════════════════════════════════════════════════════════
+        // EPUB BOOK READER
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentBook = null;
+        let rendition = null;
+
+        async function openBook(index) {
+            const book = BOOKS[index];
+            
+            console.log('📖 Opening EPUB book:', book.name);
+            
+            // Show overlay
+            const overlay = document.getElementById('readerOverlay');
+            const title = document.getElementById('readerTitle');
+            title.textContent = book.name;
+            overlay.classList.add('active');
+            
+            // Get EPUB file URL from Jellyfin - use stream endpoint with proper authentication
+            const epubUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${book.id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`;
+            
+            console.log('📥 Fetching EPUB from:', epubUrl);
+            console.log('📋 Book details:', book);
+            
+            try {
+                // Fetch the EPUB file first to ensure we can access it
+                const response = await fetch(epubUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/epub+zip'
+                    }
+                });
+                
+                console.log('📡 Response status:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch EPUB: ${response.status} - ${response.statusText}`);
+                }
+                
+                const epubBlob = await response.blob();
+                console.log('📦 EPUB blob size:', epubBlob.size, 'bytes');
+                
+                const epubBlobUrl = URL.createObjectURL(epubBlob);
+                
+                console.log('✅ EPUB fetched successfully, creating reader...');
+                
+                // Create epub.js book from blob
+                currentBook = ePub(epubBlobUrl);
+                
+                // Render into viewer
+                rendition = currentBook.renderTo("epubViewer", {
+                    width: "100%",
+                    height: "100%",
+                    spread: "none"
+                });
+                
+                // Display first page
+                await rendition.display();
+                
+                // Update page counter
+                document.getElementById('pageCounter').textContent = 'Use arrows to turn pages';
+                
+                console.log('✅ EPUB loaded successfully!');
+            } catch (error) {
+                console.error('❌ Error loading EPUB:', error);
+                alert('Could not open this book. Please try another one!');
+                closeReader();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // PDF STORY BOOK READER
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function openStoryBook(index) {
+            const book = STORYBOOKS[index];
+            
+            console.log('📖 Opening PDF book:', book.name);
+            
+            currentReaderType = 'pdf';
+            
+            // Show overlay
+            const overlay = document.getElementById('readerOverlay');
+            const title = document.getElementById('readerTitle');
+            title.textContent = book.name;
+            overlay.classList.add('active');
+            
+            // Hide EPUB viewer, show PDF canvas
+            document.getElementById('epubViewer').style.display = 'none';
+            document.getElementById('pdfCanvas').style.display = 'block';
+            
+            const pdfUrl = book.file;
+            
+            console.log('📥 Loading PDF from:', pdfUrl);
+            
+            try {
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                currentPDF = await loadingTask.promise;
+                totalPDFPages = currentPDF.numPages;
+                currentPDFPage = 1;
+                
+                console.log('✅ PDF loaded! Total pages:', totalPDFPages);
+                
+                await renderPDFPage(1);
+                
+            } catch (error) {
+                console.error('❌ Error loading PDF:', error);
+                alert('Could not open this book. Please try another one!');
+                closeReader();
+            }
+        }
+        
+        async function renderPDFPage(pageNum) {
+            if (!currentPDF) return;
+            
+            try {
+                const page = await currentPDF.getPage(pageNum);
+                const canvas = document.getElementById('pdfCanvas');
+                const ctx = canvas.getContext('2d', { alpha: false });
+                
+                // SUPER HIGH QUALITY RENDERING
+                ctx.imageSmoothingEnabled = false;
+                
+                const devicePixelRatio = window.devicePixelRatio || 1;
+                const viewport = page.getViewport({ scale: 1 });
+                
+                const baseScale = Math.min(
+                    (window.innerWidth * 0.8) / viewport.width,
+                    (window.innerHeight * 0.8) / viewport.height
+                );
+                
+                // 4x quality for crystal clear text
+                const qualityMultiplier = 4.0;
+                const renderScale = baseScale * qualityMultiplier * devicePixelRatio;
+                
+                const scaledViewport = page.getViewport({ scale: renderScale });
+                
+                canvas.width = scaledViewport.width;
+                canvas.height = scaledViewport.height;
+                
+                // Display at normal size (quality stays high)
+                canvas.style.width = (scaledViewport.width / (qualityMultiplier * devicePixelRatio)) + 'px';
+                canvas.style.height = (scaledViewport.height / (qualityMultiplier * devicePixelRatio)) + 'px';
+                
+                await page.render({
+                    canvasContext: ctx,
+                    viewport: scaledViewport,
+                    intent: 'print'
+                }).promise;
+                
+                document.getElementById('pageCounter').textContent = `Page ${currentPDFPage} of ${totalPDFPages}`;
+                
+                document.getElementById('prevPage').disabled = currentPDFPage === 1;
+                document.getElementById('nextPage').disabled = currentPDFPage === totalPDFPages;
+                
+                console.log(`✅ Rendered ULTRA HIGH QUALITY page ${currentPDFPage}`);
+            } catch (error) {
+                console.error('Error rendering PDF page:', error);
+            }
+        }
+
+        function openAudiobook(index) {
+            const audio = AUDIOBOOKS[index];
+            
+            console.log('🎧 Opening audiobook:', audio.name);
+            window.location.href = `movie-frame.html?id=${audio.id}&name=${encodeURIComponent(audio.name)}`;
+        }
+
+        function openCartoon(index) {
+            const show = CARTOONS[index];
+            console.log('📺 Opening cartoon:', show.name);
+            window.location.href = `movie-frame.html?id=${show.id}&name=${encodeURIComponent(show.name)}`;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // BOOK READER NAVIGATION (EPUB & PDF)
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function nextPage() {
+            if (currentReaderType === 'pdf' && currentPDF) {
+                if (currentPDFPage < totalPDFPages) {
+                    currentPDFPage++;
+                    await renderPDFPage(currentPDFPage);
+                }
+            } else if (rendition) {
+                rendition.next();
+            }
+        }
+
+        async function previousPage() {
+            if (currentReaderType === 'pdf' && currentPDF) {
+                if (currentPDFPage > 1) {
+                    currentPDFPage--;
+                    await renderPDFPage(currentPDFPage);
+                }
+            } else if (rendition) {
+                rendition.prev();
+            }
+        }
+
+        function closeReader() {
+            document.getElementById('readerOverlay').classList.remove('active');
+            
+            // Destroy EPUB instance
+            if (rendition) {
+                rendition.destroy();
+                rendition = null;
+            }
+            if (currentBook) {
+                currentBook.destroy();
+                currentBook = null;
+            }
+            
+            // Clear EPUB viewer
+            document.getElementById('epubViewer').innerHTML = '';
+            document.getElementById('epubViewer').style.display = 'none';
+            
+            // Clear PDF
+            currentPDF = null;
+            currentPDFPage = 1;
+            totalPDFPages = 0;
+            document.getElementById('pdfCanvas').style.display = 'none';
+            
+            currentReaderType = null;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // OPEN GAME
+        // ═══════════════════════════════════════════════════════════════
+        
+        function openGame(index) {
+            const game = GAMES[index];
+            // Open game in new window/tab
+            window.open(game.file, '_blank');
+        }
+
+    </script>
+
+
+
+</body></html>
