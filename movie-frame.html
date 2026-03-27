@@ -99,19 +99,16 @@
 <body>
 
 <div id="flmBar">
-  <a class="flm-btn btn-front" href="https://flmtv.com/home">
+  <a class="flm-btn btn-front" href="https://flmtv.com/home" id="backBtn">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
     ← Home
-  </a>
-  <a class="flm-btn btn-back" id="backBtn" style="display:none; background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3);">
-    ↩ Back
   </a>
   <div class="logo-wrap">
     <div class="logo-flag"><span></span><span></span><span></span></div>
     <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
   </div>
   <div class="bar-spacer"></div>
-  <a class="flm-btn btn-vault" href="https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#!/home" target="_self">
+  <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#!/home'; return false;">
     🎬 The Vault
   </a>
 </div>
@@ -133,7 +130,6 @@ const CAT_NAME = decodeURIComponent(params.get('catName') || '');
 const backBtn = document.getElementById('backBtn');
 if (CAT_ID) {
   backBtn.href = 'category-detail.html?id=' + CAT_ID + '&name=' + encodeURIComponent(CAT_NAME);
-  backBtn.style.display = 'inline-flex';
 }
 
 if (ITEM_ID) {

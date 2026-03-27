@@ -292,7 +292,7 @@ async function loadCategory() {
         }
         
         // LOAD FIRST PAGE ONLY - Much faster!
-        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}&api_key=${CONFIG.API_KEY}`;
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}&api_key=${CONFIG.API_KEY}`;
         console.log('Loading page', currentPage + 1, ':', itemsUrl);
         
         const itemsRes = await fetch(itemsUrl);
@@ -351,7 +351,7 @@ function displayItems(items) {
             card.innerHTML = `
                 ${posterUrl ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="item-poster"></div>'}
                 <div class="item-info">
-                    <div class="item-title">${item.OriginalTitle || item.Name}</div>
+                    <div class="item-title">${item.Name}</div>
                     ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
                 </div>
             `;
@@ -385,7 +385,7 @@ async function loadMore() {
     document.getElementById('loadingMore').style.display = 'block';
     document.getElementById('loadMoreBtn').disabled = true;
     
-    const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}&api_key=${CONFIG.API_KEY}`;
+    const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}&api_key=${CONFIG.API_KEY}`;
     
     try {
         const itemsRes = await fetch(itemsUrl);
