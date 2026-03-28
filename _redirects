@@ -1,1 +1,2 @@
 /jellyfin/*  http://flmtv26.duckdns.org:8096/:splat  200
+/hls/*  https://flmtv26.duckdns.org/hls/:splat  200
