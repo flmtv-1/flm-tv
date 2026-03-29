@@ -35,6 +35,13 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 3px solid #ffd700;
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 999;
+            box-sizing: border-box;
         }
 
         .logo {
@@ -138,9 +145,10 @@
         /* Books Grid */
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.5rem;
             margin-bottom: 3rem;
+            align-items: start;
         }
 
         /* Coloring Cards - SMALL SQUARES */
@@ -168,34 +176,38 @@
         }
 
         .book-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 1rem;
+            background: transparent;
+            border-radius: 8px;
+            padding: 0;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: none;
+            overflow: visible;
         }
 
         .book-card:hover {
             transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .book-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .book-cover {
             width: 100%;
-            height: 280px;
+            aspect-ratio: 2/3;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
             overflow: hidden;
-        }
-
-        .book-cover i {
-            font-size: 4rem;
-            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .book-cover img {
@@ -205,21 +217,24 @@
         }
 
         .book-title {
-            font-size: 1rem;
-            color: #333;
+            font-size: 0.8rem;
+            color: #ffffff;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
             line-height: 1.3;
+            margin-top: 0.4rem;
+            padding: 0 0.2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
 
-        .book-type {
-            display: inline-block;
-            background: #22c55e;
+        .book-cover i {
+            font-size: 3rem;
             color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            margin-top: 0.5rem;
+        }
+
+        /* Hide book-type badges - removed from cards */
+        .book-type {
+            display: none;
         }
 
         /* Games Grid */
@@ -351,16 +366,29 @@
         }
 
         .nav-arrow.left {
-            left: 2rem;
+            left: 0.5rem;
         }
 
         .nav-arrow.right {
-            right: 2rem;
+            right: 0.5rem;
         }
 
         .nav-arrow:disabled {
             opacity: 0.3;
             cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .reader-content {
+                padding: 0.5rem 4rem;
+            }
+            .nav-arrow {
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+            .nav-arrow.left { left: 0.25rem; }
+            .nav-arrow.right { right: 0.25rem; }
         }
 
         .page-counter {
@@ -397,23 +425,57 @@
 
         /* Mobile */
         @media (max-width: 768px) {
-            .books-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 1rem;
+            .header {
+                padding: 0.75rem 1rem;
             }
-
+            .logo {
+                font-size: 1.4rem;
+            }
+            .back-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .section-tabs {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            .tab-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                border-radius: 14px;
+                flex: 0 1 auto;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            .books-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.6rem;
+                align-items: start;
+            }
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
-
             .nav-arrow {
                 width: 50px;
                 height: 50px;
                 font-size: 1.5rem;
             }
+        }
 
-            .section-title {
-                font-size: 2rem;
+        @media (max-width: 400px) {
+            .tab-btn {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+            }
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
             }
         }
 
@@ -465,6 +527,10 @@
                 <i class="fas fa-tv"></i>
                 Cartoons
             </button>
+            <button class="tab-btn" onclick="showSection('comics')">
+                <i class="fas fa-book"></i>
+                Big Kids Comics
+            </button>
             <button class="tab-btn" onclick="showSection('audiobooks')">
                 <i class="fas fa-headphones"></i>
                 Audiobooks
@@ -472,10 +538,6 @@
             <button class="tab-btn" onclick="showSection('storybooks')">
                 <i class="fas fa-book-open"></i>
                 Story Books
-            </button>
-            <button class="tab-btn" onclick="showSection('coloring')">
-                <i class="fas fa-palette"></i>
-                Coloring
             </button>
             <button class="tab-btn" onclick="showSection('games')">
                 <i class="fas fa-gamepad"></i>
@@ -491,6 +553,17 @@
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
                     <p>Loading cartoons...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Big Kids Comics Section -->
+        <div id="comics-section" class="section-content">
+            <h1 class="section-title">🦸 Big Kids Comics</h1>
+            <div class="books-grid" id="comicsGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading comics...</p>
                 </div>
             </div>
         </div>
@@ -517,54 +590,21 @@
             </div>
         </div>
 
-        <!-- Coloring Section -->
-        <div id="coloring-section" class="section-content">
-            <h1 class="section-title">🎨 Choose a Picture to Color</h1>
-            
-            <!-- Coloring Page Gallery -->
-            <div class="books-grid" id="coloringGallery" style="display: block;">
-                <!-- Gallery will be populated by JavaScript -->
-            </div>
-            
-            <!-- Coloring Canvas (hidden until page selected) -->
-            <div id="coloringCanvas" style="display: none;">
-                <div style="text-align: center; margin-bottom: 1rem;">
-                    <button class="back-btn" onclick="backToGallery()" style="display: inline-block; margin: 0 auto;">
-                        <i class="fas fa-arrow-left"></i> Choose Another Picture
-                    </button>
-                </div>
-                
-                <!-- Color Palette -->
-                <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                    <button class="color-btn" onclick="selectColor('#FF0000')" style="background: #FF0000;" title="Red"></button>
-                    <button class="color-btn" onclick="selectColor('#FF6B00')" style="background: #FF6B00;" title="Orange"></button>
-                    <button class="color-btn" onclick="selectColor('#FFD700')" style="background: #FFD700;" title="Yellow"></button>
-                    <button class="color-btn" onclick="selectColor('#00FF00')" style="background: #00FF00;" title="Green"></button>
-                    <button class="color-btn" onclick="selectColor('#00BFFF')" style="background: #00BFFF;" title="Blue"></button>
-                    <button class="color-btn" onclick="selectColor('#8B00FF')" style="background: #8B00FF;" title="Purple"></button>
-                    <button class="color-btn" onclick="selectColor('#FF1493')" style="background: #FF1493;" title="Pink"></button>
-                    <button class="color-btn" onclick="selectColor('#8B4513')" style="background: #8B4513;" title="Brown"></button>
-                    <button class="color-btn" onclick="selectColor('#000000')" style="background: #000000;" title="Black"></button>
-                    <button class="color-btn" onclick="selectColor('#FFFFFF')" style="background: #FFFFFF; border: 2px solid #333;" title="White"></button>
-                    <button class="color-btn" onclick="clearColoring()" style="background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);" title="Clear All">
-                        <i class="fas fa-undo" style="color: white;"></i>
-                    </button>
-                </div>
-                
-                <!-- SVG Coloring Area -->
-                <div style="display: flex; justify-content: center;">
-                    <svg id="coloringSVG" width="600" height="600" style="background: white; border: 3px solid #ffd700; border-radius: 15px; cursor: pointer;"></svg>
-                </div>
-            </div>
-        </div>
-
         <!-- Games Section -->
         <div id="games-section" class="section-content">
             <h1 class="section-title">🎮 Choose a Game to Play</h1>
-            <div class="games-grid" id="gamesGrid">
-                <div class="loading">
-                    <i class="fas fa-spinner"></i>
-                    <p>Games coming soon!</p>
+            
+            <!-- Coming Soon Message -->
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 3rem; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
+                    <i class="fas fa-gamepad" style="font-size: 5rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                    <h2 style="color: #667eea; font-size: 2.5rem; margin-bottom: 1rem;">Coming Soon!</h2>
+                    <p style="color: #333; font-size: 1.3rem; line-height: 1.6;">
+                        Awesome games are on the way! Check back soon for fun games to play.
+                    </p>
+                    <div style="margin-top: 2rem;">
+                        <i class="fas fa-trophy" style="font-size: 3rem; color: #764ba2;"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -606,11 +646,11 @@
             SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-            BOOKS_LIBRARY_ID: '467bd88b656c88ee6a423d8478e9e54a',      // TEXT BOOKS (EPUB)
-            STORYBOOKS_LIBRARY_ID: 'cd9fa11a14441d0f61e557525d3369d9',  // TEXT-BOOKS-KIDS 01 (PDFs)
-            AUDIOBOOKS_LIBRARY_ID: 'eb2423cff03c7994638e891f33af209d',  // MUSIC LIBRARY
-            CARTOONS_LIBRARY_ID: 'ca43f3291c81d4f007f2b33936d256e6',    // KIDS WORLD (Cartoons/TV)
-            GAMES_LIBRARY_ID: null  // Add when games library is created
+            COMICS_LIBRARY_ID: '2bc01a0435b16f914579fc15f131978e',     // BIG KIDS COMICS (CBR - opens in Jellyfin)
+            STORYBOOKS_LIBRARY_ID: 'c0008eeeb6b0a99b8450194800eb77d4', // STORY TIME (PDFs - built-in reader)
+            AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054', // AUDIO STORIES
+            CARTOONS_LIBRARY_ID: '721f4a924b7d17ff69c721701538b3be',   // KIDS WORLD (Cartoons/TV)
+            GAMES_LIBRARY_ID: null
         };
 
         // ═══════════════════════════════════════════════════════════════
@@ -640,11 +680,7 @@
         // ═══════════════════════════════════════════════════════════════
         
         window.addEventListener('load', () => {
-            // Load cartoons initially (active tab)
             loadCartoons();
-            // Initialize coloring gallery (lightweight)
-            initColoringGallery();
-            // Don't load audiobooks until user clicks that tab
         });
 
         // Keyboard navigation
@@ -660,20 +696,19 @@
         // SECTION SWITCHING - WITH ON-DEMAND LOADING
         // ═══════════════════════════════════════════════════════════════
         
-        let loadedSections = { cartoons: true, coloring: true }; // Pre-loaded
+        let loadedSections = { cartoons: true };
         
         function showSection(section) {
-            // Hide all sections
             document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
-            // Show selected section
             document.getElementById(`${section}-section`).classList.add('active');
             event.target.closest('.tab-btn').classList.add('active');
             
-            // Load content on-demand if not already loaded
             if (!loadedSections[section]) {
-                if (section === 'storybooks') {
+                if (section === 'comics') {
+                    loadComics();
+                    loadedSections.comics = true;
+                } else if (section === 'storybooks') {
                     loadStoryBooks();
                     loadedSections.storybooks = true;
                 } else if (section === 'audiobooks') {
@@ -687,62 +722,37 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // LOAD BOOKS FROM JELLYFIN
+        // LOAD BIG KIDS COMICS FROM JELLYFIN (CBR - opens in Jellyfin reader)
         // ═══════════════════════════════════════════════════════════════
         
-        async function loadBooks() {
-            const grid = document.getElementById('booksGrid');
-            
+        async function loadComics() {
+            const grid = document.getElementById('comicsGrid');
             try {
-                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.BOOKS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                
+                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.COMICS_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Book&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
                 const response = await fetch(url);
                 const data = await response.json();
+                const comics = data.Items || [];
                 
-                BOOKS = (data.Items || []).map(book => ({
-                    id: book.Id,
-                    name: book.Name,
-                    file: `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Download?api_key=${JELLYFIN_CONFIG.API_KEY}`,
-                    type: book.Path ? book.Path.split('.').pop().toUpperCase() : 'EPUB',
-                    imageUrl: book.ImageTags && book.ImageTags.Primary
+                if (comics.length === 0) {
+                    grid.innerHTML = '<div class="loading"><p>No comics available yet!</p></div>';
+                    return;
+                }
+                
+                grid.innerHTML = comics.map(book => {
+                    const imgUrl = book.ImageTags && book.ImageTags.Primary
                         ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
-                        : null
-                }));
-                
-                displayBooks();
-            } catch (error) {
-                console.error('Error loading books:', error);
-                grid.innerHTML = `
-                    <div class="loading">
-                        <p style="color: #ff6b6b;">Oops! Could not load books</p>
-                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to check the connection!</p>
-                    </div>
-                `;
+                        : null;
+                    const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${book.Id}`;
+                    return `<div class="book-card" onclick="window.location.href='${jellyfinUrl}'">
+                        ${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book"></i></div>'}
+                        <div class="book-title">${book.Name}</div>
+                        <span class="book-type">📚 COMIC</span>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                console.error('Error loading comics:', e);
+                grid.innerHTML = '<div class="loading"><p style="color:#ff6b6b;">Could not load comics</p></div>';
             }
-        }
-        
-        function displayBooks() {
-            const grid = document.getElementById('booksGrid');
-            
-            if (BOOKS.length === 0) {
-                grid.innerHTML = `
-                    <div class="loading">
-                        <p>No books available yet!</p>
-                        <p style="font-size: 1rem; margin-top: 1rem;">Ask a grown-up to add some books 📚</p>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = BOOKS.map((book, index) => `
-                <div class="book-card" onclick="openBook(${index})">
-                    <div class="book-cover">
-                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
-                    </div>
-                    <div class="book-title">${book.name}</div>
-                    <span class="book-type">${book.type}</span>
-                </div>
-            `).join('');
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -795,9 +805,7 @@
 
             grid.innerHTML = STORYBOOKS.map((book, index) => `
                 <div class="book-card" onclick="openStoryBook(${index})">
-                    <div class="book-cover">
-                        ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}">` : '<i class="fas fa-book-open"></i>'}
-                    </div>
+                    ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book-open"></i></div>'}
                     <div class="book-title">${book.name}</div>
                     <span class="book-type">${book.type}</span>
                 </div>
@@ -851,9 +859,7 @@
 
             grid.innerHTML = AUDIOBOOKS.map((audio, index) => `
                 <div class="book-card" onclick="openAudiobook(${index})">
-                    <div class="book-cover">
-                        ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}">` : '<i class="fas fa-headphones"></i>'}
-                    </div>
+                    ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-headphones"></i></div>'}
                     <div class="book-title">${audio.name}</div>
                     <span class="book-type">🎧 AUDIO</span>
                 </div>
@@ -916,9 +922,7 @@
 
             grid.innerHTML = CARTOONS.map((show, index) => `
                 <div class="book-card" onclick="openCartoon(${index})">
-                    <div class="book-cover">
-                        ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}">` : '<i class="fas fa-tv"></i>'}
-                    </div>
+                    ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-tv"></i></div>'}
                     <div class="book-title">${show.name}</div>
                     <span class="book-type">📺 TV</span>
                 </div>
@@ -1200,93 +1204,6 @@
             window.open(game.file, '_blank');
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // COLORING BOOK
-        // ═══════════════════════════════════════════════════════════════
-
-        let currentColor = '#FF0000'; // Default red
-        let currentColoringPage = null; // Renamed to avoid conflict
-
-        // Coloring pages - ALL YOUR PNG FILES!
-        const COLORING_PAGES = [
-            { name: 'Realistic Cute Dog', image: 'Coloring Pages/realistic-cute-dog-coloring-pages.png' },
-            { name: 'Princess Cute', image: 'Coloring Pages/princess-colouring-pages-cute.png' },
-            { name: 'Princess Kindergarten', image: 'Coloring Pages/princess-coloring-sheets-for-kindergarten.png' },
-            { name: 'Poodle Dog', image: 'Coloring Pages/poodle-dog-coloring-page.png' },
-            { name: 'Poodle Kids', image: 'Coloring Pages/poodle-coloring-pages-for-kids.png' },
-            { name: 'Valentine Heart', image: 'Coloring Pages/free-valentines-day-heart-coloring-pages.png' },
-            { name: 'Valentine Pages', image: 'Coloring Pages/free-valentine-coloring-pages.png' },
-            { name: 'Cute Puppy', image: 'Coloring Pages/cute-puppy-printable-realistic-dog-coloring-pages.png' },
-            { name: 'Boxer Print Free', image: 'Coloring Pages/boxer-dog-coloring-pages-to-print-free.png' },
-            { name: 'Boxer Toddlers', image: 'Coloring Pages/boxer-dog-coloring-pages-toddlers.png' },
-            { name: 'Boxer Toddler', image: 'Coloring Pages/boxer-dog-coloring-pages-toddler.png' },
-            { name: 'Boxer Adults', image: 'Coloring Pages/boxer-dog-coloring-pages-for-adults.png' },
-            { name: 'Boxer Flowers', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages.png' },
-            { name: 'Boxer Flowers Free', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-free.png' },
-            { name: 'Boxer Flowers Print', image: 'Coloring Pages/boxer-dog-and-flowers-coloring-pages-printable.png' },
-            { name: 'Baby Poodle', image: 'Coloring Pages/baby-poodle-coloring-page.png' },
-            { name: 'Baby Cute Dog', image: 'Coloring Pages/baby-cute-dog-coloring-pages.png' }
-        ];
-
-        // Initialize coloring gallery
-        function initColoringGallery() {
-            const gallery = document.getElementById('coloringGallery');
-            
-            gallery.innerHTML = COLORING_PAGES.map((page, index) => `
-                <div class="book-card" onclick="openColoringPage(${index})">
-                    <div class="book-cover">
-                        <img src="${page.image}" style="width: 100%; height: 100%; object-fit: contain;" alt="${page.name}">
-                    </div>
-                    <div class="book-title">${page.name}</div>
-                    <span class="book-type">🎨 COLOR ME!</span>
-                </div>
-            `).join('');
-        }
-
-        // Open a coloring page
-        function openColoringPage(index) {
-            currentColoringPage = index;
-            const page = COLORING_PAGES[index];
-            
-            // Hide gallery, show canvas
-            document.getElementById('coloringGallery').style.display = 'none';
-            document.getElementById('coloringCanvas').style.display = 'block';
-            
-            // Load PNG image into SVG container
-            const svg = document.getElementById('coloringSVG');
-            svg.innerHTML = `<image href="${page.image}" width="600" height="600" preserveAspectRatio="xMidYMid meet"/>`;
-        }
-
-        // Select color
-        function selectColor(color) {
-            currentColor = color;
-            
-            // Update button selection
-            document.querySelectorAll('.color-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.closest('.color-btn').classList.add('selected');
-        }
-
-        // Clear coloring
-        function clearColoring() {
-            if (currentColoringPage === null) return;
-            
-            // Reload the page to reset
-            openColoringPage(currentColoringPage);
-        }
-
-        // Back to gallery
-        function backToGallery() {
-            document.getElementById('coloringGallery').style.display = 'grid';
-            document.getElementById('coloringCanvas').style.display = 'none';
-            currentColoringPage = null;
-        }
-
-        // Initialize coloring gallery on load
-        window.addEventListener('load', () => {
-            initColoringGallery();
-        });
     </script>
 
 </body>
