@@ -45,54 +45,84 @@
         }
         
         .header {
-            position: relative;
-            height: 260px;
-            overflow: hidden;
+            background: var(--bg-light);
+            padding: 6rem 2rem 2rem;
             border-bottom: 3px solid var(--primary);
         }
-
-        .hero-slides { position: absolute; inset: 0; }
-
-        .hero-slide {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 1.2s ease;
-        }
-
-        .hero-slide.active { opacity: 1; }
-
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(10,15,26,0.2) 0%, rgba(10,15,26,0.7) 60%, rgba(10,15,26,0.97) 100%);
-            z-index: 1;
-        }
-
+        
         .header-content {
-            position: relative;
-            z-index: 2;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 5rem 2rem 1.5rem;
         }
-
+        
         .category-title {
             font-size: 3rem;
             font-weight: 800;
             color: var(--primary);
-            margin-bottom: 0.5rem;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            margin-bottom: 1rem;
         }
-
+        
         .category-count {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
         }
-
-        /* ALPHABET BAR */
+        
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .item-card {
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .item-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .item-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            background: #1a1a1a;
+        }
+        
+        .item-info {
+            padding: 1rem;
+        }
+        
+        .item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .item-year {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* ALPHABET FILTER BAR */
         .alpha-bar {
             display: flex;
             flex-wrap: wrap;
@@ -104,7 +134,7 @@
 
         .alpha-btn {
             background: var(--bg-light);
-            border: 1px solid #334155;
+            border: 1px solid var(--border, #334155);
             color: var(--text-secondary);
             width: 36px;
             height: 36px;
@@ -118,79 +148,22 @@
             justify-content: center;
         }
 
-        .alpha-btn:hover, .alpha-btn.active {
+        .alpha-btn:hover {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        .alpha-btn.active {
             background: var(--primary);
             color: #000;
             border-color: var(--primary);
         }
 
         @media (max-width: 768px) {
-            .header { height: 180px; }
-            .header-content { padding: 3rem 1rem 1rem; }
-            .category-title { font-size: 2rem; }
-            .alpha-bar { padding: 0.75rem 1rem; gap: 0.2rem; }
-            .alpha-btn { width: 28px; height: 28px; font-size: 0.7rem; }
-            .items-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.75rem; }
+            .alpha-bar { padding: 0.75rem 1rem; gap: 0.25rem; }
+            .alpha-btn { width: 30px; height: 30px; font-size: 0.75rem; }
         }
-        
-        .content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .item-card {
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            overflow: visible;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            min-width: 0;
-        }
-        
-        .item-card:hover {
-            transform: translateY(-4px);
-        }
-        
-        .item-poster {
-            width: 100%;
-            aspect-ratio: 2/3;
-            object-fit: cover;
-            background: #1a1a1a;
-            border-radius: 8px;
-            display: block;
-        }
-
-        .item-info {
-            padding: 0.4rem 0.1rem 0;
-        }
-        
-        .item-title {
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.15rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.3;
-        }
-        
-        .item-year {
-            color: var(--text-secondary);
-            font-size: 0.72rem;
-        }
-        
-        /* LOADING OVERLAY */
         #loading {
             position: fixed;
             inset: 0;
@@ -305,14 +278,13 @@
 </div>
 
 <div class="header">
-    <div class="hero-slides" id="heroSlides"></div>
-    <div class="hero-overlay"></div>
     <div class="header-content">
         <h1 class="category-title" id="categoryTitle">Loading...</h1>
         <div class="category-count" id="categoryCount"></div>
     </div>
 </div>
 
+<!-- ALPHABET FILTER BAR -->
 <div class="alpha-bar" id="alphaBar"></div>
 
 <div class="content">
@@ -343,114 +315,133 @@ const CONFIG = {
     USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1'
 };
 
-const categoryId   = new URLSearchParams(window.location.search).get('id');
+const categoryId = new URLSearchParams(window.location.search).get('id');
 const categoryName = new URLSearchParams(window.location.search).get('name');
 
+// PAGINATION SETTINGS
 const ITEMS_PER_PAGE = 24;
 let currentPage = 0;
-let totalItems  = 0;
-let nameFilter  = '';
-let slideshowStarted = false;
+let totalItems = 0;
+let allItems = [];
+let nameFilter = ''; // current letter filter
 
-// ── HERO SLIDESHOW ──
-function startHeroSlideshow(items) {
-    if (slideshowStarted) return;
-    slideshowStarted = true;
-    const pool = items.filter(i => i.ImageTags && i.ImageTags.Primary)
-                      .sort(() => Math.random() - 0.5).slice(0, 8);
-    if (!pool.length) return;
-    const container = document.getElementById('heroSlides');
-    container.innerHTML = pool.map((item, i) => {
-        const bd  = `${CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop?api_key=${CONFIG.API_KEY}&maxWidth=1400&quality=80`;
-        const pri = `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&maxWidth=600&quality=80`;
-        return `<div class="hero-slide ${i===0?'active':''}" style="background-image:url('${bd}'),url('${pri}')"></div>`;
-    }).join('');
-    let cur = 0;
-    const slides = container.querySelectorAll('.hero-slide');
-    setInterval(() => {
-        slides[cur].classList.remove('active');
-        cur = (cur + 1) % slides.length;
-        slides[cur].classList.add('active');
-    }, 4000);
-}
-
-// ── ALPHABET BAR ──
+// Build alphabet bar
 function buildAlphaBar() {
-    const letters = ['All','#','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-    document.getElementById('alphaBar').innerHTML = letters.map(l =>
-        `<button class="alpha-btn ${l==='All'?'active':''}" onclick="filterByLetter(event,'${l}')">${l}</button>`
-    ).join('');
+    const bar = document.getElementById('alphaBar');
+    const letters = ['All', '#', 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+    bar.innerHTML = letters.map(l => `
+        <button class="alpha-btn ${l === 'All' ? 'active' : ''}" onclick="filterByLetter('${l}')">${l}</button>
+    `).join('');
 }
 
-function filterByLetter(e, letter) {
-    nameFilter  = letter === 'All' ? '' : letter;
+function filterByLetter(letter) {
+    nameFilter = letter === 'All' ? '' : letter;
     currentPage = 0;
     document.getElementById('itemsGrid').innerHTML = '';
     document.getElementById('loading').style.display = 'flex';
+    // Update active button
     document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
+    event.target.classList.add('active');
     loadCategory();
 }
 
-// ── LOAD ──
+// Authentication skipped — using API key directly
+
 async function loadCategory() {
     try {
-        if (categoryName) document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
-        const lp  = nameFilter === '#' ? '&NameStartsWith=%23' : nameFilter ? `&NameStartsWith=${nameFilter}` : '';
-        const url = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${CONFIG.API_KEY}`;
-        const data = await (await fetch(url)).json();
-        totalItems = data.TotalRecordCount || 0;
-        const items = data.Items || [];
+        // Use API key directly — no auth needed
+        
+        // Set category name if provided
+        if (categoryName) {
+            document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
+        }
+        
+        // LOAD FIRST PAGE ONLY - Much faster!
+        const letterParam = nameFilter === '#' ? '&NameStartsWith=%23' : nameFilter ? `&NameStartsWith=${nameFilter}` : '';
+        const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${letterParam}&api_key=${CONFIG.API_KEY}`;
+        console.log('Loading page', currentPage + 1, ':', itemsUrl);
+        
+        const itemsRes = await fetch(itemsUrl);
+        const itemsData = await itemsRes.json();
+        
+        console.log('Category items:', itemsData);
+        
+        totalItems = itemsData.TotalRecordCount || 0;
+        allItems = itemsData.Items || [];
+        
+        // Update count
         document.getElementById('categoryCount').textContent = `${totalItems} items total`;
+        
+        // If no name provided, try to get it from category
         if (!categoryName) {
             try {
-                const p = await (await fetch(`${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}?api_key=${CONFIG.API_KEY}`)).json();
-                document.getElementById('categoryTitle').textContent = p.Name || 'Category';
-            } catch(e) { document.getElementById('categoryTitle').textContent = 'Category'; }
+                const parentUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${categoryId}?api_key=${CONFIG.API_KEY}`;
+                const parentRes = await fetch(parentUrl);
+                const parent = await parentRes.json();
+                document.getElementById('categoryTitle').textContent = parent.Name || 'Category';
+            } catch (e) {
+                document.getElementById('categoryTitle').textContent = 'Category';
+            }
         }
-        startHeroSlideshow(items);
-        displayItems(items);
+        
+        // Display items
+        displayItems(allItems);
+        
+        // Show pagination controls
         updatePaginationControls();
+        
         document.getElementById('loading').style.display = 'none';
-    } catch(err) {
-        console.error(err);
+        
+    } catch (error) {
+        console.error('Error loading category:', error);
         document.getElementById('loading').style.display = 'none';
     }
 }
 
 function displayItems(items) {
-    const grid = document.getElementById('itemsGrid');
-    if (!items || !items.length) {
-        grid.innerHTML = '<p style="color:var(--text-secondary);grid-column:1/-1;text-align:center;padding:2rem;">No items found</p>';
-        return;
+    const itemsGrid = document.getElementById('itemsGrid');
+    
+    if (items && items.length > 0) {
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            card.onclick = () => {
+                const catParam = categoryId ? `&catId=${categoryId}&catName=${encodeURIComponent(categoryName || '')}` : '';
+                window.location.href = `movie-frame.html?id=${item.Id}${catParam}`;
+            };
+            
+            const posterUrl = item.ImageTags && item.ImageTags.Primary
+                ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=300&quality=90`
+                : '';
+            
+            card.innerHTML = `
+                ${posterUrl ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy" onerror="this.style.background='#1a1a1a'">` : '<div class="item-poster"></div>'}
+                <div class="item-info">
+                    <div class="item-title">${item.OriginalTitle || item.Name}</div>
+                    ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
+                </div>
+            `;
+            
+            itemsGrid.appendChild(card);
+        });
+    } else {
+        itemsGrid.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">No items found in this category</p>';
     }
-    items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        card.onclick = () => {
-            const cp = categoryId ? `&catId=${categoryId}&catName=${encodeURIComponent(categoryName||'')}` : '';
-            window.location.href = `movie-frame.html?id=${item.Id}${cp}`;
-        };
-        const posterUrl = item.ImageTags && item.ImageTags.Primary
-            ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=300&quality=90`
-            : '';
-        card.innerHTML = `
-            ${posterUrl
-                ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy">`
-                : '<div class="item-poster"></div>'}
-            <div class="item-info">
-                <div class="item-title">${item.OriginalTitle || item.Name}</div>
-                ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
-            </div>`;
-        grid.appendChild(card);
-    });
 }
 
 function updatePaginationControls() {
-    const hasMore    = (currentPage + 1) * ITEMS_PER_PAGE < totalItems;
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-    document.getElementById('loadMoreBtn').style.display = hasMore ? 'block' : 'none';
-    document.getElementById('pageInfo').textContent = `Page ${currentPage+1} of ${totalPages}`;
+    const hasMore = (currentPage + 1) * ITEMS_PER_PAGE < totalItems;
+    
+    // Show Load More button if there are more items
+    if (hasMore) {
+        document.getElementById('loadMoreBtn').style.display = 'block';
+    } else {
+        document.getElementById('loadMoreBtn').style.display = 'none';
+    }
+    
+    // Update page navigation
+    document.getElementById('pageInfo').textContent = `Page ${currentPage + 1} of ${totalPages}`;
     document.getElementById('prevBtn').disabled = currentPage === 0;
     document.getElementById('nextBtn').disabled = !hasMore;
 }
@@ -459,9 +450,21 @@ async function loadMore() {
     currentPage++;
     document.getElementById('loadingMore').style.display = 'block';
     document.getElementById('loadMoreBtn').disabled = true;
-    const lp  = nameFilter === '#' ? '&NameStartsWith=%23' : nameFilter ? `&NameStartsWith=${nameFilter}` : '';
-    const url = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${CONFIG.API_KEY}`;
-    try { displayItems((await (await fetch(url)).json()).Items); updatePaginationControls(); } catch(e) {}
+    
+    const letterParam = nameFilter === '#' ? '&NameStartsWith=%23' : nameFilter ? `&NameStartsWith=${nameFilter}` : '';
+    const itemsUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage * ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${letterParam}&api_key=${CONFIG.API_KEY}`;
+    
+    try {
+        const itemsRes = await fetch(itemsUrl);
+        const itemsData = await itemsRes.json();
+        
+        displayItems(itemsData.Items);
+        updatePaginationControls();
+        
+    } catch (error) {
+        console.error('Error loading more:', error);
+    }
+    
     document.getElementById('loadingMore').style.display = 'none';
     document.getElementById('loadMoreBtn').disabled = false;
 }
@@ -474,11 +477,20 @@ async function nextPage() {
 }
 
 async function previousPage() {
-    if (currentPage > 0) { currentPage--; document.getElementById('itemsGrid').innerHTML = ''; document.getElementById('loading').style.display = 'flex'; await loadCategory(); }
+    if (currentPage > 0) {
+        currentPage--;
+        document.getElementById('itemsGrid').innerHTML = '';
+        document.getElementById('loading').style.display = 'flex';
+        await loadCategory();
+    }
 }
 
-if (!categoryId) { history.back(); }
-else { buildAlphaBar(); loadCategory(); }
+if (!categoryId) {
+    history.back();
+} else {
+    buildAlphaBar();
+    loadCategory();
+}
 </script>
 
 </body>
