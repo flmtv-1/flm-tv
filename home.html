@@ -4020,7 +4020,7 @@
     }
 
     if (type === 'Book') {
-        window.location.href = `movie-frame.html?id=${itemId}`;
+        window.open(`https://flmtv26.duckdns.org:8920/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`, '_blank');
         return;
     }
 

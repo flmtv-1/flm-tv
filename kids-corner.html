@@ -739,8 +739,8 @@
                     const imgUrl = book.ImageTags && book.ImageTags.Primary
                         ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
                         : null;
-                    const jellyfinUrl = `movie-frame.html?id=${book.Id}`;
-                    return `<div class="book-card" onclick="window.location.href='${jellyfinUrl}'">
+                    const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/#/details?id=${book.Id}&serverId=db6bb6388c8c4c70825698639853ede6`;
+                    return `<div class="book-card" onclick="window.open('${jellyfinUrl}', '_blank')">
                         ${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book"></i></div>'}
                         <div class="book-title">${cleanBookName(book.Name)}</div>
                         <span class="book-type">📚 COMIC</span>
