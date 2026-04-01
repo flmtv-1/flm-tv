@@ -109,7 +109,7 @@
     <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
   </div>
   <div class="bar-spacer"></div>
-  <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#!/home'; return false;">
+  <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
     🎬 The Vault
   </a>
 </div>
@@ -134,7 +134,7 @@ document.getElementById('homeBtn').href = 'home.html';
 if (ITEM_ID) {
   document.getElementById('jellyfinFrame').src =
     CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
-    '#!/details?id=' + ITEM_ID +
+    '#/details?id=' + ITEM_ID +
     '&serverId=' + CONFIG.SERVER_ID;
 }
 </script>
