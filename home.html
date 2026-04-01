@@ -3590,7 +3590,8 @@
                     Limit: 20,
                     SortBy: isCollections ? 'SortName' : 'DateCreated',
                     Recursive: true,
-                    IncludeItemTypes: isCollections ? 'BoxSet' : 'Movie,Series,BoxSet',
+                    Recursive: isCollections ? true : false,
+                    IncludeItemTypes: isCollections ? 'BoxSet' : '',
                 });
 
                 // Replace placeholder header with full header including View All
