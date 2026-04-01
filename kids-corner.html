@@ -634,7 +634,7 @@
             SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
             USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-            COMICS_LIBRARY_ID: '2bc01a0435b16f914579fc15f131978e',     // BIG KIDS COMICS (CBR - opens in Jellyfin)
+            COMICS_LIBRARY_ID: '371dbb33d90bd6e05f56711163916640',     // BIG KIDS COMICS (CBR - opens in Jellyfin)
             STORYBOOKS_LIBRARY_ID: 'c0008eeeb6b0a99b8450194800eb77d4', // STORY TIME (PDFs - built-in reader)
             AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054', // AUDIO STORIES
             CARTOONS_LIBRARY_ID: '721f4a924b7d17ff69c721701538b3be',   // KIDS WORLD (Cartoons/TV)
@@ -730,7 +730,7 @@
                     const imgUrl = book.ImageTags && book.ImageTags.Primary
                         ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
                         : null;
-                    const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${book.Id}`;
+                    const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#!/details?id=${book.Id}`;
                     return `<div class="book-card" onclick="window.location.href='${jellyfinUrl}'">
                         ${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book"></i></div>'}
                         <div class="book-title">${book.Name}</div>
@@ -1116,7 +1116,7 @@
             console.log('🎧 Opening audiobook:', audio.name);
             
             // Open in Jellyfin's native audio player (no auth params needed)
-            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${audio.id}`;
+            const jellyfinUrl = `movie-frame.html?id=${audio.id}`;
             window.location.href = jellyfinUrl;
         }
 
@@ -1126,7 +1126,7 @@
             console.log('📺 Opening cartoon:', show.name);
             
             // Open in Jellyfin's native TV player (no auth params needed)
-            const jellyfinUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${show.id}`;
+            const jellyfinUrl = `movie-frame.html?id=${show.id}`;
             window.location.href = jellyfinUrl;
         }
 
