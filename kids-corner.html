@@ -714,7 +714,8 @@
         // ═══════════════════════════════════════════════════════════════
         
         async function openComic(bookId) {
-            window.location.href = `movie-frame.html?id=${bookId}`;
+            // Book reader cannot work in iframe - open Jellyfin directly in new tab
+            window.open(`https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#!/details?id=${bookId}&serverId=db6bb6388c8c4c70825698639853ede6`, '_blank');
         }
 
         async function loadComics() {
