@@ -4020,7 +4020,22 @@
     }
 
     if (type === 'Book') {
-        window.open(`https://flmtv26.duckdns.org:8920/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`, '_blank');
+        let bookToken = JELLYFIN_CONFIG.API_KEY;
+        try {
+            const authResp = await fetch(`https://flmtv26.duckdns.org:8920/Users/AuthenticateByName`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="flmtv-web", Version="1.0.0"`
+                },
+                body: JSON.stringify({ Username: 'Public', Pw: '' })
+            });
+            if (authResp.ok) {
+                const authData = await authResp.json();
+                bookToken = authData.AccessToken;
+            }
+        } catch(e) {}
+        window.open(`https://flmtv26.duckdns.org:8920/web/index.html?api_key=${bookToken}#/details?id=${itemId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}`, '_blank');
         return;
     }
 

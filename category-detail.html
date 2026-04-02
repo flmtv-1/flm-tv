@@ -400,7 +400,15 @@ async function loadCategory() {
         const url = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${CONFIG.API_KEY}`;
         const data = await (await fetch(url)).json();
         totalItems = data.TotalRecordCount || 0;
-        const items = data.Items || [];
+        let items = data.Items || [];
+
+        // If items are Folders (e.g. Comics library subfolders), re-fetch recursively for actual books
+        if (items.length > 0 && items[0].Type === 'Folder') {
+            const recursiveUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&IncludeItemTypes=Book&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${CONFIG.API_KEY}`;
+            const recursiveData = await (await fetch(recursiveUrl)).json();
+            totalItems = recursiveData.TotalRecordCount || 0;
+            items = recursiveData.Items || [];
+        }
         document.getElementById('categoryCount').textContent = `${totalItems} items total`;
         if (!categoryName) {
             try {
@@ -428,8 +436,12 @@ function displayItems(items) {
         const card = document.createElement('div');
         card.className = 'item-card';
         card.onclick = () => {
-            const cp = categoryId ? `&catId=${categoryId}&catName=${encodeURIComponent(categoryName||'')}` : '';
-            window.location.href = `movie-frame.html?id=${item.Id}${cp}`;
+            if (item.Type === 'Book') {
+                window.open(`https://flmtv26.duckdns.org:8920/web/#/details?id=${item.Id}&serverId=db6bb6388c8c4c70825698639853ede6`, '_blank');
+            } else {
+                const cp = categoryId ? `&catId=${categoryId}&catName=${encodeURIComponent(categoryName||'')}` : '';
+                window.location.href = `movie-frame.html?id=${item.Id}${cp}`;
+            }
         };
         const posterUrl = item.ImageTags && item.ImageTags.Primary
             ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=300&quality=90`
