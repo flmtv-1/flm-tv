@@ -713,9 +713,9 @@
         // LOAD BIG KIDS COMICS FROM JELLYFIN (CBR - opens in Jellyfin reader)
         // ═══════════════════════════════════════════════════════════════
         
-        async function openComic(bookId) {
-            // Book reader cannot work in iframe - open Jellyfin directly in new tab
-            window.open(`https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#!/details?id=${bookId}&serverId=db6bb6388c8c4c70825698639853ede6`, '_blank');
+        async function openComic(bookId, bookName) {
+            // Open in our custom comic reader - bypasses Public user restrictions
+            window.location.href = `comic-reader.html?id=${bookId}&name=${encodeURIComponent(bookName || 'Comic')}`;
         }
 
         async function loadComics() {
@@ -745,7 +745,7 @@
                         ? `${JELLYFIN_CONFIG.SERVER}/Items/${book.Id}/Images/Primary?maxHeight=400&quality=90&tag=${book.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
                         : null;
                     const jellyfinUrl = `https://flmtv26.duckdns.org:8920/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#/details?id=${book.Id}&serverId=db6bb6388c8c4c70825698639853ede6`;
-                    return `<div class="book-card" onclick="openComic('${book.Id}')">
+                    return `<div class="book-card" onclick="openComic('${book.Id}', '${cleanBookName(book.Name)}')">
                         ${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book"></i></div>'}
                         <div class="book-title">${cleanBookName(book.Name)}</div>
                         <span class="book-type">📚 COMIC</span>

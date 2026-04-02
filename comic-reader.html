@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comic Reader - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- JSZip to unpack CBZ files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0f1a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: rgba(15, 23, 42, 0.98);
+            border-bottom: 2px solid #ffd700;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-gold { background: #ffd700; color: #000; }
+        .btn-gold:hover { background: #ffe84d; }
+        .btn-green { background: #22c55e; color: #fff; }
+        .btn-green:hover { background: #16a34a; }
+
+        .logo-wrap { display: flex; align-items: center; gap: 0.5rem; }
+        .logo-flag { display: flex; flex-direction: column; width: 14px; height: 20px; gap: 2px; }
+        .logo-flag span { flex: 1; border-radius: 1px; }
+        .logo-flag span:nth-child(1) { background: #0038a8; }
+        .logo-flag span:nth-child(2) { background: #dc2626; }
+        .logo-flag span:nth-child(3) { background: #ffd700; }
+        .logo-text { font-size: 16px; font-weight: 700; letter-spacing: 1.5px; }
+        .logo-text .flm { color: #ffd700; }
+        .logo-text .tv { color: #22c55e; }
+
+        .comic-title {
+            flex: 1;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .page-info {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        /* ── LOADING / ERROR ── */
+        .status-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 215, 0, 0.2);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .status-text { font-size: 1.2rem; color: #94a3b8; }
+        .error-text { font-size: 1.2rem; color: #ef4444; }
+
+        /* ── READER ── */
+        .reader {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #000;
+            position: relative;
+        }
+
+        .page-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem;
+            overflow: auto;
+        }
+
+        .comic-page {
+            max-width: 100%;
+            max-height: calc(100vh - 130px);
+            object-fit: contain;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.8);
+            user-select: none;
+        }
+
+        /* ── NAV ARROWS ── */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.85);
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .nav-arrow:hover:not(:disabled) {
+            background: #22c55e;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-arrow.left { left: 12px; }
+        .nav-arrow.right { right: 12px; }
+
+        /* ── FOOTER NAV ── */
+        .footer-nav {
+            background: rgba(15, 23, 42, 0.98);
+            border-top: 2px solid #ffd700;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .footer-nav button {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #22c55e;
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .footer-nav button:hover:not(:disabled) { background: #22c55e; }
+        .footer-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .page-counter {
+            font-size: 1rem;
+            color: #ffd700;
+            font-weight: 700;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .comic-title { font-size: 0.85rem; }
+            .nav-arrow { width: 44px; height: 44px; font-size: 1.1rem; }
+            .nav-arrow.left { left: 4px; }
+            .nav-arrow.right { right: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <a class="btn btn-gold" href="#" onclick="history.back(); return false;">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <a class="btn btn-gold" href="home.html">
+        🏠 Home
+    </a>
+    <div class="logo-wrap">
+        <div class="logo-flag"><span></span><span></span><span></span></div>
+        <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
+    </div>
+    <div class="comic-title" id="comicTitle">Loading...</div>
+    <div class="page-info" id="pageInfo"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="statusScreen" class="status-screen">
+    <div class="spinner"></div>
+    <div class="status-text" id="statusText">Loading comic...</div>
+</div>
+
+<div id="readerArea" class="reader" style="display:none;">
+    <button class="nav-arrow left" id="prevBtn" onclick="changePage(-1)" disabled>
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <div class="page-container">
+        <img id="comicPage" class="comic-page" src="" alt="Comic page">
+    </div>
+
+    <button class="nav-arrow right" id="nextBtn" onclick="changePage(1)">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+</div>
+
+<!-- FOOTER NAV -->
+<div id="footerNav" class="footer-nav" style="display:none;">
+    <button onclick="changePage(-1)" id="prevBtnFooter" disabled>
+        <i class="fas fa-chevron-left"></i> Previous
+    </button>
+    <div class="page-counter" id="pageCounter">Page 1 of 1</div>
+    <button onclick="changePage(1)" id="nextBtnFooter">
+        Next <i class="fas fa-chevron-right"></i>
+    </button>
+</div>
+
+<script>
+const CONFIG = {
+    SERVER: 'https://flmtv26.duckdns.org:8920',
+    API_KEY: '62131ee22c0141c6b651be75a7444350'
+};
+
+const params = new URLSearchParams(location.search);
+const ITEM_ID = params.get('id') || '';
+const ITEM_NAME = decodeURIComponent(params.get('name') || 'Comic');
+
+let pages = [];       // Array of blob URLs for each page image
+let currentPage = 0;
+
+// ── INIT ──
+document.getElementById('comicTitle').textContent = ITEM_NAME;
+
+if (!ITEM_ID) {
+    showError('No comic specified. Please go back and try again.');
+} else {
+    loadComic();
+}
+
+// ── LOAD COMIC ──
+async function loadComic() {
+    try {
+        setStatus('Fetching comic file...');
+
+        // Download the CBR/CBZ file via API key - bypasses Public user restrictions
+        const downloadUrl = `${CONFIG.SERVER}/Items/${ITEM_ID}/Download?api_key=${CONFIG.API_KEY}`;
+        const response = await fetch(downloadUrl);
+
+        if (!response.ok) {
+            throw new Error(`Server returned ${response.status}`);
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+        const arrayBuffer = await response.arrayBuffer();
+
+        setStatus('Unpacking pages...');
+
+        // CBZ is just a ZIP file - use JSZip to extract images
+        // CBR is RAR format - we handle it differently
+        const filename = getFilename(response) || '';
+        const ext = filename.split('.').pop().toLowerCase();
+
+        if (ext === 'cbz' || contentType.includes('zip') || contentType.includes('cbz')) {
+            await loadCBZ(arrayBuffer);
+        } else if (ext === 'cbr' || contentType.includes('cbr') || contentType.includes('rar')) {
+            await loadCBR(arrayBuffer);
+        } else {
+            // Try CBZ first as it's most common
+            try {
+                await loadCBZ(arrayBuffer);
+            } catch(e) {
+                showError('This comic format is not yet supported. CBZ comics work best!');
+            }
+        }
+
+    } catch(err) {
+        console.error('Comic load error:', err);
+        showError('Could not load comic: ' + err.message);
+    }
+}
+
+function getFilename(response) {
+    const cd = response.headers.get('content-disposition') || '';
+    const match = cd.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+    return match ? match[1].replace(/['"]/g, '') : '';
+}
+
+// ── LOAD CBZ (ZIP-based) ──
+async function loadCBZ(arrayBuffer) {
+    const zip = await JSZip.loadAsync(arrayBuffer);
+
+    // Get all image files, sorted by name
+    const imageFiles = Object.keys(zip.files)
+        .filter(name => {
+            const lower = name.toLowerCase();
+            return (lower.endsWith('.jpg') || lower.endsWith('.jpeg') ||
+                    lower.endsWith('.png') || lower.endsWith('.webp') ||
+                    lower.endsWith('.gif')) &&
+                   !zip.files[name].dir;
+        })
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    if (imageFiles.length === 0) {
+        throw new Error('No images found in comic file');
+    }
+
+    setStatus(`Loading ${imageFiles.length} pages...`);
+
+    // Extract all pages as blob URLs
+    pages = [];
+    for (const filename of imageFiles) {
+        const blob = await zip.files[filename].async('blob');
+        const url = URL.createObjectURL(blob);
+        pages.push(url);
+    }
+
+    showReader();
+}
+
+// ── LOAD CBR (RAR-based) - limited support ──
+async function loadCBR(arrayBuffer) {
+    // CBR uses RAR format which requires a native library
+    // Show helpful message
+    showError(
+        'CBR format requires special handling. ' +
+        'Please ask the admin to convert this comic to CBZ format for the best experience. ' +
+        'CBZ comics work perfectly!'
+    );
+}
+
+// ── SHOW READER ──
+function showReader() {
+    document.getElementById('statusScreen').style.display = 'none';
+    document.getElementById('readerArea').style.display = 'flex';
+    document.getElementById('footerNav').style.display = 'flex';
+    
+    currentPage = 0;
+    displayPage(0);
+}
+
+// ── DISPLAY PAGE ──
+function displayPage(index) {
+    if (index < 0 || index >= pages.length) return;
+    currentPage = index;
+
+    const img = document.getElementById('comicPage');
+    img.src = pages[index];
+
+    // Update counters
+    const display = `Page ${index + 1} of ${pages.length}`;
+    document.getElementById('pageCounter').textContent = display;
+    document.getElementById('pageInfo').textContent = display;
+    document.title = `${ITEM_NAME} - ${display}`;
+
+    // Update buttons
+    document.getElementById('prevBtn').disabled = index === 0;
+    document.getElementById('nextBtn').disabled = index === pages.length - 1;
+    document.getElementById('prevBtnFooter').disabled = index === 0;
+    document.getElementById('nextBtnFooter').disabled = index === pages.length - 1;
+
+    // Scroll to top of page
+    document.querySelector('.page-container').scrollTop = 0;
+}
+
+// ── CHANGE PAGE ──
+function changePage(dir) {
+    displayPage(currentPage + dir);
+}
+
+// ── KEYBOARD NAV ──
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changePage(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changePage(-1);
+});
+
+// ── TOUCH SWIPE ──
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) changePage(diff > 0 ? 1 : -1);
+});
+
+// ── HELPERS ──
+function setStatus(msg) {
+    document.getElementById('statusText').textContent = msg;
+}
+
+function showError(msg) {
+    document.getElementById('statusScreen').style.display = 'flex';
+    document.getElementById('readerArea').style.display = 'none';
+    document.getElementById('footerNav').style.display = 'none';
+    const statusDiv = document.getElementById('statusScreen');
+    statusDiv.innerHTML = `
+        <i class="fas fa-exclamation-circle" style="font-size:3rem;color:#ef4444;"></i>
+        <div class="error-text">${msg}</div>
+        <a class="btn btn-gold" href="javascript:history.back()">
+            <i class="fas fa-arrow-left"></i> Go Back
+        </a>
+    `;
+}
+</script>
+
+</body>
+</html>
