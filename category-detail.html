@@ -437,7 +437,9 @@ function displayItems(items) {
         card.className = 'item-card';
         card.onclick = () => {
             if (item.Type === 'Book') {
-                window.location.href = `movie-frame.html?id=${item.Id}`;
+                // Book reader cannot work inside an iframe - open Jellyfin directly in new tab
+                const bookUrl = `https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#!/details?id=${item.Id}&serverId=db6bb6388c8c4c70825698639853ede6`;
+                window.open(bookUrl, '_blank');
             } else {
                 const cp = categoryId ? `&catId=${categoryId}&catName=${encodeURIComponent(categoryName||'')}` : '';
                 window.location.href = `movie-frame.html?id=${item.Id}${cp}`;
