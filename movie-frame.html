@@ -133,8 +133,9 @@ document.getElementById('homeBtn').href = 'home.html';
 
 if (ITEM_ID) {
   document.getElementById('jellyfinFrame').src =
-    'https://flmtv.com/jellyfin/web/index.html?api_key=' + CONFIG.API_KEY +
-    '#/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
+    CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
+    '&serverId=' + CONFIG.SERVER_ID +
+    '&api_key=' + CONFIG.API_KEY;
 }
 </script>
 
