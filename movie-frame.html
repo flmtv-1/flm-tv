@@ -118,7 +118,7 @@
 
 <script>
 const CONFIG = {
-  SERVER:    'https://flmtv26.duckdns.org:8920',
+  SERVER:    'https://flmtv26.duckdns.org',
   API_KEY:   '62131ee22c0141c6b651be75a7444350',
   SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
 };
@@ -133,8 +133,9 @@ document.getElementById('homeBtn').href = 'home.html';
 
 if (ITEM_ID) {
   document.getElementById('jellyfinFrame').src =
-    CONFIG.SERVER + '/web/#/details?id=' + ITEM_ID +
-    '&serverId=' + CONFIG.SERVER_ID;
+    CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
+    '&serverId=' + CONFIG.SERVER_ID +
+    '&api_key=' + CONFIG.API_KEY;
 }
 </script>
 
