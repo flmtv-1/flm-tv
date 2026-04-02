@@ -133,8 +133,7 @@ document.getElementById('homeBtn').href = 'home.html';
 
 if (ITEM_ID) {
   document.getElementById('jellyfinFrame').src =
-    CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
-    '#/details?id=' + ITEM_ID +
+    CONFIG.SERVER + '/web/#/details?id=' + ITEM_ID +
     '&serverId=' + CONFIG.SERVER_ID;
 }
 </script>

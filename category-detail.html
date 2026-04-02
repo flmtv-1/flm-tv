@@ -437,7 +437,7 @@ function displayItems(items) {
         card.className = 'item-card';
         card.onclick = () => {
             if (item.Type === 'Book') {
-                window.open(`https://flmtv26.duckdns.org:8920/web/#/details?id=${item.Id}&serverId=db6bb6388c8c4c70825698639853ede6`, '_blank');
+                window.location.href = `movie-frame.html?id=${item.Id}`;
             } else {
                 const cp = categoryId ? `&catId=${categoryId}&catName=${encodeURIComponent(categoryName||'')}` : '';
                 window.location.href = `movie-frame.html?id=${item.Id}${cp}`;
