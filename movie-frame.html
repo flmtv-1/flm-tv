@@ -132,27 +132,10 @@ const CAT_NAME = decodeURIComponent(params.get('catName') || '');
 document.getElementById('homeBtn').href = 'home.html';
 
 if (ITEM_ID) {
-  // If this is a Book, the Jellyfin reader cannot run inside an iframe.
-  // Redirect the whole window directly to Jellyfin so the reader works.
-  fetch(CONFIG.SERVER + '/Users/2562494c1df24f8789cd0ad8a38a7bf4/Items/' + ITEM_ID + '?api_key=' + CONFIG.API_KEY)
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.Type === 'Book') {
-        window.location.href = CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
-          '&serverId=' + CONFIG.SERVER_ID;
-      } else {
-        document.getElementById('jellyfinFrame').src =
-          CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
-          '&serverId=' + CONFIG.SERVER_ID +
-          '&api_key=' + CONFIG.API_KEY;
-      }
-    })
-    .catch(function() {
-      document.getElementById('jellyfinFrame').src =
-        CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
-        '&serverId=' + CONFIG.SERVER_ID +
-        '&api_key=' + CONFIG.API_KEY;
-    });
+  document.getElementById('jellyfinFrame').src =
+    CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
+    '&serverId=' + CONFIG.SERVER_ID +
+    '&api_key=' + CONFIG.API_KEY;
 }
 </script>
 
