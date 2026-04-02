@@ -633,7 +633,7 @@
         const JELLYFIN_CONFIG = {
             SERVER: 'https://flmtv26.duckdns.org:8920',
             API_KEY: '62131ee22c0141c6b651be75a7444350',
-            USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
+            USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4',
             COMICS_LIBRARY_ID: '371dbb33d90bd6e05f56711163916640',     // BIG KIDS COMICS (CBR - opens in Jellyfin)
             STORYBOOKS_LIBRARY_ID: 'c0008eeeb6b0a99b8450194800eb77d4', // STORY TIME (PDFs - built-in reader)
             AUDIOBOOKS_LIBRARY_ID: '82157e90ee02c1ced8b2c9db574b0054', // AUDIO STORIES
@@ -714,7 +714,7 @@
         // ═══════════════════════════════════════════════════════════════
         
         async function openComic(bookId) {
-            window.location.href = `movie-frame.html?id=${bookId}`;
+            window.location.href = `${JELLYFIN_CONFIG.SERVER}/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#/details?id=${bookId}&serverId=db6bb6388c8c4c70825698639853ede6`;
         }
 
         async function loadComics() {

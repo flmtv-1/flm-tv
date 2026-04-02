@@ -1,94 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading Movie - FLM TV</title>
-    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
-            color: #ffd700;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .loading {
-            text-align: center;
-        }
-        
-        .loading-logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 2rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 215, 0, 0.2);
-            border-top-color: #ffd700;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .loading-text {
-            font-size: 1.2rem;
-            color: #ffd700;
-        }
-    </style>
+<!-- saved from url=(0070)https://flmtv.com/movie-frame.html?id=0b30a58fd5019e61d741097dfc9e628a -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLM TV</title>
+  <style>
+    :root { --hdr: 50px; --gold: #ffd700; --green: #22c55e; --red: #dc2626; }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { background: #000; overflow: hidden; }
+
+    #flmBar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--hdr);
+      background: rgba(0,0,0,0.92);
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 1rem;
+      z-index: 99999;
+    }
+
+    .flm-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-vault {
+      background: var(--green);
+      color: #fff;
+    }
+    .btn-vault:hover { background: #16a34a; }
+
+    .btn-front {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .btn-front:hover { background: #ffe84d; }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-flag {
+      display: flex;
+      flex-direction: column;
+      width: 14px;
+      height: 20px;
+      gap: 2px;
+    }
+
+    .logo-flag span {
+      flex: 1;
+      border-radius: 1px;
+    }
+
+    .logo-flag span:nth-child(1) { background: #0038a8; }
+    .logo-flag span:nth-child(2) { background: var(--red); }
+    .logo-flag span:nth-child(3) { background: var(--gold); }
+
+    .logo-text { font-size: 16px; font-weight: 700; letter-spacing: 1.5px; }
+    .logo-text .flm { color: var(--gold); }
+    .logo-text .tv  { color: var(--green); }
+
+    .bar-spacer { flex: 1; }
+
+    #jellyfinFrame {
+      position: fixed;
+      top: var(--hdr);
+      left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: calc(100% - var(--hdr));
+      border: none;
+      background: #000;
+    }
+
+    @media (max-width: 768px) {
+      .flm-btn { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+      .logo-text { font-size: 14px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="loading">
-        <img src="assets/logos/flm-logo.png" alt="FLM TV" class="loading-logo">
-        <div class="spinner"></div>
-        <p class="loading-text">Loading movie...</p>
-    </div>
 
-    <script>
-        const JELLYFIN = {
-            SERVER: 'https://flmtv26.duckdns.org:8920',
-            SERVER_ID: 'db6bb6388c8c4c70825698639853ede6',
-	    USER_ID: '0407d4609a0346f99c09e0d7ddc9ccd1',
-            API_KEY: '62131ee22c0141c6b651be75a7444350'
-        };
+<div id="flmBar">
+  <a class="flm-btn btn-front" href="#" onclick="history.back(); return false;" id="backBtn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    Back
+  </a>
+  <a class="flm-btn btn-front" href="home.html" id="homeBtn">🏠 Home</a>
+  <div class="logo-wrap">
+    <div class="logo-flag"><span></span><span></span><span></span></div>
+    <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
+  </div>
+  <div class="bar-spacer"></div>
+  <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
+    🎬 The Vault
+  </a>
+</div>
 
-        // Get movie ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const movieId = urlParams.get('id');
+<iframe id="jellyfinFrame" allowfullscreen="" allow="autoplay; fullscreen; picture-in-picture" title="FLM TV"></iframe>
 
-        if (movieId) {
-            // Redirect directly to Jellyfin detail page
-            console.log('🎬 Redirecting to Jellyfin for movie:', movieId);
-            window.location.href = `${JELLYFIN.SERVER}/web/index.html?api_key=${JELLYFIN.API_KEY}#/details?id=${movieId}&serverId=${JELLYFIN.SERVER_ID}`;
-        } else {
-            // No movie ID - go back to home
-            console.log('❌ No movie ID provided');
-            document.querySelector('.loading-text').textContent = 'Error: No movie found';
-            setTimeout(() => {
-                window.location.href = 'home.html';
-            }, 2000);
-        }
-    </script>
-</body>
-</html>
+<script>
+const CONFIG = {
+  SERVER:    'https://flmtv26.duckdns.org:8920',
+  API_KEY:   '62131ee22c0141c6b651be75a7444350',
+  SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
+};
+
+const params   = new URLSearchParams(location.search);
+const ITEM_ID  = params.get('id') || '';
+const CAT_ID   = params.get('catId') || '';
+const CAT_NAME = decodeURIComponent(params.get('catName') || '');
+
+// Home button always goes home
+document.getElementById('homeBtn').href = 'home.html';
+
+if (ITEM_ID) {
+  // If this is a Book, the Jellyfin reader cannot run inside an iframe.
+  // Redirect the whole window directly to Jellyfin so the reader works.
+  fetch(CONFIG.SERVER + '/Users/2562494c1df24f8789cd0ad8a38a7bf4/Items/' + ITEM_ID + '?api_key=' + CONFIG.API_KEY)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.Type === 'Book') {
+        window.location.href = CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY + '#/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
+      } else {
+        document.getElementById('jellyfinFrame').src =
+          CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
+          '&serverId=' + CONFIG.SERVER_ID +
+          '&api_key=' + CONFIG.API_KEY;
+      }
+    })
+    .catch(function() {
+      document.getElementById('jellyfinFrame').src =
+        CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
+        '&serverId=' + CONFIG.SERVER_ID +
+        '&api_key=' + CONFIG.API_KEY;
+    });
+}
+</script>
+
+
+</body></html>
