@@ -714,22 +714,7 @@
         // ═══════════════════════════════════════════════════════════════
         
         async function openComic(bookId) {
-            let token = JELLYFIN_CONFIG.API_KEY;
-            try {
-                const authResp = await fetch(`https://flmtv26.duckdns.org:8920/Users/AuthenticateByName`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="flmtv-web", Version="1.0.0"`
-                    },
-                    body: JSON.stringify({ Username: 'Public', Pw: '' })
-                });
-                if (authResp.ok) {
-                    const authData = await authResp.json();
-                    token = authData.AccessToken;
-                }
-            } catch(e) {}
-            window.open(`https://flmtv26.duckdns.org:8920/web/index.html?api_key=${token}#/details?id=${bookId}&serverId=db6bb6388c8c4c70825698639853ede6`, '_blank');
+            window.open(`https://flmtv26.duckdns.org:8920/web/#/details?id=${bookId}&serverId=db6bb6388c8c4c70825698639853ede6`, '_blank');
         }
 
         async function loadComics() {
