@@ -2761,7 +2761,14 @@
             <div class="live-showcase-right">
                 <div class="showcase-cat-header">
                     <h2 class="category-nav-title" style="margin:0;">Browse Categories</h2>
-    
+                    <div style="display:flex;gap:8px;">
+                        <button class="category-nav-arrow left" onclick="scrollCategoryNav(-1)" style="position:relative;top:auto;transform:none;">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="category-nav-arrow right" onclick="scrollCategoryNav(1)" style="position:relative;top:auto;transform:none;">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="category-nav-scroll showcase-scroll" id="categoryNavScroll">
                     <!-- Category cards will be dynamically added here -->

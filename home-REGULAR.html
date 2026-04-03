@@ -2728,255 +2728,23 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!--  LIVE TV SHOWCASE + CATEGORY NAVIGATION                         -->
+    <!--  CATEGORY NAVIGATION                                            -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
-
-    <section class="live-showcase-section">
-        <div class="live-showcase-container">
-
-            <!-- BIG LIVE PLAYER -->
-            <div class="live-showcase-player">
-                <div class="live-showcase-badge">
-                    <div class="live-dot"></div>
-                    LIVE · CH 26.5
-                </div>
-                <video id="previewVideo" muted defaultmuted autoplay playsinline></video>
-                <div class="live-showcase-overlay">
-                    <div class="live-showcase-info">
-                        <div class="live-showcase-logo">FLM <span>TV</span></div>
-                        <div class="live-showcase-sub">Las Vegas · Worldwide</div>
-                    </div>
-                    <div class="live-showcase-actions">
-                        <button class="live-watch-btn" onclick="openLiveStream()">
-                            <i class="fas fa-play"></i> Watch Live
-                        </button>
-                        <button class="live-vol-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
-                            <i class="fas fa-volume-mute"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CATEGORIES BESIDE + BELOW -->
-            <div class="live-showcase-right">
-                <div class="showcase-cat-header">
-                    <h2 class="category-nav-title" style="margin:0;">Browse Categories</h2>
     
-                </div>
-                <div class="category-nav-scroll showcase-scroll" id="categoryNavScroll">
-                    <!-- Category cards will be dynamically added here -->
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <style>
-    .live-showcase-section {
-        padding: 0 0 2rem;
-        background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
-    }
-
-    .live-showcase-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 1.5rem 2rem;
-        display: grid;
-        grid-template-columns: 1fr 380px;
-        gap: 1.5rem;
-        align-items: start;
-    }
-
-    /* BIG PLAYER */
-    .live-showcase-player {
-        position: relative;
-        border-radius: 14px;
-        overflow: hidden;
-        background: #000;
-        aspect-ratio: 16/9;
-        box-shadow:
-            0 0 0 2px rgba(255,215,0,0.3),
-            0 0 60px rgba(255,215,0,0.1),
-            0 20px 60px rgba(0,0,0,0.8);
-        cursor: pointer;
-    }
-
-    .live-showcase-player::before,
-    .live-showcase-player::after {
-        content: '';
-        position: absolute;
-        width: 20px; height: 20px;
-        z-index: 10; pointer-events: none;
-    }
-    .live-showcase-player::before {
-        top: 0; left: 0;
-        border-top: 2px solid #ffd700;
-        border-left: 2px solid #ffd700;
-        border-radius: 14px 0 0 0;
-    }
-    .live-showcase-player::after {
-        bottom: 0; right: 0;
-        border-bottom: 2px solid #ffd700;
-        border-right: 2px solid #ffd700;
-        border-radius: 0 0 14px 0;
-    }
-
-    .live-showcase-player video {
-        position: absolute;
-        inset: 0; width: 100%; height: 100%;
-        object-fit: cover;
-    }
-
-    .live-showcase-badge {
-        position: absolute;
-        top: 14px; left: 14px;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        background: rgba(220,38,38,0.9);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 20px;
-        padding: 5px 12px;
-        font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
-        font-size: 13px;
-        letter-spacing: 2px;
-        font-weight: 700;
-        color: #fff;
-        backdrop-filter: blur(4px);
-    }
-
-    .live-showcase-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 20px;
-        z-index: 5;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .live-showcase-player:hover .live-showcase-overlay { opacity: 1; }
-
-    .live-showcase-info { margin-bottom: 12px; }
-
-    .live-showcase-logo {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 36px;
-        letter-spacing: 4px;
-        color: #ffd700;
-        line-height: 1;
-    }
-
-    .live-showcase-logo span { color: #22c55e; }
-
-    .live-showcase-sub {
-        font-size: 12px;
-        letter-spacing: 2px;
-        color: rgba(255,255,255,0.6);
-        text-transform: uppercase;
-        margin-top: 4px;
-    }
-
-    .live-showcase-actions {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-
-    .live-watch-btn {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: #ffd700;
-        color: #000;
-        border: none;
-        padding: 10px 22px;
-        border-radius: 6px;
-        font-weight: 800;
-        font-size: 14px;
-        cursor: pointer;
-        letter-spacing: 0.5px;
-        transition: all 0.2s;
-    }
-
-    .live-watch-btn:hover { background: #ffe84d; transform: scale(1.04); }
-
-    .live-vol-btn {
-        width: 40px; height: 40px;
-        border-radius: 50%;
-        background: rgba(0,0,0,0.6);
-        border: 2px solid rgba(255,215,0,0.6);
-        color: #ffd700;
-        font-size: 15px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-    }
-
-    .live-vol-btn:hover { background: rgba(255,215,0,0.2); }
-
-    /* RIGHT SIDE CATEGORIES */
-    .live-showcase-right {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        height: 100%;
-    }
-
-    .showcase-cat-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .showcase-scroll {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        max-height: 420px;
-        padding-right: 4px;
-        flex: none !important;
-    }
-
-    .showcase-scroll::-webkit-scrollbar { width: 4px; }
-    .showcase-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
-    .showcase-scroll::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.3); border-radius: 4px; }
-
-    /* Keep live channel card hidden from showcase scroll */
-    .showcase-scroll .live-channel-card { display: none !important; }
-
-    @media (max-width: 1024px) {
-        .live-showcase-container {
-            grid-template-columns: 1fr;
-        }
-        .live-showcase-right {
-            order: 2;
-        }
-        .showcase-scroll {
-            grid-template-columns: repeat(4, 1fr) !important;
-            max-height: none !important;
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .live-showcase-container { padding: 1rem; gap: 1rem; }
-        .showcase-scroll {
-            grid-template-columns: repeat(3, 1fr) !important;
-        }
-    }
-    </style>
-
-    <script>
+    <section class="category-nav-section">
+        <div class="category-nav-container">
+            <h2 class="category-nav-title">Browse Categories</h2>
+            <div class="category-nav-wrapper">
+                <button class="category-nav-arrow left" onclick="scrollCategoryNav(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="category-nav-scroll" id="categoryNavScroll">
+                    <!-- LIVE CHANNEL 26.5 - vMix Stream -->
+                    <div class="live-channel-card" onclick="openLiveStream()">
+                        <video id="previewVideo" muted defaultmuted autoplay playsinline
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+                        </video>
+                       <script>
     (function() {
         const vid = document.getElementById('previewVideo');
         const url = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
@@ -2994,7 +2762,27 @@
         }
         if (typeof Hls !== 'undefined') { init(); } else { window.addEventListener('load', init); }
     })();
-    </script>
+</script>
+                        <div class="live-channel-content">
+                            <div class="live-indicator">
+                                <div class="live-dot"></div>
+                                <span> LIVE</span>
+                            </div>
+                            <div class="live-channel-name">Channel 26.5 Live</div>
+                        </div>
+                        <!-- Volume Toggle Button -->
+                        <button class="preview-volume-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
+                            <i class="fas fa-volume-mute"></i>
+                        </button>
+                    </div>
+                    <!-- Category cards will be dynamically added here -->
+                </div>
+                <button class="category-nav-arrow right" onclick="scrollCategoryNav(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  CONTENT SECTIONS                                               -->
@@ -3832,11 +3620,7 @@
                         if (item.Type === 'Book') {
                             card.onclick = () => openComic(item.Id, item.Name);
                         } else {
-                            if (item.Type === 'Book') {
-                            card.onclick = () => openComic(item.Id, item.Name);
-                        } else {
                             card.onclick = () => playJellyfinItem(item.Id, item.Type);
-                        }
                         }
 
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
@@ -4219,10 +4003,6 @@
             }, 5000);
         }
         
-       function openComic(bookId, bookName) {
-           window.location.href = `comic-reader.html?id=${bookId}&name=${encodeURIComponent(bookName || 'Comic')}`;
-       }
-
        function openComic(bookId, bookName) {
            window.location.href = `comic-reader.html?id=${bookId}&name=${encodeURIComponent(bookName || 'Comic')}`;
        }
