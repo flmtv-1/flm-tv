@@ -4038,7 +4038,7 @@
                         'X-Emby-Authorization': `MediaBrowser Client="FLM Television Network", Device="Web Browser", DeviceId="flmtv-web", Version="1.0.0"`
                     },
                     body: JSON.stringify({
-                        Username: 'Public',
+                        Username: 'Enter to Sign in',
                         Pw: ''
                     })
                 });
@@ -4075,6 +4075,75 @@
             }
         }
         
+        // ═══════════════════════════════════════════════════════════════
+        // SILENT PRE-AUTH - runs as soon as home page loads
+        // Authenticates with Jellyfin BEFORE user clicks anything
+        // ═══════════════════════════════════════════════════════════════
+        (async function silentAuth() {
+            const SERVER = 'https://flmtv26.duckdns.org:8920';
+            const SERVER_ID = 'db6bb6388c8c4c70825698639853ede6';
+            const API_KEY = '62131ee22c0141c6b651be75a7444350';
+
+            try {
+                // Check if already have valid credentials
+                const existing = localStorage.getItem('jellyfin_credentials');
+                if (existing) {
+                    const creds = JSON.parse(existing);
+                    const server = creds.Servers && creds.Servers[0];
+                    if (server && server.AccessToken) {
+                        // Verify token is still valid
+                        const check = await fetch(SERVER + '/Users/Me', {
+                            headers: { 'X-Emby-Token': server.AccessToken }
+                        });
+                        if (check.ok) {
+                            console.log('✅ Silent auth: existing session valid');
+                            return;
+                        }
+                    }
+                }
+
+                // Authenticate fresh
+                const resp = await fetch(SERVER + '/Users/AuthenticateByName', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-home", Version="1.0.0"'
+                    },
+                    body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
+                });
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.AccessToken) {
+                        const creds = {
+                            Servers: [{
+                                AccessToken: data.AccessToken,
+                                UserId: data.User.Id,
+                                Id: SERVER_ID,
+                                ManualAddress: SERVER,
+                                manualAddressOnly: true,
+                                Name: 'DESKTOP-16LU6FC',
+                                DateLastAccessed: Date.now(),
+                                LastConnectionMode: 2
+                            }]
+                        };
+                        localStorage.setItem('jellyfin_credentials', JSON.stringify(creds));
+                        localStorage.setItem('user-' + data.User.Id + '-' + SERVER_ID, JSON.stringify({
+                            Name: data.User.Name,
+                            ServerId: SERVER_ID,
+                            Id: data.User.Id,
+                            PrimaryImageTag: data.User.PrimaryImageTag || '',
+                            HasPassword: false,
+                            HasConfiguredPassword: false
+                        }));
+                        console.log('✅ Silent auth: new session created for', data.User.Name);
+                    }
+                }
+            } catch(e) {
+                console.log('⚠️ Silent auth failed:', e);
+            }
+        })();
+
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 DOM loaded, starting app...');
             
@@ -4274,7 +4343,7 @@
                 'Content-Type': 'application/json',
                 'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID || 'flmtv-web'}", Version="1.0.0"`
             },
-            body: JSON.stringify({ Username: 'Public', Pw: '' })
+            body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
         });
         if (authResp.ok) {
             const authData = await authResp.json();
@@ -4329,7 +4398,7 @@
                         'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID}", Version="1.0.0"`
                     },
                     body: JSON.stringify({
-                        Username: 'Public',
+                        Username: 'Enter to Sign in',
                         Pw: ''
                     })
                 });
