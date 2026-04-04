@@ -377,7 +377,7 @@
             const frame = document.getElementById('playerFrame');
             
             // Use Jellyfin's native player - this ALWAYS works!
-            const playerUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6`;
+            const playerUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#!/details?id=${itemId}&serverId=db6bb6388c8c4c70825698639853ede6`;
             
             frame.src = playerUrl;
             overlay.classList.add('active');

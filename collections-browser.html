@@ -186,7 +186,7 @@ COLLECTIONS.forEach(collection => {
     const card = document.createElement('div');
     card.className = 'collection-card';
     card.onclick = () => {
-        window.location.href = `collection-detail.html?id=${collection.id}&name=${encodeURIComponent(collection.name)}`;
+        window.location.href = `flm-collection-browser.html?id=${collection.id}&name=${encodeURIComponent(collection.name)}`;
     };
     
     // Try to fetch poster from Jellyfin
