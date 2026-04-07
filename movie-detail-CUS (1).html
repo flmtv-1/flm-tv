@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Now - FLM TV</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        /* Loading Overlay - Covers Jellyfin logo flash */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 215, 0, 0.2);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 1.5rem;
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ffd700;
+            z-index: 100;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .header::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .header {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            color: #ffd700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .header-btns {
+            display: flex;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #22c55e;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover { 
+            background: #22c55e; 
+            transform: scale(1.05);
+        }
+        
+        /* Panel Fullscreen Mode */
+        .side-panel.panel-fullscreen {
+            width: 100vw !important;
+            right: 0 !important;
+        }
+        
+        /* Panel Toggle Button */
+        .panel-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform 0.2s;
+        }
+        
+        .panel-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Chat specific styles */
+        .message {
+            margin-bottom: 1rem;
+        }
+        
+        .message.received .message-bubble {
+            background: rgba(34, 197, 94, 0.2);
+            border-left: 3px solid #22c55e;
+            padding: 0.75rem;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .message.sent .message-bubble {
+            background: rgba(255, 215, 0, 0.2);
+            border-left: 3px solid #ffd700;
+            padding: 0.75rem;
+            border-radius: 8px;
+            color: white;
+            margin-left: auto;
+            max-width: 80%;
+        }
+        
+        .message-username {
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        /* Video Player - Fullscreen */
+        .player-section {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 70px); /* Full screen minus header */
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .play-overlay.hidden { display: none; }
+
+        .play-btn {
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #1a1a2e;
+            transition: transform 0.3s;
+        }
+
+        .play-btn:hover { transform: scale(1.1); }
+        
+        /* Unmute button for iOS */
+        .unmute-overlay {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 215, 0, 0.98);
+            color: #000;
+            padding: 1.25rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            z-index: 20;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 6px 30px rgba(255, 215, 0, 0.7);
+            border: 3px solid #000;
+        }
+        
+        .unmute-overlay.show {
+            display: flex;
+        }
+        
+        .unmute-overlay i {
+            font-size: 1.5rem;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.08); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Content Layout */
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .poster-section {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .poster {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-like { background: rgba(255,255,255,0.1); color: white; }
+        .btn-like:hover { background: rgba(255,255,255,0.2); }
+        
+        .btn-list {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* Info Section */
+        .info-section h1 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            color: #94a3b8;
+            flex-wrap: wrap;
+        }
+
+        .overview {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #e2e8f0;
+        }
+
+        .detail-row {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: #94a3b8;
+            min-width: 150px;
+        }
+
+        .detail-value {
+            color: #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: #ffd700;
+        }
+
+        /* Cast Grid */
+        .cast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .cast-card {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .cast-card:hover { transform: scale(1.05); }
+
+        .cast-photo {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #333;
+            margin-bottom: 0.5rem;
+            border: 3px solid #ffd700;
+        }
+
+        .cast-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cast-role {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Episodes */
+        .episodes-section {
+            margin-top: 3rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .season-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .season-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .season-btn.active {
+            background: #ffd700;
+            color: #1a1a2e;
+            border-color: #ffd700;
+        }
+
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .episode-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+            padding: 1rem;
+        }
+
+        .episode-card:hover { transform: scale(1.02); }
+
+        .episode-card.playing {
+            border: 2px solid #ffd700;
+        }
+
+        .episode-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Similar Movies */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .movie-card {
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover { transform: scale(1.05); }
+
+        .movie-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* Side Panels */
+        .side-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(10px);
+            border-left: 2px solid #ffd700;
+            transition: right 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-panel.active { right: 0; }
+
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid rgba(255,215,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            color: #ffd700;
+        }
+
+        .panel-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .panel-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        /* Footer CSS removed - no footer needed */
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.75rem 1rem;
+            }
+            
+            .header-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .player-section {
+                height: calc(100vh - 60px); /* Full screen on mobile */
+            }
+            
+            body {
+                overflow-y: auto;
+            }
+            
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1.5rem;
+            }
+
+            .poster-section {
+                position: relative;
+                top: 0;
+            }
+            
+            .poster {
+                max-width: 200px;
+                margin: 0 auto;
+                display: block;
+            }
+
+            .side-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .cast-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+            
+            .cast-photo {
+                border: 2px solid #ffd700;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .episodes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-section h1 {
+                font-size: 1.75rem;
+            }
+            
+            .meta-info {
+                font-size: 0.9rem;
+            }
+            
+            .unmute-overlay {
+                bottom: 100px;
+                left: 1rem;
+                right: 1rem;
+                transform: none;
+                justify-content: center;
+                font-size: 1rem;
+                padding: 1rem 1.5rem;
+            }
+            
+            .unmute-overlay i {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay - Hides Jellyfin logo flash -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <img src="assets/logos/flm-logo.png" alt="FLM TV" class="loading-logo">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <button class="header-btn" onclick="window.location.href='index.html'" style="background: transparent; border-color: #ffd700; color: #ffd700;">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">FLM TV</div>
+        <div class="header-btns">
+            <a href="https://7RealmsTV.com" target="_blank" class="header-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;" title="7RealmsTV.com">
+                <i class="fas fa-globe"></i>
+            </a>
+            <button class="header-btn" onclick="openPanel('chatPanel')">
+                <i class="fas fa-comments"></i> CHAT
+            </button>
+            <button class="header-btn" onclick="openPanel('aiPanel')">
+                <i class="fas fa-robot"></i> ZAINA AI
+            </button>
+        </div>
+    </header>
+
+    <!-- Video Player - Initially hidden -->
+    <div class="player-section" id="playerSection" style="display: none; position: fixed; inset: 0; z-index: 9999; background: #000;">
+        <button id="backButton" style="position: absolute; top: 20px; left: 20px; z-index: 10001; background: rgba(0,0,0,0.8); border: 2px solid #ffd700; color: #ffd700; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+            ← Back
+        </button>
+        <iframe 
+            id="jellyfinPlayerFrame"
+            style="width: 100%; height: 100%; border: none; background: #000;"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            allowfullscreen
+        ></iframe>
+    </div>
+
+    <!-- Custom Content - SHOW FIRST -->
+    <div class="content-wrapper" style="display: flex;">
+        <!-- Poster Sidebar -->
+        <div class="poster-section" style="position: relative;">
+            <img id="poster" class="poster" src="https://via.placeholder.com/300x450" alt="Poster">
+            
+            <!-- BIG PLAY BUTTON on poster -->
+            <button id="playButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; border-radius: 50%; background: rgba(255,215,0,0.95); border: none; color: #000; font-size: 2.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,215,0,0.5); transition: all 0.3s;">
+                <i class="fas fa-play" style="margin-left: 8px;"></i>
+            </button>
+            
+            <div class="action-buttons">
+                <button class="btn btn-like"><i class="fas fa-thumbs-up"></i></button>
+                <button class="btn btn-like"><i class="fas fa-thumbs-down"></i></button>
+            </div>
+            
+            <button class="btn btn-list">
+                <i class="fas fa-plus"></i> My List
+            </button>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <h1 id="movieTitle">Loading...</h1>
+            
+            <div class="meta-info">
+                <span id="year">-</span>
+                <span id="runtime">-</span>
+                <span id="rating">-</span>
+            </div>
+
+            <p class="overview" id="overview">Loading description...</p>
+
+            <div class="detail-row">
+                <div class="detail-label">Genres:</div>
+                <div class="detail-value" id="genres">-</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Directed by:</div>
+                <div class="detail-value" id="director">-</div>
+            </div>
+
+            <!-- Cast -->
+            <h2 class="section-title">Starring</h2>
+            <div class="cast-grid" id="castGrid"></div>
+
+            <!-- Episodes -->
+            <div class="episodes-section" id="episodesSection" style="display: none;">
+                <h2 class="section-title">Episodes</h2>
+                <div class="season-selector" id="seasonSelector"></div>
+                <div class="episodes-grid" id="episodesGrid"></div>
+            </div>
+
+            <!-- Recommendations -->
+            <h2 class="section-title">You May Also Like</h2>
+            <div class="movies-grid" id="similarMovies"></div>
+        </div>
+    </div>
+
+    <!-- Chat Panel -->
+    <div class="side-panel" id="chatPanel">
+        <div class="panel-header">
+            <div>
+                <h3 class="panel-title" style="margin-bottom: 0.25rem;"><i class="fas fa-comments"></i> Live Chat</h3>
+                <p style="font-size: 0.75rem; color: #b3b3b3; margin: 0;">Chat with viewers worldwide 🌍</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="panel-toggle" onclick="togglePanelFullscreen('chatPanel')" title="Expand Panel">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="panel-close" onclick="closePanel('chatPanel')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Simple Username Input -->
+        <div style="padding: 0.75rem; background: #282828; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 0.5rem;">
+            <label style="font-size: 0.85rem; color: #b3b3b3; white-space: nowrap;">Name:</label>
+            <input type="text" id="chatUsernameInput" placeholder="Enter your name" 
+                   style="flex: 1; padding: 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: white; font-size: 0.9rem;"
+                   maxlength="20">
+        </div>
+        
+        <div class="chat-messages" id="chatMessages" style="flex-grow: 1; padding: 1rem; overflow-y: auto; background-color: #1a1a1a;">
+        </div>
+        
+        <div class="chat-input-area" style="background-color: #282828; padding: 1rem; border-top: 1px solid #333; display: flex; align-items: center; gap: 0.5rem; position: sticky; bottom: 0; flex-shrink: 0;">
+            <textarea id="chatInput" class="chat-input" placeholder="Type your message..." style="flex-grow: 1; padding: 0.75rem; border-radius: 1.5rem; border: 1px solid #444; background-color: #333; color: white; outline: none; font-size: 1em; resize: none; min-height: 40px; max-height: 100px; overflow-y: auto; font-family: inherit;"></textarea>
+            <button id="emojiBtn" class="chat-btn" style="background-color: var(--secondary); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">😀</button>
+            <button id="sendBtn" class="chat-btn" style="background-color: var(--secondary); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+            <div id="emojiPicker" class="emoji-picker" style="position: absolute; bottom: calc(100% + 10px); left: 0; right: 0; background-color: #282828; border-radius: 8px; box-shadow: 0 -5px 15px rgba(0,0,0,0.4); padding: 1rem; display: none; flex-wrap: wrap; gap: 0.5rem; max-height: 200px; overflow-y: auto; z-index: 10;"></div>
+        </div>
+    </div>
+
+    <!-- AI Panel -->
+    <div class="side-panel" id="aiPanel">
+        <div class="panel-header">
+            <h3 class="panel-title"><i class="fas fa-robot"></i> Zaina J AI</h3>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="panel-toggle" onclick="togglePanelFullscreen('aiPanel')" title="Expand Panel">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="panel-close" onclick="closePanel('aiPanel')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="panel-body" style="padding: 1.5rem; overflow-y: auto; flex-grow: 1;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                <div>
+                    <h4 style="color: var(--accent); font-weight: 700; margin-bottom: 0.25rem;">Zaina J AI</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">Your Entertainment Assistant</p>
+                </div>
+            </div>
+            
+            <!-- ZAINA AI Assistant Search -->
+            <div style="background: rgba(255, 215, 0, 0.05); border: 2px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                    Search YouTube for trailers, auto-fill metadata, and preview posters.
+                </p>
+                <label style="color: var(--text); font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                    🎬 Search Film or Trailer:
+                </label>
+                <input id="lumaSearch" placeholder="Enter film title..." 
+                       onkeypress="if(event.key === 'Enter') searchYouTube()"
+                       style="width: 100%; padding: 0.75rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); color: white; border: 2px solid rgba(255, 215, 0, 0.3); font-family: inherit; margin-bottom: 1rem;">
+                <button onclick="searchYouTube()" 
+                        style="width: 100%; background: var(--accent); color: #000; padding: 0.75rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1rem;">
+                    🔍 Search YouTube
+                </button>
+                <div id="lumaResults" style="margin-top: 1.5rem;"></div>
+            </div>
+            
+            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--text);">
+                Search film info, trailers, actors...
+            </h3>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+                <input type="text" id="aiSearchInput" placeholder="Search film..." 
+                       style="flex: 1; padding: 0.75rem; border-radius: 0.5rem; background: #333; color: white; border: 1px solid #444; font-family: inherit;">
+                <button id="aiSearchButton" 
+                        style="background: var(--secondary); color: white; padding: 0.75rem 1.25rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-search"></i><span class="search-text"> Search</span>
+                </button>
+            </div>
+            
+            <!-- AI Chat Messages Area -->
+            <div style="border-top: 1px solid #333; padding-top: 1.5rem; margin-top: 1.5rem;">
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--neon-green);">
+                    Chat with Zaina AI
+                </h3>
+                <div id="aiMessages" class="chat-messages" style="background-color: #1a1a1a; border-radius: 8px; padding: 1rem; min-height: 200px; max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
+                    <div class="message received">
+                        <div class="message-bubble">👋 Hi! I'm Zaina AI. Ask me anything about movies, TV shows, or entertainment!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI Chat Input Area -->
+        <div class="chat-input-area" style="background-color: #282828; padding: 1rem; border-top: 1px solid #333; display: flex; align-items: center; gap: 0.5rem;">
+            <textarea id="aiChatInput" class="chat-input" placeholder="Ask Zaina AI anything..." style="flex-grow: 1; padding: 0.75rem; border-radius: 1.5rem; border: 1px solid #444; background-color: #333; color: white; outline: none; font-size: 1em; resize: none; min-height: 40px; max-height: 100px; overflow-y: auto; font-family: inherit;"></textarea>
+            <button id="aiSendBtn" class="chat-btn" style="background-color: var(--accent); color: #000; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; flex-shrink: 0;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- Tiny footer - 1 inch or less -->
+    <footer style="background: #0d1117; border-top: 1px solid #ffd700; padding: 0.5rem 1rem; text-align: center;">
+        <span style="color: #94a3b8; font-size: 0.75rem;">© 2025 FLM Television Network</span>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        console.log('🎬 PLAYER.HTML LOADED - Script starting...');
+        console.log('📍 Current URL:', window.location.href);
+        
+        // Hide loading overlay after 3 seconds to cover Jellyfin logo flash
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.remove(), 500); // Remove after fade
+            }
+        }, 1000); // 1 second
+        
+        const JELLYFIN = {
+            SERVER: 'https://flmtv26.duckdns.org:8920',
+            API_KEY: '62131ee22c0141c6b651be75a7444350',
+            USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4'
+        };
+
+        const movieId = new URLSearchParams(window.location.search).get('id');
+        console.log('🎬 Movie ID:', movieId);
+        
+        if (!movieId) {
+            console.error('❌ NO MOVIE ID IN URL!');
+            alert('Error: No movie ID provided in URL');
+        }
+        
+        let hasStarted = false;
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  FIREBASE INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyD871FYC8vGc7JAAw-2rGMZBB_h4sI0HpQ",
+            authDomain: "flmtv-site-counter.firebaseapp.com",
+            databaseURL: "https://flmtv-site-counter-default-rtdb.firebaseio.com",
+            projectId: "flmtv-site-counter",
+            storageBucket: "flmtv-site-counter.firebasestorage.app",
+            messagingSenderId: "354930172302",
+            appId: "1:354930172302:web:3176dfff3d81ce823404df"
+        };
+        
+        firebase.initializeApp(FIREBASE_CONFIG);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        
+        let isAuthReady = false;
+        let fallbackUserId = 'user_' + Math.random().toString(36).substring(7);
+        let displayedMessages = new Set();
+        
+        auth.signInAnonymously()
+            .then(() => {
+                console.log('✅ Firebase Auth: Signed in anonymously');
+                isAuthReady = true;
+            })
+            .catch(err => {
+                console.error('❌ Firebase Auth Error:', err);
+                console.log('⚠️ Using fallback mode');
+                isAuthReady = true;
+            });
+        
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('✅ User authenticated:', user.uid.substring(0, 8));
+                isAuthReady = true;
+            } else {
+                console.log('⚠️ Using fallback user ID');
+                isAuthReady = true;
+            }
+        });
+        
+        console.log('✅ Firebase initialized!');
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  FIREBASE CHAT LISTENER
+        // ═══════════════════════════════════════════════════════════════
+        
+        database.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+            const messageId = snapshot.key;
+            const msg = snapshot.val();
+            
+            if (displayedMessages.has(messageId)) {
+                return;
+            }
+            displayedMessages.add(messageId);
+            
+            if (msg && msg.text) {
+                const username = msg.username || `Viewer${msg.userId ? msg.userId.substring(0, 6) : '???'}`;
+                
+                let isOwnMessage = false;
+                const savedUsername = localStorage.getItem('flmtvChatUsername');
+                if (savedUsername && msg.username === savedUsername) {
+                    isOwnMessage = true;
+                } else if (auth.currentUser && msg.userId === auth.currentUser.uid) {
+                    isOwnMessage = true;
+                }
+                
+                const messagesContainer = document.getElementById('chatMessages');
+                if (messagesContainer) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message ' + (isOwnMessage ? 'sent' : 'received');
+                    messageDiv.style.marginBottom = '0.75rem';
+                    messageDiv.style.display = 'flex';
+                    messageDiv.style.flexDirection = 'column';
+                    messageDiv.style.alignItems = isOwnMessage ? 'flex-end' : 'flex-start';
+                    
+                    const messageBubble = document.createElement('div');
+                    messageBubble.className = 'message-bubble';
+                    messageBubble.style.maxWidth = '80%';
+                    messageBubble.style.padding = '0.6rem 0.9rem';
+                    messageBubble.style.borderRadius = '1rem';
+                    messageBubble.style.lineHeight = '1.4';
+                    messageBubble.style.wordWrap = 'break-word';
+                    messageBubble.style.backgroundColor = isOwnMessage ? '#22c55e' : '#333';
+                    messageBubble.style.color = 'white';
+                    messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
+                    messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
+                    
+                    messageBubble.innerHTML = `
+                        <div style="font-weight: 700; color: #ffd700; margin-bottom: 0.25rem; font-size: 0.85rem;">
+                            ${username}
+                        </div>
+                        <div>${escapeHtml(msg.text)}</div>
+                    `;
+                    
+                    messageDiv.appendChild(messageBubble);
+                    messagesContainer.appendChild(messageDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    
+                    console.log('💬 Message displayed:', username, msg.text);
+                }
+            }
+        });
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        //  MOBILE DETECTION & AUDIO UNLOCK
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Detect if mobile device
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        console.log('📱 Device type:', isMobile ? 'Mobile' : 'Desktop');
+        
+        // iOS Audio Context unlock (required for iOS sound)
+        if (isMobile) {
+            const unlockAudio = () => {
+                const video = document.getElementById('videoPlayer');
+                video.play().then(() => {
+                    video.pause();
+                    console.log('🔓 iOS Audio unlocked');
+                }).catch(() => {});
+                
+                // Remove listeners after first interaction
+                document.removeEventListener('touchstart', unlockAudio);
+                document.removeEventListener('click', unlockAudio);
+            };
+            
+            document.addEventListener('touchstart', unlockAudio, { once: true });
+            document.addEventListener('click', unlockAudio, { once: true });
+        }
+
+        function openPanel(id) {
+            document.querySelectorAll('.side-panel').forEach(p => p.classList.remove('active'));
+            const panel = document.getElementById(id);
+            if (panel) {
+                panel.classList.add('active');
+                
+                // Load saved username for chat
+                if (id === 'chatPanel') {
+                    const savedUsername = localStorage.getItem('flmtvChatUsername');
+                    const usernameInput = document.getElementById('chatUsernameInput');
+                    if (savedUsername && usernameInput) {
+                        usernameInput.value = savedUsername;
+                    }
+                }
+            }
+        }
+
+        function closePanel(id) {
+            const panel = document.getElementById(id);
+            if (panel) {
+                panel.classList.remove('active');
+                panel.classList.remove('panel-fullscreen');
+                
+                // Reset toggle button icon
+                const toggleBtn = panel.querySelector('.panel-toggle i');
+                if (toggleBtn) {
+                    toggleBtn.className = 'fas fa-expand';
+                }
+            }
+        }
+        
+        function togglePanelFullscreen(panelId) {
+            const panel = document.getElementById(panelId);
+            const toggleBtn = panel.querySelector('.panel-toggle i');
+            
+            if (panel.classList.contains('panel-fullscreen')) {
+                panel.classList.remove('panel-fullscreen');
+                toggleBtn.className = 'fas fa-expand';
+            } else {
+                panel.classList.add('panel-fullscreen');
+                toggleBtn.className = 'fas fa-compress';
+            }
+        }
+        
+        // Chat and AI functions placeholder
+        // Note: Full Firebase integration would go here
+        // For now, these are basic placeholders
+        
+        function searchYouTube() {
+            const searchInput = document.getElementById('lumaSearch');
+            if (searchInput && searchInput.value.trim()) {
+                alert('YouTube search feature requires your existing backend integration');
+            }
+        }
+        
+        // Emoji picker
+        const emojis = ['😀', '😂', '😍', '🥰', '😎', '🤔', '😭', '😡', '👍', '👎', '❤️', '🔥', '💯', '🎬', '🍿', '⭐'];
+        const emojiBtn = document.getElementById('emojiBtn');
+        const emojiPicker = document.getElementById('emojiPicker');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        
+        if (emojiBtn && emojiPicker) {
+            // Populate emoji picker
+            emojis.forEach(emoji => {
+                const span = document.createElement('span');
+                span.textContent = emoji;
+                span.style.cursor = 'pointer';
+                span.style.fontSize = '1.5em';
+                span.onclick = () => {
+                    if (chatInput) {
+                        chatInput.value += emoji;
+                        chatInput.focus();
+                    }
+                };
+                emojiPicker.appendChild(span);
+            });
+            
+            // Toggle emoji picker
+            emojiBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'flex' : 'none';
+            });
+            
+            // Close emoji picker when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+                    emojiPicker.style.display = 'none';
+                }
+            });
+        }
+        
+        // Firebase chat send function
+        // chatInput and sendBtn already declared above
+        
+        function sendMessage() {
+            const messageText = chatInput.value.trim();
+            const usernameInput = document.getElementById('chatUsernameInput');
+            const username = usernameInput ? usernameInput.value.trim() : '';
+            
+            if (messageText === '') {
+                return;
+            }
+            
+            if (!username) {
+                if (usernameInput) {
+                    usernameInput.focus();
+                    usernameInput.style.border = '2px solid #ce1126';
+                    setTimeout(() => {
+                        usernameInput.style.border = '1px solid #444';
+                    }, 2000);
+                }
+                alert('Please enter your name first!');
+                return;
+            }
+            
+            // Show sending state
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            sendBtn.disabled = true;
+            sendBtn.style.opacity = '0.6';
+            
+            // Save username
+            localStorage.setItem('flmtvChatUsername', username);
+            
+            // Get user ID
+            const user = auth.currentUser;
+            const userId = user ? user.uid : fallbackUserId;
+            
+            // Send to Firebase
+            console.log('📤 Sending message to Firebase...');
+            
+            database.ref('messages').push({
+                text: messageText,
+                username: username,
+                userId: userId,
+                timestamp: Date.now()
+            }).then(() => {
+                console.log('✅ Message sent successfully!');
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+                
+                // Reset button
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                sendBtn.disabled = false;
+                sendBtn.style.opacity = '1';
+            }).catch((error) => {
+                console.error('❌ Firebase error:', error);
+                alert('Chat error: ' + error.message);
+                
+                // Reset button
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                sendBtn.disabled = false;
+                sendBtn.style.opacity = '1';
+            });
+        }
+        
+        if (sendBtn && chatInput) {
+            sendBtn.addEventListener('click', sendMessage);
+            sendBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                sendMessage();
+            });
+            
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Auto-resize textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            });
+        }
+        
+        // AI Chat send
+        const aiSendBtn = document.getElementById('aiSendBtn');
+        const aiChatInput = document.getElementById('aiChatInput');
+        
+        if (aiSendBtn && aiChatInput) {
+            const sendAIMessage = () => {
+                const query = aiChatInput.value.trim();
+                if (query) {
+                    // Add user message
+                    const aiMessages = document.getElementById('aiMessages');
+                    const userMsg = document.createElement('div');
+                    userMsg.className = 'message sent';
+                    userMsg.innerHTML = `<div class="message-bubble">${query}</div>`;
+                    aiMessages.appendChild(userMsg);
+                    
+                    // Add AI response (placeholder)
+                    const aiMsg = document.createElement('div');
+                    aiMsg.className = 'message received';
+                    aiMsg.innerHTML = `<div class="message-bubble">🤖 Zaina AI integration coming soon! Connect to your existing AI backend.</div>`;
+                    aiMessages.appendChild(aiMsg);
+                    
+                    aiMessages.scrollTop = aiMessages.scrollHeight;
+                    aiChatInput.value = '';
+                    
+                    console.log('🤖 AI Query:', query);
+                }
+            };
+            
+            aiSendBtn.addEventListener('click', sendAIMessage);
+            aiChatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendAIMessage();
+                }
+            });
+        }
+
+        // DEPRECATED: Using Jellyfin player now, these functions not needed
+        /*
+        function startPlay() {
+            const video = document.getElementById('videoPlayer');
+            const overlay = document.getElementById('playOverlay');
+            const unmuteOverlay = document.getElementById('unmuteOverlay');
+            
+            console.log('🎬 Play button clicked');
+            
+            // Hide play overlay
+            overlay.classList.add('hidden');
+            
+            // For MOBILE: Start muted (required by iOS/Android)
+            // For DESKTOP: Will work with sound immediately
+            video.muted = true;
+            
+            console.log('Starting playback...');
+            
+            // Start playing (muted)
+            video.play().then(() => {
+                console.log('✅ Video playing (muted)');
+                hasStarted = true;
+                
+                // On MOBILE: Show unmute button immediately
+                if (isMobile) {
+                    console.log('📱 Mobile detected - showing unmute button');
+                    unmuteOverlay.classList.add('show');
+                } else {
+                    // On DESKTOP: Try to unmute automatically
+                    console.log('💻 Desktop - attempting auto-unmute');
+                    setTimeout(() => {
+                        video.muted = false;
+                        video.volume = 1.0;
+                        
+                        // Check if it worked
+                        if (!video.muted) {
+                            console.log('✅ Desktop unmuted successfully');
+                        }
+                    }, 100);
+                }
+                
+            }).catch(e => {
+                console.error('❌ Play failed:', e);
+                alert('Cannot play video. Please refresh and try again.');
+            });
+        }
+        
+        // Force unmute when user taps the unmute button
+        function forceUnmute() {
+            const video = document.getElementById('videoPlayer');
+            const unmuteOverlay = document.getElementById('unmuteOverlay');
+            
+            console.log('🔊 Unmute button clicked');
+            
+            // Mark that user wants sound
+            hasStarted = true;
+            
+            // Pause video first
+            const wasPlaying = !video.paused;
+            video.pause();
+            
+            // iOS-specific unmute sequence
+            // Remove the muted attribute completely
+            video.removeAttribute('muted');
+            video.muted = false;
+            video.volume = 1.0;
+            video.defaultMuted = false;
+            
+            console.log('After unmute attempt:', {
+                muted: video.muted,
+                volume: video.volume,
+                hasAttribute: video.hasAttribute('muted'),
+                defaultMuted: video.defaultMuted
+            });
+            
+            // Force reload the video element (iOS fix)
+            video.load();
+            
+            // Resume playing if it was playing
+            if (wasPlaying) {
+                video.play().catch(e => console.log('Play after unmute error:', e));
+            }
+            
+            // Hide button
+            unmuteOverlay.classList.remove('show');
+            
+            // Triple-check after a moment
+            setTimeout(() => {
+                if (video.muted || video.hasAttribute('muted')) {
+                    console.log('⚠️ Still muted, trying again...');
+                    video.removeAttribute('muted');
+                    video.muted = false;
+                    video.volume = 1.0;
+                    
+                    // If STILL muted after this, show button again
+                    setTimeout(() => {
+                        if (video.muted) {
+                            console.log('❌ Cannot unmute - iOS blocking');
+                            unmuteOverlay.classList.add('show');
+                        } else {
+                            console.log('✅ Unmuted successfully!');
+                        }
+                    }, 100);
+                } else {
+                    console.log('✅ Unmuted successfully on first try!');
+                }
+            }, 100);
+        }
+        */
+        // End deprecated functions
+
+        async function loadMovie() {
+            console.log('🎬 loadMovie() called with ID:', movieId);
+            
+            if (!movieId) {
+                console.error('❌ Cannot load movie - no ID');
+                alert('Error: No movie ID');
+                return;
+            }
+            
+            try {
+                console.log('📡 Fetching movie data from Jellyfin...');
+                const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items/${movieId}?Fields=People&api_key=${JELLYFIN.API_KEY}`);
+                
+                if (!r.ok) {
+                    throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+                }
+                
+                const item = await r.json();
+                console.log('✅ Movie data loaded:', item.Name);
+
+                // Authenticate with Jellyfin as Public user
+                try {
+                    const authResponse = await fetch(`${JELLYFIN.SERVER}/Users/AuthenticateByName`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-player-${Date.now()}", Version="1.0.0"`
+                        },
+                        body: JSON.stringify({
+                            Username: 'Public',
+                            Pw: ''
+                        })
+                    });
+                    
+                    if (authResponse.ok) {
+                        const authData = await authResponse.json();
+                        console.log('✅ Authenticated as Public');
+                        
+                        // Store credentials for Jellyfin iframe
+                        localStorage.setItem('jellyfin_credentials', JSON.stringify({
+                            Servers: [{
+                                AccessToken: authData.AccessToken,
+                                UserId: authData.User.Id,
+                                Id: 'db6bb6388c8c4c70825698639853ede6',
+                                Name: 'FLM TV',
+                                Url: JELLYFIN.SERVER,
+                                DateLastAccessed: new Date().getTime()
+                            }]
+                        }));
+                    }
+                } catch (authError) {
+                    console.log('Auth error:', authError);
+                }
+                
+                // Load Jellyfin player in iframe with API key (no Public button!)
+                const iframe = document.getElementById('jellyfinPlayerFrame');
+                const playerUrl = `${JELLYFIN.SERVER}/web/index.html#!/details?id=${movieId}&api_key=${JELLYFIN.API_KEY}`;
+                iframe.src = playerUrl;
+                console.log('🎬 Loading Jellyfin player');
+                
+                // Try to auto-click Public button when iframe loads
+                iframe.addEventListener('load', () => {
+                    console.log('📺 Iframe loaded');
+                    setTimeout(() => {
+                        try {
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            const publicBtn = iframeDoc.querySelector('.card.itemAction, [data-username="Public"]');
+                            if (publicBtn) {
+                                console.log('✅ Auto-clicking Public button');
+                                publicBtn.click();
+                            }
+                        } catch (e) {
+                            console.log('⚠️ Cannot auto-click (CORS blocked)');
+                        }
+                    }, 500);
+                });
+
+                // Poster
+                if (item.ImageTags?.Primary) {
+                    document.getElementById('poster').src = `${JELLYFIN.SERVER}/Items/${movieId}/Images/Primary?api_key=${JELLYFIN.API_KEY}`;
+                }
+
+                // Info
+                document.getElementById('movieTitle').textContent = item.Name;
+                document.getElementById('year').textContent = item.ProductionYear || 'N/A';
+                document.getElementById('runtime').textContent = formatTime(item.RunTimeTicks);
+                document.getElementById('rating').textContent = item.OfficialRating || 'NR';
+                document.getElementById('overview').textContent = item.Overview || 'No description available.';
+                document.getElementById('genres').textContent = item.Genres?.join(', ') || 'N/A';
+                document.title = `${item.Name} - FLM TV`;
+
+                // Cast with CLICKABLE PHOTOS
+                const castGrid = document.getElementById('castGrid');
+                const actors = item.People?.filter(p => p.Type === 'Actor').slice(0, 6) || [];
+                
+                actors.forEach(person => {
+                    const card = document.createElement('div');
+                    card.className = 'cast-card';
+                    card.onclick = () => window.location.href = `person-detail.html?id=${person.Id}`;
+                    
+                    const img = person.PrimaryImageTag 
+                        ? `${JELLYFIN.SERVER}/Items/${person.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
+                        : 'https://via.placeholder.com/120';
+                    
+                    card.innerHTML = `
+                        <img src="${img}" class="cast-photo" alt="${person.Name}">
+                        <div class="cast-name">${person.Name}</div>
+                        <div class="cast-role">${person.Role || 'Actor'}</div>
+                    `;
+                    castGrid.appendChild(card);
+                });
+
+                // Director
+                const director = item.People?.find(p => p.Type === 'Director')?.Name;
+                document.getElementById('director').textContent = director || 'N/A';
+
+                // Episodes for TV shows
+                if (item.Type === 'Series' || item.Type === 'Episode') {
+                    const seriesId = item.Type === 'Series' ? item.Id : item.SeriesId;
+                    await loadSeasons(seriesId);
+                    document.getElementById('episodesSection').style.display = 'block';
+                }
+
+                loadSimilar(item.ParentId);
+                
+                // Setup PLAY button
+                document.getElementById('playButton').onclick = function() {
+                    console.log('▶️ PLAY clicked - loading Jellyfin player');
+                    
+                    // Hide custom details
+                    document.querySelector('.content-wrapper').style.display = 'none';
+                    
+                    // Show player
+                    document.getElementById('playerSection').style.display = 'block';
+                    
+                    // Load Jellyfin player with video page (should skip detail page)
+                    const iframe = document.getElementById('jellyfinPlayerFrame');
+                    // Setup PLAY button
+document.getElementById('playButton').onclick = function() {
+    console.log('▶️ PLAY clicked - redirecting to auth page');
+    // Redirect to intermediate page that authenticates then goes to Jellyfin
+    window.location.href = `play-redirect.html?id=${movieId}`;
+};
+                    iframe.src = playerUrl;
+                    
+                    console.log('🎬 Loading:', playerUrl);
+                };
+                
+                // Setup BACK button - go to home page
+                document.getElementById('backButton').onclick = function() {
+                    window.location.href = 'home.html';
+                };
+                
+                // Add hover effect to play button
+                const playBtn = document.getElementById('playButton');
+                playBtn.onmouseenter = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                playBtn.onmouseleave = () => playBtn.style.transform = 'translate(-50%, -50%) scale(1)';
+
+            } catch (e) {
+                console.error('Error loading movie:', e);
+                alert('Error loading video. Please check your connection and try again.');
+            }
+        }
+
+        async function loadSeasons(seriesId) {
+            const r = await fetch(`${JELLYFIN.SERVER}/Shows/${seriesId}/Seasons?userId=${JELLYFIN.USER_ID}&api_key=${JELLYFIN.API_KEY}`);
+            const data = await r.json();
+            
+            const selector = document.getElementById('seasonSelector');
+            data.Items?.forEach((season, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'season-btn' + (i === 0 ? ' active' : '');
+                btn.textContent = season.Name;
+                btn.onclick = () => {
+                    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadEpisodes(season.Id);
+                };
+                selector.appendChild(btn);
+            });
+            
+            if (data.Items?.[0]) loadEpisodes(data.Items[0].Id);
+        }
+
+        async function loadEpisodes(seasonId) {
+            const r = await fetch(`${JELLYFIN.SERVER}/Shows/${seasonId}/Episodes?userId=${JELLYFIN.USER_ID}&api_key=${JELLYFIN.API_KEY}`);
+            const data = await r.json();
+            
+            const grid = document.getElementById('episodesGrid');
+            grid.innerHTML = '';
+            
+            data.Items?.forEach(ep => {
+                const card = document.createElement('div');
+                card.className = 'episode-card';
+                if (ep.Id === movieId) card.classList.add('playing');
+                card.onclick = () => window.location.href = `movie-detail.html?id=${ep.Id}`;
+                
+                const thumb = ep.ImageTags?.Primary 
+                    ? `${JELLYFIN.SERVER}/Items/${ep.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
+                    : 'https://via.placeholder.com/300x150';
+                
+                card.innerHTML = `
+                    <img src="${thumb}" class="episode-thumb">
+                    <div style="color: #ffd700; font-weight: 700;">Episode ${ep.IndexNumber}</div>
+                    <div style="font-weight: 600; margin: 0.5rem 0;">${ep.Name}</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">${(ep.Overview || '').substring(0, 80)}...</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function loadSimilar(parentId) {
+            const r = await fetch(`${JELLYFIN.SERVER}/Users/${JELLYFIN.USER_ID}/Items?ParentId=${parentId}&Limit=6&api_key=${JELLYFIN.API_KEY}`);
+            const data = await r.json();
+            
+            const grid = document.getElementById('similarMovies');
+            data.Items?.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.onclick = () => window.location.href = `movie-detail.html?id=${item.Id}`;
+                
+                const img = item.ImageTags?.Primary 
+                    ? `${JELLYFIN.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}`
+                    : 'https://via.placeholder.com/180x270';
+                
+                card.innerHTML = `<img src="${img}" alt="${item.Name}">`;
+                grid.appendChild(card);
+            });
+        }
+
+        function formatTime(ticks) {
+            if (!ticks) return 'N/A';
+            const mins = Math.floor(ticks / 600000000);
+            const hrs = Math.floor(mins / 60);
+            return hrs > 0 ? `${hrs}h ${mins % 60}m` : `${mins}m`;
+        }
+
+        loadMovie();
+    </script>
+</body>
+</html>
