@@ -165,7 +165,7 @@ async function autoLoginAndLoad() {
   if (ITEM_ID) {
     document.getElementById('jellyfinFrame').src =
       CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
-      '#!/details?id=' + ITEM_ID +
+      '#/details?id=' + ITEM_ID +
       '&serverId=' + CONFIG.SERVER_ID;
   }
 }
