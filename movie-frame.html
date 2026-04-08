@@ -131,12 +131,46 @@ const CAT_NAME = decodeURIComponent(params.get('catName') || '');
 // Home button always goes home
 document.getElementById('homeBtn').href = 'home.html';
 
-if (ITEM_ID) {
-  document.getElementById('jellyfinFrame').src =
-    CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
-    '#!/details?id=' + ITEM_ID +
-    '&serverId=' + CONFIG.SERVER_ID;
+// Auto-login to Jellyfin as Public user before loading the frame
+async function autoLoginAndLoad() {
+  try {
+    const authResponse = await fetch(CONFIG.SERVER + '/Users/AuthenticateByName', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Browser", DeviceId="flmtv-web", Version="1.0"'
+      },
+      body: JSON.stringify({ Username: 'Public', Pw: '' })
+    });
+
+    if (authResponse.ok) {
+      const authData = await authResponse.json();
+      const credentials = {
+        Servers: [{
+          Id: CONFIG.SERVER_ID,
+          Name: 'FLM TV',
+          Url: CONFIG.SERVER,
+          UserId: authData.User.Id,
+          AccessToken: authData.AccessToken,
+          DateLastAccessed: new Date().getTime()
+        }]
+      };
+      localStorage.setItem('jellyfin_credentials', JSON.stringify(credentials));
+      console.log('✅ Auto-logged in as Public user');
+    }
+  } catch(e) {
+    console.log('Auto-login attempt:', e);
+  }
+
+  if (ITEM_ID) {
+    document.getElementById('jellyfinFrame').src =
+      CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
+      '#!/details?id=' + ITEM_ID +
+      '&serverId=' + CONFIG.SERVER_ID;
+  }
 }
+
+autoLoginAndLoad();
 </script>
 
 
