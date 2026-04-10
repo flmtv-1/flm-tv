@@ -120,57 +120,29 @@
 const CONFIG = {
   SERVER:    'https://flmtv26.duckdns.org:8920',
   API_KEY:   '62131ee22c0141c6b651be75a7444350',
+  USER_ID:   '2562494c1df24f8789cd0ad8a38a7bf4',
   SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
 };
 
 const params   = new URLSearchParams(location.search);
 const ITEM_ID  = params.get('id') || '';
-const CAT_ID   = params.get('catId') || '';
-const CAT_NAME = decodeURIComponent(params.get('catName') || '');
 
 // Home button always goes home
 document.getElementById('homeBtn').href = 'home.html';
 
-// Auto-login to Jellyfin as Public user before loading the frame
-async function autoLoginAndLoad() {
-  try {
-    const authResponse = await fetch(CONFIG.SERVER + '/Users/AuthenticateByName', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Browser", DeviceId="flmtv-web", Version="1.0"'
-      },
-      body: JSON.stringify({ Username: 'ENTER FLM', Pw: '' })
-    });
-
-    if (authResponse.ok) {
-      const authData = await authResponse.json();
-      const credentials = {
-        Servers: [{
-          Id: CONFIG.SERVER_ID,
-          Name: 'FLM TV',
-          Url: CONFIG.SERVER,
-          UserId: authData.User.Id,
-          AccessToken: authData.AccessToken,
-          DateLastAccessed: new Date().getTime()
-        }]
-      };
-      localStorage.setItem('jellyfin_credentials', JSON.stringify(credentials));
-      console.log('✅ Auto-logged in as Public user');
-    }
-  } catch(e) {
-    console.log('Auto-login attempt:', e);
-  }
-
+// Load the iframe directly — api_key + userId in URL bypasses Jellyfin login screen
+function loadFrame() {
   if (ITEM_ID) {
-    document.getElementById('jellyfinFrame').src =
-      CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY +
+    const url = CONFIG.SERVER + '/web/index.html' +
+      '?api_key=' + CONFIG.API_KEY +
+      '&userId=' + CONFIG.USER_ID +
       '#/details?id=' + ITEM_ID +
       '&serverId=' + CONFIG.SERVER_ID;
+    document.getElementById('jellyfinFrame').src = url;
   }
 }
 
-autoLoginAndLoad();
+loadFrame();
 </script>
 
 
