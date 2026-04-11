@@ -143,6 +143,43 @@ function loadFrame() {
 }
 
 loadFrame();
+
+// Inject CSS into iframe to hide Jellyfin's header bars
+function injectFrameCSS() {
+  const frame = document.getElementById('jellyfinFrame');
+  try {
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    if (doc && doc.head) {
+      const style = doc.getElementById('flm-hide-header');
+      if (!style) {
+        const s = doc.createElement('style');
+        s.id = 'flm-hide-header';
+        s.textContent = `
+          .skinHeader, .headerTop, .mainHeader,
+          .skinHeader-withBackground, .sectionTitleContainer,
+          header.skinHeader { 
+            display: none !important; 
+          }
+          .scrollY { 
+            top: 0 !important; 
+          }
+          .backdropContainer { 
+            top: 0 !important; 
+          }
+        `;
+        doc.head.appendChild(s);
+      }
+    }
+  } catch(e) {}
+}
+
+// Try injecting after load and keep retrying as Jellyfin re-renders
+document.getElementById('jellyfinFrame').addEventListener('load', function() {
+  setTimeout(injectFrameCSS, 500);
+  setTimeout(injectFrameCSS, 1500);
+  setTimeout(injectFrameCSS, 3000);
+});
+setInterval(injectFrameCSS, 2000);
 </script>
 
 
