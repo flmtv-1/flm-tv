@@ -180,6 +180,29 @@ document.getElementById('jellyfinFrame').addEventListener('load', function() {
   setTimeout(injectFrameCSS, 3000);
 });
 setInterval(injectFrameCSS, 2000);
+
+// ── Hide FLM bar when fullscreen; restore on exit ──────────────────
+const flmBar = document.getElementById('flmBar');
+const frame  = document.getElementById('jellyfinFrame');
+
+function onFullscreenChange() {
+  const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+  if (fsEl) {
+    flmBar.style.transition    = 'opacity 0.3s';
+    flmBar.style.opacity       = '0';
+    flmBar.style.pointerEvents = 'none';
+    frame.style.top            = '0';
+    frame.style.height         = '100%';
+  } else {
+    flmBar.style.opacity       = '1';
+    flmBar.style.pointerEvents = '';
+    frame.style.top            = '';
+    frame.style.height         = '';
+  }
+}
+
+document.addEventListener('fullscreenchange',       onFullscreenChange);
+document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 </script>
 
 
