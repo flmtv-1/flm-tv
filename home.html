@@ -2992,13 +2992,23 @@
     @media (max-width: 600px) {
         .live-showcase-container { padding: 0.75rem; gap: 0.75rem; }
         .showcase-scroll {
-            grid-template-columns: repeat(2, 1fr) !important;
+            display: flex !important;
+            flex-direction: row !important;
+            grid-template-columns: unset !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            max-height: none !important;
+            gap: 8px !important;
+            padding-bottom: 6px !important;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
         }
-        /* Reset min-width so the 2-column grid can size correctly */
         .showcase-scroll .category-nav-item {
-            min-width: 0 !important;
-            flex: none !important;
-            width: 100% !important;
+            flex: 0 0 130px !important;
+            min-width: 130px !important;
+            width: 130px !important;
+            height: 80px !important;
+            scroll-snap-align: start;
         }
     }
     </style>
