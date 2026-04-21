@@ -86,28 +86,7 @@
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
-            position: relative;
         }
-
-        .trailer-btn {
-            position: absolute;
-            bottom: 58px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(220,38,38,0.9);
-            color: white;
-            border: none;
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.2s;
-            z-index: 5;
-        }
-        .collection-card:hover .trailer-btn { opacity: 1; }
         
         .collection-card:hover {
             border-color: var(--primary);
@@ -213,14 +192,12 @@ COLLECTIONS.forEach(collection => {
     // Try to fetch poster from Jellyfin
     const posterUrl = `${SERVER}/Items/${collection.id}/Images/Primary?api_key=${API_KEY}&maxWidth=400`;
     
-    const safeTitle = collection.name.replace(/'/g, "\\'");
     card.innerHTML = `
         <img src="${posterUrl}" 
              alt="${collection.name}" 
              class="collection-poster" 
              loading="lazy" 
              onerror="this.style.background='#1a1a1a'">
-        <button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${safeTitle}',${collection.year||'null'},'Movie')">▶ Trailer</button>
         <div class="collection-info">
             <div class="collection-name">${collection.name}</div>
             ${collection.year ? `<div class="collection-year">${collection.year}</div>` : ''}
@@ -233,79 +210,5 @@ COLLECTIONS.forEach(collection => {
 document.getElementById('collectionsCount').textContent = `${COLLECTIONS.length} collections`;
 </script>
 
-
-<!-- TRAILER MODAL -->
-<div id="trailerModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:99999;align-items:center;justify-content:center;padding:1rem;">
-    <div style="width:100%;max-width:900px;position:relative;">
-        <button onclick="closeTrailer()" style="position:absolute;top:-44px;right:0;background:#22c55e;border:none;color:white;width:38px;height:38px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10;">&#x2715;</button>
-        <div id="trailerTitle" style="color:#ffd700;font-size:1.2rem;font-weight:800;margin-bottom:0.75rem;"></div>
-        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:2px solid #ffd700;">
-            <iframe id="trailerFrame" src="" allow="autoplay;encrypted-media" allowfullscreen
-                style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
-        </div>
-    </div>
-</div>
-<style>#trailerModal.active { display: flex !important; }</style>
-
-<script>
-const TMDB_KEY = '34773a6e0f80645a5b07a1ee76ecc26b';
-
-async function fetchTrailer(title, year, type) {
-    const modal   = document.getElementById('trailerModal');
-    const frame   = document.getElementById('trailerFrame');
-    const titleEl = document.getElementById('trailerTitle');
-    titleEl.textContent = 'Loading trailer for "' + title + '"...';
-    frame.src = '';
-    modal.classList.add('active');
-    try {
-        const isTv       = type === 'Series';
-        const searchType = isTv ? 'tv' : 'movie';
-        const yearParam  = isTv ? 'first_air_date_year' : 'year';
-        const searchRes  = await fetch('https://api.themoviedb.org/3/search/' + searchType + '?api_key=' + TMDB_KEY + '&query=' + encodeURIComponent(title) + (year ? '&' + yearParam + '=' + year : ''));
-        const searchData = await searchRes.json();
-        if (!searchData.results || !searchData.results.length) { titleEl.textContent = 'No trailer found for "' + title + '"'; return; }
-        const tmdbId     = searchData.results[0].id;
-        const videosRes  = await fetch('https://api.themoviedb.org/3/' + searchType + '/' + tmdbId + '/videos?api_key=' + TMDB_KEY);
-        const videosData = await videosRes.json();
-        const candidates = (videosData.results || []).filter(v =>
-            v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
-        ).sort((a, b) => {
-            if (a.type === 'Trailer' && b.type !== 'Trailer') return -1;
-            if (b.type === 'Trailer' && a.type !== 'Trailer') return 1;
-            if (a.official && !b.official) return -1;
-            if (b.official && !a.official) return 1;
-            return 0;
-        });
-        if (!candidates.length) { titleEl.textContent = 'No trailer available for "' + title + '"'; return; }
-        titleEl.textContent = title + (year ? ' (' + year + ')' : '');
-        for (const c of candidates) {
-            frame.src = 'https://www.youtube-nocookie.com/embed/' + c.key + '?autoplay=1&rel=0&modestbranding=1&origin=' + encodeURIComponent(window.location.origin);
-            const ok = await new Promise(resolve => {
-                let done = false;
-                frame.addEventListener('load',  () => { if (!done) { done = true; resolve(true);  } }, { once: true });
-                frame.addEventListener('error', () => { if (!done) { done = true; resolve(false); } }, { once: true });
-                setTimeout(() => { if (!done) { done = true; resolve(true); } }, 2000);
-            });
-            if (ok) return;
-            frame.src = '';
-        }
-        titleEl.textContent = 'Opening trailer for "' + title + '" on YouTube...';
-        window.open('https://www.youtube.com/watch?v=' + candidates[0].key, '_blank');
-        closeTrailer();
-    } catch(err) {
-        titleEl.textContent = 'Could not load trailer for "' + title + '"';
-        console.error('Trailer error:', err);
-    }
-}
-
-function closeTrailer() {
-    document.getElementById('trailerModal').classList.remove('active');
-    document.getElementById('trailerFrame').src = '';
-}
-
-document.getElementById('trailerModal').addEventListener('click', function(e) {
-    if (e.target === this) closeTrailer();
-});
-</script>
 </body>
 </html>
