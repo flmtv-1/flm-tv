@@ -3913,7 +3913,7 @@
                                     ${item.ProductionYear || ''} ${item.OfficialRating ? '• ' + item.OfficialRating : ''}
                                 </div>
                             </div>
-                            ${item.Type === 'Movie' ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${item.Name.replace(/'/g,"\\'")}', ${item.ProductionYear || 'null'})">▶ Trailer</button>` : ''}
+                            ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${item.Name.replace(/'/g,"\\'")}', ${item.ProductionYear || 'null'}, '${item.Type}')">▶ Trailer</button>` : ''}
                         `;
                         carousel.appendChild(card);
                     });
@@ -5442,7 +5442,7 @@ async function loadCollectionPage(collectionId, title) {
 // ═══════════════════════════════════════════════════════════════
 const TMDB_KEY = '34773a6e0f80645a5b07a1ee76ecc26b';
 
-async function fetchTrailer(title, year) {
+async function fetchTrailer(title, year, type) {
     const modal = document.getElementById('trailerModal');
     const frame = document.getElementById('trailerFrame');
     const titleEl = document.getElementById('trailerTitle');
@@ -5454,7 +5454,10 @@ async function fetchTrailer(title, year) {
 
     try {
         // Search TMDB for the movie
-        const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}${year ? '&year=' + year : ''}`;
+        const isTv = type === 'Series';
+        const searchType = isTv ? 'tv' : 'movie';
+        const yearParam = isTv ? 'first_air_date_year' : 'year';
+        const searchUrl = `https://api.themoviedb.org/3/search/${searchType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}${year ? '&' + yearParam + '=' + year : ''}`;
         const searchRes = await fetch(searchUrl);
         const searchData = await searchRes.json();
 
@@ -5466,7 +5469,7 @@ async function fetchTrailer(title, year) {
         const movieId = searchData.results[0].id;
 
         // Fetch videos for the movie
-        const videosUrl = `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${TMDB_KEY}`;
+        const videosUrl = `https://api.themoviedb.org/3/${searchType}/${movieId}/videos?api_key=${TMDB_KEY}`;
         const videosRes = await fetch(videosUrl);
         const videosData = await videosRes.json();
 
