@@ -5470,53 +5470,18 @@ async function fetchTrailer(title, year) {
         const videosRes = await fetch(videosUrl);
         const videosData = await videosRes.json();
 
-        // Collect all trailers + teasers, prioritize "Official Trailer"
-        const candidates = (videosData.results || []).filter(v =>
+        // Find official trailer on YouTube
+        const trailer = videosData.results?.find(v =>
             v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
-        ).sort((a, b) => {
-            // Prefer Trailer over Teaser, official over others
-            if (a.type === 'Trailer' && b.type !== 'Trailer') return -1;
-            if (b.type === 'Trailer' && a.type !== 'Trailer') return 1;
-            if (a.official && !b.official) return -1;
-            if (b.official && !a.official) return 1;
-            return 0;
-        });
+        );
 
-        if (candidates.length === 0) {
+        if (!trailer) {
             titleEl.textContent = `No trailer available for "${title}"`;
             return;
         }
 
         titleEl.textContent = `${title}${year ? ' (' + year + ')' : ''}`;
-
-        // Try each candidate until one loads without error
-        let loaded = false;
-        for (const candidate of candidates) {
-            // Use youtube-nocookie.com to reduce embedding restrictions
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${candidate.key}?autoplay=1&rel=0&modestbranding=1&origin=${encodeURIComponent(window.location.origin)}`;
-            frame.src = embedUrl;
-
-            // Wait briefly and check if iframe loaded (error 153 fires quickly)
-            const ok = await new Promise(resolve => {
-                let settled = false;
-                const onLoad = () => { if (!settled) { settled = true; resolve(true); } };
-                const onError = () => { if (!settled) { settled = true; resolve(false); } };
-                frame.addEventListener('load', onLoad, { once: true });
-                frame.addEventListener('error', onError, { once: true });
-                // YouTube embedding errors don't always fire 'error' — give it 2s
-                setTimeout(() => { if (!settled) { settled = true; resolve(true); } }, 2000);
-            });
-
-            if (ok) { loaded = true; break; }
-            frame.src = '';
-        }
-
-        if (!loaded) {
-            // All candidates failed — open on YouTube as last resort
-            titleEl.textContent = `Opening trailer for "${title}" on YouTube...`;
-            window.open(`https://www.youtube.com/watch?v=${candidates[0].key}`, '_blank');
-            closeTrailer();
-        }
+        frame.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1`;
 
     } catch (err) {
         titleEl.textContent = `Could not load trailer for "${title}"`;
