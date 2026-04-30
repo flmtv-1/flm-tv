@@ -5677,10 +5677,18 @@ async function loadCollectionPage(collectionId, title) {
     var ua = navigator.userAgent || '';
     var isFirestick = /AFT|FireTV|Silk|AFTS|AFTB|AFTM|AFTN|AFTT|AFTRS|AFTEL|AFTDCT|AFTEUFF|AFTEU|AFTANNA|AFTJMST|AFTMM|AFTLE|Android.*TV|WebTV|SmartTV|SMART-TV|HbbTV|NetCast|BRAVIA|Viera|NETTV|AppleTV|boxee|Kylo|Roku|DTV|Sony.*TV|Philips.*TV/i.test(ua);
     
-    // Also detect by screen size - Firestick is always 1920x1080
-    var isTV = (window.screen.width === 1920 && window.screen.height === 1080) ||
-               (window.screen.width === 1280 && window.screen.height === 720);
+    // Detect by screen size - Firestick reports various sizes
+    var sw = window.screen.width;
+    var sh = window.screen.height;
+    var isTV = (sw >= 1280 && sh >= 600 && sw <= 1920);
     
+    // Show debug info briefly so we can see what's being detected
+    var dbg = document.createElement('div');
+    dbg.style.cssText = 'position:fixed;top:0;left:0;background:rgba(0,0,0,0.85);color:#fff;padding:6px 10px;font-size:11px;z-index:99999;pointer-events:none;';
+    dbg.textContent = 'UA:' + ua.substring(0,40) + ' | ' + sw + 'x' + sh + ' | TV:' + isTV + ' | FS:' + isFirestick;
+    document.body.appendChild(dbg);
+    setTimeout(function(){ dbg.remove(); }, 8000);
+
     if (isFirestick || isTV) {
         document.body.classList.add('is-firestick');
         console.log('📺 Firestick/TV detected - TV styles applied');
