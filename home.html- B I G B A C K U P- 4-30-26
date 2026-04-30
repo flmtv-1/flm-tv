@@ -2654,8 +2654,8 @@
         /*  PC browsers are narrower so this will NOT fire on PC/phone.   */
         /* ═══════════════════════════════════════════════════════════════ */
         /* Firestick styles applied via JS class detection */
-        body.is-firestick .live-showcase-section {
-            display: none !important;
+        body.is-firestick {
+            zoom: 0.6 !important;
         }
 
         body.is-firestick .content-carousel {
@@ -2663,47 +2663,8 @@
             overflow-y: visible !important;
         }
 
-        /* Scale down header and text elements only — not cards */
-        body.is-firestick .header {
-            padding: 0.5rem 1rem !important;
-        }
-
-        body.is-firestick .header-content {
-            transform: scale(0.75) !important;
-            transform-origin: left center !important;
-        }
-
-        body.is-firestick .hero-banner {
-            height: 25vh !important;
-        }
-
-        body.is-firestick .search-container {
-            padding: 0.5rem 1rem !important;
-        }
-
-        body.is-firestick .category-title {
-            font-size: 1.2rem !important;
-        }
-
-        body.is-firestick .category-section {
-            margin-bottom: 1rem !important;
-        }
-
-        body.is-firestick .content-container {
-            padding: 0.5rem 1rem !important;
-        }
-
-        /* Cards — fixed portrait size */
-        body.is-firestick .content-card {
-            flex: 0 0 150px !important;
-            min-width: 150px !important;
-            max-width: 150px !important;
-        }
-
-        body.is-firestick .content-card-image {
-            width: 150px !important;
-            height: 225px !important;
-            object-fit: cover !important;
+        body.is-firestick .live-showcase-section {
+            display: none !important;
         }
 
         /* Focus glow for remote navigation */
