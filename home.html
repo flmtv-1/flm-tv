@@ -2653,53 +2653,49 @@
         /*  Firestick renders at 1920px wide.                             */
         /*  PC browsers are narrower so this will NOT fire on PC/phone.   */
         /* ═══════════════════════════════════════════════════════════════ */
-        @media screen and (min-width: 1800px) {
+        /* Firestick styles applied via JS class detection */
+        body.is-firestick {
+            zoom: 0.6 !important;
+        }
 
-            /* Scale entire page down to fit TV screen */
-            body { zoom: 0.55 !important; }
+        body.is-firestick .content-carousel {
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+        }
 
-            /* Carousel never clips card clicks */
-            .content-carousel {
-                overflow-x: auto !important;
-                overflow-y: visible !important;
-            }
+        body.is-firestick .live-showcase-section {
+            display: none !important;
+        }
 
-            /* ── BRIGHT GREEN FOCUS GLOW on ALL interactive elements ── */
-            /* Green is more visible on dark backgrounds than gold        */
-            a:focus,
-            button:focus,
-            [tabindex]:focus,
-            input:focus {
-                outline: 4px solid #22c55e !important;
-                outline-offset: 4px !important;
-                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5) !important;
-                z-index: 9999 !important;
-            }
+        /* Focus glow for remote navigation */
+        body.is-firestick a:focus,
+        body.is-firestick button:focus,
+        body.is-firestick [tabindex]:focus,
+        body.is-firestick input:focus {
+            outline: 4px solid #22c55e !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.6) !important;
+            z-index: 9999 !important;
+        }
 
-            .content-card:focus {
-                outline: 4px solid #22c55e !important;
-                outline-offset: 4px !important;
-                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5),
-                            0 0 30px rgba(34, 197, 94, 0.7) !important;
-                transform: scale(1.06) !important;
-                z-index: 9999 !important;
-            }
+        body.is-firestick .content-card:focus {
+            outline: 4px solid #22c55e !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.6),
+                        0 0 30px rgba(34, 197, 94, 0.8) !important;
+            transform: scale(1.06) !important;
+            z-index: 9999 !important;
+        }
 
-            .category-nav-item:focus {
-                outline: 4px solid #22c55e !important;
-                outline-offset: 4px !important;
-                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5) !important;
-            }
-
-            .header-nav a:focus,
-            .btn-icon:focus,
-            .btn-icon-text:focus,
-            .btn-primary:focus,
-            .view-all-btn:focus {
-                outline: 4px solid #22c55e !important;
-                outline-offset: 4px !important;
-                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5) !important;
-            }
+        body.is-firestick .category-nav-item:focus,
+        body.is-firestick .header-nav a:focus,
+        body.is-firestick .btn-icon:focus,
+        body.is-firestick .btn-icon-text:focus,
+        body.is-firestick .btn-primary:focus,
+        body.is-firestick .view-all-btn:focus {
+            outline: 4px solid #22c55e !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.6) !important;
         }
         
     </style>
@@ -5633,6 +5629,41 @@ async function loadCollectionPage(collectionId, title) {
             window.location.href = `collection-detail.html?id=${itemId}`;
         }
     };
+})();
+</script>
+
+<script>
+// Detect Firestick / Android TV browser and apply TV-specific styles
+(function() {
+    var ua = navigator.userAgent || '';
+    var isFirestick = /AFT|FireTV|Silk|AFTS|AFTB|AFTM|AFTN|AFTT|AFTRS|AFTEL|AFTDCT|AFTEUFF|AFTEU|AFTANNA|AFTJMST|AFTMM|AFTLE|Android.*TV|WebTV|SmartTV|SMART-TV|HbbTV|NetCast|BRAVIA|Viera|NETTV|AppleTV|boxee|Kylo|Roku|DTV|Sony.*TV|Philips.*TV/i.test(ua);
+    
+    // Also detect by screen size - Firestick is always 1920x1080
+    var isTV = (window.screen.width === 1920 && window.screen.height === 1080) ||
+               (window.screen.width === 1280 && window.screen.height === 720);
+    
+    if (isFirestick || isTV) {
+        document.body.classList.add('is-firestick');
+        console.log('📺 Firestick/TV detected - TV styles applied');
+        
+        // Make all content cards focusable for remote navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for cards to load then make them focusable
+            setTimeout(function() {
+                document.querySelectorAll('.content-card').forEach(function(card) {
+                    if (!card.getAttribute('tabindex')) {
+                        card.setAttribute('tabindex', '0');
+                    }
+                });
+                document.querySelectorAll('.category-nav-item').forEach(function(item) {
+                    if (!item.getAttribute('tabindex')) {
+                        item.setAttribute('tabindex', '0');
+                    }
+                });
+                console.log('📺 Cards made focusable for remote nav');
+            }, 2000);
+        });
+    }
 })();
 </script>
 
