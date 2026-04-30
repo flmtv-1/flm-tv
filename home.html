@@ -2798,52 +2798,39 @@
     }
 
     /* ═══════════════════════════════════════════════════════════════ */
-    /*  TV / FIRESTICK OPTIMIZATIONS (1200px+)                        */
+    /*  FIRESTICK / TV ONLY (1800px+)                                  */
+    /*  Firestick renders at 1920px. PC browsers are narrower.         */
+    /*  This block will NOT fire on PC or phone.                       */
     /* ═══════════════════════════════════════════════════════════════ */
-    @media screen and (min-width: 1200px) {
-        .hero-banner { height: 35vh !important; }
+    @media screen and (min-width: 1800px) {
 
-        .live-showcase-container {
-            max-width: 1100px !important;
-            margin: 0 auto !important;
+        /* Scale entire page down to fit TV screen */
+        body {
+            zoom: 0.7 !important;
         }
 
-        /* Cards: smaller so more are visible at TV resolution */
-        .content-card {
-            flex: 0 0 160px !important;
-            min-width: 160px !important;
-            cursor: pointer !important;
+        /* Hide live stream card - shows as black box on Firestick */
+        .live-showcase-section {
+            display: none !important;
         }
 
-        .content-card-image {
-            height: 240px !important;
+        /* Keep hero banner reasonable */
+        .hero-banner {
+            height: 40vh !important;
         }
 
-        /* Carousel: always scrollable, never clips clicks */
+        /* Carousel never clips card clicks */
         .content-carousel {
             overflow-x: auto !important;
             overflow-y: visible !important;
-            padding: 0.75rem 0.5rem 1.5rem !important;
         }
 
-        /* Larger focus outline so remote users can see selection */
+        /* Visible focus ring for remote navigation */
         .content-card:focus,
         .content-card:hover {
             outline: 3px solid var(--neon-green) !important;
             outline-offset: 2px !important;
-            transform: scale(1.06) !important;
             z-index: 10 !important;
-        }
-
-        /* Category titles readable at TV distance */
-        .category-title {
-            font-size: 1.4rem !important;
-        }
-
-        /* View All button bigger for remote navigation */
-        .view-all-btn {
-            font-size: 1rem !important;
-            padding: 0.5rem 1.25rem !important;
         }
     }
 
