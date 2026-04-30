@@ -124,48 +124,26 @@ const CONFIG = {
   SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
 };
 
-const params   = new URLSearchParams(location.search);
-const ITEM_ID  = params.get('id') || '';
+const params  = new URLSearchParams(location.search);
+const ITEM_ID = params.get('id') || '';
 
-// Home button always goes home
 document.getElementById('homeBtn').href = 'home.html';
 
-// Load the iframe directly — api_key + userId in URL bypasses Jellyfin login screen
-function loadFrame() {
-  if (ITEM_ID) {
-    const url = CONFIG.SERVER + '/web/index.html' +
-      '?api_key=' + CONFIG.API_KEY +
-      '&userId=' + CONFIG.USER_ID +
-      '#/details?id=' + ITEM_ID +
-      '&serverId=' + CONFIG.SERVER_ID;
-    document.getElementById('jellyfinFrame').src = url;
-  }
-}
-
-loadFrame();
-
-// Inject CSS into iframe to hide Jellyfin's header bars
+// ── Inject CSS to hide Jellyfin's own header bar ──────────────────
 function injectFrameCSS() {
   const frame = document.getElementById('jellyfinFrame');
   try {
     const doc = frame.contentDocument || frame.contentWindow.document;
     if (doc && doc.head) {
-      const style = doc.getElementById('flm-hide-header');
-      if (!style) {
+      if (!doc.getElementById('flm-hide-header')) {
         const s = doc.createElement('style');
         s.id = 'flm-hide-header';
         s.textContent = `
           .skinHeader, .headerTop, .mainHeader,
           .skinHeader-withBackground, .sectionTitleContainer,
-          header.skinHeader { 
-            display: none !important; 
-          }
-          .scrollY { 
-            top: 0 !important; 
-          }
-          .backdropContainer { 
-            top: 0 !important; 
-          }
+          header.skinHeader { display: none !important; }
+          .scrollY { top: 0 !important; }
+          .backdropContainer { top: 0 !important; }
         `;
         doc.head.appendChild(s);
       }
@@ -173,13 +151,90 @@ function injectFrameCSS() {
   } catch(e) {}
 }
 
-// Try injecting after load and keep retrying as Jellyfin re-renders
+// ── Navigate iframe to the correct detail page after Jellyfin is ready ──
+function navigateToItem() {
+  if (!ITEM_ID) return;
+  const frame = document.getElementById('jellyfinFrame');
+  try {
+    const win = frame.contentWindow;
+    if (win && win.location) {
+      const currentHash = win.location.hash || '';
+      const targetHash  = '/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
+      // Only navigate if not already on the right page
+      if (!currentHash.includes(ITEM_ID)) {
+        win.location.hash = targetHash;
+      }
+    }
+  } catch(e) {}
+}
+
+// ── Main load function ──────────────────────────────────────────────
+async function loadFrame() {
+  if (!ITEM_ID) return;
+
+  // Step 1: Authenticate with Jellyfin and write session to localStorage
+  // This prevents Jellyfin's web client from showing the login screen
+  try {
+    const resp = await fetch(CONFIG.SERVER + '/Users/AuthenticateByName', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="flmtv-movieframe", Version="1.0.0"'
+      },
+      body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
+    });
+
+    if (resp.ok) {
+      const data = await resp.json();
+      // Write credentials in the exact format Jellyfin web client reads
+      const creds = {
+        Servers: [{
+          Id: CONFIG.SERVER_ID,
+          Url: CONFIG.SERVER,
+          AccessToken: data.AccessToken,
+          UserId: data.User.Id,
+          DateLastAccessed: Date.now(),
+          LastConnectionMode: 2,
+          manualAddressOnly: true
+        }]
+      };
+      localStorage.setItem('jellyfin_credentials', JSON.stringify(creds));
+      localStorage.setItem('user-' + data.User.Id + '-' + CONFIG.SERVER_ID, JSON.stringify({
+        Name: data.User.Name,
+        ServerId: CONFIG.SERVER_ID,
+        Id: data.User.Id,
+        HasPassword: false,
+        HasConfiguredPassword: false
+      }));
+    }
+  } catch(e) {
+    console.warn('Pre-auth failed, continuing anyway:', e);
+  }
+
+  // Step 2: Load iframe to the detail page
+  const targetHash = '#/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
+  const url = CONFIG.SERVER + '/web/index.html' +
+    '?api_key=' + CONFIG.API_KEY +
+    '&userId=' + CONFIG.USER_ID +
+    targetHash;
+
+  document.getElementById('jellyfinFrame').src = url;
+}
+
+// Step 3: After iframe loads, keep pushing it to the correct page
+// Jellyfin sometimes redirects to home after init — this corrects it
 document.getElementById('jellyfinFrame').addEventListener('load', function() {
-  setTimeout(injectFrameCSS, 500);
-  setTimeout(injectFrameCSS, 1500);
-  setTimeout(injectFrameCSS, 3000);
+  setTimeout(injectFrameCSS,   500);
+  setTimeout(injectFrameCSS,  1500);
+  setTimeout(injectFrameCSS,  3000);
+  setTimeout(navigateToItem,  1200);
+  setTimeout(navigateToItem,  2500);
+  setTimeout(navigateToItem,  4000);
 });
+
 setInterval(injectFrameCSS, 2000);
+
+loadFrame();
 
 // ── Hide FLM bar when fullscreen; restore on exit ──────────────────
 const flmBar = document.getElementById('flmBar');

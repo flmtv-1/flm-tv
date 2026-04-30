@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
     
     <!-- SEO Meta Tags -->
@@ -83,10 +83,11 @@
             top: 0;
             z-index: 100;
             padding: 1rem 2rem;
+            width: 100%;
         }
         
         .header-content {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -344,7 +345,7 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         .hero-banner {
-            height: 45vh;
+            height: 70vh;
             position: relative;
             overflow: hidden;
         }
@@ -618,8 +619,8 @@
             display: flex;
             gap: 1rem;
             overflow-x: auto;
-            overflow-y: hidden;
-            padding: 0.5rem 0 1rem 0;
+            overflow-y: visible;
+            padding: 0.5rem 0.5rem 1.5rem 0.5rem;
             scroll-behavior: smooth;
             scrollbar-width: thin;
             scrollbar-color: var(--neon-green) var(--bg-light);
@@ -2796,12 +2797,53 @@
         background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
     }
 
-    /* TV / Firestick optimizations */
+    /* ═══════════════════════════════════════════════════════════════ */
+    /*  TV / FIRESTICK OPTIMIZATIONS (1200px+)                        */
+    /* ═══════════════════════════════════════════════════════════════ */
     @media screen and (min-width: 1200px) {
-        .hero-banner { height: 40vh !important; }
+        .hero-banner { height: 35vh !important; }
+
         .live-showcase-container {
             max-width: 1100px !important;
             margin: 0 auto !important;
+        }
+
+        /* Cards: smaller so more are visible at TV resolution */
+        .content-card {
+            flex: 0 0 160px !important;
+            min-width: 160px !important;
+            cursor: pointer !important;
+        }
+
+        .content-card-image {
+            height: 240px !important;
+        }
+
+        /* Carousel: always scrollable, never clips clicks */
+        .content-carousel {
+            overflow-x: auto !important;
+            overflow-y: visible !important;
+            padding: 0.75rem 0.5rem 1.5rem !important;
+        }
+
+        /* Larger focus outline so remote users can see selection */
+        .content-card:focus,
+        .content-card:hover {
+            outline: 3px solid var(--neon-green) !important;
+            outline-offset: 2px !important;
+            transform: scale(1.06) !important;
+            z-index: 10 !important;
+        }
+
+        /* Category titles readable at TV distance */
+        .category-title {
+            font-size: 1.4rem !important;
+        }
+
+        /* View All button bigger for remote navigation */
+        .view-all-btn {
+            font-size: 1rem !important;
+            padding: 0.5rem 1.25rem !important;
         }
     }
 
@@ -3887,14 +3929,13 @@
                     itemsWithImages.forEach(item => {
                         const card = document.createElement('div');
                         card.className = 'content-card';
+                        card.setAttribute('tabindex', '0');
                         if (item.Type === 'Book') {
                             card.onclick = () => openComic(item.Id, item.Name);
-                        } else {
-                            if (item.Type === 'Book') {
-                            card.onclick = () => openComic(item.Id, item.Name);
+                            card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') openComic(item.Id, item.Name); };
                         } else {
                             card.onclick = () => playJellyfinItem(item.Id, item.Type);
-                        }
+                            card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') playJellyfinItem(item.Id, item.Type); };
                         }
 
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
