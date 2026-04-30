@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
     
     <!-- SEO Meta Tags -->
@@ -344,11 +344,9 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         .hero-banner {
-            height: 45vh;
+            height: 70vh;
             position: relative;
             overflow: hidden;
-            max-width: 1600px;
-            margin: 0 auto;
         }
         
         .hero-slide {
@@ -567,7 +565,7 @@
         }
         
         .category-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 3rem;
         }
         
         .category-header {
@@ -594,14 +592,14 @@
         .view-all-btn {
             color: var(--neon-green);
             text-decoration: none;
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
             border: 2px solid var(--neon-green);
-            padding: 0.3rem 0.9rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 8px;
             white-space: nowrap;
         }
@@ -2705,9 +2703,11 @@
                     <i class="fas fa-lock"></i>
                 </button>
                 
-                <button class="btn-primary" id="signInBtn" onclick="openModal('signInModal')">
+                <!-- Sign In button hidden - admin only
+                <button class="btn-primary" id="signInBtn">
                     <i class="fas fa-user"></i><span class="sign-in-text"> Sign In / Sign Up</span>
                 </button>
+                -->
             </div>
         </div>
     </header>
@@ -2796,64 +2796,6 @@
     .live-showcase-section {
         padding: 0 0 2rem;
         background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
-    }
-
-    /* Firestick live card - hidden by default, shown only on TV */
-    #firestickLiveCard { display: none !important; }
-    .tv-scroll-hint { display: none !important; }
-
-    /* TV / Firestick ONLY (1280px+) - targets Firestick/TV screens */
-    @media screen and (min-width: 1280px) {
-        #firestickLiveCard { display: block !important; }
-        .tv-scroll-hint { display: flex !important; }
-
-        /* Scale entire page down */
-        body { zoom: 0.5 !important; }
-
-        /* Carousel never clips clicks */
-        .content-carousel {
-            overflow-x: auto !important;
-            overflow-y: visible !important;
-        }
-
-        /* Hide the entire live showcase section - stream doesn't autoplay on Firestick */
-        /* Replaced by the small firestickLiveCard below */
-        .live-showcase-section {
-            display: none !important;
-        }
-
-        /* ── BRIGHT FOCUS GLOW for remote navigation ── */
-        a:focus,
-        button:focus,
-        [tabindex]:focus,
-        .content-card:focus,
-        .category-nav-item:focus,
-        .view-all-btn:focus,
-        .header-nav a:focus,
-        .btn-icon:focus,
-        .btn-icon-text:focus,
-        .btn-primary:focus,
-        .live-watch-btn:focus,
-        .bottom-nav-item:focus,
-        #firestickLiveCard:focus {
-            outline: 5px solid #39ff14 !important;
-            outline-offset: 4px !important;
-            box-shadow: 0 0 0 5px #39ff14, 0 0 30px rgba(57,255,20,0.9) !important;
-            z-index: 100 !important;
-        }
-
-        .content-card:focus {
-            outline: 5px solid #39ff14 !important;
-            outline-offset: 4px !important;
-            box-shadow: 0 0 0 5px #39ff14, 0 0 35px rgba(57,255,20,1) !important;
-            transform: scale(1.06) !important;
-            z-index: 100 !important;
-        }
-
-        .category-nav-item:focus {
-            outline: 5px solid #39ff14 !important;
-            box-shadow: 0 0 0 5px #39ff14, 0 0 30px rgba(57,255,20,0.9) !important;
-        }
     }
 
     .live-showcase-container {
@@ -3107,39 +3049,6 @@
     <!--  CONTENT SECTIONS                                               -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
-    <!-- FIRESTICK LIVE TV CARD - only visible on TV (hidden on PC/phone via CSS) -->
-    <div id="firestickLiveCard" style="display:none; margin: 0.5rem 2rem 1rem; cursor:pointer;"
-         onclick="openLiveStream()" tabindex="0"
-         onkeydown="if(event.key==='Enter'||event.key===' ')openLiveStream()">
-        <div style="
-            position: relative;
-            width: 220px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 3px solid #ffd700;
-            box-shadow: 0 0 20px rgba(255,215,0,0.5);
-            background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2e 100%);
-        ">
-            <img src="assets/images/flmtv-AlienBanner1-1200x630.png" alt="FLM TV Live"
-                 style="width:100%; height:130px; object-fit:cover; opacity:0.7;">
-            <div style="
-                position: absolute;
-                top: 8px; left: 8px;
-                background: rgba(220,38,38,0.95);
-                border-radius: 20px;
-                padding: 3px 10px;
-                font-size: 11px;
-                font-weight: 700;
-                color: #fff;
-                letter-spacing: 1.5px;
-            ">● LIVE · CH 26.5</div>
-            <div style="padding: 10px; text-align:center;">
-                <div style="color:#ffd700; font-size:1rem; font-weight:800; letter-spacing:1px;">▶ Watch FLM TV Live</div>
-                <div style="color:rgba(255,255,255,0.6); font-size:0.75rem; margin-top:3px;">Channel 26.5 Las Vegas</div>
-            </div>
-        </div>
-    </div>
-
     <div class="content-container" id="contentContainer">
         <div class="loading-spinner">
             <div class="spinner"></div>
@@ -3971,13 +3880,14 @@
                     itemsWithImages.forEach(item => {
                         const card = document.createElement('div');
                         card.className = 'content-card';
-                        card.setAttribute('tabindex', '0');
                         if (item.Type === 'Book') {
                             card.onclick = () => openComic(item.Id, item.Name);
-                            card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') openComic(item.Id, item.Name); };
+                        } else {
+                            if (item.Type === 'Book') {
+                            card.onclick = () => openComic(item.Id, item.Name);
                         } else {
                             card.onclick = () => playJellyfinItem(item.Id, item.Type);
-                            card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') playJellyfinItem(item.Id, item.Type); };
+                        }
                         }
 
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
@@ -4003,7 +3913,6 @@
                                     ${item.ProductionYear || ''} ${item.OfficialRating ? '• ' + item.OfficialRating : ''}
                                 </div>
                             </div>
-                            ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${item.Name.replace(/'/g,"\\'")}', ${item.ProductionYear || 'null'}, '${item.Type}')">▶ Trailer</button>` : ''}
                         `;
                         carousel.appendChild(card);
                     });
@@ -5527,109 +5436,7 @@ async function loadCollectionPage(collectionId, title) {
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  TRAILER FUNCTIONALITY
-// ═══════════════════════════════════════════════════════════════
-const TMDB_KEY = '34773a6e0f80645a5b07a1ee76ecc26b';
-
-async function fetchTrailer(title, year, type) {
-    const modal = document.getElementById('trailerModal');
-    const frame = document.getElementById('trailerFrame');
-    const titleEl = document.getElementById('trailerTitle');
-
-    // Show modal with loading state
-    titleEl.textContent = `Loading trailer for "${title}"...`;
-    frame.src = '';
-    modal.classList.add('active');
-
-    try {
-        // Search TMDB for the movie
-        const isTv = type === 'Series';
-        const searchType = isTv ? 'tv' : 'movie';
-        const yearParam = isTv ? 'first_air_date_year' : 'year';
-        const searchUrl = `https://api.themoviedb.org/3/search/${searchType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}${year ? '&' + yearParam + '=' + year : ''}`;
-        const searchRes = await fetch(searchUrl);
-        const searchData = await searchRes.json();
-
-        if (!searchData.results || searchData.results.length === 0) {
-            titleEl.textContent = `No trailer found for "${title}"`;
-            return;
-        }
-
-        const movieId = searchData.results[0].id;
-
-        // Fetch videos for the movie
-        const videosUrl = `https://api.themoviedb.org/3/${searchType}/${movieId}/videos?api_key=${TMDB_KEY}`;
-        const videosRes = await fetch(videosUrl);
-        const videosData = await videosRes.json();
-
-        // Collect all trailers + teasers, prioritize "Official Trailer"
-        const candidates = (videosData.results || []).filter(v =>
-            v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
-        ).sort((a, b) => {
-            // Prefer Trailer over Teaser, official over others
-            if (a.type === 'Trailer' && b.type !== 'Trailer') return -1;
-            if (b.type === 'Trailer' && a.type !== 'Trailer') return 1;
-            if (a.official && !b.official) return -1;
-            if (b.official && !a.official) return 1;
-            return 0;
-        });
-
-        if (candidates.length === 0) {
-            titleEl.textContent = `No trailer available for "${title}"`;
-            return;
-        }
-
-        titleEl.textContent = `${title}${year ? ' (' + year + ')' : ''}`;
-
-        // Try each candidate until one loads without error
-        let loaded = false;
-        for (const candidate of candidates) {
-            // Use youtube-nocookie.com to reduce embedding restrictions
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${candidate.key}?autoplay=1&rel=0&modestbranding=1&origin=${encodeURIComponent(window.location.origin)}`;
-            frame.src = embedUrl;
-
-            // Wait briefly and check if iframe loaded (error 153 fires quickly)
-            const ok = await new Promise(resolve => {
-                let settled = false;
-                const onLoad = () => { if (!settled) { settled = true; resolve(true); } };
-                const onError = () => { if (!settled) { settled = true; resolve(false); } };
-                frame.addEventListener('load', onLoad, { once: true });
-                frame.addEventListener('error', onError, { once: true });
-                // YouTube embedding errors don't always fire 'error' — give it 2s
-                setTimeout(() => { if (!settled) { settled = true; resolve(true); } }, 2000);
-            });
-
-            if (ok) { loaded = true; break; }
-            frame.src = '';
-        }
-
-        if (!loaded) {
-            // All candidates failed — open on YouTube as last resort
-            titleEl.textContent = `Opening trailer for "${title}" on YouTube...`;
-            window.open(`https://www.youtube.com/watch?v=${candidates[0].key}`, '_blank');
-            closeTrailer();
-        }
-
-    } catch (err) {
-        titleEl.textContent = `Could not load trailer for "${title}"`;
-        console.error('Trailer error:', err);
-    }
-}
-
-function closeTrailer() {
-    const modal = document.getElementById('trailerModal');
-    const frame = document.getElementById('trailerFrame');
-    modal.classList.remove('active');
-    frame.src = ''; // Stop video
-}
-
-// Close trailer on backdrop click
-document.getElementById('trailerModal').addEventListener('click', function(e) {
-    if (e.target === this) closeTrailer();
-});
-
-
+// Auto-open chat and switch room based on URL parameters from video player
 (function() {
     // Parse URL parameters
     const urlParams = new URLSearchParams(window.location.search);
@@ -5665,43 +5472,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     });
 })();
 </script>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!--  TRAILER MODAL                                                   -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div id="trailerModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:99999;align-items:center;justify-content:center;padding:1rem;">
-    <div style="width:100%;max-width:900px;position:relative;">
-        <button onclick="closeTrailer()" style="position:absolute;top:-44px;right:0;background:var(--secondary);border:none;color:white;width:38px;height:38px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10;">✕</button>
-        <div id="trailerTitle" style="color:var(--primary);font-size:1.2rem;font-weight:800;margin-bottom:0.75rem;"></div>
-        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:2px solid var(--primary);">
-            <iframe id="trailerFrame" src="" allow="autoplay;encrypted-media" allowfullscreen
-                style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
-        </div>
-    </div>
-</div>
-
-<style>
-#trailerModal.active { display: flex !important; }
-.trailer-btn {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(220,38,38,0.9);
-    color: white;
-    border: none;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 5;
-}
-.content-card:hover .trailer-btn { opacity: 1; }
-</style>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!--  BOTTOM NAVIGATION (Mobile Only - Like Hulu)                    -->
