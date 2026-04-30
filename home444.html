@@ -347,8 +347,6 @@
             height: 45vh;
             position: relative;
             overflow: hidden;
-            max-width: 1600px;
-            margin: 0 auto;
         }
         
         .hero-slide {
@@ -567,7 +565,7 @@
         }
         
         .category-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 3rem;
         }
         
         .category-header {
@@ -594,14 +592,14 @@
         .view-all-btn {
             color: var(--neon-green);
             text-decoration: none;
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
             border: 2px solid var(--neon-green);
-            padding: 0.3rem 0.9rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 8px;
             white-space: nowrap;
         }
@@ -2798,22 +2796,12 @@
         background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
     }
 
-    /* TV / Firestick ONLY (1800px+) - will NOT fire on PC or phone */
-    @media screen and (min-width: 1800px) {
-        body { zoom: 0.7 !important; }
+    /* TV / Firestick optimizations */
+    @media screen and (min-width: 1200px) {
+        .hero-banner { height: 40vh !important; }
         .live-showcase-container {
             max-width: 1100px !important;
             margin: 0 auto !important;
-        }
-        .content-carousel {
-            overflow-x: auto !important;
-            overflow-y: visible !important;
-        }
-        .content-card:focus,
-        .content-card:hover {
-            outline: 3px solid var(--neon-green) !important;
-            outline-offset: 2px !important;
-            z-index: 10 !important;
         }
     }
 
@@ -3899,13 +3887,14 @@
                     itemsWithImages.forEach(item => {
                         const card = document.createElement('div');
                         card.className = 'content-card';
-                        card.setAttribute('tabindex', '0');
                         if (item.Type === 'Book') {
                             card.onclick = () => openComic(item.Id, item.Name);
-                            card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') openComic(item.Id, item.Name); };
+                        } else {
+                            if (item.Type === 'Book') {
+                            card.onclick = () => openComic(item.Id, item.Name);
                         } else {
                             card.onclick = () => playJellyfinItem(item.Id, item.Type);
-                            card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') playJellyfinItem(item.Id, item.Type); };
+                        }
                         }
 
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
