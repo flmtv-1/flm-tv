@@ -2647,6 +2647,60 @@
                 scroll-behavior: auto !important;
             }
         }
+
+        /* ═══════════════════════════════════════════════════════════════ */
+        /*  FIRESTICK / TV ONLY — min-width: 1800px                       */
+        /*  Firestick renders at 1920px wide.                             */
+        /*  PC browsers are narrower so this will NOT fire on PC/phone.   */
+        /* ═══════════════════════════════════════════════════════════════ */
+        @media screen and (min-width: 1800px) {
+
+            /* Scale entire page down to fit TV screen */
+            body { zoom: 0.55 !important; }
+
+            /* Carousel never clips card clicks */
+            .content-carousel {
+                overflow-x: auto !important;
+                overflow-y: visible !important;
+            }
+
+            /* ── BRIGHT GREEN FOCUS GLOW on ALL interactive elements ── */
+            /* Green is more visible on dark backgrounds than gold        */
+            a:focus,
+            button:focus,
+            [tabindex]:focus,
+            input:focus {
+                outline: 4px solid #22c55e !important;
+                outline-offset: 4px !important;
+                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5) !important;
+                z-index: 9999 !important;
+            }
+
+            .content-card:focus {
+                outline: 4px solid #22c55e !important;
+                outline-offset: 4px !important;
+                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5),
+                            0 0 30px rgba(34, 197, 94, 0.7) !important;
+                transform: scale(1.06) !important;
+                z-index: 9999 !important;
+            }
+
+            .category-nav-item:focus {
+                outline: 4px solid #22c55e !important;
+                outline-offset: 4px !important;
+                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5) !important;
+            }
+
+            .header-nav a:focus,
+            .btn-icon:focus,
+            .btn-icon-text:focus,
+            .btn-primary:focus,
+            .view-all-btn:focus {
+                outline: 4px solid #22c55e !important;
+                outline-offset: 4px !important;
+                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.5) !important;
+            }
+        }
         
     </style>
 </head>
