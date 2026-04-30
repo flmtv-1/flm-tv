@@ -2800,13 +2800,15 @@
 
     /* Firestick live card - hidden by default, shown only on TV */
     #firestickLiveCard { display: none !important; }
+    .tv-scroll-hint { display: none !important; }
 
-    /* TV / Firestick ONLY (1800px+) - will NOT fire on PC or phone */
-    @media screen and (min-width: 1800px) {
+    /* TV / Firestick ONLY (1280px+) - targets Firestick/TV screens */
+    @media screen and (min-width: 1280px) {
         #firestickLiveCard { display: block !important; }
+        .tv-scroll-hint { display: flex !important; }
 
         /* Scale entire page down */
-        body { zoom: 0.55 !important; }
+        body { zoom: 0.5 !important; }
 
         /* Carousel never clips clicks */
         .content-carousel {
@@ -2814,24 +2816,13 @@
             overflow-y: visible !important;
         }
 
-        /* Hide the big live player - replaced by smaller card below */
-        .live-showcase-player {
+        /* Hide the entire live showcase section - stream doesn't autoplay on Firestick */
+        /* Replaced by the small firestickLiveCard below */
+        .live-showcase-section {
             display: none !important;
         }
 
-        /* Make the whole showcase section stack vertically and compact */
-        .live-showcase-container {
-            grid-template-columns: 1fr !important;
-            max-width: 100% !important;
-            padding: 0.5rem 2rem !important;
-        }
-
-        /* Hide the right-side categories panel - already shown below */
-        .live-showcase-right {
-            display: none !important;
-        }
-
-        /* ── FOCUS GLOW on ALL interactive elements for remote nav ── */
+        /* ── BRIGHT FOCUS GLOW for remote navigation ── */
         a:focus,
         button:focus,
         [tabindex]:focus,
@@ -2843,25 +2834,25 @@
         .btn-icon-text:focus,
         .btn-primary:focus,
         .live-watch-btn:focus,
-        .bottom-nav-item:focus {
-            outline: 4px solid #ffd700 !important;
-            outline-offset: 3px !important;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8) !important;
+        .bottom-nav-item:focus,
+        #firestickLiveCard:focus {
+            outline: 5px solid #39ff14 !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 5px #39ff14, 0 0 30px rgba(57,255,20,0.9) !important;
             z-index: 100 !important;
         }
 
-        .content-card:focus,
-        .content-card:hover {
-            outline: 4px solid #ffd700 !important;
-            outline-offset: 3px !important;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.9) !important;
-            transform: scale(1.05) !important;
+        .content-card:focus {
+            outline: 5px solid #39ff14 !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 0 5px #39ff14, 0 0 35px rgba(57,255,20,1) !important;
+            transform: scale(1.06) !important;
             z-index: 100 !important;
         }
 
         .category-nav-item:focus {
-            outline: 4px solid #ffd700 !important;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8) !important;
+            outline: 5px solid #39ff14 !important;
+            box-shadow: 0 0 0 5px #39ff14, 0 0 30px rgba(57,255,20,0.9) !important;
         }
     }
 
