@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join FLM TV — Free Access</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --gold: #ffd700; --gold2: #f59e0b; --green: #22c55e;
+            --dark: #05080f; --dark2: #0d1117; --card: rgba(10,14,22,0.92);
+            --red: #ef4444; --border: rgba(255,215,0,0.15);
+        }
+        body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-x: hidden; position: relative; }
+        .bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse 100% 50% at 50% -10%, rgba(255,215,0,0.1) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 90% 90%, rgba(34,197,94,0.07) 0%, transparent 60%), var(--dark); }
+        .bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(255,215,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.03) 1px, transparent 1px); background-size: 60px 60px; }
+        .orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.12; animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
+        .orb1 { width: 500px; height: 500px; background: var(--gold); top: -150px; left: -150px; }
+        .orb2 { width: 350px; height: 350px; background: var(--green); bottom: -100px; right: -100px; animation-delay: -5s; }
+        .orb3 { width: 250px; height: 250px; background: #6366f1; top: 40%; left: 70%; animation-delay: -9s; }
+        @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(25px,20px) scale(1.08); } }
+        .page { position: relative; z-index: 10; display: grid; grid-template-columns: 1fr 1fr; max-width: 1000px; width: 95%; min-height: 85vh; margin: 2rem auto; border-radius: 28px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.7); animation: fadeUp 0.7s ease both; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        .showcase { background: linear-gradient(160deg, #0a1020 0%, #060c16 100%); border: 1px solid var(--border); border-right: none; border-radius: 28px 0 0 28px; padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+        .showcase::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 60%); }
+        .logo-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 2.5rem; position: relative; }
+        .logo-img { width: 48px; height: 48px; object-fit: contain; }
+        .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--gold); letter-spacing: 3px; line-height: 1; text-shadow: 0 0 30px rgba(255,215,0,0.3); }
+        .showcase-headline { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1.05; letter-spacing: 1px; margin-bottom: 1.25rem; position: relative; }
+        .showcase-headline span { color: var(--gold); }
+        .showcase-desc { font-size: 0.95rem; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 2.5rem; position: relative; }
+        .perks { display: flex; flex-direction: column; gap: 1rem; position: relative; }
+        .perk { display: flex; align-items: flex-start; gap: 12px; animation: fadeUp 0.5s ease both; opacity: 0; }
+        .perk:nth-child(1){animation-delay:0.2s} .perk:nth-child(2){animation-delay:0.3s} .perk:nth-child(3){animation-delay:0.4s} .perk:nth-child(4){animation-delay:0.5s} .perk:nth-child(5){animation-delay:0.6s}
+        .perk-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        .perk-text strong { display: block; font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .perk-text span { font-size: 0.8rem; color: rgba(255,255,255,0.4); }
+        .free-badge { position: absolute; bottom: 2.5rem; left: 2.5rem; right: 2.5rem; background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05)); border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; }
+        .free-badge-icon { font-size: 1.5rem; }
+        .free-badge-text strong { display: block; color: var(--green); font-size: 0.95rem; }
+        .free-badge-text span { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+        .form-panel { background: var(--card); border: 1px solid var(--border); border-left: none; border-radius: 0 28px 28px 0; padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center; backdrop-filter: blur(20px); }
+        .form-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; color: var(--gold); margin-bottom: 0.4rem; }
+        .form-subtitle { font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; }
+        .tabs { display: flex; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 4px; margin-bottom: 1.75rem; border: 1px solid rgba(255,255,255,0.06); }
+        .tab { flex: 1; padding: 0.6rem; border: none; background: transparent; color: rgba(255,255,255,0.45); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; border-radius: 7px; cursor: pointer; transition: all 0.2s; }
+        .tab.active { background: rgba(255,215,0,0.12); color: var(--gold); border: 1px solid rgba(255,215,0,0.2); }
+        .field { margin-bottom: 1.1rem; }
+        .field label { display: block; font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+        .field input, .field select { width: 100%; padding: 0.85rem 1rem; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s, background 0.2s; -webkit-appearance: none; }
+        .field input::placeholder { color: rgba(255,255,255,0.25); }
+        .field input:focus, .field select:focus { border-color: var(--gold); background: rgba(255,215,0,0.04); }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .age-note { background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.15); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 0.78rem; color: rgba(255,215,0,0.7); margin-bottom: 1.25rem; line-height: 1.5; }
+        .error-msg { display: none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 0.65rem 0.85rem; font-size: 0.82rem; color: #fca5a5; margin-bottom: 1rem; }
+        .btn-submit { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%); color: #000; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.25s; box-shadow: 0 6px 20px rgba(255,215,0,0.3); margin-bottom: 1rem; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,215,0,0.45); }
+        .divider-or { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; color: rgba(255,255,255,0.2); font-size: 0.78rem; }
+        .divider-or::before, .divider-or::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+        .btn-kids-access { width: 100%; padding: 0.85rem; background: rgba(34,197,94,0.08); color: var(--green); border: 1.5px solid rgba(34,197,94,0.25); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-bottom: 1.25rem; }
+        .btn-kids-access:hover { background: rgba(34,197,94,0.15); border-color: var(--green); }
+        .legal { font-size: 0.72rem; color: rgba(255,255,255,0.22); text-align: center; line-height: 1.6; }
+        .legal a { color: rgba(255,215,0,0.45); text-decoration: none; }
+        .legal a:hover { color: var(--gold); }
+        .success-screen { display: none; text-align: center; animation: fadeUp 0.5s ease both; }
+        .success-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--gold), var(--gold2)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; }
+        .success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .success-msg { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 2rem; }
+        .btn-enter-now { padding: 1rem 2.5rem; background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 24px rgba(255,215,0,0.35); }
+        .btn-enter-now:hover { transform: translateY(-2px); }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(12px); }
+        .overlay.active { display: flex; }
+        .overlay-card { background: var(--dark2); border: 1px solid rgba(34,197,94,0.25); border-radius: 20px; padding: 2.5rem; max-width: 380px; width: 90%; text-align: center; animation: fadeUp 0.3s ease both; }
+        .overlay-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .overlay-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--green); letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .overlay-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 1.5rem; }
+        .pin-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 1.25rem; }
+        .pin-box { width: 52px; height: 58px; background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.12); border-radius: 10px; text-align: center; font-size: 1.4rem; font-weight: 700; color: white; outline: none; font-family: 'DM Sans', sans-serif; transition: border-color 0.2s; }
+        .pin-box:focus { border-color: var(--green); }
+        .pin-error { display: none; color: var(--red); font-size: 0.82rem; margin-bottom: 1rem; }
+        .btn-unlock { width: 100%; padding: 0.9rem; background: var(--green); color: #000; border: none; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; margin-bottom: 0.75rem; transition: all 0.2s; }
+        .btn-unlock:hover { background: #16a34a; }
+        .btn-cancel { width: 100%; padding: 0.85rem; background: transparent; color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; }
+        .btn-cancel:hover { color: white; border-color: rgba(255,255,255,0.25); }
+        @media (max-width: 700px) {
+            .page { grid-template-columns: 1fr; max-width: 440px; min-height: auto; }
+            .showcase { display: none; }
+            .form-panel { border-radius: 28px; border-left: 1px solid var(--border); padding: 2.5rem 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="page">
+    <div class="showcase">
+        <div class="logo-wrap">
+            <img src="assets/logos/flm-logo.png" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">FLM TV</div>
+        </div>
+        <div class="showcase-headline">The World<br>Comes <span>Alive</span><br>On One Screen</div>
+        <p class="showcase-desc">Las Vegas's first multicultural TV network. Movies, drama, anime, live Channel 26.5, and family programming from cultures around the world — all free.</p>
+        <div class="perks">
+            <div class="perk"><div class="perk-icon">📺</div><div class="perk-text"><strong>Live Channel 26.5</strong><span>24/7 broadcast, free streaming</span></div></div>
+            <div class="perk"><div class="perk-icon">🌏</div><div class="perk-text"><strong>Multicultural Programming</strong><span>Filipino, Korean, Japanese, Chinese & more</span></div></div>
+            <div class="perk"><div class="perk-icon">🎬</div><div class="perk-text"><strong>Movies & TV Shows</strong><span>Thousands of titles on demand</span></div></div>
+            <div class="perk"><div class="perk-icon">👨‍👩‍👧</div><div class="perk-text"><strong>Family & Kids Corner</strong><span>Safe programming with parental controls</span></div></div>
+            <div class="perk"><div class="perk-icon">💬</div><div class="perk-text"><strong>Live Chat Community</strong><span>Watch together with viewers worldwide</span></div></div>
+        </div>
+        <div class="free-badge">
+            <div class="free-badge-icon">🎉</div>
+            <div class="free-badge-text">
+                <strong>100% Free — No Credit Card</strong>
+                <span>Create your free account in seconds and start watching instantly</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-panel">
+        <div id="formView">
+            <div class="form-title">JOIN FREE</div>
+            <div class="form-subtitle">Create your free account — start watching in seconds</div>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('signup', this)">Create Account</button>
+                <button class="tab" onclick="switchTab('signin', this)">Sign In</button>
+            </div>
+
+            <div id="signupForm">
+                <div class="field-row">
+                    <div class="field"><label>First Name</label><input type="text" id="firstName" placeholder="First name" autocomplete="given-name"></div>
+                    <div class="field"><label>Last Name</label><input type="text" id="lastName" placeholder="Last name" autocomplete="family-name"></div>
+                </div>
+                <div class="field"><label>Email Address</label><input type="email" id="email" placeholder="your@email.com" autocomplete="email"></div>
+                <div class="field"><label>Date of Birth</label><input type="date" id="dob" max=""></div>
+                <div class="age-note">🔞 FLM TV contains some content intended for mature audiences. Viewer discretion is advised. Users under 18 will be directed to our family-friendly Kids Mode, which requires a parent PIN.</div>
+                <div class="error-msg" id="signupError"></div>
+                <button class="btn-submit" onclick="handleSignup()">🎬 &nbsp; Create Free Account — Watch Now</button>
+                <div class="divider-or">or</div>
+                <button class="btn-kids-access" onclick="showKidsOverlay()">👶 &nbsp; Parent: Enable Kids Mode</button>
+                <div class="legal">By joining you agree to our <a href="privacy.html">Privacy Policy</a>. We never sell your data.</div>
+            </div>
+
+            <div id="signinForm" style="display:none;">
+                <div class="field"><label>Email Address</label><input type="email" id="signinEmail" placeholder="your@email.com" autocomplete="email"></div>
+                <div class="age-note" style="background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.15);color:rgba(34,197,94,0.7);">👋 Welcome back! We'll look up your account by email.</div>
+                <div class="error-msg" id="signinError"></div>
+                <button class="btn-submit" onclick="handleSignin()">▶ &nbsp; Sign In & Watch</button>
+                <div class="divider-or">or</div>
+                <button class="btn-kids-access" onclick="showKidsOverlay()">👶 &nbsp; Parent: Enable Kids Mode</button>
+                <div class="legal">No account? <a href="#" onclick="switchTab('signup', document.querySelectorAll('.tab')[0]); return false;">Create one free</a></div>
+            </div>
+        </div>
+
+        <div class="success-screen" id="successView">
+            <div class="success-icon">🎬</div>
+            <div class="success-title">You're In!</div>
+            <p class="success-msg" id="successMsg">Welcome to FLM TV! Your free account is ready.</p>
+            <button class="btn-enter-now" onclick="goToHome()">▶ &nbsp; Start Watching Now</button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" id="kidsOverlay">
+    <div class="overlay-card">
+        <div class="overlay-icon">🔐</div>
+        <div class="overlay-title">Parent PIN</div>
+        <p class="overlay-desc">Enter your parental control PIN to enable Kids Mode. Set your PIN at <strong>flmtv.com/parental-controls.html</strong></p>
+        <div class="pin-row">
+            <input class="pin-box" type="password" maxlength="1" inputmode="numeric" id="p1">
+            <input class="pin-box" type="password" maxlength="1" inputmode="numeric" id="p2">
+            <input class="pin-box" type="password" maxlength="1" inputmode="numeric" id="p3">
+            <input class="pin-box" type="password" maxlength="1" inputmode="numeric" id="p4">
+        </div>
+        <div class="pin-error" id="pinError">Incorrect PIN. Please try again.</div>
+        <button class="btn-unlock" onclick="submitPin()">Unlock Kids Mode</button>
+        <button class="btn-cancel" onclick="closeKidsOverlay()">Cancel</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+    if (localStorage.getItem('flmtv_age_verified') === 'true') window.location.href = 'home.html';
+    if (localStorage.getItem('flmtv_kids_mode') === 'true') window.location.href = 'kids-corner.html';
+
+    function switchTab(tab, btn) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+        document.getElementById('signinForm').style.display = tab === 'signin' ? 'block' : 'none';
+    }
+
+    function calculateAge(dob) {
+        const today = new Date(), birth = new Date(dob);
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+        return age;
+    }
+
+    function showError(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.style.display = 'block'; }
+    function hideError(id) { document.getElementById(id).style.display = 'none'; }
+
+    function handleSignup() {
+        hideError('signupError');
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const dob = document.getElementById('dob').value;
+        if (!firstName) return showError('signupError', 'Please enter your first name.');
+        if (!email || !email.includes('@')) return showError('signupError', 'Please enter a valid email address.');
+        if (!dob) return showError('signupError', 'Please enter your date of birth to continue.');
+        const age = calculateAge(dob);
+        localStorage.setItem('flmtv_user', JSON.stringify({ firstName, lastName, email, dob, age, joinedAt: new Date().toISOString() }));
+        if (age < 18) {
+            showKidsOverlay();
+            return;
+        }
+        localStorage.setItem('flmtv_age_verified', 'true');
+        document.getElementById('successMsg').innerHTML = `Welcome, <strong>${firstName}</strong>! Your free FLM TV account is ready.<br>Enjoy movies, live TV, and more.`;
+        showSuccess();
+    }
+
+    function handleSignin() {
+        hideError('signinError');
+        const email = document.getElementById('signinEmail').value.trim();
+        if (!email || !email.includes('@')) return showError('signinError', 'Please enter your email address.');
+        const stored = localStorage.getItem('flmtv_user');
+        let name = '';
+        if (stored) { const u = JSON.parse(stored); if (u.email?.toLowerCase() === email.toLowerCase()) name = u.firstName; }
+        localStorage.setItem('flmtv_age_verified', 'true');
+        document.getElementById('successMsg').innerHTML = name ? `Welcome back, <strong>${name}</strong>!<br>Great to see you again.` : `Welcome back to FLM TV!<br>Enjoy the show.`;
+        showSuccess();
+    }
+
+    function showSuccess() {
+        document.getElementById('formView').style.display = 'none';
+        document.getElementById('successView').style.display = 'block';
+    }
+
+    function goToHome() { window.location.href = 'home.html'; }
+
+    function showKidsOverlay() { document.getElementById('kidsOverlay').classList.add('active'); document.getElementById('p1').focus(); }
+    function closeKidsOverlay() { document.getElementById('kidsOverlay').classList.remove('active'); clearPin(); document.getElementById('pinError').style.display = 'none'; }
+    function clearPin() { ['p1','p2','p3','p4'].forEach(id => document.getElementById(id).value = ''); }
+
+    function submitPin() {
+        const pin = ['p1','p2','p3','p4'].map(id => document.getElementById(id).value).join('');
+        const savedPin = localStorage.getItem('flmtv_parent_pin');
+        if (!savedPin) { document.getElementById('pinError').textContent = 'No PIN set. Visit parental-controls.html first.'; document.getElementById('pinError').style.display = 'block'; return; }
+        if (pin === savedPin) { localStorage.setItem('flmtv_age_verified', 'true'); localStorage.setItem('flmtv_kids_mode', 'true'); window.location.href = 'kids-corner.html'; }
+        else { document.getElementById('pinError').textContent = 'Incorrect PIN. Please try again.'; document.getElementById('pinError').style.display = 'block'; clearPin(); document.getElementById('p1').focus(); }
+    }
+
+    ['p1','p2','p3','p4'].forEach((id, i, arr) => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => { if (el.value && i < arr.length-1) document.getElementById(arr[i+1]).focus(); if (i === arr.length-1 && el.value) submitPin(); });
+        el.addEventListener('keydown', e => { if (e.key === 'Backspace' && !el.value && i > 0) document.getElementById(arr[i-1]).focus(); });
+    });
+</script>
+</body>
+</html>
