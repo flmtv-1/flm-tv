@@ -445,8 +445,25 @@ function toggleVolume() {
     volIcon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
 }
 
-// Firestick d-pad navigation
+// Keyboard/remote controls
 document.addEventListener('keydown', function(e) {
+    // Space/Enter on video = play/pause
+    if (e.key === ' ' && document.activeElement === document.body) {
+        e.preventDefault();
+        togglePlay();
+        return;
+    }
+    
+    // Backspace/Escape = go home
+    if (e.key === 'Backspace' || e.key === 'Escape') {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            window.location.href = 'home.html';
+        } else {
+            document.exitFullscreen && document.exitFullscreen();
+        }
+        return;
+    }
+
     var focusable = Array.from(document.querySelectorAll('[tabindex="0"], button, a')).filter(function(el) {
         return el.offsetParent !== null;
     });
@@ -455,18 +472,22 @@ document.addEventListener('keydown', function(e) {
 
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault();
-        var next = focusable[idx + 1];
+        var next = focusable[idx + 1] || focusable[0];
         if (next) next.focus();
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault();
-        var prev = focusable[idx - 1];
+        var prev = focusable[idx - 1] || focusable[focusable.length - 1];
         if (prev) prev.focus();
-    } else if (e.key === 'Enter' || e.key === ' ') {
+    } else if (e.key === 'Enter') {
         e.preventDefault();
         if (focused) focused.click();
-    } else if (e.key === 'Backspace' || e.key === 'Escape') {
-        window.location.href = 'home.html';
     }
+});
+
+// Auto focus Full Screen button on load for easy access
+window.addEventListener('load', function() {
+    var fsBtn = document.querySelector('.hdr-btn');
+    if (fsBtn) setTimeout(function() { fsBtn.focus(); }, 500);
 });
 
 // Start stream

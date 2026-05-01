@@ -2769,12 +2769,26 @@
 
         /* Stream card same size as category cards */
         body.is-firestick .live-showcase-player {
-            flex: 0 0 220px !important;
-            width: 220px !important;
-            height: 130px !important;
-            min-height: 130px !important;
-            max-height: 130px !important;
+            flex: 0 0 260px !important;
+            width: 260px !important;
+            height: 160px !important;
+            min-height: 160px !important;
+            max-height: 160px !important;
             border-radius: 10px !important;
+        }
+
+        /* Make Watch Live button smaller on Firestick */
+        body.is-firestick .live-watch-btn {
+            padding: 6px 12px !important;
+            font-size: 11px !important;
+            gap: 4px !important;
+        }
+
+        /* Make vol button smaller on Firestick */
+        body.is-firestick .live-vol-btn {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 11px !important;
         }
 
         body.is-firestick .live-showcase-right {
@@ -4039,12 +4053,8 @@
                 carousel.className = 'content-carousel';
 
                 if (items && items.Items && items.Items.length > 0) {
-                    const itemsWithImages = items.Items.filter(item =>
-                        item.ImageTags?.Primary ||
-                        item.SeriesThumb ||
-                        item.SeriesPrimaryImageTag ||
-                        item.ParentThumbImageTag
-                    );
+                    // Use all items, not just those with primary images
+                    const itemsWithImages = items.Items;
 
                     itemsWithImages.forEach(item => {
                         const card = document.createElement('div');
