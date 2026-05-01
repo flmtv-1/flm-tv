@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>FLM TV Live — Channel 26.5 Las Vegas</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: #ffd700;
+            --green: #22c55e;
+            --red: #dc2626;
+            --dark: #050810;
+        }
+
+        body {
+            background: var(--dark);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP BAR */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 54px;
+            background: rgba(5,8,16,0.95);
+            border-bottom: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 9999;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 1rem;
+            background: rgba(255,215,0,0.1);
+            border: 2px solid var(--gold);
+            border-radius: 6px;
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover, .back-btn:focus {
+            background: var(--gold);
+            color: #000;
+            outline: 3px solid var(--green);
+            outline-offset: 3px;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .logo span:first-child { color: var(--gold); }
+        .logo span:last-child { color: var(--green); }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--red);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .channel-info {
+            text-align: right;
+            line-height: 1.2;
+        }
+
+        .channel-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .channel-sub {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* VIDEO CONTAINER */
+        .video-container {
+            position: fixed;
+            top: 54px;
+            left: 0; right: 0; bottom: 0;
+            background: #000;
+        }
+
+        #liveVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+        }
+
+        .loading-logo span:first-child { color: var(--gold); }
+        .loading-logo span:last-child { color: var(--green); }
+
+        .loading-text {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .loading-bar {
+            width: 160px;
+            height: 2px;
+            background: rgba(255,215,0,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-bar::after {
+            content: '';
+            display: block;
+            height: 100%;
+            width: 40%;
+            background: var(--gold);
+            animation: slide 1s ease-in-out infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(350%); }
+        }
+
+        /* ERROR STATE */
+        .error-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--dark);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .error-overlay.show { display: flex; }
+
+        .error-icon { font-size: 3rem; color: var(--red); }
+        .error-text { color: rgba(255,255,255,0.6); font-size: 1rem; }
+
+        .retry-btn {
+            padding: 0.75rem 2rem;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .retry-btn:hover, .retry-btn:focus {
+            background: #ffe84d;
+            outline: 3px solid var(--green);
+            outline-offset: 3px;
+        }
+
+        /* VOLUME CONTROL */
+        .vol-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 48px;
+            height: 48px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            color: var(--gold);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: all 0.2s;
+        }
+
+        .vol-btn:hover, .vol-btn:focus {
+            background: var(--gold);
+            color: #000;
+            outline: 3px solid var(--green);
+            outline-offset: 3px;
+        }
+
+        /* Firestick focus styles */
+        :focus {
+            outline: 3px solid var(--green) !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 15px rgba(34,197,94,0.6) !important;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <div class="topbar-left">
+        <a class="back-btn" href="home.html" tabindex="0">
+            ← FLM TV Home
+        </a>
+        <div class="logo"><span>FLM</span> <span>TV</span></div>
+        <div class="live-badge">
+            <div class="live-dot"></div>
+            LIVE
+        </div>
+    </div>
+    <div class="topbar-right">
+        <div class="channel-info">
+            <div class="channel-name">Channel 26.5</div>
+            <div class="channel-sub">Las Vegas · Worldwide</div>
+        </div>
+    </div>
+</div>
+
+<!-- VIDEO -->
+<div class="video-container">
+
+    <video id="liveVideo" playsinline autoplay></video>
+
+    <!-- LOADING -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-logo"><span>FLM</span> <span>TV</span></div>
+        <div class="loading-text">Connecting to Channel 26.5...</div>
+        <div class="loading-bar"></div>
+    </div>
+
+    <!-- ERROR -->
+    <div class="error-overlay" id="errorOverlay">
+        <div class="error-icon"><i class="fas fa-signal"></i></div>
+        <div class="error-text">Stream temporarily unavailable</div>
+        <button class="retry-btn" onclick="initStream()" tabindex="0">
+            <i class="fas fa-redo"></i> Retry
+        </button>
+    </div>
+
+</div>
+
+<!-- VOLUME BUTTON -->
+<button class="vol-btn" id="volBtn" tabindex="0" title="Toggle Mute">
+    <i class="fas fa-volume-up"></i>
+</button>
+
+<script>
+const STREAM_URL = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+const video = document.getElementById('liveVideo');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const errorOverlay = document.getElementById('errorOverlay');
+const volBtn = document.getElementById('volBtn');
+
+let isMuted = false;
+
+function initStream() {
+    errorOverlay.classList.remove('show');
+    loadingOverlay.classList.remove('hidden');
+
+    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        const hls = new Hls({
+            enableWorker: true,
+            lowLatencyMode: true,
+        });
+        hls.loadSource(STREAM_URL);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play().then(function() {
+                loadingOverlay.classList.add('hidden');
+            }).catch(function() {
+                // Autoplay blocked - show play prompt
+                loadingOverlay.classList.add('hidden');
+            });
+        });
+        hls.on(Hls.Events.ERROR, function(event, data) {
+            if (data.fatal) {
+                loadingOverlay.classList.add('hidden');
+                errorOverlay.classList.add('show');
+            }
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = STREAM_URL;
+        video.addEventListener('loadedmetadata', function() {
+            video.play();
+            loadingOverlay.classList.add('hidden');
+        });
+        video.addEventListener('error', function() {
+            loadingOverlay.classList.add('hidden');
+            errorOverlay.classList.add('show');
+        });
+    } else {
+        loadingOverlay.classList.add('hidden');
+        errorOverlay.classList.add('show');
+    }
+}
+
+// Volume toggle
+volBtn.addEventListener('click', function() {
+    isMuted = !isMuted;
+    video.muted = isMuted;
+    volBtn.innerHTML = isMuted 
+        ? '<i class="fas fa-volume-mute"></i>' 
+        : '<i class="fas fa-volume-up"></i>';
+});
+
+// Firestick d-pad navigation
+document.addEventListener('keydown', function(e) {
+    var focusable = Array.from(document.querySelectorAll('[tabindex="0"], button, a')).filter(function(el) {
+        return el.offsetParent !== null;
+    });
+    var focused = document.activeElement;
+    var idx = focusable.indexOf(focused);
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        var next = focusable[idx + 1];
+        if (next) next.focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        var prev = focusable[idx - 1];
+        if (prev) prev.focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (focused) focused.click();
+    } else if (e.key === 'Backspace' || e.key === 'Escape') {
+        window.location.href = 'home.html';
+    }
+});
+
+// Start stream
+initStream();
+</script>
+
+</body>
+</html>
