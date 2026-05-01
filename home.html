@@ -2821,7 +2821,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
-                        <li><a href="#" onclick="openLiveStream(); return false;"> Live TV</a></li>
+                        <li><a href="live.html"> Live TV</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
                     </ul>
                 </nav>
@@ -2896,7 +2896,7 @@
         <div class="live-showcase-container">
 
             <!-- LIVE TV CARD - Static backdrop, click to watch -->
-            <div class="live-showcase-player" onclick="openLiveStream()" style="cursor:pointer;">
+            <div class="live-showcase-player" onclick="window.location.href='live.html'" style="cursor:pointer;">
                 <div class="live-showcase-badge">
                     <div class="live-dot"></div>
                     LIVE · CH 26.5
@@ -2911,7 +2911,7 @@
                         <div class="live-showcase-sub">Las Vegas · Channel 26.5 · Live Now</div>
                     </div>
                     <div class="live-showcase-actions">
-                        <button class="live-watch-btn" onclick="event.stopPropagation();openLiveStream()">
+                        <button class="live-watch-btn" onclick="event.stopPropagation();window.location.href='live.html'">
                             <i class="fas fa-play"></i> Watch Live
                         </button>
                     </div>
