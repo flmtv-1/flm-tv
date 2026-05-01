@@ -262,49 +262,28 @@
             outline-offset: 3px;
         }
 
-        /* PLAY / FULLSCREEN BUTTONS */
-        .controls {
-            position: fixed;
-            bottom: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            z-index: 9999;
-        }
 
-        .ctrl-btn {
+
+        /* Small header control buttons */
+        .hdr-btn {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.75rem;
-            background: rgba(0,0,0,0.8);
-            border: 2px solid var(--gold);
-            border-radius: 8px;
-            color: var(--gold);
-            font-size: 1rem;
-            font-weight: 700;
+            gap: 0.3rem;
+            padding: 0.3rem 0.75rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,215,0,0.4);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .ctrl-btn:hover, .ctrl-btn:focus {
-            background: var(--gold);
-            color: #000;
-            outline: 3px solid var(--green) !important;
-            outline-offset: 3px !important;
-        }
-
-        .ctrl-btn.play {
-            background: var(--green);
-            border-color: var(--green);
-            color: #fff;
-        }
-
-        .ctrl-btn.play:hover, .ctrl-btn.play:focus {
-            background: #16a34a;
-            color: #fff;
+        .hdr-btn:hover, .hdr-btn:focus {
+            background: rgba(255,215,0,0.2);
+            border-color: var(--gold);
+            color: var(--gold);
         }
 
         /* Firestick focus styles */
@@ -328,6 +307,15 @@
             <div class="live-dot"></div>
             LIVE
         </div>
+        <button class="hdr-btn" tabindex="0" onclick="togglePlay()">
+            <i class="fas fa-play" id="playIcon"></i> Play
+        </button>
+        <button class="hdr-btn" tabindex="0" onclick="toggleFullscreen()">
+            <i class="fas fa-expand"></i> Full Screen
+        </button>
+        <button class="hdr-btn" tabindex="0" onclick="toggleVolume()">
+            <i class="fas fa-volume-up" id="volIcon"></i>
+        </button>
     </div>
     <div class="topbar-right">
         <div class="channel-info">
@@ -360,18 +348,7 @@
 
 </div>
 
-<!-- CONTROLS -->
-<div class="controls">
-    <button class="ctrl-btn play" id="playBtn" tabindex="0" onclick="togglePlay()">
-        <i class="fas fa-play" id="playIcon"></i> Play
-    </button>
-    <button class="ctrl-btn" id="fsBtn" tabindex="0" onclick="toggleFullscreen()">
-        <i class="fas fa-expand"></i> Full Screen
-    </button>
-    <button class="ctrl-btn" id="volBtn" tabindex="0" onclick="toggleVolume()">
-        <i class="fas fa-volume-up" id="volIcon"></i>
-    </button>
-</div>
+
 
 <script>
 const STREAM_URL = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
