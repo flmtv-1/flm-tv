@@ -2735,6 +2735,66 @@
         body.is-firestick .content-card-overlay {
             display: none !important;
         }
+
+        /* Firestick: stream card + categories all in one horizontal row */
+        body.is-firestick .live-showcase-container {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 10px !important;
+            padding: 0.5rem 1rem !important;
+            overflow-x: auto !important;
+        }
+
+        /* Stream card same size as category cards */
+        body.is-firestick .live-showcase-player {
+            flex: 0 0 220px !important;
+            width: 220px !important;
+            height: 130px !important;
+            min-height: 130px !important;
+            max-height: 130px !important;
+            border-radius: 10px !important;
+        }
+
+        body.is-firestick .live-showcase-right {
+            flex: 1 !important;
+            height: auto !important;
+        }
+
+        body.is-firestick .showcase-cat-header {
+            display: none !important;
+        }
+
+        body.is-firestick .showcase-scroll {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 10px !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            max-height: none !important;
+            grid-template-columns: unset !important;
+        }
+
+        body.is-firestick .showcase-scroll .category-nav-item {
+            flex: 0 0 180px !important;
+            min-width: 180px !important;
+            height: 120px !important;
+        }
+
+        /* Hide up/down arrows on Firestick */
+        body.is-firestick .live-showcase-right > div > div:first-child {
+            display: none !important;
+        }
+
+        /* Hide video on Firestick - stream doesn't autoplay, show backdrop instead */
+        body.is-firestick .live-showcase-player video {
+            display: none !important;
+        }
+
+        /* Always show the overlay with Watch Live button on Firestick */
+        body.is-firestick .live-showcase-overlay {
+            opacity: 1 !important;
+        }
         
     </style>
 </head>
