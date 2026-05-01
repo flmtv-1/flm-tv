@@ -4481,15 +4481,7 @@
         token = JELLYFIN_CONFIG.API_KEY;
     }
 
-    if (itemType === 'Series') {
-        window.location.href = document.body.classList.contains('is-firestick')
-            ? `tv-detail.html?id=${itemId}`
-            : `movie-frame.html?id=${itemId}`;
-    } else {
-        window.location.href = document.body.classList.contains('is-firestick')
-            ? `tv-detail.html?id=${itemId}`
-            : `movie-frame.html?id=${itemId}`;
-    }
+    window.location.href = `movie-frame.html?id=${itemId}`;
 }
         
         // ═══════════════════════════════════════════════════════════════

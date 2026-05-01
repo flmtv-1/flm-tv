@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLM TV</title>
+    <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: #ffd700;
+            --green: #22c55e;
+            --dark: #050810;
+            --red: #dc2626;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* BACKDROP */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            transition: opacity 0.8s ease;
+        }
+
+        .backdrop::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(5,8,16,0.97) 0%,
+                rgba(5,8,16,0.85) 40%,
+                rgba(5,8,16,0.4) 70%,
+                rgba(5,8,16,0.15) 100%
+            ),
+            linear-gradient(
+                180deg,
+                rgba(5,8,16,0.3) 0%,
+                transparent 30%,
+                transparent 60%,
+                rgba(5,8,16,0.95) 100%
+            );
+        }
+
+        /* TOP BAR */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 56px;
+            background: rgba(5,8,16,0.9);
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0 2rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            tabindex: 0;
+        }
+
+        .back-btn:hover, .back-btn:focus {
+            background: rgba(255,215,0,0.15);
+            border-color: var(--gold);
+            outline: none;
+        }
+
+        .topbar-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-left: auto;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 56px 0 0;
+        }
+
+        .detail-wrap {
+            max-width: 680px;
+            padding: 3rem 3rem 3rem 4rem;
+            animation: slideIn 0.6s ease both;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* TYPE BADGE */
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 0.85rem;
+            background: var(--gold);
+            color: #000;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            margin-bottom: 1.25rem;
+        }
+
+        /* TITLE */
+        .title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            line-height: 1;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        /* META */
+        .meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .meta-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .rating-badge {
+            padding: 0.2rem 0.6rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .star-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--gold);
+            font-size: 0.85rem;
+        }
+
+        /* DESCRIPTION */
+        .description {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 560px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* GENRES */
+        .genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .genre-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ACTIONS */
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-play {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 8px 24px rgba(255,215,0,0.35);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-play:hover, .btn-play:focus {
+            background: #ffe84d;
+            transform: scale(1.04);
+            box-shadow: 0 12px 32px rgba(255,215,0,0.55);
+            outline: 4px solid rgba(255,215,0,0.5);
+            outline-offset: 4px;
+        }
+
+        .btn-play:active { transform: scale(0.98); }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 18px solid #000;
+            flex-shrink: 0;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1rem 1.75rem;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1.5px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover, .btn-secondary:focus {
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.4);
+            outline: 4px solid rgba(255,255,255,0.2);
+            outline-offset: 4px;
+        }
+
+        /* POSTER (right side, decorative) */
+        .poster-wrap {
+            position: fixed;
+            right: 4rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            animation: posterIn 0.7s 0.2s ease both;
+            opacity: 0;
+        }
+
+        @keyframes posterIn {
+            from { opacity: 0; transform: translateY(-45%) scale(0.95); }
+            to { opacity: 1; transform: translateY(-50%) scale(1); }
+        }
+
+        .poster {
+            width: 220px;
+            height: 330px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.08);
+        }
+
+        /* LOADING */
+        #loadingScreen {
+            position: fixed;
+            inset: 0;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            gap: 1.5rem;
+        }
+
+        .loader-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            color: var(--gold);
+            letter-spacing: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loader-bar {
+            width: 120px;
+            height: 2px;
+            background: rgba(255,215,0,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loader-bar::after {
+            content: '';
+            display: block;
+            height: 100%;
+            width: 40%;
+            background: var(--gold);
+            animation: slide 1s ease-in-out infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(350%); }
+        }
+
+        /* ERROR */
+        #errorScreen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--dark);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 9999;
+        }
+
+        #errorScreen.show { display: flex; }
+
+        /* TV Navigation focus styles */
+        :focus {
+            outline: 3px solid var(--gold);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 900px) {
+            .poster-wrap { display: none; }
+            .detail-wrap { padding: 2rem 1.5rem; max-width: 100%; }
+            .title { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loadingScreen">
+    <div class="loader-logo">FLM TV</div>
+    <div class="loader-bar"></div>
+</div>
+
+<!-- ERROR -->
+<div id="errorScreen">
+    <div style="font-size:1.2rem;color:rgba(255,255,255,0.6);">Could not load title</div>
+    <button class="btn-secondary" onclick="history.back()" tabindex="0">← Go Back</button>
+</div>
+
+<!-- BACKDROP -->
+<div class="backdrop" id="backdrop"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <button class="back-btn" onclick="history.back()" tabindex="0">
+        ← Back
+    </button>
+    <div class="topbar-logo">FLM TV</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+    <div class="detail-wrap" id="detailWrap" style="display:none;">
+
+        <div class="type-badge" id="typeBadge">Movie</div>
+
+        <h1 class="title" id="titleEl">—</h1>
+
+        <div class="meta" id="metaEl"></div>
+
+        <p class="description" id="descEl"></p>
+
+        <div class="genres" id="genresEl"></div>
+
+        <div class="actions">
+            <button class="btn-play" id="playBtn" tabindex="0" onclick="playNow()">
+                <div class="play-icon"></div>
+                Play Now
+            </button>
+            <button class="btn-secondary" onclick="history.back()" tabindex="0">
+                ← Back
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- POSTER -->
+<div class="poster-wrap" id="posterWrap" style="display:none;">
+    <img class="poster" id="posterImg" src="" alt="">
+</div>
+
+<script>
+const CONFIG = {
+    SERVER:    'https://flmtv26.duckdns.org:8920',
+    API_KEY:   '62131ee22c0141c6b651be75a7444350',
+    USER_ID:   '2562494c1df24f8789cd0ad8a38a7bf4',
+    SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
+};
+
+const params = new URLSearchParams(location.search);
+const ITEM_ID = params.get('id') || '';
+
+let itemData = null;
+
+async function loadDetail() {
+    if (!ITEM_ID) { showError(); return; }
+
+    try {
+        const res = await fetch(
+            `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items/${ITEM_ID}?api_key=${CONFIG.API_KEY}`
+        );
+        if (!res.ok) throw new Error('Not found');
+        const data = await res.json();
+        itemData = data;
+        renderDetail(data);
+    } catch(e) {
+        console.error('Load error:', e);
+        showError();
+    }
+}
+
+function renderDetail(d) {
+    // Backdrop
+    if (d.BackdropImageTags && d.BackdropImageTags.length) {
+        const bdUrl = `${CONFIG.SERVER}/Items/${d.Id}/Images/Backdrop/0?api_key=${CONFIG.API_KEY}&tag=${d.BackdropImageTags[0]}&format=jpg&maxWidth=1920`;
+        document.getElementById('backdrop').style.backgroundImage = `url('${bdUrl}')`;
+    } else if (d.ImageTags?.Primary) {
+        const bdUrl = `${CONFIG.SERVER}/Items/${d.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${d.ImageTags.Primary}&format=jpg&maxWidth=1920`;
+        document.getElementById('backdrop').style.backgroundImage = `url('${bdUrl}')`;
+    }
+
+    // Type badge
+    document.getElementById('typeBadge').textContent = d.Type === 'Series' ? 'TV Series' : 'Movie';
+
+    // Title
+    document.getElementById('titleEl').textContent = d.Name || 'Untitled';
+    document.title = (d.Name || 'FLM TV') + ' — FLM TV';
+
+    // Meta
+    const meta = [];
+    if (d.ProductionYear) meta.push(`<span class="meta-item">${d.ProductionYear}</span>`);
+    if (d.RunTimeTicks) {
+        const mins = Math.round(d.RunTimeTicks / 600000000);
+        const h = Math.floor(mins / 60), m = mins % 60;
+        meta.push(`<span class="meta-item">${h > 0 ? h + 'h ' : ''}${m}m</span>`);
+    }
+    if (d.OfficialRating) meta.push(`<span class="rating-badge">${d.OfficialRating}</span>`);
+    if (d.CommunityRating) {
+        meta.push(`<span class="star-rating">★ ${d.CommunityRating.toFixed(1)}</span>`);
+    }
+    document.getElementById('metaEl').innerHTML = meta.join('<div class="meta-dot"></div>');
+
+    // Description
+    document.getElementById('descEl').textContent = d.Overview || 'No description available.';
+
+    // Genres
+    if (d.Genres && d.Genres.length) {
+        document.getElementById('genresEl').innerHTML = d.Genres.slice(0, 5).map(g =>
+            `<span class="genre-tag">${g}</span>`
+        ).join('');
+    }
+
+    // Poster
+    if (d.ImageTags?.Primary) {
+        const posterUrl = `${CONFIG.SERVER}/Items/${d.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${d.ImageTags.Primary}&format=jpg&maxHeight=600`;
+        const img = document.getElementById('posterImg');
+        img.src = posterUrl;
+        img.alt = d.Name;
+        document.getElementById('posterWrap').style.display = 'block';
+    }
+
+    // Show content
+    document.getElementById('detailWrap').style.display = 'block';
+    document.getElementById('loadingScreen').style.display = 'none';
+
+    // Focus play button for TV remote
+    setTimeout(() => document.getElementById('playBtn').focus(), 300);
+}
+
+function playNow() {
+    if (!itemData) return;
+
+    // Go directly to Jellyfin video player — skips detail page
+    const playerUrl = CONFIG.SERVER + '/web/index.html' +
+        '?api_key=' + CONFIG.API_KEY +
+        '#/video' +
+        '?id=' + ITEM_ID +
+        '&mediaSourceId=' + ITEM_ID +
+        '&userId=' + CONFIG.USER_ID +
+        '&serverId=' + CONFIG.SERVER_ID +
+        '&startTimeTicks=0' +
+        '&audioStreamIndex=1' +
+        '&subtitleStreamIndex=-1';
+
+    window.location.href = playerUrl;
+}
+
+function showError() {
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('errorScreen').classList.add('show');
+}
+
+// TV Remote D-pad navigation
+document.addEventListener('keydown', function(e) {
+    const focusable = Array.from(document.querySelectorAll('[tabindex="0"]')).filter(el => el.offsetParent !== null);
+    const focused = document.activeElement;
+    const idx = focusable.indexOf(focused);
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = focusable[idx + 1];
+        if (next) next.focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = focusable[idx - 1];
+        if (prev) prev.focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (focused) focused.click();
+    } else if (e.key === 'Backspace' || e.key === 'Escape') {
+        history.back();
+    }
+});
+
+loadDetail();
+</script>
+</body>
+</html>

@@ -124,56 +124,18 @@ const CONFIG = {
   SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
 };
 
-const params  = new URLSearchParams(location.search);
-const ITEM_ID = params.get('id') || '';
+const params   = new URLSearchParams(location.search);
+const ITEM_ID  = params.get('id') || '';
 
+// Home button always goes home
 document.getElementById('homeBtn').href = 'home.html';
 
-// ── Inject CSS to hide Jellyfin's own header bar ──────────────────
-function injectFrameCSS() {
-  const frame = document.getElementById('jellyfinFrame');
-  try {
-    const doc = frame.contentDocument || frame.contentWindow.document;
-    if (doc && doc.head) {
-      if (!doc.getElementById('flm-hide-header')) {
-        const s = doc.createElement('style');
-        s.id = 'flm-hide-header';
-        s.textContent = `
-          .skinHeader, .headerTop, .mainHeader,
-          .skinHeader-withBackground, .sectionTitleContainer,
-          header.skinHeader { display: none !important; }
-          .scrollY { top: 0 !important; }
-          .backdropContainer { top: 0 !important; }
-        `;
-        doc.head.appendChild(s);
-      }
-    }
-  } catch(e) {}
-}
-
-// ── Navigate iframe to the correct detail page after Jellyfin is ready ──
-function navigateToItem() {
-  if (!ITEM_ID) return;
-  const frame = document.getElementById('jellyfinFrame');
-  try {
-    const win = frame.contentWindow;
-    if (win && win.location) {
-      const currentHash = win.location.hash || '';
-      const targetHash  = '/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
-      // Only navigate if not already on the right page
-      if (!currentHash.includes(ITEM_ID)) {
-        win.location.hash = targetHash;
-      }
-    }
-  } catch(e) {}
-}
-
-// ── Main load function ──────────────────────────────────────────────
+// Step 1: Pre-authenticate so Jellyfin never shows login screen
+// Step 2: Load iframe directly to movie detail page
 async function loadFrame() {
   if (!ITEM_ID) return;
 
-  // Step 1: Authenticate with Jellyfin and write session to localStorage
-  // This prevents Jellyfin's web client from showing the login screen
+  // Pre-auth — write session to localStorage before iframe loads
   try {
     const resp = await fetch(CONFIG.SERVER + '/Users/AuthenticateByName', {
       method: 'POST',
@@ -181,13 +143,11 @@ async function loadFrame() {
         'Content-Type': 'application/json',
         'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="flmtv-movieframe", Version="1.0.0"'
       },
-      body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
+      body: JSON.stringify({ Username: 'ENTER FLM', Pw: '' })
     });
-
     if (resp.ok) {
       const data = await resp.json();
-      // Write credentials in the exact format Jellyfin web client reads
-      const creds = {
+      localStorage.setItem('jellyfin_credentials', JSON.stringify({
         Servers: [{
           Id: CONFIG.SERVER_ID,
           Url: CONFIG.SERVER,
@@ -197,44 +157,75 @@ async function loadFrame() {
           LastConnectionMode: 2,
           manualAddressOnly: true
         }]
-      };
-      localStorage.setItem('jellyfin_credentials', JSON.stringify(creds));
-      localStorage.setItem('user-' + data.User.Id + '-' + CONFIG.SERVER_ID, JSON.stringify({
-        Name: data.User.Name,
-        ServerId: CONFIG.SERVER_ID,
-        Id: data.User.Id,
-        HasPassword: false,
-        HasConfiguredPassword: false
       }));
     }
   } catch(e) {
-    console.warn('Pre-auth failed, continuing anyway:', e);
+    console.warn('Pre-auth failed:', e);
   }
 
-  // Step 2: Load iframe to the detail page
-  const targetHash = '#/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
+  // Load iframe directly to movie detail page
   const url = CONFIG.SERVER + '/web/index.html' +
     '?api_key=' + CONFIG.API_KEY +
     '&userId=' + CONFIG.USER_ID +
-    targetHash;
-
+    '#/details?id=' + ITEM_ID +
+    '&serverId=' + CONFIG.SERVER_ID;
   document.getElementById('jellyfinFrame').src = url;
 }
 
-// Step 3: After iframe loads, keep pushing it to the correct page
-// Jellyfin sometimes redirects to home after init — this corrects it
-document.getElementById('jellyfinFrame').addEventListener('load', function() {
-  setTimeout(injectFrameCSS,   500);
-  setTimeout(injectFrameCSS,  1500);
-  setTimeout(injectFrameCSS,  3000);
-  setTimeout(navigateToItem,  1200);
-  setTimeout(navigateToItem,  2500);
-  setTimeout(navigateToItem,  4000);
-});
-
-setInterval(injectFrameCSS, 2000);
+// After iframe loads, keep pushing to correct detail page
+// (Jellyfin sometimes redirects to home after init)
+function navigateToItem() {
+  if (!ITEM_ID) return;
+  const frame = document.getElementById('jellyfinFrame');
+  try {
+    const win = frame.contentWindow;
+    if (win && win.location && !win.location.hash.includes(ITEM_ID)) {
+      win.location.hash = '/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
+    }
+  } catch(e) {}
+}
 
 loadFrame();
+
+// Inject CSS into iframe to hide Jellyfin's header bars
+function injectFrameCSS() {
+  const frame = document.getElementById('jellyfinFrame');
+  try {
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    if (doc && doc.head) {
+      const style = doc.getElementById('flm-hide-header');
+      if (!style) {
+        const s = doc.createElement('style');
+        s.id = 'flm-hide-header';
+        s.textContent = `
+          .skinHeader, .headerTop, .mainHeader,
+          .skinHeader-withBackground, .sectionTitleContainer,
+          header.skinHeader { 
+            display: none !important; 
+          }
+          .scrollY { 
+            top: 0 !important; 
+          }
+          .backdropContainer { 
+            top: 0 !important; 
+          }
+        `;
+        doc.head.appendChild(s);
+      }
+    }
+  } catch(e) {}
+}
+
+// After iframe loads — inject CSS and keep navigating to correct movie
+document.getElementById('jellyfinFrame').addEventListener('load', function() {
+  setTimeout(injectFrameCSS, 500);
+  setTimeout(injectFrameCSS, 1500);
+  setTimeout(injectFrameCSS, 3000);
+  setTimeout(navigateToItem, 1200);
+  setTimeout(navigateToItem, 2500);
+  setTimeout(navigateToItem, 4000);
+});
+setInterval(injectFrameCSS, 2000);
 
 // ── Hide FLM bar when fullscreen; restore on exit ──────────────────
 const flmBar = document.getElementById('flmBar');
@@ -261,4 +252,37 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 </script>
 
 
+<script>
+// Firestick detection - shrink bar so it doesn't cover cards
+(function() {
+    var ua = navigator.userAgent || '';
+    var isFirestick = /AFT|FireTV|Silk/i.test(ua);
+    var isTV = (window.screen.width >= 1280 && window.screen.height >= 600 && window.screen.width <= 1920);
+    if (isFirestick || isTV) {
+        document.body.style.zoom = '0.7';
+        var bar = document.getElementById('flmBar');
+        if (bar) {
+            bar.style.height = '36px';
+            bar.style.padding = '0 0.5rem';
+            bar.style.fontSize = '0.75rem';
+        }
+        // Make all buttons in bar focusable and visible
+        var btns = document.querySelectorAll('.flm-btn');
+        btns.forEach(function(b) {
+            b.style.padding = '0.25rem 0.6rem';
+            b.style.fontSize = '0.75rem';
+        });
+        // Update iframe position
+        var frame = document.getElementById('jellyfinFrame');
+        if (frame) {
+            frame.style.top = '36px';
+            frame.style.height = 'calc(100% - 36px)';
+        }
+        // Focus glow for remote nav
+        var style = document.createElement('style');
+        style.textContent = 'a:focus,button:focus{outline:3px solid #22c55e !important;box-shadow:0 0 15px rgba(34,197,94,0.8) !important;}';
+        document.head.appendChild(style);
+    }
+})();
+</script>
 </body></html>
