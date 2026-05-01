@@ -2698,23 +2698,36 @@
         }
 
         body.is-firestick .content-card:focus {
-            outline: 4px solid #22c55e !important;
-            outline-offset: 4px !important;
-            box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.6),
-                        0 0 30px rgba(34, 197, 94, 0.8) !important;
-            transform: scale(1.06) !important;
+            outline: 3px solid #fff !important;
+            outline-offset: 2px !important;
+            transform: scale(1.18) !important;
             z-index: 9999 !important;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8) !important;
+            transition: transform 0.15s ease !important;
         }
 
-        body.is-firestick .category-nav-item:focus,
+        body.is-firestick .content-card {
+            transition: transform 0.15s ease !important;
+        }
+
+        body.is-firestick .category-nav-item:focus {
+            outline: 3px solid #fff !important;
+            transform: scale(1.12) !important;
+            z-index: 9999 !important;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.8) !important;
+        }
+
         body.is-firestick .header-nav a:focus,
         body.is-firestick .btn-icon:focus,
         body.is-firestick .btn-icon-text:focus,
         body.is-firestick .btn-primary:focus,
-        body.is-firestick .view-all-btn:focus {
-            outline: 4px solid #22c55e !important;
-            outline-offset: 4px !important;
-            box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.6) !important;
+        body.is-firestick .view-all-btn:focus,
+        body.is-firestick .live-showcase-player:focus,
+        body.is-firestick .live-watch-btn:focus {
+            outline: 3px solid #fff !important;
+            outline-offset: 2px !important;
+            transform: scale(1.08) !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8) !important;
         }
 
         /* Portrait card size on Firestick */
@@ -5876,14 +5889,7 @@ async function loadCollectionPage(collectionId, title) {
 
             if (next && next !== focused) {
                 next.focus();
-                // Only scroll the carousel horizontally, never the page vertically
-                var carousel = next.closest('.content-carousel, .showcase-scroll');
-                if (carousel) {
-                    var cardLeft = next.offsetLeft;
-                    var carouselWidth = carousel.offsetWidth;
-                    var scrollTarget = cardLeft - (carouselWidth / 2) + (next.offsetWidth / 2);
-                    carousel.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' });
-                }
+                // No scrolling — card scales up so user always knows where they are
             }
         });
 
