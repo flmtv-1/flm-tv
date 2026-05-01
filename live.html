@@ -414,15 +414,27 @@ function togglePlay() {
     }
 }
 
-// Fullscreen
+// Fullscreen - video only, hides topbar
 function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(function() {
-            video.webkitRequestFullscreen && video.webkitRequestFullscreen();
-        });
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        var el = video;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+        else if (el.msRequestFullscreen) el.msRequestFullscreen();
     } else {
-        document.exitFullscreen && document.exitFullscreen();
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
+}
+
+// Hide topbar when fullscreen, restore when exiting
+document.addEventListener('fullscreenchange', onFSChange);
+document.addEventListener('webkitfullscreenchange', onFSChange);
+function onFSChange() {
+    var topbar = document.querySelector('.topbar');
+    var isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (topbar) topbar.style.display = isFS ? 'none' : 'flex';
 }
 
 // Volume
