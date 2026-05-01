@@ -262,6 +262,51 @@
             outline-offset: 3px;
         }
 
+        /* PLAY / FULLSCREEN BUTTONS */
+        .controls {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 9999;
+        }
+
+        .ctrl-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.75rem;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn:hover, .ctrl-btn:focus {
+            background: var(--gold);
+            color: #000;
+            outline: 3px solid var(--green) !important;
+            outline-offset: 3px !important;
+        }
+
+        .ctrl-btn.play {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+        }
+
+        .ctrl-btn.play:hover, .ctrl-btn.play:focus {
+            background: #16a34a;
+            color: #fff;
+        }
+
         /* Firestick focus styles */
         :focus {
             outline: 3px solid var(--green) !important;
@@ -295,7 +340,7 @@
 <!-- VIDEO -->
 <div class="video-container">
 
-    <video id="liveVideo" playsinline autoplay></video>
+    <video id="liveVideo" playsinline autoplay controls style="width:100%;height:100%;object-fit:contain;"></video>
 
     <!-- LOADING -->
     <div class="loading-overlay" id="loadingOverlay">
@@ -315,10 +360,18 @@
 
 </div>
 
-<!-- VOLUME BUTTON -->
-<button class="vol-btn" id="volBtn" tabindex="0" title="Toggle Mute">
-    <i class="fas fa-volume-up"></i>
-</button>
+<!-- CONTROLS -->
+<div class="controls">
+    <button class="ctrl-btn play" id="playBtn" tabindex="0" onclick="togglePlay()">
+        <i class="fas fa-play" id="playIcon"></i> Play
+    </button>
+    <button class="ctrl-btn" id="fsBtn" tabindex="0" onclick="toggleFullscreen()">
+        <i class="fas fa-expand"></i> Full Screen
+    </button>
+    <button class="ctrl-btn" id="volBtn" tabindex="0" onclick="toggleVolume()">
+        <i class="fas fa-volume-up" id="volIcon"></i>
+    </button>
+</div>
 
 <script>
 const STREAM_URL = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
@@ -370,14 +423,38 @@ function initStream() {
     }
 }
 
-// Volume toggle
-volBtn.addEventListener('click', function() {
+// Play/pause
+function togglePlay() {
+    const playIcon = document.getElementById('playIcon');
+    const playBtn = document.getElementById('playBtn');
+    if (video.paused) {
+        video.play();
+        playIcon.className = 'fas fa-pause';
+        playBtn.innerHTML = '<i class="fas fa-pause" id="playIcon"></i> Pause';
+    } else {
+        video.pause();
+        playBtn.innerHTML = '<i class="fas fa-play" id="playIcon"></i> Play';
+    }
+}
+
+// Fullscreen
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(function() {
+            video.webkitRequestFullscreen && video.webkitRequestFullscreen();
+        });
+    } else {
+        document.exitFullscreen && document.exitFullscreen();
+    }
+}
+
+// Volume
+function toggleVolume() {
     isMuted = !isMuted;
     video.muted = isMuted;
-    volBtn.innerHTML = isMuted 
-        ? '<i class="fas fa-volume-mute"></i>' 
-        : '<i class="fas fa-volume-up"></i>';
-});
+    const volIcon = document.getElementById('volIcon');
+    volIcon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+}
 
 // Firestick d-pad navigation
 document.addEventListener('keydown', function(e) {
