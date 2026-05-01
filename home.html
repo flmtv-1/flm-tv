@@ -5741,73 +5741,126 @@ async function loadCollectionPage(collectionId, title) {
         document.body.classList.add('is-firestick');
         console.log('📺 Firestick/TV detected - TV styles applied');
 
+        // Make all interactive elements focusable
         function makeFocusable() {
-            document.querySelectorAll('.content-card, .category-nav-item, .view-all-btn, .btn-primary, .header-nav a, .btn-icon, .btn-icon-text').forEach(function(el) {
-                if (!el.getAttribute('tabindex')) {
-                    el.setAttribute('tabindex', '0');
-                }
+            document.querySelectorAll(
+                '.content-card, .category-nav-item, .view-all-btn, ' +
+                '.live-showcase-player, .live-watch-btn, ' +
+                '.header-nav a, .btn-icon, .btn-icon-text'
+            ).forEach(function(el) {
+                if (!el.getAttribute('tabindex')) el.setAttribute('tabindex', '0');
             });
         }
+        setInterval(makeFocusable, 1500);
 
-        // Run immediately, and keep running as cards load in
-        setInterval(makeFocusable, 1000);
+        // ── ROW-BASED D-PAD NAVIGATION ──────────────────────────────
+        // Groups elements into rows by vertical position
+        // Left/Right moves within a row, Up/Down jumps between rows
+        // This prevents the bouncing/jumping behaviour
+        
+        var ROW_THRESHOLD = 60; // px — elements within this vertical range = same row
 
-        // D-pad navigation
+        function getRows() {
+            var els = Array.from(document.querySelectorAll(
+                '.header-nav a, .btn-icon, .btn-icon-text, ' +
+                '.live-showcase-player, .live-watch-btn, ' +
+                '.view-all-btn, .content-card, .category-nav-item'
+            )).filter(function(el) {
+                var r = el.getBoundingClientRect();
+                return el.offsetParent !== null && r.width > 0 && r.height > 0;
+            });
+
+            // Sort by vertical center
+            els.sort(function(a, b) {
+                return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+            });
+
+            // Group into rows
+            var rows = [];
+            els.forEach(function(el) {
+                var top = el.getBoundingClientRect().top;
+                var placed = false;
+                for (var i = 0; i < rows.length; i++) {
+                    var rowTop = rows[i][0].getBoundingClientRect().top;
+                    if (Math.abs(top - rowTop) < ROW_THRESHOLD) {
+                        rows[i].push(el);
+                        placed = true;
+                        break;
+                    }
+                }
+                if (!placed) rows.push([el]);
+            });
+
+            // Sort each row left to right
+            rows.forEach(function(row) {
+                row.sort(function(a, b) {
+                    return a.getBoundingClientRect().left - b.getBoundingClientRect().left;
+                });
+            });
+
+            return rows;
+        }
+
+        function findPosition(rows, focused) {
+            for (var r = 0; r < rows.length; r++) {
+                var c = rows[r].indexOf(focused);
+                if (c !== -1) return { row: r, col: c };
+            }
+            return null;
+        }
+
         document.addEventListener('keydown', function(e) {
+            if (['ArrowRight','ArrowLeft','ArrowUp','ArrowDown','Enter',' '].indexOf(e.key) === -1) return;
+            
             var focused = document.activeElement;
+            var rows = getRows();
+            if (!rows.length) return;
+
+            // Nothing focused — start at first element
             if (!focused || focused === document.body) {
-                // Nothing focused — focus first card
-                var first = document.querySelector('.content-card, .header-nav a');
-                if (first) first.focus();
+                rows[0][0].focus();
+                e.preventDefault();
                 return;
             }
 
-            var all = Array.from(document.querySelectorAll(
-                '.header-nav a, .btn-icon, .btn-icon-text, .btn-primary, .view-all-btn, .content-card, .category-nav-item'
-            )).filter(function(el) {
-                return el.offsetParent !== null && el.getAttribute('tabindex') !== null;
-            });
+            var pos = findPosition(rows, focused);
+            if (!pos) {
+                rows[0][0].focus();
+                e.preventDefault();
+                return;
+            }
 
-            var idx = all.indexOf(focused);
             var next = null;
-            var rect = focused.getBoundingClientRect();
+            var r = pos.row, c = pos.col;
 
             if (e.key === 'ArrowRight') {
-                next = all[idx + 1] || all[idx];
+                // Move right in same row, or wrap to first of next row
+                if (c < rows[r].length - 1) {
+                    next = rows[r][c + 1];
+                } else if (r < rows.length - 1) {
+                    next = rows[r + 1][0];
+                }
                 e.preventDefault();
             } else if (e.key === 'ArrowLeft') {
-                next = all[idx - 1] || all[0];
+                // Move left in same row, or wrap to last of prev row
+                if (c > 0) {
+                    next = rows[r][c - 1];
+                } else if (r > 0) {
+                    next = rows[r - 1][rows[r - 1].length - 1];
+                }
                 e.preventDefault();
             } else if (e.key === 'ArrowDown') {
-                // Find closest element below current
-                var candidates = all.filter(function(el) {
-                    return el.getBoundingClientRect().top > rect.bottom - 10;
-                });
-                if (candidates.length) {
-                    // Find the one closest horizontally
-                    candidates.sort(function(a, b) {
-                        var aRect = a.getBoundingClientRect();
-                        var bRect = b.getBoundingClientRect();
-                        var aDist = Math.abs(aRect.left - rect.left);
-                        var bDist = Math.abs(bRect.left - rect.left);
-                        return aDist - bDist;
-                    });
-                    next = candidates[0];
+                // Move to same column position in next row
+                if (r < rows.length - 1) {
+                    var nextRow = rows[r + 1];
+                    next = nextRow[Math.min(c, nextRow.length - 1)];
                 }
                 e.preventDefault();
             } else if (e.key === 'ArrowUp') {
-                var candidates = all.filter(function(el) {
-                    return el.getBoundingClientRect().bottom < rect.top + 10;
-                });
-                if (candidates.length) {
-                    candidates.sort(function(a, b) {
-                        var aRect = a.getBoundingClientRect();
-                        var bRect = b.getBoundingClientRect();
-                        var aDist = Math.abs(aRect.left - rect.left);
-                        var bDist = Math.abs(bRect.left - rect.left);
-                        return aDist - bDist;
-                    });
-                    next = candidates[candidates.length - 1];
+                // Move to same column position in prev row
+                if (r > 0) {
+                    var prevRow = rows[r - 1];
+                    next = prevRow[Math.min(c, prevRow.length - 1)];
                 }
                 e.preventDefault();
             } else if (e.key === 'Enter' || e.key === ' ') {
@@ -5819,8 +5872,7 @@ async function loadCollectionPage(collectionId, title) {
             if (next && next !== focused) {
                 next.focus();
                 next.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-                // Also scroll the parent carousel if needed
-                var carousel = next.closest('.content-carousel');
+                var carousel = next.closest('.content-carousel, .showcase-scroll');
                 if (carousel) {
                     carousel.scrollTo({ left: next.offsetLeft - 100, behavior: 'smooth' });
                 }
