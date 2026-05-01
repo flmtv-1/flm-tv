@@ -2724,6 +2724,11 @@
             max-width: 140px !important;
             width: 140px !important;
             height: auto !important;
+            margin-right: 12px !important;
+        }
+        
+        body.is-firestick .content-carousel {
+            gap: 16px !important;
         }
 
         body.is-firestick .content-card-image {
@@ -5871,10 +5876,13 @@ async function loadCollectionPage(collectionId, title) {
 
             if (next && next !== focused) {
                 next.focus();
-                next.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                // Only scroll the carousel horizontally, never the page vertically
                 var carousel = next.closest('.content-carousel, .showcase-scroll');
                 if (carousel) {
-                    carousel.scrollTo({ left: next.offsetLeft - 100, behavior: 'smooth' });
+                    var cardLeft = next.offsetLeft;
+                    var carouselWidth = carousel.offsetWidth;
+                    var scrollTarget = cardLeft - (carouselWidth / 2) + (next.offsetWidth / 2);
+                    carousel.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' });
                 }
             }
         });

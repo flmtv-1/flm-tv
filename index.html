@@ -222,9 +222,9 @@
             background: #ffd700;
             color: #000;
             transform: scale(1.1);
-            outline: 4px solid #22c55e;
-            outline-offset: 3px;
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+            outline: 4px solid #22c55e !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.8) !important;
         }
 
         /* Strong focus glow for remote navigation on both buttons */
@@ -232,6 +232,14 @@
             outline: 4px solid #22c55e !important;
             outline-offset: 4px !important;
             box-shadow: 0 0 30px rgba(34, 197, 94, 0.9) !important;
+            animation: none !important;
+        }
+
+        /* Global focus glow for Firestick */
+        :focus {
+            outline: 4px solid #22c55e !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.7) !important;
         }
 
         @media (max-width: 768px) {
@@ -337,6 +345,38 @@
             }
         });
     </script>
+
+<script>
+// Auto-focus ENTER button on load for Firestick remote
+window.addEventListener('load', function() {
+    var enterBtn = document.querySelector('.enter-btn');
+    if (enterBtn) {
+        enterBtn.focus();
+    }
+});
+
+// D-pad navigation on intro page
+document.addEventListener('keydown', function(e) {
+    var focusable = Array.from(document.querySelectorAll('.enter-btn, .mute-btn')).filter(function(el) {
+        return el.offsetParent !== null;
+    });
+    var focused = document.activeElement;
+    var idx = focusable.indexOf(focused);
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        var next = focusable[idx + 1];
+        if (next) next.focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        var prev = focusable[idx - 1];
+        if (prev) prev.focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (focused) focused.click();
+    }
+});
+</script>
     
 </body>
 </html>
