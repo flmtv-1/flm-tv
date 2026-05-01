@@ -2927,16 +2927,15 @@
     <section class="live-showcase-section">
         <div class="live-showcase-container">
 
-            <!-- LIVE TV CARD - Static backdrop, click to watch -->
+            <!-- LIVE TV CARD - Live stream plays on PC, static image on Firestick -->
             <div class="live-showcase-player" onclick="window.location.href='live.html'" style="cursor:pointer;">
                 <div class="live-showcase-badge">
                     <div class="live-dot"></div>
                     LIVE · CH 26.5
                 </div>
-                <img src="assets/images/flmtv-AlienBanner1-1200x630.png" 
-                     alt="FLM TV Live" 
-                     style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;"
-                     onerror="this.style.background='#0a0f1a';this.style.display='block'">
+                <video id="liveStreamVideo" autoplay muted playsinline
+                       style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;background:#000;">
+                </video>
                 <div class="live-showcase-overlay" style="opacity:1;">
                     <div class="live-showcase-info">
                         <div class="live-showcase-logo">FLM <span>TV</span></div>
@@ -3473,7 +3472,7 @@
                 <span>Back</span>
             </button>
             
-            <video id="liveStreamVideo" controls muted
+            <video id="liveModalVideo" controls muted
                 width="100%" 
                 height="100%"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;">
@@ -5396,7 +5395,7 @@
     const modal = document.getElementById('videoModal');
     modal.classList.add('active');
     
-    const liveStreamVideo = document.getElementById('liveStreamVideo');
+    const liveStreamVideo = document.getElementById('liveStreamVideo') || document.getElementById('liveModalVideo');
     const streamUrl = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
 
     if (liveStreamVideo) {
@@ -5455,7 +5454,7 @@
             clearTimeout(window._streamIdleTimer);
             document.removeEventListener('mousemove', _resetStreamIdle);
             
-            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            const liveStreamVideo = document.getElementById('liveStreamVideo') || document.getElementById('liveModalVideo');
             if (liveStreamVideo) {
                 liveStreamVideo.pause();
                 liveStreamVideo.muted = true;
@@ -5483,7 +5482,7 @@
         window.addEventListener('popstate', function(event) {
             const videoModal = document.getElementById('videoModal');
             const jellyfinViewer = document.getElementById('jellyfinViewer');
-            const liveStreamVideo = document.getElementById('liveStreamVideo');
+            const liveStreamVideo = document.getElementById('liveStreamVideo') || document.getElementById('liveModalVideo');
             
             // DISCONNECT SRT stream completely
             if (liveStreamVideo) {
