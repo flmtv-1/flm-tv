@@ -29,7 +29,7 @@
             flex-direction: column;
         }
 
-        /* TOP BAR */
+        /* TOP BAR - auto hide */
         .topbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -41,6 +41,13 @@
             justify-content: space-between;
             padding: 0 1.5rem;
             z-index: 9999;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .topbar.hidden {
+            opacity: 0;
+            transform: translateY(-100%);
+            pointer-events: none;
         }
 
         .topbar-left {
@@ -134,6 +141,11 @@
             top: 54px;
             left: 0; right: 0; bottom: 0;
             background: #000;
+            transition: top 0.5s ease;
+        }
+
+        .video-container.fullheight {
+            top: 0 !important;
         }
 
         #liveVideo {
@@ -456,6 +468,28 @@ function toggleVolume() {
     volIcon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
 }
 
+// ── AUTO-HIDE CONTROLS ───────────────────────────────────────
+var topbar = document.querySelector('.topbar');
+var videoContainer = document.querySelector('.video-container');
+var hideTimer = null;
+
+function showControls() {
+    topbar.classList.remove('hidden');
+    videoContainer.classList.remove('fullheight');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hideControls, 3500);
+}
+
+function hideControls() {
+    topbar.classList.add('hidden');
+    videoContainer.classList.add('fullheight');
+}
+
+// Hide controls after stream starts playing
+video.addEventListener('playing', function() {
+    setTimeout(hideControls, 2000);
+});
+
 // ── FIRESTICK REMOTE NAVIGATION ──────────────────────────────
 // Buttons in order: Back, Play, FullScreen, Volume
 var BUTTONS = ['back-btn', 'playBtn', 'fsBtn', 'volBtn'];
@@ -466,14 +500,12 @@ function getFocusable() {
     }).filter(Boolean);
 }
 
-// Auto-focus Play button when page loads
+// Auto-focus Play button when page loads, then hide bar when playing
 window.addEventListener('load', function() {
     setTimeout(function() {
         var playBtn = document.getElementById('playBtn');
-        if (playBtn) {
-            playBtn.focus();
-            console.log('📺 Remote: focused Play button');
-        }
+        if (playBtn) playBtn.focus();
+        showControls();
     }, 1200);
 });
 
@@ -492,35 +524,46 @@ document.addEventListener('keydown', function(e) {
         return;
     }
 
-    // ── PLAY/PAUSE on SPACE (when nothing specific focused) ──
+    // ── SPACE = play/pause ──
     if (e.key === ' ') {
         e.preventDefault();
         togglePlay();
+        showControls();
         return;
     }
 
-    // ── ARROW NAVIGATION ──
+    // ── ANY ARROW KEY = show controls first ──
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' ||
         e.key === 'ArrowUp'   || e.key === 'ArrowDown') {
         e.preventDefault();
 
-        // If fullscreen — exit fullscreen on any arrow (shows topbar again)
+        // If controls are hidden — just show them, focus Play button
+        if (topbar.classList.contains('hidden')) {
+            showControls();
+            setTimeout(function() {
+                document.getElementById('playBtn') && document.getElementById('playBtn').focus();
+            }, 100);
+            return;
+        }
+
+        // If fullscreen — exit fullscreen, show controls
         if (isFullscreen) {
             document.exitFullscreen && document.exitFullscreen();
             document.webkitExitFullscreen && document.webkitExitFullscreen();
             setTimeout(function() {
+                showControls();
                 document.getElementById('playBtn') && document.getElementById('playBtn').focus();
             }, 300);
             return;
         }
 
+        // Controls visible — navigate between buttons
         var buttons = getFocusable();
         var focused = document.activeElement;
         var idx = buttons.indexOf(focused);
 
-        // If nothing focused, focus play button
         if (idx === -1) {
-            buttons[1] && buttons[1].focus(); // Play button
+            buttons[1] && buttons[1].focus();
             return;
         }
 
@@ -531,18 +574,30 @@ document.addEventListener('keydown', function(e) {
             var prev = buttons[idx - 1] || buttons[buttons.length - 1];
             prev.focus();
         }
+
+        // Reset hide timer on navigation
+        showControls();
         return;
     }
 
     // ── ENTER = click focused button ──
     if (e.key === 'Enter') {
         e.preventDefault();
+        // If controls hidden, show them first
+        if (topbar.classList.contains('hidden')) {
+            showControls();
+            setTimeout(function() {
+                document.getElementById('playBtn') && document.getElementById('playBtn').focus();
+            }, 100);
+            return;
+        }
         var focused2 = document.activeElement;
         if (focused2 && focused2 !== document.body) {
             focused2.click();
         } else {
             togglePlay();
         }
+        showControls();
         return;
     }
 });
