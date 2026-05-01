@@ -286,11 +286,12 @@
             color: var(--gold);
         }
 
-        /* Firestick focus styles */
+        /* Firestick focus styles - very visible */
         :focus {
-            outline: 3px solid var(--green) !important;
-            outline-offset: 3px !important;
-            box-shadow: 0 0 15px rgba(34,197,94,0.6) !important;
+            outline: 4px solid #ffd700 !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 25px rgba(255,215,0,0.9) !important;
+            transform: scale(1.1) !important;
         }
     </style>
 </head>
@@ -307,13 +308,13 @@
             <div class="live-dot"></div>
             LIVE
         </div>
-        <button class="hdr-btn" tabindex="0" onclick="togglePlay()">
+        <button class="hdr-btn" id="playBtn" tabindex="0" onclick="togglePlay()">
             <i class="fas fa-play" id="playIcon"></i> Play
         </button>
-        <button class="hdr-btn" tabindex="0" onclick="toggleFullscreen()">
+        <button class="hdr-btn" id="fsBtn" tabindex="0" onclick="toggleFullscreen()">
             <i class="fas fa-expand"></i> Full Screen
         </button>
-        <button class="hdr-btn" tabindex="0" onclick="toggleVolume()">
+        <button class="hdr-btn" id="volBtn" tabindex="0" onclick="toggleVolume()">
             <i class="fas fa-volume-up" id="volIcon"></i>
         </button>
     </div>
@@ -414,10 +415,16 @@ function togglePlay() {
     }
 }
 
-// Fullscreen - video only, hides topbar
+// Fullscreen - full page, topbar hidden
 function toggleFullscreen() {
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        var el = video;
+        // Hide topbar first
+        document.querySelector('.topbar').style.display = 'none';
+        // Make video fill screen
+        var vc = document.querySelector('.video-container');
+        vc.style.top = '0';
+        // Request fullscreen on whole page
+        var el = document.documentElement;
         if (el.requestFullscreen) el.requestFullscreen();
         else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
         else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
@@ -428,13 +435,17 @@ function toggleFullscreen() {
     }
 }
 
-// Hide topbar when fullscreen, restore when exiting
+// Restore topbar when exiting fullscreen
 document.addEventListener('fullscreenchange', onFSChange);
 document.addEventListener('webkitfullscreenchange', onFSChange);
 function onFSChange() {
     var topbar = document.querySelector('.topbar');
+    var vc = document.querySelector('.video-container');
     var isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
-    if (topbar) topbar.style.display = isFS ? 'none' : 'flex';
+    if (!isFS) {
+        topbar.style.display = 'flex';
+        vc.style.top = '54px';
+    }
 }
 
 // Volume
@@ -484,10 +495,12 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Auto focus Full Screen button on load for easy access
+// Auto focus Play button on load
 window.addEventListener('load', function() {
-    var fsBtn = document.querySelector('.hdr-btn');
-    if (fsBtn) setTimeout(function() { fsBtn.focus(); }, 500);
+    setTimeout(function() {
+        var playBtn = document.getElementById('playBtn');
+        if (playBtn) playBtn.focus();
+    }, 1000);
 });
 
 // Start stream
