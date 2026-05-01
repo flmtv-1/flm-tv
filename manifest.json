@@ -1,0 +1,28 @@
+{
+  "background_color": "#000000",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "FLM TV",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "FLM TV",
+  "start_url": "/",
+  "theme_color": "#ffd700",
+  "icons": [
+    {
+      "src": "https://flmtv.com/assets/logos/flm-logo.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "isSquare": true,
+      "isPng": true,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 512,
+      "is512x512": true,
+      "is256x256": false,
+      "is192x192": false
+    }
+  ],
+  "id": "flmtv",
+  "description": "FLM TV - FREE multicultural streaming. Channel 26.5 Las Vegas. Filipino, Asian, International cinema &amp; live TV worldwide."
+}
