@@ -200,11 +200,8 @@
             }
         }
         
-        /* MUTE/UNMUTE BUTTON */
+        /* MUTE/UNMUTE BUTTON - sits next to ENTER button */
         .mute-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
             width: 50px;
             height: 50px;
             background: rgba(0, 0, 0, 0.7);
@@ -218,31 +215,35 @@
             justify-content: center;
             z-index: 1000;
             transition: all 0.3s ease;
+            flex-shrink: 0;
         }
         
-        .mute-btn:hover {
+        .mute-btn:hover, .mute-btn:focus {
             background: #ffd700;
             color: #000;
             transform: scale(1.1);
+            outline: 4px solid #22c55e;
+            outline-offset: 3px;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
         }
-        
+
+        /* Strong focus glow for remote navigation on both buttons */
+        .enter-btn:focus {
+            outline: 4px solid #22c55e !important;
+            outline-offset: 4px !important;
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.9) !important;
+        }
+
         @media (max-width: 768px) {
             .mute-btn {
                 width: 45px;
                 height: 45px;
                 font-size: 18px;
-                top: 15px;
-                right: 15px;
             }
         }
     </style>
 </head>
 <body>
-    
-    <!-- MUTE/UNMUTE BUTTON -->
-    <button class="mute-btn" id="muteBtn" title="Unmute">
-        <i class="fas fa-volume-mute"></i>
-    </button>
     
     <!-- VIDEO BACKGROUND -->
     <div class="video-bg">
@@ -255,12 +256,17 @@
     <!-- Dark overlay -->
     <div class="overlay"></div>
     
-    <!-- ENTER BUTTON -->
+    <!-- ENTER BUTTON + MUTE BUTTON side by side -->
     <div class="content">
-        <a class="enter-btn" href="home.html">
-            <span>▶</span>
-            <span>ENTER</span>
-        </a>
+        <div style="display:flex; align-items:center; gap:1rem;">
+            <a class="enter-btn" href="home.html">
+                <span>▶</span>
+                <span>ENTER</span>
+            </a>
+            <button class="mute-btn" id="muteBtn" title="Unmute">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+        </div>
     </div>
     
     <!-- FOOTER -->

@@ -646,17 +646,13 @@
             position: relative;
         }
         
-        .content-card:hover,
-        .content-card:focus {
+        .content-card:hover {
             transform: scale(1.05);
             box-shadow: 0 0 30px rgba(34, 197, 94, 0.6),
                         0 0 60px rgba(34, 197, 94, 0.4),
                         0 8px 25px rgba(0, 0, 0, 0.5);
             border: 2px solid var(--neon-green);
-            outline: none;
         }
-
-        .content-card:focus .content-card-overlay { opacity: 1; }
         
         .content-card-image {
             width: 100%;
@@ -2668,19 +2664,7 @@
         }
 
         body.is-firestick .live-showcase-section {
-            display: block !important;
-        }
-
-        body.is-firestick .live-showcase-container {
-            grid-template-columns: 280px 1fr !important;
-            max-width: 1100px !important;
-            margin: 0 auto !important;
-            padding: 1rem 1.5rem !important;
-        }
-
-        body.is-firestick .live-showcase-player {
-            max-height: 180px !important;
-            min-height: 180px !important;
+            display: none !important;
         }
 
         /* Focus glow for remote navigation */
@@ -2832,24 +2816,24 @@
     <section class="live-showcase-section">
         <div class="live-showcase-container">
 
-            <!-- LIVE TV CARD - Static backdrop, click to watch -->
-            <div class="live-showcase-player" onclick="openLiveStream()" style="cursor:pointer;">
+            <!-- BIG LIVE PLAYER -->
+            <div class="live-showcase-player">
                 <div class="live-showcase-badge">
                     <div class="live-dot"></div>
                     LIVE · CH 26.5
                 </div>
-                <img src="assets/images/flmtv-AlienBanner1-1200x630.png" 
-                     alt="FLM TV Live" 
-                     style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;"
-                     onerror="this.style.background='#0a0f1a';this.style.display='block'">
-                <div class="live-showcase-overlay" style="opacity:1;">
+                <video id="previewVideo" muted defaultmuted autoplay playsinline></video>
+                <div class="live-showcase-overlay">
                     <div class="live-showcase-info">
                         <div class="live-showcase-logo">FLM <span>TV</span></div>
-                        <div class="live-showcase-sub">Las Vegas · Channel 26.5 · Live Now</div>
+                        <div class="live-showcase-sub">Las Vegas · Worldwide</div>
                     </div>
                     <div class="live-showcase-actions">
-                        <button class="live-watch-btn" onclick="event.stopPropagation();openLiveStream()">
+                        <button class="live-watch-btn" onclick="openLiveStream()">
                             <i class="fas fa-play"></i> Watch Live
+                        </button>
+                        <button class="live-vol-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
+                            <i class="fas fa-volume-mute"></i>
                         </button>
                     </div>
                 </div>
@@ -3968,13 +3952,15 @@
                     itemsWithImages.forEach(item => {
                         const card = document.createElement('div');
                         card.className = 'content-card';
-                        card.setAttribute('tabindex', '0');
-                        card.setAttribute('role', 'button');
-                        const clickFn = item.Type === 'Book'
-                            ? () => openComic(item.Id, item.Name)
-                            : () => playJellyfinItem(item.Id, item.Type);
-                        card.onclick = clickFn;
-                        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clickFn(); } });
+                        if (item.Type === 'Book') {
+                            card.onclick = () => openComic(item.Id, item.Name);
+                        } else {
+                            if (item.Type === 'Book') {
+                            card.onclick = () => openComic(item.Id, item.Name);
+                        } else {
+                            card.onclick = () => playJellyfinItem(item.Id, item.Type);
+                        }
+                        }
 
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
                         if (item.ImageTags?.Primary) {
@@ -4163,7 +4149,7 @@
                         'X-Emby-Authorization': `MediaBrowser Client="FLM Television Network", Device="Web Browser", DeviceId="flmtv-web", Version="1.0.0"`
                     },
                     body: JSON.stringify({
-                        Username: 'ENTER FLM',
+                        Username: 'Enter to Sign in',
                         Pw: ''
                     })
                 });
@@ -4234,7 +4220,7 @@
                         'Content-Type': 'application/json',
                         'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-home", Version="1.0.0"'
                     },
-                    body: JSON.stringify({ Username: 'ENTER FLM', Pw: '' })
+                    body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
                 });
 
                 if (resp.ok) {
@@ -4469,7 +4455,7 @@
                 'Content-Type': 'application/json',
                 'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID || 'flmtv-web'}", Version="1.0.0"`
             },
-            body: JSON.stringify({ Username: 'ENTER FLM', Pw: '' })
+            body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
         });
         if (authResp.ok) {
             const authData = await authResp.json();
@@ -4482,13 +4468,9 @@
     }
 
     if (itemType === 'Series') {
-        window.location.href = document.body.classList.contains('is-firestick')
-            ? `tv-detail.html?id=${itemId}`
-            : `movie-frame.html?id=${itemId}`;
+        window.location.href = `movie-frame.html?id=${itemId}`;
     } else {
-        window.location.href = document.body.classList.contains('is-firestick')
-            ? `tv-detail.html?id=${itemId}`
-            : `movie-frame.html?id=${itemId}`;
+        window.location.href = `movie-frame.html?id=${itemId}`;
     }
 }
         
@@ -4528,7 +4510,7 @@
                         'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID}", Version="1.0.0"`
                     },
                     body: JSON.stringify({
-                        Username: 'ENTER FLM',
+                        Username: 'Enter to Sign in',
                         Pw: ''
                     })
                 });
@@ -5685,98 +5667,78 @@ async function loadCollectionPage(collectionId, title) {
     if (isFirestick || isTV) {
         document.body.classList.add('is-firestick');
         console.log('📺 Firestick/TV detected - TV styles applied');
-
-        function makeFocusable() {
-            document.querySelectorAll('.content-card, .category-nav-item, .view-all-btn, .btn-primary, .header-nav a, .btn-icon, .btn-icon-text').forEach(function(el) {
-                if (!el.getAttribute('tabindex')) {
-                    el.setAttribute('tabindex', '0');
-                }
-            });
-        }
-
-        // Run immediately, and keep running as cards load in
-        setInterval(makeFocusable, 1000);
-
-        // D-pad navigation
-        document.addEventListener('keydown', function(e) {
-            var focused = document.activeElement;
-            if (!focused || focused === document.body) {
-                // Nothing focused — focus first card
-                var first = document.querySelector('.content-card, .header-nav a');
-                if (first) first.focus();
-                return;
-            }
-
-            var all = Array.from(document.querySelectorAll(
-                '.header-nav a, .btn-icon, .btn-icon-text, .btn-primary, .view-all-btn, .content-card, .category-nav-item'
-            )).filter(function(el) {
-                return el.offsetParent !== null && el.getAttribute('tabindex') !== null;
-            });
-
-            var idx = all.indexOf(focused);
-            var next = null;
-            var rect = focused.getBoundingClientRect();
-
-            if (e.key === 'ArrowRight') {
-                next = all[idx + 1] || all[idx];
-                e.preventDefault();
-            } else if (e.key === 'ArrowLeft') {
-                next = all[idx - 1] || all[0];
-                e.preventDefault();
-            } else if (e.key === 'ArrowDown') {
-                // Find closest element below current
-                var candidates = all.filter(function(el) {
-                    return el.getBoundingClientRect().top > rect.bottom - 10;
+        
+        // Make all content cards focusable for remote navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for cards to load then make them focusable
+            setTimeout(function() {
+                document.querySelectorAll('.content-card').forEach(function(card) {
+                    if (!card.getAttribute('tabindex')) {
+                        card.setAttribute('tabindex', '0');
+                    }
                 });
-                if (candidates.length) {
-                    // Find the one closest horizontally
-                    candidates.sort(function(a, b) {
-                        var aRect = a.getBoundingClientRect();
-                        var bRect = b.getBoundingClientRect();
-                        var aDist = Math.abs(aRect.left - rect.left);
-                        var bDist = Math.abs(bRect.left - rect.left);
-                        return aDist - bDist;
-                    });
-                    next = candidates[0];
-                }
-                e.preventDefault();
-            } else if (e.key === 'ArrowUp') {
-                var candidates = all.filter(function(el) {
-                    return el.getBoundingClientRect().bottom < rect.top + 10;
+                document.querySelectorAll('.category-nav-item').forEach(function(item) {
+                    if (!item.getAttribute('tabindex')) {
+                        item.setAttribute('tabindex', '0');
+                    }
                 });
-                if (candidates.length) {
-                    candidates.sort(function(a, b) {
-                        var aRect = a.getBoundingClientRect();
-                        var bRect = b.getBoundingClientRect();
-                        var aDist = Math.abs(aRect.left - rect.left);
-                        var bDist = Math.abs(bRect.left - rect.left);
-                        return aDist - bDist;
-                    });
-                    next = candidates[candidates.length - 1];
-                }
-                e.preventDefault();
-            } else if (e.key === 'Enter' || e.key === ' ') {
-                focused.click();
-                e.preventDefault();
-                return;
-            }
+                console.log('📺 Cards made focusable for remote nav');
 
-            if (next && next !== focused) {
-                next.focus();
-                next.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-                // Also scroll the parent carousel if needed
-                var carousel = next.closest('.content-carousel');
-                if (carousel) {
-                    carousel.scrollTo({ left: next.offsetLeft - 100, behavior: 'smooth' });
-                }
-            }
+                // D-pad navigation between all focusable elements
+                document.addEventListener('keydown', function(e) {
+                    var focused = document.activeElement;
+                    if (!focused) return;
+
+                    var all = Array.from(document.querySelectorAll(
+                        '.header-nav a, .btn-icon, .btn-icon-text, .btn-primary, .view-all-btn, .content-card, .category-nav-item'
+                    )).filter(function(el) {
+                        return el.offsetParent !== null;
+                    });
+
+                    var idx = all.indexOf(focused);
+                    if (idx === -1) return;
+
+                    var next = null;
+                    var rect = focused.getBoundingClientRect();
+
+                    if (e.key === 'ArrowRight') {
+                        next = all[idx + 1];
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowLeft') {
+                        next = all[idx - 1];
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowDown') {
+                        var below = all.filter(function(el) {
+                            return el.getBoundingClientRect().top > rect.bottom - 10;
+                        });
+                        if (below.length) next = below[0];
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowUp') {
+                        var above = all.filter(function(el) {
+                            return el.getBoundingClientRect().bottom < rect.top + 10;
+                        });
+                        if (above.length) next = above[above.length - 1];
+                        e.preventDefault();
+                    } else if (e.key === 'Enter' || e.key === ' ') {
+                        focused.click();
+                        e.preventDefault();
+                        return;
+                    }
+
+                    if (next) {
+                        next.focus();
+                        next.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                    }
+                });
+
+                // Focus first element
+                setTimeout(function() {
+                    var first = document.querySelector('.header-nav a');
+                    if (first) first.focus();
+                }, 500);
+
+            }, 2000);
         });
-
-        // Focus first nav item after cards load
-        setTimeout(function() {
-            var first = document.querySelector('.header-nav a');
-            if (first) first.focus();
-        }, 3000);
     }
 })();
 </script>
