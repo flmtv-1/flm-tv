@@ -6,7 +6,7 @@
   "orientation": "any",
   "scope": "/",
   "short_name": "FLM TV",
-  "start_url": "/",
+  "start_url": "https://flmtv.com/",
   "theme_color": "#ffd700",
   "icons": [
     {
@@ -24,5 +24,10 @@
     }
   ],
   "id": "flmtv",
-  "description": "FLM TV - FREE multicultural streaming. Channel 26.5 Las Vegas. Filipino, Asian, International cinema &amp; live TV worldwide."
+  "description": "FLM TV - FREE multicultural streaming. Channel 26.5 Las Vegas. Filipino, Asian, International cinema &amp; live TV worldwide.",
+  "lang": "en",
+  "categories": [
+    "entertainment",
+    "music"
+  ]
 }
