@@ -14,19 +14,19 @@
   "categories": ["entertainment", "music"],
   "icons": [
     {
-      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_icon_512x512.png",
+      "src": "https://flmtv.com/assets/logos/flm-logo-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_icon_512x512.png",
+      "src": "https://flmtv.com/assets/logos/flm-logo-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://flmtv.com/assets/logos/flm-logo.png",
+      "src": "https://flmtv.com/assets/logos/flm-logo_192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
