@@ -17,7 +17,13 @@
       "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_icon_512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_icon_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "https://flmtv.com/assets/logos/flm-logo.png",
@@ -28,21 +34,21 @@
   ],
   "screenshots": [
     {
-      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_screenshot_1920x1080.jpg",
+      "src": "https://flmtv.com/assets/logos/favicon/splashscreen_1920x1080.png",
       "sizes": "1920x1080",
-      "type": "image/jpeg",
+      "type": "image/png",
       "form_factor": "wide",
       "label": "FLM TV Home Screen"
     },
     {
-      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_screenshot_1280x720.jpg",
-      "sizes": "1280x720",
+      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_screenshot_1920x1080.jpg",
+      "sizes": "1920x1080",
       "type": "image/jpeg",
       "form_factor": "wide",
       "label": "FLM TV Browse"
     },
     {
-      "src": "https://flmtv.com/assets/images/Screenshots/NEW%20FLM%20TV%20Banner%201025X500%2C%20Z-pegs.png",
+      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_banner_1025x500.png",
       "sizes": "1025x500",
       "type": "image/png",
       "form_factor": "wide",
