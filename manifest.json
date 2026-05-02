@@ -1,33 +1,52 @@
 {
-  "background_color": "#000000",
-  "dir": "ltr",
-  "display": "standalone",
   "name": "FLM TV",
-  "orientation": "any",
-  "scope": "/",
   "short_name": "FLM TV",
+  "description": "FLM TV - FREE multicultural streaming. Channel 26.5 Las Vegas. Filipino, Asian, International cinema & live TV worldwide.",
+  "id": "flmtv",
   "start_url": "https://flmtv.com/",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "orientation": "any",
+  "display": "standalone",
+  "background_color": "#000000",
   "theme_color": "#ffd700",
+  "categories": ["entertainment", "music"],
   "icons": [
     {
-      "src": "https://flmtv.com/assets/logos/flm-logo.png",
-      "type": "image/png",
+      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_icon_512x512.png",
       "sizes": "512x512",
-      "isSquare": true,
-      "isPng": true,
-      "isWebp": false,
-      "isJpg": false,
-      "width": 512,
-      "is512x512": true,
-      "is256x256": false,
-      "is192x192": false
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://flmtv.com/assets/logos/flm-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
-  "id": "flmtv",
-  "description": "FLM TV - FREE multicultural streaming. Channel 26.5 Las Vegas. Filipino, Asian, International cinema &amp; live TV worldwide.",
-  "lang": "en",
-  "categories": [
-    "entertainment",
-    "music"
+  "screenshots": [
+    {
+      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_screenshot_1920x1080.jpg",
+      "sizes": "1920x1080",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "FLM TV Home Screen"
+    },
+    {
+      "src": "https://flmtv.com/assets/images/Screenshots/FLM_TV_screenshot_1280x720.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "FLM TV Browse"
+    },
+    {
+      "src": "https://flmtv.com/assets/images/Screenshots/NEW%20FLM%20TV%20Banner%201025X500%2C%20Z-pegs.png",
+      "sizes": "1025x500",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "FLM TV Banner"
+    }
   ]
 }

@@ -356,6 +356,13 @@ window.addEventListener('load', function() {
     }
 });
 
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(function() { console.log('✅ FLM TV Service Worker registered'); })
+        .catch(function(err) { console.log('SW error:', err); });
+}
+
 // D-pad navigation on intro page
 document.addEventListener('keydown', function(e) {
     var focusable = Array.from(document.querySelectorAll('.enter-btn, .mute-btn')).filter(function(el) {
