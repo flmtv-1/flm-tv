@@ -3,6 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Fire TV Detection and D-pad Navigation -->
+    <script>
+        var isFireTV = navigator.userAgent.indexOf('AFT') !== -1;
+        if (isFireTV) {
+            // Override viewport for Fire TV
+            var viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) viewport.setAttribute('content', 'width=1280, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        }
+    </script>
+    <script>
+        if (isFireTV) {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Load spatial navigation for Fire TV remote
+                var script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/spatialnavigation@0.0.1/spatialnavigation.js';
+                script.onload = function() {
+                    if (typeof SpatialNavigation !== 'undefined') {
+                        SpatialNavigation.init();
+                        SpatialNavigation.add({
+                            selector: 'a, button, [onclick], .movie-card, .category-card, .nav-link, .btn, input, select'
+                        });
+                        SpatialNavigation.makeFocusable();
+                        SpatialNavigation.focus();
+                    }
+                };
+                document.head.appendChild(script);
+            });
+        }
+    </script>
+    <style>
+        /* Fire TV Focus Styles - only visible when using remote */
+        a:focus, button:focus, [onclick]:focus, .movie-card:focus, .category-card:focus, .nav-link:focus, .btn:focus {
+            outline: 4px solid #ffd700 !important;
+            outline-offset: 4px !important;
+            transform: scale(1.05);
+            transition: transform 0.1s ease;
+            z-index: 999;
+            position: relative;
+        }
+    </style>
     <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
     
     <!-- SEO Meta Tags -->
