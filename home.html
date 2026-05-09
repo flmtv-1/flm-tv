@@ -2711,7 +2711,8 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
-                        <li><a href="#" onclick="openLiveStream(); return false;"> Live TV</a></li>
+                        <li><a href="live-tv.html"> Live TV</a></li>
+                        <li><a href="schedule.html">Schedule</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
                     </ul>
                 </nav>
@@ -3442,6 +3443,7 @@
     PLAYER_SERVER: 'https://flmtv.com/jellyfin',
     
     COLLECTIONS: [
+        { id: 'live-tv', name: '📡 LIVE TV', url: 'live-tv.html', hideFromCarousel: true },
         { id: '689c3f2fb8ec0ad205e3d8a10f2374c3', name: 'MOVIES', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=689c3f2fb8ec0ad205e3d8a10f2374c3&collectionType=movies' },
         { id: 'd90d03c78404f7ea661bd134d6f74ed8', name: 'MORE MOVIES', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=d90d03c78404f7ea661bd134d6f74ed8&collectionType=movies' },
         { id: '2bf52839930529f99103629d73a7eddf', name: 'AWESOME TV SHOWS', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=2bf52839930529f99103629d73a7eddf&collectionType=tvshows' },
@@ -3832,6 +3834,45 @@
             
             for (const collection of JELLYFIN_CONFIG.COLLECTIONS) {
                 try {
+                    // ── SPECIAL: Live TV card (not a Jellyfin collection) ──
+                    if (collection.id === 'live-tv') {
+                        const navItem = document.createElement('div');
+                        navItem.className = 'category-nav-item';
+                        navItem.onclick = () => window.location.href = 'live-tv.html';
+                        navItem.style.cssText = 'background: linear-gradient(135deg, #1a0505 0%, #2e0808 60%, #1a0505 100%); border: 2px solid rgba(192,39,45,0.6); position: relative; overflow: hidden;';
+                        navItem.innerHTML = `
+                            <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 70% 30%, rgba(192,39,45,0.25) 0%, transparent 60%);pointer-events:none;"></div>
+                            <div class="category-nav-overlay" style="background:linear-gradient(0deg,rgba(8,8,8,0.9) 0%,transparent 60%);">
+                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                                    <div style="width:8px;height:8px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
+                                    <span style="font-size:10px;color:#E8333A;font-weight:700;letter-spacing:2px;">LIVE NOW</span>
+                                </div>
+                                <div class="category-nav-name" style="color:#ffd700;">📡 LIVE TV</div>
+                                <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;">150+ Channels</div>
+                            </div>
+                            <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
+                        `;
+                        navScroll.appendChild(navItem);
+                        continue;
+                    }
+
+                    // ── SPECIAL: Kids Corner and Collections (local pages) ──
+                    if (collection.id === 'kids-corner' || collection.id === '9d7ad6afe9afa2dab1a2f6e00ad28fa6') {
+                        const navItem = document.createElement('div');
+                        navItem.className = 'category-nav-item';
+                        navItem.onclick = () => window.location.href = collection.url;
+                        navItem.innerHTML = `
+                            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300" 
+                                 alt="${collection.name}" 
+                                 class="category-nav-image" loading="lazy">
+                            <div class="category-nav-overlay">
+                                <div class="category-nav-name">${collection.name}</div>
+                            </div>
+                        `;
+                        navScroll.appendChild(navItem);
+                        continue;
+                    }
+
                     // Get collection info to determine type
                     const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collection.id}`, {});
                     
@@ -4534,6 +4575,12 @@
     // Get collection/category info from config
     const collection = JELLYFIN_CONFIG.COLLECTIONS.find(c => c.id === collectionId);
     const collectionName = collection ? collection.name : 'Category';
+
+    // Special handling for Live TV
+    if (collectionId === 'live-tv') {
+        window.location.href = 'live-tv.html';
+        return;
+    }
     
     // Special handling for Collections - redirect to collections browser
     if (collectionName === '🎬 Collections' || collectionId === '9d7ad6afe9afa2dab1a2f6e00ad28fa6') {
