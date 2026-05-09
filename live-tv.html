@@ -619,9 +619,9 @@
 
 <!-- NAV -->
 <nav class="topnav">
-  <a href="index.html" class="nav-logo">FLM<span>TV</span></a>
+  <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
+    <li><a href="home.html">Home</a></li>
     <li><a href="browse.html">Browse</a></li>
     <li><a href="live-tv.html" class="active">Live TV</a></li>
   </ul>
@@ -666,24 +666,42 @@
       </div>
     </div>
 
-    <!-- RIGHT: JELLYFIN CHANNEL GUIDE IFRAME -->
+    <!-- RIGHT: CHANNEL SIDEBAR -->
     <div class="channel-sidebar">
       <div class="sidebar-header">
         <div class="sidebar-title">Channel Guide</div>
-        <div class="sidebar-count">2,500+ Live Channels</div>
+        <div class="sidebar-count" id="chCount">Loading channels...</div>
       </div>
-      <div class="sidebar-note">
-        <span style="color:var(--gold-dim);font-size:11px;letter-spacing:1px;">
-          📺 Click any channel to watch &nbsp;·&nbsp; Powered by The Vault
-        </span>
+
+      <div class="search-wrap">
+        <input class="search-input" id="channelSearch" type="text" placeholder="Search channels..." oninput="searchChannels(this.value)">
       </div>
-      <iframe
-        id="jellyfinFrame"
-        src="https://flmtv26.duckdns.org:8920/web/index.html#!/livetv.html?tab=channels"
-        style="width:100%;flex:1;border:none;background:#000;min-height:550px;"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-      ></iframe>
+
+      <div class="channel-filter">
+        <button class="filter-btn active" onclick="filterChannels('all', this)">All</button>
+        <button class="filter-btn" onclick="filterChannels('FLM', this)">FLM</button>
+        <button class="filter-btn" onclick="filterChannels('News', this)">News</button>
+        <button class="filter-btn" onclick="filterChannels('Music', this)">Music</button>
+        <button class="filter-btn" onclick="filterChannels('Sports', this)">Sports</button>
+        <button class="filter-btn" onclick="filterChannels('Movies', this)">Movies</button>
+      </div>
+
+      <div class="channel-list" id="channelList">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- VAULT BUTTON -->
+      <div style="padding:14px 16px;border-top:1px solid rgba(201,168,76,0.15);background:var(--dark3);">
+        <a href="https://flmtv26.duckdns.org:8920/web/index.html#!/livetv.html" target="_blank" style="
+          display:flex;align-items:center;justify-content:center;gap:8px;
+          background:var(--gold);color:#000;text-decoration:none;
+          font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;
+          letter-spacing:2px;padding:10px 16px;border-radius:2px;
+          text-transform:uppercase;transition:background 0.2s;
+        " onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">
+          📺 Browse 2,500+ Channels in The Vault
+        </a>
+      </div>
     </div>
 
   </div>
@@ -970,15 +988,18 @@ function retryStream() {
 
 // ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  // Render FLM channel immediately
-  renderChannels();
-  renderRail();
-  document.getElementById('chCount').textContent = '1 channel • Loading more...';
-
-  // Start FLM stream
+  // Start FLM stream immediately — this is the priority
   const flm = FLM_CHANNELS[0];
   currentStreamUrl = flm.url;
+  currentChannelId = flm.id;
   loadStream(flm.url);
+
+  // Render channel list
+  try { renderChannels(); } catch(e) { console.warn('renderChannels:', e); }
+  try { renderRail(); } catch(e) { console.warn('renderRail:', e); }
+
+  const chCount = document.getElementById('chCount');
+  if (chCount) chCount.textContent = '1 channel • Loading more...';
 
   // Load additional channels from M3U
   loadM3UChannels();
