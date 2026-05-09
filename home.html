@@ -3848,14 +3848,15 @@
                         navItem.onclick = () => window.location.href = 'live-stations.html';
                         navItem.style.cssText = 'background: linear-gradient(135deg, #050a1a 0%, #0a1530 60%, #050a1a 100%); border: 2px solid rgba(192,39,45,0.5); position: relative; overflow: hidden;';
                         navItem.innerHTML = `
-                            <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 70% 30%, rgba(192,39,45,0.2) 0%, transparent 60%);pointer-events:none;"></div>
-                            <div class="category-nav-overlay" style="background:linear-gradient(0deg,rgba(8,8,8,0.9) 0%,transparent 60%);">
-                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                                    <div style="width:8px;height:8px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
-                                    <span style="font-size:10px;color:#E8333A;font-weight:700;letter-spacing:2px;">LIVE</span>
+                            <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%, rgba(192,39,45,0.15) 0%, transparent 70%);pointer-events:none;"></div>
+                            <div class="category-nav-overlay" style="background:linear-gradient(0deg,rgba(8,8,8,0.95) 0%,transparent 50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12px;text-align:center;">
+                                <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px;">
+                                    <div style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
+                                    <span style="font-size:10px;color:#E8333A;font-weight:700;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;">LIVE</span>
                                 </div>
-                                <div class="category-nav-name" style="color:#ffd700;font-size:18px;">TV STATIONS</div>
-                                <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;">2,500+ Free Channels</div>
+                                <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;line-height:0.9;letter-spacing:4px;">TV</div>
+                                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#ffd700;letter-spacing:4px;line-height:1;">STATIONS</div>
+                                <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
                             </div>
                             <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
                         `;
