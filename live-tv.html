@@ -879,7 +879,7 @@ function filterChannels(cat, btn) {
 function switchChannel(ch) {
   // Non-FLM channels can't play in browser due to CORS — open in Jellyfin Live TV
   if (!ch.isFLM) {
-    window.open('http://flmtv26.duckdns.org:8096/web/index.html#!/livetv.html', '_blank');
+    window.open('https://flmtv26.duckdns.org:8920/web/index.html#!/livetv.html?tab=channels', '_blank');
     return;
   }
 
