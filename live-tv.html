@@ -224,6 +224,13 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-height: 600px;
+  }
+
+  .sidebar-note {
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    background: rgba(201,168,76,0.03);
   }
 
   .sidebar-header {
@@ -659,29 +666,24 @@
       </div>
     </div>
 
-    <!-- RIGHT: CHANNEL SIDEBAR -->
+    <!-- RIGHT: JELLYFIN CHANNEL GUIDE IFRAME -->
     <div class="channel-sidebar">
       <div class="sidebar-header">
         <div class="sidebar-title">Channel Guide</div>
-        <div class="sidebar-count" id="chCount">Loading channels...</div>
+        <div class="sidebar-count">2,500+ Live Channels</div>
       </div>
-
-      <div class="search-wrap">
-        <input class="search-input" id="channelSearch" type="text" placeholder="Search channels..." oninput="searchChannels(this.value)">
+      <div class="sidebar-note">
+        <span style="color:var(--gold-dim);font-size:11px;letter-spacing:1px;">
+          📺 Click any channel to watch &nbsp;·&nbsp; Powered by The Vault
+        </span>
       </div>
-
-      <div class="channel-filter">
-        <button class="filter-btn active" onclick="filterChannels('all', this)">All</button>
-        <button class="filter-btn" onclick="filterChannels('FLM', this)">FLM</button>
-        <button class="filter-btn" onclick="filterChannels('News', this)">News</button>
-        <button class="filter-btn" onclick="filterChannels('Music', this)">Music</button>
-        <button class="filter-btn" onclick="filterChannels('Sports', this)">Sports</button>
-        <button class="filter-btn" onclick="filterChannels('Movies', this)">Movies</button>
-      </div>
-
-      <div class="channel-list" id="channelList">
-        <!-- populated by JS -->
-      </div>
+      <iframe
+        id="jellyfinFrame"
+        src="https://flmtv26.duckdns.org:8920/web/index.html#!/livetv.html?tab=channels"
+        style="width:100%;flex:1;border:none;background:#000;min-height:550px;"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+      ></iframe>
     </div>
 
   </div>
