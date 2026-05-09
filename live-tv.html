@@ -794,12 +794,13 @@ function renderChannels() {
     const item = document.createElement('div');
     item.className = 'channel-item' + (ch.id === currentChannelId ? ' active' : '');
     item.dataset.id = ch.id;
+    const extIcon = ch.isFLM ? '' : `<span title="Opens in Jellyfin" style="font-size:9px;color:var(--text-muted);margin-left:2px;">↗</span>`;
 
     item.innerHTML = `
       <div class="ch-num">${ch.number}</div>
       <div class="ch-thumb">${ch.logo ? `<img src="${ch.logo}" onerror="this.style.display='none'">` : abbr(ch.name)}</div>
       <div class="ch-info">
-        <div class="ch-name">${ch.name}</div>
+        <div class="ch-name">${ch.name}${extIcon}</div>
         <div class="ch-category">${ch.category || 'Live TV'}</div>
       </div>
       <div class="ch-live-indicator"></div>
@@ -876,6 +877,12 @@ function filterChannels(cat, btn) {
 
 // ── SWITCH CHANNEL ────────────────────────────────────────────
 function switchChannel(ch) {
+  // Non-FLM channels can't play in browser due to CORS — open in Jellyfin Live TV
+  if (!ch.isFLM) {
+    window.open('http://flmtv26.duckdns.org:8096/web/index.html#!/livetv.html', '_blank');
+    return;
+  }
+
   currentChannelId = ch.id;
   currentStreamUrl = ch.url;
 
