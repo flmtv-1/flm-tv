@@ -2797,7 +2797,7 @@
                         <div class="live-showcase-sub">Las Vegas · Worldwide</div>
                     </div>
                     <div class="live-showcase-actions">
-                        <a href="flm-live.html" class="live-watch-btn">
+                        <a href="live.html" class="live-watch-btn">
                             <i class="fas fa-play"></i> Watch Live
                         </a>
                         <button class="live-vol-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
@@ -3443,7 +3443,7 @@
     PLAYER_SERVER: 'https://flmtv.com/jellyfin',
     
     COLLECTIONS: [
-        { id: 'live-tv', name: '📡 LIVE TV', url: 'flm-live.html', hideFromCarousel: true },
+        { id: 'live-tv', name: '📡 LIVE TV', url: 'live.html', hideFromCarousel: true },
         { id: 'live-stations', name: '📺 TV STATIONS', url: 'live-stations.html', hideFromCarousel: true },
         { id: '689c3f2fb8ec0ad205e3d8a10f2374c3', name: 'MOVIES', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=689c3f2fb8ec0ad205e3d8a10f2374c3&collectionType=movies' },
         { id: 'd90d03c78404f7ea661bd134d6f74ed8', name: 'MORE MOVIES', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=d90d03c78404f7ea661bd134d6f74ed8&collectionType=movies' },
@@ -4583,7 +4583,7 @@
 
     // Special handling for Live TV
     if (collectionId === 'live-tv') {
-        window.location.href = 'flm-live.html';
+        window.location.href = 'live.html';
         return;
     }
 
