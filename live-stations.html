@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLM TV — Live Stations</title>
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --gold: #C9A84C; --gold-light: #E8C97A; --gold-dim: #7A6330;
+  --red: #C0272D; --red-bright: #E8333A;
+  --black: #070709; --dark: #0E0E13; --dark2: #14141A;
+  --dark3: #1C1C24; --dark4: #26262F;
+  --text: #F0EDE8; --text-dim: #888898; --text-muted: #444450;
+  --live-green: #00E676;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--black); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+/* NAV */
+.topnav { position:sticky; top:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:0 32px; height:60px; background:rgba(7,7,9,0.97); border-bottom:1px solid rgba(201,168,76,0.2); backdrop-filter:blur(12px); }
+.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:5px; color:var(--gold); text-decoration:none; }
+.nav-logo span { color:var(--red); }
+.nav-links { display:flex; gap:24px; list-style:none; }
+.nav-links a { color:var(--text-dim); text-decoration:none; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; transition:color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color:var(--gold); }
+.live-pill { display:flex; align-items:center; gap:7px; background:var(--red); color:#fff; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:7px 16px; border-radius:2px; }
+.live-pill:hover { background:var(--red-bright); }
+.live-dot { width:7px; height:7px; border-radius:50%; background:#fff; animation:blink 1.2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* HERO */
+.hero { position:relative; overflow:hidden; padding:44px 32px 32px; background:linear-gradient(180deg,rgba(192,39,45,0.07) 0%,transparent 100%); text-align:center; }
+.hero-ghost { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:160px; letter-spacing:16px; color:rgba(201,168,76,0.025); white-space:nowrap; pointer-events:none; user-select:none; }
+.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--gold-dim); border:1px solid rgba(201,168,76,0.18); padding:5px 14px; border-radius:2px; margin-bottom:16px; }
+.hero-title { font-family:'Bebas Neue',sans-serif; font-size:64px; letter-spacing:6px; line-height:1; color:var(--text); margin-bottom:8px; }
+.hero-title em { color:var(--gold); font-style:normal; }
+.hero-sub { font-family:'Barlow Condensed',sans-serif; font-size:16px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; margin-bottom:24px; }
+.back-btn { display:inline-flex; align-items:center; gap:8px; background:transparent; border:1px solid rgba(201,168,76,0.3); color:var(--gold); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:8px 20px; border-radius:2px; text-decoration:none; text-transform:uppercase; transition:all 0.2s; }
+.back-btn:hover { background:rgba(201,168,76,0.1); }
+
+/* CONTROLS */
+.controls-bar { display:flex; align-items:center; gap:12px; padding:14px 32px; background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.04); flex-wrap:wrap; }
+.search-box { display:flex; align-items:center; gap:8px; background:var(--dark3); border:1px solid rgba(201,168,76,0.2); border-radius:3px; padding:8px 14px; flex:1; min-width:200px; max-width:340px; }
+.search-box i { color:var(--gold-dim); font-size:13px; }
+.search-box input { background:transparent; border:none; outline:none; color:var(--text); font-family:'Barlow',sans-serif; font-size:13px; width:100%; }
+.search-box input::placeholder { color:var(--text-muted); }
+.filter-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+.ftab { background:transparent; border:1px solid var(--dark4); color:var(--text-dim); font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:1.5px; padding:6px 14px; border-radius:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; white-space:nowrap; }
+.ftab:hover { border-color:var(--gold-dim); color:var(--gold); }
+.ftab.active { background:var(--gold); border-color:var(--gold); color:#000; }
+.channel-count { margin-left:auto; font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--text-muted); letter-spacing:1px; white-space:nowrap; }
+
+/* GRID */
+.grid-wrap { max-width:1400px; margin:0 auto; padding:28px 32px 80px; }
+.channel-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+
+/* CHANNEL CARD */
+.ch-card { background:var(--dark2); border:1px solid rgba(255,255,255,0.06); border-radius:6px; overflow:hidden; cursor:pointer; transition:all 0.2s; text-decoration:none; display:flex; flex-direction:column; position:relative; }
+.ch-card:hover { border-color:var(--gold-dim); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.4); }
+.ch-card:hover .ch-play-overlay { opacity:1; }
+
+.ch-img-wrap { width:100%; aspect-ratio:16/9; background:var(--dark3); display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; }
+.ch-img-wrap img { width:100%; height:100%; object-fit:contain; padding:10px; transition:transform 0.2s; }
+.ch-card:hover .ch-img-wrap img { transform:scale(1.05); }
+.ch-abbr { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--gold-dim); text-align:center; padding:8px; }
+
+.ch-play-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; }
+.ch-play-btn { width:42px; height:42px; border-radius:50%; background:var(--red); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; padding-left:3px; }
+
+.ch-info { padding:10px 12px; border-top:1px solid rgba(255,255,255,0.04); }
+.ch-name { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.5px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ch-meta { font-size:10px; color:var(--text-muted); margin-top:2px; letter-spacing:0.5px; }
+
+/* LIVE BADGE */
+.ch-live-badge { position:absolute; top:6px; left:6px; display:flex; align-items:center; gap:4px; background:var(--red); color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:700; letter-spacing:1.5px; padding:2px 6px; border-radius:2px; }
+.badge-dot { width:5px; height:5px; border-radius:50%; background:#fff; animation:blink 1s infinite; }
+
+/* LOADING */
+.loading-state { text-align:center; padding:80px 32px; }
+.loading-spinner { width:48px; height:48px; border:3px solid rgba(201,168,76,0.15); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 20px; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loading-text { font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; }
+
+/* ERROR */
+.error-state { text-align:center; padding:80px 32px; }
+.error-icon { font-size:48px; margin-bottom:16px; opacity:0.4; }
+.error-text { font-family:'Barlow Condensed',sans-serif; font-size:18px; letter-spacing:2px; color:var(--text-dim); margin-bottom:8px; }
+.error-sub { font-size:13px; color:var(--text-muted); margin-bottom:24px; }
+.retry-btn { display:inline-flex; align-items:center; gap:8px; background:var(--gold); color:#000; border:none; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:2px; padding:10px 24px; border-radius:2px; cursor:pointer; text-transform:uppercase; }
+
+/* HIDDEN */
+.ch-card.hidden { display:none !important; }
+
+/* FOOTER */
+.page-footer { text-align:center; padding:32px; border-top:1px solid rgba(201,168,76,0.1); color:var(--text-muted); font-size:12px; letter-spacing:1px; }
+.page-footer a { color:var(--gold-dim); text-decoration:none; }
+
+/* RESPONSIVE */
+@media(max-width:640px) {
+  .topnav{padding:0 16px;} .nav-links{display:none;}
+  .hero{padding:32px 16px 24px;} .hero-ghost{display:none;} .hero-title{font-size:46px;}
+  .grid-wrap{padding:16px 12px 60px;}
+  .controls-bar{padding:12px 16px;}
+  .channel-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="live-tv.html">Live TV</a></li>
+    <li><a href="live-stations.html" class="active">Stations</a></li>
+    <li><a href="schedule.html">Schedule</a></li>
+  </ul>
+  <a href="live-tv.html" class="live-pill"><div class="live-dot"></div> WATCH FLM LIVE</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-ghost">STATIONS</div>
+  <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · WORLDWIDE</div>
+  <h1 class="hero-title">LIVE <em>STATIONS</em></h1>
+  <div class="hero-sub">2,500+ Free Live Channels • Powered by The Vault</div>
+  <a href="live-tv.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Live TV</a>
+</section>
+
+<div class="controls-bar">
+  <div class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="searchInput" placeholder="Search stations..." oninput="filterChannels()">
+  </div>
+  <div class="filter-tabs">
+    <button class="ftab active" onclick="setFilter('all',this)">All</button>
+    <button class="ftab" onclick="setFilter('news',this)">News</button>
+    <button class="ftab" onclick="setFilter('music',this)">Music</button>
+    <button class="ftab" onclick="setFilter('sports',this)">Sports</button>
+    <button class="ftab" onclick="setFilter('movies',this)">Movies</button>
+    <button class="ftab" onclick="setFilter('kids',this)">Kids</button>
+  </div>
+  <div class="channel-count" id="channelCount">Loading...</div>
+</div>
+
+<div class="grid-wrap">
+  <div id="loadingState" class="loading-state">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Tuning in to 2,500+ stations...</div>
+  </div>
+  <div id="errorState" class="error-state" style="display:none;">
+    <div class="error-icon">📡</div>
+    <div class="error-text">Could Not Load Stations</div>
+    <div class="error-sub">The Vault may be offline or unreachable</div>
+    <button class="retry-btn" onclick="loadChannels()"><i class="fas fa-redo"></i> Retry</button>
+  </div>
+  <div class="channel-grid" id="channelGrid" style="display:none;"></div>
+</div>
+
+<div class="page-footer">
+  2,500+ Free Live Channels &nbsp;·&nbsp; <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp; Las Vegas &amp; Worldwide<br>
+  <a href="live-tv.html">← Back to Live TV</a>
+</div>
+
+<script>
+const JELLYFIN = {
+  server: 'https://flmtv26.duckdns.org:8920',
+  apiKey: '62131ee22c0141c6b651be75a7444350',
+  serverId: 'db6bb6388c8c4c70825698639853ede6',
+  userId: '2562494c1df24f8789cd0ad8a38a7bf4'
+};
+
+let allChannels = [];
+let currentFilter = 'all';
+
+// ── FETCH CHANNELS FROM JELLYFIN ──────────────────────────────
+async function loadChannels() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('errorState').style.display = 'none';
+  document.getElementById('channelGrid').style.display = 'none';
+
+  try {
+    const url = `${JELLYFIN.server}/LiveTv/Channels?api_key=${JELLYFIN.apiKey}&UserId=${JELLYFIN.userId}&Limit=2507&EnableImages=true&ImageTypeLimit=1&Fields=Overview,Genres`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('API error: ' + res.status);
+    const data = await res.json();
+
+    allChannels = data.Items || [];
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('channelGrid').style.display = 'grid';
+    renderChannels(allChannels);
+
+  } catch(e) {
+    console.error('Failed to load channels:', e);
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
+  }
+}
+
+// ── RENDER CHANNELS ───────────────────────────────────────────
+function renderChannels(channels) {
+  const grid = document.getElementById('channelGrid');
+  grid.innerHTML = '';
+
+  const visible = channels.filter(ch => {
+    if (currentFilter === 'all') return true;
+    const name = (ch.Name || '').toLowerCase();
+    const genres = (ch.Genres || []).join(' ').toLowerCase();
+    const combined = name + ' ' + genres;
+    return combined.includes(currentFilter);
+  });
+
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const filtered = query
+    ? visible.filter(ch => (ch.Name || '').toLowerCase().includes(query))
+    : visible;
+
+  document.getElementById('channelCount').textContent = filtered.length + ' stations';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:2px;">NO STATIONS FOUND</div>`;
+    return;
+  }
+
+  filtered.forEach(ch => {
+    const id = ch.Id;
+    const name = ch.Name || 'Unknown';
+    const number = ch.ChannelNumber || '';
+    const jellyfinUrl = `${JELLYFIN.server}/web/index.html#/details?id=${id}&serverId=${JELLYFIN.serverId}`;
+
+    // Image URL
+    let imgHtml = '';
+    if (ch.ImageTags && ch.ImageTags.Primary) {
+      const imgUrl = `${JELLYFIN.server}/Items/${id}/Images/Primary?api_key=${JELLYFIN.apiKey}&maxHeight=200&quality=85`;
+      imgHtml = `<img src="${imgUrl}" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                 <div class="ch-abbr" style="display:none;">${abbr(name)}</div>`;
+    } else {
+      imgHtml = `<div class="ch-abbr">${abbr(name)}</div>`;
+    }
+
+    const card = document.createElement('a');
+    card.className = 'ch-card';
+    card.href = jellyfinUrl;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.innerHTML = `
+      <div class="ch-img-wrap">
+        ${imgHtml}
+        <div class="ch-play-overlay">
+          <div class="ch-play-btn"><i class="fas fa-play"></i></div>
+        </div>
+        <div class="ch-live-badge"><div class="badge-dot"></div>LIVE</div>
+      </div>
+      <div class="ch-info">
+        <div class="ch-name">${name}</div>
+        <div class="ch-meta">${number ? 'CH ' + number : 'Live TV'}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ── FILTER ────────────────────────────────────────────────────
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderChannels(allChannels);
+}
+
+function filterChannels() {
+  renderChannels(allChannels);
+}
+
+function abbr(name) {
+  if (!name) return '?';
+  return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 4);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+loadChannels();
+</script>
+</body>
+</html>
