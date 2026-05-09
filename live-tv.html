@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLM TV — Live Television</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #7A6330;
+    --red: #C0272D;
+    --red-bright: #E8333A;
+    --black: #080808;
+    --dark: #111111;
+    --dark2: #1A1A1A;
+    --dark3: #242424;
+    --dark4: #2E2E2E;
+    --text: #F0EDE8;
+    --text-dim: #999990;
+    --live-green: #00E676;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TOP NAV ── */
+  .topnav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 60px;
+    background: linear-gradient(180deg, rgba(8,8,8,0.98) 0%, rgba(8,8,8,0.0) 100%);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+  /* ── HERO PLAYER SECTION ── */
+  .hero {
+    padding-top: 60px;
+    background: var(--dark);
+    position: relative;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    min-height: calc(100vh - 60px);
+  }
+
+  /* Player side */
+  .player-side {
+    position: relative;
+    background: #000;
+  }
+
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #000;
+  }
+
+  #main-player {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+  }
+
+  .player-overlay {
+    position: absolute;
+    bottom: 48px; left: 0; right: 0;
+    padding: 16px 28px 10px;
+    background: linear-gradient(0deg, rgba(8,8,8,0.75) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #fff;
+    animation: pulse 1.2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .now-playing-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  }
+
+  .now-playing-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* Below video — channel info bar */
+  .channel-info-bar {
+    padding: 16px 28px;
+    background: var(--dark2);
+    border-top: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .channel-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 70px;
+  }
+
+  .channel-details { flex: 1; }
+
+  .channel-name-big {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .channel-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .channel-logo-badge {
+    width: 56px; height: 56px;
+    border-radius: 6px;
+    background: var(--dark3);
+    border: 1px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.2;
+    overflow: hidden;
+  }
+
+  .channel-logo-badge img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* ── CHANNEL LIST SIDEBAR ── */
+  .channel-sidebar {
+    background: var(--dark2);
+    border-left: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    background: var(--dark3);
+  }
+
+  .sidebar-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+
+  .sidebar-count {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    letter-spacing: 1px;
+  }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--dark3);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    padding: 8px 12px 8px 34px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237A6330' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+  }
+
+  .search-input::placeholder { color: var(--text-dim); }
+  .search-input:focus { border-color: var(--gold-dim); }
+
+  .channel-filter {
+    display: flex;
+    gap: 0;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--dark4);
+    color: var(--text-dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .filter-btn.active { background: var(--gold); border-color: var(--gold); color: var(--black); }
+
+  .channel-list {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dim) transparent;
+  }
+
+  .channel-list::-webkit-scrollbar { width: 4px; }
+  .channel-list::-webkit-scrollbar-track { background: transparent; }
+  .channel-list::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+  .channel-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .channel-item:hover { background: rgba(201,168,76,0.06); }
+
+  .channel-item.active {
+    background: rgba(201,168,76,0.12);
+    border-left: 3px solid var(--gold);
+  }
+
+  .channel-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+  }
+
+  .ch-thumb {
+    width: 44px; height: 44px;
+    border-radius: 4px;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.2;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .ch-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .ch-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    color: var(--gold-dim);
+    min-width: 28px;
+    flex-shrink: 0;
+  }
+
+  .ch-info { flex: 1; min-width: 0; }
+
+  .ch-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ch-category {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 1px;
+    letter-spacing: 0.5px;
+  }
+
+  .ch-live-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--live-green);
+    flex-shrink: 0;
+    animation: pulse 1.5s infinite;
+  }
+
+  .player-loading {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.85);
+    gap: 16px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 3;
+  }
+
+  .player-loading.visible { opacity: 1; }
+
+  .loading-ring {
+    width: 48px; height: 48px;
+    border: 3px solid rgba(201,168,76,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  /* ── ERROR STATE ── */
+  .player-error {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.9);
+    gap: 12px;
+    text-align: center;
+    padding: 32px;
+    z-index: 3;
+  }
+
+  .player-error.visible { display: flex; }
+
+  .error-icon {
+    font-size: 40px;
+    opacity: 0.4;
+  }
+
+  .error-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .error-sub {
+    font-size: 12px;
+    color: var(--dark4);
+  }
+
+  .retry-btn {
+    margin-top: 8px;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 8px 24px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER TICKER ── */
+  .ticker-bar {
+    background: var(--red);
+    padding: 8px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 30s linear infinite;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* ── BOTTOM CHANNEL RAIL ── */
+  .channel-rail-section {
+    padding: 32px;
+    background: var(--black);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+  }
+
+  .channel-rail {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .rail-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .rail-card:hover {
+    border-color: var(--gold-dim);
+    background: var(--dark3);
+    transform: translateY(-2px);
+  }
+
+  .rail-card.active {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  .rail-logo {
+    width: 36px; height: 36px;
+    border-radius: 3px;
+    background: var(--dark3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-align: center;
+    line-height: 1.2;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .rail-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+  .rail-info { min-width: 0; }
+
+  .rail-num {
+    font-size: 10px;
+    color: var(--gold-dim);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .rail-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+    }
+    .channel-sidebar {
+      border-left: none;
+      border-top: 1px solid rgba(201,168,76,0.2);
+      max-height: 400px;
+    }
+    .topnav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .channel-rail-section { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a href="index.html" class="nav-logo">FLM<span>TV</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="browse.html">Browse</a></li>
+    <li><a href="live-tv.html" class="active">Live TV</a></li>
+  </ul>
+</nav>
+
+<!-- HERO: PLAYER + SIDEBAR -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <!-- LEFT: VIDEO PLAYER -->
+    <div class="player-side">
+      <div class="video-wrapper">
+        <video id="main-player" controls playsinline></video>
+
+        <div class="player-loading" id="playerLoading">
+          <div class="loading-ring"></div>
+          <div class="loading-text">Tuning In...</div>
+        </div>
+
+        <div class="player-error" id="playerError">
+          <div class="error-icon">📡</div>
+          <div class="error-text">Stream Unavailable</div>
+          <div class="error-sub">This channel may be offline or loading</div>
+          <button class="retry-btn" onclick="retryStream()">Retry</button>
+        </div>
+
+        <div class="player-overlay">
+          <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+          <div class="now-playing-title" id="nowPlayingTitle">FLM TV — Channel 26.5</div>
+          <div class="now-playing-sub" id="nowPlayingSub">Your Multicultural Network • Las Vegas & Worldwide</div>
+        </div>
+      </div>
+
+      <!-- CHANNEL INFO BAR -->
+      <div class="channel-info-bar">
+        <div class="channel-number" id="currentChNum">26.5</div>
+        <div class="channel-details">
+          <div class="channel-name-big" id="currentChName">FLM TV</div>
+          <div class="channel-desc" id="currentChDesc">Las Vegas Multicultural Broadcast Network • flmtv.com</div>
+        </div>
+        <div class="channel-logo-badge" id="currentChLogo">FLM<br>TV</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: CHANNEL SIDEBAR -->
+    <div class="channel-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Channel Guide</div>
+        <div class="sidebar-count" id="chCount">Loading channels...</div>
+      </div>
+
+      <div class="search-wrap">
+        <input class="search-input" id="channelSearch" type="text" placeholder="Search channels..." oninput="searchChannels(this.value)">
+      </div>
+
+      <div class="channel-filter">
+        <button class="filter-btn active" onclick="filterChannels('all', this)">All</button>
+        <button class="filter-btn" onclick="filterChannels('FLM', this)">FLM</button>
+        <button class="filter-btn" onclick="filterChannels('News', this)">News</button>
+        <button class="filter-btn" onclick="filterChannels('Music', this)">Music</button>
+        <button class="filter-btn" onclick="filterChannels('Sports', this)">Sports</button>
+        <button class="filter-btn" onclick="filterChannels('Movies', this)">Movies</button>
+      </div>
+
+      <div class="channel-list" id="channelList">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-inner">
+    🎬 FLM TV Channel 26.5 Las Vegas &nbsp;&nbsp;&bull;&nbsp;&nbsp; Streaming Worldwide at FLMTV.com &nbsp;&nbsp;&bull;&nbsp;&nbsp; Multicultural Entertainment, Music & News &nbsp;&nbsp;&bull;&nbsp;&nbsp; Watch Live Now &nbsp;&nbsp;&bull;&nbsp;&nbsp; 🎵 Zaina Juliette &nbsp;&nbsp;&bull;&nbsp;&nbsp; FLM TV — Where Every Culture Shines &nbsp;&nbsp;&bull;&nbsp;&nbsp; 📺 Available on Roku &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  </div>
+</div>
+
+<!-- BOTTOM CHANNEL RAIL -->
+<section class="channel-rail-section">
+  <div class="section-header">
+    <div class="section-title">All Channels</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="channel-rail" id="channelRail">
+    <!-- populated by JS -->
+  </div>
+</section>
+
+<script>
+// ── CHANNEL DATA ──────────────────────────────────────────────
+// FLM's own channel first, then populated from M3U sources
+const FLM_CHANNELS = [
+  {
+    id: 'flmtv',
+    number: '26.5',
+    name: 'FLM TV',
+    desc: 'Las Vegas Multicultural Broadcast Network',
+    category: 'FLM',
+    url: 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8',
+    logo: null,
+    isFLM: true
+  }
+];
+
+// M3U sources — Jellyfin "The Vault" proxied channels
+// These will be loaded from your tuner feeds
+const M3U_SOURCES = [
+  'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8'
+];
+
+let allChannels = [...FLM_CHANNELS];
+let filteredChannels = [...allChannels];
+let currentChannelId = 'flmtv';
+let hlsInstance = null;
+let currentStreamUrl = null;
+
+// ── M3U PARSER ────────────────────────────────────────────────
+function parseM3U(text) {
+  const lines = text.split('\n');
+  const channels = [];
+  let current = null;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.startsWith('#EXTINF:')) {
+      current = {};
+      // Parse name
+      const nameMatch = line.match(/,(.+)$/);
+      if (nameMatch) current.name = nameMatch[1].trim();
+      // Parse tvg attrs
+      const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+      const groupMatch = line.match(/group-title="([^"]+)"/);
+      const idMatch = line.match(/tvg-id="([^"]+)"/);
+      if (logoMatch) current.logo = logoMatch[1];
+      if (groupMatch) current.category = groupMatch[1];
+      if (idMatch) current.tvgId = idMatch[1];
+    } else if (line && !line.startsWith('#') && current) {
+      current.url = line;
+      current.id = 'ch_' + channels.length;
+      current.number = String(200 + channels.length);
+      current.desc = current.category || 'Live TV';
+      channels.push(current);
+      current = null;
+    }
+  }
+  return channels;
+}
+
+// ── LOAD M3U CHANNELS ─────────────────────────────────────────
+async function loadM3UChannels() {
+  for (const src of M3U_SOURCES) {
+    try {
+      const res = await fetch(src);
+      if (!res.ok) continue;
+      const text = await res.text();
+      const parsed = parseM3U(text);
+      // Limit to first 150 to avoid overwhelming the UI
+      allChannels = [...FLM_CHANNELS, ...parsed.slice(0, 150)];
+      filteredChannels = [...allChannels];
+      renderChannels();
+      renderRail();
+      document.getElementById('chCount').textContent = allChannels.length + ' channels available';
+    } catch(e) {
+      console.warn('Could not load M3U source:', src, e);
+    }
+  }
+}
+
+// ── RENDER SIDEBAR ────────────────────────────────────────────
+function renderChannels() {
+  const list = document.getElementById('channelList');
+  list.innerHTML = '';
+
+  filteredChannels.forEach(ch => {
+    const item = document.createElement('div');
+    item.className = 'channel-item' + (ch.id === currentChannelId ? ' active' : '');
+    item.dataset.id = ch.id;
+
+    item.innerHTML = `
+      <div class="ch-num">${ch.number}</div>
+      <div class="ch-thumb">${ch.logo ? `<img src="${ch.logo}" onerror="this.style.display='none'">` : abbr(ch.name)}</div>
+      <div class="ch-info">
+        <div class="ch-name">${ch.name}</div>
+        <div class="ch-category">${ch.category || 'Live TV'}</div>
+      </div>
+      <div class="ch-live-indicator"></div>
+    `;
+
+    item.addEventListener('click', () => switchChannel(ch));
+    list.appendChild(item);
+  });
+}
+
+// ── RENDER BOTTOM RAIL ────────────────────────────────────────
+function renderRail() {
+  const rail = document.getElementById('channelRail');
+  rail.innerHTML = '';
+
+  allChannels.forEach(ch => {
+    const card = document.createElement('div');
+    card.className = 'rail-card' + (ch.id === currentChannelId ? ' active' : '');
+    card.dataset.id = ch.id;
+
+    card.innerHTML = `
+      <div class="rail-logo">${ch.logo ? `<img src="${ch.logo}" onerror="this.style.display='none'">` : abbr(ch.name)}</div>
+      <div class="rail-info">
+        <div class="rail-num">CH ${ch.number}</div>
+        <div class="rail-name">${ch.name}</div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => switchChannel(ch));
+    rail.appendChild(card);
+  });
+}
+
+function abbr(name) {
+  if (!name) return '?';
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 4);
+}
+
+// ── SEARCH ────────────────────────────────────────────────────
+function searchChannels(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) {
+    filteredChannels = [...allChannels];
+  } else {
+    filteredChannels = allChannels.filter(ch =>
+      ch.name.toLowerCase().includes(q) ||
+      (ch.category || '').toLowerCase().includes(q) ||
+      (ch.number || '').includes(q)
+    );
+  }
+  // Clear active filter btn
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn').classList.add('active');
+  renderChannels();
+}
+
+// ── FILTER ────────────────────────────────────────────────────
+function filterChannels(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('channelSearch').value = '';
+
+  if (cat === 'all') {
+    filteredChannels = [...allChannels];
+  } else if (cat === 'FLM') {
+    filteredChannels = allChannels.filter(ch => ch.isFLM);
+  } else {
+    filteredChannels = allChannels.filter(ch =>
+      (ch.category || '').toLowerCase().includes(cat.toLowerCase())
+    );
+  }
+  renderChannels();
+}
+
+// ── SWITCH CHANNEL ────────────────────────────────────────────
+function switchChannel(ch) {
+  currentChannelId = ch.id;
+  currentStreamUrl = ch.url;
+
+  // Update UI
+  document.getElementById('nowPlayingTitle').textContent = ch.name;
+  document.getElementById('nowPlayingSub').textContent = ch.desc || ch.category || 'Live TV';
+  document.getElementById('currentChNum').textContent = ch.number;
+  document.getElementById('currentChName').textContent = ch.name;
+  document.getElementById('currentChDesc').textContent = ch.desc || ch.category || 'Live Television';
+
+  const logoEl = document.getElementById('currentChLogo');
+  if (ch.logo) {
+    logoEl.innerHTML = `<img src="${ch.logo}" onerror="this.innerHTML='${abbr(ch.name)}'">`;
+  } else {
+    logoEl.textContent = abbr(ch.name);
+  }
+
+  // Highlight active in sidebar
+  document.querySelectorAll('.channel-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === ch.id);
+  });
+  document.querySelectorAll('.rail-card').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === ch.id);
+  });
+
+  loadStream(ch.url);
+}
+
+// ── HLS PLAYER ────────────────────────────────────────────────
+function loadStream(url) {
+  const video = document.getElementById('main-player');
+  const loading = document.getElementById('playerLoading');
+  const error = document.getElementById('playerError');
+
+  error.classList.remove('visible');
+  loading.classList.add('visible');
+
+  if (hlsInstance) {
+    hlsInstance.destroy();
+    hlsInstance = null;
+  }
+
+  if (Hls.isSupported()) {
+    hlsInstance = new Hls({
+      enableWorker: true,
+      lowLatencyMode: true,
+    });
+    hlsInstance.loadSource(url);
+    hlsInstance.attachMedia(video);
+
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+      loading.classList.remove('visible');
+      video.play().catch(() => {});
+    });
+
+    hlsInstance.on(Hls.Events.ERROR, (e, data) => {
+      if (data.fatal) {
+        loading.classList.remove('visible');
+        error.classList.add('visible');
+      }
+    });
+
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Safari native HLS
+    video.src = url;
+    video.addEventListener('loadedmetadata', () => {
+      loading.classList.remove('visible');
+      video.play().catch(() => {});
+    }, { once: true });
+    video.addEventListener('error', () => {
+      loading.classList.remove('visible');
+      error.classList.add('visible');
+    }, { once: true });
+  } else {
+    loading.classList.remove('visible');
+    error.classList.add('visible');
+  }
+}
+
+function retryStream() {
+  if (currentStreamUrl) loadStream(currentStreamUrl);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  // Render FLM channel immediately
+  renderChannels();
+  renderRail();
+  document.getElementById('chCount').textContent = '1 channel • Loading more...';
+
+  // Start FLM stream
+  const flm = FLM_CHANNELS[0];
+  currentStreamUrl = flm.url;
+  loadStream(flm.url);
+
+  // Load additional channels from M3U
+  loadM3UChannels();
+});
+</script>
+</body>
+</html>
