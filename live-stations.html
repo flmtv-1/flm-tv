@@ -190,7 +190,9 @@ async function loadChannels() {
     if (!res.ok) throw new Error('API error: ' + res.status);
     const data = await res.json();
 
-    allChannels = data.Items || [];
+    allChannels = (data.Items || []).filter(ch => 
+      ch.Name && ch.Name.toLowerCase() !== 'unknown' && ch.Name.trim() !== ''
+    );
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('channelGrid').style.display = 'grid';
     renderChannels(allChannels);
