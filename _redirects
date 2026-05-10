@@ -1,1 +1,2 @@
 /jellyfin/*  http://flmtv26.duckdns.org:8096/:splat  200
+/vmix/*  http://10.0.0.4:8088/:splat  200
