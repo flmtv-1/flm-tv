@@ -3,189 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FLM TV — Today's Schedule</title>
+<title>FLM TV — Live Schedule</title>
 <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
-
-:root {
-  --gold: #C9A84C;
-  --gold-light: #E8C97A;
-  --gold-dim: #7A6330;
-  --red: #C0272D;
-  --red-bright: #E8333A;
-  --black: #070709;
-  --dark: #0E0E13;
-  --dark2: #14141A;
-  --dark3: #1C1C24;
-  --dark4: #26262F;
-  --text: #F0EDE8;
-  --text-dim: #888898;
-  --text-muted: #444450;
-  --live-green: #00E676;
-  --ad-blue: #4A9EFF;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--black);
-  color: var(--text);
-  font-family: 'Barlow', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.012) 3px,rgba(0,0,0,0.012) 4px);
-  pointer-events: none; z-index: 999;
-}
-
-/* NAV */
-.topnav {
-  position: sticky; top: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px; height: 60px;
-  background: rgba(7,7,9,0.97);
-  border-bottom: 1px solid rgba(201,168,76,0.2);
-  backdrop-filter: blur(12px);
-}
-.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:5px; color:var(--gold); text-decoration:none; }
-.nav-logo span { color:var(--red); }
-.nav-links { display:flex; gap:24px; list-style:none; }
-.nav-links a { color:var(--text-dim); text-decoration:none; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; transition:color 0.2s; }
-.nav-links a:hover,.nav-links a.active { color:var(--gold); }
-.live-pill { display:flex; align-items:center; gap:7px; background:var(--red); color:#fff; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:7px 16px; border-radius:2px; transition:background 0.2s; }
-.live-pill:hover { background:var(--red-bright); }
-.live-dot { width:7px; height:7px; border-radius:50%; background:#fff; animation:blink 1.2s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
-/* HERO */
-.hero { position:relative; overflow:hidden; padding:48px 32px 36px; background:linear-gradient(180deg,rgba(192,39,45,0.07) 0%,transparent 100%); text-align:center; }
-.hero-ghost { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:180px; letter-spacing:16px; color:rgba(201,168,76,0.025); white-space:nowrap; pointer-events:none; user-select:none; }
-.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--gold-dim); border:1px solid rgba(201,168,76,0.18); padding:5px 14px; border-radius:2px; margin-bottom:18px; }
-.hero-title { font-family:'Bebas Neue',sans-serif; font-size:68px; letter-spacing:6px; line-height:1; color:var(--text); margin-bottom:8px; }
-.hero-title em { color:var(--gold); font-style:normal; }
-.hero-date { font-family:'Barlow Condensed',sans-serif; font-size:17px; letter-spacing:4px; color:var(--text-dim); text-transform:uppercase; margin-bottom:28px; }
-.hero-stats { display:flex; justify-content:center; gap:48px; }
-.stat-num { font-family:'Bebas Neue',sans-serif; font-size:34px; letter-spacing:2px; color:var(--gold); line-height:1; }
-.stat-label { font-size:10px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:3px; }
-
-/* JUMP BAR */
-.jump-bar { display:flex; align-items:center; justify-content:center; gap:16px; padding:14px 32px; background:var(--dark2); border-top:1px solid rgba(201,168,76,0.1); border-bottom:1px solid rgba(201,168,76,0.1); }
-.jump-btn { display:inline-flex; align-items:center; gap:8px; background:transparent; border:1px solid rgba(0,230,118,0.4); color:var(--live-green); font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:2px; padding:8px 20px; border-radius:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; }
-.jump-btn:hover { background:rgba(0,230,118,0.1); }
-.clock-display { font-family:'Share Tech Mono',monospace; font-size:14px; color:var(--text-dim); letter-spacing:2px; }
-
-/* FILTER */
-.filter-bar { display:flex; gap:8px; padding:16px 32px; background:var(--dark); border-bottom:1px solid rgba(255,255,255,0.04); overflow-x:auto; }
-.filter-bar::-webkit-scrollbar { display:none; }
-.ftab { flex-shrink:0; background:transparent; border:1px solid var(--dark4); color:var(--text-dim); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.5px; padding:6px 16px; border-radius:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; }
-.ftab:hover { border-color:var(--gold-dim); color:var(--gold); }
-.ftab.active { background:var(--gold); border-color:var(--gold); color:#000; }
-
-/* SCHEDULE */
-.schedule-wrap { max-width:860px; margin:0 auto; padding:28px 32px 80px; }
-
-.time-block-header { display:flex; align-items:center; gap:14px; padding:24px 0 10px; }
-.time-block-label { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:3px; color:var(--gold-dim); white-space:nowrap; }
-.time-block-line { flex:1; height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent); }
-
-/* SHOW CARD */
-.show-card {
-  display:grid; grid-template-columns:90px 1fr auto;
-  align-items:stretch; gap:0;
-  margin-bottom:3px; border-radius:4px; overflow:hidden;
-  transition:transform 0.15s; position:relative;
-}
-.show-card:not(.live-now):hover { transform:translateX(3px); }
-.show-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; z-index:1; }
-.show-card.upcoming::before { background:var(--dark4); }
-.show-card.live-now::before { background:var(--live-green); }
-.show-card.ad-card::before { background:rgba(74,158,255,0.25); }
-.show-card.flm-promo::before { background:var(--gold-dim); }
-
-.show-time { padding:13px 14px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); text-align:right; display:flex; flex-direction:column; justify-content:center; }
-.show-time-start { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--text); letter-spacing:0.5px; }
-.show-time-end { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); margin-top:2px; }
-
-.show-info { padding:13px 18px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); flex:1; }
-.show-name { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:600; letter-spacing:0.5px; color:var(--text); line-height:1.2; }
-.show-meta { font-size:11px; color:var(--text-muted); margin-top:3px; letter-spacing:0.5px; }
-
-.show-dur { padding:13px 14px; background:var(--dark2); font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-muted); white-space:nowrap; display:flex; align-items:center; }
-
-/* AIRED */
-.show-card.aired .show-time,
-.show-card.aired .show-info,
-.show-card.aired .show-dur { background:rgba(14,14,19,0.5); opacity:0.4; }
-.show-card.aired .show-name { text-decoration:line-through; text-decoration-color:rgba(255,255,255,0.15); }
-
-/* LIVE NOW */
-.show-card.live-now { box-shadow:0 0 0 2px var(--live-green),0 4px 28px rgba(0,230,118,0.12); }
-.show-card.live-now .show-time { background:rgba(0,230,118,0.07); border-right-color:rgba(0,230,118,0.15); }
-.show-card.live-now .show-info { background:rgba(0,230,118,0.05); border-right-color:rgba(0,230,118,0.1); }
-.show-card.live-now .show-dur  { background:rgba(0,230,118,0.04); }
-.show-card.live-now .show-time-start { color:var(--live-green); }
-.show-card.live-now .show-name { color:#fff; font-size:17px; }
-
-.live-badge { display:inline-flex; align-items:center; gap:6px; background:var(--live-green); color:#000; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; padding:2px 8px; border-radius:2px; margin-top:6px; }
-.live-badge-dot { width:5px; height:5px; border-radius:50%; background:#000; animation:blink 1s infinite; }
-
-/* PROGRESS */
-.progress-bar-wrap { grid-column:1/-1; height:3px; background:rgba(0,230,118,0.1); }
-.progress-bar-fill { height:100%; background:var(--live-green); transition:width 1s linear; }
-
-/* AD */
-.show-card.ad-card .show-time,
-.show-card.ad-card .show-info,
-.show-card.ad-card .show-dur { background:rgba(74,158,255,0.03); }
-.show-card.ad-card .show-name { color:var(--ad-blue); font-size:13px; font-weight:500; }
-.show-card.ad-card .show-time-start { color:var(--ad-blue); opacity:0.6; font-size:11px; }
-.show-card.ad-card.aired { opacity:0.2; }
-
-/* FLM PROMO */
-.show-card.flm-promo .show-name { color:var(--gold); font-size:13px; }
-.show-card.flm-promo .show-time,
-.show-card.flm-promo .show-info,
-.show-card.flm-promo .show-dur { background:rgba(201,168,76,0.03); }
-
-.movie-badge { display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:700; letter-spacing:1.5px; color:var(--gold); border:1px solid rgba(201,168,76,0.3); padding:1px 6px; border-radius:2px; margin-left:8px; vertical-align:middle; }
-.flm-tag { font-size:10px; color:var(--gold-dim); letter-spacing:1px; margin-left:6px; font-family:'Barlow Condensed',sans-serif; font-weight:700; vertical-align:middle; }
-
-.show-card.hidden { display:none !important; }
-
-/* FOOTER */
-.schedule-footer { text-align:center; padding:40px 32px; border-top:1px solid rgba(201,168,76,0.1); color:var(--text-muted); font-size:12px; letter-spacing:1px; line-height:2; }
-.schedule-footer a { color:var(--gold-dim); text-decoration:none; }
-.schedule-footer a:hover { color:var(--gold); }
-
-@media(max-width:640px){
-  .topnav{padding:0 16px;}
-  .nav-links{display:none;}
-  .hero{padding:32px 16px 24px;}
-  .hero-ghost{display:none;}
-  .hero-title{font-size:46px;}
-  .hero-stats{gap:24px;}
-  .schedule-wrap{padding:16px 12px 60px;}
-  .filter-bar{padding:10px 12px;}
-  .show-card{grid-template-columns:72px 1fr;}
-  .show-dur{display:none;}
-}
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#7A6330;--red:#C0272D;--red-bright:#E8333A;--black:#070709;--dark:#0E0E13;--dark2:#14141A;--dark3:#1C1C24;--dark4:#26262F;--text:#F0EDE8;--text-dim:#888898;--text-muted:#444450;--live-green:#00E676;--ad-blue:#4A9EFF;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.012) 3px,rgba(0,0,0,0.012) 4px);pointer-events:none;z-index:999;}
+.topnav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:rgba(7,7,9,0.97);border-bottom:1px solid rgba(201,168,76,0.2);backdrop-filter:blur(12px);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:5px;color:var(--gold);text-decoration:none;}
+.nav-logo span{color:var(--red);}
+.nav-links{display:flex;gap:24px;list-style:none;}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.live-pill{display:flex;align-items:center;gap:7px;background:var(--red);color:#fff;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:7px 16px;border-radius:2px;}
+.live-pill:hover{background:var(--red-bright);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.hero{position:relative;overflow:hidden;padding:48px 32px 36px;background:linear-gradient(180deg,rgba(192,39,45,0.07) 0%,transparent 100%);text-align:center;}
+.hero-ghost{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:180px;letter-spacing:16px;color:rgba(201,168,76,0.025);white-space:nowrap;pointer-events:none;user-select:none;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold-dim);border:1px solid rgba(201,168,76,0.18);padding:5px 14px;border-radius:2px;margin-bottom:18px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:68px;letter-spacing:6px;line-height:1;color:var(--text);margin-bottom:8px;}
+.hero-title em{color:var(--gold);font-style:normal;}
+.hero-date{font-family:'Barlow Condensed',sans-serif;font-size:17px;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;margin-bottom:28px;}
+.hero-stats{display:flex;justify-content:center;gap:48px;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;color:var(--gold);line-height:1;}
+.stat-label{font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-top:3px;}
+.now-playing-hero{max-width:860px;margin:0 auto;padding:0 32px;}
+.now-playing-card{background:linear-gradient(135deg,rgba(0,230,118,0.08) 0%,rgba(0,230,118,0.03) 100%);border:2px solid var(--live-green);border-radius:6px;padding:20px 24px;display:flex;align-items:center;gap:20px;box-shadow:0 0 30px rgba(0,230,118,0.1);}
+.np-live-badge{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+.np-live-text{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:var(--live-green);}
+.np-dot{width:12px;height:12px;border-radius:50%;background:var(--live-green);animation:blink 1s infinite;}
+.np-info{flex:1;}
+.np-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#fff;line-height:1;}
+.np-meta{font-size:12px;color:var(--text-dim);margin-top:4px;letter-spacing:1px;}
+.np-progress-wrap{margin-top:10px;height:3px;background:rgba(0,230,118,0.15);border-radius:2px;overflow:hidden;}
+.np-progress-fill{height:100%;background:var(--live-green);transition:width 5s linear;}
+.np-time{text-align:right;flex-shrink:0;}
+.np-time-start{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--live-green);}
+.np-time-end{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);margin-top:2px;}
+.np-remaining{font-size:11px;color:var(--text-dim);margin-top:6px;letter-spacing:1px;}
+.up-next-bar{max-width:860px;margin:8px auto 0;padding:0 32px;}
+.up-next-card{background:var(--dark2);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:12px 20px;display:flex;align-items:center;gap:16px;}
+.up-next-label{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;color:var(--gold-dim);flex-shrink:0;}
+.up-next-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:var(--text);}
+.up-next-time{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-muted);flex-shrink:0;}
+.status-bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 32px;background:var(--dark2);border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--live-green);animation:blink 2s infinite;}
+.status-text{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;}
+.clock-display{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--text-dim);letter-spacing:2px;}
+.filter-bar{display:flex;gap:8px;padding:16px 32px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.04);overflow-x:auto;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.ftab{flex-shrink:0;background:transparent;border:1px solid var(--dark4);color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:6px 16px;border-radius:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+.ftab:hover{border-color:var(--gold-dim);color:var(--gold);}
+.ftab.active{background:var(--gold);border-color:var(--gold);color:#000;}
+.schedule-wrap{max-width:860px;margin:0 auto;padding:28px 32px 80px;}
+.time-block-header{display:flex;align-items:center;gap:14px;padding:24px 0 10px;}
+.time-block-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold-dim);white-space:nowrap;}
+.time-block-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent);}
+.show-card{display:grid;grid-template-columns:90px 1fr auto;align-items:stretch;gap:0;margin-bottom:3px;border-radius:4px;overflow:hidden;transition:transform 0.15s;position:relative;}
+.show-card:not(.live-now):hover{transform:translateX(3px);}
+.show-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;z-index:1;}
+.show-card.upcoming::before{background:var(--dark4);}
+.show-card.live-now::before{background:var(--live-green);}
+.show-card.ad-card::before{background:rgba(74,158,255,0.25);}
+.show-time{padding:13px 14px;background:var(--dark2);border-right:1px solid rgba(255,255,255,0.04);text-align:right;display:flex;flex-direction:column;justify-content:center;}
+.show-time-start{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text);}
+.show-time-end{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);margin-top:2px;}
+.show-info{padding:13px 18px;background:var(--dark2);border-right:1px solid rgba(255,255,255,0.04);flex:1;}
+.show-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;color:var(--text);line-height:1.2;}
+.show-meta{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.show-dur{padding:13px 14px;background:var(--dark2);font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);white-space:nowrap;display:flex;align-items:center;}
+.show-card.aired .show-time,.show-card.aired .show-info,.show-card.aired .show-dur{background:rgba(14,14,19,0.5);opacity:0.4;}
+.show-card.aired .show-name{text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.15);}
+.show-card.live-now .show-time{background:rgba(0,230,118,0.07);}
+.show-card.live-now .show-info{background:rgba(0,230,118,0.05);}
+.show-card.live-now .show-dur{background:rgba(0,230,118,0.04);}
+.show-card.live-now .show-time-start{color:var(--live-green);}
+.show-card.live-now .show-name{color:#fff;font-size:17px;}
+.show-card.live-now{box-shadow:0 0 0 2px var(--live-green),0 4px 28px rgba(0,230,118,0.12);}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:var(--live-green);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:2px;margin-top:6px;}
+.live-badge-dot{width:5px;height:5px;border-radius:50%;background:#000;animation:blink 1s infinite;}
+.progress-bar-wrap{grid-column:1/-1;height:3px;background:rgba(0,230,118,0.1);}
+.progress-bar-fill{height:100%;background:var(--live-green);transition:width 5s linear;}
+.show-card.ad-card .show-time,.show-card.ad-card .show-info,.show-card.ad-card .show-dur{background:rgba(74,158,255,0.03);}
+.show-card.ad-card .show-name{color:var(--ad-blue);font-size:13px;font-weight:500;}
+.show-card.ad-card.aired{opacity:0.2;}
+.movie-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:1px 6px;border-radius:2px;margin-left:8px;vertical-align:middle;}
+.show-card.hidden{display:none!important;}
+.loading-state{text-align:center;padding:60px 32px;}
+.loading-spinner{width:40px;height:40px;border:3px solid rgba(201,168,76,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;}
+.schedule-footer{text-align:center;padding:40px 32px;border-top:1px solid rgba(201,168,76,0.1);color:var(--text-muted);font-size:12px;letter-spacing:1px;line-height:2;}
+.schedule-footer a{color:var(--gold-dim);text-decoration:none;}
+@media(max-width:640px){.topnav{padding:0 16px;}.nav-links{display:none;}.hero{padding:32px 16px 24px;}.hero-ghost{display:none;}.hero-title{font-size:46px;}.hero-stats{gap:24px;}.schedule-wrap{padding:16px 12px 60px;}.filter-bar{padding:10px 12px;}.show-card{grid-template-columns:72px 1fr;}.show-dur{display:none;}.now-playing-hero,.up-next-bar{padding:0 12px;}}
 </style>
 </head>
 <body>
 
 <nav class="topnav">
-  <a href="index.html" class="nav-logo">FLM<span>TV</span></a>
+  <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
   <ul class="nav-links">
     <li><a href="home.html">Home</a></li>
-    <li><a href="browse.html">Browse</a></li>
-    <li><a href="live.html">Live TV</a></li>
+    <li><a href="live-stations.html">Live TV</a></li>
     <li><a href="schedule.html" class="active">Schedule</a></li>
   </ul>
   <a href="live.html" class="live-pill"><div class="live-dot"></div> WATCH LIVE</a>
@@ -193,20 +116,48 @@ body::after {
 
 <section class="hero">
   <div class="hero-ghost">GUIDE</div>
-  <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · WORLDWIDE</div>
+  <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · LIVE FROM VMIX</div>
   <h1 class="hero-title">TODAY'S <em>PROGRAMMING</em></h1>
   <div class="hero-date" id="heroDate">—</div>
   <div class="hero-stats">
-    <div><div class="stat-num">37</div><div class="stat-label">Shows Today</div></div>
-    <div><div class="stat-num">22+</div><div class="stat-label">Hours</div></div>
-    <div><div class="stat-num">FREE</div><div class="stat-label">Always Free</div></div>
+    <div><div class="stat-num" id="statShows">—</div><div class="stat-label">Shows Today</div></div>
+    <div><div class="stat-num" id="statHours">—</div><div class="stat-label">Hours</div></div>
+    <div><div class="stat-num">LIVE</div><div class="stat-label">Auto-Updating</div></div>
   </div>
 </section>
 
-<div class="jump-bar">
-  <button class="jump-btn" onclick="jumpToNow()">
-    <div class="live-dot" style="background:var(--live-green);"></div> Jump to Now Playing
-  </button>
+<div class="now-playing-hero">
+  <div class="now-playing-card">
+    <div class="np-live-badge">
+      <div class="np-dot"></div>
+      <div class="np-live-text">ON AIR</div>
+    </div>
+    <div class="np-info">
+      <div class="np-title" id="npTitle">Connecting to vMix...</div>
+      <div class="np-meta" id="npMeta">FLM TV Channel 26.5 · Las Vegas</div>
+      <div class="np-progress-wrap">
+        <div class="np-progress-fill" id="npProgress" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="np-time">
+      <div class="np-time-start" id="npStart">--:-- --</div>
+      <div class="np-time-end" id="npEnd">--:-- --</div>
+      <div class="np-remaining" id="npRemaining"></div>
+    </div>
+  </div>
+</div>
+
+<div class="up-next-bar">
+  <div class="up-next-card">
+    <div class="up-next-label">UP NEXT</div>
+    <div class="up-next-title" id="upNextTitle">Loading...</div>
+    <div class="up-next-time" id="upNextTime">--:-- --</div>
+  </div>
+</div>
+
+<div class="status-bar">
+  <div class="status-dot"></div>
+  <div class="status-text" id="statusText">Connecting to vMix...</div>
   <div class="clock-display" id="clockDisplay">--:-- --</div>
 </div>
 
@@ -215,109 +166,149 @@ body::after {
   <button class="ftab" onclick="filterSchedule('shows',this)">Shows Only</button>
   <button class="ftab" onclick="filterSchedule('movies',this)">Movies</button>
   <button class="ftab" onclick="filterSchedule('kids',this)">Kids</button>
-  <button class="ftab" onclick="filterSchedule('flm',this)">FLM Originals</button>
   <button class="ftab" onclick="filterSchedule('upcoming',this)">Up Next</button>
 </div>
 
-<div class="schedule-wrap" id="scheduleWrap"></div>
+<div class="schedule-wrap" id="scheduleWrap">
+  <div class="loading-state">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading live schedule from vMix...</div>
+  </div>
+</div>
 
 <div class="schedule-footer">
-  Schedule is updated as programming changes &nbsp;·&nbsp;
-  <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp;
-  Las Vegas &amp; Worldwide<br>
+  Schedule updates automatically from vMix every 30 seconds &nbsp;·&nbsp;
+  <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp; Las Vegas &amp; Worldwide<br>
   <a href="live.html">▶ Watch Live at FLMTV.com</a>
 </div>
 
 <script>
-const SCHEDULE = [
-  {name:"Sesame Street",              start:"6:37 AM", end:"7:03 AM",  startMin:397,  endMin:423,  dur:"25 min",      type:"kids"},
-  {name:"Word World",                 start:"7:03 AM", end:"7:30 AM",  startMin:423,  endMin:450,  dur:"27 min",      type:"kids"},
-  {name:"Super Why!",                 start:"7:30 AM", end:"7:57 AM",  startMin:450,  endMin:477,  dur:"27 min",      type:"kids"},
-  {name:"Schoolhouse Rock",           start:"7:57 AM", end:"8:00 AM",  startMin:477,  endMin:480,  dur:"3 min",       type:"kids"},
-  {name:"Schoolhouse Rock",           start:"8:00 AM", end:"8:03 AM",  startMin:480,  endMin:483,  dur:"3 min",       type:"kids"},
-  {name:"Schoolhouse Rock",           start:"8:03 AM", end:"8:06 AM",  startMin:483,  endMin:486,  dur:"3 min",       type:"kids"},
-  {name:"Charlie Brown",              start:"8:06 AM", end:"8:29 AM",  startMin:486,  endMin:509,  dur:"22 min",      type:"kids"},
-  {name:"Fireman Sam",                start:"8:29 AM", end:"9:19 AM",  startMin:509,  endMin:559,  dur:"50 min",      type:"kids"},
-  {name:"Lance Hendron",              start:"9:19 AM", end:"9:19 AM",  startMin:559,  endMin:559,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"9:19 AM", end:"9:20 AM",  startMin:559,  endMin:560,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Mary Perry",                 start:"9:20 AM", end:"9:20 AM",  startMin:560,  endMin:560,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"FLMTV.com",                  start:"9:20 AM", end:"9:20 AM",  startMin:560,  endMin:560,  dur:"12 sec",      type:"flm", isFlmPromo:true},
-  {name:"Gilligan's Island",          start:"9:20 AM", end:"9:45 AM",  startMin:560,  endMin:585,  dur:"25 min",      type:"classic"},
-  {name:"2 Louisiana Chefs",          start:"9:45 AM", end:"9:51 AM",  startMin:585,  endMin:591,  dur:"5 min",       type:"flm"},
-  {name:"Mother's Day Compilation",   start:"9:51 AM", end:"9:51 AM",  startMin:591,  endMin:591,  dur:"Special",     type:"flm"},
-  {name:"Mister Ed",                  start:"9:51 AM", end:"10:17 AM", startMin:591,  endMin:617,  dur:"25 min",      type:"classic"},
-  {name:"Mary Perry",                 start:"10:17 AM",end:"10:17 AM", startMin:617,  endMin:617,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"10:17 AM",end:"10:17 AM", startMin:617,  endMin:617,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"10:17 AM",end:"10:18 AM", startMin:617,  endMin:618,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Charlie's Angels",           start:"10:18 AM",end:"11:07 AM", startMin:618,  endMin:667,  dur:"48 min",      type:"classic"},
-  {name:"The Addams Family",          start:"11:07 AM",end:"11:33 AM", startMin:667,  endMin:693,  dur:"25 min",      type:"classic"},
-  {name:"Little Rascals",             start:"11:33 AM",end:"11:53 AM", startMin:693,  endMin:713,  dur:"20 min",      type:"classic"},
-  {name:"Bewitched",                  start:"11:53 AM",end:"12:19 PM", startMin:713,  endMin:739,  dur:"25 min",      type:"classic"},
-  {name:"Bewitched",                  start:"12:19 PM",end:"12:44 PM", startMin:739,  endMin:764,  dur:"25 min",      type:"classic"},
-  {name:"Lance Hendron",              start:"12:44 PM",end:"12:45 PM", startMin:764,  endMin:765,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"12:45 PM",end:"12:45 PM", startMin:765,  endMin:765,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Mary Perry",                 start:"12:45 PM",end:"12:46 PM", startMin:765,  endMin:766,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Good Times",                 start:"12:46 PM",end:"1:10 PM",  startMin:766,  endMin:790,  dur:"24 min",      type:"classic"},
-  {name:"Good Times",                 start:"1:10 PM", end:"1:35 PM",  startMin:790,  endMin:815,  dur:"24 min",      type:"classic"},
-  {name:"The Jeffersons",             start:"1:35 PM", end:"2:00 PM",  startMin:815,  endMin:840,  dur:"25 min",      type:"classic"},
-  {name:"Zaina Juliette & Friends",   start:"2:00 PM", end:"2:28 PM",  startMin:840,  endMin:868,  dur:"28 min",      type:"flm"},
-  {name:"Mary Perry",                 start:"2:28 PM", end:"2:28 PM",  startMin:868,  endMin:868,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"2:28 PM", end:"2:29 PM",  startMin:868,  endMin:869,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"2:29 PM", end:"2:29 PM",  startMin:869,  endMin:869,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lucy - American Mother",     start:"2:29 PM", end:"2:55 PM",  startMin:869,  endMin:895,  dur:"25 min",      type:"classic"},
-  {name:"Matilda",                    start:"2:55 PM", end:"4:33 PM",  startMin:895,  endMin:993,  dur:"1 hr 38 min", type:"movie", isMovie:true},
-  {name:"Mary Perry",                 start:"4:33 PM", end:"4:34 PM",  startMin:993,  endMin:994,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"4:34 PM", end:"4:34 PM",  startMin:994,  endMin:994,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"4:34 PM", end:"4:35 PM",  startMin:994,  endMin:995,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Charlie & the Chocolate Factory", start:"4:35 PM", end:"6:30 PM", startMin:995, endMin:1110, dur:"1 hr 55 min", type:"movie", isMovie:true},
-  {name:"Jurassic Park III",          start:"6:30 PM", end:"7:53 PM",  startMin:1110, endMin:1193, dur:"1 hr 22 min", type:"movie", isMovie:true},
-  {name:"Mary Perry",                 start:"7:53 PM", end:"7:53 PM",  startMin:1193, endMin:1193, dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"7:53 PM", end:"7:53 PM",  startMin:1193, endMin:1193, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"7:53 PM", end:"7:54 PM",  startMin:1193, endMin:1194, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"The Lost World",             start:"7:54 PM", end:"10:03 PM", startMin:1194, endMin:1323, dur:"2 hr 8 min",  type:"movie", isMovie:true},
-  {name:"Alice in Wonderland",        start:"10:03 PM",end:"11:51 PM", startMin:1323, endMin:1431, dur:"1 hr 48 min", type:"movie", isMovie:true},
-  {name:"Mary Perry",                 start:"11:51 PM",end:"11:52 PM", startMin:1431, endMin:1432, dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"11:52 PM",end:"11:52 PM", startMin:1432, endMin:1432, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"11:52 PM",end:"11:53 PM", startMin:1432, endMin:1433, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"The Lord of the Rings",      start:"11:53 PM",end:"3:48 AM",  startMin:1433, endMin:1668, dur:"3 hr 55 min", type:"movie", isMovie:true},
-  {name:"The Twilight Zone",          start:"3:48 AM", end:"4:14 AM",  startMin:1668, endMin:1694, dur:"25 min",      type:"classic"},
-  {name:"The Twilight Zone",          start:"4:14 AM", end:"4:40 AM",  startMin:1694, endMin:1720, dur:"25 min",      type:"classic"},
-  {name:"The Twilight Zone",          start:"4:40 AM", end:"5:06 AM",  startMin:1720, endMin:1746, dur:"25 min",      type:"classic"},
-  {name:"Andy Griffith Show",         start:"5:06 AM", end:"5:31 AM",  startMin:1746, endMin:1771, dur:"25 min",      type:"classic"},
-  {name:"Andy Griffith Show",         start:"5:31 AM", end:"5:59 AM",  startMin:1771, endMin:1799, dur:"27 min",      type:"classic"},
-];
+const VMIX_API = 'https://flmtv.com/vmix/api';
+const AD_KEYWORDS = ['lance hendron','lenna hovanessian','mary perry','ashwater','flmtv.com','flm tv.com'];
+const KIDS_KEYWORDS = ['sesame','super why','word world','schoolhouse','charlie brown','fireman sam','molly','liberty','little rascals','ready jet'];
+const MOVIE_MIN_MS = 60 * 60 * 1000;
 
-const FLM_ORIGINALS = ["Lucy the Raffle","Locals in Las Vegas","Charly Suarez","Zaina Juliette & Friends","Og Scorpio","Gladius"];
-const KIDS = ["Sesame Street","Super Why!","Ready Jet Go","Molly of Denali","Liberty's Kids","Little Rascals"];
+let scheduleData = [];
 
-function getNowMin() {
-  const n = new Date();
-  return n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
+function msToReadable(ms) {
+  const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000);
+  if (h > 0) return `${h} hr ${m} min`;
+  if (m > 0) return `${m} min`;
+  return `${Math.floor(ms/1000)} sec`;
 }
 
-function getStatus(s) {
-  let now = getNowMin();
-  let st = s.startMin, en = s.endMin;
-  // Handle overnight (endMin > 1440 = past midnight)
-  if (en > 1440 && now < 720) { now += 1440; }
-  if (now >= st && now < en) return 'live';
-  if (now >= en) return 'aired';
-  return 'upcoming';
+function formatTime(date) {
+  let h = date.getHours(), m = date.getMinutes();
+  const ap = h < 12 ? 'AM' : 'PM';
+  return `${h%12||12}:${String(m).padStart(2,'0')} ${ap}`;
 }
 
-function getProgress(s) {
-  let now = getNowMin();
-  let st = s.startMin, en = s.endMin;
-  if (en > 1440 && now < 720) now += 1440;
-  return Math.min(100, Math.max(0, ((now - st)/(en - st))*100));
-}
-
-function blockLabel(min) {
-  const h = Math.floor(min/60) % 24;
-  if (h>=5 && h<12) return 'MORNING';
-  if (h>=12 && h<17) return 'AFTERNOON';
-  if (h>=17 && h<21) return 'EVENING';
+function blockLabel(date) {
+  const h = date.getHours();
+  if (h>=5&&h<12) return 'MORNING';
+  if (h>=12&&h<17) return 'AFTERNOON';
+  if (h>=17&&h<21) return 'EVENING';
   return 'LATE NIGHT';
+}
+
+async function fetchVmix() {
+  try {
+    const res = await fetch(VMIX_API + '?_=' + Date.now());
+    if (!res.ok) throw new Error('API error');
+    const text = await res.text();
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
+    parseVmix(xml);
+    document.getElementById('statusText').textContent = 
+      `Live from vMix · Updated ${new Date().toLocaleTimeString()}`;
+  } catch(e) {
+    document.getElementById('statusText').textContent = 'vMix connection error · Retrying...';
+  }
+}
+
+function parseVmix(xml) {
+  const inputs = Array.from(xml.querySelectorAll('input'));
+  const now = new Date();
+  const shows = [];
+
+  inputs.forEach(inp => {
+    const type = inp.getAttribute('type') || '';
+    const title = (inp.getAttribute('title') || inp.getAttribute('shortTitle') || '').trim();
+    const state = inp.getAttribute('state') || '';
+    const duration = parseInt(inp.getAttribute('duration') || '0');
+    const position = parseInt(inp.getAttribute('position') || '0');
+
+    if (type === 'GT' || type === 'Image') return;
+    if (duration < 10000) return;
+    if (!title) return;
+    if (['logo','title 4','be right back','bright.gtzip','tootywoodsy'].some(k => title.toLowerCase().includes(k))) return;
+
+    const isAd = AD_KEYWORDS.some(k => title.toLowerCase().includes(k));
+    const isKids = KIDS_KEYWORDS.some(k => title.toLowerCase().includes(k));
+    const isMovie = duration >= MOVIE_MIN_MS && !isAd;
+    let type2 = 'classic';
+    if (isAd) type2 = 'ad';
+    else if (isMovie) type2 = 'movie';
+    else if (isKids) type2 = 'kids';
+    else if (['zaina','lucy','locals','charly','og scorpio','gladius'].some(k => title.toLowerCase().includes(k))) type2 = 'flm';
+
+    shows.push({title, duration, position, state, isAd, isKids, isMovie, type: type2});
+  });
+
+  if (!shows.length) return;
+
+  // Find active show
+  let activeIdx = shows.findIndex(s => s.state === 'Running');
+  if (activeIdx === -1) activeIdx = 0;
+
+  const activeShow = shows[activeIdx];
+  const activeStart = new Date(now.getTime() - activeShow.position);
+
+  // Calculate all start times
+  let timelineStart = activeStart.getTime();
+  for (let i = activeIdx - 1; i >= 0; i--) timelineStart -= shows[i].duration;
+
+  scheduleData = shows.map((show, i) => {
+    let st = timelineStart;
+    for (let j = 0; j < i; j++) st += shows[j].duration;
+    const et = st + show.duration;
+    const isLive = i === activeIdx;
+    const isAired = et < now.getTime() && !isLive;
+    return {
+      ...show,
+      startTime: st, endTime: et,
+      startFmt: formatTime(new Date(st)),
+      endFmt: formatTime(new Date(et)),
+      durFmt: msToReadable(show.duration),
+      isLive, isAired,
+      progress: isLive ? Math.min(100,(show.position/show.duration)*100) : 0,
+      block: blockLabel(new Date(st))
+    };
+  });
+
+  updateNowPlaying();
+  renderSchedule();
+  const showCount = scheduleData.filter(s => !s.isAd).length;
+  const totalHrs = Math.round(scheduleData.reduce((a,s) => a+s.duration,0)/3600000);
+  document.getElementById('statShows').textContent = showCount;
+  document.getElementById('statHours').textContent = totalHrs + '+';
+}
+
+function updateNowPlaying() {
+  const live = scheduleData.find(s => s.isLive);
+  const next = scheduleData.find(s => !s.isAired && !s.isLive);
+  if (live) {
+    document.getElementById('npTitle').textContent = live.title;
+    document.getElementById('npStart').textContent = live.startFmt;
+    document.getElementById('npEnd').textContent = live.endFmt;
+    document.getElementById('npProgress').style.width = live.progress + '%';
+    document.getElementById('npRemaining').textContent = 
+      msToReadable(live.duration - live.position) + ' remaining';
+    document.getElementById('npMeta').textContent = live.durFmt + ' · FLM TV Channel 26.5';
+  }
+  if (next) {
+    document.getElementById('upNextTitle').textContent = next.title;
+    document.getElementById('upNextTime').textContent = next.startFmt;
+  }
 }
 
 function renderSchedule() {
@@ -325,120 +316,73 @@ function renderSchedule() {
   wrap.innerHTML = '';
   let lastBlock = null;
 
-  SCHEDULE.forEach(show => {
-    const status = getStatus(show);
-    const block = blockLabel(show.startMin);
-
-    if (block !== lastBlock) {
-      lastBlock = block;
+  scheduleData.forEach(show => {
+    if (show.block !== lastBlock) {
+      lastBlock = show.block;
       const hdr = document.createElement('div');
       hdr.className = 'time-block-header';
-      hdr.innerHTML = `<div class="time-block-label">${block}</div><div class="time-block-line"></div>`;
+      hdr.innerHTML = `<div class="time-block-label">${show.block}</div><div class="time-block-line"></div>`;
       wrap.appendChild(hdr);
     }
-
-    const isFlmOrig = FLM_ORIGINALS.includes(show.name);
-    const isKids = KIDS.includes(show.name);
-
-    const classes = ['show-card', status];
+    const classes = ['show-card', show.isLive ? 'live-now' : show.isAired ? 'aired' : 'upcoming'];
     if (show.isAd) classes.push('ad-card');
-    if (show.isFlmPromo) classes.push('flm-promo');
-
-    const filterTags = [show.type, status];
-    if (isKids) filterTags.push('kids');
-    if (isFlmOrig) filterTags.push('flm');
-    if (show.isMovie) filterTags.push('movies');
+    const tags = [show.type, show.isLive?'live':show.isAired?'aired':'upcoming'];
+    if (show.isKids) tags.push('kids');
+    if (show.isMovie) tags.push('movies');
 
     const card = document.createElement('div');
     card.className = classes.join(' ');
-    card.dataset.filter = filterTags.join(' ');
-    if (status === 'live') card.id = 'live-now-card';
+    card.dataset.filter = tags.join(' ');
+    if (show.isLive) card.id = 'live-now-card';
 
-    const movieBadge = show.isMovie ? `<span class="movie-badge">MOVIE</span>` : '';
-    const flmTag = isFlmOrig ? `<span class="flm-tag">★ FLM ORIGINAL</span>` : '';
-    const liveBadge = status === 'live' ? `<div class="live-badge"><div class="live-badge-dot"></div>ON AIR NOW</div>` : '';
-    const progressBar = status === 'live' ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${getProgress(show)}%"></div></div>` : '';
+    const movieBadge = show.isMovie ? '<span class="movie-badge">MOVIE</span>' : '';
+    const liveBadge = show.isLive ? '<div class="live-badge"><div class="live-badge-dot"></div>ON AIR NOW</div>' : '';
+    const progress = show.isLive ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${show.progress}%"></div></div>` : '';
 
     card.innerHTML = `
-      <div class="show-time">
-        <div class="show-time-start">${show.start}</div>
-        <div class="show-time-end">${show.end}</div>
-      </div>
-      <div class="show-info">
-        <div class="show-name">${show.name}${movieBadge}${flmTag}</div>
-        <div class="show-meta">${show.dur}</div>
-        ${liveBadge}
-      </div>
-      <div class="show-dur">${show.dur}</div>
-      ${progressBar}
-    `;
+      <div class="show-time"><div class="show-time-start">${show.startFmt}</div><div class="show-time-end">${show.endFmt}</div></div>
+      <div class="show-info"><div class="show-name">${show.title}${movieBadge}</div><div class="show-meta">${show.durFmt}</div>${liveBadge}</div>
+      <div class="show-dur">${show.durFmt}</div>${progress}`;
     wrap.appendChild(card);
   });
-}
-
-function jumpToNow() {
-  const el = document.getElementById('live-now-card');
-  if (!el) return;
-  el.scrollIntoView({behavior:'smooth', block:'center'});
-  el.style.boxShadow = '0 0 0 3px #00E676, 0 0 40px rgba(0,230,118,0.35)';
-  setTimeout(() => { el.style.boxShadow = '0 0 0 2px var(--live-green), 0 4px 28px rgba(0,230,118,0.12)'; }, 900);
 }
 
 function filterSchedule(cat, btn) {
   document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-
   document.querySelectorAll('.show-card').forEach(card => {
     const tags = card.dataset.filter || '';
-    let show = false;
-    if (cat === 'all') show = true;
-    else if (cat === 'shows') show = !card.classList.contains('ad-card') && !card.classList.contains('flm-promo') && !tags.includes('movie');
-    else if (cat === 'movies') show = tags.includes('movies');
-    else if (cat === 'kids') show = tags.includes('kids');
-    else if (cat === 'flm') show = tags.includes('flm') && !card.classList.contains('ad-card');
-    else if (cat === 'upcoming') show = tags.includes('upcoming');
+    let show = cat==='all' ? true
+      : cat==='shows' ? !card.classList.contains('ad-card') && !tags.includes('movie')
+      : cat==='movies' ? tags.includes('movies')
+      : cat==='kids' ? tags.includes('kids')
+      : cat==='upcoming' ? tags.includes('upcoming') || tags.includes('live')
+      : true;
     card.classList.toggle('hidden', !show);
   });
-
   document.querySelectorAll('.time-block-header').forEach(hdr => {
-    let next = hdr.nextElementSibling;
-    let hasVisible = false;
+    let next = hdr.nextElementSibling, has = false;
     while (next && !next.classList.contains('time-block-header')) {
-      if (next.classList.contains('show-card') && !next.classList.contains('hidden')) { hasVisible = true; break; }
+      if (next.classList.contains('show-card') && !next.classList.contains('hidden')) { has = true; break; }
       next = next.nextElementSibling;
     }
-    hdr.style.display = hasVisible ? '' : 'none';
+    hdr.style.display = has ? '' : 'none';
   });
 }
 
 function updateClock() {
-  const n = new Date();
-  const h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
-  const ap = h < 12 ? 'AM' : 'PM';
-  const h12 = h%12||12;
-  document.getElementById('clockDisplay').textContent = `${h12}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ap}`;
+  const n = new Date(), h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
+  document.getElementById('clockDisplay').textContent = 
+    `${h%12||12}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${h<12?'AM':'PM'}`;
 }
 
-function updateProgress() {
-  const fill = document.getElementById('progressFill');
-  const card = document.getElementById('live-now-card');
-  if (!fill || !card) return;
-  const nameEl = card.querySelector('.show-name');
-  if (!nameEl) return;
-  const rawName = nameEl.textContent.replace(/MOVIE|★ FLM ORIGINAL/g,'').trim();
-  const show = SCHEDULE.find(s => s.name === rawName);
-  if (show) fill.style.width = getProgress(show) + '%';
-}
+document.getElementById('heroDate').textContent = 
+  new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
 
-// Init
-document.getElementById('heroDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
-renderSchedule();
+fetchVmix();
 updateClock();
 setInterval(updateClock, 1000);
-setInterval(updateProgress, 30000);
-setInterval(renderSchedule, 5*60*1000); // re-render every 5 min
-
-window.addEventListener('load', () => setTimeout(jumpToNow, 700));
+setInterval(fetchVmix, 30000);
 </script>
 </body>
 </html>
