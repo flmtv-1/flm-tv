@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLM TV — Live Schedule</title>
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#7A6330;
+  --red:#C0272D;--black:#070709;--dark:#0E0E13;--dark2:#14141A;
+  --dark3:#1C1C24;--dark4:#26262F;
+  --text:#F0EDE8;--text-dim:#888898;--text-muted:#444450;
+  --green:#00E676;--ad-blue:#4A9EFF;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;}
+
+/* NAV */
+.topnav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:rgba(7,7,9,0.97);border-bottom:1px solid rgba(201,168,76,0.2);backdrop-filter:blur(12px);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:5px;color:var(--gold);text-decoration:none;}
+.nav-logo span{color:var(--red);}
+.nav-links{display:flex;gap:24px;list-style:none;}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.live-pill{display:flex;align-items:center;gap:7px;background:var(--red);color:#fff;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:7px 16px;border-radius:2px;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* HERO */
+.hero{padding:40px 32px 28px;background:linear-gradient(180deg,rgba(192,39,45,0.07) 0%,transparent 100%);text-align:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold-dim);border:1px solid rgba(201,168,76,0.18);padding:5px 14px;border-radius:2px;margin-bottom:16px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:60px;letter-spacing:6px;color:var(--text);margin-bottom:6px;}
+.hero-title em{color:var(--gold);font-style:normal;}
+.hero-date{font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;}
+
+/* NOW PLAYING CARD */
+.now-playing-wrap{max-width:860px;margin:24px auto 8px;padding:0 32px;}
+.now-playing-card{background:linear-gradient(135deg,rgba(0,230,118,0.08),rgba(0,230,118,0.03));border:2px solid var(--green);border-radius:6px;padding:20px 24px;display:flex;align-items:center;gap:20px;box-shadow:0 0 30px rgba(0,230,118,0.1);}
+.np-badge{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+.np-dot{width:14px;height:14px;border-radius:50%;background:var(--green);animation:blink 1s infinite;}
+.np-label{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:var(--green);}
+.np-info{flex:1;min-width:0;}
+.np-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;color:#fff;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.np-sub{font-size:12px;color:var(--text-dim);margin-top:4px;letter-spacing:1px;}
+.np-progress-wrap{margin-top:10px;height:3px;background:rgba(0,230,118,0.15);border-radius:2px;overflow:hidden;}
+.np-progress-fill{height:100%;background:var(--green);transition:width 5s linear;}
+.np-time{text-align:right;flex-shrink:0;}
+.np-remaining{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--green);}
+.np-remaining-label{font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;}
+
+/* UP NEXT */
+.up-next-wrap{max-width:860px;margin:0 auto 8px;padding:0 32px;}
+.up-next-card{background:var(--dark2);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:14px 20px;display:flex;align-items:center;gap:16px;}
+.up-next-label{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:var(--gold-dim);flex-shrink:0;white-space:nowrap;}
+.up-next-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.up-next-arrow{color:var(--gold-dim);margin-left:auto;flex-shrink:0;}
+
+/* STATUS */
+.status-bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 32px;background:var(--dark2);border-top:1px solid rgba(201,168,76,0.08);border-bottom:1px solid rgba(201,168,76,0.08);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+.status-text{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;}
+.clock{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim);letter-spacing:2px;}
+
+/* QUEUE */
+.queue-wrap{max-width:860px;margin:0 auto;padding:24px 32px 80px;}
+.section-header{display:flex;align-items:center;gap:14px;padding:0 0 12px;}
+.section-label{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--gold-dim);white-space:nowrap;}
+.section-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent);}
+
+/* QUEUE ITEMS */
+.queue-item{display:flex;align-items:center;gap:0;margin-bottom:2px;border-radius:3px;overflow:hidden;position:relative;cursor:default;}
+.queue-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.queue-item.is-next::before{background:var(--gold);}
+.queue-item.is-show::before{background:var(--dark4);}
+.queue-item.is-ad::before{background:rgba(74,158,255,0.3);}
+.queue-item.is-movie::before{background:rgba(201,168,76,0.5);}
+.queue-item.is-kids::before{background:rgba(0,200,150,0.5);}
+.queue-item.is-flm::before{background:rgba(201,168,76,0.8);}
+
+.q-num{width:44px;padding:10px 8px 10px 14px;background:var(--dark2);font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);text-align:right;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.03);}
+.q-title{flex:1;padding:10px 16px;background:var(--dark2);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid rgba(255,255,255,0.03);}
+.q-tag{padding:10px 14px;background:var(--dark2);font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);white-space:nowrap;flex-shrink:0;}
+
+.queue-item.is-next .q-num{color:var(--gold);}
+.queue-item.is-next .q-title{color:#fff;}
+.queue-item.is-next .q-tag{color:var(--gold);}
+.queue-item.is-ad .q-title{color:var(--ad-blue);font-size:13px;font-weight:400;}
+.queue-item.is-ad .q-num{opacity:0.4;}
+.queue-item.is-movie .q-tag{color:var(--gold);}
+.queue-item.is-kids .q-tag{color:#00C896;}
+.queue-item.is-flm .q-tag{color:var(--gold);}
+
+/* NEXT badge */
+.next-badge{display:inline-flex;align-items:center;background:var(--gold);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:800;letter-spacing:1.5px;padding:2px 6px;border-radius:2px;margin-left:8px;vertical-align:middle;}
+.movie-badge{display:inline-flex;align-items:center;background:rgba(201,168,76,0.15);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;padding:2px 6px;border-radius:2px;margin-left:8px;vertical-align:middle;border:1px solid rgba(201,168,76,0.3);}
+
+.loading-state{text-align:center;padding:60px 32px;}
+.loading-spinner{width:36px;height:36px;border:3px solid rgba(201,168,76,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;}
+
+.error-state{text-align:center;padding:40px 32px;color:var(--text-muted);font-size:13px;}
+
+.footer{text-align:center;padding:32px;border-top:1px solid rgba(201,168,76,0.08);color:var(--text-muted);font-size:11px;letter-spacing:1px;line-height:2;}
+.footer a{color:var(--gold-dim);text-decoration:none;}
+
+@media(max-width:640px){
+  .topnav{padding:0 16px;}.nav-links{display:none;}
+  .hero{padding:28px 16px 20px;}.hero-title{font-size:42px;}
+  .now-playing-wrap,.up-next-wrap,.queue-wrap{padding:0 12px;}
+  .now-playing-wrap{margin-top:16px;}
+  .queue-wrap{padding:16px 12px 60px;}
+  .q-tag{display:none;}
+  .np-card{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="live-stations.html">Live TV</a></li>
+    <li><a href="schedule.html" class="active">Schedule</a></li>
+  </ul>
+  <a href="live.html" class="live-pill"><div class="live-dot"></div> WATCH LIVE</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · LIVE FROM VMIX</div>
+  <h1 class="hero-title">TODAY'S <em>PROGRAMMING</em></h1>
+  <div class="hero-date" id="heroDate">—</div>
+</section>
+
+<!-- NOW PLAYING -->
+<div class="now-playing-wrap">
+  <div class="now-playing-card" id="nowPlayingCard">
+    <div class="np-badge">
+      <div class="np-dot"></div>
+      <div class="np-label">ON AIR</div>
+    </div>
+    <div class="np-info">
+      <div class="np-title" id="npTitle">Connecting...</div>
+      <div class="np-sub" id="npSub">FLM TV Channel 26.5 · Las Vegas</div>
+      <div class="np-progress-wrap">
+        <div class="np-progress-fill" id="npProgress" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="np-time">
+      <div class="np-remaining" id="npRemaining">—</div>
+      <div class="np-remaining-label">REMAINING</div>
+    </div>
+  </div>
+</div>
+
+<!-- UP NEXT -->
+<div class="up-next-wrap">
+  <div class="up-next-card">
+    <div class="up-next-label">▶ UP NEXT</div>
+    <div class="up-next-title" id="upNextTitle">Loading...</div>
+    <div class="up-next-arrow"><i class="fas fa-chevron-right"></i></div>
+  </div>
+</div>
+
+<!-- STATUS -->
+<div class="status-bar">
+  <div class="status-dot"></div>
+  <div class="status-text" id="statusText">Connecting to vMix...</div>
+  <div class="clock" id="clock">--:-- --</div>
+</div>
+
+<!-- QUEUE -->
+<div class="queue-wrap">
+  <div class="section-header">
+    <div class="section-label">COMING UP</div>
+    <div class="section-line"></div>
+  </div>
+  <div id="queueList">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading live schedule from vMix...</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Live schedule powered by vMix &nbsp;·&nbsp;
+  <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp; Las Vegas &amp; Worldwide<br>
+  <a href="live.html">▶ Watch Live at FLMTV.com</a>
+</div>
+
+<script>
+const VMIX_API = 'https://flmtv.com/vmix/api';
+const AD_KEYWORDS = ['lance hendron','lenna hovanessian','mary perry','ashwater','flmtv.com','flm tv.com','boxer','og scorpio','commercial','clips-fillers','schoolhouse rock'];
+const KIDS_KEYWORDS = ['sesame','super why','word world','schoolhouse','charlie brown','fireman sam','molly','liberty','little rascals','ready jet','nature cat','noddy','sonic boom','scooby','jetsons','tom and jerry','winnie'];
+const FLM_KEYWORDS = ['zaina','locals in las vegas','gladius','lucy the raffle','lucy-american'];
+const MOVIE_FOLDERS = ['movies','movies-5','sort-movies'];
+
+function cleanTitle(path) {
+  // Extract filename from full path
+  const parts = path.replace(/\\\\/g, '\\').split(/[\\\/]/);
+  let name = parts[parts.length - 1];
+  // Remove extension
+  name = name.replace(/\.[^.]+$/, '');
+  // Clean up common patterns
+  name = name.replace(/\s*[\(\[]\d{4}[\)\]]/g, ''); // remove years
+  name = name.replace(/1080p|720p|BluRay|WEB-DL|HDTV|x264|x265|HEVC|AAC|DDP|ia$/gi, '');
+  name = name.replace(/S\d+E\d+[-_\s]*/gi, ''); // remove S01E01
+  name = name.replace(/[-_\.]+/g, ' ').trim();
+  name = name.replace(/\s+/g, ' ').trim();
+  // Title case
+  return name.split(' ').map(w => w.length > 2 ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w).join(' ');
+}
+
+function getType(path, name) {
+  const p = path.toLowerCase();
+  const n = name.toLowerCase();
+  if (AD_KEYWORDS.some(k => n.includes(k) || p.includes(k))) return 'ad';
+  if (FLM_KEYWORDS.some(k => n.includes(k))) return 'flm';
+  if (KIDS_KEYWORDS.some(k => n.includes(k))) return 'kids';
+  if (MOVIE_FOLDERS.some(k => p.includes(k))) return 'movie';
+  return 'show';
+}
+
+function msToReadable(ms) {
+  if (!ms || ms <= 0) return '';
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
+async function fetchVmix() {
+  try {
+    const res = await fetch(VMIX_API + '?_=' + Date.now());
+    if (!res.ok) throw new Error('API error');
+    const text = await res.text();
+    const xml = new DOMParser().parseFromString(text, 'text/xml');
+    parseAndRender(xml);
+    document.getElementById('statusText').textContent = 
+      `Live from vMix · Updated ${new Date().toLocaleTimeString()}`;
+  } catch(e) {
+    document.getElementById('statusText').textContent = 'vMix connection error · Retrying in 30s...';
+  }
+}
+
+function parseAndRender(xml) {
+  // Find active input number
+  const activeNode = xml.querySelector('active');
+  if (!activeNode) return;
+  const activeNum = activeNode.textContent.trim();
+
+  // Find the active input
+  const activeInput = xml.querySelector(`input[number="${activeNum}"]`);
+  if (!activeInput) return;
+
+  const activeType = activeInput.getAttribute('type');
+  const activeTitle = activeInput.getAttribute('title') || '';
+  const duration = parseInt(activeInput.getAttribute('duration') || '0');
+  const position = parseInt(activeInput.getAttribute('position') || '0');
+  const selectedIndex = parseInt(activeInput.getAttribute('selectedIndex') || '0');
+
+  // Get current show name
+  let nowTitle = activeTitle;
+
+  // If it's a VideoList, get the selected item name
+  let items = [];
+  if (activeType === 'VideoList') {
+    const listItems = activeInput.querySelectorAll('list item');
+    listItems.forEach(item => {
+      items.push(item.textContent.trim());
+    });
+    if (items[selectedIndex]) {
+      nowTitle = cleanTitle(items[selectedIndex]);
+    }
+  } else {
+    nowTitle = cleanTitle(activeTitle);
+  }
+
+  // Update Now Playing
+  const remaining = duration - position;
+  const progress = duration > 0 ? Math.min(100, (position / duration) * 100) : 0;
+  
+  document.getElementById('npTitle').textContent = nowTitle;
+  document.getElementById('npProgress').style.width = progress + '%';
+  document.getElementById('npRemaining').textContent = msToReadable(remaining);
+  document.getElementById('npSub').textContent = 
+    getType('', nowTitle.toLowerCase()) === 'movie' ? '🎬 Feature Film · FLM TV Channel 26.5' : 'FLM TV Channel 26.5 · Las Vegas';
+
+  // Up Next
+  const nextIdx = selectedIndex + 1;
+  let upNextName = 'Stay tuned...';
+  if (items[nextIdx]) {
+    upNextName = cleanTitle(items[nextIdx]);
+    // Skip ads for "up next"
+    let lookAhead = nextIdx;
+    while (lookAhead < items.length) {
+      const t = getType(items[lookAhead], cleanTitle(items[lookAhead]));
+      if (t !== 'ad') { upNextName = cleanTitle(items[lookAhead]); break; }
+      lookAhead++;
+    }
+  }
+  document.getElementById('upNextTitle').textContent = upNextName;
+
+  // Build queue — show items from next onwards
+  const queueList = document.getElementById('queueList');
+  if (items.length === 0) {
+    queueList.innerHTML = '<div class="error-state">Queue information not available for this input type.</div>';
+    return;
+  }
+
+  const remaining_items = items.slice(selectedIndex + 1);
+  if (remaining_items.length === 0) {
+    queueList.innerHTML = '<div class="error-state">End of playlist.</div>';
+    return;
+  }
+
+  let html = '';
+  let showCount = 0;
+  remaining_items.forEach((path, i) => {
+    const name = cleanTitle(path);
+    const type = getType(path, name);
+    
+    // Skip consecutive ads from display (show just one)
+    if (type === 'ad') {
+      // Only show ads occasionally
+      if (i > 0 && getType(remaining_items[i-1], cleanTitle(remaining_items[i-1])) === 'ad') return;
+    }
+
+    showCount++;
+    const isNext = i === 0;
+    const typeClass = `is-${type}`;
+    const nextBadge = isNext ? '<span class="next-badge">NEXT</span>' : '';
+    const movieBadge = type === 'movie' ? '<span class="movie-badge">MOVIE</span>' : '';
+    const tag = type === 'ad' ? 'AD' : type === 'movie' ? 'FILM' : type === 'kids' ? 'KIDS' : type === 'flm' ? 'FLM' : '';
+
+    html += `
+      <div class="queue-item ${typeClass}">
+        <div class="q-num">${showCount}</div>
+        <div class="q-title">${name}${nextBadge}${movieBadge}</div>
+        <div class="q-tag">${tag}</div>
+      </div>`;
+  });
+
+  queueList.innerHTML = html;
+}
+
+function updateClock() {
+  const n = new Date();
+  const h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
+  const ap = h < 12 ? 'AM' : 'PM';
+  document.getElementById('clock').textContent = 
+    `${h%12||12}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ap}`;
+}
+
+document.getElementById('heroDate').textContent = 
+  new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
+
+fetchVmix();
+updateClock();
+setInterval(updateClock, 1000);
+setInterval(fetchVmix, 30000);
+</script>
+</body>
+</html>
