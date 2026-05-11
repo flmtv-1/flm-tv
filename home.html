@@ -3044,29 +3044,44 @@
             gap: 0.75rem;
             grid-template-columns: 1fr !important;
         }
-        /* Player: compact fixed height */
+        /* Player: completely locked — no aspect-ratio, no resize, no pop */
         .live-showcase-player {
             width: 100% !important;
             height: 200px !important;
             max-height: 200px !important;
             min-height: 200px !important;
             aspect-ratio: unset !important;
+            overflow: hidden !important;
+            flex-shrink: 0 !important;
+            flex-grow: 0 !important;
         }
-        /* Categories box: fixed height with scroll inside — same as PC box */
+        .live-showcase-player video {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            aspect-ratio: unset !important;
+        }
+        /* Categories: horizontal scroll left/right on phone */
         .live-showcase-right {
             width: 100% !important;
         }
         .showcase-scroll {
-            grid-template-columns: repeat(2, 1fr) !important;
-            max-height: 200px !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
+            display: flex !important;
+            flex-direction: row !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            max-height: none !important;
+            grid-template-columns: unset !important;
+            gap: 0.5rem !important;
+            padding-bottom: 6px !important;
         }
         .showcase-scroll .category-nav-item {
-            min-width: 0 !important;
-            flex: none !important;
-            width: 100% !important;
-            height: 65px !important;
+            flex: 0 0 140px !important;
+            min-width: 140px !important;
+            width: 140px !important;
+            height: 80px !important;
         }
         .category-nav-name {
             font-size: 0.7rem !important;
