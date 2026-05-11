@@ -2814,8 +2814,7 @@
 
                 </div>
                 <div style="position:relative;display:flex;align-items:center;gap:8px;">
-                    <!-- Up/Down arrows on the right side -->
-                    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+                    <div class="showcase-updown-arrows" style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
                         <button onclick="document.getElementById('categoryNavScroll').scrollBy({top:-220,behavior:'smooth'})" 
                             style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
                             onmouseover="this.style.background='rgba(255,215,0,0.25)'" onmouseout="this.style.background='rgba(255,215,0,0.1)'">&#9650;</button>
@@ -2823,9 +2822,13 @@
                             style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
                             onmouseover="this.style.background='rgba(255,215,0,0.25)'" onmouseout="this.style.background='rgba(255,215,0,0.1)'">&#9660;</button>
                     </div>
-                    <div class="category-nav-scroll showcase-scroll" id="categoryNavScroll" style="flex:1;">
+                    <button class="showcase-lr-arrow" onclick="document.getElementById('categoryNavScroll').scrollBy({left:-300,behavior:'smooth'})"
+                        style="display:none;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;align-items:center;justify-content:center;flex-shrink:0;">&#9664;</button>
+                    <div class="category-nav-scroll showcase-scroll" id="categoryNavScroll">
                         <!-- Category cards will be dynamically added here -->
                     </div>
+                    <button class="showcase-lr-arrow" onclick="document.getElementById('categoryNavScroll').scrollBy({left:300,behavior:'smooth'})"
+                        style="display:none;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;align-items:center;justify-content:center;flex-shrink:0;">&#9654;</button>
                 </div>
             </div>
 
@@ -3061,13 +3064,22 @@
             flex-direction: row !important;
             overflow-x: auto !important;
             overflow-y: hidden !important;
-            max-height: none !important;
+            max-height: 90px !important;
+            height: 90px !important;
+            flex-grow: 1 !important;
+            min-width: 0 !important;
         }
         .showcase-scroll .category-nav-item {
             flex: 0 0 150px !important;
             min-width: 150px !important;
             width: 150px !important;
             height: 90px !important;
+        }
+        .showcase-updown-arrows {
+            display: none !important;
+        }
+        .showcase-lr-arrow {
+            display: flex !important;
         }
         .category-nav-name {
             font-size: 0.7rem !important;
