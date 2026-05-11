@@ -2790,7 +2790,9 @@
                     <div class="live-dot"></div>
                     LIVE · CH 26.5
                 </div>
-                <video id="previewVideo" muted defaultmuted autoplay playsinline></video>
+                <div id="previewVideoWrap" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden;">
+                    <video id="previewVideo" muted defaultmuted autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;"></video>
+                </div>
                 <div class="live-showcase-overlay">
                     <div class="live-showcase-info">
                         <div class="live-showcase-logo">FLM <span>TV</span></div>
@@ -3044,7 +3046,7 @@
             gap: 0.75rem;
             grid-template-columns: 1fr !important;
         }
-        /* Player: completely locked — no aspect-ratio, no resize, no pop */
+        /* LOCK the player box — nothing inside can resize it */
         .live-showcase-player {
             width: 100% !important;
             height: 200px !important;
@@ -3054,14 +3056,26 @@
             overflow: hidden !important;
             flex-shrink: 0 !important;
             flex-grow: 0 !important;
+            contain: strict !important;
         }
-        .live-showcase-player video {
+        /* Kill aspect-ratio and lock video wrapper + video itself */
+        #previewVideoWrap {
             position: absolute !important;
             inset: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            object-fit: contain !important;
             aspect-ratio: unset !important;
+            overflow: hidden !important;
+        }
+        #previewVideo {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            aspect-ratio: unset !important;
+            object-fit: contain !important;
+            max-width: 100% !important;
+            max-height: 200px !important;
         }
         /* Categories: horizontal scroll left/right on phone */
         .live-showcase-right {
@@ -3106,6 +3120,29 @@
             }, true);
         }
         if (typeof Hls !== 'undefined') { init(); } else { window.addEventListener('load', init); }
+
+        // MOBILE: hard-lock player size after stream loads so HLS can't resize it
+        if (window.innerWidth <= 600) {
+            var player = document.querySelector('.live-showcase-player');
+            if (player) {
+                player.style.setProperty('height', '200px', 'important');
+                player.style.setProperty('max-height', '200px', 'important');
+                player.style.setProperty('min-height', '200px', 'important');
+                player.style.setProperty('aspect-ratio', 'unset', 'important');
+                player.style.setProperty('overflow', 'hidden', 'important');
+            }
+            // Re-lock every 500ms for the first 5 seconds while HLS initializes
+            var lockCount = 0;
+            var lockInterval = setInterval(function() {
+                if (player) {
+                    player.style.setProperty('height', '200px', 'important');
+                    player.style.setProperty('max-height', '200px', 'important');
+                    player.style.setProperty('aspect-ratio', 'unset', 'important');
+                }
+                lockCount++;
+                if (lockCount >= 10) clearInterval(lockInterval);
+            }, 500);
+        }
     })();
     </script>
 
