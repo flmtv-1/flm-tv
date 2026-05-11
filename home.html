@@ -426,7 +426,7 @@
         }
         
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             font-weight: 900;
             margin-bottom: 1rem;
             color: var(--accent);
@@ -2745,9 +2745,9 @@
                     <i class="fas fa-lock"></i>
                 </button>
                 
-                <button class="btn-primary" id="signInBtn" onclick="openModal('signInModal')">
-                    <i class="fas fa-user"></i><span class="sign-in-text"> Sign In / Sign Up</span>
-                </button>
+                <a href="live-stations.html" class="btn-primary" style="text-decoration:none;display:flex;align-items:center;gap:0.4rem;">
+                    <i class="fas fa-tv"></i><span class="sign-in-text"> TV Stations</span>
+                </a>
             </div>
         </div>
     </header>
@@ -2829,7 +2829,7 @@
 
     /* TV / Firestick optimizations */
     @media screen and (min-width: 1200px) {
-        .hero-banner { height: 40vh !important; }
+        /* hero height controlled by base 70vh */
         .live-showcase-container {
             max-width: 1100px !important;
             margin: 0 auto !important;
@@ -3078,6 +3078,10 @@
         }
         .category-nav-name {
             font-size: 0.7rem !important;
+        }
+        .btn {
+            padding: 0.6rem 1.2rem !important;
+            font-size: 0.85rem !important;
         }
     }
     </style>
