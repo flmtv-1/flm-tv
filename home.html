@@ -2790,7 +2790,12 @@
                     <div class="live-dot"></div>
                     LIVE · CH 26.5
                 </div>
-                <video id="previewVideo" muted defaultmuted autoplay playsinline></video>
+                <video id="previewVideo" muted defaultmuted autoplay playsinline
+                    poster="assets/images/Screenshots/NEW FLM TV Banner 1080, Z-pegusus.png"
+                    onerror="this.style.display='none';document.getElementById('previewFallback').style.display='block';"
+                ></video>
+                <img id="previewFallback" src="assets/images/Screenshots/NEW FLM TV Banner 1080, Z-pegusus.png" 
+                    style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" alt="FLM TV">
                 <div class="live-showcase-overlay">
                     <div class="live-showcase-info">
                         <div class="live-showcase-logo">FLM <span>TV</span></div>
@@ -2807,33 +2812,14 @@
                 </div>
             </div>
 
-            <!-- CATEGORIES BESIDE + BELOW -->
-            <div class="live-showcase-right">
-                <div class="showcase-cat-header">
-                    <h2 class="category-nav-title" style="margin:0;">Browse Categories</h2>
+        </div>
 
-                </div>
-                <div style="position:relative;display:flex;align-items:center;gap:8px;">
-                    <!-- Up/Down arrows on the right side -->
-                    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
-                        <button onclick="document.getElementById('categoryNavScroll').scrollBy({top:-220,behavior:'smooth'})" 
-                            style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
-                            onmouseover="this.style.background='rgba(255,215,0,0.25)'" onmouseout="this.style.background='rgba(255,215,0,0.1)'">&#9650;</button>
-                        <button onclick="document.getElementById('categoryNavScroll').scrollBy({top:220,behavior:'smooth'})"
-                            style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
-                            onmouseover="this.style.background='rgba(255,215,0,0.25)'" onmouseout="this.style.background='rgba(255,215,0,0.1)'">&#9660;</button>
-                    </div>
-                    <div class="category-nav-scroll showcase-scroll" id="categoryNavScroll" style="flex:1;">
-                        <!-- Category cards will be dynamically added here -->
-                    </div>
-                </div>
-            </div>
-
+        <!-- CATEGORIES: horizontal scroll row under the player, all views -->
+        <div class="cat-strip-wrap">
+            <h2 class="cat-strip-title">Browse Categories</h2>
+            <div class="cat-strip" id="categoryNavScroll"></div>
         </div>
     </section>
-
-    <!-- MOBILE ONLY: horizontal category strip, completely separate from the grid -->
-    <div id="mobileCatStrip" style="display:none; overflow-x:auto; overflow-y:hidden; padding:0.5rem 0.75rem; gap:0.5rem; -webkit-overflow-scrolling:touch;"></div>
 
     <style>
     .live-showcase-section {
@@ -2851,13 +2837,52 @@
     }
 
     .live-showcase-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 1.5rem 2rem 0.75rem;
+    }
+
+    /* CATEGORIES STRIP — horizontal scroll, all views */
+    .cat-strip-wrap {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 1.5rem 2rem;
-        display: grid;
-        grid-template-columns: 1fr 380px;
-        gap: 1.5rem;
-        align-items: start;
+        padding: 0 2rem 1.5rem;
+    }
+    .cat-strip-title {
+        font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+        color: #ffd700;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        margin: 0 0 0.6rem 0;
+    }
+    .cat-strip {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 10px;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,215,0,0.3) transparent;
+    }
+    .cat-strip::-webkit-scrollbar { height: 4px; }
+    .cat-strip::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
+    .cat-strip::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.3); border-radius: 4px; }
+    .cat-strip .category-nav-item {
+        flex: 0 0 160px;
+        min-width: 160px;
+        width: 160px;
+        height: 90px;
+    }
+    @media (max-width: 600px) {
+        .cat-strip-wrap { padding: 0 0.75rem 1rem; }
+        .cat-strip .category-nav-item {
+            flex: 0 0 130px !important;
+            min-width: 130px !important;
+            width: 130px !important;
+            height: 80px !important;
+        }
     }
 
     /* BIG PLAYER */
@@ -3043,36 +3068,13 @@
 
     @media (max-width: 600px) {
         .live-showcase-container {
-            padding: 0.75rem;
-            gap: 0.75rem;
-            grid-template-columns: 1fr !important;
+            padding: 0.75rem 0.75rem 0.5rem;
         }
-        /* Player: compact fixed height */
         .live-showcase-player {
-            width: 100% !important;
             height: 200px !important;
             max-height: 200px !important;
             min-height: 200px !important;
             aspect-ratio: unset !important;
-        }
-        /* Hide the right panel box completely on mobile */
-        .live-showcase-right {
-            display: none !important;
-        }
-        /* Show the mobile strip */
-        #mobileCatStrip {
-            display: flex !important;
-        }
-        #mobileCatStrip .category-nav-item {
-            flex: 0 0 130px !important;
-            min-width: 130px !important;
-            width: 130px !important;
-            height: 80px !important;
-        }
-        /* Fix TV STATIONS text size inside the small mobile card */
-        #mobileCatStrip .tv-stations-text {
-            font-size: 32px !important;
-            line-height: 1 !important;
         }
         .category-nav-name {
             font-size: 0.7rem !important;
@@ -3083,14 +3085,26 @@
     <script>
     (function() {
         const vid = document.getElementById('previewVideo');
+        const fallback = document.getElementById('previewFallback');
         const url = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+
+        function showFallback() {
+            if (fallback) { fallback.style.display = 'block'; }
+        }
+
         function init() {
             vid.muted = true; vid.volume = 0; vid.defaultMuted = true;
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
                 var h = new Hls(); h.loadSource(url); h.attachMedia(vid);
                 h.on(Hls.Events.MANIFEST_PARSED, function() { vid.muted = true; vid.play().catch(function(){}); });
+                h.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) { showFallback(); }
+                });
             } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
                 vid.src = url; vid.play().catch(function(){});
+                vid.addEventListener('error', showFallback);
+            } else {
+                showFallback();
             }
             vid.addEventListener('volumechange', function() {
                 if (!this.muted || this.volume > 0) { this.muted = true; this.volume = 0; }
@@ -3854,14 +3868,13 @@
                         navItem.style.cssText = 'background: linear-gradient(135deg, #050a1a 0%, #0a1530 60%, #050a1a 100%); border: 2px solid rgba(192,39,45,0.5); position: relative; overflow: hidden;';
                         navItem.innerHTML = `
                             <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%, rgba(192,39,45,0.15) 0%, transparent 70%);pointer-events:none;"></div>
-                            <div class="category-nav-overlay" style="background:linear-gradient(0deg,rgba(8,8,8,0.95) 0%,transparent 50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12px;text-align:center;">
-                                <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px;">
+                            <div class="category-nav-overlay" style="background:linear-gradient(0deg,rgba(8,8,8,0.95) 0%,transparent 50%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;text-align:center;">
+                                <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
                                     <div style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
                                     <span style="font-size:10px;color:#E8333A;font-weight:700;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;">LIVE</span>
                                 </div>
-                                <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;line-height:0.9;letter-spacing:4px;" class="tv-stations-text">TV</div>
-                                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#ffd700;letter-spacing:4px;line-height:1;">STATIONS</div>
-                                <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
+                                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;line-height:1;letter-spacing:3px;">TV STATIONS</div>
+                                <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
                             </div>
                             <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
                         `;
@@ -6104,25 +6117,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
 })();
 </script>
-
-    <!-- MOBILE: copy category cards into horizontal strip -->
-    <script>
-    if (window.innerWidth <= 600) {
-        var strip = document.getElementById('mobileCatStrip');
-        var src = document.getElementById('categoryNavScroll');
-        if (strip && src) {
-            var obs = new MutationObserver(function() {
-                strip.innerHTML = '';
-                src.querySelectorAll('.category-nav-item').forEach(function(card) {
-                    var clone = card.cloneNode(true);
-                    clone.onclick = card.onclick;
-                    strip.appendChild(clone);
-                });
-            });
-            obs.observe(src, { childList: true });
-        }
-    }
-    </script>
 
 </body>
 </html>

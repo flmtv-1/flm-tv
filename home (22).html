@@ -385,7 +385,7 @@
         /* ═══════════════════════════════════════════════════════════════ */
         
         .hero-banner {
-            height: 45vh;
+            height: 70vh;
             position: relative;
             overflow: hidden;
         }
@@ -2745,9 +2745,9 @@
                     <i class="fas fa-lock"></i>
                 </button>
                 
-                <button class="btn-primary" id="signInBtn" onclick="openModal('signInModal')">
-                    <i class="fas fa-user"></i><span class="sign-in-text"> Sign In / Sign Up</span>
-                </button>
+                <a href="live-stations.html" class="btn-primary" style="text-decoration:none;display:flex;align-items:center;gap:0.4rem;">
+                    <i class="fas fa-tv"></i><span class="sign-in-text"> TV Stations</span>
+                </a>
             </div>
         </div>
     </header>
@@ -2812,14 +2812,29 @@
                 </div>
             </div>
 
-        </div>
+            <!-- CATEGORIES BOX right side -->
+            <div class="live-showcase-right">
+                <div class="showcase-cat-header">
+                    <h2 class="category-nav-title" style="margin:0;">Browse Categories</h2>
+                </div>
+                <div style="position:relative;display:flex;align-items:center;gap:8px;">
+                    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+                        <button onclick="document.getElementById('categoryNavScroll').scrollBy({top:-220,behavior:'smooth'})"
+                            style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
+                            onmouseover="this.style.background='rgba(255,215,0,0.25)'" onmouseout="this.style.background='rgba(255,215,0,0.1)'">&#9650;</button>
+                        <button onclick="document.getElementById('categoryNavScroll').scrollBy({top:220,behavior:'smooth'})"
+                            style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
+                            onmouseover="this.style.background='rgba(255,215,0,0.25)'" onmouseout="this.style.background='rgba(255,215,0,0.1)'">&#9660;</button>
+                    </div>
+                    <div class="category-nav-scroll showcase-scroll" id="categoryNavScroll" style="flex:1;"></div>
+                </div>
+            </div>
 
-        <!-- CATEGORIES: horizontal scroll row under the player, all views -->
-        <div class="cat-strip-wrap">
-            <h2 class="cat-strip-title">Browse Categories</h2>
-            <div class="cat-strip" id="categoryNavScroll"></div>
         </div>
     </section>
+
+    <!-- MOBILE ONLY: horizontal category strip -->
+    <div id="mobileCatStrip" style="display:none;overflow-x:auto;overflow-y:hidden;padding:0.5rem 0.75rem;gap:0.5rem;-webkit-overflow-scrolling:touch;"></div>
 
     <style>
     .live-showcase-section {
@@ -2829,7 +2844,7 @@
 
     /* TV / Firestick optimizations */
     @media screen and (min-width: 1200px) {
-        .hero-banner { height: 40vh !important; }
+        /* TV / Firestick layout section */
         .live-showcase-container {
             max-width: 1100px !important;
             margin: 0 auto !important;
@@ -2837,9 +2852,13 @@
     }
 
     .live-showcase-container {
-        max-width: 700px;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 1.5rem 2rem 0.75rem;
+        padding: 1.5rem 2rem;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 1.5rem;
+        align-items: stretch;
     }
 
     /* CATEGORIES STRIP — horizontal scroll, all views */
@@ -2891,7 +2910,8 @@
         border-radius: 14px;
         overflow: hidden;
         background: #000;
-        aspect-ratio: 16/9;
+        height: 100%;
+        width: 100%;
         box-shadow:
             0 0 0 2px rgba(255,215,0,0.3),
             0 0 60px rgba(255,215,0,0.1),
@@ -2953,7 +2973,7 @@
         justify-content: flex-end;
         padding: 20px;
         z-index: 5;
-        opacity: 0;
+        opacity: 1;
         transition: opacity 0.3s ease;
     }
 
@@ -3025,6 +3045,7 @@
         flex-direction: column;
         gap: 12px;
         height: 100%;
+        overflow: hidden;
     }
 
     .showcase-cat-header {
@@ -3039,6 +3060,7 @@
         gap: 10px !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
+        flex: 1 !important;
         max-height: 420px;
         padding-right: 4px;
         flex: none !important;
@@ -3068,13 +3090,31 @@
 
     @media (max-width: 600px) {
         .live-showcase-container {
-            padding: 0.75rem 0.75rem 0.5rem;
+            padding: 0.75rem;
+            gap: 0.75rem;
+            grid-template-columns: 1fr !important;
         }
+        /* Player: compact fixed height */
         .live-showcase-player {
+            width: 100% !important;
             height: 200px !important;
             max-height: 200px !important;
             min-height: 200px !important;
             aspect-ratio: unset !important;
+        }
+        /* Hide the right panel box completely on mobile */
+        .live-showcase-right {
+            display: none !important;
+        }
+        /* Show the mobile strip */
+        #mobileCatStrip {
+            display: flex !important;
+        }
+        #mobileCatStrip .category-nav-item {
+            flex: 0 0 130px !important;
+            min-width: 130px !important;
+            width: 130px !important;
+            height: 80px !important;
         }
         .category-nav-name {
             font-size: 0.7rem !important;
@@ -6117,6 +6157,24 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
 })();
 </script>
+
+    <script>
+    if (window.innerWidth <= 600) {
+        var strip = document.getElementById('mobileCatStrip');
+        var src = document.getElementById('categoryNavScroll');
+        if (strip && src) {
+            var obs = new MutationObserver(function() {
+                strip.innerHTML = '';
+                src.querySelectorAll('.category-nav-item').forEach(function(card) {
+                    var clone = card.cloneNode(true);
+                    clone.onclick = card.onclick;
+                    strip.appendChild(clone);
+                });
+            });
+            obs.observe(src, { childList: true });
+        }
+    }
+    </script>
 
 </body>
 </html>
