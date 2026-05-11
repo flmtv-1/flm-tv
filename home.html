@@ -3057,16 +3057,17 @@
             width: 100% !important;
         }
         .showcase-scroll {
-            grid-template-columns: repeat(2, 1fr) !important;
-            max-height: 200px !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
+            display: flex !important;
+            flex-direction: row !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            max-height: none !important;
         }
         .showcase-scroll .category-nav-item {
-            min-width: 0 !important;
-            flex: none !important;
-            width: 100% !important;
-            height: 65px !important;
+            flex: 0 0 130px !important;
+            min-width: 130px !important;
+            width: 130px !important;
+            height: 75px !important;
         }
         .category-nav-name {
             font-size: 0.7rem !important;
@@ -3853,7 +3854,7 @@
                                     <div style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
                                     <span style="font-size:10px;color:#E8333A;font-weight:700;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;">LIVE</span>
                                 </div>
-                                <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;line-height:0.9;letter-spacing:4px;">TV</div>
+                                <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(24px, 5vw, 52px);color:#fff;line-height:0.9;letter-spacing:4px;">TV</div>
                                 <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#ffd700;letter-spacing:4px;line-height:1;">STATIONS</div>
                                 <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
                             </div>
