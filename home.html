@@ -3053,10 +3053,13 @@
         /* Player: compact fixed height */
         .live-showcase-player {
             width: 100% !important;
-            height: 180px !important;
-            max-height: 180px !important;
-            min-height: 180px !important;
-            aspect-ratio: unset !important;
+            height: 200px !important;
+            max-height: 200px !important;
+            min-height: 200px !important;
+            aspect-ratio: 16/9 !important;
+        }
+        .live-showcase-player video {
+            object-fit: contain !important;
         }
         /* Categories box: fixed height with scroll inside — same as PC box */
         .live-showcase-right {
