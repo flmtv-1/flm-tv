@@ -2790,9 +2790,7 @@
                     <div class="live-dot"></div>
                     LIVE · CH 26.5
                 </div>
-                <div id="previewVideoWrap" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden;">
-                    <video id="previewVideo" muted defaultmuted autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;"></video>
-                </div>
+                <video id="previewVideo" muted defaultmuted autoplay playsinline></video>
                 <div class="live-showcase-overlay">
                     <div class="live-showcase-info">
                         <div class="live-showcase-logo">FLM <span>TV</span></div>
@@ -2817,7 +2815,7 @@
                 </div>
                 <div style="position:relative;display:flex;align-items:center;gap:8px;">
                     <!-- Up/Down arrows on the right side -->
-                    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+                    <div id="catScrollArrows" style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
                         <button onclick="document.getElementById('categoryNavScroll').scrollBy({top:-220,behavior:'smooth'})" 
                             style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.4);color:#ffd700;cursor:pointer;width:26px;height:26px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
                             onmouseover="this.style.background='rgba(255,215,0,0.25)'" onmouseout="this.style.background='rgba(255,215,0,0.1)'">&#9650;</button>
@@ -3046,36 +3044,9 @@
             gap: 0.75rem;
             grid-template-columns: 1fr !important;
         }
-        /* LOCK the player box — nothing inside can resize it */
-        .live-showcase-player {
-            width: 100% !important;
-            height: 200px !important;
-            max-height: 200px !important;
-            min-height: 200px !important;
-            aspect-ratio: unset !important;
-            overflow: hidden !important;
-            flex-shrink: 0 !important;
-            flex-grow: 0 !important;
-            contain: strict !important;
-        }
-        /* Kill aspect-ratio and lock video wrapper + video itself */
-        #previewVideoWrap {
-            position: absolute !important;
-            inset: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            aspect-ratio: unset !important;
-            overflow: hidden !important;
-        }
-        #previewVideo {
-            position: absolute !important;
-            inset: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            aspect-ratio: unset !important;
-            object-fit: contain !important;
-            max-width: 100% !important;
-            max-height: 200px !important;
+        /* Hide the up/down arrows on mobile — useless for horizontal scroll */
+        #catScrollArrows {
+            display: none !important;
         }
         /* Categories: horizontal scroll left/right on phone */
         .live-showcase-right {
@@ -3090,6 +3061,8 @@
             grid-template-columns: unset !important;
             gap: 0.5rem !important;
             padding-bottom: 6px !important;
+            flex: 1 !important;
+            width: 100% !important;
         }
         .showcase-scroll .category-nav-item {
             flex: 0 0 140px !important;
@@ -3120,29 +3093,6 @@
             }, true);
         }
         if (typeof Hls !== 'undefined') { init(); } else { window.addEventListener('load', init); }
-
-        // MOBILE: hard-lock player size after stream loads so HLS can't resize it
-        if (window.innerWidth <= 600) {
-            var player = document.querySelector('.live-showcase-player');
-            if (player) {
-                player.style.setProperty('height', '200px', 'important');
-                player.style.setProperty('max-height', '200px', 'important');
-                player.style.setProperty('min-height', '200px', 'important');
-                player.style.setProperty('aspect-ratio', 'unset', 'important');
-                player.style.setProperty('overflow', 'hidden', 'important');
-            }
-            // Re-lock every 500ms for the first 5 seconds while HLS initializes
-            var lockCount = 0;
-            var lockInterval = setInterval(function() {
-                if (player) {
-                    player.style.setProperty('height', '200px', 'important');
-                    player.style.setProperty('max-height', '200px', 'important');
-                    player.style.setProperty('aspect-ratio', 'unset', 'important');
-                }
-                lockCount++;
-                if (lockCount >= 10) clearInterval(lockInterval);
-            }, 500);
-        }
     })();
     </script>
 
