@@ -197,8 +197,8 @@ body::after {
   <h1 class="hero-title">TODAY'S <em>PROGRAMMING</em></h1>
   <div class="hero-date" id="heroDate">—</div>
   <div class="hero-stats">
-    <div><div class="stat-num">37</div><div class="stat-label">Shows Today</div></div>
-    <div><div class="stat-num">22+</div><div class="stat-label">Hours</div></div>
+    <div><div class="stat-num" >37</div><div class="stat-label">Shows Today</div></div>
+    <div><div class="stat-num" id="statHours">—</div><div class="stat-label">Hours</div></div>
     <div><div class="stat-num">FREE</div><div class="stat-label">Always Free</div></div>
   </div>
 </section>
@@ -229,87 +229,497 @@ body::after {
 </div>
 
 <script>
-const SCHEDULE = [
-  {name:"Sesame Street",              start:"6:37 AM", end:"7:03 AM",  startMin:397,  endMin:423,  dur:"25 min",      type:"kids"},
-  {name:"Word World",                 start:"7:03 AM", end:"7:30 AM",  startMin:423,  endMin:450,  dur:"27 min",      type:"kids"},
-  {name:"Super Why!",                 start:"7:30 AM", end:"7:57 AM",  startMin:450,  endMin:477,  dur:"27 min",      type:"kids"},
-  {name:"Schoolhouse Rock",           start:"7:57 AM", end:"8:00 AM",  startMin:477,  endMin:480,  dur:"3 min",       type:"kids"},
-  {name:"Schoolhouse Rock",           start:"8:00 AM", end:"8:03 AM",  startMin:480,  endMin:483,  dur:"3 min",       type:"kids"},
-  {name:"Schoolhouse Rock",           start:"8:03 AM", end:"8:06 AM",  startMin:483,  endMin:486,  dur:"3 min",       type:"kids"},
-  {name:"Charlie Brown",              start:"8:06 AM", end:"8:29 AM",  startMin:486,  endMin:509,  dur:"22 min",      type:"kids"},
-  {name:"Fireman Sam",                start:"8:29 AM", end:"9:19 AM",  startMin:509,  endMin:559,  dur:"50 min",      type:"kids"},
-  {name:"Lance Hendron",              start:"9:19 AM", end:"9:19 AM",  startMin:559,  endMin:559,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"9:19 AM", end:"9:20 AM",  startMin:559,  endMin:560,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Mary Perry",                 start:"9:20 AM", end:"9:20 AM",  startMin:560,  endMin:560,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"FLMTV.com",                  start:"9:20 AM", end:"9:20 AM",  startMin:560,  endMin:560,  dur:"12 sec",      type:"flm", isFlmPromo:true},
-  {name:"Gilligan's Island",          start:"9:20 AM", end:"9:45 AM",  startMin:560,  endMin:585,  dur:"25 min",      type:"classic"},
-  {name:"2 Louisiana Chefs",          start:"9:45 AM", end:"9:51 AM",  startMin:585,  endMin:591,  dur:"5 min",       type:"flm"},
-  {name:"Mother's Day Compilation",   start:"9:51 AM", end:"9:51 AM",  startMin:591,  endMin:591,  dur:"Special",     type:"flm"},
-  {name:"Mister Ed",                  start:"9:51 AM", end:"10:17 AM", startMin:591,  endMin:617,  dur:"25 min",      type:"classic"},
-  {name:"Mary Perry",                 start:"10:17 AM",end:"10:17 AM", startMin:617,  endMin:617,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"10:17 AM",end:"10:17 AM", startMin:617,  endMin:617,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"10:17 AM",end:"10:18 AM", startMin:617,  endMin:618,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Charlie's Angels",           start:"10:18 AM",end:"11:07 AM", startMin:618,  endMin:667,  dur:"48 min",      type:"classic"},
-  {name:"The Addams Family",          start:"11:07 AM",end:"11:33 AM", startMin:667,  endMin:693,  dur:"25 min",      type:"classic"},
-  {name:"Little Rascals",             start:"11:33 AM",end:"11:53 AM", startMin:693,  endMin:713,  dur:"20 min",      type:"classic"},
-  {name:"Bewitched",                  start:"11:53 AM",end:"12:19 PM", startMin:713,  endMin:739,  dur:"25 min",      type:"classic"},
-  {name:"Bewitched",                  start:"12:19 PM",end:"12:44 PM", startMin:739,  endMin:764,  dur:"25 min",      type:"classic"},
-  {name:"Lance Hendron",              start:"12:44 PM",end:"12:45 PM", startMin:764,  endMin:765,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"12:45 PM",end:"12:45 PM", startMin:765,  endMin:765,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Mary Perry",                 start:"12:45 PM",end:"12:46 PM", startMin:765,  endMin:766,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Good Times",                 start:"12:46 PM",end:"1:10 PM",  startMin:766,  endMin:790,  dur:"24 min",      type:"classic"},
-  {name:"Good Times",                 start:"1:10 PM", end:"1:35 PM",  startMin:790,  endMin:815,  dur:"24 min",      type:"classic"},
-  {name:"The Jeffersons",             start:"1:35 PM", end:"2:00 PM",  startMin:815,  endMin:840,  dur:"25 min",      type:"classic"},
-  {name:"Zaina Juliette & Friends",   start:"2:00 PM", end:"2:28 PM",  startMin:840,  endMin:868,  dur:"28 min",      type:"flm"},
-  {name:"Mary Perry",                 start:"2:28 PM", end:"2:28 PM",  startMin:868,  endMin:868,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"2:28 PM", end:"2:29 PM",  startMin:868,  endMin:869,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"2:29 PM", end:"2:29 PM",  startMin:869,  endMin:869,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lucy - American Mother",     start:"2:29 PM", end:"2:55 PM",  startMin:869,  endMin:895,  dur:"25 min",      type:"classic"},
-  {name:"Matilda",                    start:"2:55 PM", end:"4:33 PM",  startMin:895,  endMin:993,  dur:"1 hr 38 min", type:"movie", isMovie:true},
-  {name:"Mary Perry",                 start:"4:33 PM", end:"4:34 PM",  startMin:993,  endMin:994,  dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"4:34 PM", end:"4:34 PM",  startMin:994,  endMin:994,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"4:34 PM", end:"4:35 PM",  startMin:994,  endMin:995,  dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Charlie & the Chocolate Factory", start:"4:35 PM", end:"6:30 PM", startMin:995, endMin:1110, dur:"1 hr 55 min", type:"movie", isMovie:true},
-  {name:"Jurassic Park III",          start:"6:30 PM", end:"7:53 PM",  startMin:1110, endMin:1193, dur:"1 hr 22 min", type:"movie", isMovie:true},
-  {name:"Mary Perry",                 start:"7:53 PM", end:"7:53 PM",  startMin:1193, endMin:1193, dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"7:53 PM", end:"7:53 PM",  startMin:1193, endMin:1193, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"7:53 PM", end:"7:54 PM",  startMin:1193, endMin:1194, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"The Lost World",             start:"7:54 PM", end:"10:03 PM", startMin:1194, endMin:1323, dur:"2 hr 8 min",  type:"movie", isMovie:true},
-  {name:"Alice in Wonderland",        start:"10:03 PM",end:"11:51 PM", startMin:1323, endMin:1431, dur:"1 hr 48 min", type:"movie", isMovie:true},
-  {name:"Mary Perry",                 start:"11:51 PM",end:"11:52 PM", startMin:1431, endMin:1432, dur:"15 sec",      type:"ad", isAd:true},
-  {name:"Lance Hendron",              start:"11:52 PM",end:"11:52 PM", startMin:1432, endMin:1432, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"Lenna Hovanessian",          start:"11:52 PM",end:"11:53 PM", startMin:1432, endMin:1433, dur:"30 sec",      type:"ad", isAd:true},
-  {name:"The Lord of the Rings",      start:"11:53 PM",end:"3:48 AM",  startMin:1433, endMin:1668, dur:"3 hr 55 min", type:"movie", isMovie:true},
-  {name:"The Twilight Zone",          start:"3:48 AM", end:"4:14 AM",  startMin:1668, endMin:1694, dur:"25 min",      type:"classic"},
-  {name:"The Twilight Zone",          start:"4:14 AM", end:"4:40 AM",  startMin:1694, endMin:1720, dur:"25 min",      type:"classic"},
-  {name:"The Twilight Zone",          start:"4:40 AM", end:"5:06 AM",  startMin:1720, endMin:1746, dur:"25 min",      type:"classic"},
-  {name:"Andy Griffith Show",         start:"5:06 AM", end:"5:31 AM",  startMin:1746, endMin:1771, dur:"25 min",      type:"classic"},
-  {name:"Andy Griffith Show",         start:"5:31 AM", end:"5:59 AM",  startMin:1771, endMin:1799, dur:"27 min",      type:"classic"},
-];
+// ── SCHEDULE DATA (auto-generated from JSON) ──────────────────────────
+const SCHEDULE_JSON = {
+  "2026-05-11": [
+    {
+      "startTime": "09:41",
+      "name": "Molly of Denali S01E30 Busy Beavers The Night Watchers ia",
+      "path": "Molly of Denali_S01E30_Busy Beavers_The Night Watchers.ia.mp4",
+      "duration": 1538.112,
+      "inPoint": 6,
+      "outPoint": 1538,
+      "category": ""
+    },
+    {
+      "startTime": "10:07",
+      "name": "Dancing Bear Logo1",
+      "path": "Dancing Bear Logo1.mp4",
+      "duration": 16.975292,
+      "inPoint": 0,
+      "outPoint": 16.975292,
+      "category": ""
+    },
+    {
+      "startTime": "10:07",
+      "name": "Mary Perry",
+      "path": "Mary Perry.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "10:07",
+      "name": "Lance Hendron",
+      "path": "Lance Hendron.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "10:08",
+      "name": "Lenna Hovanessian",
+      "path": "Lenna Hovanessian.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "10:09",
+      "name": "The Monkees 202 The Picture Frame (a k a The Bank Robbery)",
+      "path": "The Monkees 202 The Picture Frame (a.k.a. The Bank Robbery).mp4",
+      "duration": 1492.764444,
+      "inPoint": 0,
+      "outPoint": 1492.764444,
+      "category": ""
+    },
+    {
+      "startTime": "10:34",
+      "name": "Abbott and Costello in South of Dixie ia",
+      "path": "Abbott and Costello in South of Dixie.ia.mp4",
+      "duration": 1397.125433,
+      "inPoint": 0,
+      "outPoint": 1397.125433,
+      "category": ""
+    },
+    {
+      "startTime": "10:57",
+      "name": "The Addams Family S2 E20 Ophelia Finds Romance ia",
+      "path": "The Addams Family S2 E20 - Ophelia Finds Romance.ia.mp4",
+      "duration": 1540.086712,
+      "inPoint": 0,
+      "outPoint": 1540.086712,
+      "category": ""
+    },
+    {
+      "startTime": "11:23",
+      "name": "The Dick Van Dyke Show S02E05",
+      "path": "The Dick Van Dyke Show - S02E05.mp4",
+      "duration": 1522.943991,
+      "inPoint": 0,
+      "outPoint": 1522.943991,
+      "category": ""
+    },
+    {
+      "startTime": "11:48",
+      "name": "Lance Hendron",
+      "path": "Lance Hendron.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "11:49",
+      "name": "Lenna Hovanessian 2 mov",
+      "path": "Lenna Hovanessian-2.mov.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "11:50",
+      "name": "MaryPerryHFinal",
+      "path": "MaryPerryHFinal.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "11:50",
+      "name": "S01E11 Beaver's Short Pants ia",
+      "path": "S01E11 - Beaver's Short Pants.ia.mp4",
+      "duration": 1547.128917,
+      "inPoint": 0,
+      "outPoint": 1547.128917,
+      "category": ""
+    },
+    {
+      "startTime": "12:16",
+      "name": "3 Men in Black",
+      "path": "3 - Men in Black.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": ""
+    },
+    {
+      "startTime": "12:46",
+      "name": "Charlie's Angels S04e06 Fallen Angel",
+      "path": "Charlie's Angels S04e06 Fallen Angel.mkv",
+      "duration": 2938.79,
+      "inPoint": 0,
+      "outPoint": 2938.79,
+      "category": ""
+    },
+    {
+      "startTime": "13:35",
+      "name": "Bewitched S04E19 Snob in the Grass",
+      "path": "Bewitched S04E19 Snob in the Grass.mp4",
+      "duration": 1527.573333,
+      "inPoint": 0,
+      "outPoint": 1527.573333,
+      "category": ""
+    },
+    {
+      "startTime": "14:00",
+      "name": "Bewitched S04E20 If They Never Met",
+      "path": "Bewitched S04E20 If They Never Met.mp4",
+      "duration": 1530.862656,
+      "inPoint": 0,
+      "outPoint": 1530.862656,
+      "category": ""
+    },
+    {
+      "startTime": "14:26",
+      "name": "MaryPerryHFinal",
+      "path": "MaryPerryHFinal.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "14:26",
+      "name": "Lance Hendron",
+      "path": "Lance Hendron.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "14:27",
+      "name": "Lenna Hovanessian 2 mov",
+      "path": "Lenna Hovanessian-2.mov.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "14:28",
+      "name": "Whats Happening S03E18",
+      "path": "Whats Happening S03E18.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": ""
+    },
+    {
+      "startTime": "14:58",
+      "name": "Good Times S05E08 (Breaker, Breaker)",
+      "path": "Good Times S05E08 (Breaker, Breaker).mp4",
+      "duration": 1528.433333,
+      "inPoint": 0,
+      "outPoint": 1528.433333,
+      "category": ""
+    },
+    {
+      "startTime": "15:23",
+      "name": "Good Times S05E09 (Bye Bye Bookman)",
+      "path": "Good Times S05E09 (Bye-Bye Bookman).mp4",
+      "duration": 1540.690431,
+      "inPoint": 0,
+      "outPoint": 1540.690431,
+      "category": ""
+    },
+    {
+      "startTime": "15:49",
+      "name": "Sanford and Son (Season 4) Disc 1 t01",
+      "path": "Sanford and Son- (Season 4) Disc 1_t01.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": ""
+    },
+    {
+      "startTime": "16:19",
+      "name": "Sanford and Son (Season 4) Disc 1 t02",
+      "path": "Sanford and Son- (Season 4) Disc 1_t02.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": ""
+    },
+    {
+      "startTime": "16:49",
+      "name": "The Jeffersons S06E12 One Flew Into the Cuckoo's Nest",
+      "path": "The Jeffersons S06E12 One Flew Into the Cuckoo's Nest.mkv",
+      "duration": 1476.462,
+      "inPoint": 0,
+      "outPoint": 1476.462,
+      "category": ""
+    },
+    {
+      "startTime": "17:14",
+      "name": "Lenna Hovanessian 2 mov",
+      "path": "Lenna Hovanessian-2.mov.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "17:15",
+      "name": "Lance Hendron",
+      "path": "Lance Hendron.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "17:16",
+      "name": "Cardboard Boxer",
+      "path": "Boxer.mp4",
+      "duration": 135.929615,
+      "inPoint": 0,
+      "outPoint": 135.929615,
+      "category": ""
+    },
+    {
+      "startTime": "17:18",
+      "name": "Charlie Brown and Snoopy Show 1x07 Snoopy, the Psychiatrist",
+      "path": "Charlie Brown and Snoopy Show - 1x07 - Snoopy, the Psychiatrist.mp4",
+      "duration": 1350.974625,
+      "inPoint": 0,
+      "outPoint": 1350.974625,
+      "category": ""
+    },
+    {
+      "startTime": "17:41",
+      "name": "06 I Got Six",
+      "path": "06 I Got Six.mkv",
+      "duration": 187.003,
+      "inPoint": 0,
+      "outPoint": 187.003,
+      "category": ""
+    },
+    {
+      "startTime": "17:44",
+      "name": "07 Lucky Seven Sampson",
+      "path": "07 Lucky Seven Sampson.mkv",
+      "duration": 185.49,
+      "inPoint": 0,
+      "outPoint": 185.49,
+      "category": ""
+    },
+    {
+      "startTime": "17:47",
+      "name": "Cloudy With A Chance Of Meatballs ia",
+      "path": "Cloudy With A Chance Of Meatballs.ia.mp4",
+      "duration": 5393.4275,
+      "inPoint": 0,
+      "outPoint": 5393.4275,
+      "category": ""
+    },
+    {
+      "startTime": "19:17",
+      "name": "S04E09 Won't You Calm Down, Dan Dailey",
+      "path": "S04E09 - Won't You Calm Down, Dan Dailey.mp4",
+      "duration": 1549.676553,
+      "inPoint": 0,
+      "outPoint": 1549.676553,
+      "category": ""
+    },
+    {
+      "startTime": "19:43",
+      "name": "The X Files, Season 1 Disc 1 t03",
+      "path": "The X-Files, Season 1 Disc 1_t03.mkv",
+      "duration": 2749.728,
+      "inPoint": 0,
+      "outPoint": 2749.728,
+      "category": ""
+    },
+    {
+      "startTime": "20:29",
+      "name": "The Lord of the Rings The Two Towers",
+      "path": "The Lord of the Rings The Two Towers .mkv",
+      "duration": 14132.138,
+      "inPoint": 0,
+      "outPoint": 14132.138,
+      "category": ""
+    },
+    {
+      "startTime": "00:25",
+      "name": "The Twilight Zone (1959) S01E08 Time Enough at Last (1080p BluRay x265 ImE)",
+      "path": "The Twilight Zone (1959) - S01E08 - Time Enough at Last (1080p BluRay x265 ImE).mkv",
+      "duration": 1557.396,
+      "inPoint": 0,
+      "outPoint": 1557.396,
+      "category": ""
+    },
+    {
+      "startTime": "00:51",
+      "name": "The Twilight Zone (1959) S01E09 Perchance to Dream (1080p BluRay x265 ImE)",
+      "path": "The Twilight Zone (1959) - S01E09 - Perchance to Dream (1080p BluRay x265 ImE).mkv",
+      "duration": 1556.564,
+      "inPoint": 0,
+      "outPoint": 1556.564,
+      "category": ""
+    },
+    {
+      "startTime": "01:17",
+      "name": "The Twilight Zone (1959) S01E07 The Lonely (1080p BluRay x265 ImE)",
+      "path": "The Twilight Zone (1959) - S01E07 - The Lonely (1080p BluRay x265 ImE).mkv",
+      "duration": 1556.096,
+      "inPoint": 0,
+      "outPoint": 1556.096,
+      "category": ""
+    },
+    {
+      "startTime": "01:43",
+      "name": "Hellboy II: The Golden Army",
+      "path": "Hellboy.ia.mp4",
+      "duration": 7949.049138,
+      "inPoint": 0,
+      "outPoint": 7949.049138,
+      "category": ""
+    },
+    {
+      "startTime": "03:55",
+      "name": "Gran Torino ia",
+      "path": "Gran Torino.ia.mp4",
+      "duration": 7000.700499,
+      "inPoint": 0,
+      "outPoint": 7000.700499,
+      "category": ""
+    },
+    {
+      "startTime": "05:52",
+      "name": "Herbie Goes to Monte Carlo ia",
+      "path": "Herbie Goes to Monte Carlo.ia.mp4",
+      "duration": 6295.4445,
+      "inPoint": 0,
+      "outPoint": 6295.4445,
+      "category": ""
+    },
+    {
+      "startTime": "07:37",
+      "name": "Sesame Street Episode 4225 (November 5, 2010)",
+      "path": "Sesame Street - Episode 4225 (November 5, 2010).mp4",
+      "duration": 3174.976,
+      "inPoint": 0,
+      "outPoint": 3174.976,
+      "category": ""
+    },
+    {
+      "startTime": "08:30",
+      "name": "Sesame Street Episode 5025 (May 2, 2020)",
+      "path": "Sesame Street - Episode 5025 (May 2, 2020).mp4",
+      "duration": 1556.0545,
+      "inPoint": 0,
+      "outPoint": 1556.0545,
+      "category": ""
+    }
+  ]
+};
 
-const FLM_ORIGINALS = ["Lucy the Raffle","Locals in Las Vegas","Charly Suarez","Zaina Juliette & Friends","Og Scorpio","Gladius"];
-const KIDS = ["Sesame Street","Super Why!","Ready Jet Go","Molly of Denali","Liberty's Kids","Little Rascals"];
+// ── KNOWN CATEGORIES ─────────────────────────────────────────────────
+const AD_NAMES    = ['lance hendron','lenna hovanessian','mary perry','maryperry','cardboard boxer','dancing bear logo'];
+const KIDS_NAMES  = ['sesame street','molly of denali','ready jet go','elinor wonders','super why','charlie brown','schoolhouse rock','little rascals'];
+const MOVIE_NAMES = ['lord of the rings','hellboy','gran torino','herbie goes','cloudy with a chance','matilda','jurassic','alice in wonderland','lost world','charlie and the chocolate'];
+const FLM_NAMES   = ['zaina juliette','flmtv','flm tv','2 louisiana','lucy the raffle','locals in las vegas'];
+const FLM_ORIGINALS = ['Lucy the Raffle','Locals in Las Vegas','Charly Suarez','Zaina Juliette & Friends','Og Scorpio','Gladius'];
+
+function classifyShow(name) {
+  const n = name.toLowerCase();
+  if (AD_NAMES.some(x => n.includes(x)))    return { type:'ad',      isAd:true };
+  if (KIDS_NAMES.some(x => n.includes(x)))  return { type:'kids' };
+  if (MOVIE_NAMES.some(x => n.includes(x))) return { type:'movie',   isMovie:true };
+  if (FLM_NAMES.some(x => n.includes(x)))   return { type:'flm',     isFlmPromo:true };
+  return { type:'classic' };
+}
+
+function parseSchedule(json) {
+  // Find today's date key
+  const today = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const todayKey = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  
+  // Try today first, then fall back to first available date
+  const dateKey = json[todayKey] ? todayKey : Object.keys(json)[0];
+  const shows = (json[dateKey] || []).filter(s => s && s.name);
+
+  return shows.map((s, i) => {
+    const cls = classifyShow(s.name);
+    // Parse startTime HH:MM into minutes (handle overnight: times < 09:00 = next day)
+    const [sh, sm] = s.startTime.split(':').map(Number);
+    let startMin = sh * 60 + sm;
+    // Shows starting before 9am are overnight/next-day — add 1440
+    if (sh < 9) startMin += 1440;
+    
+    // Duration in minutes
+    const inP  = s.inPoint  || 0;
+    const outP = s.outPoint || s.duration || 0;
+    const durSec = Math.max(0, outP - inP);
+    const durMin = durSec / 60;
+    const endMin = startMin + durMin;
+
+    // Format duration string
+    let dur = '';
+    if (durSec === 0) dur = '—';
+    else if (durMin < 1) dur = Math.round(durSec) + ' sec';
+    else if (durMin < 60) dur = Math.round(durMin) + ' min';
+    else { const h = Math.floor(durMin/60), m = Math.round(durMin%60); dur = h + ' hr' + (m>0?' '+m+' min':''); }
+
+    // Format time display
+    function minToTime(m) {
+      const hh = Math.floor(m/60) % 24;
+      const mm = Math.round(m % 60);
+      const ampm = hh >= 12 ? 'PM' : 'AM';
+      const h12 = hh % 12 || 12;
+      return `${h12}:${String(mm).padStart(2,'0')} ${ampm}`;
+    }
+
+    return {
+      name: s.name.replace(/\s*\.ia$/i,'').replace(/\s*(\(\d{4}p.*?\))/i,'').trim(),
+      rawName: s.name,
+      path: s.path || '',
+      start: minToTime(startMin),
+      end:   minToTime(endMin),
+      startMin, endMin, dur,
+      ...cls,
+      isFlmOrig: FLM_ORIGINALS.some(x => s.name.toLowerCase().includes(x.toLowerCase()))
+    };
+  });
+}
+
+const SCHEDULE = parseSchedule(SCHEDULE_JSON);
 
 function getNowMin() {
   const n = new Date();
-  return n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
+  let m = n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
+  if (n.getHours() < 9) m += 1440; // overnight
+  return m;
 }
 
 function getStatus(s) {
-  let now = getNowMin();
-  let st = s.startMin, en = s.endMin;
-  // Handle overnight (endMin > 1440 = past midnight)
-  if (en > 1440 && now < 720) { now += 1440; }
-  if (now >= st && now < en) return 'live';
-  if (now >= en) return 'aired';
+  const now = getNowMin();
+  if (now >= s.startMin && now < s.endMin) return 'live';
+  if (now >= s.endMin) return 'aired';
   return 'upcoming';
 }
 
 function getProgress(s) {
-  let now = getNowMin();
-  let st = s.startMin, en = s.endMin;
-  if (en > 1440 && now < 720) now += 1440;
-  return Math.min(100, Math.max(0, ((now - st)/(en - st))*100));
+  const now = getNowMin();
+  return Math.min(100, Math.max(0, ((now - s.startMin)/(s.endMin - s.startMin))*100));
 }
 
 function blockLabel(min) {
@@ -327,7 +737,7 @@ function renderSchedule() {
 
   SCHEDULE.forEach(show => {
     const status = getStatus(show);
-    const block = blockLabel(show.startMin);
+    const block  = blockLabel(show.startMin);
 
     if (block !== lastBlock) {
       lastBlock = block;
@@ -337,27 +747,24 @@ function renderSchedule() {
       wrap.appendChild(hdr);
     }
 
-    const isFlmOrig = FLM_ORIGINALS.includes(show.name);
-    const isKids = KIDS.includes(show.name);
-
     const classes = ['show-card', status];
-    if (show.isAd) classes.push('ad-card');
+    if (show.isAd)       classes.push('ad-card');
     if (show.isFlmPromo) classes.push('flm-promo');
 
     const filterTags = [show.type, status];
-    if (isKids) filterTags.push('kids');
-    if (isFlmOrig) filterTags.push('flm');
-    if (show.isMovie) filterTags.push('movies');
+    if (show.type==='kids')  filterTags.push('kids');
+    if (show.isFlmOrig)      filterTags.push('flm');
+    if (show.isMovie)        filterTags.push('movies');
 
     const card = document.createElement('div');
     card.className = classes.join(' ');
     card.dataset.filter = filterTags.join(' ');
     if (status === 'live') card.id = 'live-now-card';
 
-    const movieBadge = show.isMovie ? `<span class="movie-badge">MOVIE</span>` : '';
-    const flmTag = isFlmOrig ? `<span class="flm-tag">★ FLM ORIGINAL</span>` : '';
-    const liveBadge = status === 'live' ? `<div class="live-badge"><div class="live-badge-dot"></div>ON AIR NOW</div>` : '';
-    const progressBar = status === 'live' ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${getProgress(show)}%"></div></div>` : '';
+    const movieBadge = show.isMovie   ? `<span class="movie-badge">MOVIE</span>` : '';
+    const flmTag     = show.isFlmOrig ? `<span class="flm-tag">★ FLM ORIGINAL</span>` : '';
+    const liveBadge  = status==='live' ? `<div class="live-badge"><div class="live-badge-dot"></div>ON AIR NOW</div>` : '';
+    const progressBar= status==='live' ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${getProgress(show)}%"></div></div>` : '';
 
     card.innerHTML = `
       <div class="show-time">
@@ -374,11 +781,20 @@ function renderSchedule() {
     `;
     wrap.appendChild(card);
   });
+
+  // Update hero stats
+  const total = SCHEDULE.length;
+  const movies = SCHEDULE.filter(s=>s.isMovie).length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statMovies').textContent = movies;
+  document.getElementById('statHours').textContent = Math.round(
+    SCHEDULE.reduce((a,s)=>a+(s.endMin-s.startMin),0)/60
+  );
 }
 
 function jumpToNow() {
   const el = document.getElementById('live-now-card');
-  if (!el) return;
+  if (!el) { alert('No show currently airing — check back later!'); return; }
   el.scrollIntoView({behavior:'smooth', block:'center'});
   el.style.boxShadow = '0 0 0 3px #00E676, 0 0 40px rgba(0,230,118,0.35)';
   setTimeout(() => { el.style.boxShadow = '0 0 0 2px var(--live-green), 0 4px 28px rgba(0,230,118,0.12)'; }, 900);
@@ -387,58 +803,52 @@ function jumpToNow() {
 function filterSchedule(cat, btn) {
   document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-
   document.querySelectorAll('.show-card').forEach(card => {
     const tags = card.dataset.filter || '';
     let show = false;
-    if (cat === 'all') show = true;
-    else if (cat === 'shows') show = !card.classList.contains('ad-card') && !card.classList.contains('flm-promo') && !tags.includes('movie');
-    else if (cat === 'movies') show = tags.includes('movies');
-    else if (cat === 'kids') show = tags.includes('kids');
-    else if (cat === 'flm') show = tags.includes('flm') && !card.classList.contains('ad-card');
-    else if (cat === 'upcoming') show = tags.includes('upcoming');
+    if (cat==='all')      show = true;
+    else if (cat==='shows')   show = !card.classList.contains('ad-card') && !card.classList.contains('flm-promo') && !tags.includes('movie');
+    else if (cat==='movies')  show = tags.includes('movies');
+    else if (cat==='kids')    show = tags.includes('kids');
+    else if (cat==='flm')     show = tags.includes('flm') && !card.classList.contains('ad-card');
+    else if (cat==='upcoming')show = tags.includes('upcoming');
     card.classList.toggle('hidden', !show);
   });
-
-  document.querySelectorAll('.time-block-header').forEach(hdr => {
-    let next = hdr.nextElementSibling;
-    let hasVisible = false;
-    while (next && !next.classList.contains('time-block-header')) {
-      if (next.classList.contains('show-card') && !next.classList.contains('hidden')) { hasVisible = true; break; }
-      next = next.nextElementSibling;
-    }
-    hdr.style.display = hasVisible ? '' : 'none';
-  });
 }
 
+// Live clock
 function updateClock() {
   const n = new Date();
-  const h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
-  const ap = h < 12 ? 'AM' : 'PM';
-  const h12 = h%12||12;
-  document.getElementById('clockDisplay').textContent = `${h12}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ap}`;
+  const h = n.getHours()%12||12, m = String(n.getMinutes()).padStart(2,'0');
+  const s = String(n.getSeconds()).padStart(2,'0');
+  const ap = n.getHours()>=12?'PM':'AM';
+  const el = document.getElementById('liveClock');
+  if (el) el.textContent = `${h}:${m}:${s} ${ap}`;
 }
 
+// Progress bar update
 function updateProgress() {
   const fill = document.getElementById('progressFill');
-  const card = document.getElementById('live-now-card');
-  if (!fill || !card) return;
-  const nameEl = card.querySelector('.show-name');
-  if (!nameEl) return;
-  const rawName = nameEl.textContent.replace(/MOVIE|★ FLM ORIGINAL/g,'').trim();
-  const show = SCHEDULE.find(s => s.name === rawName);
-  if (show) fill.style.width = getProgress(show) + '%';
+  if (!fill) return;
+  const live = SCHEDULE.find(s => getStatus(s)==='live');
+  if (live) fill.style.width = getProgress(live) + '%';
 }
 
-// Init
-document.getElementById('heroDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
-renderSchedule();
-updateClock();
-setInterval(updateClock, 1000);
-setInterval(updateProgress, 30000);
-setInterval(renderSchedule, 5*60*1000); // re-render every 5 min
+// Hero date
+function setHeroDate() {
+  const el = document.getElementById('heroDate');
+  if (!el) return;
+  el.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+}
 
-window.addEventListener('load', () => setTimeout(jumpToNow, 700));
+window.addEventListener('DOMContentLoaded', () => {
+  setHeroDate();
+  renderSchedule();
+  updateClock();
+  setInterval(updateClock, 1000);
+  setInterval(updateProgress, 10000);
+  setInterval(() => { renderSchedule(); }, 60000); // re-render every minute so live status updates
+});
 </script>
 </body>
 </html>
