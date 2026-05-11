@@ -701,13 +701,16 @@ function parseSchedule(json) {
   });
 }
 
+// ── TIME OFFSET (minutes) — increase if page is behind, decrease if ahead ──
+const TIME_OFFSET_MINUTES = 23;
+
 const SCHEDULE = parseSchedule(SCHEDULE_JSON);
 
 function getNowMin() {
   const n = new Date();
   let m = n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
   if (n.getHours() < 9) m += 1440; // overnight
-  return m;
+  return m + TIME_OFFSET_MINUTES; // offset to match actual playout
 }
 
 function getStatus(s) {
