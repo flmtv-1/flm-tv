@@ -2832,9 +2832,6 @@
         </div>
     </section>
 
-    <!-- MOBILE ONLY: horizontal category strip, completely separate from the grid -->
-    <div id="mobileCatStrip" style="display:none; overflow-x:auto; overflow-y:hidden; padding:0.5rem 0.75rem; gap:0.5rem; -webkit-overflow-scrolling:touch;"></div>
-
     <style>
     .live-showcase-section {
         padding: 0 0 2rem;
@@ -3055,23 +3052,23 @@
             min-height: 200px !important;
             aspect-ratio: unset !important;
         }
-        /* Hide the right panel box completely on mobile */
+        /* Categories box: fixed height with scroll inside — same as PC box */
         .live-showcase-right {
-            display: none !important;
+            width: 100% !important;
         }
-        /* Show the mobile strip */
-        #mobileCatStrip {
+        .showcase-scroll {
             display: flex !important;
+            flex-direction: row !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            max-height: none !important;
+            grid-template-columns: unset !important;
         }
-        #mobileCatStrip .category-nav-item {
+        .showcase-scroll .category-nav-item {
             flex: 0 0 130px !important;
             min-width: 130px !important;
             width: 130px !important;
-            height: 80px !important;
-        }
-        /* Fix TV STATIONS text size inside the small mobile card */
-        #mobileCatStrip .tv-stations-text {
-            font-size: 28px !important;
+            height: 75px !important;
         }
         .category-nav-name {
             font-size: 0.7rem !important;
@@ -3858,7 +3855,7 @@
                                     <div style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
                                     <span style="font-size:10px;color:#E8333A;font-weight:700;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;">LIVE</span>
                                 </div>
-                                <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;line-height:0.9;letter-spacing:4px;" class="tv-stations-text">TV</div>
+                                <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,6vw,52px);color:#fff;line-height:0.9;letter-spacing:4px;">TV</div>
                                 <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#ffd700;letter-spacing:4px;line-height:1;">STATIONS</div>
                                 <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
                             </div>
@@ -6103,25 +6100,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
 })();
 </script>
-
-    <!-- MOBILE: copy category cards into horizontal strip -->
-    <script>
-    if (window.innerWidth <= 600) {
-        var strip = document.getElementById('mobileCatStrip');
-        var src = document.getElementById('categoryNavScroll');
-        if (strip && src) {
-            var obs = new MutationObserver(function() {
-                strip.innerHTML = '';
-                src.querySelectorAll('.category-nav-item').forEach(function(card) {
-                    var clone = card.cloneNode(true);
-                    clone.onclick = card.onclick;
-                    strip.appendChild(clone);
-                });
-            });
-            obs.observe(src, { childList: true });
-        }
-    }
-    </script>
 
 </body>
 </html>
