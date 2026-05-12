@@ -1037,7 +1037,7 @@ function parseSchedule(json) {
 }
 
 // ── TIME OFFSET (minutes) — increase if page is behind, decrease if ahead ──
-const TIME_OFFSET_MINUTES = -109;
+const TIME_OFFSET_MINUTES = 158;
 
 const SCHEDULE = parseSchedule(SCHEDULE_JSON);
 
@@ -1123,9 +1123,9 @@ function renderSchedule() {
   // Update hero stats
   const total = SCHEDULE.length;
   const movies = SCHEDULE.filter(s=>s.isMovie).length;
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statMovies').textContent = movies;
-  document.getElementById('statHours').textContent = Math.round(
+  if (document.getElementById('statTotal')) document.getElementById('statTotal').textContent = total;
+  if (document.getElementById('statMovies')) document.getElementById('statMovies').textContent = movies;
+  if (document.getElementById('statHours')) document.getElementById('statHours').textContent = Math.round(
     SCHEDULE.reduce((a,s)=>a+(s.endMin-s.startMin),0)/60
   );
 }
