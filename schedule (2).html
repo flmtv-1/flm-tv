@@ -230,6 +230,7 @@ body::after {
 <script>
 // ── SCHEDULE DATA (auto-generated from JSON) ──────────────────────────
 const SCHEDULE_JSON = {
+const SCHEDULE_JSON = {
   "2026-05-13": [
     {
       "startTime": "09:35",
@@ -854,88 +855,6 @@ const SCHEDULE_JSON = {
     }
   ]
 };
-
-// ── KNOWN CATEGORIES ─────────────────────────────────────────────────
-const AD_NAMES    = ['lance hendron','lenna hovanessian','mary perry','maryperry','cardboard boxer','dancing bear logo'];
-const KIDS_NAMES  = ['sesame street','molly of denali','ready jet go','elinor wonders','super why','charlie brown','schoolhouse rock','little rascals'];
-const MOVIE_NAMES = ['lord of the rings','hellboy','gran torino','herbie goes','cloudy with a chance','matilda','jurassic','alice in wonderland','lost world','charlie and the chocolate'];
-const FLM_NAMES   = ['zaina juliette','flmtv','flm tv','2 louisiana','lucy the raffle','locals in las vegas'];
-const FLM_ORIGINALS = ['Lucy the Raffle','Locals in Las Vegas','Charly Suarez','Zaina Juliette & Friends','Og Scorpio','Gladius'];
-
-function classifyShow(name) {
-  const n = name.toLowerCase();
-  if (AD_NAMES.some(x => n.includes(x)))    return { type:'ad',      isAd:true };
-  if (KIDS_NAMES.some(x => n.includes(x)))  return { type:'kids' };
-  if (MOVIE_NAMES.some(x => n.includes(x))) return { type:'movie',   isMovie:true };
-  if (FLM_NAMES.some(x => n.includes(x)))   return { type:'flm',     isFlmPromo:true };
-  return { type:'classic' };
-}
-
-function parseSchedule(json) {
-  // Find today's date key
-  const today = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const todayKey = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
-  
-  // Try today first, then fall back to first available date
-  const dateKey = json[todayKey] ? todayKey : Object.keys(json)[0];
-  const shows = (json[dateKey] || []).filter(s => s && s.name);
-
-  return shows.map((s, i) => {
-    const cls = classifyShow(s.name);
-    // Parse startTime HH:MM into minutes (handle overnight: times < 09:00 = next day)
-    const [sh, sm] = s.startTime.split(':').map(Number);
-    let startMin = sh * 60 + sm;
-    // Shows starting before 9am are overnight/next-day — add 1440
-    if (sh < 9) startMin += 1440;
-    
-    // Duration in minutes
-    const inP  = s.inPoint  || 0;
-    const outP = s.outPoint || s.duration || 0;
-    const durSec = Math.max(0, outP - inP);
-    const durMin = durSec / 60;
-    const endMin = startMin + durMin;
-
-    // Format duration string
-    let dur = '';
-    if (durSec === 0) dur = '—';
-    else if (durMin < 1) dur = Math.round(durSec) + ' sec';
-    else if (durMin < 60) dur = Math.round(durMin) + ' min';
-    else { const h = Math.floor(durMin/60), m = Math.round(durMin%60); dur = h + ' hr' + (m>0?' '+m+' min':''); }
-
-    // Format time display
-    function minToTime(m) {
-      const hh = Math.floor(m/60) % 24;
-      const mm = Math.round(m % 60);
-      const ampm = hh >= 12 ? 'PM' : 'AM';
-      const h12 = hh % 12 || 12;
-      return `${h12}:${String(mm).padStart(2,'0')} ${ampm}`;
-    }
-
-    return {
-      name: s.name.replace(/\s*\.ia$/i,'').replace(/\s*(\(\d{4}p.*?\))/i,'').trim(),
-      rawName: s.name,
-      path: s.path || '',
-      start: minToTime(startMin),
-      end:   minToTime(endMin),
-      startMin, endMin, dur,
-      ...cls,
-      isFlmOrig: FLM_ORIGINALS.some(x => s.name.toLowerCase().includes(x.toLowerCase()))
-    };
-  });
-}
-
-// ── TIME OFFSET (minutes) — increase if page is behind, decrease if ahead ──
-const TIME_OFFSET_MINUTES = 0;
-
-const SCHEDULE = parseSchedule(SCHEDULE_JSON);
-
-function getNowMin() {
-  const n = new Date();
-  let m = n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
-  if (n.getHours() < 9) m += 1440; // overnight
-  return m + TIME_OFFSET_MINUTES; // offset to match actual playout
-}
 
 function getStatus(s) {
   const now = getNowMin();
