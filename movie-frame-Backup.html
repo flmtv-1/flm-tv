@@ -94,19 +94,40 @@
       .flm-btn { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
       .logo-text { font-size: 14px; }
 
-      #flmBar {
+      /* On mobile: hide top bar, show bottom bar instead */
+      #flmBar { display: none !important; }
+
+      #flmBarBottom {
         display: flex !important;
-        top: 0 !important;
-        bottom: auto !important;
       }
+
       #jellyfinFrame {
-        top: var(--hdr) !important;
-        height: calc(100% - var(--hdr)) !important;
-        bottom: 0 !important;
+        top: 0 !important;
+        height: calc(100% - 52px) !important;
+        bottom: 52px !important;
       }
     }
 
+    #flmBarBottom {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 52px;
+      background: rgba(0,0,0,0.95);
+      border-top: 2px solid var(--gold);
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 0.5rem;
+      z-index: 99999;
+      gap: 0.5rem;
+    }
 
+    #flmBarBottom .flm-btn {
+      flex: 1;
+      justify-content: center;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -129,7 +150,21 @@
 
 <iframe id="jellyfinFrame" allowfullscreen="" allow="autoplay; fullscreen; picture-in-picture" title="FLM TV"></iframe>
 
-
+<!-- MOBILE ONLY: bottom navigation bar -->
+<div id="flmBarBottom">
+  <a class="flm-btn btn-front" href="#" onclick="history.back(); return false;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    Back
+  </a>
+  <a class="flm-btn btn-front" href="home.html">🏠 Home</a>
+  <div class="logo-wrap">
+    <div class="logo-flag"><span></span><span></span><span></span></div>
+    <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
+  </div>
+  <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
+    🎬 Vault
+  </a>
+</div>
 
 <script>
 const CONFIG = {
