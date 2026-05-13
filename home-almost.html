@@ -2243,10 +2243,10 @@
             .content-card-image {
                 width: 100% !important;
                 height: auto !important;
-                aspect-ratio: 2 / 3 !important;
+                aspect-ratio: 2 / 3 !important; /* PORTRAIT - taller than wide! */
                 border-radius: 6px !important;
-                object-fit: cover !important;
-                max-height: none !important;
+                object-fit: cover;
+                max-height: 180px !important;
             }
             
             /* CATEGORY CARDS - Keep landscape/horizontal */
@@ -2947,17 +2947,19 @@
     .live-showcase-overlay {
         position: absolute;
         inset: 0;
-        background: none;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        padding: 55px 20px 20px 20px;
+        justify-content: flex-end;
+        padding: 20px;
         z-index: 5;
         opacity: 1;
         transition: opacity 0.3s ease;
     }
 
     .live-showcase-player:hover .live-showcase-overlay { opacity: 1; }
+
+    .live-showcase-info { margin-bottom: 12px; }
 
     .live-showcase-logo {
         font-family: 'Bebas Neue', sans-serif;
@@ -2981,7 +2983,6 @@
         display: flex;
         gap: 10px;
         align-items: center;
-        margin-top: 15px;
     }
 
     .live-watch-btn {
@@ -3871,13 +3872,13 @@
                         navItem.style.cssText = 'background: linear-gradient(135deg, #050a1a 0%, #0a1530 60%, #050a1a 100%); border: 2px solid rgba(192,39,45,0.5); position: relative; overflow: hidden;';
                         navItem.innerHTML = `
                             <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%, rgba(192,39,45,0.15) 0%, transparent 70%);pointer-events:none;"></div>
-                            <div class="category-nav-overlay" style="background:rgba(8,8,8,0.75);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;text-align:center;">
+                            <div class="category-nav-overlay" style="background:linear-gradient(0deg,rgba(8,8,8,0.95) 0%,transparent 50%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;text-align:center;">
                                 <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
-                                    <div style="width:8px;height:8px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
-                                    <span style="font-size:11px;color:#E8333A;font-weight:900;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;text-shadow:0 0 8px rgba(232,51,58,0.8);">LIVE</span>
+                                    <div style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
+                                    <span style="font-size:10px;color:#E8333A;font-weight:700;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;">LIVE</span>
                                 </div>
-                                <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;line-height:1;letter-spacing:2px;">TV STATIONS</div>
-                                <div style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:2px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
+                                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;line-height:1;letter-spacing:3px;">TV STATIONS</div>
+                                <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
                             </div>
                             <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
                         `;

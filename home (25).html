@@ -2947,17 +2947,19 @@
     .live-showcase-overlay {
         position: absolute;
         inset: 0;
-        background: none;
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%);
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        padding: 55px 20px 20px 20px;
+        justify-content: flex-end;
+        padding: 0 20px 40px 20px;
         z-index: 5;
         opacity: 1;
         transition: opacity 0.3s ease;
     }
 
     .live-showcase-player:hover .live-showcase-overlay { opacity: 1; }
+
+    .live-showcase-info { margin-bottom: 12px; margin-top: 65px; }
 
     .live-showcase-logo {
         font-family: 'Bebas Neue', sans-serif;
@@ -2981,7 +2983,6 @@
         display: flex;
         gap: 10px;
         align-items: center;
-        margin-top: 15px;
     }
 
     .live-watch-btn {

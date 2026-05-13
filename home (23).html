@@ -2947,17 +2947,19 @@
     .live-showcase-overlay {
         position: absolute;
         inset: 0;
-        background: none;
+        background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 50%, transparent 75%);
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        padding: 55px 20px 20px 20px;
+        justify-content: flex-end;
+        padding: 20px;
         z-index: 5;
         opacity: 1;
         transition: opacity 0.3s ease;
     }
 
     .live-showcase-player:hover .live-showcase-overlay { opacity: 1; }
+
+    .live-showcase-info { margin-bottom: 12px; }
 
     .live-showcase-logo {
         font-family: 'Bebas Neue', sans-serif;
@@ -2981,7 +2983,6 @@
         display: flex;
         gap: 10px;
         align-items: center;
-        margin-top: 15px;
     }
 
     .live-watch-btn {
@@ -3876,8 +3877,8 @@
                                     <div style="width:8px;height:8px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
                                     <span style="font-size:11px;color:#E8333A;font-weight:900;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;text-shadow:0 0 8px rgba(232,51,58,0.8);">LIVE</span>
                                 </div>
-                                <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;line-height:1;letter-spacing:2px;">TV STATIONS</div>
-                                <div style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:2px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
+                                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;line-height:1;letter-spacing:3px;">TV STATIONS</div>
+                                <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
                             </div>
                             <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
                         `;
