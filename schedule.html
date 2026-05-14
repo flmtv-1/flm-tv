@@ -206,6 +206,9 @@ body::after {
   <button class="jump-btn" onclick="jumpToNow()">
     <div class="live-dot" style="background:var(--live-green);"></div> Jump to Now Playing
   </button>
+  <button class="jump-btn" onclick="downloadSchedule()" style="border-color:rgba(201,168,76,0.4);color:var(--gold);">
+    ⬇ Download Schedule
+  </button>
   <div class="clock-display" id="clockDisplay">--:-- --</div>
 </div>
 
@@ -464,6 +467,25 @@ function renderSchedule() {
   document.getElementById('statHours').textContent = Math.round(
     SCHEDULE.reduce((a,s)=>a+(s.endMin-s.startMin),0)/60
   );
+}
+
+function downloadSchedule() {
+  const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  let txt = `FLM TV — Channel 26.5 Las Vegas & Worldwide\n`;
+  txt += `Today's Schedule — ${date}\n`;
+  txt += `${'═'.repeat(60)}\n\n`;
+  SCHEDULE.forEach(s => {
+    if (s.isAd) return; // skip commercials
+    txt += `${s.start.padEnd(10)} ${s.name}\n`;
+  });
+  txt += `\n${'─'.repeat(60)}\n`;
+  txt += `Watch Live: FLMTV.com\n`;
+  txt += `Channel 26.5 — Las Vegas\n`;
+  const blob = new Blob([txt], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `FLM-TV-Schedule-${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
 }
 
 function jumpToNow() {
