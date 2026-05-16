@@ -107,6 +107,47 @@
     }
 
 
+
+    /* Bottom Nav - mobile only */
+    #flmBottomNav {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      #flmBottomNav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        height: 60px;
+        background: #111;
+        border-top: 2px solid #ffd700;
+        z-index: 99999;
+        align-items: center;
+        justify-content: space-around;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      .fnav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        color: #aaa;
+        text-decoration: none;
+        font-size: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        flex: 1;
+        height: 100%;
+        text-transform: uppercase;
+      }
+      .fnav-item:hover, .fnav-item:active { color: #ffd700; }
+      .fnav-item svg { width: 22px; height: 22px; }
+      /* Shrink iframe to make room for bottom nav */
+      #jellyfinFrame {
+        bottom: 60px !important;
+        height: calc(100% - var(--hdr) - 60px) !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -272,8 +313,7 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 (function() {
     var ua = navigator.userAgent || '';
     var isFirestick = /AFT|FireTV|Silk/i.test(ua);
-    var isTV = (window.screen.width >= 1280 && window.screen.height >= 600 && window.screen.width <= 1920);
-    if (isFirestick || isTV) {
+    if (isFirestick) {
         document.body.style.zoom = '0.7';
         var bar = document.getElementById('flmBar');
         if (bar) {
@@ -300,4 +340,40 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
     }
 })();
 </script>
+
+<!-- FLM TV Bottom Nav - mobile only -->
+<div id="flmBottomNav">
+  <a class="fnav-item" href="kids-corner.html">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.5C9 2.5 6.5 7 6.5 12H17.5C17.5 7 15 2.5 12 2.5Z" fill="#e74c3c"/>
+      <rect x="9" y="12" width="6" height="7" rx="1" fill="#e74c3c"/>
+      <circle cx="12" cy="9" r="2" fill="#74d7f7"/>
+      <path d="M6.5 12 L4 16 L6.5 15 Z" fill="#f39c12"/>
+      <path d="M17.5 12 L20 16 L17.5 15 Z" fill="#f39c12"/>
+      <path d="M9 19 L10 22 L12 20 L14 22 L15 19" fill="#f39c12" stroke="#f39c12" stroke-width="0.5"/>
+      <circle cx="7" cy="5" r="1" fill="#ffd700"/>
+      <circle cx="17" cy="4" r="0.7" fill="#2ecc71"/>
+      <circle cx="5" cy="9" r="0.6" fill="#9b59b6"/>
+    </svg>
+    Kids
+  </a>
+  <a class="fnav-item" href="home.html">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    Chat
+  </a>
+  <a class="fnav-item" href="home.html">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg>
+    Live TV
+  </a>
+  <a class="fnav-item" href="/schedule.html" style="color:#ffd700;">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+    Schedule
+  </a>
+  <a class="fnav-item" href="home.html">
+    <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" 
+         style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #22c55e;"
+         onerror="this.style.display='none'">
+    Zaina AI
+  </a>
+</div>
 </body></html>
