@@ -94,15 +94,18 @@
       .flm-btn { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
       .logo-text { font-size: 14px; }
 
+      /* ── Mobile: bar moves to BOTTOM ── */
       #flmBar {
-        display: flex !important;
-        top: 0 !important;
-        bottom: auto !important;
+        top: auto !important;
+        bottom: 0 !important;
+        border-bottom: none !important;
+        border-top: 2px solid var(--gold) !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
       }
       #jellyfinFrame {
-        top: var(--hdr) !important;
+        top: 0 !important;
+        bottom: var(--hdr) !important;
         height: calc(100% - var(--hdr)) !important;
-        bottom: 0 !important;
       }
     }
 
