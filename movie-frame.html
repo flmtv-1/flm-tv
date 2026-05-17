@@ -127,35 +127,44 @@
         display: flex;
         position: fixed;
         bottom: 0; left: 0; right: 0;
-        height: 60px;
+        height: 78px;
         background: #111;
-        border-top: 2px solid #ffd700;
-        z-index: 99999;
-        align-items: center;
+        border-top: 3px solid #ffd700;
+        z-index: 2147483647;
+        align-items: flex-end;
         justify-content: space-around;
-        padding-bottom: env(safe-area-inset-bottom, 0px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+        padding-top: 10px;
+        pointer-events: auto !important;
+        isolation: isolate;
       }
       .fnav-item {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 2px;
+        gap: 3px;
         color: #aaa;
         text-decoration: none;
-        font-size: 0.6rem;
+        font-size: 0.62rem;
         font-weight: 700;
         letter-spacing: 0.5px;
         flex: 1;
         height: 100%;
         text-transform: uppercase;
+        cursor: pointer;
+        pointer-events: auto !important;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(255,215,0,0.3);
+        user-select: none;
+        -webkit-user-select: none;
       }
-      .fnav-item:hover, .fnav-item:active { color: #ffd700; }
-      .fnav-item svg { width: 22px; height: 22px; }
-      /* Shrink iframe to make room for bottom nav */
+      .fnav-item:active { color: #ffd700; transform: scale(0.95); }
+      .fnav-item svg { width: 24px; height: 24px; }
+      /* Shrink iframe so it never sits under the bottom nav */
       #jellyfinFrame {
-        bottom: 60px !important;
-        height: calc(100% - var(--hdr) - 60px) !important;
+        bottom: 78px !important;
+        height: calc(100% - 38px - 78px) !important;
       }
     }
   </style>
@@ -355,7 +364,7 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
   <a class="fnav-item" href="kids-corner.html">
     <img src="https://flmtv.com/assets/images/kids-avatar.png"
          style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid #ff69b4;"
-         onerror="this.style.display='none'">
+         onerror="this.outerHTML='<span style=\'font-size:24px;line-height:1;\'>👧</span>'">
     Kids
   </a>
   <a class="fnav-item" href="home.html">
