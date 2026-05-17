@@ -9,7 +9,7 @@
         var isFireTV = navigator.userAgent.indexOf('AFT') !== -1;
         if (isFireTV) {
             var viewport = document.querySelector('meta[name="viewport"]');
-            if (viewport) viewport.setAttribute('content', 'width=1280, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            if (viewport) viewport.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
         }
     </script>
     <script>
@@ -2830,7 +2830,7 @@
     @media screen and (min-width: 1200px) {
         /* hero height controlled by base 70vh */
         .live-showcase-container {
-            max-width: 500px !important;
+            max-width: 600px !important;
             margin: 0 auto !important;
         }
     }
@@ -5866,96 +5866,43 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
     console.log('📺 FLM TV: Firestick navigation active');
 
-    // ── DIAGNOSTIC OVERLAY — shows real viewport numbers on Firestick ──
-    window.addEventListener('load', function() {
-        var diag = document.createElement('div');
-        diag.id = 'tv-diag';
-        diag.style.cssText = 'position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,0.95);color:#ffd700;font-size:24px;font-family:monospace;padding:30px;border-bottom:4px solid #ffd700;z-index:999999;line-height:2;';
-        diag.innerHTML =
-            '📺 FIRESTICK DIAGNOSTICS<br>' +
-            'window.innerWidth: <b>' + window.innerWidth + '</b><br>' +
-            'window.innerHeight: <b>' + window.innerHeight + '</b><br>' +
-            'screen.width: <b>' + window.screen.width + '</b><br>' +
-            'screen.height: <b>' + window.screen.height + '</b><br>' +
-            'devicePixelRatio: <b>' + window.devicePixelRatio + '</b><br>' +
-            'UA: <b style="font-size:16px;word-break:break-all;">' + navigator.userAgent + '</b>';
-        document.body.insertBefore(diag, document.body.firstChild);
-    });
-
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
     var style = document.createElement('style');
     style.textContent = `
         /* ══════════════════════════════════════════════════════
-           FIRESTICK: No zoom tricks. Firestick upscales 1280→1920
-           (1.5x). So everything must be sized for 1280px and the
-           TV handles the rest. Elements sized at X CSS px will
-           appear as X×1.5 physical px on screen.
+           FIRESTICK: Real viewport = 960x540px, DPR=4 (4K)
+           All sizes calculated for 960px CSS viewport.
         ══════════════════════════════════════════════════════ */
 
-        /* Header — fit everything in 1280px */
-        .header {
-            padding: 0.4rem 0.8rem !important;
-        }
-        .header-content {
-            flex-wrap: nowrap !important;
-            gap: 0.4rem !important;
-            padding-right: 0.5rem !important;
-        }
-        .logo-container img {
-            height: 28px !important;
-        }
-        .logo-text {
-            font-size: 1.1rem !important;
-        }
-        .header-nav {
-            gap: 0.4rem !important;
-        }
-        .header-nav a {
-            font-size: 0.72rem !important;
-        }
-        .nav-actions {
-            gap: 0.25rem !important;
-        }
-        .btn-icon {
-            width: 26px !important;
-            height: 26px !important;
-            font-size: 0.68rem !important;
-        }
-        .btn-icon-text {
-            padding: 0.25rem 0.5rem !important;
-            font-size: 0.65rem !important;
-            gap: 0.3rem !important;
-        }
-        .btn-primary {
-            padding: 0.25rem 0.5rem !important;
-            font-size: 0.65rem !important;
-        }
+        /* Header — fit in 960px */
+        .header { padding: 0.4rem 0.8rem !important; }
+        .header-content { flex-wrap: nowrap !important; gap: 0.4rem !important; }
+        .logo-container img { height: 28px !important; }
+        .logo-text { font-size: 1.1rem !important; }
+        .header-nav { gap: 0.4rem !important; }
+        .header-nav a { font-size: 0.72rem !important; }
+        .nav-actions { gap: 0.25rem !important; }
+        .btn-icon { width: 26px !important; height: 26px !important; font-size: 0.68rem !important; }
+        .btn-icon-text { padding: 0.25rem 0.5rem !important; font-size: 0.65rem !important; gap: 0.3rem !important; }
+        .btn-primary { padding: 0.25rem 0.5rem !important; font-size: 0.65rem !important; }
 
-        /* Hide non-essential nav buttons */
-        button[title="Notifications"],
-        #parentLockBtn,
-        .btn-icon-text[onclick*="aiPanel"] {
-            display: none !important;
-        }
+        /* Hide non-essential buttons */
+        button[title="Notifications"], #parentLockBtn, .btn-icon-text[onclick*="aiPanel"] { display: none !important; }
 
-        /* Force single row */
-        .header-content {
-            flex-wrap: nowrap !important;
-        }
+        /* Live card — 350px = 36% of 960px viewport */
+        .live-showcase-container { max-width: 350px !important; padding: 0.5rem !important; }
+        .live-showcase-section { padding: 0 0 1rem !important; }
 
-        /* Live card — 320px CSS × 1.5 upscale = 480px on TV (25% screen) */
-        .live-showcase-container {
-            max-width: 320px !important;
-            padding: 0.5rem !important;
-        }
+        /* Hide broken stream, show backdrop */
+        #previewVideo { display: none !important; }
+        #previewFallback { display: block !important; }
 
-        /* Hide broken video stream, always show backdrop image */
-        #previewVideo {
-            display: none !important;
-        }
-        #previewFallback {
-            display: block !important;
-        }
+        /* Movie cards — reduce height for 540px screen */
+        .movie-card { flex: 0 0 120px !important; min-width: 120px !important; max-width: 120px !important; }
+        .movie-poster { height: 170px !important; }
+
+        /* Hide search bar — not usable with remote */
+        .search-container { display: none !important; }
 
         /* Netflix-style focus: card grows + gold glow */
         .content-card:focus,
@@ -6016,7 +5963,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             outline: none;
         }
     `;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
 
     // ── 2. MAKE CARDS FOCUSABLE ──────────────────────────────────
     function makeFocusable() {
