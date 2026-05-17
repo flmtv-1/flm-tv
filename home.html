@@ -8,9 +8,8 @@
     <script>
         var isFireTV = navigator.userAgent.indexOf('AFT') !== -1;
         if (isFireTV) {
-            // Set viewport to 1920 so page renders at full HD width - Firestick scales it down naturally
             var viewport = document.querySelector('meta[name="viewport"]');
-            if (viewport) viewport.setAttribute('content', 'width=1920, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            if (viewport) viewport.setAttribute('content', 'width=1280, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
         }
     </script>
     <script>
@@ -5870,6 +5869,11 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
     var style = document.createElement('style');
     style.textContent = `
+        /* ── FIRESTICK: Correct zoom to cancel 1.5x Firestick upscale (1/1.5 = 0.667) ── */
+        body {
+            zoom: 0.667 !important;
+        }
+
         /* ── FIRESTICK: Force navbar to single row, no wrapping ── */
         .header-content {
             flex-wrap: nowrap !important;
@@ -5884,9 +5888,9 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             display: block !important;
         }
 
-        /* ── FIRESTICK: Live card size ── */
+        /* ── FIRESTICK: Live card size (700px × 0.667 zoom = ~467px on screen) ── */
         .live-showcase-container {
-            max-width: 650px !important;
+            max-width: 700px !important;
             padding: 0.75rem !important;
         }
 
