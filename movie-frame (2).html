@@ -91,28 +91,18 @@
     }
 
     @media (max-width: 768px) {
-      .flm-btn { 
-        padding: 0.2rem 0.45rem; 
-        font-size: 0.68rem; 
-        gap: 0.15rem;
-        border-radius: 4px;
-        white-space: nowrap;
-      }
-      .logo-text { font-size: 11px; letter-spacing: 0.5px; }
-      .logo-flag { width: 10px; height: 14px; }
+      .flm-btn { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+      .logo-text { font-size: 14px; }
 
       #flmBar {
-        height: 38px;
-        gap: 0.3rem;
-        padding: 0 0.4rem;
         display: flex !important;
         top: 0 !important;
         bottom: auto !important;
       }
       #jellyfinFrame {
-        top: 38px !important;
-        height: calc(100% - 38px - 60px) !important;
-        bottom: 60px !important;
+        top: var(--hdr) !important;
+        height: calc(100% - var(--hdr)) !important;
+        bottom: 0 !important;
       }
     }
 
@@ -174,7 +164,8 @@
   </div>
   <div class="bar-spacer"></div>
   <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
-🎬 The Vault</a>
+    🎬 The Vault
+  </a>
 </div>
 
 <iframe id="jellyfinFrame" allowfullscreen="" allow="autoplay; fullscreen; picture-in-picture" title="FLM TV"></iframe>
