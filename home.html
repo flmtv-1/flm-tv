@@ -2830,7 +2830,7 @@
     @media screen and (min-width: 1200px) {
         /* hero height controlled by base 70vh */
         .live-showcase-container {
-            max-width: 1100px !important;
+            max-width: 500px !important;
             margin: 0 auto !important;
         }
     }
@@ -5869,64 +5869,76 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
     var style = document.createElement('style');
     style.textContent = `
-        /* ── FIRESTICK: Shrink header elements to fit 1280px — NO body zoom ── */
-        .header {
-            padding: 0.5rem 1rem !important;
-        }
-        .logo-container img {
-            height: 32px !important;
-        }
-        .logo-text {
-            font-size: 1.3rem !important;
-        }
-        .header-nav {
-            gap: 0.6rem !important;
-        }
-        .header-nav a {
-            font-size: 0.8rem !important;
-        }
-        .nav-actions {
-            gap: 0.35rem !important;
-        }
-        .btn-icon {
-            width: 30px !important;
-            height: 30px !important;
-            font-size: 0.75rem !important;
-        }
-        .btn-icon-text {
-            padding: 0.3rem 0.65rem !important;
-            font-size: 0.72rem !important;
-        }
-        .btn-primary {
-            padding: 0.4rem 0.75rem !important;
-            font-size: 0.75rem !important;
-        }
+        /* ══════════════════════════════════════════════════════
+           FIRESTICK: No zoom tricks. Firestick upscales 1280→1920
+           (1.5x). So everything must be sized for 1280px and the
+           TV handles the rest. Elements sized at X CSS px will
+           appear as X×1.5 physical px on screen.
+        ══════════════════════════════════════════════════════ */
 
-        /* ── FIRESTICK: Force navbar to single row, no wrapping ── */
+        /* Header — fit everything in 1280px */
+        .header {
+            padding: 0.4rem 0.8rem !important;
+        }
         .header-content {
             flex-wrap: nowrap !important;
-            gap: 0.5rem !important;
+            gap: 0.4rem !important;
+            padding-right: 0.5rem !important;
+        }
+        .logo-container img {
+            height: 28px !important;
+        }
+        .logo-text {
+            font-size: 1.1rem !important;
+        }
+        .header-nav {
+            gap: 0.4rem !important;
+        }
+        .header-nav a {
+            font-size: 0.72rem !important;
+        }
+        .nav-actions {
+            gap: 0.25rem !important;
+        }
+        .btn-icon {
+            width: 26px !important;
+            height: 26px !important;
+            font-size: 0.68rem !important;
+        }
+        .btn-icon-text {
+            padding: 0.25rem 0.5rem !important;
+            font-size: 0.65rem !important;
+            gap: 0.3rem !important;
+        }
+        .btn-primary {
+            padding: 0.25rem 0.5rem !important;
+            font-size: 0.65rem !important;
         }
 
-        /* ── FIRESTICK: Hide broken video stream, always show backdrop image ── */
+        /* Hide non-essential nav buttons */
+        button[title="Notifications"],
+        #parentLockBtn,
+        .btn-icon-text[onclick*="aiPanel"] {
+            display: none !important;
+        }
+
+        /* Force single row */
+        .header-content {
+            flex-wrap: nowrap !important;
+        }
+
+        /* Live card — 320px CSS × 1.5 upscale = 480px on TV (25% screen) */
+        .live-showcase-container {
+            max-width: 320px !important;
+            padding: 0.5rem !important;
+        }
+
+        /* Hide broken video stream, always show backdrop image */
         #previewVideo {
             display: none !important;
         }
         #previewFallback {
             display: block !important;
-        }
-
-        /* ── FIRESTICK: Live card — small enough to not look like the main player ── */
-        .live-showcase-container {
-            max-width: 480px !important;
-            padding: 0.75rem !important;
-        }
-
-        /* ── FIRESTICK: Hide non-essential nav buttons so right side fits ── */
-        button[title="Notifications"],
-        #parentLockBtn,
-        .btn-icon-text[onclick*="aiPanel"] {
-            display: none !important;
         }
 
         /* Netflix-style focus: card grows + gold glow */
