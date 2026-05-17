@@ -5866,6 +5866,22 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
     console.log('📺 FLM TV: Firestick navigation active');
 
+    // ── DIAGNOSTIC OVERLAY — shows real viewport numbers on Firestick ──
+    window.addEventListener('load', function() {
+        var diag = document.createElement('div');
+        diag.id = 'tv-diag';
+        diag.style.cssText = 'position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,0.95);color:#ffd700;font-size:24px;font-family:monospace;padding:30px;border-bottom:4px solid #ffd700;z-index:999999;line-height:2;';
+        diag.innerHTML =
+            '📺 FIRESTICK DIAGNOSTICS<br>' +
+            'window.innerWidth: <b>' + window.innerWidth + '</b><br>' +
+            'window.innerHeight: <b>' + window.innerHeight + '</b><br>' +
+            'screen.width: <b>' + window.screen.width + '</b><br>' +
+            'screen.height: <b>' + window.screen.height + '</b><br>' +
+            'devicePixelRatio: <b>' + window.devicePixelRatio + '</b><br>' +
+            'UA: <b style="font-size:16px;word-break:break-all;">' + navigator.userAgent + '</b>';
+        document.body.insertBefore(diag, document.body.firstChild);
+    });
+
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
     var style = document.createElement('style');
     style.textContent = `
