@@ -5869,9 +5869,37 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
     var style = document.createElement('style');
     style.textContent = `
-        /* ── FIRESTICK: Correct zoom to cancel 1.5x Firestick upscale (1/1.5 = 0.667) ── */
-        body {
-            zoom: 0.667 !important;
+        /* ── FIRESTICK: Shrink header elements to fit 1280px — NO body zoom ── */
+        .header {
+            padding: 0.5rem 1rem !important;
+        }
+        .logo-container img {
+            height: 32px !important;
+        }
+        .logo-text {
+            font-size: 1.3rem !important;
+        }
+        .header-nav {
+            gap: 0.6rem !important;
+        }
+        .header-nav a {
+            font-size: 0.8rem !important;
+        }
+        .nav-actions {
+            gap: 0.35rem !important;
+        }
+        .btn-icon {
+            width: 30px !important;
+            height: 30px !important;
+            font-size: 0.75rem !important;
+        }
+        .btn-icon-text {
+            padding: 0.3rem 0.65rem !important;
+            font-size: 0.72rem !important;
+        }
+        .btn-primary {
+            padding: 0.4rem 0.75rem !important;
+            font-size: 0.75rem !important;
         }
 
         /* ── FIRESTICK: Force navbar to single row, no wrapping ── */
@@ -5888,9 +5916,9 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             display: block !important;
         }
 
-        /* ── FIRESTICK: Live card size (700px × 0.667 zoom = ~467px on screen) ── */
+        /* ── FIRESTICK: Live card — small enough to not look like the main player ── */
         .live-showcase-container {
-            max-width: 700px !important;
+            max-width: 480px !important;
             padding: 0.75rem !important;
         }
 
