@@ -8,9 +8,9 @@
     <script>
         var isFireTV = navigator.userAgent.indexOf('AFT') !== -1;
         if (isFireTV) {
-            // Override viewport for Fire TV
+            // Set viewport to 1920 so page renders at full HD width - Firestick scales it down naturally
             var viewport = document.querySelector('meta[name="viewport"]');
-            if (viewport) viewport.setAttribute('content', 'width=1280, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            if (viewport) viewport.setAttribute('content', 'width=1920, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
         }
     </script>
     <script>
@@ -5870,11 +5870,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
     var style = document.createElement('style');
     style.textContent = `
-        /* ── FIRESTICK: Scale entire page so navbar fits in ONE row ── */
-        body {
-            zoom: 0.75 !important;
-        }
-
         /* ── FIRESTICK: Force navbar to single row, no wrapping ── */
         .header-content {
             flex-wrap: nowrap !important;
@@ -5891,8 +5886,15 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
         /* ── FIRESTICK: Live card size ── */
         .live-showcase-container {
-            max-width: 550px !important;
+            max-width: 650px !important;
             padding: 0.75rem !important;
+        }
+
+        /* ── FIRESTICK: Hide non-essential nav buttons so right side fits ── */
+        button[title="Notifications"],
+        #parentLockBtn,
+        .btn-icon-text[onclick*="aiPanel"] {
+            display: none !important;
         }
 
         /* Netflix-style focus: card grows + gold glow */
@@ -6104,6 +6106,13 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             if (next) {
                 next.focus();
                 next.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else if (direction === 'up') {
+                // No element found above — scroll to top and focus first nav link
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setTimeout(function() {
+                    var first = document.querySelector('.header-nav a');
+                    if (first) first.focus();
+                }, 300);
             }
         }
 
