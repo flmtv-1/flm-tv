@@ -2713,6 +2713,7 @@
                         <li><a href="live-stations.html">LIVE</a></li>
                         <li><a href="schedule.html">Schedule</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
+                        <li><a href="live-stations.html" style="color:var(--primary);font-weight:800;">· TV Stations</a></li>
                     </ul>
                 </nav>
             </div>
@@ -2744,9 +2745,7 @@
                     <i class="fas fa-lock"></i>
                 </button>
                 
-                <a href="live-stations.html" class="btn-primary" style="text-decoration:none;display:flex;align-items:center;gap:0.4rem;">
-                    <i class="fas fa-tv"></i><span class="sign-in-text"> TV Stations</span>
-                </a>
+                
             </div>
         </div>
     </header>
@@ -5901,16 +5900,8 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         #previewVideo { display: none !important; }
         #previewFallback { display: block !important; }
 
-        /* Movie cards — portrait ratio for 960px, 110x165 */
-        .movie-card {
-            flex: 0 0 110px !important;
-            min-width: 110px !important;
-            max-width: 110px !important;
-            width: 110px !important;
-        }
-        .movie-poster {
-            width: 110px !important;
-            height: 165px !important;
+        /* Movie cards — use natural 768px breakpoint (150x225 portrait) */
+        .content-card-image {
             object-fit: cover !important;
         }
 
@@ -5988,31 +5979,29 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     function doReplaceNav() {
         var navActions = document.querySelector('.nav-actions');
         if (!navActions) return false;
+
         navActions.innerHTML = `
-            <button onclick="window.location.href='kids-corner.html'" title="Kids Corner"
+            <button onclick="window.location.href='kids-corner.html'" title="Kids Corner" tabindex="0"
                 style="width:36px;height:36px;border-radius:50%;padding:0;overflow:hidden;border:2px solid #4A90E2;background:transparent;cursor:pointer;flex-shrink:0;">
                 <img src="assets/images/kids-avatar.png" alt="Kids" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
             </button>
-            <button onclick="openPanel('chatPanel')" title="Chat"
+            <button onclick="openPanel('chatPanel')" title="Chat" tabindex="0"
                 style="width:36px;height:36px;border-radius:50%;padding:0;border:none;background:#22c55e;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem;color:white;">
                 <i class="fas fa-comments"></i>
             </button>
-            <button onclick="openPanel('aiPanel')" title="Zaina AI"
+            <button onclick="openPanel('aiPanel')" title="Zaina AI" tabindex="0"
                 style="width:36px;height:36px;border-radius:50%;padding:0;overflow:hidden;border:2px solid #22c55e;background:transparent;cursor:pointer;flex-shrink:0;">
                 <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
             </button>
-            <button id="parentLockBtn" title="Parental Controls"
+            <button id="parentLockBtn" title="Parental Controls" tabindex="0"
                 style="width:36px;height:36px;border-radius:50%;padding:0;border:2px solid #22c55e;background:rgba(255,255,255,0.1);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:0.8rem;">
                 <i class="fas fa-lock"></i>
             </button>
-            <a href="live-stations.html" title="TV Stations"
-                style="width:36px;height:36px;border-radius:50%;text-decoration:none;border:2px solid #ffd700;background:rgba(255,215,0,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ffd700;font-size:0.9rem;">
-                <i class="fas fa-tv"></i>
-            </a>
         `;
+        // Re-run makeFocusable so new buttons are D-pad navigable
+        setTimeout(makeFocusable, 100);
         return true;
     }
-    // Try immediately, then retry after load
     if (!doReplaceNav()) {
         setTimeout(doReplaceNav, 300);
         setTimeout(doReplaceNav, 800);
@@ -6023,9 +6012,10 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     function makeFocusable() {
         var selectors = [
             '.header-nav a',
+            '.nav-actions button',
+            '.nav-actions a',
             '.btn-icon',
             '.btn-icon-text',
-            '.btn-primary',
             '.btn-hero-primary',
             '.live-watch-btn',
             '.live-channel-card',
@@ -6060,9 +6050,10 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     function getFocusable() {
         return Array.from(document.querySelectorAll(
             '.header-nav a, ' +
+            '.nav-actions button, ' +
+            '.nav-actions a, ' +
             '.btn-icon:not([style*="display: none"]):not([style*="display:none"]), ' +
             '.btn-icon-text:not([style*="display: none"]):not([style*="display:none"]), ' +
-            '.btn-primary, ' +
             '.btn-hero-primary, ' +
             '.live-watch-btn, ' +
             '.live-channel-card, ' +
@@ -6172,14 +6163,14 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             var next = findBest(focused, all, direction);
             if (next) {
                 next.focus();
-                next.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                next.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else if (direction === 'up') {
-                // No element found above — scroll to top and focus first nav link
+                // No element found above — go back to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 setTimeout(function() {
-                    var first = document.querySelector('.header-nav a');
-                    if (first) first.focus();
-                }, 300);
+                    var topEl = document.querySelector('.header-nav a');
+                    if (topEl) { topEl.focus(); topEl.scrollIntoView({ block: 'center' }); }
+                }, 400);
             }
         }
 
