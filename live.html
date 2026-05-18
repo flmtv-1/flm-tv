@@ -259,6 +259,9 @@ html, body {
         <div class="ch-name">Channel 26.5</div>
         <div class="ch-sub">Las Vegas · Worldwide</div>
       </div>
+      <button id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen" style="background:rgba(201,168,76,0.15);border:1px solid var(--gold);color:var(--gold);padding:6px 14px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all 0.2s;">
+        ⛶ FULLSCREEN
+      </button>
     </div>
   </nav>
 
@@ -367,6 +370,15 @@ function initStream() {
   }
 }
 
+function toggleFullscreen() {
+  const playerArea = document.getElementById('playerArea');
+  if (!document.fullscreenElement) {
+    (playerArea.requestFullscreen || playerArea.webkitRequestFullscreen || playerArea.mozRequestFullScreen).call(playerArea);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document);
+  }
+}
+
 // Firestick / keyboard navigation
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Backspace' || e.key === 'Escape') {
@@ -375,6 +387,10 @@ document.addEventListener('keydown', (e) => {
     } else {
       window.location.href = 'home.html';
     }
+  }
+  // Enter on fullscreen button
+  if (e.key === 'Enter' && document.activeElement && document.activeElement.id === 'fsBtn') {
+    toggleFullscreen();
   }
 });
 

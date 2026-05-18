@@ -4007,10 +4007,10 @@
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
                         if (item.ImageTags?.Primary) {
                             imageUrl = getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
-                        } else if (item.SeriesThumb) {
-                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&format=webp&maxHeight=450`;
                         } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
                             imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&format=webp&maxHeight=450`;
+                        } else if (item.SeriesThumb) {
+                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&format=webp&maxHeight=450`;
                         } else if (item.ParentThumbImageTag && item.ParentThumbItemId) {
                             imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&format=webp&maxHeight=450`;
                         }
@@ -5900,6 +5900,34 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         #previewVideo { display: none !important; }
         #previewFallback { display: block !important; }
 
+        /* Hide scrollbars on Firestick — D-pad handles navigation */
+        .content-carousel::-webkit-scrollbar,
+        .movies-scroll::-webkit-scrollbar,
+        .category-nav-scroll::-webkit-scrollbar { display: none !important; }
+        .content-carousel, .movies-scroll { scrollbar-width: none !important; }
+
+        /* Carousel arrow buttons */
+        .tv-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 60px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+        .tv-arrow-left { left: 0; }
+        .tv-arrow-right { right: 0; }
+        .category-section { position: relative; }
+
         /* Movie cards — use natural 768px breakpoint (150x225 portrait) */
         .content-card-image {
             object-fit: cover !important;
@@ -5975,6 +6003,34 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     `;
     document.body.appendChild(style);
 
+    // ── ADD CAROUSEL ARROWS FOR FIRESTICK ───────────────────────
+    function addCarouselArrows() {
+        document.querySelectorAll('.category-section').forEach(function(section) {
+            if (section.querySelector('.tv-arrow')) return; // already added
+            var carousel = section.querySelector('.content-carousel');
+            if (!carousel) return;
+
+            var leftBtn = document.createElement('button');
+            leftBtn.className = 'tv-arrow tv-arrow-left';
+            leftBtn.innerHTML = '&#8249;';
+            leftBtn.setAttribute('tabindex', '0');
+            leftBtn.onclick = function() { carousel.scrollBy({ left: -300, behavior: 'smooth' }); };
+
+            var rightBtn = document.createElement('button');
+            rightBtn.className = 'tv-arrow tv-arrow-right';
+            rightBtn.innerHTML = '&#8250;';
+            rightBtn.setAttribute('tabindex', '0');
+            rightBtn.onclick = function() { carousel.scrollBy({ left: 300, behavior: 'smooth' }); };
+
+            section.appendChild(leftBtn);
+            section.appendChild(rightBtn);
+        });
+    }
+    window.addEventListener('load', function() {
+        setTimeout(addCarouselArrows, 2000);
+        setTimeout(addCarouselArrows, 5000);
+    });
+
     // ── REPLACE TOP BAR WITH FLOATING-STYLE BRANDED BUTTONS ─────
     function doReplaceNav() {
         var navActions = document.querySelector('.nav-actions');
@@ -6024,7 +6080,11 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.movie-card',
             '.view-all-btn',
             '.bottom-nav-item',
-            '.trailer-btn'
+            '.trailer-btn',
+            '.panel-close',
+            '.modal-close',
+            '.close-video',
+            '.close-live-tv'
         ];
         selectors.forEach(function(sel) {
             document.querySelectorAll(sel).forEach(function(el) {
@@ -6061,7 +6121,11 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.content-card, ' +
             '.movie-card, ' +
             '.view-all-btn, ' +
-            '.bottom-nav-item'
+            '.bottom-nav-item, ' +
+            '.panel-close, ' +
+            '.modal-close, ' +
+            '.close-video, ' +
+            '.close-live-tv'
         )).filter(function(el) {
             return el.offsetParent !== null &&
                    el.offsetWidth > 0 &&

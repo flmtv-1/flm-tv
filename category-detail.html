@@ -456,6 +456,7 @@ function displayItems(items) {
     items.forEach(item => {
         const card = document.createElement('div');
         card.className = 'item-card';
+        card.setAttribute('tabindex', '0');
         card.onclick = () => {
             if (item.Type === 'Book') {
                 window.location.href = `comic-reader.html?id=${item.Id}&name=${encodeURIComponent(item.Name||'Comic')}`;
@@ -464,6 +465,9 @@ function displayItems(items) {
                 window.location.href = `movie-frame.html?id=${item.Id}${cp}`;
             }
         };
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+        });
         const posterUrl = item.ImageTags && item.ImageTags.Primary
             ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=300&quality=90`
             : '';
@@ -592,4 +596,91 @@ function closeTrailer() {
 document.getElementById('trailerModal').addEventListener('click', function(e) {
     if (e.target === this) closeTrailer();
 });
+</script>
+
+<script>
+// ── FIRESTICK D-PAD NAVIGATION ──────────────────────────────
+(function() {
+    var ua = navigator.userAgent || '';
+    if (!/AFT|FireTV|Silk/i.test(ua)) return;
+
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+
+    var style = document.createElement('style');
+    style.textContent = `
+        .item-card:focus { outline: 4px solid #ffd700 !important; transform: scale(1.05); z-index: 10; position: relative; }
+        .back-btn:focus, .alpha-btn:focus, .load-more-btn:focus, #prevBtn:focus, #nextBtn:focus { outline: 4px solid #ffd700 !important; }
+    `;
+    document.head.appendChild(style);
+
+    function getFocusable() {
+        return Array.from(document.querySelectorAll('.item-card, .back-btn, .alpha-btn, .load-more-btn, #prevBtn, #nextBtn'))
+            .filter(function(el) { return el.offsetParent !== null && el.offsetWidth > 0 && el.offsetHeight > 0; });
+    }
+
+    function findBest(current, all, dir) {
+        var cr = current.getBoundingClientRect();
+        var cx = cr.left + cr.width/2, cy = cr.top + cr.height/2;
+        var candidates = all.filter(function(el) {
+            if (el === current) return false;
+            var r = el.getBoundingClientRect();
+            var ex = r.left + r.width/2, ey = r.top + r.height/2;
+            if (dir === 'right') return ex > cr.right - 10;
+            if (dir === 'left')  return ex < cr.left + 10;
+            if (dir === 'down')  return ey > cr.bottom - 10;
+            if (dir === 'up')    return ey < cr.top + 10;
+        });
+        if (!candidates.length) return null;
+        var best = null, bestScore = Infinity;
+        candidates.forEach(function(el) {
+            var r = el.getBoundingClientRect();
+            var dx = (r.left+r.width/2)-cx, dy = (r.top+r.height/2)-cy;
+            var p = (dir==='right'||dir==='left') ? Math.abs(dx) : Math.abs(dy);
+            var s = (dir==='right'||dir==='left') ? Math.abs(dy) : Math.abs(dx);
+            var score = p + s*0.3;
+            if (score < bestScore) { bestScore = score; best = el; }
+        });
+        return best;
+    }
+
+    document.addEventListener('keydown', function(e) {
+        var modal = document.getElementById('trailerModal');
+        if (modal && modal.classList.contains('active')) { if (e.key==='Escape'||e.key==='Backspace'){e.preventDefault();closeTrailer();} return; }
+
+        var all = getFocusable();
+        if (!all.length) return;
+        var focused = document.activeElement;
+        var inList = all.indexOf(focused) >= 0;
+
+        if (!inList) {
+            if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
+                e.preventDefault(); all[0].focus(); all[0].scrollIntoView({ block: 'center' });
+            }
+            return;
+        }
+
+        var dir = {ArrowRight:'right',ArrowLeft:'left',ArrowDown:'down',ArrowUp:'up'}[e.key];
+        if (dir) {
+            e.preventDefault();
+            var next = findBest(focused, all, dir);
+            if (next) { next.focus(); next.scrollIntoView({ behavior:'smooth', block:'center' }); }
+            else if (dir === 'up') { window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){ var b=document.querySelector('.back-btn'); if(b)b.focus(); },400); }
+        }
+        if (e.key==='Backspace'||e.key==='Escape') { e.preventDefault(); history.back(); }
+    }, true);
+
+    window.addEventListener('load', function() {
+        document.querySelectorAll('.item-card').forEach(function(el) {
+            if (!el.getAttribute('tabindex')) el.setAttribute('tabindex','0');
+        });
+        // Re-apply after pagination loads
+        var observer = new MutationObserver(function() {
+            document.querySelectorAll('.item-card').forEach(function(el) {
+                if (!el.getAttribute('tabindex')) el.setAttribute('tabindex','0');
+            });
+        });
+        observer.observe(document.body, { childList:true, subtree:true });
+    });
+})();
 </script>
