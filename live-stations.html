@@ -287,5 +287,132 @@ function abbr(name) {
 // ── INIT ──────────────────────────────────────────────────────
 loadChannels();
 </script>
+
+<script>
+// ── FIRESTICK D-PAD NAVIGATION ────────────────────────────────
+(function() {
+    var ua = navigator.userAgent || '';
+    if (!/AFT|FireTV|Silk/i.test(ua)) return;
+
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+
+    var style = document.createElement('style');
+    style.textContent = `
+        .ch-card:focus {
+            outline: 4px solid #ffd700 !important;
+            border-color: #ffd700 !important;
+            transform: scale(1.06) !important;
+            box-shadow: 0 0 20px rgba(255,215,0,0.5) !important;
+            z-index: 10; position: relative;
+        }
+        .ftab:focus, .back-btn:focus, .nav-logo:focus {
+            outline: 3px solid #ffd700 !important;
+            box-shadow: 0 0 12px rgba(255,215,0,0.5) !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    function getFocusable() {
+        return Array.from(document.querySelectorAll(
+            '.ch-card:not(.hidden), .ftab, .back-btn, .nav-logo, a[href="home.html"]'
+        )).filter(function(el) {
+            return el.offsetParent !== null && el.offsetWidth > 0 && el.offsetHeight > 0;
+        });
+    }
+
+    function findBest(cur, all, dir) {
+        var cr = cur.getBoundingClientRect();
+        var cx = cr.left + cr.width/2, cy = cr.top + cr.height/2;
+        var cands = all.filter(function(el) {
+            if (el === cur) return false;
+            var r = el.getBoundingClientRect();
+            var ex = r.left+r.width/2, ey = r.top+r.height/2;
+            if (dir==='right') return ex > cr.right - 5;
+            if (dir==='left')  return ex < cr.left + 5;
+            if (dir==='down')  return ey > cr.bottom + 10;
+            if (dir==='up')    return ey < cr.top - 10;
+        });
+        if (!cands.length) return null;
+        var best=null, bs=Infinity;
+        cands.forEach(function(el) {
+            var r = el.getBoundingClientRect();
+            var dx=(r.left+r.width/2)-cx, dy=(r.top+r.height/2)-cy;
+            var p=(dir==='right'||dir==='left')?Math.abs(dx):Math.abs(dy);
+            var s=(dir==='right'||dir==='left')?Math.abs(dy):Math.abs(dx);
+            var sc=p+s*0.3;
+            if(sc<bs){bs=sc;best=el;}
+        });
+        return best;
+    }
+
+    document.addEventListener('keydown', function(e) {
+        // Don't intercept search input
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+            if (e.key==='Escape') document.activeElement.blur();
+            return;
+        }
+
+        var all = getFocusable();
+        if (!all.length) return;
+        var focused = document.activeElement;
+        var inList = all.indexOf(focused) >= 0;
+
+        if (!inList) {
+            if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
+                e.preventDefault();
+                var first = document.querySelector('.ch-card:not(.hidden)');
+                if (first) { first.focus(); first.scrollIntoView({block:'center'}); }
+                else { all[0].focus(); }
+            }
+            return;
+        }
+
+        var dir = {ArrowRight:'right',ArrowLeft:'left',ArrowDown:'down',ArrowUp:'up'}[e.key];
+        if (dir) {
+            e.preventDefault();
+            var next = findBest(focused, all, dir);
+            if (next) { next.focus(); next.scrollIntoView({behavior:'smooth',block:'center'}); }
+            else if (dir==='up') {
+                window.scrollTo({top:0,behavior:'smooth'});
+                setTimeout(function(){ document.querySelector('.ftab')?.focus(); }, 400);
+            }
+            return;
+        }
+
+        // Enter = follow the link
+        if (e.key==='Enter' || e.keyCode===13) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (focused.href) window.location.href = focused.href;
+            else if (focused.onclick) focused.onclick(e);
+            else focused.click();
+            return;
+        }
+
+        if (e.key==='Backspace'||e.key==='Escape') {
+            e.preventDefault();
+            window.location.href = 'home.html';
+        }
+    }, true);
+
+    // Add tabindex to all cards as they load
+    new MutationObserver(function() {
+        document.querySelectorAll('.ch-card:not(.hidden)').forEach(function(el) {
+            if (!el.getAttribute('tabindex')) el.setAttribute('tabindex','0');
+        });
+    }).observe(document.body, {childList:true, subtree:true});
+
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.querySelectorAll('.ch-card').forEach(function(el) {
+                el.setAttribute('tabindex','0');
+            });
+            var first = document.querySelector('.ch-card');
+            if (first) first.focus();
+        }, 1500);
+    });
+})();
+</script>
 </body>
 </html>

@@ -6177,10 +6177,10 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             var r = getRect(el);
             var ex = r.left + r.width / 2;
             var ey = r.top + r.height / 2;
-            if (direction === 'right') return ex > cr.right - 10;
-            if (direction === 'left')  return ex < cr.left + 10;
-            if (direction === 'down')  return ey > cr.bottom - 10;
-            if (direction === 'up')    return ey < cr.top + 10;
+            if (direction === 'right') return ex > cr.right - 5;
+            if (direction === 'left')  return ex < cr.left + 5;
+            if (direction === 'down')  return ey > cr.bottom + 10;
+            if (direction === 'up')    return ey < cr.top - 10;
         });
 
         if (candidates.length === 0) return null;
@@ -6265,9 +6265,17 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         }
 
         // Enter / Select — click the focused element
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === 'Enter' || e.keyCode === 13) {
             e.preventDefault();
-            focused.click();
+            e.stopPropagation();
+            // Try all methods to trigger the action
+            if (focused.tagName === 'A' && focused.href) {
+                window.location.href = focused.href;
+            } else if (focused.onclick) {
+                focused.onclick(e);
+            } else {
+                focused.click();
+            }
             return;
         }
 
