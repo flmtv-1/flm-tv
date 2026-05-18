@@ -653,16 +653,7 @@ window.addEventListener('DOMContentLoaded', () => {
             else if (dir==='up') { window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){all[0].focus();},400); }
         }
         if (e.key==='Backspace'||e.key==='Escape') { e.preventDefault(); window.location.href='home.html'; }
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            if (focused.tagName === 'A' && focused.href) {
-                window.location.href = focused.href;
-            } else if (focused.onclick) {
-                focused.onclick(e);
-            } else {
-                focused.click();
-            }
-        }
+        if (e.key==='Enter' && focused && focused.onclick) focused.click();
     }, true);
 
     window.addEventListener('load', function() {
