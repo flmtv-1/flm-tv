@@ -3865,10 +3865,11 @@
 
                     // ── SPECIAL: TV Stations card ──
                     if (collection.id === 'live-stations') {
-                        const navItem = document.createElement('div');
+                        const navItem = document.createElement('a');
                         navItem.className = 'category-nav-item';
-                        navItem.onclick = () => window.location.href = 'live-stations.html';
-                        navItem.style.cssText = 'background: linear-gradient(135deg, #050a1a 0%, #0a1530 60%, #050a1a 100%); border: 2px solid rgba(192,39,45,0.5); position: relative; overflow: hidden;';
+                        navItem.href = 'live-stations.html';
+                        navItem.setAttribute('tabindex', '0');
+                        navItem.style.cssText = 'background: linear-gradient(135deg, #050a1a 0%, #0a1530 60%, #050a1a 100%); border: 2px solid rgba(192,39,45,0.5); position: relative; overflow: hidden; text-decoration: none; display: block;';
                         navItem.innerHTML = `
                             <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%, rgba(192,39,45,0.15) 0%, transparent 70%);pointer-events:none;"></div>
                             <div class="category-nav-overlay" style="background:rgba(8,8,8,0.75);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;text-align:center;">
@@ -5945,6 +5946,19 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         .category-header { margin-bottom: 0.5rem !important; }
         .category-section { margin-bottom: 1.5rem !important; }
 
+        /* Force portrait movie cards on Firestick */
+        .content-card {
+            flex: 0 0 150px !important;
+            min-width: 150px !important;
+            max-width: 150px !important;
+        }
+        .content-card-image {
+            width: 150px !important;
+            height: 225px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+        }
+
         /* Hide search bar — not usable with remote */
         .search-container { display: none !important; }
 
@@ -6250,6 +6264,16 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
         if (direction) {
             e.preventDefault();
+            // Special: DOWN from header always jumps to first content below nav
+            if (direction === 'down' && focused.closest('header')) {
+                var contentItems = all.filter(function(el) { return !el.closest('header'); });
+                if (contentItems.length > 0) {
+                    contentItems[0].focus();
+                    contentItems[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+
             var next = findBest(focused, all, direction);
             if (next) {
                 next.focus();
