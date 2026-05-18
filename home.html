@@ -3968,6 +3968,9 @@
                     SortBy: isCollections ? 'SortName' : 'DateCreated',
                     Recursive: true,
                     IncludeItemTypes: isCollections ? 'BoxSet' : 'Movie,Series,Book,MusicAlbum',
+                    Fields: 'PrimaryImageAspectRatio,ProductionYear,OfficialRating,SeriesPrimaryImageTag,ParentThumbImageTag,ImageTags',
+                    ImageTypeLimit: 1,
+                    EnableImageTypes: 'Primary,Thumb',
                 });
 
                 // Replace placeholder header with full header including View All
@@ -6108,6 +6111,24 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
     // ── 3. GET ALL FOCUSABLE ELEMENTS IN ORDER ───────────────────
     function getFocusable() {
+        // If a side panel is open, only navigate within it
+        var activePanel = document.querySelector('.side-panel.active');
+        if (activePanel) {
+            return Array.from(activePanel.querySelectorAll(
+                'button, a, input, textarea, [tabindex="0"]'
+            )).filter(function(el) {
+                return el.offsetParent !== null && el.offsetWidth > 0 && el.offsetHeight > 0;
+            });
+        }
+
+        // If video modal open, only navigate close button
+        var videoModal = document.querySelector('.video-modal.active');
+        if (videoModal) {
+            return Array.from(videoModal.querySelectorAll('.close-video, button')).filter(function(el) {
+                return el.offsetParent !== null;
+            });
+        }
+
         return Array.from(document.querySelectorAll(
             '.header-nav a, ' +
             '.nav-actions button, ' +

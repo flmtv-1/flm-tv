@@ -135,6 +135,23 @@ body::after {
 .live-badge { display:inline-flex; align-items:center; gap:6px; background:var(--live-green); color:#000; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; padding:2px 8px; border-radius:2px; margin-top:6px; }
 .live-badge-dot { width:5px; height:5px; border-radius:50%; background:#000; animation:blink 1s infinite; }
 
+.watch-now-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    background: var(--live-green);
+    color: #000;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.watch-now-btn:hover { background: #fff; color: #000; transform: scale(1.05); }
+
 /* PROGRESS */
 .progress-bar-wrap { grid-column:1/-1; height:3px; background:rgba(0,230,118,0.1); }
 .progress-bar-fill { height:100%; background:var(--live-green); transition:width 1s linear; }
@@ -180,7 +197,7 @@ body::after {
 <body>
 
 <nav class="topnav">
-  <a href="index.html" class="nav-logo">FLM<span>TV</span></a>
+  <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
   <ul class="nav-links">
     <li><a href="home.html">Home</a></li>
     <li><a href="browse.html">Browse</a></li>
@@ -444,11 +461,16 @@ function renderSchedule() {
     const card = document.createElement('div');
     card.className = classes.join(' ');
     card.dataset.filter = filterTags.join(' ');
-    if (status === 'live' && !liveCardRendered) card.id = 'live-now-card';
+    if (status === 'live' && !liveCardRendered) {
+        card.id = 'live-now-card';
+        card.style.cursor = 'pointer';
+        card.onclick = function() { window.location.href = 'live.html'; };
+    }
 
     const movieBadge = show.isMovie   ? `<span class="movie-badge">MOVIE</span>` : '';
     const flmTag     = show.isFlmOrig ? `<span class="flm-tag">★ FLM ORIGINAL</span>` : '';
     const liveBadge  = (status==='live' && !liveCardRendered) ? `<div class="live-badge"><div class="live-badge-dot"></div>ON AIR NOW</div>` : '';
+    const watchNowBtn = (status==='live' && !liveCardRendered) ? `<a href="live.html" class="watch-now-btn" onclick="event.stopPropagation();">▶ Watch Now</a>` : '';
     const progressBar= (status==='live' && !liveCardRendered) ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${getProgress(show)}%"></div></div>` : '';
     if (status === 'live') liveCardRendered = true;
 
@@ -461,6 +483,7 @@ function renderSchedule() {
         <div class="show-name">${show.name}${movieBadge}${flmTag}</div>
         <div class="show-meta">${show.dur}</div>
         ${liveBadge}
+        ${watchNowBtn}
       </div>
       <div class="show-dur">${show.dur}</div>
       ${progressBar}
@@ -554,6 +577,98 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(updateProgress, 10000);
   setInterval(() => { renderSchedule(); }, 60000); // re-render every minute so live status updates
 });
+</script>
+
+<script>
+(function() {
+    var ua = navigator.userAgent || '';
+    if (!/AFT|FireTV|Silk/i.test(ua)) return;
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+
+    var style = document.createElement('style');
+    style.textContent = `
+        .show-card:focus, .ftab:focus, .jump-btn:focus, .nav-logo:focus, a:focus {
+            outline: 4px solid #ffd700 !important;
+            box-shadow: 0 0 20px rgba(255,215,0,0.5) !important;
+            z-index: 10; position: relative;
+        }
+        #live-now-card:focus { outline: 4px solid #00E676 !important; }
+    `;
+    document.head.appendChild(style);
+
+    function getFocusable() {
+        return Array.from(document.querySelectorAll(
+            '.show-card:not(.hidden), .ftab, .jump-btn, .nav-logo, a.live-pill'
+        )).filter(function(el) {
+            return el.offsetParent !== null && el.offsetWidth > 0 && el.offsetHeight > 0;
+        });
+    }
+
+    function findBest(current, all, dir) {
+        var cr = current.getBoundingClientRect();
+        var cx = cr.left + cr.width/2, cy = cr.top + cr.height/2;
+        var candidates = all.filter(function(el) {
+            if (el === current) return false;
+            var r = el.getBoundingClientRect();
+            var ex = r.left+r.width/2, ey = r.top+r.height/2;
+            if (dir==='right') return ex > cr.right - 10;
+            if (dir==='left')  return ex < cr.left + 10;
+            if (dir==='down')  return ey > cr.bottom - 10;
+            if (dir==='up')    return ey < cr.top + 10;
+        });
+        if (!candidates.length) return null;
+        var best = null, bestScore = Infinity;
+        candidates.forEach(function(el) {
+            var r = el.getBoundingClientRect();
+            var dx=(r.left+r.width/2)-cx, dy=(r.top+r.height/2)-cy;
+            var p=(dir==='right'||dir==='left')?Math.abs(dx):Math.abs(dy);
+            var s=(dir==='right'||dir==='left')?Math.abs(dy):Math.abs(dx);
+            var score=p+s*0.3;
+            if(score<bestScore){bestScore=score;best=el;}
+        });
+        return best;
+    }
+
+    document.addEventListener('keydown', function(e) {
+        var all = getFocusable();
+        if (!all.length) return;
+        var focused = document.activeElement;
+        var inList = all.indexOf(focused) >= 0;
+        if (!inList) {
+            if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
+                e.preventDefault();
+                var liveCard = document.getElementById('live-now-card');
+                if (liveCard) { liveCard.focus(); liveCard.scrollIntoView({block:'center'}); }
+                else { all[0].focus(); }
+            }
+            return;
+        }
+        var dir = {ArrowRight:'right',ArrowLeft:'left',ArrowDown:'down',ArrowUp:'up'}[e.key];
+        if (dir) {
+            e.preventDefault();
+            var next = findBest(focused, all, dir);
+            if (next) { next.focus(); next.scrollIntoView({behavior:'smooth',block:'center'}); }
+            else if (dir==='up') { window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){all[0].focus();},400); }
+        }
+        if (e.key==='Backspace'||e.key==='Escape') { e.preventDefault(); window.location.href='home.html'; }
+        if (e.key==='Enter' && focused && focused.onclick) focused.click();
+    }, true);
+
+    window.addEventListener('load', function() {
+        document.querySelectorAll('.show-card').forEach(function(el) {
+            if (!el.getAttribute('tabindex')) el.setAttribute('tabindex','0');
+            el.addEventListener('keydown', function(e) {
+                if (e.key==='Enter'||e.key===' ') { e.preventDefault(); el.click(); }
+            });
+        });
+        new MutationObserver(function() {
+            document.querySelectorAll('.show-card').forEach(function(el) {
+                if (!el.getAttribute('tabindex')) el.setAttribute('tabindex','0');
+            });
+        }).observe(document.body, {childList:true, subtree:true});
+    });
+})();
 </script>
 </body>
 </html>
