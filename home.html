@@ -5955,8 +5955,11 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         .content-card-image {
             width: 150px !important;
             height: 225px !important;
+            min-height: 225px !important;
+            max-height: 225px !important;
             object-fit: cover !important;
             object-position: center top !important;
+            display: block !important;
         }
 
         /* Hide search bar — not usable with remote */
@@ -6264,14 +6267,16 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
         if (direction) {
             e.preventDefault();
-            // Special: DOWN from header always jumps to first content below nav
+            // Special: DOWN from header jumps directly to first category card (TV STATIONS)
             if (direction === 'down' && focused.closest('header')) {
-                var contentItems = all.filter(function(el) { return !el.closest('header'); });
-                if (contentItems.length > 0) {
-                    contentItems[0].focus();
-                    contentItems[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
+                var target = document.querySelector('.category-nav-item[tabindex="0"]') ||
+                             document.querySelector('.live-watch-btn') ||
+                             all.filter(function(el) { return !el.closest('header'); })[0];
+                if (target) {
+                    target.focus();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
+                return;
             }
 
             var next = findBest(focused, all, direction);
