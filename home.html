@@ -2713,7 +2713,6 @@
                         <li><a href="live-stations.html">LIVE</a></li>
                         <li><a href="schedule.html">Schedule</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
-                        <li><a href="live-stations.html" style="color:var(--primary);font-weight:800;">· TV Stations</a></li>
                     </ul>
                 </nav>
             </div>
@@ -2745,6 +2744,9 @@
                     <i class="fas fa-lock"></i>
                 </button>
                 
+                <a href="live-stations.html" class="btn-primary" style="text-decoration:none;display:flex;align-items:center;gap:0.4rem;">
+                    <i class="fas fa-tv"></i><span class="sign-in-text"> TV Stations</span>
+                </a>
                 
             </div>
         </div>
@@ -3912,9 +3914,8 @@
                     let backdropUrl = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300';
                     
                     if (items && items.Items && items.Items.length > 0) {
-                        // Try to find item with backdrop, otherwise use primary image
+                        // Use backdrop (landscape) for category cards — that's the correct style
                         let foundBackdrop = false;
-                        
                         for (const item of items.Items) {
                             if (item.BackdropImageTags && item.BackdropImageTags.length > 0) {
                                 backdropUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Backdrop?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.BackdropImageTags[0]}&format=webp&maxWidth=300`;
@@ -3922,8 +3923,6 @@
                                 break;
                             }
                         }
-                        
-                        // If no backdrop found, use primary image from first item
                         if (!foundBackdrop && items.Items[0].ImageTags?.Primary) {
                             backdropUrl = getImageUrl(items.Items[0].Id, items.Items[0].ImageTags.Primary, 'Primary');
                         }
@@ -4004,13 +4003,13 @@
 
                         let imageUrl = 'https://placehold.co/200x300?text=No+Image';
                         if (item.ImageTags?.Primary) {
-                            imageUrl = getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
+                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&fillWidth=200&fillHeight=300&quality=90&format=webp`;
                         } else if (item.SeriesPrimaryImageTag && item.SeriesId) {
-                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&format=webp&maxHeight=450`;
+                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.SeriesPrimaryImageTag}&fillWidth=200&fillHeight=300&quality=90&format=webp`;
                         } else if (item.SeriesThumb) {
-                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&format=webp&maxHeight=450`;
+                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.SeriesId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&fillWidth=200&fillHeight=300&quality=90&format=webp`;
                         } else if (item.ParentThumbImageTag && item.ParentThumbItemId) {
-                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&format=webp&maxHeight=450`;
+                            imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&fillWidth=200&fillHeight=300&quality=90&format=webp`;
                         }
 
                         card.innerHTML = `
@@ -5928,8 +5927,15 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         .tv-arrow-right { right: 0; }
         .category-section { position: relative; }
 
-        /* Movie cards — use natural 768px breakpoint (150x225 portrait) */
+        /* Movie cards — force portrait 2:3 ratio */
+        .content-card {
+            flex: 0 0 150px !important;
+            min-width: 150px !important;
+            max-width: 150px !important;
+        }
         .content-card-image {
+            width: 150px !important;
+            height: 225px !important;
             object-fit: cover !important;
         }
 
@@ -6256,6 +6262,13 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                     if (topEl) { topEl.focus(); topEl.scrollIntoView({ block: 'center' }); }
                 }, 400);
             }
+        }
+
+        // Enter / Select — click the focused element
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            focused.click();
+            return;
         }
 
         // Back button = go back
