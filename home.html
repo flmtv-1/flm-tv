@@ -3968,9 +3968,6 @@
                     SortBy: isCollections ? 'SortName' : 'DateCreated',
                     Recursive: true,
                     IncludeItemTypes: isCollections ? 'BoxSet' : 'Movie,Series,Book,MusicAlbum',
-                    Fields: 'PrimaryImageAspectRatio,ProductionYear,OfficialRating,SeriesPrimaryImageTag,ParentThumbImageTag,ImageTags',
-                    ImageTypeLimit: 1,
-                    EnableImageTypes: 'Primary,Thumb',
                 });
 
                 // Replace placeholder header with full header including View All
@@ -3989,9 +3986,7 @@
                 if (items && items.Items && items.Items.length > 0) {
                     const itemsWithImages = items.Items.filter(item =>
                         item.ImageTags?.Primary ||
-                        item.SeriesThumb ||
-                        item.SeriesPrimaryImageTag ||
-                        item.ParentThumbImageTag
+                        (item.SeriesPrimaryImageTag && item.SeriesId)
                     );
 
                     itemsWithImages.forEach(item => {
@@ -6089,7 +6084,8 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.panel-close',
             '.modal-close',
             '.close-video',
-            '.close-live-tv'
+            '.close-live-tv',
+            '.tv-arrow'
         ];
         selectors.forEach(function(sel) {
             document.querySelectorAll(sel).forEach(function(el) {
@@ -6148,7 +6144,8 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.panel-close, ' +
             '.modal-close, ' +
             '.close-video, ' +
-            '.close-live-tv'
+            '.close-live-tv, ' +
+            '.tv-arrow'
         )).filter(function(el) {
             return el.offsetParent !== null &&
                    el.offsetWidth > 0 &&

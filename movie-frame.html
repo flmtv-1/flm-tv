@@ -327,35 +327,96 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 
 
 <script>
-// Firestick detection - shrink bar so it doesn't cover cards
+// FLM TV: Firestick D-pad navigation for movie-frame top bar
 (function() {
     var ua = navigator.userAgent || '';
-    var isFirestick = /AFT|FireTV|Silk/i.test(ua);
-    if (isFirestick) {
-        document.body.style.zoom = '0.7';
-        var bar = document.getElementById('flmBar');
-        if (bar) {
-            bar.style.height = '36px';
-            bar.style.padding = '0 0.5rem';
-            bar.style.fontSize = '0.75rem';
-        }
-        // Make all buttons in bar focusable and visible
-        var btns = document.querySelectorAll('.flm-btn');
-        btns.forEach(function(b) {
-            b.style.padding = '0.25rem 0.6rem';
-            b.style.fontSize = '0.75rem';
-        });
-        // Update iframe position
-        var frame = document.getElementById('jellyfinFrame');
-        if (frame) {
-            frame.style.top = '36px';
-            frame.style.height = 'calc(100% - 36px)';
-        }
-        // Focus glow for remote nav
-        var style = document.createElement('style');
-        style.textContent = 'a:focus,button:focus{outline:3px solid #22c55e !important;box-shadow:0 0 15px rgba(34,197,94,0.8) !important;}';
-        document.head.appendChild(style);
+    if (!/AFT|FireTV|Silk/i.test(ua)) return;
+
+    // Fix viewport for Firestick 960px — NO zoom
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+
+    // Shrink bar to fit 960px without zoom
+    var bar = document.getElementById('flmBar');
+    if (bar) {
+        bar.style.height = '42px';
+        bar.style.padding = '0 0.6rem';
+        bar.style.gap = '0.5rem';
     }
+    document.querySelectorAll('.flm-btn').forEach(function(b) {
+        b.setAttribute('tabindex', '0');
+        b.style.padding = '0.3rem 0.8rem';
+        b.style.fontSize = '0.8rem';
+    });
+
+    // Focus styles
+    var style = document.createElement('style');
+    style.textContent = `
+        .flm-btn:focus {
+            outline: 3px solid #ffd700 !important;
+            box-shadow: 0 0 15px rgba(255,215,0,0.7) !important;
+            transform: scale(1.05);
+        }
+        #flmBar { background: rgba(0,0,0,0.97) !important; }
+    `;
+    document.head.appendChild(style);
+
+    // Top bar buttons in order
+    var barBtns = ['backBtn', 'homeBtn'];
+    var vaultBtn = document.querySelector('#flmBar a.btn-vault');
+    if (vaultBtn) { vaultBtn.setAttribute('tabindex','0'); barBtns.push(vaultBtn.id || 'vaultBtn'); if (!vaultBtn.id) vaultBtn.id = 'vaultBtn'; }
+
+    var barIdx = 0;
+    var inBar = false;
+
+    function focusBarBtn(i) {
+        barIdx = Math.max(0, Math.min(barBtns.length - 1, i));
+        var el = document.getElementById(barBtns[barIdx]);
+        if (el) { el.focus(); inBar = true; }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        // Backspace always goes back
+        if (e.key === 'Backspace' || e.key === 'Escape') {
+            e.preventDefault();
+            history.back();
+            return;
+        }
+
+        // ArrowUp always brings focus to bar
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            focusBarBtn(barIdx);
+            return;
+        }
+
+        // If focused on bar buttons
+        if (inBar) {
+            if (e.key === 'ArrowRight') { e.preventDefault(); focusBarBtn(barIdx + 1); return; }
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); focusBarBtn(barIdx - 1); return; }
+            if (e.key === 'ArrowDown')  {
+                e.preventDefault();
+                inBar = false;
+                // Pass focus into iframe
+                var frame = document.getElementById('jellyfinFrame');
+                if (frame && frame.contentWindow) {
+                    try { frame.contentWindow.focus(); } catch(e) {}
+                }
+                return;
+            }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var el = document.getElementById(barBtns[barIdx]);
+                if (el) el.click();
+                return;
+            }
+        }
+    }, true);
+
+    // Focus first bar button on load
+    window.addEventListener('load', function() {
+        setTimeout(function() { focusBarBtn(0); }, 500);
+    });
 })();
 </script>
 
