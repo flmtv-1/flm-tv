@@ -2925,17 +2925,17 @@
 
     .live-showcase-badge {
         position: absolute;
-        top: 14px; left: 14px;
+        top: 10px; left: 10px;
         z-index: 10;
         display: flex;
         align-items: center;
-        gap: 7px;
+        gap: 5px;
         background: rgba(220,38,38,0.9);
         border: 1px solid rgba(255,255,255,0.2);
         border-radius: 20px;
-        padding: 5px 12px;
+        padding: 3px 9px;
         font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
-        font-size: 13px;
+        font-size: 11px;
         letter-spacing: 2px;
         font-weight: 700;
         color: #fff;
@@ -5909,24 +5909,26 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         .category-nav-scroll::-webkit-scrollbar { display: none !important; }
         .content-carousel, .movies-scroll { scrollbar-width: none !important; }
 
-        /* Carousel arrow buttons */
+        /* Carousel arrow buttons — small, unobtrusive */
         .tv-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 40px;
-            height: 60px;
-            background: rgba(0,0,0,0.7);
-            border: 2px solid #ffd700;
+            width: 28px;
+            height: 40px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,215,0,0.6);
             color: #ffd700;
-            font-size: 1.2rem;
+            font-size: 1rem;
             cursor: pointer;
             z-index: 20;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
+            border-radius: 4px;
+            opacity: 0.7;
         }
+        .tv-arrow:focus { opacity: 1; outline: 2px solid #ffd700 !important; }
         .tv-arrow-left { left: 0; }
         .tv-arrow-right { right: 0; }
         .category-section { position: relative; }
