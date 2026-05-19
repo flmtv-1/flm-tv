@@ -5928,6 +5928,18 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         .tv-arrow-right { right: 0; }
         .category-section { position: relative; }
 
+        /* Movie cards — force portrait 2:3 ratio */
+        .content-card {
+            flex: 0 0 150px !important;
+            min-width: 150px !important;
+            max-width: 150px !important;
+        }
+        .content-card-image {
+            width: 150px !important;
+            height: 225px !important;
+            object-fit: cover !important;
+        }
+
         /* View All buttons + section titles — smaller for TV */
         .view-all-btn { font-size: 0.85rem !important; padding: 0.2rem 0.6rem !important; }
         .category-title { font-size: 1rem !important; }
