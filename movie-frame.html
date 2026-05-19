@@ -182,14 +182,14 @@
     <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
   </div>
   <div class="bar-spacer"></div>
-  <button class="flm-btn" onclick="window.location.href='kids-corner.html'" title="Kids Corner" style="padding:2px;border-radius:50%;border:2px solid #4A90E2;background:transparent;width:36px;height:36px;overflow:hidden;cursor:pointer;">
-    <img src="assets/images/kids-avatar.png" alt="Kids" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+  <button onclick="window.location.href='kids-corner.html'" title="Kids Corner" tabindex="0" style="padding:0;border-radius:50%;border:3px solid #4A90E2;background:transparent;width:44px;height:44px;overflow:hidden;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+    <img src="assets/images/kids-avatar.png" alt="Kids" style="width:44px;height:44px;object-fit:cover;border-radius:50%;display:block;">
   </button>
-  <button class="flm-btn" onclick="window.open('https://flmtv.com/home.html#chat','_blank')" title="Chat" style="padding:0;border-radius:50%;border:none;background:#22c55e;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:white;">
+  <button onclick="window.open('https://flmtv.com/home.html#chat','_blank')" title="Chat" tabindex="0" style="padding:0;border-radius:50%;border:none;background:#22c55e;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:white;flex-shrink:0;">
     💬
   </button>
-  <button class="flm-btn" onclick="window.open('https://flmtv.com/home.html#ai','_blank')" title="Zaina AI" style="padding:2px;border-radius:50%;border:2px solid #22c55e;background:transparent;width:36px;height:36px;overflow:hidden;cursor:pointer;">
-    <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+  <button onclick="window.open('https://flmtv.com/home.html#ai','_blank')" title="Zaina AI" tabindex="0" style="padding:0;border-radius:50%;border:3px solid #22c55e;background:transparent;width:44px;height:44px;overflow:hidden;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+    <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:44px;height:44px;object-fit:cover;border-radius:50%;display:block;">
   </button>
   <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
 🎬 The Vault</a>
@@ -337,154 +337,98 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 
 <script>
 // FLM TV: Firestick D-pad navigation for movie-frame top bar
-// FIXED: back button logic, inBar reset, all buttons focusable, compact bar
 (function() {
     var ua = navigator.userAgent || '';
     if (!/AFT|FireTV|Silk/i.test(ua)) return;
 
-    // ── Fix viewport for Firestick 960px CSS viewport ──
+    // Fix viewport for Firestick 960px — NO zoom
     var vp = document.querySelector('meta[name="viewport"]');
     if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
 
-    // ── Compact bar: shrink to 38px so iframe has max space ──
+    // Shrink bar to fit 960px without zoom
+    var bar = document.getElementById('flmBar');
+    if (bar) {
+        bar.style.height = '42px';
+        bar.style.padding = '0 0.6rem';
+        bar.style.gap = '0.5rem';
+    }
+    document.querySelectorAll('.flm-btn').forEach(function(b) {
+        b.setAttribute('tabindex', '0');
+        // Don't override padding on avatar/circular buttons
+        if (b.style.borderRadius !== '50%') {
+            b.style.padding = '0.3rem 0.8rem';
+            b.style.fontSize = '0.8rem';
+        }
+    });
+
+    // Focus styles
     var style = document.createElement('style');
     style.textContent = `
-        /* Firestick overrides for movie-frame bar */
-        #flmBar {
-            height: 38px !important;
-            padding: 0 0.5rem !important;
-            gap: 0.35rem !important;
-            background: rgba(0,0,0,0.97) !important;
-        }
-        #jellyfinFrame {
-            top: 38px !important;
-            height: calc(100% - 38px) !important;
-        }
-        /* Hide round avatar buttons — just keep Back, Home, Vault */
-        #flmBar button.flm-btn { display: none !important; }
-        /* Compact text buttons */
-        #flmBar a.flm-btn {
-            padding: 0.2rem 0.65rem !important;
-            font-size: 0.78rem !important;
-            gap: 0.25rem !important;
-        }
-        /* Logo smaller */
-        .logo-text { font-size: 13px !important; }
-        .logo-flag { width: 10px !important; height: 14px !important; }
-        /* Gold focus ring for all bar buttons */
-        #flmBar a.flm-btn:focus {
+        .flm-btn:focus {
             outline: 3px solid #ffd700 !important;
-            box-shadow: 0 0 15px rgba(255,215,0,0.8) !important;
-            transform: scale(1.08) !important;
-            z-index: 9999 !important;
+            box-shadow: 0 0 15px rgba(255,215,0,0.7) !important;
+            transform: scale(1.05);
         }
+        #flmBar { background: rgba(0,0,0,0.97) !important; }
     `;
     document.head.appendChild(style);
 
-    // ── Bar button order: Back, Home, Vault ──
-    // Give Vault button an ID if it doesn't have one
-    var vaultEl = document.querySelector('#flmBar a.btn-vault');
-    if (vaultEl && !vaultEl.id) vaultEl.id = 'vaultBtn';
-
-    var barBtnIds = ['backBtn', 'homeBtn', 'vaultBtn'].filter(function(id) {
-        return !!document.getElementById(id);
-    });
-
-    // Make all bar link buttons focusable
-    barBtnIds.forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.setAttribute('tabindex', '0');
-    });
+    // Top bar buttons in order
+    var barBtns = ['backBtn', 'homeBtn'];
+    var vaultBtn = document.querySelector('#flmBar a.btn-vault');
+    if (vaultBtn) { vaultBtn.setAttribute('tabindex','0'); barBtns.push(vaultBtn.id || 'vaultBtn'); if (!vaultBtn.id) vaultBtn.id = 'vaultBtn'; }
 
     var barIdx = 0;
-    var inBar = true; // start in bar on load
-
-    // ── SMART BACK: go to home.html if no history, else history.back() ──
-    function goBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = 'home.html';
-        }
-    }
-
-    // Override the back button onclick to use smart back
-    var backBtn = document.getElementById('backBtn');
-    if (backBtn) {
-        backBtn.onclick = function(e) { e.preventDefault(); goBack(); return false; };
-    }
+    var inBar = false;
 
     function focusBarBtn(i) {
-        barIdx = Math.max(0, Math.min(barBtnIds.length - 1, i));
-        var el = document.getElementById(barBtnIds[barIdx]);
-        if (el) {
-            el.focus();
-            inBar = true;
-        }
+        barIdx = Math.max(0, Math.min(barBtns.length - 1, i));
+        var el = document.getElementById(barBtns[barIdx]);
+        if (el) { el.focus(); inBar = true; }
     }
 
-    // Reset inBar when focus leaves the bar via mouse/pointer
-    document.getElementById('flmBar').addEventListener('focusout', function(e) {
-        // Only reset if focus moved OUTSIDE the bar entirely
-        setTimeout(function() {
-            if (!document.getElementById('flmBar').contains(document.activeElement)) {
-                inBar = false;
-            }
-        }, 50);
-    });
-
     document.addEventListener('keydown', function(e) {
-        // Backspace/Escape = smart back
+        // Backspace always goes back
         if (e.key === 'Backspace' || e.key === 'Escape') {
             e.preventDefault();
-            goBack();
+            history.back();
             return;
         }
 
-        // ArrowUp always brings focus back to bar
+        // ArrowUp always brings focus to bar
         if (e.key === 'ArrowUp') {
             e.preventDefault();
             focusBarBtn(barIdx);
             return;
         }
 
+        // If focused on bar buttons
         if (inBar) {
-            if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                focusBarBtn(barIdx + 1);
-                return;
-            }
-            if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                focusBarBtn(barIdx - 1);
-                return;
-            }
-            if (e.key === 'ArrowDown') {
+            if (e.key === 'ArrowRight') { e.preventDefault(); focusBarBtn(barIdx + 1); return; }
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); focusBarBtn(barIdx - 1); return; }
+            if (e.key === 'ArrowDown')  {
                 e.preventDefault();
                 inBar = false;
-                // Try to pass focus into the Jellyfin iframe
+                // Pass focus into iframe
                 var frame = document.getElementById('jellyfinFrame');
-                if (frame) {
-                    try { frame.contentWindow.focus(); } catch(err) {}
-                    frame.focus();
+                if (frame && frame.contentWindow) {
+                    try { frame.contentWindow.focus(); } catch(e) {}
                 }
                 return;
             }
-            if (e.key === 'Enter' || e.key === ' ') {
+            if (e.key === 'Enter') {
                 e.preventDefault();
-                var el = document.getElementById(barBtnIds[barIdx]);
+                var el = document.getElementById(barBtns[barIdx]);
                 if (el) el.click();
                 return;
             }
         }
     }, true);
 
-    // Focus Back button on load
+    // Focus first bar button on load
     window.addEventListener('load', function() {
-        setTimeout(function() { focusBarBtn(0); }, 600);
+        setTimeout(function() { focusBarBtn(0); }, 500);
     });
-
-    console.log('📺 FLM TV: movie-frame Firestick nav loaded — ' + barBtnIds.length + ' bar buttons');
 })();
 </script>
 
