@@ -256,7 +256,7 @@
     <!-- Header -->
     <div class="header">
         <div class="logo-section">
-            <button class="back-btn" onclick="goBack()">
+            <button class="back-btn" onclick="goBack()" id="collBackBtn" tabindex="0">
                 <i class="fas fa-arrow-left"></i> Back
             </button>
         </div>
@@ -281,7 +281,7 @@
     <div class="player-overlay" id="playerOverlay">
         <div class="player-header">
             <div class="logo-text">FLM TV</div>
-            <button class="close-player" onclick="closePlayer()">
+            <button class="close-player" onclick="closePlayer()" id="collCloseBtn" tabindex="0">
                 <i class="fas fa-times"></i> Close Player
             </button>
         </div>
@@ -399,7 +399,11 @@
         }
         
         function goBack() {
-            window.history.back();
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'home.html';
+            }
         }
         
         // Handle browser back button
@@ -413,5 +417,189 @@
         // Load collection on page load
         loadCollection();
     </script>
+
+<script>
+// ── FLM TV: Firestick D-pad navigation for Collection Browser ──────────
+(function() {
+    var ua = navigator.userAgent || '';
+    if (!/AFT|FireTV|Silk/i.test(ua)) return;
+
+    console.log('📺 FLM TV: collection-browser Firestick nav active');
+
+    // ── Fix viewport for 960px CSS viewport ──
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+
+    // ── Inject Firestick CSS ──
+    var style = document.createElement('style');
+    style.textContent = \`
+        /* Header compact */
+        .header { padding: 0.5rem 1rem !important; }
+        .logo-text { font-size: 1.4rem !important; }
+        .back-btn { padding: 0.4rem 0.9rem !important; font-size: 0.82rem !important; }
+
+        /* Grid: 5 columns on 960px Firestick */
+        .content-grid {
+            grid-template-columns: repeat(5, 1fr) !important;
+            gap: 0.75rem !important;
+            padding: 0.75rem 1rem !important;
+        }
+
+        /* Collection header smaller */
+        .collection-header { padding: 0.75rem 1rem !important; }
+        .collection-title { font-size: 1.6rem !important; }
+        .collection-info { font-size: 0.9rem !important; }
+
+        /* Hide scrollbars */
+        body::-webkit-scrollbar { display: none !important; }
+        body { scrollbar-width: none !important; }
+
+        /* Gold focus ring for all focusable elements */
+        .movie-card:focus,
+        .back-btn:focus,
+        .close-player:focus {
+            outline: 4px solid #ffd700 !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 6px rgba(255,215,0,0.35),
+                        0 0 25px rgba(255,215,0,0.6) !important;
+            transform: scale(1.1) !important;
+            z-index: 99 !important;
+            position: relative !important;
+        }
+
+        /* Show play overlay when card is focused */
+        .movie-card:focus .play-overlay { opacity: 1 !important; }
+    \`;
+    document.head.appendChild(style);
+
+    // ── Make movie cards keyboard-focusable ──
+    function makeCardsFocusable() {
+        document.querySelectorAll('.movie-card').forEach(function(card) {
+            if (!card.getAttribute('tabindex')) {
+                card.setAttribute('tabindex', '0');
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        card.click();
+                    }
+                });
+            }
+        });
+    }
+
+    // Run now + watch for dynamically added cards
+    makeCardsFocusable();
+    new MutationObserver(makeCardsFocusable).observe(document.body, { childList: true, subtree: true });
+
+    // ── Spatial navigation helpers ──
+    function getFocusable() {
+        var selector = '.movie-card, #collBackBtn, #collCloseBtn, .back-btn, .close-player';
+        // If player overlay is open, restrict to close button only
+        var overlay = document.getElementById('playerOverlay');
+        if (overlay && overlay.classList.contains('active')) {
+            selector = '#collCloseBtn, .close-player';
+        }
+        return Array.from(document.querySelectorAll(selector)).filter(function(el) {
+            return el.offsetParent !== null && el.offsetWidth > 0 && el.offsetHeight > 0;
+        });
+    }
+
+    function findBest(cur, all, dir) {
+        var cr = cur.getBoundingClientRect();
+        var cx = cr.left + cr.width / 2, cy = cr.top + cr.height / 2;
+        var cands = all.filter(function(el) {
+            if (el === cur) return false;
+            var r = el.getBoundingClientRect();
+            var ex = r.left + r.width / 2, ey = r.top + r.height / 2;
+            if (dir === 'right') return ex > cr.right - 5;
+            if (dir === 'left')  return ex < cr.left + 5;
+            if (dir === 'down')  return ey > cr.bottom - 5;
+            if (dir === 'up')    return ey < cr.top + 5;
+        });
+        if (!cands.length) return null;
+        var best = null, bs = Infinity;
+        cands.forEach(function(el) {
+            var r = el.getBoundingClientRect();
+            var dx = (r.left + r.width / 2) - cx;
+            var dy = (r.top + r.height / 2) - cy;
+            var primary = (dir === 'right' || dir === 'left') ? Math.abs(dx) : Math.abs(dy);
+            var secondary = (dir === 'right' || dir === 'left') ? Math.abs(dy) : Math.abs(dx);
+            var score = primary + secondary * 0.3;
+            if (score < bs) { bs = score; best = el; }
+        });
+        return best;
+    }
+
+    // ── Keydown handler ──
+    document.addEventListener('keydown', function(e) {
+        // Backspace/Escape = smart back (or close player if open)
+        if (e.key === 'Backspace' || e.key === 'Escape') {
+            e.preventDefault();
+            var overlay = document.getElementById('playerOverlay');
+            if (overlay && overlay.classList.contains('active')) {
+                if (typeof closePlayer === 'function') closePlayer();
+            } else {
+                if (window.history.length > 1) window.history.back();
+                else window.location.href = 'home.html';
+            }
+            return;
+        }
+
+        var all = getFocusable();
+        if (!all.length) return;
+
+        var focused = document.activeElement;
+        var inList = all.indexOf(focused) >= 0;
+
+        // No focus — grab first element on any arrow key
+        if (!inList) {
+            if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
+                e.preventDefault();
+                var first = document.getElementById('collBackBtn') || all[0];
+                first.focus();
+                first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+        }
+
+        var dir = { ArrowRight: 'right', ArrowLeft: 'left', ArrowDown: 'down', ArrowUp: 'up' }[e.key];
+        if (dir) {
+            e.preventDefault();
+            var next = findBest(focused, all, dir);
+            if (next) {
+                next.focus();
+                next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else if (dir === 'up') {
+                // Hit top — go to back button
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setTimeout(function() {
+                    var btn = document.getElementById('collBackBtn') || all[0];
+                    if (btn) { btn.focus(); }
+                }, 350);
+            }
+            return;
+        }
+
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (focused.tagName === 'A' && focused.href) {
+                window.location.href = focused.href;
+            } else {
+                focused.click();
+            }
+        }
+    }, true);
+
+    // ── Auto-focus Back button on load ──
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            makeCardsFocusable();
+            var btn = document.getElementById('collBackBtn');
+            if (btn) btn.focus();
+        }, 800);
+    });
+})();
+</script>
+
 </body>
 </html>
