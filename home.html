@@ -3490,7 +3490,7 @@
         { id: '12dc1447c71e042cf48154d67538804e', name: 'GAMING Coming Soon', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=12dc1447c71e042cf48154d67538804e&collectionType=tvshows' },
         { id: '2627e7d2c827d9bd908128d0320a8263', name: 'MUSIC', url: 'http://flmtv26.duckdns.org:8096/web/#/music?topParentId=2627e7d2c827d9bd908128d0320a8263&collectionType=music' },
         { id: 'kids-corner', name: '🌟 Kids Corner', url: 'kids-corner.html', hideFromCarousel: true },
-        { id: '9d7ad6afe9afa2dab1a2f6e00ad28fa6', name: '🎬 Collections', url: 'collections-browser.html', hideFromCarousel: true },
+        { id: '9d7ad6afe9afa2dab1a2f6e00ad28fa6', name: '🎬 Collections', url: 'flm-collection-browser.html', hideFromCarousel: true },
     ]
 };
         
@@ -4613,7 +4613,7 @@
     
     // Special handling for Collections - redirect to collections browser
     if (collectionName === '🎬 Collections' || collectionId === '9d7ad6afe9afa2dab1a2f6e00ad28fa6') {
-        window.location.href = 'collections-browser.html';
+        window.location.href = 'flm-collection-browser.html';
         return;
     }
     
@@ -5844,7 +5844,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         if (itemType === 'Movie' || itemType === 'Series') {
             window.location.href = `movie-frame.html?id=${itemId}`;
         } else if (itemType === 'BoxSet') {
-            window.location.href = `collection-detail.html?id=${itemId}`;
+            window.location.href = `category-detail.html?id=${itemId}`;
         }
     };
 })();
