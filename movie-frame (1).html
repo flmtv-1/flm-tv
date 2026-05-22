@@ -91,13 +91,82 @@
     }
 
     @media (max-width: 768px) {
-      .flm-btn { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
-      .logo-text { font-size: 14px; }
+      .flm-btn { 
+        padding: 0.2rem 0.45rem; 
+        font-size: 0.68rem; 
+        gap: 0.15rem;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+      .logo-text { font-size: 11px; letter-spacing: 0.5px; }
+      .logo-flag { width: 10px; height: 14px; }
 
-      /* On mobile: keep top bar */
+      #flmBar {
+        height: 38px;
+        gap: 0.3rem;
+        padding: 0 0.4rem;
+        display: flex !important;
+        top: 0 !important;
+        bottom: auto !important;
+      }
+      #jellyfinFrame {
+        top: 38px !important;
+        height: calc(100% - 38px - 60px) !important;
+        bottom: 60px !important;
+      }
     }
 
 
+
+    /* Bottom Nav - mobile only */
+    #flmBottomNav {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      #flmBottomNav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        height: 78px;
+        background: #111;
+        border-top: 3px solid #ffd700;
+        z-index: 2147483647;
+        align-items: flex-end;
+        justify-content: space-around;
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+        padding-top: 10px;
+        pointer-events: auto !important;
+        isolation: isolate;
+      }
+      .fnav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        color: #aaa;
+        text-decoration: none;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        flex: 1;
+        height: 100%;
+        text-transform: uppercase;
+        cursor: pointer;
+        pointer-events: auto !important;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(255,215,0,0.3);
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .fnav-item:active { color: #ffd700; transform: scale(0.95); }
+      .fnav-item svg { width: 24px; height: 24px; }
+      /* Shrink iframe so it never sits under the bottom nav */
+      #jellyfinFrame {
+        bottom: 78px !important;
+        height: calc(100% - 38px - 78px) !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -113,9 +182,17 @@
     <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
   </div>
   <div class="bar-spacer"></div>
-  <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv26.duckdns.org:8920/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
-    🎬 The Vault
-  </a>
+  <button onclick="window.location.href='kids-corner.html'" title="Kids Corner" tabindex="0" style="padding:0;border-radius:50%;border:3px solid #4A90E2;background:transparent;width:44px;height:44px;overflow:hidden;cursor:pointer;flex-shrink:0;">
+    <img src="assets/images/kids-avatar.png" alt="Kids" style="width:44px;height:44px;object-fit:cover;border-radius:50%;display:block;">
+  </button>
+  <button onclick="window.location.href='home.html#chat'" title="Chat" tabindex="0" style="padding:0;border-radius:50%;border:none;background:#22c55e;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:white;flex-shrink:0;">
+    💬
+  </button>
+  <button onclick="window.location.href='home.html#ai'" title="Zaina AI" tabindex="0" style="padding:0;border-radius:50%;border:3px solid #22c55e;background:transparent;width:44px;height:44px;overflow:hidden;cursor:pointer;flex-shrink:0;">
+    <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:44px;height:44px;object-fit:cover;border-radius:50%;display:block;">
+  </button>
+  <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv.com/jellyfin/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
+🎬 The Vault</a>
 </div>
 
 <iframe id="jellyfinFrame" allowfullscreen="" allow="autoplay; fullscreen; picture-in-picture" title="FLM TV"></iframe>
@@ -124,7 +201,7 @@
 
 <script>
 const CONFIG = {
-  SERVER:    'https://flmtv26.duckdns.org:8920',
+  SERVER:    'https://flmtv.com/jellyfin',
   API_KEY:   '62131ee22c0141c6b651be75a7444350',
   USER_ID:   '2562494c1df24f8789cd0ad8a38a7bf4',
   SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
@@ -259,36 +336,183 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 
 
 <script>
-// Firestick detection - shrink bar so it doesn't cover cards
+// FLM TV: Firestick D-pad navigation for movie-frame top bar
+// FIXED: back button logic, inBar reset, all buttons focusable, compact bar
 (function() {
     var ua = navigator.userAgent || '';
-    var isFirestick = /AFT|FireTV|Silk/i.test(ua);
-    var isTV = (window.screen.width >= 1280 && window.screen.height >= 600 && window.screen.width <= 1920);
-    if (isFirestick || isTV) {
-        document.body.style.zoom = '0.7';
-        var bar = document.getElementById('flmBar');
-        if (bar) {
-            bar.style.height = '36px';
-            bar.style.padding = '0 0.5rem';
-            bar.style.fontSize = '0.75rem';
+    if (!/AFT|FireTV|Silk/i.test(ua)) return;
+
+    // ── Fix viewport for Firestick 960px CSS viewport ──
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+
+    // ── Compact bar: shrink to 38px so iframe has max space ──
+    var style = document.createElement('style');
+    style.textContent = `
+        /* Firestick overrides for movie-frame bar */
+        #flmBar {
+            height: 38px !important;
+            padding: 0 0.5rem !important;
+            gap: 0.35rem !important;
+            background: rgba(0,0,0,0.97) !important;
         }
-        // Make all buttons in bar focusable and visible
-        var btns = document.querySelectorAll('.flm-btn');
-        btns.forEach(function(b) {
-            b.style.padding = '0.25rem 0.6rem';
-            b.style.fontSize = '0.75rem';
-        });
-        // Update iframe position
-        var frame = document.getElementById('jellyfinFrame');
-        if (frame) {
-            frame.style.top = '36px';
-            frame.style.height = 'calc(100% - 36px)';
+        #jellyfinFrame {
+            top: 38px !important;
+            height: calc(100% - 38px) !important;
         }
-        // Focus glow for remote nav
-        var style = document.createElement('style');
-        style.textContent = 'a:focus,button:focus{outline:3px solid #22c55e !important;box-shadow:0 0 15px rgba(34,197,94,0.8) !important;}';
-        document.head.appendChild(style);
+        /* Hide round avatar buttons — just keep Back, Home, Vault */
+        #flmBar button.flm-btn { display: none !important; }
+        /* Compact text buttons */
+        #flmBar a.flm-btn {
+            padding: 0.2rem 0.65rem !important;
+            font-size: 0.78rem !important;
+            gap: 0.25rem !important;
+        }
+        /* Logo smaller */
+        .logo-text { font-size: 13px !important; }
+        .logo-flag { width: 10px !important; height: 14px !important; }
+        /* Gold focus ring for all bar buttons */
+        #flmBar a.flm-btn:focus {
+            outline: 3px solid #ffd700 !important;
+            box-shadow: 0 0 15px rgba(255,215,0,0.8) !important;
+            transform: scale(1.08) !important;
+            z-index: 9999 !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // ── Bar button order: Back, Home, Vault ──
+    // Give Vault button an ID if it doesn't have one
+    var vaultEl = document.querySelector('#flmBar a.btn-vault');
+    if (vaultEl && !vaultEl.id) vaultEl.id = 'vaultBtn';
+
+    var barBtnIds = ['backBtn', 'homeBtn', 'vaultBtn'].filter(function(id) {
+        return !!document.getElementById(id);
+    });
+
+    // Make all bar link buttons focusable
+    barBtnIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.setAttribute('tabindex', '0');
+    });
+
+    var barIdx = 0;
+    var inBar = true; // start in bar on load
+
+    // ── SMART BACK: go to home.html if no history, else history.back() ──
+    function goBack() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = 'home.html';
+        }
     }
+
+    // Override the back button onclick to use smart back
+    var backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.onclick = function(e) { e.preventDefault(); goBack(); return false; };
+    }
+
+    function focusBarBtn(i) {
+        barIdx = Math.max(0, Math.min(barBtnIds.length - 1, i));
+        var el = document.getElementById(barBtnIds[barIdx]);
+        if (el) {
+            el.focus();
+            inBar = true;
+        }
+    }
+
+    // Reset inBar when focus leaves the bar via mouse/pointer
+    document.getElementById('flmBar').addEventListener('focusout', function(e) {
+        // Only reset if focus moved OUTSIDE the bar entirely
+        setTimeout(function() {
+            if (!document.getElementById('flmBar').contains(document.activeElement)) {
+                inBar = false;
+            }
+        }, 50);
+    });
+
+    document.addEventListener('keydown', function(e) {
+        // Backspace/Escape = smart back
+        if (e.key === 'Backspace' || e.key === 'Escape') {
+            e.preventDefault();
+            goBack();
+            return;
+        }
+
+        // ArrowUp always brings focus back to bar
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            focusBarBtn(barIdx);
+            return;
+        }
+
+        if (inBar) {
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                focusBarBtn(barIdx + 1);
+                return;
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                focusBarBtn(barIdx - 1);
+                return;
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                inBar = false;
+                // Try to pass focus into the Jellyfin iframe
+                var frame = document.getElementById('jellyfinFrame');
+                if (frame) {
+                    try { frame.contentWindow.focus(); } catch(err) {}
+                    frame.focus();
+                }
+                return;
+            }
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                var el = document.getElementById(barBtnIds[barIdx]);
+                if (el) el.click();
+                return;
+            }
+        }
+    }, true);
+
+    // Focus Back button on load
+    window.addEventListener('load', function() {
+        setTimeout(function() { focusBarBtn(0); }, 600);
+    });
+
+    console.log('📺 FLM TV: movie-frame Firestick nav loaded — ' + barBtnIds.length + ' bar buttons');
 })();
 </script>
+
+<!-- FLM TV Bottom Nav - mobile only -->
+<div id="flmBottomNav">
+  <a class="fnav-item" href="kids-corner.html">
+    <img src="https://flmtv.com/assets/images/kids-avatar.png"
+         style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid #ff69b4;"
+         onerror="this.outerHTML='<span style=\'font-size:24px;line-height:1;\'>👧</span>'">
+    Kids
+  </a>
+  <a class="fnav-item" href="home.html">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    Chat
+  </a>
+  <a class="fnav-item" href="home.html">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg>
+    Live TV
+  </a>
+  <a class="fnav-item" href="/schedule.html" style="color:#ffd700;">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+    Schedule
+  </a>
+  <a class="fnav-item" href="home.html">
+    <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" 
+         style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #22c55e;"
+         onerror="this.style.display='none'">
+    Zaina AI
+  </a>
+</div>
 </body></html>
