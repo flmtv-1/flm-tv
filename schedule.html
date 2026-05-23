@@ -60,7 +60,8 @@ body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;}
 .prog{grid-column:1/-1;height:3px;background:rgba(0,230,118,0.1);}
 .prog-fill{height:100%;background:var(--green);transition:width 5s linear;}
 
-.day-hdr{display:flex;align-items:center;gap:12px;padding:24px 0 10px;}
+.channel-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+.dl-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:2px;cursor:pointer;text-decoration:none;}
 .day-lbl{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:rgba(201,168,76,0.5);}
 .day-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent);}
 
@@ -79,12 +80,14 @@ body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;}
 </nav>
 
 <div class="hero">
+  <div class="channel-tag">📡 Channel 26.5 · Las Vegas · Worldwide</div>
   <h1>TODAY'S <em>PROGRAMMING</em></h1>
   <div class="hero-date" id="heroDate"></div>
 </div>
 
 <div class="bar">
   <button class="now-btn" onclick="jumpToNow()"><div class="dot" style="background:var(--green)"></div> NOW PLAYING</button>
+  <a class="dl-btn" id="dlBtn" href="#" onclick="downloadSchedule();return false;">↓ DOWNLOAD SCHEDULE</a>
   <div class="clock" id="clock"></div>
 </div>
 
@@ -275,6 +278,19 @@ function tick() {
   document.getElementById('clock').textContent = `${h}:${m}:${s} ${d.getHours()>=12?'PM':'AM'}`;
   const pf = document.getElementById('pf');
   if (pf) { const t=now(), live=S.find(s=>t>=s.start&&t<s.end); if(live) pf.style.width=Math.min(100,((t-live.start)/(live.end-live.start))*100)+'%'; }
+}
+
+function downloadSchedule() {
+  const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  let txt = `FLM TV — CHANNEL 26.5 · LAS VEGAS · WORLDWIDE\nTODAY'S PROGRAMMING — ${date}\n${'─'.repeat(50)}\n\n`;
+  S.forEach(s => {
+    if (s.type === 'ad') return;
+    txt += `${ftime(s.start).padEnd(10)} ${s.n}\n`;
+  });
+  const a = document.createElement('a');
+  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt);
+  a.download = 'FLMTV-Schedule.txt';
+  a.click();
 }
 
 document.getElementById('heroDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
