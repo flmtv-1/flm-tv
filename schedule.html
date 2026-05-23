@@ -118,15 +118,15 @@ const ITEMS = [
 {"t":"10:59","n":"Gilligan's Island S02E12","d":1518,"type":"show"},
 {"t":"11:24","n":"Mister Ed S01E07 Ed the Lover","d":1326,"type":"show"},
 {"t":"11:46","n":"Leave it to Beaver","d":1539,"type":"show"},
-{"t":"12:12","n":"Bewitched","d":1521,"type":"show"},
-{"t":"12:37","n":"Bewitched 2","d":1521,"type":"show"},
+{"t":"11:37","n":"Bewitched","d":1521,"type":"show"},
+{"t":"12:02","n":"Bewitched 2","d":1521,"type":"show"},
 {"t":"13:02","n":"VoteScottBlack.com","d":30,"type":"ad"},
 {"t":"13:03","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
 {"t":"13:03","n":"LallyForNV.com","d":30,"type":"ad"},
 {"t":"13:04","n":"Lenna4NV.com","d":30,"type":"ad"},
 {"t":"13:05","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"13:06","n":"Andy Griffith","d":1800,"type":"show"},
-{"t":"13:36","n":"Andy Griffith 2","d":1503,"type":"show"},
+{"t":"12:30","n":"Andy Griffith","d":1537,"type":"show"},
+{"t":"12:56","n":"Andy Griffith 2","d":1503,"type":"show"},
 {"t":"14:01","n":"Boxer","d":135,"type":"ad"},
 {"t":"14:03","n":"The Twilight Zone","d":1570,"type":"show"},
 {"t":"14:29","n":"The Twilight Zone 2","d":1557,"type":"show"},
@@ -150,7 +150,26 @@ const ITEMS = [
 {"t":"16:58","n":"Schoolhouse Rock 2","d":194,"type":"kids"},
 {"t":"17:01","n":"Schoolhouse Rock 3","d":186,"type":"kids"},
 {"t":"17:04","n":"Schoolhouse Rock 4","d":192,"type":"kids"},
-{"t":"17:07","n":"Aladdin (1992)","d":5400,"type":"movie"}
+{"t":"17:07","n":"Aladdin (1992)","d":5400,"type":"movie"},
+{"t":"18:37","n":"Here's Lucy","d":1549,"type":"show"},
+{"t":"19:03","n":"Zaina Juliette Show","d":1642,"type":"flm"},
+{"t":"19:30","n":"SheBoujay.com","d":60,"type":"ad"},
+{"t":"19:31","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"19:32","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"19:32","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"19:33","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"19:33","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"19:34","n":"Louisiana Chefs","d":335,"type":"show"},
+{"t":"19:40","n":"Boxer","d":135,"type":"ad"},
+{"t":"19:42","n":"Unfortunate Events 6","d":3159,"type":"show"},
+{"t":"20:35","n":"Achy Breaky Hearts","d":7140,"type":"movie"},
+{"t":"22:34","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"22:35","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"22:35","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"22:36","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"22:36","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"22:37","n":"Let Me In","d":6947,"type":"movie"},
+{"t":"00:33","n":"Love Complex","d":2767,"type":"movie"}
 ];
 
 // ─────────────────────────────────────────────
@@ -162,7 +181,7 @@ function build(items) {
   return items.map((s, i) => {
     const [h, m] = s.t.split(':').map(Number);
     const minOfDay = h * 60 + m;
-    if (i > 0 && minOfDay < prevMin - 30) dayOffset += 1440;
+    if (i > 0 && minOfDay < prevMin - 360) dayOffset += 1440;
     prevMin = minOfDay;
     const start = dayOffset + minOfDay;
     const end = start + s.d / 60;
