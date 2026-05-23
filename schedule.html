@@ -3,301 +3,420 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FLM TV — Schedule</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>FLM TV — Today's Schedule</title>
+<link rel="icon" type="image/png" href="assets/logos/favicons-3/favicon-96x96.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root {
-  --gold:#C9A84C; --red:#C0272D; --black:#070709; --dark:#14141A;
-  --text:#F0EDE8; --dim:#888898; --muted:#444450;
-  --green:#00E676; --blue:#4A9EFF;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;}
-.nav{position:sticky;top:0;z-index:99;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;background:rgba(7,7,9,0.97);border-bottom:1px solid rgba(201,168,76,0.2);}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:5px;color:var(--gold);text-decoration:none;}
-.logo span{color:var(--red);}
-.live-btn{display:flex;align-items:center;gap:6px;background:var(--red);color:#fff;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:2px;}
-.dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1.2s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-
-.hero{padding:28px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.1);}
-.hero h1{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:5px;}
-.hero h1 em{color:var(--gold);font-style:normal;}
-.hero-date{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-top:4px;}
-
-.bar{display:flex;align-items:center;justify-content:space-between;padding:10px 28px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.04);}
-.now-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(0,230,118,0.4);color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:2px;cursor:pointer;}
-.clock{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--dim);letter-spacing:2px;}
-
-.wrap{max-width:860px;margin:0 auto;padding:20px 28px 80px;}
-
-.show{display:grid;grid-template-columns:90px 1fr 70px;margin-bottom:2px;border-radius:2px;overflow:hidden;border-left:3px solid var(--muted);}
-.show.live{border-left-color:var(--green);box-shadow:0 0 0 1px var(--green),0 0 20px rgba(0,230,118,0.15);animation:glow 2s ease-in-out infinite;}
-@keyframes glow{0%,100%{box-shadow:0 0 0 1px var(--green),0 0 20px rgba(0,230,118,0.12)}50%{box-shadow:0 0 0 1px var(--green),0 0 32px rgba(0,230,118,0.3)}}
-.show.aired{opacity:.3;}
-.show.ad{border-left-color:rgba(74,158,255,0.35);}
-
-.tcol{padding:10px 12px;background:var(--dark);text-align:right;display:flex;flex-direction:column;justify-content:center;}
-.ts{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);}
-.te{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
-.show.live .ts{color:var(--green);}
-
-.icol{padding:10px 14px;background:var(--dark);border-left:1px solid rgba(255,255,255,0.03);}
-.sname{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;}
-.show.live .sname{color:#fff;font-size:16px;}
-.show.ad .sname{color:var(--blue);font-size:13px;}
-.badges{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;align-items:center;}
-.badge{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:2px 6px;border-radius:2px;}
-.b-live{background:var(--green);color:#000;display:flex;align-items:center;gap:4px;}
-.b-live-dot{width:5px;height:5px;border-radius:50%;background:#000;animation:blink 1s infinite;}
-.b-movie{color:var(--gold);border:1px solid rgba(201,168,76,0.3);}
-.b-kids{color:#a78bfa;border:1px solid rgba(167,139,250,0.3);}
-.b-flm{color:var(--gold);font-size:9px;}
-.watch{display:inline-flex;align-items:center;gap:4px;margin-top:5px;background:var(--green);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:1px;padding:4px 12px;border-radius:2px;text-decoration:none;}
-
-.dcol{padding:10px 8px;background:var(--dark);border-left:1px solid rgba(255,255,255,0.03);font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;justify-content:flex-end;}
-
-.prog{grid-column:1/-1;height:3px;background:rgba(0,230,118,0.1);}
-.prog-fill{height:100%;background:var(--green);transition:width 5s linear;}
-
-.channel-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
-.dl-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:2px;cursor:pointer;text-decoration:none;}
-.day-lbl{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:rgba(201,168,76,0.5);}
-.day-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent);}
-
-@media(max-width:600px){
-  .show{grid-template-columns:72px 1fr;}
-  .dcol{display:none;}
-  .wrap{padding:12px 12px 60px;}
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:#7A6330;--red:#C0272D;--red-bright:#E8333A;--black:#070709;--dark:#0E0E13;--dark2:#14141A;--dark3:#1C1C24;--dark4:#26262F;--text:#F0EDE8;--text-dim:#888898;--text-muted:#444450;--live-green:#00E676;--ad-blue:#4A9EFF;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.012) 3px,rgba(0,0,0,0.012) 4px);pointer-events:none;z-index:999;}
+.topnav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:rgba(7,7,9,0.97);border-bottom:1px solid rgba(201,168,76,0.2);backdrop-filter:blur(12px);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:5px;color:var(--gold);text-decoration:none;}
+.nav-logo span{color:var(--red);}
+.nav-links{display:flex;gap:24px;list-style:none;}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.live-pill{display:flex;align-items:center;gap:7px;background:var(--red);color:#fff;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:7px 16px;border-radius:2px;transition:background 0.2s;}
+.live-pill:hover{background:var(--red-bright);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.hero{position:relative;overflow:hidden;padding:48px 32px 36px;background:linear-gradient(180deg,rgba(192,39,45,0.07) 0%,transparent 100%);text-align:center;}
+.hero-ghost{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bebas Neue',sans-serif;font-size:180px;letter-spacing:16px;color:rgba(201,168,76,0.025);white-space:nowrap;pointer-events:none;user-select:none;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold-dim);border:1px solid rgba(201,168,76,0.18);padding:5px 14px;border-radius:2px;margin-bottom:18px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:68px;letter-spacing:6px;line-height:1;color:var(--text);margin-bottom:8px;}
+.hero-title em{color:var(--gold);font-style:normal;}
+.hero-date{font-family:'Barlow Condensed',sans-serif;font-size:17px;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;margin-bottom:28px;}
+.hero-stats{display:flex;justify-content:center;gap:48px;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;color:var(--gold);line-height:1;}
+.stat-label{font-size:10px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-top:3px;}
+.jump-bar{display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 32px;background:var(--dark2);border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);}
+.jump-btn{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(0,230,118,0.4);color:var(--live-green);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;padding:8px 20px;border-radius:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+.jump-btn:hover{background:rgba(0,230,118,0.1);}
+.clock-display{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--text-dim);letter-spacing:2px;}
+.filter-bar{display:flex;gap:8px;padding:16px 32px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.04);overflow-x:auto;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.ftab{flex-shrink:0;background:transparent;border:1px solid var(--dark4);color:var(--text-dim);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:6px 16px;border-radius:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+.ftab:hover{border-color:var(--gold-dim);color:var(--gold);}
+.ftab.active{background:var(--gold);border-color:var(--gold);color:#000;}
+.schedule-wrap{max-width:860px;margin:0 auto;padding:28px 32px 80px;}
+.time-block-header{display:flex;align-items:center;gap:14px;padding:24px 0 10px;}
+.time-block-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold-dim);white-space:nowrap;}
+.time-block-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent);}
+.show-card{display:grid;grid-template-columns:90px 1fr auto;align-items:stretch;gap:0;margin-bottom:3px;border-radius:4px;overflow:hidden;transition:transform 0.15s;position:relative;}
+.show-card:not(.live-now):hover{transform:translateX(3px);}
+.show-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;z-index:1;}
+.show-card.upcoming::before{background:var(--dark4);}
+.show-card.live-now::before{background:var(--live-green);}
+.show-card.ad-card::before{background:rgba(74,158,255,0.25);}
+.show-card.flm-card::before{background:var(--gold-dim);}
+.show-time{padding:13px 14px;background:var(--dark2);border-right:1px solid rgba(255,255,255,0.04);text-align:right;display:flex;flex-direction:column;justify-content:center;}
+.show-time-start{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text);letter-spacing:0.5px;}
+.show-time-end{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);margin-top:2px;}
+.show-info{padding:13px 18px;background:var(--dark2);border-right:1px solid rgba(255,255,255,0.04);flex:1;}
+.show-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;letter-spacing:0.5px;color:var(--text);line-height:1.2;}
+.show-meta{font-size:11px;color:var(--text-muted);margin-top:3px;letter-spacing:0.5px;}
+.show-dur{padding:13px 14px;background:var(--dark2);font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);white-space:nowrap;display:flex;align-items:center;}
+.show-card.aired .show-time,.show-card.aired .show-info,.show-card.aired .show-dur{background:rgba(14,14,19,0.5);opacity:0.4;}
+.show-card.live-now{box-shadow:0 0 0 2px var(--live-green),0 4px 28px rgba(0,230,118,0.12);}
+.show-card.live-now .show-time{background:rgba(0,230,118,0.07);border-right-color:rgba(0,230,118,0.15);}
+.show-card.live-now .show-info{background:rgba(0,230,118,0.05);border-right-color:rgba(0,230,118,0.1);}
+.show-card.live-now .show-dur{background:rgba(0,230,118,0.04);}
+.show-card.live-now .show-time-start{color:var(--live-green);}
+.show-card.live-now .show-name{color:#fff;font-size:17px;}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:var(--live-green);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:2px;margin-top:6px;}
+.live-badge-dot{width:5px;height:5px;border-radius:50%;background:#000;animation:blink 1s infinite;}
+.watch-now-btn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:var(--live-green);color:#000;font-weight:800;font-size:12px;letter-spacing:1px;padding:6px 16px;border-radius:4px;text-decoration:none;transition:all 0.2s;}
+.watch-now-btn:hover{background:#fff;color:#000;}
+.progress-bar-wrap{grid-column:1/-1;height:3px;background:rgba(0,230,118,0.1);}
+.progress-bar-fill{height:100%;background:var(--live-green);transition:width 1s linear;}
+.show-card.ad-card .show-time,.show-card.ad-card .show-info,.show-card.ad-card .show-dur{background:rgba(74,158,255,0.03);}
+.show-card.ad-card .show-name{color:var(--ad-blue);font-size:13px;font-weight:500;}
+.show-card.ad-card .show-time-start{color:var(--ad-blue);font-size:11px;}
+.show-card.ad-card.aired{opacity:1;}
+.show-card.flm-card .show-name{color:var(--gold);}
+.show-card.flm-card .show-time,.show-card.flm-card .show-info,.show-card.flm-card .show-dur{background:rgba(201,168,76,0.03);}
+.movie-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:1px 6px;border-radius:2px;margin-left:8px;vertical-align:middle;}
+.show-card.hidden{display:none!important;}
+.schedule-footer{text-align:center;padding:40px 32px;border-top:1px solid rgba(201,168,76,0.1);color:var(--text-muted);font-size:12px;letter-spacing:1px;line-height:2;}
+.schedule-footer a{color:var(--gold-dim);text-decoration:none;}
+.schedule-footer a:hover{color:var(--gold);}
+@media(max-width:640px){
+  .topnav{padding:0 16px;}.nav-links{display:none;}.hero{padding:32px 16px 24px;}.hero-ghost{display:none;}.hero-title{font-size:46px;}.hero-stats{gap:24px;}.schedule-wrap{padding:16px 12px 60px;}.filter-bar{padding:10px 12px;}.show-card{grid-template-columns:72px 1fr;}.show-dur{display:none;}
 }
 </style>
 </head>
 <body>
-
-<nav class="nav">
-  <a href="home.html" class="logo">FLM<span>TV</span></a>
-  <a href="live.html" class="live-btn"><div class="dot"></div> WATCH LIVE</a>
+<nav class="topnav">
+  <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="browse.html">Browse</a></li>
+    <li><a href="live.html">Live TV</a></li>
+    <li><a href="schedule.html" class="active">Schedule</a></li>
+  </ul>
+  <a href="live.html" class="live-pill"><div class="live-dot"></div> WATCH LIVE</a>
 </nav>
 
-<div class="hero">
-  <div class="channel-tag">📡 Channel 26.5 · Las Vegas · Worldwide</div>
-  <h1>TODAY'S <em>PROGRAMMING</em></h1>
-  <div class="hero-date" id="heroDate"></div>
+<section class="hero">
+  <div class="hero-ghost">GUIDE</div>
+  <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · WORLDWIDE</div>
+  <h1 class="hero-title">TODAY'S <em>PROGRAMMING</em></h1>
+  <div class="hero-date" id="heroDate">—</div>
+  <div class="hero-stats">
+    <div><div class="stat-num" id="statTotal">—</div><div class="stat-label">Shows Today</div></div>
+    <div><div class="stat-num" id="statHours">—</div><div class="stat-label">Hours</div></div>
+    <div><div class="stat-num">FREE</div><div class="stat-label">Always Free</div></div>
+  </div>
+</section>
+
+<div class="jump-bar">
+  <button class="jump-btn" onclick="jumpToNow()">
+    <div class="live-dot" style="background:var(--live-green);"></div> Jump to Now Playing
+  </button>
+  <button class="jump-btn" onclick="downloadSchedule()" style="border-color:rgba(201,168,76,0.4);color:var(--gold);">
+    ⬇ Download Schedule
+  </button>
+  <div class="clock-display" id="clockDisplay">--:-- --</div>
 </div>
 
-<div class="bar">
-  <button class="now-btn" onclick="jumpToNow()"><div class="dot" style="background:var(--green)"></div> NOW PLAYING</button>
-  <a class="dl-btn" id="dlBtn" href="#" onclick="downloadSchedule();return false;">↓ DOWNLOAD SCHEDULE</a>
-  <div class="clock" id="clock"></div>
+<div class="filter-bar">
+  <button class="ftab active" onclick="filterSchedule('all',this)">All</button>
+  <button class="ftab" onclick="filterSchedule('shows',this)">Shows Only</button>
+  <button class="ftab" onclick="filterSchedule('movies',this)">Movies</button>
+  <button class="ftab" onclick="filterSchedule('kids',this)">Kids</button>
+  <button class="ftab" onclick="filterSchedule('flm',this)">FLM Originals</button>
+  <button class="ftab" onclick="filterSchedule('upcoming',this)">Up Next</button>
 </div>
 
-<div class="wrap" id="wrap"></div>
+<div class="schedule-wrap" id="scheduleWrap"></div>
+
+<div class="schedule-footer">
+  Schedule is updated as programming changes &nbsp;·&nbsp;
+  <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp;
+  Las Vegas &amp; Worldwide<br>
+  <a href="live.html">▶ Watch Live at FLMTV.com</a>
+</div>
 
 <script>
-// ─────────────────────────────────────────────
-// SCHEDULE — in broadcast order
-// type: show | movie | kids | ad | flm
-// ─────────────────────────────────────────────
-const ITEMS = [
-{"t":"07:28","n":"Sesame Street 2","d":1558,"type":"kids"},
-{"t":"07:54","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"07:54","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"07:55","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"07:55","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"07:56","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"07:56","n":"Super Why","d":1620,"type":"kids"},
-{"t":"08:23","n":"Ready Jet Go!","d":1591,"type":"kids"},
-{"t":"08:49","n":"Nature Cat","d":1441,"type":"kids"},
-{"t":"09:13","n":"FLMTV.com/KidsCorner","d":17,"type":"ad"},
-{"t":"09:13","n":"Snail-logo1-Z","d":15,"type":"ad"},
-{"t":"09:04","n":"The Monkees 207 Hillbilly Honeymoon","d":1505,"type":"show"},
-{"t":"10:04","n":"The Dick Van Dyke Show S02E06","d":1507,"type":"show"},
-{"t":"10:29","n":"Get Smart S01E13 (Aboard the Orient Express)","d":1523,"type":"show"},
-{"t":"10:54","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"10:55","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"10:56","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"10:57","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"10:58","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"10:59","n":"Gilligan's Island S02E12","d":1518,"type":"show"},
-{"t":"11:24","n":"Mister Ed S01E07 Ed the Lover","d":1326,"type":"show"},
-{"t":"11:46","n":"Leave it to Beaver","d":1539,"type":"show"},
-{"t":"12:12","n":"Bewitched","d":1521,"type":"show"},
-{"t":"12:37","n":"Bewitched 2","d":1521,"type":"show"},
-{"t":"13:02","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"13:03","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"13:03","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"13:04","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"13:05","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"13:06","n":"Andy Griffith","d":1800,"type":"show"},
-{"t":"13:36","n":"Andy Griffith 2","d":1503,"type":"show"},
-{"t":"14:01","n":"Boxer","d":135,"type":"ad"},
-{"t":"14:03","n":"The Twilight Zone","d":1570,"type":"show"},
-{"t":"14:29","n":"The Twilight Zone 2","d":1557,"type":"show"},
-{"t":"14:55","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"14:56","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"14:56","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"14:57","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"14:58","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"14:59","n":"SheBoujay.com","d":60,"type":"ad"},
-{"t":"15:00","n":"What's Happening S01E03","d":1800,"type":"show"},
-{"t":"15:30","n":"Good Times S05E16 Where There's Smoke","d":1540,"type":"show"},
-{"t":"15:56","n":"Sanford and Son Season 4","d":1800,"type":"show"},
-{"t":"16:26","n":"The Jeffersons S06E21 The Loan","d":1495,"type":"show"},
-{"t":"16:51","n":"FLM TV Tag","d":21,"type":"ad"},
-{"t":"16:51","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"16:52","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"16:52","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"16:53","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"16:54","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"16:55","n":"Schoolhouse Rock 1","d":185,"type":"kids"},
-{"t":"16:58","n":"Schoolhouse Rock 2","d":194,"type":"kids"},
-{"t":"17:01","n":"Schoolhouse Rock 3","d":186,"type":"kids"},
-{"t":"17:04","n":"Schoolhouse Rock 4","d":192,"type":"kids"},
-{"t":"17:07","n":"Aladdin (1992)","d":5400,"type":"movie"},
-{"t":"18:37","n":"Here's Lucy","d":1549,"type":"show"},
-{"t":"19:03","n":"Zaina Juliette Show","d":1642,"type":"flm"},
-{"t":"19:30","n":"SheBoujay.com","d":60,"type":"ad"},
-{"t":"19:31","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"19:32","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"19:32","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"19:33","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"19:33","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"19:34","n":"Louisiana Chefs","d":335,"type":"show"},
-{"t":"19:40","n":"Boxer","d":135,"type":"ad"},
-{"t":"19:42","n":"Unfortunate Events 6","d":3159,"type":"show"},
-{"t":"20:35","n":"Achy Breaky Hearts","d":7140,"type":"movie"},
-{"t":"22:34","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"22:35","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"22:35","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"22:36","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"22:36","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"22:37","n":"Let Me In","d":6947,"type":"movie"},
-{"t":"00:33","n":"Love Complex","d":2767,"type":"movie"}
+// ── TODAY'S SCHEDULE ─────────────────────────────────────────────────
+// startTime = actual broadcast time (HH:MM), duration = seconds
+const TODAY_SCHEDULE = [
+  {t:"07:28",n:"Sesame Street 2",d:1558,cat:"kids"},
+  {t:"07:54",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"07:54",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"07:55",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"07:55",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"07:56",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"07:56",n:"Super Why",d:1620,cat:"kids"},
+  {t:"08:23",n:"Ready Jet Go!",d:1591,cat:"kids"},
+  {t:"08:49",n:"Nature Cat",d:1441,cat:"kids"},
+  {t:"09:13",n:"FLMTV.com/KidsCorner",d:17,cat:"ad"},
+  {t:"09:13",n:"Snail-logo1-Z",d:15,cat:"ad"},
+  {t:"09:04",n:"The Monkees 207 Hillbilly Honeymoon",d:1505,cat:"show"},
+  {t:"10:04",n:"The Dick Van Dyke Show S02E06",d:1507,cat:"show"},
+  {t:"10:29",n:"Get Smart S01E13",d:1523,cat:"show"},
+  {t:"10:54",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"10:55",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"10:56",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"10:57",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"10:58",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"10:59",n:"Gilligan's Island S02E12",d:1518,cat:"show"},
+  {t:"11:24",n:"Mister Ed S01E07 Ed the Lover",d:1326,cat:"show"},
+  {t:"11:46",n:"Leave it to Beaver",d:1539,cat:"show"},
+  {t:"11:37",n:"Bewitched",d:1521,cat:"show"},
+  {t:"12:02",n:"Bewitched 2",d:1521,cat:"show"},
+  {t:"12:27",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"12:27",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"12:27",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"12:28",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"12:28",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"12:29",n:"Andy Griffith",d:1537,cat:"show"},
+  {t:"12:55",n:"Andy Griffith 2",d:1503,cat:"show"},
+  {t:"13:20",n:"Boxer",d:135,cat:"ad"},
+  {t:"13:29",n:"The Twilight Zone",d:1570,cat:"show"},
+  {t:"13:55",n:"The Twilight Zone 2",d:1557,cat:"show"},
+  {t:"14:21",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"14:21",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"14:22",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"14:22",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"14:23",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"14:23",n:"SheBoujay.com",d:60,cat:"ad"},
+  {t:"14:24",n:"What's Happening S01E03",d:1502,cat:"show"},
+  {t:"14:49",n:"Good Times S05E16 Where There's Smoke",d:1540,cat:"show"},
+  {t:"15:15",n:"Sanford and Son Season 4",d:1516,cat:"show"},
+  {t:"15:40",n:"The Jeffersons S06E21 The Loan",d:1495,cat:"show"},
+  {t:"16:05",n:"FLM TV Tag",d:21,cat:"ad"},
+  {t:"16:05",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"16:06",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"16:06",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"16:07",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"16:07",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"16:08",n:"Schoolhouse Rock 1",d:185,cat:"kids"},
+  {t:"16:11",n:"Schoolhouse Rock 2",d:194,cat:"kids"},
+  {t:"16:14",n:"Schoolhouse Rock 3",d:186,cat:"kids"},
+  {t:"16:17",n:"Schoolhouse Rock 4",d:192,cat:"kids"},
+  {t:"16:20",n:"Aladdin (1992)",d:5439,cat:"movie"},
+  {t:"17:51",n:"Here's Lucy",d:1549,cat:"show"},
+  {t:"18:17",n:"Zaina Juliette Show",d:1642,cat:"flm"},
+  {t:"18:44",n:"SheBoujay.com",d:60,cat:"ad"},
+  {t:"18:45",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"18:46",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"18:46",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"18:47",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"18:47",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"18:48",n:"Louisiana Chefs",d:335,cat:"show"},
+  {t:"18:54",n:"Boxer",d:135,cat:"ad"},
+  {t:"18:56",n:"Unfortunate Events 6",d:3159,cat:"show"},
+  {t:"19:49",n:"Achy Breaky Hearts",d:7140,cat:"movie"},
+  {t:"21:48",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"21:49",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"21:49",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"21:50",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"21:50",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"21:51",n:"Let Me In",d:6947,cat:"movie"},
+  {t:"23:46",n:"Love Complex",d:2767,cat:"movie"}
 ];
 
-// ─────────────────────────────────────────────
-// ENGINE — walks list in order, one midnight crossing = next calendar day
-// ─────────────────────────────────────────────
-function build(items) {
-  let dayOffset = 0;
-  let prevMin = -1;
-  return items.map((s, i) => {
-    const [h, m] = s.t.split(':').map(Number);
-    const minOfDay = h * 60 + m;
-    if (i > 0 && minOfDay < prevMin - 30) dayOffset += 1440;
-    prevMin = minOfDay;
-    const start = dayOffset + minOfDay;
-    const end = start + s.d / 60;
-    return { ...s, start, end, day: Math.floor(dayOffset / 1440) };
-  });
-}
-
-function ftime(min) {
-  const h = Math.floor(min / 60) % 24, m = Math.round(min % 60);
-  return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`;
-}
-
-function fdur(sec) {
-  if (!sec) return '—';
-  const m = sec / 60;
-  if (m < 1) return Math.round(sec) + 's';
-  if (m < 60) return Math.round(m) + ' min';
-  return Math.floor(m / 60) + ' hr' + (Math.round(m % 60) ? ' ' + Math.round(m % 60) + ' min' : '');
-}
-
-const S = build(ITEMS);
-
-// Get current time in schedule-minutes
-// Walk each day offset, find which one has a live show
-function now() {
+// ── TIME UTILITIES ────────────────────────────────────────────────────
+function nowMin() {
   const d = new Date();
-  const raw = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60;
-  const days = [...new Set(S.map(s => s.day))];
-  for (const day of days) {
-    const t = raw + day * 1440;
-    if (S.some(s => t >= s.start && t < s.end)) return t;
-  }
-  // In a gap between shows — still return raw so upcoming shows highlight correctly
-  return raw;
+  return d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
 }
 
-function render() {
-  const t = now();
-  // Find last 3 aired shows to keep, hide the rest
-  const aired = S.filter(s => t >= s.end);
-  const keepAired = new Set(aired.slice(-5).map(s => s.t + s.n));
-  const wrap = document.getElementById('wrap');
+function toMin(t) {
+  const [h,m] = t.split(':').map(Number);
+  return h*60+m;
+}
+
+function getStatus(show) {
+  const now = nowMin();
+  const start = toMin(show.t);
+  const end = start + show.d/60;
+  // Shows after midnight (00:xx - 05:xx): if current time is evening, they're upcoming
+  if (start < 360 && now > 720) return 'upcoming';
+  if (now >= start && now < end) return 'live';
+  if (now >= end) return 'aired';
+  return 'upcoming';
+}
+
+function getProgress(show) {
+  const now = nowMin();
+  const start = toMin(show.t);
+  const end = start + show.d/60;
+  return Math.min(100, ((now - start)/(end - start))*100);
+}
+
+function fmt12(t) {
+  let [h,m] = t.split(':').map(Number);
+  const ap = h>=12?'PM':'AM';
+  h = h%12||12;
+  return `${h}:${String(m).padStart(2,'0')} ${ap}`;
+}
+
+function fmtEnd(t, durSec) {
+  const [h,m] = t.split(':').map(Number);
+  const total = h*60+m + durSec/60;
+  const eh = Math.floor(total/60)%24, em = Math.round(total%60);
+  const ap = eh>=12?'PM':'AM';
+  return `${eh%12||12}:${String(em).padStart(2,'0')} ${ap}`;
+}
+
+function fmtDur(s) {
+  if (s<60) return s+'s';
+  const m=Math.floor(s/60), h=Math.floor(m/60);
+  if (h>0) return h+'h '+(m%60>0?m%60+'m':'');
+  return m+' min';
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+function renderSchedule() {
+  const wrap = document.getElementById('scheduleWrap');
   wrap.innerHTML = '';
-  let lastDay = -1;
+  const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+  wrap.insertAdjacentHTML('beforeend',
+    `<div class="time-block-header"><div class="time-block-label">${date}</div><div class="time-block-line"></div></div>`
+  );
 
-  S.forEach(s => {
-    if (s.day !== lastDay) {
-      lastDay = s.day;
-      // day 0 = today, day 1 = tomorrow — always relative to TODAY's date
-      const d = new Date();
-      d.setHours(0,0,0,0);
-      d.setDate(d.getDate() + s.day);
-      wrap.insertAdjacentHTML('beforeend',
-        `<div class="day-hdr"><div class="day-lbl">${d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase()}</div><div class="day-line"></div></div>`
-      );
-    }
+  let liveRendered = false;
+  const airedItems = TODAY_SCHEDULE.filter(s => getStatus(s)==='aired');
+  const keepAired = new Set(airedItems.slice(-5).map(s=>s.t+s.n));
 
-    const live  = t >= s.start && t < s.end;
-    const aired = t >= s.end;
-    if (aired && !keepAired.has(s.t + s.n)) return;
-    const pct   = live ? Math.min(100, ((t - s.start) / (s.end - s.start)) * 100) : 0;
-    const cls   = `show ${live?'live':aired?'aired':'upcoming'} ${s.type==='ad'?'ad':''} ${s.type==='flm'?'flm':''}`;
+  let showCount=0, totalSec=0;
+  TODAY_SCHEDULE.forEach(s => {
+    if (s.cat!=='ad') { showCount++; totalSec+=s.d; }
+  });
+  document.getElementById('statTotal').textContent = showCount;
+  document.getElementById('statHours').textContent = (totalSec/3600).toFixed(1);
+
+  TODAY_SCHEDULE.forEach(s => {
+    const status = getStatus(s);
+    if (status==='aired' && !keepAired.has(s.t+s.n)) return;
+
+    const isLive = status==='live';
+    const isAired = status==='aired';
+    const isAd = s.cat==='ad';
+    const isMovie = s.cat==='movie';
+    const isKids = s.cat==='kids';
+    const isFlm = s.cat==='flm';
+
+    const cardClass = [
+      'show-card',
+      isLive?'live-now':(isAired?'aired':'upcoming'),
+      isAd?'ad-card':'',
+      isFlm?'flm-card':''
+    ].filter(Boolean).join(' ');
+
+    const filterData = [
+      s.cat==='show'||s.cat==='flm'?'shows':'',
+      isMovie?'movies':'',
+      isKids?'kids':'',
+      isFlm?'flm':'',
+      status==='upcoming'?'upcoming':''
+    ].filter(Boolean).join(' ');
+
+    const pct = isLive ? getProgress(s) : 0;
+    const liveId = (isLive && !liveRendered) ? 'id="live-now-card"' : '';
+    if (isLive) liveRendered = true;
 
     wrap.insertAdjacentHTML('beforeend', `
-      <div class="${cls}" ${live ? 'id="live-now"' : ''}>
-        <div class="tcol"><div class="ts">${ftime(s.start)}</div><div class="te">${ftime(s.end)}</div></div>
-        <div class="icol">
-          <div class="sname">${s.n}</div>
-          <div class="badges">
-            ${live  ? `<span class="badge b-live"><span class="b-live-dot"></span>ON AIR NOW</span>` : ''}
-            ${s.type==='movie' ? `<span class="badge b-movie">MOVIE</span>` : ''}
-            ${s.type==='kids'  ? `<span class="badge b-kids">KIDS</span>`  : ''}
-            ${s.type==='flm'   ? `<span class="badge b-flm">★ FLM ORIGINAL</span>` : ''}
-          </div>
-          ${live ? `<a href="live.html" class="watch">▶ Watch Now</a>` : ''}
+      <div class="${cardClass}" ${liveId} data-filter="${filterData}" tabindex="0">
+        <div class="show-time">
+          <div class="show-time-start">${fmt12(s.t)}</div>
+          <div class="show-time-end">${fmtEnd(s.t,s.d)}</div>
         </div>
-        <div class="dcol">${fdur(s.d)}</div>
-        ${live ? `<div class="prog"><div class="prog-fill" id="pf" style="width:${pct}%"></div></div>` : ''}
+        <div class="show-info">
+          <div class="show-name">${s.n}${isMovie?'<span class="movie-badge">MOVIE</span>':''}</div>
+          ${isLive?`<div class="live-badge"><span class="live-badge-dot"></span> ON AIR NOW</div>`:''}
+          ${isFlm?`<div class="show-meta">★ FLM ORIGINAL</div>`:''}
+          ${isKids?`<div class="show-meta">KIDS</div>`:''}
+          ${isLive?`<a href="live.html" class="watch-now-btn">▶ Watch Now</a>`:''}
+        </div>
+        <div class="show-dur">${fmtDur(s.d)}</div>
+        ${isLive?`<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${pct}%"></div></div>`:''}
       </div>`);
   });
 }
 
-function jumpToNow() {
-  const el = document.getElementById('live-now');
-  if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
-}
-
-function tick() {
-  const d = new Date();
-  const h = d.getHours() % 12 || 12, m = String(d.getMinutes()).padStart(2,'0'), s = String(d.getSeconds()).padStart(2,'0');
-  document.getElementById('clock').textContent = `${h}:${m}:${s} ${d.getHours()>=12?'PM':'AM'}`;
-  const pf = document.getElementById('pf');
-  if (pf) { const t=now(), live=S.find(s=>t>=s.start&&t<s.end); if(live) pf.style.width=Math.min(100,((t-live.start)/(live.end-live.start))*100)+'%'; }
-}
-
+// ── DOWNLOAD ──────────────────────────────────────────────────────────
 function downloadSchedule() {
   const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   let txt = `FLM TV — CHANNEL 26.5 · LAS VEGAS · WORLDWIDE\nTODAY'S PROGRAMMING — ${date}\n${'─'.repeat(50)}\n\n`;
-  S.forEach(s => {
-    if (s.type === 'ad') return;
-    txt += `${ftime(s.start).padEnd(10)} ${s.n}\n`;
+  TODAY_SCHEDULE.forEach(s => {
+    if (s.cat==='ad') return;
+    txt += `${fmt12(s.t).padEnd(12)} ${s.n}\n`;
   });
+  const blob = new Blob([txt], {type:'text/plain'});
   const a = document.createElement('a');
-  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt);
-  a.download = 'FLMTV-Schedule.txt';
+  a.href = URL.createObjectURL(blob);
+  a.download = `FLM-TV-Schedule-${new Date().toISOString().slice(0,10)}.txt`;
   a.click();
 }
 
-document.getElementById('heroDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-render();
+// ── OTHER FUNCTIONS ───────────────────────────────────────────────────
+function jumpToNow() {
+  const el = document.getElementById('live-now-card');
+  if (!el) { alert('No show currently airing — check back later!'); return; }
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.style.boxShadow='0 0 0 3px #00E676,0 0 40px rgba(0,230,118,0.35)';
+  setTimeout(()=>{el.style.boxShadow='';},900);
+}
+
+function filterSchedule(cat, btn) {
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.show-card').forEach(card=>{
+    const tags = card.dataset.filter||'';
+    let show = false;
+    if (cat==='all') show=true;
+    else if (cat==='shows') show=tags.includes('shows')&&!tags.includes('movies');
+    else if (cat==='movies') show=tags.includes('movies');
+    else if (cat==='kids') show=tags.includes('kids');
+    else if (cat==='flm') show=tags.includes('flm');
+    else if (cat==='upcoming') show=tags.includes('upcoming');
+    card.classList.toggle('hidden',!show);
+  });
+}
+
+function updateClock() {
+  const d=new Date();
+  const h=d.getHours()%12||12, m=String(d.getMinutes()).padStart(2,'0'), s=String(d.getSeconds()).padStart(2,'0');
+  const el=document.getElementById('clockDisplay');
+  if(el) el.textContent=`${h}:${m}:${s} ${d.getHours()>=12?'PM':'AM'}`;
+}
+
+function updateProgress() {
+  const fill=document.getElementById('progressFill');
+  if(!fill) return;
+  const live=TODAY_SCHEDULE.find(s=>getStatus(s)==='live');
+  if(live) fill.style.width=getProgress(live)+'%';
+}
+
+document.getElementById('heroDate').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+
+renderSchedule();
 jumpToNow();
-setInterval(tick, 1000);
-setInterval(render, 30000);
+updateClock();
+setInterval(updateClock,1000);
+setInterval(updateProgress,10000);
+setInterval(renderSchedule,60000);
+</script>
+
+<script>
+(function(){
+  var ua=navigator.userAgent||'';
+  if(!/AFT|FireTV|Silk/i.test(ua))return;
+  var vp=document.querySelector('meta[name="viewport"]');
+  if(vp)vp.setAttribute('content','width=960,initial-scale=1.0,maximum-scale=1.0,user-scalable=no');
+  var style=document.createElement('style');
+  style.textContent=`.show-card:focus,.ftab:focus,.jump-btn:focus,.nav-logo:focus,a:focus{outline:4px solid #ffd700!important;box-shadow:0 0 20px rgba(255,215,0,0.5)!important;z-index:10;position:relative;}#live-now-card:focus{outline:4px solid #00E676!important;}`;
+  document.head.appendChild(style);
+  function getFocusable(){return Array.from(document.querySelectorAll('.show-card:not(.hidden),.ftab,.jump-btn,.nav-logo,a.live-pill')).filter(el=>el.offsetParent!==null);}
+  function findBest(cur,all,dir){var cr=cur.getBoundingClientRect(),cx=cr.left+cr.width/2,cy=cr.top+cr.height/2;var cands=all.filter(el=>{if(el===cur)return false;var r=el.getBoundingClientRect(),ex=r.left+r.width/2,ey=r.top+r.height/2;if(dir==='right')return ex>cr.right-10;if(dir==='left')return ex<cr.left+10;if(dir==='down')return ey>cr.bottom-10;if(dir==='up')return ey<cr.top+10;});if(!cands.length)return null;var best=null,bs=Infinity;cands.forEach(el=>{var r=el.getBoundingClientRect(),dx=(r.left+r.width/2)-cx,dy=(r.top+r.height/2)-cy,p=(dir==='right'||dir==='left')?Math.abs(dx):Math.abs(dy),s=(dir==='right'||dir==='left')?Math.abs(dy):Math.abs(dx),score=p+s*0.3;if(score<bs){bs=score;best=el;}});return best;}
+  document.addEventListener('keydown',function(e){var all=getFocusable();if(!all.length)return;var focused=document.activeElement,inList=all.indexOf(focused)>=0;if(!inList){if(['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)){e.preventDefault();var lc=document.getElementById('live-now-card');if(lc){lc.focus();lc.scrollIntoView({block:'center'});}else{all[0].focus();}}return;}var dir={ArrowRight:'right',ArrowLeft:'left',ArrowDown:'down',ArrowUp:'up'}[e.key];if(dir){e.preventDefault();var next=findBest(focused,all,dir);if(next){next.focus();next.scrollIntoView({behavior:'smooth',block:'center'});}else if(dir==='up'){window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{all[0].focus();},400);}}if(e.key==='Backspace'||e.key==='Escape'){e.preventDefault();window.location.href='home.html';}},true);
+})();
 </script>
 </body>
 </html>
