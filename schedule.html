@@ -3,199 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FLM TV — Today's Schedule</title>
+<title>FLM TV — Schedule</title>
 <link rel="icon" type="image/png" href="assets/logos/favicons-3/favicon-96x96.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
-
 :root {
-  --gold: #C9A84C;
-  --gold-light: #E8C97A;
-  --gold-dim: #7A6330;
-  --red: #C0272D;
-  --red-bright: #E8333A;
-  --black: #070709;
-  --dark: #0E0E13;
-  --dark2: #14141A;
-  --dark3: #1C1C24;
-  --dark4: #26262F;
-  --text: #F0EDE8;
-  --text-dim: #888898;
-  --text-muted: #444450;
-  --live-green: #00E676;
-  --ad-blue: #4A9EFF;
+  --gold: #C9A84C; --gold-light: #E8C97A; --gold-dim: #7A6330;
+  --red: #C0272D; --red-bright: #E8333A;
+  --black: #070709; --dark: #0E0E13; --dark2: #14141A; --dark3: #1C1C24; --dark4: #26262F;
+  --text: #F0EDE8; --text-dim: #888898; --text-muted: #444450;
+  --green: #00E676; --blue: #4A9EFF;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--black);
-  color: var(--text);
-  font-family: 'Barlow', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.012) 3px,rgba(0,0,0,0.012) 4px);
-  pointer-events: none; z-index: 999;
-}
-
-/* NAV */
-.topnav {
-  position: sticky; top: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px; height: 60px;
-  background: rgba(7,7,9,0.97);
-  border-bottom: 1px solid rgba(201,168,76,0.2);
-  backdrop-filter: blur(12px);
-}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--black); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; }
+.topnav { position:sticky; top:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:0 32px; height:60px; background:rgba(7,7,9,0.97); border-bottom:1px solid rgba(201,168,76,0.2); backdrop-filter:blur(12px); }
 .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:5px; color:var(--gold); text-decoration:none; }
 .nav-logo span { color:var(--red); }
 .nav-links { display:flex; gap:24px; list-style:none; }
 .nav-links a { color:var(--text-dim); text-decoration:none; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; transition:color 0.2s; }
 .nav-links a:hover,.nav-links a.active { color:var(--gold); }
-.live-pill { display:flex; align-items:center; gap:7px; background:var(--red); color:#fff; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:7px 16px; border-radius:2px; transition:background 0.2s; }
-.live-pill:hover { background:var(--red-bright); }
+.live-pill { display:flex; align-items:center; gap:7px; background:var(--red); color:#fff; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:7px 16px; border-radius:2px; }
 .live-dot { width:7px; height:7px; border-radius:50%; background:#fff; animation:blink 1.2s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-
-/* HERO */
-.hero { position:relative; overflow:hidden; padding:48px 32px 36px; background:linear-gradient(180deg,rgba(192,39,45,0.07) 0%,transparent 100%); text-align:center; }
-.hero-ghost { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:180px; letter-spacing:16px; color:rgba(201,168,76,0.025); white-space:nowrap; pointer-events:none; user-select:none; }
-.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--gold-dim); border:1px solid rgba(201,168,76,0.18); padding:5px 14px; border-radius:2px; margin-bottom:18px; }
-.hero-title { font-family:'Bebas Neue',sans-serif; font-size:68px; letter-spacing:6px; line-height:1; color:var(--text); margin-bottom:8px; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+.hero { padding:36px 32px 24px; text-align:center; border-bottom:1px solid rgba(201,168,76,0.1); }
+.hero-title { font-family:'Bebas Neue',sans-serif; font-size:56px; letter-spacing:6px; color:var(--text); }
 .hero-title em { color:var(--gold); font-style:normal; }
-.hero-date { font-family:'Barlow Condensed',sans-serif; font-size:17px; letter-spacing:4px; color:var(--text-dim); text-transform:uppercase; margin-bottom:28px; }
-.hero-stats { display:flex; justify-content:center; gap:48px; }
-.stat-num { font-family:'Bebas Neue',sans-serif; font-size:34px; letter-spacing:2px; color:var(--gold); line-height:1; }
-.stat-label { font-size:10px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:3px; }
-
-/* JUMP BAR */
-.jump-bar { display:flex; align-items:center; justify-content:center; gap:16px; padding:14px 32px; background:var(--dark2); border-top:1px solid rgba(201,168,76,0.1); border-bottom:1px solid rgba(201,168,76,0.1); }
-.jump-btn { display:inline-flex; align-items:center; gap:8px; background:transparent; border:1px solid rgba(0,230,118,0.4); color:var(--live-green); font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:2px; padding:8px 20px; border-radius:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; }
-.jump-btn:hover { background:rgba(0,230,118,0.1); }
-.clock-display { font-family:'Share Tech Mono',monospace; font-size:14px; color:var(--text-dim); letter-spacing:2px; }
-
-/* FILTER */
-.filter-bar { display:flex; gap:8px; padding:16px 32px; background:var(--dark); border-bottom:1px solid rgba(255,255,255,0.04); overflow-x:auto; }
-.filter-bar::-webkit-scrollbar { display:none; }
-.ftab { flex-shrink:0; background:transparent; border:1px solid var(--dark4); color:var(--text-dim); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:600; letter-spacing:1.5px; padding:6px 16px; border-radius:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; }
-.ftab:hover { border-color:var(--gold-dim); color:var(--gold); }
-.ftab.active { background:var(--gold); border-color:var(--gold); color:#000; }
-
-/* SCHEDULE */
-.schedule-wrap { max-width:860px; margin:0 auto; padding:28px 32px 80px; }
-
-.time-block-header { display:flex; align-items:center; gap:14px; padding:24px 0 10px; }
-.time-block-label { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:3px; color:var(--gold-dim); white-space:nowrap; }
-.time-block-line { flex:1; height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent); }
-
-/* SHOW CARD */
-.show-card {
-  display:grid; grid-template-columns:90px 1fr auto;
-  align-items:stretch; gap:0;
-  margin-bottom:3px; border-radius:4px; overflow:hidden;
-  transition:transform 0.15s; position:relative;
-}
-.show-card:not(.live-now):hover { transform:translateX(3px); }
-.show-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; z-index:1; }
-.show-card.upcoming::before { background:var(--dark4); }
-.show-card.live-now::before { background:var(--live-green); }
-.show-card.ad-card::before { background:rgba(74,158,255,0.25); }
-.show-card.flm-promo::before { background:var(--gold-dim); }
-
-.show-time { padding:13px 14px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); text-align:right; display:flex; flex-direction:column; justify-content:center; }
-.show-time-start { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--text); letter-spacing:0.5px; }
-.show-time-end { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); margin-top:2px; }
-
-.show-info { padding:13px 18px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); flex:1; }
-.show-name { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:600; letter-spacing:0.5px; color:var(--text); line-height:1.2; }
-.show-meta { font-size:11px; color:var(--text-muted); margin-top:3px; letter-spacing:0.5px; }
-
-.show-dur { padding:13px 14px; background:var(--dark2); font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-muted); white-space:nowrap; display:flex; align-items:center; }
-
-/* AIRED */
-.show-card.aired .show-time,
-.show-card.aired .show-info,
-.show-card.aired .show-dur { background:rgba(14,14,19,0.5); opacity:0.4; }
-
-/* LIVE NOW */
-.show-card.live-now { box-shadow:0 0 0 2px var(--live-green),0 4px 28px rgba(0,230,118,0.12); }
-.show-card.live-now .show-time { background:rgba(0,230,118,0.07); border-right-color:rgba(0,230,118,0.15); }
-.show-card.live-now .show-info { background:rgba(0,230,118,0.05); border-right-color:rgba(0,230,118,0.1); }
-.show-card.live-now .show-dur  { background:rgba(0,230,118,0.04); }
-.show-card.live-now .show-time-start { color:var(--live-green); }
-.show-card.live-now .show-name { color:#fff; font-size:17px; }
-
-.live-badge { display:inline-flex; align-items:center; gap:6px; background:var(--live-green); color:#000; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; padding:2px 8px; border-radius:2px; margin-top:6px; }
-.live-badge-dot { width:5px; height:5px; border-radius:50%; background:#000; animation:blink 1s infinite; }
-
-.watch-now-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 8px;
-    background: var(--live-green);
-    color: #000;
-    font-weight: 800;
-    font-size: 12px;
-    letter-spacing: 1px;
-    padding: 6px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-.watch-now-btn:hover { background: #fff; color: #000; transform: scale(1.05); }
-
-/* PROGRESS */
-.progress-bar-wrap { grid-column:1/-1; height:3px; background:rgba(0,230,118,0.1); }
-.progress-bar-fill { height:100%; background:var(--live-green); transition:width 1s linear; }
-
-/* AD */
-.show-card.ad-card .show-time,
-.show-card.ad-card .show-info,
-.show-card.ad-card .show-dur { background:rgba(74,158,255,0.03); }
-.show-card.ad-card .show-name { color:var(--ad-blue); font-size:13px; font-weight:500; }
-.show-card.ad-card .show-time-start { color:var(--ad-blue); font-size:11px; }
-.show-card.ad-card.aired { opacity:1; }
-
-/* FLM PROMO */
-.show-card.flm-promo .show-name { color:var(--gold); font-size:13px; }
-.show-card.flm-promo .show-time,
-.show-card.flm-promo .show-info,
-.show-card.flm-promo .show-dur { background:rgba(201,168,76,0.03); }
-
-.movie-badge { display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:700; letter-spacing:1.5px; color:var(--gold); border:1px solid rgba(201,168,76,0.3); padding:1px 6px; border-radius:2px; margin-left:8px; vertical-align:middle; }
-.flm-tag { font-size:10px; color:var(--gold-dim); letter-spacing:1px; margin-left:6px; font-family:'Barlow Condensed',sans-serif; font-weight:700; vertical-align:middle; }
-
-.show-card.hidden { display:none !important; }
-
-/* FOOTER */
-.schedule-footer { text-align:center; padding:40px 32px; border-top:1px solid rgba(201,168,76,0.1); color:var(--text-muted); font-size:12px; letter-spacing:1px; line-height:2; }
-.schedule-footer a { color:var(--gold-dim); text-decoration:none; }
-.schedule-footer a:hover { color:var(--gold); }
-
+.hero-sub { font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:4px; color:var(--text-dim); text-transform:uppercase; margin-top:4px; }
+.toolbar { display:flex; align-items:center; justify-content:space-between; padding:12px 32px; background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.04); flex-wrap:wrap; gap:12px; }
+.toolbar-left { display:flex; gap:10px; align-items:center; }
+.btn { display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid rgba(0,230,118,0.4); color:var(--green); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:7px 16px; border-radius:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; }
+.btn:hover { background:rgba(0,230,118,0.1); }
+.btn-gold { border-color:rgba(201,168,76,0.4); color:var(--gold); }
+.btn-gold:hover { background:rgba(201,168,76,0.1); }
+.clock { font-family:'Share Tech Mono',monospace; font-size:15px; color:var(--text-dim); letter-spacing:2px; }
+.schedule-wrap { max-width:900px; margin:0 auto; padding:24px 32px 80px; }
+.day-header { display:flex; align-items:center; gap:14px; padding:28px 0 12px; }
+.day-label { font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:3px; color:var(--gold-dim); white-space:nowrap; }
+.day-line { flex:1; height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.25),transparent); }
+.show-card { display:grid; grid-template-columns:100px 1fr 80px; align-items:stretch; margin-bottom:3px; border-radius:3px; overflow:hidden; border-left:3px solid var(--dark4); transition:transform 0.15s; }
+.show-card:hover { transform:translateX(2px); }
+.show-card.aired { opacity:0.35; }
+.show-card.live { border-left-color:var(--green); box-shadow:0 0 0 1px var(--green),0 4px 24px rgba(0,230,118,0.2); animation:pglow 2s ease-in-out infinite; }
+@keyframes pglow { 0%,100%{box-shadow:0 0 0 1px var(--green),0 4px 24px rgba(0,230,118,0.15)}50%{box-shadow:0 0 0 1px var(--green),0 4px 36px rgba(0,230,118,0.35)} }
+.show-card.ad { border-left-color:rgba(74,158,255,0.3); }
+.show-card.flm { border-left-color:var(--gold-dim); }
+.time-col { padding:12px 14px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); text-align:right; display:flex; flex-direction:column; justify-content:center; }
+.time-start { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--text); }
+.time-end { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); margin-top:2px; }
+.show-card.live .time-start { color:var(--green); }
+.info-col { padding:12px 16px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); }
+.show-name { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:600; color:var(--text); line-height:1.2; }
+.show-card.live .show-name { color:#fff; font-size:17px; }
+.show-card.ad .show-name { color:var(--blue); font-size:13px; }
+.show-card.flm .show-name { color:var(--gold); }
+.show-badges { display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap; }
+.badge { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; padding:2px 7px; border-radius:2px; }
+.badge-live { background:var(--green); color:#000; display:flex; align-items:center; gap:5px; }
+.badge-live-dot { width:5px; height:5px; border-radius:50%; background:#000; animation:blink 1s infinite; }
+.badge-movie { color:var(--gold); border:1px solid rgba(201,168,76,0.35); }
+.badge-kids { color:#a78bfa; border:1px solid rgba(167,139,250,0.35); }
+.badge-flm { color:var(--gold-dim); }
+.watch-btn { display:inline-flex; align-items:center; gap:5px; margin-top:6px; background:var(--green); color:#000; font-weight:800; font-size:11px; letter-spacing:1px; padding:5px 14px; border-radius:3px; text-decoration:none; }
+.dur-col { padding:12px 10px; background:var(--dark2); font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-muted); display:flex; align-items:center; justify-content:flex-end; }
+.progress-wrap { grid-column:1/-1; height:3px; background:rgba(0,230,118,0.1); }
+.progress-fill { height:100%; background:var(--green); transition:width 5s linear; }
+.footer { text-align:center; padding:40px 32px; border-top:1px solid rgba(201,168,76,0.1); color:var(--text-muted); font-size:12px; letter-spacing:1px; line-height:2; }
+.footer a { color:var(--gold-dim); text-decoration:none; }
 @media(max-width:640px){
-  .topnav{padding:0 16px;}
-  .nav-links{display:none;}
-  .hero{padding:32px 16px 24px;}
-  .hero-ghost{display:none;}
-  .hero-title{font-size:46px;}
-  .hero-stats{gap:24px;}
-  .schedule-wrap{padding:16px 12px 60px;}
-  .filter-bar{padding:10px 12px;}
-  .show-card{grid-template-columns:72px 1fr;}
-  .show-dur{display:none;}
+  .topnav{padding:0 16px;} .nav-links{display:none;} .hero{padding:24px 16px 16px;} .hero-title{font-size:40px;}
+  .schedule-wrap{padding:16px 12px 60px;} .show-card{grid-template-columns:80px 1fr;} .dur-col{display:none;} .toolbar{padding:10px 16px;}
 }
 </style>
 </head>
 <body>
-
 <nav class="topnav">
   <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
   <ul class="nav-links">
@@ -206,364 +88,243 @@ body::after {
   </ul>
   <a href="live.html" class="live-pill"><div class="live-dot"></div> WATCH LIVE</a>
 </nav>
-
-<section class="hero">
-  <div class="hero-ghost">GUIDE</div>
-  <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · WORLDWIDE</div>
+<div class="hero">
   <h1 class="hero-title">TODAY'S <em>PROGRAMMING</em></h1>
-  <div class="hero-date" id="heroDate">—</div>
-  <div class="hero-stats">
-    <div><div class="stat-num" id="statTotal">68</div><div class="stat-label">Shows Today</div></div>
-    <div><div class="stat-num" id="statHours">—</div><div class="stat-label">Hours</div></div>
-    <div><div class="stat-num">FREE</div><div class="stat-label">Always Free</div></div>
+  <div class="hero-sub" id="heroDate">—</div>
+</div>
+<div class="toolbar">
+  <div class="toolbar-left">
+    <button class="btn" onclick="jumpToNow()"><div class="live-dot" style="background:var(--green)"></div> Now Playing</button>
+    <button class="btn btn-gold" onclick="downloadSchedule()">⬇ Download</button>
   </div>
-</section>
-
-<div class="jump-bar">
-  <button class="jump-btn" onclick="jumpToNow()">
-    <div class="live-dot" style="background:var(--live-green);"></div> Jump to Now Playing
-  </button>
-  <button class="jump-btn" onclick="downloadSchedule()" style="border-color:rgba(201,168,76,0.4);color:var(--gold);">
-    ⬇ Download Schedule
-  </button>
-  <div class="clock-display" id="clockDisplay">--:-- --</div>
+  <div class="clock" id="clock">--:-- --</div>
 </div>
-
-<div class="filter-bar">
-  <button class="ftab active" onclick="filterSchedule('all',this)">All</button>
-  <button class="ftab" onclick="filterSchedule('shows',this)">Shows Only</button>
-  <button class="ftab" onclick="filterSchedule('movies',this)">Movies</button>
-  <button class="ftab" onclick="filterSchedule('kids',this)">Kids</button>
-  <button class="ftab" onclick="filterSchedule('flm',this)">FLM Originals</button>
-  <button class="ftab" onclick="filterSchedule('upcoming',this)">Up Next</button>
-</div>
-
 <div class="schedule-wrap" id="scheduleWrap"></div>
-
-<div class="schedule-footer">
-  Schedule is updated as programming changes &nbsp;·&nbsp;
-  <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp;
-  Las Vegas &amp; Worldwide<br>
+<div class="footer">
+  Schedule updates as programming changes &nbsp;·&nbsp;
+  <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp; Las Vegas &amp; Worldwide<br>
   <a href="live.html">▶ Watch Live at FLMTV.com</a>
 </div>
-
 <script>
-// ── SCHEDULE DATA (auto-generated from JSON) ──────────────────────────
-const SCHEDULE_JSON = [{"startTime":"09:15","name":"Super Why","path":"Super Why.mp4","duration":1621,"inPoint":0,"outPoint":1621,"category":"kids"},{"startTime":"09:42","name":"Tiny Tots Kitchen","path":"Tiny Tots Kitchen.mp4","duration":870,"inPoint":0,"outPoint":870,"category":"kids"},{"startTime":"09:56","name":"Ready Jet Go","path":"Ready Jet Go.mp4","duration":1591,"inPoint":0,"outPoint":1591,"category":"kids"},{"startTime":"10:23","name":"Elinor Wonders Why","path":"Elinor Wonders Why.mp4","duration":1501,"inPoint":0,"outPoint":1501,"category":"kids"},{"startTime":"10:48","name":"FLMTV.com/KidsCorner","path":"FLMTV.com/KidsCorner.mp4","duration":17,"inPoint":0,"outPoint":17,"category":"commercial"},{"startTime":"10:48","name":"VoteScottBlack.com","path":"VoteScottBlack.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"10:48","name":"JudgeMaryPerry.com","path":"JudgeMaryPerry.com.mp4","duration":14,"inPoint":0,"outPoint":14,"category":"commercial"},{"startTime":"10:49","name":"LallyForNV.com","path":"LallyForNV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"10:49","name":"Lenna4NV.com","path":"Lenna4NV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"10:50","name":"Lance4Judge.com","path":"Lance4Judge.com.mp4","duration":32,"inPoint":0,"outPoint":32,"category":"commercial"},{"startTime":"10:50","name":"The Monkees","path":"The Monkees.mp4","duration":1504,"inPoint":0,"outPoint":1504,"category":""},{"startTime":"11:15","name":"Gilligan's Island","path":"Gilligans Island.mp4","duration":1517,"inPoint":0,"outPoint":1517,"category":""},{"startTime":"11:40","name":"The Addams Family","path":"The Addams Family.mp4","duration":1530,"inPoint":0,"outPoint":1530,"category":""},{"startTime":"12:06","name":"Six Million Dollar Man","path":"Six Million Dollar Man.mp4","duration":3065,"inPoint":0,"outPoint":3065,"category":""},{"startTime":"12:57","name":"Charlie's Angels","path":"Charlies Angels.mp4","duration":2941,"inPoint":0,"outPoint":2941,"category":""},{"startTime":"13:46","name":"Bewitched","path":"Bewitched.mp4","duration":1529,"inPoint":0,"outPoint":1529,"category":""},{"startTime":"14:12","name":"Bewitched 2","path":"Bewitched 2.mp4","duration":1527,"inPoint":0,"outPoint":1527,"category":""},{"startTime":"14:37","name":"VoteScottBlack.com","path":"VoteScottBlack.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"14:37","name":"JudgeMaryPerry.com","path":"JudgeMaryPerry.com.mp4","duration":14,"inPoint":0,"outPoint":14,"category":"commercial"},{"startTime":"14:38","name":"LallyForNV.com","path":"LallyForNV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"14:38","name":"Lenna4NV.com","path":"Lenna4NV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"14:39","name":"Lance4Judge.com","path":"Lance4Judge.com.mp4","duration":32,"inPoint":0,"outPoint":32,"category":"commercial"},{"startTime":"14:39","name":"Leave It to Beaver","path":"Leave It to Beaver.mp4","duration":1539,"inPoint":0,"outPoint":1539,"category":""},{"startTime":"15:05","name":"MASH","path":"MASH.mp4","duration":1538,"inPoint":0,"outPoint":1538,"category":""},{"startTime":"15:31","name":"Whats Happening","path":"Whats Happening.mp4","duration":1513,"inPoint":0,"outPoint":1513,"category":""},{"startTime":"15:56","name":"Good Times","path":"Good Times.mp4","duration":1541,"inPoint":0,"outPoint":1541,"category":""},{"startTime":"16:21","name":"FLMTV.com","path":"FLMTV.com.mp4","duration":12,"inPoint":0,"outPoint":12,"category":"commercial"},{"startTime":"16:22","name":"Sanford and Son","path":"Sanford and Son.mp4","duration":1510,"inPoint":0,"outPoint":1510,"category":""},{"startTime":"16:47","name":"The Jeffersons","path":"The Jeffersons.mp4","duration":1497,"inPoint":0,"outPoint":1497,"category":""},{"startTime":"17:12","name":"Frozen Fever","path":"Frozen Fever.mp4","duration":477,"inPoint":0,"outPoint":477,"category":""},{"startTime":"17:20","name":"VoteScottBlack.com","path":"VoteScottBlack.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"17:20","name":"JudgeMaryPerry.com","path":"JudgeMaryPerry.com.mp4","duration":14,"inPoint":0,"outPoint":14,"category":"commercial"},{"startTime":"17:20","name":"LallyForNV.com","path":"LallyForNV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"17:21","name":"Lenna4NV.com","path":"Lenna4NV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"17:21","name":"Lance4Judge.com","path":"Lance4Judge.com.mp4","duration":32,"inPoint":0,"outPoint":32,"category":"commercial"},{"startTime":"17:22","name":"Winnie the Pooh","path":"Winnie the Pooh.mp4","duration":3783,"inPoint":0,"outPoint":3783,"category":""},{"startTime":"18:25","name":"Here's Lucy","path":"Heres Lucy.mp4","duration":1549,"inPoint":0,"outPoint":1549,"category":""},{"startTime":"18:51","name":"Zaina Juliette & Friends","path":"Zaina Juliette & Friends.mp4","duration":1705,"inPoint":0,"outPoint":1705,"category":"flm"},{"startTime":"19:19","name":"Locals in Las Vegas","path":"Locals in Las Vegas.mp4","duration":1709,"inPoint":0,"outPoint":1709,"category":"flm"},{"startTime":"19:48","name":"Boxer","path":"Boxer.mp4","duration":135,"inPoint":0,"outPoint":135,"category":"commercial"},{"startTime":"19:50","name":"Og Scorpio","path":"Og Scorpio.mp4","duration":269,"inPoint":0,"outPoint":269,"category":"commercial"},{"startTime":"19:54","name":"GladiusTheShow.net","path":"GladiusTheShow.net.mp4","duration":84,"inPoint":0,"outPoint":84,"category":"commercial"},{"startTime":"19:56","name":"GladiusTheShow.net 2","path":"GladiusTheShow.net 2.mp4","duration":59,"inPoint":0,"outPoint":59,"category":"commercial"},{"startTime":"19:57","name":"Friends","path":"Friends.mp4","duration":1371,"inPoint":0,"outPoint":1371,"category":""},{"startTime":"20:20","name":"Unfortunate Events","path":"Unfortunate Events.mp4","duration":2550,"inPoint":0,"outPoint":2550,"category":""},{"startTime":"21:02","name":"VoteScottBlack.com","path":"VoteScottBlack.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"21:03","name":"JudgeMaryPerry.com","path":"JudgeMaryPerry.com.mp4","duration":14,"inPoint":0,"outPoint":14,"category":"commercial"},{"startTime":"21:03","name":"LallyForNV.com","path":"LallyForNV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"21:03","name":"Lenna4NV.com","path":"Lenna4NV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"21:04","name":"Lance4Judge.com","path":"Lance4Judge.com.mp4","duration":32,"inPoint":0,"outPoint":32,"category":"commercial"},{"startTime":"21:04","name":"SheBoujay.com","path":"SheBoujay.com.mp4","duration":60,"inPoint":0,"outPoint":60,"category":"commercial"},{"startTime":"21:05","name":"Edward Scissorhands","path":"Edward Scissorhands.mp4","duration":6300,"inPoint":0,"outPoint":6300,"category":"movie"},{"startTime":"22:50","name":"FLMTV.com","path":"FLMTV.com.mp4","duration":28,"inPoint":0,"outPoint":28,"category":"commercial"},{"startTime":"22:51","name":"Marlowe","path":"Marlowe.mp4","duration":6581,"inPoint":0,"outPoint":6581,"category":"movie"},{"startTime":"00:41","name":"Dont Look Up","path":"Dont Look Up.mp4","duration":8591,"inPoint":0,"outPoint":8591,"category":"movie"},{"startTime":"03:04","name":"VoteScottBlack.com","path":"VoteScottBlack.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"03:04","name":"JudgeMaryPerry.com","path":"JudgeMaryPerry.com.mp4","duration":14,"inPoint":0,"outPoint":14,"category":"commercial"},{"startTime":"03:05","name":"LallyForNV.com","path":"LallyForNV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"03:05","name":"Lance4Judge.com","path":"Lance4Judge.com.mp4","duration":32,"inPoint":0,"outPoint":32,"category":"commercial"},{"startTime":"03:06","name":"Lenna4NV.com","path":"Lenna4NV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"03:06","name":"The Lord of the Rings","path":"The Lord of the Rings.mp4","duration":14132,"inPoint":0,"outPoint":14132,"category":"movie"},{"startTime":"07:02","name":"Sesame Street","path":"Sesame Street.mp4","duration":1558,"inPoint":0,"outPoint":1558,"category":"kids"},{"startTime":"07:28","name":"Sesame Street 2","path":"Sesame Street 2.mp4","duration":1558,"inPoint":0,"outPoint":1558,"category":"kids"},{"startTime":"07:54","name":"VoteScottBlack.com","path":"VoteScottBlack.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"07:54","name":"JudgeMaryPerry.com","path":"JudgeMaryPerry.com.mp4","duration":14,"inPoint":0,"outPoint":14,"category":"commercial"},{"startTime":"07:54","name":"LallyForNV.com","path":"LallyForNV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"07:55","name":"Lance4Judge.com","path":"Lance4Judge.com.mp4","duration":32,"inPoint":0,"outPoint":32,"category":"commercial"},{"startTime":"07:55","name":"Lenna4NV.com","path":"Lenna4NV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"07:56","name":"Super Why","path":"Super Why.mp4","duration":1620,"inPoint":0,"outPoint":1620,"category":"kids"},{"startTime":"08:23","name":"Ready Jet Go!","path":"Ready Jet Go!.mp4","duration":1591,"inPoint":0,"outPoint":1591,"category":"kids"},{"startTime":"08:49","name":"Nature Cat","path":"Nature Cat.mp4","duration":1441,"inPoint":0,"outPoint":1441,"category":"kids"},{"startTime":"09:13","name":"FLMTV.com/KidsCorner","path":"FLMTV.com/KidsCorner.mp4","duration":1535,"inPoint":0,"outPoint":1535,"category":"commercial"},{"startTime":"09:39","name":"Snail-logo1-Z","path":"Snail-logo1-Z.mp4","duration":15,"inPoint":0,"outPoint":15,"category":"commercial"},{"startTime":"09:40","name":"The Monkees 207 Hillbilly Honeymoon","path":"The Monkees 207 Hillbilly Honeymoon.mp4","duration":1505,"inPoint":0,"outPoint":1505,"category":""},{"startTime":"10:05","name":"The Dick Van Dyke Show S02E06","path":"The Dick Van Dyke Show S02E06.mp4","duration":1507,"inPoint":0,"outPoint":1507,"category":""},{"startTime":"10:30","name":"Get Smart S01E13 Aboard the Orient Express","path":"Get Smart S01E13.mp4","duration":1523,"inPoint":0,"outPoint":1523,"category":""},{"startTime":"10:55","name":"VoteScottBlack.com","path":"VoteScottBlack.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"10:55","name":"JudgeMaryPerry.com","path":"JudgeMaryPerry.com.mp4","duration":14,"inPoint":0,"outPoint":14,"category":"commercial"},{"startTime":"10:56","name":"Lance4Judge.com","path":"Lance4Judge.com.mp4","duration":32,"inPoint":0,"outPoint":32,"category":"commercial"},{"startTime":"10:57","name":"Lenna4NV.com","path":"Lenna4NV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"10:58","name":"LallyForNV.com","path":"LallyForNV.com.mp4","duration":30,"inPoint":0,"outPoint":30,"category":"commercial"},{"startTime":"10:59","name":"Gilligan's Island S02E12 Don't Bug the Mosquitoes","path":"Gilligans Island S02E12.mp4","duration":1518,"inPoint":0,"outPoint":1518,"category":""},{"startTime":"11:24","name":"Mister Ed S01E07 Ed the Lover","path":"Mister Ed S01E07.mp4","duration":1326,"inPoint":0,"outPoint":1326,"category":""},{"startTime":"11:46","name":"S01E18 Child Care","path":"S01E18 Child Care.mp4","duration":1539,"inPoint":0,"outPoint":1539,"category":""}];
+// ════════════════════════════════════════════════════
+// SCHEDULE — add shows IN ORDER, that's all you need
+// ════════════════════════════════════════════════════
+const SCHEDULE_RAW = [
+{"time":"09:15","name":"Super Why","duration":1621,"type":"kids"},
+{"time":"09:42","name":"Tiny Tots Kitchen","duration":870,"type":"kids"},
+{"time":"09:56","name":"Ready Jet Go","duration":1591,"type":"kids"},
+{"time":"10:23","name":"Elinor Wonders Why","duration":1501,"type":"kids"},
+{"time":"10:48","name":"FLMTV.com/KidsCorner","duration":17,"type":"ad"},
+{"time":"10:48","name":"VoteScottBlack.com","duration":30,"type":"ad"},
+{"time":"10:48","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
+{"time":"10:49","name":"LallyForNV.com","duration":30,"type":"ad"},
+{"time":"10:49","name":"Lenna4NV.com","duration":30,"type":"ad"},
+{"time":"10:50","name":"Lance4Judge.com","duration":32,"type":"ad"},
+{"time":"10:50","name":"The Monkees","duration":1504,"type":"show"},
+{"time":"11:15","name":"Gilligan's Island","duration":1517,"type":"show"},
+{"time":"11:40","name":"The Addams Family","duration":1530,"type":"show"},
+{"time":"12:06","name":"Six Million Dollar Man","duration":3065,"type":"show"},
+{"time":"12:57","name":"Charlie's Angels","duration":2941,"type":"show"},
+{"time":"13:46","name":"Bewitched","duration":1529,"type":"show"},
+{"time":"14:12","name":"Bewitched 2","duration":1527,"type":"show"},
+{"time":"14:37","name":"VoteScottBlack.com","duration":30,"type":"ad"},
+{"time":"14:37","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
+{"time":"14:38","name":"LallyForNV.com","duration":30,"type":"ad"},
+{"time":"14:38","name":"Lenna4NV.com","duration":30,"type":"ad"},
+{"time":"14:39","name":"Lance4Judge.com","duration":32,"type":"ad"},
+{"time":"14:39","name":"Leave It to Beaver","duration":1539,"type":"show"},
+{"time":"15:05","name":"MASH","duration":1538,"type":"show"},
+{"time":"15:31","name":"What's Happening","duration":1513,"type":"show"},
+{"time":"15:56","name":"Good Times","duration":1541,"type":"show"},
+{"time":"16:21","name":"FLMTV.com","duration":12,"type":"ad"},
+{"time":"16:22","name":"Sanford and Son","duration":1510,"type":"show"},
+{"time":"16:47","name":"The Jeffersons","duration":1497,"type":"show"},
+{"time":"17:12","name":"Frozen Fever","duration":477,"type":"show"},
+{"time":"17:20","name":"VoteScottBlack.com","duration":30,"type":"ad"},
+{"time":"17:20","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
+{"time":"17:20","name":"LallyForNV.com","duration":30,"type":"ad"},
+{"time":"17:21","name":"Lenna4NV.com","duration":30,"type":"ad"},
+{"time":"17:21","name":"Lance4Judge.com","duration":32,"type":"ad"},
+{"time":"17:22","name":"Winnie the Pooh","duration":3783,"type":"show"},
+{"time":"18:25","name":"Here's Lucy","duration":1549,"type":"show"},
+{"time":"18:51","name":"Zaina Juliette & Friends","duration":1705,"type":"flm"},
+{"time":"19:19","name":"Locals in Las Vegas","duration":1709,"type":"flm"},
+{"time":"19:48","name":"Boxer","duration":135,"type":"ad"},
+{"time":"19:50","name":"Og Scorpio","duration":269,"type":"ad"},
+{"time":"19:54","name":"GladiusTheShow.net","duration":84,"type":"ad"},
+{"time":"19:56","name":"GladiusTheShow.net 2","duration":59,"type":"ad"},
+{"time":"19:57","name":"Friends","duration":1371,"type":"show"},
+{"time":"20:20","name":"Unfortunate Events","duration":2550,"type":"show"},
+{"time":"21:02","name":"VoteScottBlack.com","duration":30,"type":"ad"},
+{"time":"21:03","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
+{"time":"21:03","name":"LallyForNV.com","duration":30,"type":"ad"},
+{"time":"21:03","name":"Lenna4NV.com","duration":30,"type":"ad"},
+{"time":"21:04","name":"Lance4Judge.com","duration":32,"type":"ad"},
+{"time":"21:04","name":"SheBoujay.com","duration":60,"type":"ad"},
+{"time":"21:05","name":"Edward Scissorhands","duration":6300,"type":"movie"},
+{"time":"22:50","name":"FLMTV.com","duration":28,"type":"ad"},
+{"time":"22:51","name":"Marlowe","duration":6581,"type":"movie"},
+{"time":"00:41","name":"Don't Look Up","duration":8591,"type":"movie"},
+{"time":"03:04","name":"VoteScottBlack.com","duration":30,"type":"ad"},
+{"time":"03:04","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
+{"time":"03:05","name":"LallyForNV.com","duration":30,"type":"ad"},
+{"time":"03:05","name":"Lance4Judge.com","duration":32,"type":"ad"},
+{"time":"03:06","name":"Lenna4NV.com","duration":30,"type":"ad"},
+{"time":"03:06","name":"The Lord of the Rings","duration":14132,"type":"movie"},
+{"time":"07:02","name":"Sesame Street","duration":1558,"type":"kids"},
+{"time":"07:28","name":"Sesame Street 2","duration":1558,"type":"kids"},
+{"time":"07:54","name":"VoteScottBlack.com","duration":30,"type":"ad"},
+{"time":"07:54","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
+{"time":"07:54","name":"LallyForNV.com","duration":30,"type":"ad"},
+{"time":"07:55","name":"Lance4Judge.com","duration":32,"type":"ad"},
+{"time":"07:55","name":"Lenna4NV.com","duration":30,"type":"ad"},
+{"time":"07:56","name":"Super Why","duration":1620,"type":"kids"},
+{"time":"08:23","name":"Ready Jet Go!","duration":1591,"type":"kids"},
+{"time":"08:49","name":"Nature Cat","duration":1441,"type":"kids"},
+{"time":"09:13","name":"FLMTV.com/KidsCorner","duration":1535,"type":"ad"},
+{"time":"09:39","name":"Snail-logo1-Z","duration":15,"type":"ad"},
+{"time":"09:40","name":"The Monkees 207 Hillbilly Honeymoon","duration":1505,"type":"show"},
+{"time":"10:05","name":"The Dick Van Dyke Show S02E06","duration":1507,"type":"show"},
+{"time":"10:30","name":"Get Smart S01E13 Aboard the Orient Express","duration":1523,"type":"show"},
+{"time":"10:55","name":"VoteScottBlack.com","duration":30,"type":"ad"},
+{"time":"10:55","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
+{"time":"10:56","name":"Lance4Judge.com","duration":32,"type":"ad"},
+{"time":"10:57","name":"Lenna4NV.com","duration":30,"type":"ad"},
+{"time":"10:58","name":"LallyForNV.com","duration":30,"type":"ad"},
+{"time":"10:59","name":"Gilligan's Island S02E12 Don't Bug the Mosquitoes","duration":1518,"type":"show"},
+{"time":"11:24","name":"Mister Ed S01E07 Ed the Lover","duration":1326,"type":"show"},
+{"time":"11:46","name":"S01E18 Child Care","duration":1539,"type":"show"}
+];
 
-// ── KNOWN CATEGORIES ─────────────────────────────────────────────────
-const AD_NAMES    = ['lance hendron','lenna hovanessian','mary perry','maryperry','cardboard boxer','dancing bear logo','lance4judge','judgemaryperry','lenna4nv','sheboujay','boxer','snail logo','snail-logo'];
-const KIDS_NAMES  = ['sesame street','molly of denali','ready jet go','elinor wonders','super why','charlie brown','schoolhouse rock','little rascals'];
-const MOVIE_NAMES = ['lord of the rings','hellboy','gran torino','herbie goes','cloudy with a chance','matilda','jurassic','alice in wonderland','lost world','charlie and the chocolate','angels and demons','good day to die hard','good day 2 die hard','a good day'];
-const FLM_NAMES   = ['zaina juliette','flmtv','flm tv','2 louisiana','lucy the raffle','locals in las vegas'];
-const FLM_ORIGINALS = ['Lucy the Raffle','Locals in Las Vegas','Charly Suarez','Zaina Juliette & Friends','Og Scorpio','Gladius'];
-
-function classifyShow(name) {
-  const n = name.toLowerCase();
-  if (AD_NAMES.some(x => n.includes(x)))    return { type:'ad',      isAd:true };
-  if (KIDS_NAMES.some(x => n.includes(x)))  return { type:'kids' };
-  if (MOVIE_NAMES.some(x => n.includes(x))) return { type:'movie',   isMovie:true };
-  if (FLM_NAMES.some(x => n.includes(x)))   return { type:'flm',     isFlmPromo:true };
-  return { type:'classic' };
-}
-
-function parseSchedule(json) {
-  const shows = Array.isArray(json) ? json : Object.values(json).flat();
-  let offset = 0;
-  let prevMin = -1;
-  return shows.filter(s => s && s.name).map(s => {
-    const cls = classifyShow(s.name);
-    const [sh, sm] = (s.startTime||'00:00').split(':').map(Number);
-    let startMin = sh * 60 + sm + offset;
-    if (startMin < prevMin) { offset += 1440; startMin += 1440; }
-    prevMin = startMin;
-    const durSec = Math.max(0, (s.outPoint||s.duration||0) - (s.inPoint||0));
-    const durMin = durSec / 60;
+// ════════════════════════════════════════════════════
+// ENGINE
+// ════════════════════════════════════════════════════
+function buildSchedule(raw) {
+  let dayOffset = 0;
+  let prevStartMin = -1;
+  return raw.map((s, i) => {
+    const [h, m] = s.time.split(':').map(Number);
+    let startMin = h * 60 + m + dayOffset;
+    // If start time goes backward, we crossed midnight — add a day
+    if (i > 0 && startMin <= prevStartMin) {
+      dayOffset += 1440;
+      startMin += 1440;
+    }
+    prevStartMin = startMin;
+    const durMin = s.duration / 60;
     const endMin = startMin + durMin;
-    let dur = durSec===0?'—':durMin<1?Math.round(durSec)+' sec':durMin<60?Math.round(durMin)+' min':Math.floor(durMin/60)+' hr'+(Math.round(durMin%60)>0?' '+Math.round(durMin%60)+' min':'');
-    function minToTime(m) {
-      const hh=Math.floor(m/60)%24,mm=Math.round(m%60),ampm=hh>=12?'PM':'AM',h12=hh%12||12;
-      return `${h12}:${String(mm).padStart(2,'0')} ${ampm}`;
-    }
-    return { name:s.name.trim(), rawName:s.name, path:s.path||'', start:minToTime(startMin), end:minToTime(endMin), startMin, endMin, dur, ...cls, isFlmOrig:FLM_ORIGINALS.some(x=>s.name.toLowerCase().includes(x.toLowerCase())) };
+    return { ...s, startMin, endMin, dayNum: Math.floor(startMin / 1440), startLabel: fmt(startMin), endLabel: fmt(endMin), durLabel: fmtDur(s.duration) };
   });
 }
 
-// ── TIME OFFSET (minutes) — increase if page is behind, decrease if ahead ──
-const TIME_OFFSET_MINUTES = 0;
+function fmt(min) {
+  const h = Math.floor(min/60)%24, m = Math.round(min%60);
+  return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`;
+}
 
-const SCHEDULE = parseSchedule(SCHEDULE_JSON);
+function fmtDur(sec) {
+  if (!sec) return '—';
+  const m = sec/60;
+  if (m < 1) return Math.round(sec)+'s';
+  if (m < 60) return Math.round(m)+' min';
+  return Math.floor(m/60)+' hr'+(Math.round(m%60)>0?' '+Math.round(m%60)+' min':'');
+}
 
-function getNowMin() {
+const SCHEDULE = buildSchedule(SCHEDULE_RAW);
+
+function getNow() {
   const n = new Date();
-  const raw = n.getHours()*60 + n.getMinutes() + n.getSeconds()/60 + TIME_OFFSET_MINUTES;
-  // If any show spans this raw time, use it. Otherwise try +1440 (next day).
-  const matchRaw = SCHEDULE.some(s => raw >= s.startMin && raw < s.endMin);
-  return matchRaw ? raw : raw + 1440;
+  const rawMin = n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
+  // Try each day offset in the schedule — find which one has a live show
+  const offsets = [...new Set(SCHEDULE.map(s => s.dayNum * 1440))];
+  for (const off of offsets) {
+    const t = rawMin + off;
+    if (SCHEDULE.some(s => t >= s.startMin && t < s.endMin)) return t;
+  }
+  // In a gap between shows — use last offset
+  return rawMin + (offsets[offsets.length-1] || 0);
 }
 
-function getStatus(s) {
-  const now = getNowMin();
-  if (now >= s.startMin && now < s.endMin) return 'live';
-  if (now >= s.endMin) return 'aired';
-  return 'upcoming';
-}
-
-function getProgress(s) {
-  const now = getNowMin();
-  return Math.min(100, Math.max(0, ((now - s.startMin)/(s.endMin - s.startMin))*100));
-}
-
-function blockLabel(min) {
-  const h = Math.floor(min/60) % 24;
-  if (h>=5 && h<12) return 'MORNING';
-  if (h>=12 && h<17) return 'AFTERNOON';
-  if (h>=17 && h<21) return 'EVENING';
-  return 'LATE NIGHT';
-}
-
-function renderSchedule() {
+function render() {
   const wrap = document.getElementById('scheduleWrap');
+  const now = getNow();
   wrap.innerHTML = '';
-  let lastBlock = null;
+  let lastDay = -1;
+  const today = new Date();
+  today.setHours(0,0,0,0);
 
-  let liveCardRendered = false;
-  let morningCount = 0;
-  SCHEDULE.forEach(show => {
-    const status = getStatus(show);
-    const block  = blockLabel(show.startMin);
-
-    if (block !== lastBlock) {
-      lastBlock = block;
-      const hdr = document.createElement('div');
-      hdr.className = 'time-block-header';
-      if (block === 'MORNING') morningCount++;
-      const d = new Date(); d.setDate(d.getDate() + morningCount - 1);
-      const dateStr = block === 'MORNING' ? ` · ${d.getMonth()+1}-${d.getDate()}-${d.getFullYear()}` : '';
-      hdr.innerHTML = `<div class="time-block-label">${block}${dateStr}</div><div class="time-block-line"></div>`;
-      wrap.appendChild(hdr);
+  SCHEDULE.forEach(s => {
+    if (s.dayNum !== lastDay) {
+      lastDay = s.dayNum;
+      const d = new Date(today.getTime() + s.dayNum * 86400000);
+      const label = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+      wrap.insertAdjacentHTML('beforeend',`<div class="day-header"><div class="day-label">${label}</div><div class="day-line"></div></div>`);
     }
 
-    const classes = ['show-card', status === 'live' ? 'live-now' : status];
-    if (show.isAd)       classes.push('ad-card');
-    if (show.isFlmPromo) classes.push('flm-promo');
+    const isLive  = now >= s.startMin && now < s.endMin;
+    const isAired = now >= s.endMin;
+    const pct = isLive ? Math.min(100,((now-s.startMin)/(s.endMin-s.startMin))*100) : 0;
 
-    const filterTags = [show.type, status];
-    if (show.type==='kids')  filterTags.push('kids');
-    if (show.isFlmOrig)      filterTags.push('flm');
-    if (show.isMovie)        filterTags.push('movies');
+    const cls = ['show-card', isLive?'live':isAired?'aired':'upcoming', s.type==='ad'?'ad':'', s.type==='flm'?'flm':''].join(' ');
+    const id  = isLive ? 'id="live-now"' : '';
 
-    const card = document.createElement('div');
-    card.className = classes.join(' ');
-    card.dataset.filter = filterTags.join(' ');
-    if (status === 'live' && !liveCardRendered) {
-        card.id = 'live-now-card';
-        card.style.cursor = 'pointer';
-        card.onclick = function() { window.location.href = 'live.html'; };
-    }
+    const movieB = s.type==='movie' ? `<span class="badge badge-movie">MOVIE</span>` : '';
+    const kidsB  = s.type==='kids'  ? `<span class="badge badge-kids">KIDS</span>` : '';
+    const flmB   = s.type==='flm'   ? `<span class="badge badge-flm">★ FLM ORIGINAL</span>` : '';
+    const liveB  = isLive ? `<span class="badge badge-live"><span class="badge-live-dot"></span>ON AIR NOW</span>` : '';
+    const watchB = isLive ? `<a href="live.html" class="watch-btn">▶ Watch Now</a>` : '';
+    const prog   = isLive ? `<div class="progress-wrap"><div class="progress-fill" id="pfill" style="width:${pct}%"></div></div>` : '';
 
-    const movieBadge = show.isMovie   ? `<span class="movie-badge">MOVIE</span>` : '';
-    const flmTag     = show.isFlmOrig ? `<span class="flm-tag">★ FLM ORIGINAL</span>` : '';
-    const liveBadge  = (status==='live' && !liveCardRendered) ? `<div class="live-badge"><div class="live-badge-dot"></div>ON AIR NOW</div>` : '';
-    const watchNowBtn = (status==='live' && !liveCardRendered) ? `<a href="live.html" class="watch-now-btn" onclick="event.stopPropagation();">▶ Watch Now</a>` : '';
-    const progressBar= (status==='live' && !liveCardRendered) ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${getProgress(show)}%"></div></div>` : '';
-    if (status === 'live') liveCardRendered = true;
-
-    card.innerHTML = `
-      <div class="show-time">
-        <div class="show-time-start">${show.start}</div>
-        <div class="show-time-end">${show.end}</div>
-      </div>
-      <div class="show-info">
-        <div class="show-name">${show.name}${movieBadge}${flmTag}</div>
-        <div class="show-meta">${show.dur}</div>
-        ${liveBadge}
-        ${watchNowBtn}
-      </div>
-      <div class="show-dur">${show.dur}</div>
-      ${progressBar}
-    `;
-    wrap.appendChild(card);
+    wrap.insertAdjacentHTML('beforeend',`
+      <div class="${cls}" ${id}>
+        <div class="time-col"><div class="time-start">${s.startLabel}</div><div class="time-end">${s.endLabel}</div></div>
+        <div class="info-col">
+          <div class="show-name">${s.name}</div>
+          <div class="show-badges">${liveB}${movieB}${kidsB}${flmB}</div>
+          ${watchB}
+        </div>
+        <div class="dur-col">${s.durLabel}</div>
+        ${prog}
+      </div>`);
   });
+}
 
-  // Update hero stats
-  const total = SCHEDULE.length;
-  const movies = SCHEDULE.filter(s=>s.isMovie).length;
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statMovies').textContent = movies;
-  document.getElementById('statHours').textContent = Math.round(
-    SCHEDULE.reduce((a,s)=>a+(s.endMin-s.startMin),0)/60
-  );
+function jumpToNow() {
+  const el = document.getElementById('live-now');
+  if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
+  else alert('No show currently live!');
+}
+
+function updateClock() {
+  const n = new Date();
+  const h=n.getHours()%12||12, m=String(n.getMinutes()).padStart(2,'0'), s=String(n.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m}:${s} ${n.getHours()>=12?'PM':'AM'}`;
+}
+
+function updateProgress() {
+  const fill = document.getElementById('pfill');
+  if (!fill) return;
+  const now = getNow();
+  const live = SCHEDULE.find(s => now >= s.startMin && now < s.endMin);
+  if (live) fill.style.width = Math.min(100,((now-live.startMin)/(live.endMin-live.startMin))*100)+'%';
 }
 
 function downloadSchedule() {
-  const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  let txt = `FLM TV — Channel 26.5 Las Vegas & Worldwide\n`;
-  txt += `Today's Schedule — ${date}\n`;
-  txt += `${'═'.repeat(60)}\n\n`;
-  SCHEDULE.forEach(s => {
-    if (s.isAd) return; // skip commercials
-    txt += `${s.start.padEnd(10)} ${s.name}\n`;
-  });
-  txt += `\n${'─'.repeat(60)}\n`;
-  txt += `Watch Live: FLMTV.com\n`;
-  txt += `Channel 26.5 — Las Vegas\n`;
-  const blob = new Blob([txt], {type:'text/plain'});
+  let txt = `FLM TV — Channel 26.5 Las Vegas & Worldwide\nSchedule — ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}\n${'═'.repeat(60)}\n\n`;
+  SCHEDULE.forEach(s => { if (s.type!=='ad') txt += `${s.startLabel.padEnd(12)} ${s.name}\n`; });
+  txt += `\n${'─'.repeat(60)}\nWatch Live: FLMTV.com | Channel 26.5 Las Vegas\n`;
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  a.href = URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
   a.download = `FLM-TV-Schedule-${new Date().toISOString().slice(0,10)}.txt`;
   a.click();
 }
 
-function jumpToNow() {
-  const el = document.getElementById('live-now-card');
-  if (!el) { alert('No show currently airing — check back later!'); return; }
-  el.scrollIntoView({behavior:'smooth', block:'center'});
-  el.style.boxShadow = '0 0 0 3px #00E676, 0 0 40px rgba(0,230,118,0.35)';
-  setTimeout(() => { el.style.boxShadow = '0 0 0 2px var(--live-green), 0 4px 28px rgba(0,230,118,0.12)'; }, 900);
-}
-
-function filterSchedule(cat, btn) {
-  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.show-card').forEach(card => {
-    const tags = card.dataset.filter || '';
-    let show = false;
-    if (cat==='all')      show = true;
-    else if (cat==='shows')   show = !card.classList.contains('ad-card') && !card.classList.contains('flm-promo') && !tags.includes('movie');
-    else if (cat==='movies')  show = tags.includes('movies');
-    else if (cat==='kids')    show = tags.includes('kids');
-    else if (cat==='flm')     show = tags.includes('flm') && !card.classList.contains('ad-card');
-    else if (cat==='upcoming')show = tags.includes('upcoming');
-    card.classList.toggle('hidden', !show);
-  });
-}
-
-// Live clock
-function updateClock() {
-  const n = new Date();
-  const h = n.getHours()%12||12, m = String(n.getMinutes()).padStart(2,'0');
-  const s = String(n.getSeconds()).padStart(2,'0');
-  const ap = n.getHours()>=12?'PM':'AM';
-  const el = document.getElementById('clockDisplay');
-  if (el) el.textContent = `${h}:${m}:${s} ${ap}`;
-}
-
-// Progress bar update
-function updateProgress() {
-  const fill = document.getElementById('progressFill');
-  if (!fill) return;
-  const live = SCHEDULE.find(s => getStatus(s)==='live');
-  if (live) fill.style.width = getProgress(live) + '%';
-}
-
-// Hero date
-function setHeroDate() {
-  const el = document.getElementById('heroDate');
-  if (!el) return;
-  el.textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  setHeroDate();
-  renderSchedule();
-  updateClock();
-  setInterval(updateClock, 1000);
-  setInterval(updateProgress, 10000);
-  setInterval(() => { renderSchedule(); }, 60000); // re-render every minute so live status updates
-});
-</script>
-
-<script>
-(function() {
-    var ua = navigator.userAgent || '';
-    if (!/AFT|FireTV|Silk/i.test(ua)) return;
-    var vp = document.querySelector('meta[name="viewport"]');
-    if (vp) vp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-
-    var style = document.createElement('style');
-    style.textContent = `
-        .show-card:focus, .ftab:focus, .jump-btn:focus, .nav-logo:focus, a:focus {
-            outline: 4px solid #ffd700 !important;
-            box-shadow: 0 0 20px rgba(255,215,0,0.5) !important;
-            z-index: 10; position: relative;
-        }
-        #live-now-card:focus { outline: 4px solid #00E676 !important; }
-    `;
-    document.head.appendChild(style);
-
-    function getFocusable() {
-        return Array.from(document.querySelectorAll(
-            '.show-card:not(.hidden), .ftab, .jump-btn, .nav-logo, a.live-pill'
-        )).filter(function(el) {
-            return el.offsetParent !== null && el.offsetWidth > 0 && el.offsetHeight > 0;
-        });
-    }
-
-    function findBest(current, all, dir) {
-        var cr = current.getBoundingClientRect();
-        var cx = cr.left + cr.width/2, cy = cr.top + cr.height/2;
-        var candidates = all.filter(function(el) {
-            if (el === current) return false;
-            var r = el.getBoundingClientRect();
-            var ex = r.left+r.width/2, ey = r.top+r.height/2;
-            if (dir==='right') return ex > cr.right - 10;
-            if (dir==='left')  return ex < cr.left + 10;
-            if (dir==='down')  return ey > cr.bottom - 10;
-            if (dir==='up')    return ey < cr.top + 10;
-        });
-        if (!candidates.length) return null;
-        var best = null, bestScore = Infinity;
-        candidates.forEach(function(el) {
-            var r = el.getBoundingClientRect();
-            var dx=(r.left+r.width/2)-cx, dy=(r.top+r.height/2)-cy;
-            var p=(dir==='right'||dir==='left')?Math.abs(dx):Math.abs(dy);
-            var s=(dir==='right'||dir==='left')?Math.abs(dy):Math.abs(dx);
-            var score=p+s*0.3;
-            if(score<bestScore){bestScore=score;best=el;}
-        });
-        return best;
-    }
-
-    document.addEventListener('keydown', function(e) {
-        var all = getFocusable();
-        if (!all.length) return;
-        var focused = document.activeElement;
-        var inList = all.indexOf(focused) >= 0;
-        if (!inList) {
-            if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
-                e.preventDefault();
-                var liveCard = document.getElementById('live-now-card');
-                if (liveCard) { liveCard.focus(); liveCard.scrollIntoView({block:'center'}); }
-                else { all[0].focus(); }
-            }
-            return;
-        }
-        var dir = {ArrowRight:'right',ArrowLeft:'left',ArrowDown:'down',ArrowUp:'up'}[e.key];
-        if (dir) {
-            e.preventDefault();
-            var next = findBest(focused, all, dir);
-            if (next) { next.focus(); next.scrollIntoView({behavior:'smooth',block:'center'}); }
-            else if (dir==='up') { window.scrollTo({top:0,behavior:'smooth'}); setTimeout(function(){all[0].focus();},400); }
-        }
-        if (e.key==='Backspace'||e.key==='Escape') { e.preventDefault(); window.location.href='home.html'; }
-        if (e.key==='Enter' && focused && focused.onclick) focused.click();
-    }, true);
-
-    window.addEventListener('load', function() {
-        document.querySelectorAll('.show-card').forEach(function(el) {
-            if (!el.getAttribute('tabindex')) el.setAttribute('tabindex','0');
-            el.addEventListener('keydown', function(e) {
-                if (e.key==='Enter'||e.key===' ') { e.preventDefault(); el.click(); }
-            });
-        });
-        new MutationObserver(function() {
-            document.querySelectorAll('.show-card').forEach(function(el) {
-                if (!el.getAttribute('tabindex')) el.setAttribute('tabindex','0');
-            });
-        }).observe(document.body, {childList:true, subtree:true});
-    });
-})();
+document.getElementById('heroDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+render();
+updateClock();
+setInterval(updateClock, 1000);
+setInterval(updateProgress, 5000);
+setInterval(render, 30000);
 </script>
 </body>
 </html>
