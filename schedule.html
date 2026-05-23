@@ -96,10 +96,18 @@ body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;}
 // type: show | movie | kids | ad | flm
 // ─────────────────────────────────────────────
 const ITEMS = [
+{"t":"07:28","n":"Sesame Street 2","d":1558,"type":"kids"},
+{"t":"07:54","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"07:54","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"07:55","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"07:55","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"07:56","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"07:56","n":"Super Why","d":1620,"type":"kids"},
+{"t":"08:23","n":"Ready Jet Go!","d":1591,"type":"kids"},
 {"t":"08:49","n":"Nature Cat","d":1441,"type":"kids"},
-{"t":"09:13","n":"FLMTV.com/KidsCorner","d":1535,"type":"ad"},
-{"t":"09:39","n":"Snail-logo1-Z","d":15,"type":"ad"},
-{"t":"09:39","n":"The Monkees 207 Hillbilly Honeymoon","d":1505,"type":"show"},
+{"t":"09:13","n":"FLMTV.com/KidsCorner","d":17,"type":"ad"},
+{"t":"09:13","n":"Snail-logo1-Z","d":15,"type":"ad"},
+{"t":"09:04","n":"The Monkees 207 Hillbilly Honeymoon","d":1505,"type":"show"},
 {"t":"10:04","n":"The Dick Van Dyke Show S02E06","d":1507,"type":"show"},
 {"t":"10:29","n":"Get Smart S01E13 (Aboard the Orient Express)","d":1523,"type":"show"},
 {"t":"10:54","n":"VoteScottBlack.com","d":30,"type":"ad"},
@@ -187,12 +195,15 @@ function now() {
     const t = raw + day * 1440;
     if (S.some(s => t >= s.start && t < s.end)) return t;
   }
-  // In a gap — use the last day's offset
-  return raw + (Math.max(...days) * 1440);
+  // In a gap between shows — still return raw so upcoming shows highlight correctly
+  return raw;
 }
 
 function render() {
   const t = now();
+  // Find last 3 aired shows to keep, hide the rest
+  const aired = S.filter(s => t >= s.end);
+  const keepAired = new Set(aired.slice(-5).map(s => s.t + s.n));
   const wrap = document.getElementById('wrap');
   wrap.innerHTML = '';
   let lastDay = -1;
@@ -211,6 +222,7 @@ function render() {
 
     const live  = t >= s.start && t < s.end;
     const aired = t >= s.end;
+    if (aired && !keepAired.has(s.t + s.n)) return;
     const pct   = live ? Math.min(100, ((t - s.start) / (s.end - s.start)) * 100) : 0;
     const cls   = `show ${live?'live':aired?'aired':'upcoming'} ${s.type==='ad'?'ad':''} ${s.type==='flm'?'flm':''}`;
 
