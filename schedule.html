@@ -4,326 +4,320 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FLM TV — Schedule</title>
-<link rel="icon" type="image/png" href="assets/logos/favicons-3/favicon-96x96.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600&family=Barlow+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #C9A84C; --gold-light: #E8C97A; --gold-dim: #7A6330;
-  --red: #C0272D; --red-bright: #E8333A;
-  --black: #070709; --dark: #0E0E13; --dark2: #14141A; --dark3: #1C1C24; --dark4: #26262F;
-  --text: #F0EDE8; --text-dim: #888898; --text-muted: #444450;
-  --green: #00E676; --blue: #4A9EFF;
+  --gold:#C9A84C; --red:#C0272D; --black:#070709; --dark:#14141A;
+  --text:#F0EDE8; --dim:#888898; --muted:#444450;
+  --green:#00E676; --blue:#4A9EFF;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body { background:var(--black); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; }
-.topnav { position:sticky; top:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:0 32px; height:60px; background:rgba(7,7,9,0.97); border-bottom:1px solid rgba(201,168,76,0.2); backdrop-filter:blur(12px); }
-.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:5px; color:var(--gold); text-decoration:none; }
-.nav-logo span { color:var(--red); }
-.nav-links { display:flex; gap:24px; list-style:none; }
-.nav-links a { color:var(--text-dim); text-decoration:none; font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; transition:color 0.2s; }
-.nav-links a:hover,.nav-links a.active { color:var(--gold); }
-.live-pill { display:flex; align-items:center; gap:7px; background:var(--red); color:#fff; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:7px 16px; border-radius:2px; }
-.live-dot { width:7px; height:7px; border-radius:50%; background:#fff; animation:blink 1.2s infinite; }
-@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
-.hero { padding:36px 32px 24px; text-align:center; border-bottom:1px solid rgba(201,168,76,0.1); }
-.hero-title { font-family:'Bebas Neue',sans-serif; font-size:56px; letter-spacing:6px; color:var(--text); }
-.hero-title em { color:var(--gold); font-style:normal; }
-.hero-sub { font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:4px; color:var(--text-dim); text-transform:uppercase; margin-top:4px; }
-.toolbar { display:flex; align-items:center; justify-content:space-between; padding:12px 32px; background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.04); flex-wrap:wrap; gap:12px; }
-.toolbar-left { display:flex; gap:10px; align-items:center; }
-.btn { display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid rgba(0,230,118,0.4); color:var(--green); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:7px 16px; border-radius:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s; }
-.btn:hover { background:rgba(0,230,118,0.1); }
-.btn-gold { border-color:rgba(201,168,76,0.4); color:var(--gold); }
-.btn-gold:hover { background:rgba(201,168,76,0.1); }
-.clock { font-family:'Share Tech Mono',monospace; font-size:15px; color:var(--text-dim); letter-spacing:2px; }
-.schedule-wrap { max-width:900px; margin:0 auto; padding:24px 32px 80px; }
-.day-header { display:flex; align-items:center; gap:14px; padding:28px 0 12px; }
-.day-label { font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:3px; color:var(--gold-dim); white-space:nowrap; }
-.day-line { flex:1; height:1px; background:linear-gradient(90deg,rgba(201,168,76,0.25),transparent); }
-.show-card { display:grid; grid-template-columns:100px 1fr 80px; align-items:stretch; margin-bottom:3px; border-radius:3px; overflow:hidden; border-left:3px solid var(--dark4); transition:transform 0.15s; }
-.show-card:hover { transform:translateX(2px); }
-.show-card.aired { opacity:0.35; }
-.show-card.live { border-left-color:var(--green); box-shadow:0 0 0 1px var(--green),0 4px 24px rgba(0,230,118,0.2); animation:pglow 2s ease-in-out infinite; }
-@keyframes pglow { 0%,100%{box-shadow:0 0 0 1px var(--green),0 4px 24px rgba(0,230,118,0.15)}50%{box-shadow:0 0 0 1px var(--green),0 4px 36px rgba(0,230,118,0.35)} }
-.show-card.ad { border-left-color:rgba(74,158,255,0.3); }
-.show-card.flm { border-left-color:var(--gold-dim); }
-.time-col { padding:12px 14px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); text-align:right; display:flex; flex-direction:column; justify-content:center; }
-.time-start { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--text); }
-.time-end { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-muted); margin-top:2px; }
-.show-card.live .time-start { color:var(--green); }
-.info-col { padding:12px 16px; background:var(--dark2); border-right:1px solid rgba(255,255,255,0.04); }
-.show-name { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:600; color:var(--text); line-height:1.2; }
-.show-card.live .show-name { color:#fff; font-size:17px; }
-.show-card.ad .show-name { color:var(--blue); font-size:13px; }
-.show-card.flm .show-name { color:var(--gold); }
-.show-badges { display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap; }
-.badge { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; padding:2px 7px; border-radius:2px; }
-.badge-live { background:var(--green); color:#000; display:flex; align-items:center; gap:5px; }
-.badge-live-dot { width:5px; height:5px; border-radius:50%; background:#000; animation:blink 1s infinite; }
-.badge-movie { color:var(--gold); border:1px solid rgba(201,168,76,0.35); }
-.badge-kids { color:#a78bfa; border:1px solid rgba(167,139,250,0.35); }
-.badge-flm { color:var(--gold-dim); }
-.watch-btn { display:inline-flex; align-items:center; gap:5px; margin-top:6px; background:var(--green); color:#000; font-weight:800; font-size:11px; letter-spacing:1px; padding:5px 14px; border-radius:3px; text-decoration:none; }
-.dur-col { padding:12px 10px; background:var(--dark2); font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-muted); display:flex; align-items:center; justify-content:flex-end; }
-.progress-wrap { grid-column:1/-1; height:3px; background:rgba(0,230,118,0.1); }
-.progress-fill { height:100%; background:var(--green); transition:width 5s linear; }
-.footer { text-align:center; padding:40px 32px; border-top:1px solid rgba(201,168,76,0.1); color:var(--text-muted); font-size:12px; letter-spacing:1px; line-height:2; }
-.footer a { color:var(--gold-dim); text-decoration:none; }
-@media(max-width:640px){
-  .topnav{padding:0 16px;} .nav-links{display:none;} .hero{padding:24px 16px 16px;} .hero-title{font-size:40px;}
-  .schedule-wrap{padding:16px 12px 60px;} .show-card{grid-template-columns:80px 1fr;} .dur-col{display:none;} .toolbar{padding:10px 16px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Barlow',sans-serif;}
+.nav{position:sticky;top:0;z-index:99;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;background:rgba(7,7,9,0.97);border-bottom:1px solid rgba(201,168,76,0.2);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:5px;color:var(--gold);text-decoration:none;}
+.logo span{color:var(--red);}
+.live-btn{display:flex;align-items:center;gap:6px;background:var(--red);color:#fff;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:2px;}
+.dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1.2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+.hero{padding:28px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.1);}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:5px;}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hero-date{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:4px;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+
+.bar{display:flex;align-items:center;justify-content:space-between;padding:10px 28px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.04);}
+.now-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(0,230,118,0.4);color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:2px;cursor:pointer;}
+.clock{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--dim);letter-spacing:2px;}
+
+.wrap{max-width:860px;margin:0 auto;padding:20px 28px 80px;}
+
+.show{display:grid;grid-template-columns:90px 1fr 70px;margin-bottom:2px;border-radius:2px;overflow:hidden;border-left:3px solid var(--muted);}
+.show.live{border-left-color:var(--green);box-shadow:0 0 0 1px var(--green),0 0 20px rgba(0,230,118,0.15);animation:glow 2s ease-in-out infinite;}
+@keyframes glow{0%,100%{box-shadow:0 0 0 1px var(--green),0 0 20px rgba(0,230,118,0.12)}50%{box-shadow:0 0 0 1px var(--green),0 0 32px rgba(0,230,118,0.3)}}
+.show.aired{opacity:.3;}
+.show.ad{border-left-color:rgba(74,158,255,0.35);}
+
+.tcol{padding:10px 12px;background:var(--dark);text-align:right;display:flex;flex-direction:column;justify-content:center;}
+.ts{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);}
+.te{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:2px;}
+.show.live .ts{color:var(--green);}
+
+.icol{padding:10px 14px;background:var(--dark);border-left:1px solid rgba(255,255,255,0.03);}
+.sname{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;}
+.show.live .sname{color:#fff;font-size:16px;}
+.show.ad .sname{color:var(--blue);font-size:13px;}
+.badges{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;align-items:center;}
+.badge{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:2px 6px;border-radius:2px;}
+.b-live{background:var(--green);color:#000;display:flex;align-items:center;gap:4px;}
+.b-live-dot{width:5px;height:5px;border-radius:50%;background:#000;animation:blink 1s infinite;}
+.b-movie{color:var(--gold);border:1px solid rgba(201,168,76,0.3);}
+.b-kids{color:#a78bfa;border:1px solid rgba(167,139,250,0.3);}
+.b-flm{color:var(--gold);font-size:9px;}
+.watch{display:inline-flex;align-items:center;gap:4px;margin-top:5px;background:var(--green);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:1px;padding:4px 12px;border-radius:2px;text-decoration:none;}
+
+.dcol{padding:10px 8px;background:var(--dark);border-left:1px solid rgba(255,255,255,0.03);font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;justify-content:flex-end;}
+
+.prog{grid-column:1/-1;height:3px;background:rgba(0,230,118,0.1);}
+.prog-fill{height:100%;background:var(--green);transition:width 5s linear;}
+
+.day-hdr{display:flex;align-items:center;gap:12px;padding:24px 0 10px;}
+.day-lbl{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:rgba(201,168,76,0.5);}
+.day-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent);}
+
+@media(max-width:600px){
+  .show{grid-template-columns:72px 1fr;}
+  .dcol{display:none;}
+  .wrap{padding:12px 12px 60px;}
 }
 </style>
 </head>
 <body>
-<nav class="topnav">
-  <a href="home.html" class="nav-logo">FLM<span>TV</span></a>
-  <ul class="nav-links">
-    <li><a href="home.html">Home</a></li>
-    <li><a href="browse.html">Browse</a></li>
-    <li><a href="live.html">Live TV</a></li>
-    <li><a href="schedule.html" class="active">Schedule</a></li>
-  </ul>
-  <a href="live.html" class="live-pill"><div class="live-dot"></div> WATCH LIVE</a>
+
+<nav class="nav">
+  <a href="home.html" class="logo">FLM<span>TV</span></a>
+  <a href="live.html" class="live-btn"><div class="dot"></div> WATCH LIVE</a>
 </nav>
+
 <div class="hero">
-  <h1 class="hero-title">TODAY'S <em>PROGRAMMING</em></h1>
-  <div class="hero-sub" id="heroDate">—</div>
+  <h1>TODAY'S <em>PROGRAMMING</em></h1>
+  <div class="hero-date" id="heroDate"></div>
 </div>
-<div class="toolbar">
-  <div class="toolbar-left">
-    <button class="btn" onclick="jumpToNow()"><div class="live-dot" style="background:var(--green)"></div> Now Playing</button>
-    <button class="btn btn-gold" onclick="downloadSchedule()">⬇ Download</button>
-  </div>
-  <div class="clock" id="clock">--:-- --</div>
+
+<div class="bar">
+  <button class="now-btn" onclick="jumpToNow()"><div class="dot" style="background:var(--green)"></div> NOW PLAYING</button>
+  <div class="clock" id="clock"></div>
 </div>
-<div class="schedule-wrap" id="scheduleWrap"></div>
-<div class="footer">
-  Schedule updates as programming changes &nbsp;·&nbsp;
-  <strong style="color:var(--gold-dim)">FLM TV Channel 26.5</strong> &nbsp;·&nbsp; Las Vegas &amp; Worldwide<br>
-  <a href="live.html">▶ Watch Live at FLMTV.com</a>
-</div>
+
+<div class="wrap" id="wrap"></div>
+
 <script>
-// ════════════════════════════════════════════════════
-// SCHEDULE — add shows IN ORDER, that's all you need
-// ════════════════════════════════════════════════════
-const SCHEDULE_RAW = [
-{"time":"09:15","name":"Super Why","duration":1621,"type":"kids"},
-{"time":"09:42","name":"Tiny Tots Kitchen","duration":870,"type":"kids"},
-{"time":"09:56","name":"Ready Jet Go","duration":1591,"type":"kids"},
-{"time":"10:23","name":"Elinor Wonders Why","duration":1501,"type":"kids"},
-{"time":"10:48","name":"FLMTV.com/KidsCorner","duration":17,"type":"ad"},
-{"time":"10:48","name":"VoteScottBlack.com","duration":30,"type":"ad"},
-{"time":"10:48","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
-{"time":"10:49","name":"LallyForNV.com","duration":30,"type":"ad"},
-{"time":"10:49","name":"Lenna4NV.com","duration":30,"type":"ad"},
-{"time":"10:50","name":"Lance4Judge.com","duration":32,"type":"ad"},
-{"time":"10:50","name":"The Monkees","duration":1504,"type":"show"},
-{"time":"11:15","name":"Gilligan's Island","duration":1517,"type":"show"},
-{"time":"11:40","name":"The Addams Family","duration":1530,"type":"show"},
-{"time":"12:06","name":"Six Million Dollar Man","duration":3065,"type":"show"},
-{"time":"12:57","name":"Charlie's Angels","duration":2941,"type":"show"},
-{"time":"13:46","name":"Bewitched","duration":1529,"type":"show"},
-{"time":"14:12","name":"Bewitched 2","duration":1527,"type":"show"},
-{"time":"14:37","name":"VoteScottBlack.com","duration":30,"type":"ad"},
-{"time":"14:37","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
-{"time":"14:38","name":"LallyForNV.com","duration":30,"type":"ad"},
-{"time":"14:38","name":"Lenna4NV.com","duration":30,"type":"ad"},
-{"time":"14:39","name":"Lance4Judge.com","duration":32,"type":"ad"},
-{"time":"14:39","name":"Leave It to Beaver","duration":1539,"type":"show"},
-{"time":"15:05","name":"MASH","duration":1538,"type":"show"},
-{"time":"15:31","name":"What's Happening","duration":1513,"type":"show"},
-{"time":"15:56","name":"Good Times","duration":1541,"type":"show"},
-{"time":"16:21","name":"FLMTV.com","duration":12,"type":"ad"},
-{"time":"16:22","name":"Sanford and Son","duration":1510,"type":"show"},
-{"time":"16:47","name":"The Jeffersons","duration":1497,"type":"show"},
-{"time":"17:12","name":"Frozen Fever","duration":477,"type":"show"},
-{"time":"17:20","name":"VoteScottBlack.com","duration":30,"type":"ad"},
-{"time":"17:20","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
-{"time":"17:20","name":"LallyForNV.com","duration":30,"type":"ad"},
-{"time":"17:21","name":"Lenna4NV.com","duration":30,"type":"ad"},
-{"time":"17:21","name":"Lance4Judge.com","duration":32,"type":"ad"},
-{"time":"17:22","name":"Winnie the Pooh","duration":3783,"type":"show"},
-{"time":"18:25","name":"Here's Lucy","duration":1549,"type":"show"},
-{"time":"18:51","name":"Zaina Juliette & Friends","duration":1705,"type":"flm"},
-{"time":"19:19","name":"Locals in Las Vegas","duration":1709,"type":"flm"},
-{"time":"19:48","name":"Boxer","duration":135,"type":"ad"},
-{"time":"19:50","name":"Og Scorpio","duration":269,"type":"ad"},
-{"time":"19:54","name":"GladiusTheShow.net","duration":84,"type":"ad"},
-{"time":"19:56","name":"GladiusTheShow.net 2","duration":59,"type":"ad"},
-{"time":"19:57","name":"Friends","duration":1371,"type":"show"},
-{"time":"20:20","name":"Unfortunate Events","duration":2550,"type":"show"},
-{"time":"21:02","name":"VoteScottBlack.com","duration":30,"type":"ad"},
-{"time":"21:03","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
-{"time":"21:03","name":"LallyForNV.com","duration":30,"type":"ad"},
-{"time":"21:03","name":"Lenna4NV.com","duration":30,"type":"ad"},
-{"time":"21:04","name":"Lance4Judge.com","duration":32,"type":"ad"},
-{"time":"21:04","name":"SheBoujay.com","duration":60,"type":"ad"},
-{"time":"21:05","name":"Edward Scissorhands","duration":6300,"type":"movie"},
-{"time":"22:50","name":"FLMTV.com","duration":28,"type":"ad"},
-{"time":"22:51","name":"Marlowe","duration":6581,"type":"movie"},
-{"time":"00:41","name":"Don't Look Up","duration":8591,"type":"movie"},
-{"time":"03:04","name":"VoteScottBlack.com","duration":30,"type":"ad"},
-{"time":"03:04","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
-{"time":"03:05","name":"LallyForNV.com","duration":30,"type":"ad"},
-{"time":"03:05","name":"Lance4Judge.com","duration":32,"type":"ad"},
-{"time":"03:06","name":"Lenna4NV.com","duration":30,"type":"ad"},
-{"time":"03:06","name":"The Lord of the Rings","duration":14132,"type":"movie"},
-{"time":"07:02","name":"Sesame Street","duration":1558,"type":"kids"},
-{"time":"07:28","name":"Sesame Street 2","duration":1558,"type":"kids"},
-{"time":"07:54","name":"VoteScottBlack.com","duration":30,"type":"ad"},
-{"time":"07:54","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
-{"time":"07:54","name":"LallyForNV.com","duration":30,"type":"ad"},
-{"time":"07:55","name":"Lance4Judge.com","duration":32,"type":"ad"},
-{"time":"07:55","name":"Lenna4NV.com","duration":30,"type":"ad"},
-{"time":"07:56","name":"Super Why","duration":1620,"type":"kids"},
-{"time":"08:23","name":"Ready Jet Go!","duration":1591,"type":"kids"},
-{"time":"08:49","name":"Nature Cat","duration":1441,"type":"kids"},
-{"time":"09:13","name":"FLMTV.com/KidsCorner","duration":1535,"type":"ad"},
-{"time":"09:39","name":"Snail-logo1-Z","duration":15,"type":"ad"},
-{"time":"09:40","name":"The Monkees 207 Hillbilly Honeymoon","duration":1505,"type":"show"},
-{"time":"10:05","name":"The Dick Van Dyke Show S02E06","duration":1507,"type":"show"},
-{"time":"10:30","name":"Get Smart S01E13 Aboard the Orient Express","duration":1523,"type":"show"},
-{"time":"10:55","name":"VoteScottBlack.com","duration":30,"type":"ad"},
-{"time":"10:55","name":"JudgeMaryPerry.com","duration":14,"type":"ad"},
-{"time":"10:56","name":"Lance4Judge.com","duration":32,"type":"ad"},
-{"time":"10:57","name":"Lenna4NV.com","duration":30,"type":"ad"},
-{"time":"10:58","name":"LallyForNV.com","duration":30,"type":"ad"},
-{"time":"10:59","name":"Gilligan's Island S02E12 Don't Bug the Mosquitoes","duration":1518,"type":"show"},
-{"time":"11:24","name":"Mister Ed S01E07 Ed the Lover","duration":1326,"type":"show"},
-{"time":"11:46","name":"S01E18 Child Care","duration":1539,"type":"show"}
+// ─────────────────────────────────────────────
+// SCHEDULE — in broadcast order
+// type: show | movie | kids | ad | flm
+// ─────────────────────────────────────────────
+const ITEMS = [
+{"t":"09:15","n":"Super Why","d":1621,"type":"kids"},
+{"t":"09:42","n":"Tiny Tots Kitchen","d":870,"type":"kids"},
+{"t":"09:56","n":"Ready Jet Go","d":1591,"type":"kids"},
+{"t":"10:23","n":"Elinor Wonders Why","d":1501,"type":"kids"},
+{"t":"10:48","n":"FLMTV.com/KidsCorner","d":17,"type":"ad"},
+{"t":"10:48","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"10:48","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"10:49","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"10:49","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"10:50","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"10:50","n":"The Monkees","d":1504,"type":"show"},
+{"t":"11:15","n":"Gilligan's Island","d":1517,"type":"show"},
+{"t":"11:40","n":"The Addams Family","d":1530,"type":"show"},
+{"t":"12:06","n":"Six Million Dollar Man","d":3065,"type":"show"},
+{"t":"12:57","n":"Charlie's Angels","d":2941,"type":"show"},
+{"t":"13:46","n":"Bewitched","d":1529,"type":"show"},
+{"t":"14:12","n":"Bewitched 2","d":1527,"type":"show"},
+{"t":"14:37","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"14:37","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"14:38","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"14:38","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"14:39","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"14:39","n":"Leave It to Beaver","d":1539,"type":"show"},
+{"t":"15:05","n":"MASH","d":1538,"type":"show"},
+{"t":"15:31","n":"What's Happening","d":1513,"type":"show"},
+{"t":"15:56","n":"Good Times","d":1541,"type":"show"},
+{"t":"16:21","n":"FLMTV.com","d":12,"type":"ad"},
+{"t":"16:22","n":"Sanford and Son","d":1510,"type":"show"},
+{"t":"16:47","n":"The Jeffersons","d":1497,"type":"show"},
+{"t":"17:12","n":"Frozen Fever","d":477,"type":"show"},
+{"t":"17:20","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"17:20","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"17:20","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"17:21","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"17:21","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"17:22","n":"Winnie the Pooh","d":3783,"type":"show"},
+{"t":"18:25","n":"Here's Lucy","d":1549,"type":"show"},
+{"t":"18:51","n":"Zaina Juliette & Friends","d":1705,"type":"flm"},
+{"t":"19:19","n":"Locals in Las Vegas","d":1709,"type":"flm"},
+{"t":"19:48","n":"Boxer","d":135,"type":"ad"},
+{"t":"19:50","n":"Og Scorpio","d":269,"type":"ad"},
+{"t":"19:54","n":"GladiusTheShow.net","d":84,"type":"ad"},
+{"t":"19:56","n":"GladiusTheShow.net 2","d":59,"type":"ad"},
+{"t":"19:57","n":"Friends","d":1371,"type":"show"},
+{"t":"20:20","n":"Unfortunate Events","d":2550,"type":"show"},
+{"t":"21:02","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"21:03","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"21:03","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"21:03","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"21:04","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"21:04","n":"SheBoujay.com","d":60,"type":"ad"},
+{"t":"21:05","n":"Edward Scissorhands","d":6300,"type":"movie"},
+{"t":"22:50","n":"FLMTV.com","d":28,"type":"ad"},
+{"t":"22:51","n":"Marlowe","d":6581,"type":"movie"},
+{"t":"00:41","n":"Don't Look Up","d":8591,"type":"movie"},
+{"t":"03:04","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"03:04","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"03:05","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"03:05","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"03:06","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"03:06","n":"The Lord of the Rings","d":14132,"type":"movie"},
+{"t":"07:02","n":"Sesame Street","d":1558,"type":"kids"},
+{"t":"07:28","n":"Sesame Street 2","d":1558,"type":"kids"},
+{"t":"07:54","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"07:54","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"07:54","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"07:55","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"07:55","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"07:56","n":"Super Why","d":1620,"type":"kids"},
+{"t":"08:23","n":"Ready Jet Go!","d":1591,"type":"kids"},
+{"t":"08:49","n":"Nature Cat","d":1441,"type":"kids"},
+{"t":"09:13","n":"FLMTV.com/KidsCorner","d":1535,"type":"ad"},
+{"t":"09:39","n":"Snail-logo1-Z","d":15,"type":"ad"},
+{"t":"09:40","n":"The Monkees 207 Hillbilly Honeymoon","d":1505,"type":"show"},
+{"t":"10:05","n":"The Dick Van Dyke Show S02E06","d":1507,"type":"show"},
+{"t":"10:30","n":"Get Smart S01E13","d":1523,"type":"show"},
+{"t":"10:55","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"10:55","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"10:56","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"10:57","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"10:58","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"10:59","n":"Gilligan's Island S02E12","d":1518,"type":"show"},
+{"t":"11:24","n":"Mister Ed S01E07 Ed the Lover","d":1326,"type":"show"},
+{"t":"11:46","n":"Leave it to Beaver","d":1540,"type":"show"},
+{"t":"12:12","n":"Bewitched","d":1521,"type":"show"},
+{"t":"12:37","n":"Bewitched 2","d":1521,"type":"show"},
+{"t":"13:02","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"13:03","n":"JudgeMaryPerry.com","d":15,"type":"ad"},
+{"t":"13:03","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"13:04","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"13:05","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"13:06","n":"Andy Griffith","d":1800,"type":"show"},
+{"t":"13:36","n":"Andy Griffith 2","d":1504,"type":"show"},
+{"t":"14:01","n":"Boxer","d":136,"type":"ad"},
+{"t":"14:03","n":"The Twilight Zone","d":1570,"type":"show"},
+{"t":"14:29","n":"The Twilight Zone 2","d":1557,"type":"show"},
+{"t":"14:55","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"14:56","n":"JudgeMaryPerry.com","d":15,"type":"ad"},
+{"t":"14:56","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"14:57","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"14:58","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"14:59","n":"SheBoujay.com","d":60,"type":"ad"},
+{"t":"15:00","n":"What's Happening S01E03","d":1800,"type":"show"},
+{"t":"15:30","n":"Good Times S05E16","d":1541,"type":"show"},
+{"t":"15:56","n":"Sanford and Son S04","d":1800,"type":"show"},
+{"t":"16:26","n":"The Jeffersons S06E21","d":1495,"type":"show"},
+{"t":"16:51","n":"FLM TV Tag","d":21,"type":"ad"},
+{"t":"16:51","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"16:52","n":"JudgeMaryPerry.com","d":15,"type":"ad"},
+{"t":"16:52","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"16:53","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"16:54","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"16:55","n":"Schoolhouse Rock 1","d":186,"type":"kids"},
+{"t":"16:58","n":"Schoolhouse Rock 2","d":194,"type":"kids"},
+{"t":"17:01","n":"Schoolhouse Rock 3","d":186,"type":"kids"},
+{"t":"17:04","n":"Schoolhouse Rock 4","d":192,"type":"kids"},
+{"t":"17:07","n":"Aladdin (1992)","d":5440,"type":"movie"}
 ];
 
-// ════════════════════════════════════════════════════
-// ENGINE
-// ════════════════════════════════════════════════════
-function buildSchedule(raw) {
+// ─────────────────────────────────────────────
+// ENGINE — walks list in order, one midnight crossing = next calendar day
+// ─────────────────────────────────────────────
+function build(items) {
   let dayOffset = 0;
-  let prevStartMin = -1;
-  return raw.map((s, i) => {
-    const [h, m] = s.time.split(':').map(Number);
-    let startMin = h * 60 + m + dayOffset;
-    // If start time goes backward, we crossed midnight — add a day
-    if (i > 0 && startMin <= prevStartMin) {
-      dayOffset += 1440;
-      startMin += 1440;
-    }
-    prevStartMin = startMin;
-    const durMin = s.duration / 60;
-    const endMin = startMin + durMin;
-    return { ...s, startMin, endMin, dayNum: Math.floor(startMin / 1440), startLabel: fmt(startMin), endLabel: fmt(endMin), durLabel: fmtDur(s.duration) };
+  let prevMin = -1;
+  return items.map((s, i) => {
+    const [h, m] = s.t.split(':').map(Number);
+    const minOfDay = h * 60 + m;
+    if (i > 0 && minOfDay < prevMin - 30) dayOffset += 1440;
+    prevMin = minOfDay;
+    const start = dayOffset + minOfDay;
+    const end = start + s.d / 60;
+    return { ...s, start, end, day: Math.floor(dayOffset / 1440) };
   });
 }
 
-function fmt(min) {
-  const h = Math.floor(min/60)%24, m = Math.round(min%60);
-  return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`;
+function ftime(min) {
+  const h = Math.floor(min / 60) % 24, m = Math.round(min % 60);
+  return `${h % 12 || 12}:${String(m).padStart(2,'0')} ${h >= 12 ? 'PM' : 'AM'}`;
 }
 
-function fmtDur(sec) {
+function fdur(sec) {
   if (!sec) return '—';
-  const m = sec/60;
-  if (m < 1) return Math.round(sec)+'s';
-  if (m < 60) return Math.round(m)+' min';
-  return Math.floor(m/60)+' hr'+(Math.round(m%60)>0?' '+Math.round(m%60)+' min':'');
+  const m = sec / 60;
+  if (m < 1) return Math.round(sec) + 's';
+  if (m < 60) return Math.round(m) + ' min';
+  return Math.floor(m / 60) + ' hr' + (Math.round(m % 60) ? ' ' + Math.round(m % 60) + ' min' : '');
 }
 
-const SCHEDULE = buildSchedule(SCHEDULE_RAW);
+const S = build(ITEMS);
 
-function getNow() {
-  const n = new Date();
-  const rawMin = n.getHours()*60 + n.getMinutes() + n.getSeconds()/60;
-  // Try each day offset in the schedule — find which one has a live show
-  const offsets = [...new Set(SCHEDULE.map(s => s.dayNum * 1440))];
-  for (const off of offsets) {
-    const t = rawMin + off;
-    if (SCHEDULE.some(s => t >= s.startMin && t < s.endMin)) return t;
+// Get current time in schedule-minutes
+// Walk each day offset, find which one has a live show
+function now() {
+  const d = new Date();
+  const raw = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60;
+  const days = [...new Set(S.map(s => s.day))];
+  for (const day of days) {
+    const t = raw + day * 1440;
+    if (S.some(s => t >= s.start && t < s.end)) return t;
   }
-  // In a gap between shows — use last offset
-  return rawMin + (offsets[offsets.length-1] || 0);
+  // In a gap — use the last day's offset
+  return raw + (Math.max(...days) * 1440);
 }
 
 function render() {
-  const wrap = document.getElementById('scheduleWrap');
-  const now = getNow();
+  const t = now();
+  const wrap = document.getElementById('wrap');
   wrap.innerHTML = '';
   let lastDay = -1;
-  const today = new Date();
-  today.setHours(0,0,0,0);
+  const base = new Date(); base.setHours(0,0,0,0);
 
-  SCHEDULE.forEach(s => {
-    if (s.dayNum !== lastDay) {
-      lastDay = s.dayNum;
-      const d = new Date(today.getTime() + s.dayNum * 86400000);
-      const label = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-      wrap.insertAdjacentHTML('beforeend',`<div class="day-header"><div class="day-label">${label}</div><div class="day-line"></div></div>`);
+  S.forEach(s => {
+    if (s.day !== lastDay) {
+      lastDay = s.day;
+      const d = new Date(base.getTime() + s.day * 86400000);
+      wrap.insertAdjacentHTML('beforeend',
+        `<div class="day-hdr"><div class="day-lbl">${d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase()}</div><div class="day-line"></div></div>`
+      );
     }
 
-    const isLive  = now >= s.startMin && now < s.endMin;
-    const isAired = now >= s.endMin;
-    const pct = isLive ? Math.min(100,((now-s.startMin)/(s.endMin-s.startMin))*100) : 0;
+    const live  = t >= s.start && t < s.end;
+    const aired = t >= s.end;
+    const pct   = live ? Math.min(100, ((t - s.start) / (s.end - s.start)) * 100) : 0;
+    const cls   = `show ${live?'live':aired?'aired':'upcoming'} ${s.type==='ad'?'ad':''} ${s.type==='flm'?'flm':''}`;
 
-    const cls = ['show-card', isLive?'live':isAired?'aired':'upcoming', s.type==='ad'?'ad':'', s.type==='flm'?'flm':''].join(' ');
-    const id  = isLive ? 'id="live-now"' : '';
-
-    const movieB = s.type==='movie' ? `<span class="badge badge-movie">MOVIE</span>` : '';
-    const kidsB  = s.type==='kids'  ? `<span class="badge badge-kids">KIDS</span>` : '';
-    const flmB   = s.type==='flm'   ? `<span class="badge badge-flm">★ FLM ORIGINAL</span>` : '';
-    const liveB  = isLive ? `<span class="badge badge-live"><span class="badge-live-dot"></span>ON AIR NOW</span>` : '';
-    const watchB = isLive ? `<a href="live.html" class="watch-btn">▶ Watch Now</a>` : '';
-    const prog   = isLive ? `<div class="progress-wrap"><div class="progress-fill" id="pfill" style="width:${pct}%"></div></div>` : '';
-
-    wrap.insertAdjacentHTML('beforeend',`
-      <div class="${cls}" ${id}>
-        <div class="time-col"><div class="time-start">${s.startLabel}</div><div class="time-end">${s.endLabel}</div></div>
-        <div class="info-col">
-          <div class="show-name">${s.name}</div>
-          <div class="show-badges">${liveB}${movieB}${kidsB}${flmB}</div>
-          ${watchB}
+    wrap.insertAdjacentHTML('beforeend', `
+      <div class="${cls}" ${live ? 'id="live-now"' : ''}>
+        <div class="tcol"><div class="ts">${ftime(s.start)}</div><div class="te">${ftime(s.end)}</div></div>
+        <div class="icol">
+          <div class="sname">${s.n}</div>
+          <div class="badges">
+            ${live  ? `<span class="badge b-live"><span class="b-live-dot"></span>ON AIR NOW</span>` : ''}
+            ${s.type==='movie' ? `<span class="badge b-movie">MOVIE</span>` : ''}
+            ${s.type==='kids'  ? `<span class="badge b-kids">KIDS</span>`  : ''}
+            ${s.type==='flm'   ? `<span class="badge b-flm">★ FLM ORIGINAL</span>` : ''}
+          </div>
+          ${live ? `<a href="live.html" class="watch">▶ Watch Now</a>` : ''}
         </div>
-        <div class="dur-col">${s.durLabel}</div>
-        ${prog}
+        <div class="dcol">${fdur(s.d)}</div>
+        ${live ? `<div class="prog"><div class="prog-fill" id="pf" style="width:${pct}%"></div></div>` : ''}
       </div>`);
   });
 }
 
 function jumpToNow() {
   const el = document.getElementById('live-now');
-  if (el) el.scrollIntoView({behavior:'smooth',block:'center'});
-  else alert('No show currently live!');
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
-function updateClock() {
-  const n = new Date();
-  const h=n.getHours()%12||12, m=String(n.getMinutes()).padStart(2,'0'), s=String(n.getSeconds()).padStart(2,'0');
-  document.getElementById('clock').textContent = `${h}:${m}:${s} ${n.getHours()>=12?'PM':'AM'}`;
-}
-
-function updateProgress() {
-  const fill = document.getElementById('pfill');
-  if (!fill) return;
-  const now = getNow();
-  const live = SCHEDULE.find(s => now >= s.startMin && now < s.endMin);
-  if (live) fill.style.width = Math.min(100,((now-live.startMin)/(live.endMin-live.startMin))*100)+'%';
-}
-
-function downloadSchedule() {
-  let txt = `FLM TV — Channel 26.5 Las Vegas & Worldwide\nSchedule — ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}\n${'═'.repeat(60)}\n\n`;
-  SCHEDULE.forEach(s => { if (s.type!=='ad') txt += `${s.startLabel.padEnd(12)} ${s.name}\n`; });
-  txt += `\n${'─'.repeat(60)}\nWatch Live: FLMTV.com | Channel 26.5 Las Vegas\n`;
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([txt],{type:'text/plain'}));
-  a.download = `FLM-TV-Schedule-${new Date().toISOString().slice(0,10)}.txt`;
-  a.click();
+function tick() {
+  const d = new Date();
+  const h = d.getHours() % 12 || 12, m = String(d.getMinutes()).padStart(2,'0'), s = String(d.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m}:${s} ${d.getHours()>=12?'PM':'AM'}`;
+  const pf = document.getElementById('pf');
+  if (pf) { const t=now(), live=S.find(s=>t>=s.start&&t<s.end); if(live) pf.style.width=Math.min(100,((t-live.start)/(live.end-live.start))*100)+'%'; }
 }
 
 document.getElementById('heroDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
 render();
-updateClock();
-setInterval(updateClock, 1000);
-setInterval(updateProgress, 5000);
+jumpToNow();
+setInterval(tick, 1000);
 setInterval(render, 30000);
 </script>
 </body>
