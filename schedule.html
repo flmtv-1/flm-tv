@@ -118,15 +118,15 @@ const ITEMS = [
 {"t":"10:59","n":"Gilligan's Island S02E12","d":1518,"type":"show"},
 {"t":"11:24","n":"Mister Ed S01E07 Ed the Lover","d":1326,"type":"show"},
 {"t":"11:46","n":"Leave it to Beaver","d":1539,"type":"show"},
-{"t":"11:37","n":"Bewitched","d":1521,"type":"show"},
-{"t":"12:02","n":"Bewitched 2","d":1521,"type":"show"},
-{"t":"13:21","n":"VoteScottBlack.com","d":30,"type":"ad"},
-{"t":"13:21","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
-{"t":"13:21","n":"LallyForNV.com","d":30,"type":"ad"},
-{"t":"13:21","n":"Lenna4NV.com","d":30,"type":"ad"},
-{"t":"13:21","n":"Lance4Judge.com","d":32,"type":"ad"},
-{"t":"12:30","n":"Andy Griffith","d":1537,"type":"show"},
-{"t":"12:56","n":"Andy Griffith 2","d":1503,"type":"show"},
+{"t":"12:12","n":"Bewitched","d":1521,"type":"show"},
+{"t":"12:37","n":"Bewitched 2","d":1521,"type":"show"},
+{"t":"13:02","n":"VoteScottBlack.com","d":30,"type":"ad"},
+{"t":"13:03","n":"JudgeMaryPerry.com","d":14,"type":"ad"},
+{"t":"13:03","n":"LallyForNV.com","d":30,"type":"ad"},
+{"t":"13:04","n":"Lenna4NV.com","d":30,"type":"ad"},
+{"t":"13:05","n":"Lance4Judge.com","d":32,"type":"ad"},
+{"t":"13:06","n":"Andy Griffith","d":1800,"type":"show"},
+{"t":"13:36","n":"Andy Griffith 2","d":1503,"type":"show"},
 {"t":"14:01","n":"Boxer","d":135,"type":"ad"},
 {"t":"14:03","n":"The Twilight Zone","d":1570,"type":"show"},
 {"t":"14:29","n":"The Twilight Zone 2","d":1557,"type":"show"},
@@ -181,7 +181,7 @@ function build(items) {
   return items.map((s, i) => {
     const [h, m] = s.t.split(':').map(Number);
     const minOfDay = h * 60 + m;
-    if (i > 0 && minOfDay < prevMin - 360) dayOffset += 1440;
+    if (i > 0 && minOfDay < prevMin - 30) dayOffset += 1440;
     prevMin = minOfDay;
     const start = dayOffset + minOfDay;
     const end = start + s.d / 60;
