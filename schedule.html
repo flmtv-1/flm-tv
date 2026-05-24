@@ -352,8 +352,6 @@ function updateProgress() {
 
 document.getElementById('heroDate').textContent =
   new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-
-// Use hardcoded schedule only — Firebase override removed to prevent stale data
 renderSchedule();
 jumpToNow();
 updateClock();
@@ -375,17 +373,6 @@ setInterval(renderSchedule,60000);
   function findBest(cur,all,dir){var cr=cur.getBoundingClientRect(),cx=cr.left+cr.width/2,cy=cr.top+cr.height/2;var cands=all.filter(el=>{if(el===cur)return false;var r=el.getBoundingClientRect(),ex=r.left+r.width/2,ey=r.top+r.height/2;if(dir==='right')return ex>cr.right-10;if(dir==='left')return ex<cr.left+10;if(dir==='down')return ey>cr.bottom-10;if(dir==='up')return ey<cr.top+10;});if(!cands.length)return null;var best=null,bs=Infinity;cands.forEach(el=>{var r=el.getBoundingClientRect(),dx=(r.left+r.width/2)-cx,dy=(r.top+r.height/2)-cy,p=(dir==='right'||dir==='left')?Math.abs(dx):Math.abs(dy),s=(dir==='right'||dir==='left')?Math.abs(dy):Math.abs(dx),score=p+s*0.3;if(score<bs){bs=score;best=el;}});return best;}
   document.addEventListener('keydown',function(e){var all=getFocusable();if(!all.length)return;var focused=document.activeElement,inList=all.indexOf(focused)>=0;if(!inList){if(['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)){e.preventDefault();var lc=document.getElementById('live-now-card');if(lc){lc.focus();lc.scrollIntoView({block:'center'});}else{all[0].focus();}}return;}var dir={ArrowRight:'right',ArrowLeft:'left',ArrowDown:'down',ArrowUp:'up'}[e.key];if(dir){e.preventDefault();var next=findBest(focused,all,dir);if(next){next.focus();next.scrollIntoView({behavior:'smooth',block:'center'});}else if(dir==='up'){window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{all[0].focus();},400);}}if(e.key==='Backspace'||e.key==='Escape'){e.preventDefault();window.location.href='home.html';}},true);
 })();
-</script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script>
-firebase.initializeApp({
-  apiKey:"AIzaSyB-w-zzfEzKtRFPRyHV9Z0MK1XDFO0KLe4",
-  databaseURL:"https://flmtv-site-counter-default-rtdb.firebaseio.com",
-  projectId:"flmtv-site-counter",
-  appId:"1:906671731945:web:8d5a74d15c7a39a17a28f7"
-});
-const schedDB = firebase.database();
 </script>
 </body>
 </html>
