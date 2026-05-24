@@ -143,80 +143,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 // ── TODAY'S SCHEDULE ─────────────────────────────────────────────────
 // startTime = actual broadcast time (HH:MM), duration = seconds
 const TODAY_SCHEDULE = [
-  {t:"07:28",n:"Sesame Street 2",d:1558,cat:"kids"},
-  {t:"07:54",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"07:54",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"07:55",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"07:55",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"07:56",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"07:56",n:"Super Why",d:1620,cat:"kids"},
-  {t:"08:23",n:"Ready Jet Go!",d:1591,cat:"kids"},
-  {t:"08:49",n:"Nature Cat",d:1441,cat:"kids"},
-  {t:"09:13",n:"FLMTV.com/KidsCorner",d:17,cat:"ad"},
-  {t:"09:13",n:"Snail-logo1-Z",d:15,cat:"ad"},
-  {t:"09:04",n:"The Monkees 207 Hillbilly Honeymoon",d:1505,cat:"show"},
-  {t:"10:04",n:"The Dick Van Dyke Show S02E06",d:1507,cat:"show"},
-  {t:"10:29",n:"Get Smart S01E13",d:1523,cat:"show"},
-  {t:"10:54",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"10:55",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"10:56",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"10:57",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"10:58",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"10:59",n:"Gilligan's Island S02E12",d:1518,cat:"show"},
-  {t:"11:24",n:"Mister Ed S01E07 Ed the Lover",d:1326,cat:"show"},
-  {t:"11:46",n:"Leave it to Beaver",d:1539,cat:"show"},
-  {t:"11:37",n:"Bewitched",d:1521,cat:"show"},
-  {t:"12:02",n:"Bewitched 2",d:1521,cat:"show"},
-  {t:"12:27",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"12:27",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"12:27",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"12:28",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"12:28",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"12:29",n:"Andy Griffith",d:1537,cat:"show"},
-  {t:"12:55",n:"Andy Griffith 2",d:1503,cat:"show"},
-  {t:"13:20",n:"Boxer",d:135,cat:"ad"},
-  {t:"13:29",n:"The Twilight Zone",d:1570,cat:"show"},
-  {t:"13:55",n:"The Twilight Zone 2",d:1557,cat:"show"},
-  {t:"14:21",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"14:21",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"14:22",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"14:22",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"14:23",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"14:23",n:"SheBoujay.com",d:60,cat:"ad"},
-  {t:"14:24",n:"What's Happening S01E03",d:1502,cat:"show"},
-  {t:"14:49",n:"Good Times S05E16 Where There's Smoke",d:1540,cat:"show"},
-  {t:"15:15",n:"Sanford and Son Season 4",d:1516,cat:"show"},
-  {t:"15:40",n:"The Jeffersons S06E21 The Loan",d:1495,cat:"show"},
-  {t:"16:05",n:"FLM TV Tag",d:21,cat:"ad"},
-  {t:"16:05",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"16:06",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"16:06",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"16:07",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"16:07",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"16:08",n:"Schoolhouse Rock 1",d:185,cat:"kids"},
-  {t:"16:11",n:"Schoolhouse Rock 2",d:194,cat:"kids"},
-  {t:"16:14",n:"Schoolhouse Rock 3",d:186,cat:"kids"},
-  {t:"16:17",n:"Schoolhouse Rock 4",d:192,cat:"kids"},
-  {t:"16:20",n:"Aladdin (1992)",d:5439,cat:"movie"},
-  {t:"17:51",n:"Here's Lucy",d:1549,cat:"show"},
-  {t:"18:17",n:"Zaina Juliette Show",d:1642,cat:"flm"},
-  {t:"18:44",n:"SheBoujay.com",d:60,cat:"ad"},
-  {t:"18:45",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"18:46",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"18:46",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"18:47",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"18:47",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"18:48",n:"Louisiana Chefs",d:335,cat:"show"},
-  {t:"18:54",n:"Boxer",d:135,cat:"ad"},
-  {t:"18:56",n:"Unfortunate Events 6",d:3159,cat:"show"},
-  {t:"19:49",n:"Achy Breaky Hearts",d:7140,cat:"movie"},
-  {t:"21:48",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"21:49",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"21:49",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"21:50",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"21:50",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"21:51",n:"Let Me In",d:6947,cat:"movie"},
-  {t:"23:47",n:"The Silence of the Lambs",d:7111,cat:"movie"},
+  // ── YESTERDAY ENDING (overnight into today) ───────────────────────
   {t:"01:46",n:"VoteScottBlack.com",d:30,cat:"ad"},
   {t:"01:46",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
   {t:"01:46",n:"LallyForNV.com",d:30,cat:"ad"},
@@ -231,6 +158,7 @@ const TODAY_SCHEDULE = [
   {t:"05:57",n:"Lance4Judge.com",d:32,cat:"ad"},
   {t:"05:57",n:"Lenna4NV.com",d:30,cat:"ad"},
   {t:"05:58",n:"Shrek Forever After",d:5587,cat:"movie"},
+  // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
   {t:"07:31",n:"Charlie Brown",d:1457,cat:"kids"},
   {t:"07:55",n:"Sesame Street 1",d:1558,cat:"kids"},
   {t:"08:21",n:"Sesame Street 2",d:1558,cat:"kids"},
@@ -242,7 +170,8 @@ const TODAY_SCHEDULE = [
   {t:"10:37",n:"LallyForNV.com",d:30,cat:"ad"},
   {t:"10:37",n:"Lenna4NV.com",d:30,cat:"ad"},
   {t:"10:38",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"10:38",n:"Peter Pan",d:4603,cat:"movie"}
+  {t:"10:38",n:"Peter Pan",d:4603,cat:"movie"},
+  // ── ADD TODAY'S AFTERNOON/EVENING SHOWS BELOW THIS LINE ──────────
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────
@@ -305,7 +234,9 @@ function renderSchedule() {
     `<div class="time-block-header"><div class="time-block-label">${date}</div><div class="time-block-line"></div></div>`
   );
 
-  let liveRendered = false;
+  // Find the SINGLE live show (first match only) — prevents double highlight bug
+  const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
+
   const airedItems = TODAY_SCHEDULE.filter(s => getStatus(s)==='aired');
   const keepAired = new Set(airedItems.slice(-5).map(s=>s.t+s.n));
 
@@ -320,8 +251,9 @@ function renderSchedule() {
     const status = getStatus(s);
     if (status==='aired' && !keepAired.has(s.t+s.n)) return;
 
-    const isLive = status==='live';
-    const isAired = status==='aired';
+    // Only the ONE designated live show gets highlighted — all others stay upcoming/aired
+    const isLive = liveShow && s.t === liveShow.t && s.n === liveShow.n;
+    const isAired = !isLive && status==='aired';
     const isAd = s.cat==='ad';
     const isMovie = s.cat==='movie';
     const isKids = s.cat==='kids';
@@ -343,8 +275,7 @@ function renderSchedule() {
     ].filter(Boolean).join(' ');
 
     const pct = isLive ? getProgress(s) : 0;
-    const liveId = (isLive && !liveRendered) ? 'id="live-now-card"' : '';
-    if (isLive) liveRendered = true;
+    const liveId = isLive ? 'id="live-now-card"' : '';
 
     wrap.insertAdjacentHTML('beforeend', `
       <div class="${cardClass}" ${liveId} data-filter="${filterData}" tabindex="0">
@@ -422,21 +353,9 @@ function updateProgress() {
 document.getElementById('heroDate').textContent =
   new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
 
-// Load schedule from Firebase, fall back to hardcoded if unavailable
-if (typeof firebase !== 'undefined') {
-  schedDB.ref('schedule/items').once('value', (snap) => {
-    const data = snap.val();
-    if (data && data.length) {
-      TODAY_SCHEDULE.length = 0;
-      data.forEach(item => TODAY_SCHEDULE.push(item));
-    }
-    renderSchedule();
-    jumpToNow();
-  });
-} else {
-  renderSchedule();
-  jumpToNow();
-}
+// Use hardcoded schedule only — Firebase override removed to prevent stale data
+renderSchedule();
+jumpToNow();
 updateClock();
 setInterval(updateClock,1000);
 setInterval(updateProgress,10000);
