@@ -143,21 +143,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 // ── TODAY'S SCHEDULE ─────────────────────────────────────────────────
 // startTime = actual broadcast time (HH:MM), duration = seconds
 const TODAY_SCHEDULE = [
-  // ── YESTERDAY ENDING (overnight into today) ───────────────────────
-  {t:"01:46",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"01:46",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"01:46",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"01:47",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"01:47",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"01:48",n:"Love Complex",d:2767,cat:"movie"},
-  {t:"02:34",n:"Equilibrium",d:6422,cat:"movie"},
-  {t:"04:21",n:"Ace Ventura 2",d:5643,cat:"movie"},
-  {t:"05:55",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"05:56",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"05:56",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"05:57",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"05:57",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"05:58",n:"Shrek Forever After",d:5587,cat:"movie"},
+  // ── YESTERDAY ENDING (overnight into today) — already aired ──────
+  {t:"01:46",n:"VoteScottBlack.com",d:30,cat:"ad",phase:"yesterday"},
+  {t:"01:46",n:"JudgeMaryPerry.com",d:14,cat:"ad",phase:"yesterday"},
+  {t:"01:46",n:"LallyForNV.com",d:30,cat:"ad",phase:"yesterday"},
+  {t:"01:47",n:"Lenna4NV.com",d:30,cat:"ad",phase:"yesterday"},
+  {t:"01:47",n:"Lance4Judge.com",d:32,cat:"ad",phase:"yesterday"},
+  {t:"01:48",n:"Love Complex",d:2767,cat:"movie",phase:"yesterday"},
+  {t:"02:34",n:"Equilibrium",d:6422,cat:"movie",phase:"yesterday"},
+  {t:"04:21",n:"Ace Ventura 2",d:5643,cat:"movie",phase:"yesterday"},
+  {t:"05:55",n:"VoteScottBlack.com",d:30,cat:"ad",phase:"yesterday"},
+  {t:"05:56",n:"JudgeMaryPerry.com",d:14,cat:"ad",phase:"yesterday"},
+  {t:"05:56",n:"LallyForNV.com",d:30,cat:"ad",phase:"yesterday"},
+  {t:"05:57",n:"Lance4Judge.com",d:32,cat:"ad",phase:"yesterday"},
+  {t:"05:57",n:"Lenna4NV.com",d:30,cat:"ad",phase:"yesterday"},
+  {t:"05:58",n:"Shrek Forever After",d:5587,cat:"movie",phase:"yesterday"},
   // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
   {t:"07:31",n:"Charlie Brown",d:1457,cat:"kids"},
   {t:"07:55",n:"Sesame Street 1",d:1558,cat:"kids"},
@@ -170,53 +170,51 @@ const TODAY_SCHEDULE = [
   {t:"10:37",n:"Lenna4NV.com",d:30,cat:"ad"},
   {t:"10:38",n:"Lance4Judge.com",d:32,cat:"ad"},
   {t:"10:38",n:"Peter Pan",d:4603,cat:"movie"},
-  // ── AFTERNOON / EVENING ──────────────────────────────────────────
-  {t:"11:54",n:"Schoolhouse Rock 1",d:195,cat:"kids"},
-  {t:"11:57",n:"Schoolhouse Rock 2",d:183,cat:"kids"},
-  {t:"12:00",n:"Schoolhouse Rock 3",d:192,cat:"kids"},
-  {t:"12:03",n:"Schoolhouse Rock 4",d:188,cat:"kids"},
-  {t:"12:06",n:"Little Rascals 77",d:653,cat:"show"},
-  {t:"12:17",n:"Little Rascals 78",d:653,cat:"show"},
-  {t:"12:28",n:"Little Rascals 73",d:1301,cat:"show"},
-  {t:"12:49",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"12:49",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"12:49",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"12:49",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"12:49",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"12:49",n:"Leave it to Beaver",d:1544,cat:"show"},
-  {t:"13:14",n:"Three Stooges",d:1085,cat:"show"},
-  {t:"13:32",n:"Tinker Bell-Lost Treasure",d:4814,cat:"movie"},
-  {t:"14:52",n:"Zaina Juliette Show",d:1712,cat:"flm"},
-  {t:"15:20",n:"GladiusTheShow.net",d:84,cat:"ad"},
-  {t:"15:21",n:"Locals in Las Vegas",d:1709,cat:"show"},
-  {t:"15:49",n:"Herbie- Monte Carlo",d:6295,cat:"movie"},
-  {t:"17:33",n:"Back to the Future",d:6949,cat:"movie"},
-  {t:"19:28",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"19:28",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"19:28",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"19:28",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"19:28",n:"Lenna4NV.com",d:30,cat:"ad"},
-  // ── EVENING / OVERNIGHT ─────────────────────────────────────────
-  {t:"19:30",n:"FLMTV.com",d:12,cat:"ad"},
-  {t:"19:30",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"19:30",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"19:30",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"19:30",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"19:30",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"19:30",n:"O.Brother.Where.Art.Thou",d:6429,cat:"movie"},
-  {t:"21:17",n:"The.Wiz.",d:8052,cat:"movie"},
-  {t:"23:31",n:"VoteScottBlack.com",d:30,cat:"ad"},
-  {t:"23:31",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
-  {t:"23:31",n:"LallyForNV.com",d:30,cat:"ad"},
-  {t:"23:31",n:"Lenna4NV.com",d:30,cat:"ad"},
-  {t:"23:31",n:"Lance4Judge.com",d:32,cat:"ad"},
-  {t:"23:31",n:"Boxer",d:135,cat:"ad"},
-  {t:"23:33",n:"Misery",d:6445,cat:"movie"},
-  {t:"01:20",n:"Edward Scissorhands",d:6299,cat:"movie"},
-  {t:"03:04",n:"The Twilight Zone",d:1554,cat:"show"},
-  {t:"03:29",n:"The Twilight Zone 2",d:1555,cat:"show"},
-  {t:"03:54",n:"Ace Ventura 2",d:5643,cat:"movie"},
-  // ── ADD MORE SHOWS BELOW ─────────────────────────────────────────
+  // ── AFTERNOON / EVENING / OVERNIGHT ─────────────────────────────
+  {t:"12:40",n:"Serving up Science",d:316,cat:"show"},
+  {t:"12:45",n:"Andy Griffith",d:1536,cat:"show"},
+  {t:"13:10",n:"Andy Griffith 2",d:1537,cat:"show"},
+  {t:"13:35",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"13:35",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"13:35",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"13:35",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"13:35",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"13:35",n:"Leave it to Beaver",d:1544,cat:"show"},
+  {t:"14:00",n:"Three Stooges",d:1085,cat:"show"},
+  {t:"14:18",n:"Tinker Bell-Lost Treasure",d:4814,cat:"movie"},
+  {t:"15:38",n:"FLMTV.com",d:12,cat:"ad"},
+  {t:"15:38",n:"Zaina Juliette Show",d:1712,cat:"flm"},
+  {t:"16:06",n:"SheBoujay.com",d:60,cat:"ad"},
+  {t:"16:07",n:"GladiusTheShow.net",d:84,cat:"ad"},
+  {t:"16:08",n:"Boxer",d:135,cat:"ad"},
+  {t:"16:10",n:"Locals in Las Vegas",d:1709,cat:"show"},
+  {t:"16:38",n:"Herbie- Monte Carlo",d:6295,cat:"movie"},
+  {t:"18:22",n:"Back to the Future",d:6949,cat:"movie"},
+  {t:"20:17",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"20:17",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"20:17",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"20:17",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"20:17",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"20:17",n:"The Lost World",d:7726,cat:"movie"},
+  {t:"22:25",n:"FLMTV.com",d:12,cat:"ad"},
+  {t:"22:25",n:"LallyForNV.com",d:30,cat:"ad"},
+  {t:"22:25",n:"JudgeMaryPerry.com",d:14,cat:"ad"},
+  {t:"22:25",n:"Lance4Judge.com",d:32,cat:"ad"},
+  {t:"22:25",n:"Lenna4NV.com",d:30,cat:"ad"},
+  {t:"22:25",n:"VoteScottBlack.com",d:30,cat:"ad"},
+  {t:"22:25",n:"O.Brother.Where.Art.Thou",d:6429,cat:"movie"},
+  {t:"00:12",n:"The.Wiz.",d:8052,cat:"movie",phase:"tomorrow"},
+  {t:"02:26",n:"VoteScottBlack.com",d:30,cat:"ad",phase:"tomorrow"},
+  {t:"02:26",n:"JudgeMaryPerry.com",d:14,cat:"ad",phase:"tomorrow"},
+  {t:"02:26",n:"LallyForNV.com",d:30,cat:"ad",phase:"tomorrow"},
+  {t:"02:26",n:"Lenna4NV.com",d:30,cat:"ad",phase:"tomorrow"},
+  {t:"02:26",n:"Lance4Judge.com",d:32,cat:"ad",phase:"tomorrow"},
+  {t:"02:26",n:"Boxer",d:135,cat:"ad",phase:"tomorrow"},
+  {t:"02:28",n:"Misery",d:6445,cat:"movie",phase:"tomorrow"},
+  {t:"04:15",n:"Edward Scissorhands",d:6299,cat:"movie",phase:"tomorrow"},
+  {t:"05:59",n:"The Twilight Zone",d:1554,cat:"show",phase:"tomorrow"},
+  {t:"06:24",n:"The Twilight Zone 2",d:1555,cat:"show"},
+  {t:"06:49",n:"Ace Ventura 2",d:5643,cat:"movie"},
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────
@@ -232,10 +230,21 @@ function toMin(t) {
 
 function getStatus(show) {
   const now = nowMin();
+  // phase:"yesterday" = overnight shows that already aired this morning — always aired
+  if (show.phase === 'yesterday') return 'aired';
+  // phase:"tomorrow" = overnight shows airing tonight/tomorrow morning
+  if (show.phase === 'tomorrow') {
+    const start = toMin(show.t);
+    const end = start + show.d/60;
+    if (now < 360) {
+      if (now >= start && now < end) return 'live';
+      if (now >= end) return 'aired';
+    }
+    return 'upcoming';
+  }
+  // Normal shows
   const start = toMin(show.t);
   const end = start + show.d/60;
-  // Shows after midnight (00:xx - 05:xx): if current time is evening, they're upcoming
-  if (start < 360 && now > 720) return 'upcoming';
   if (now >= start && now < end) return 'live';
   if (now >= end) return 'aired';
   return 'upcoming';
