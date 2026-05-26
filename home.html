@@ -5668,10 +5668,11 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     // Parse URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const shouldOpenChat = urlParams.get('openChat') === 'true';
+    const shouldOpenAI   = urlParams.get('panel') === 'ai';
     const movieId = urlParams.get('movieId');
     const movieTitle = urlParams.get('movieTitle');
     
-    console.log('🎬 Chat auto-switch check:', { shouldOpenChat, movieId, movieTitle });
+    console.log('🎬 Chat auto-switch check:', { shouldOpenChat, shouldOpenAI, movieId, movieTitle });
     
     // Wait for page to fully load
     window.addEventListener('load', function() {
@@ -5691,6 +5692,16 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                 console.log('💬 Auto-opening chat panel');
                 if (typeof openPanel === 'function') {
                     openPanel('chatPanel');
+                } else {
+                    console.error('❌ openPanel function not found');
+                }
+            }
+
+            // If panel=ai parameter is present, open the Zaina AI panel
+            if (shouldOpenAI) {
+                console.log('🤖 Auto-opening Zaina AI panel');
+                if (typeof openPanel === 'function') {
+                    openPanel('aiPanel');
                 } else {
                     console.error('❌ openPanel function not found');
                 }

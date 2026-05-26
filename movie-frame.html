@@ -109,11 +109,7 @@
         top: 0 !important;
         bottom: auto !important;
       }
-      #jellyfinFrame {
-        top: 38px !important;
-        height: calc(100% - 38px - 60px) !important;
-        bottom: 60px !important;
-      }
+      /* iframe height set by bottom-nav section below (78px) */
     }
 
 
@@ -167,6 +163,68 @@
         height: calc(100% - 38px - 78px) !important;
       }
     }
+
+    /* ── FLM Overlay Panels (Chat / Zaina AI) ─────────────────── */
+    .flm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999998;
+      flex-direction: column;
+      background: rgba(0,0,0,0.7);
+    }
+    .flm-overlay.open { display: flex; }
+
+    .flm-panel {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 88%;
+      background: #111;
+      border-top: 3px solid var(--gold);
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.32,1,0.58,1);
+    }
+    .flm-overlay.open .flm-panel {
+      transform: translateY(0);
+    }
+    .flm-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: #000;
+      border-bottom: 1px solid #333;
+      flex-shrink: 0;
+    }
+    .flm-panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+    .flm-panel-close {
+      background: #222;
+      border: 2px solid #555;
+      color: #fff;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .flm-panel-close:hover { background: #dc2626; border-color: #dc2626; }
+    .flm-panel-iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
   </style>
 </head>
 <body>
@@ -185,10 +243,10 @@
   <button onclick="window.location.href='kids-corner.html'" title="Kids Corner" tabindex="0" style="padding:0;border-radius:50%;border:3px solid #4A90E2;background:transparent;width:44px;height:44px;overflow:hidden;cursor:pointer;flex-shrink:0;">
     <img src="assets/images/kids-avatar.png" alt="Kids" style="width:44px;height:44px;object-fit:cover;border-radius:50%;display:block;">
   </button>
-  <button onclick="window.location.href='home.html#chat'" title="Chat" tabindex="0" style="padding:0;border-radius:50%;border:none;background:#22c55e;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:white;flex-shrink:0;">
+  <button onclick="openPanel('chat')" title="Chat" tabindex="0" style="padding:0;border-radius:50%;border:none;background:#22c55e;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:white;flex-shrink:0;">
     💬
   </button>
-  <button onclick="window.location.href='home.html#ai'" title="Zaina AI" tabindex="0" style="padding:0;border-radius:50%;border:3px solid #22c55e;background:transparent;width:44px;height:44px;overflow:hidden;cursor:pointer;flex-shrink:0;">
+  <button onclick="openPanel('ai')" title="Zaina AI" tabindex="0" style="padding:0;border-radius:50%;border:3px solid #22c55e;background:transparent;width:44px;height:44px;overflow:hidden;cursor:pointer;flex-shrink:0;">
     <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:44px;height:44px;object-fit:cover;border-radius:50%;display:block;">
   </button>
   <a class="flm-btn btn-vault" href="#" onclick="document.getElementById('jellyfinFrame').src='https://flmtv.com/jellyfin/web/index.html?api_key=62131ee22c0141c6b651be75a7444350#/home'; return false;">
@@ -496,7 +554,7 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
          onerror="this.outerHTML='<span style=\'font-size:24px;line-height:1;\'>👧</span>'">
     Kids
   </a>
-  <a class="fnav-item" href="home.html">
+  <a class="fnav-item" href="#" onclick="openPanel('chat'); return false;">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
     Chat
   </a>
@@ -508,11 +566,59 @@ document.addEventListener('webkitfullscreenchange', onFullscreenChange);
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
     Schedule
   </a>
-  <a class="fnav-item" href="home.html">
+  <a class="fnav-item" href="#" onclick="openPanel('ai'); return false;">
     <img src="https://flmtv.com/assets/images/z-ai-avatar2.png" 
          style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #22c55e;"
          onerror="this.style.display='none'">
     Zaina AI
   </a>
 </div>
+<!-- ── FLM Chat Panel Overlay ─────────────────────────────── -->
+<div id="panelChat" class="flm-overlay" onclick="if(event.target===this)closePanel('chat')">
+  <div class="flm-panel">
+    <div class="flm-panel-header">
+      <span class="flm-panel-title">💬 FLM LIVE CHAT</span>
+      <button class="flm-panel-close" onclick="closePanel('chat')">✕</button>
+    </div>
+    <iframe class="flm-panel-iframe" id="chatFrame" src="" allow="microphone; camera" title="FLM Chat"></iframe>
+  </div>
+</div>
+
+<!-- ── Zaina AI Panel Overlay ─────────────────────────────── -->
+<div id="panelAi" class="flm-overlay" onclick="if(event.target===this)closePanel('ai')">
+  <div class="flm-panel">
+    <div class="flm-panel-header">
+      <span class="flm-panel-title">🤖 ZAINA AI</span>
+      <button class="flm-panel-close" onclick="closePanel('ai')">✕</button>
+    </div>
+    <iframe class="flm-panel-iframe" id="aiFrame" src="" allow="microphone; camera" title="Zaina AI"></iframe>
+  </div>
+</div>
+
+<script>
+// ── Overlay panel open/close ──────────────────────────────────
+const PANEL_URLS = {
+  chat: 'home.html?panel=chat',   // home.html loads and auto-opens chat
+  ai:   'home.html?panel=ai'      // home.html loads and auto-opens AI
+};
+
+function openPanel(type) {
+  const overlay = document.getElementById('panel' + (type === 'chat' ? 'Chat' : 'Ai'));
+  const frame   = document.getElementById(type === 'chat' ? 'chatFrame' : 'aiFrame');
+  if (!overlay || !frame) return;
+  // Only load the iframe once (avoid reload on re-open)
+  if (!frame.src || frame.src === window.location.href) {
+    frame.src = PANEL_URLS[type];
+  }
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePanel(type) {
+  const overlay = document.getElementById('panel' + (type === 'chat' ? 'Chat' : 'Ai'));
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
 </body></html>

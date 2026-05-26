@@ -2,7 +2,7 @@
 FLM TV Schedule Updater
 -----------------------
 Reads FLM-TV-Schedule.json exported from the FLM Master Scheduler
-and injects the schedule data into schedule.html
+and injects OR APPENDS the schedule data into schedule.html
 
 Run via Update-FLM-Schedule.bat
 """
@@ -23,7 +23,7 @@ def get_cat(item):
     if c == "movie":                   return "movie"
     if c == "kids":                    return "kids"
     if c == "flm":                     return "flm"
-    return "show"
+    return ""
 
 # ── LOAD JSON ───────────────────────────────────────────────────────────
 def load_schedule():
@@ -36,9 +36,6 @@ def load_schedule():
     with open(JSON_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # Support two formats:
-    # 1. Flat list: [{startTime, name, duration, category}, ...]
-    # 2. Date-keyed: {"2026-05-23": [...]}
     items = []
     if isinstance(data, list):
         items = data
@@ -47,7 +44,6 @@ def load_schedule():
         if today in data:
             items = data[today]
         else:
-            # Use the most recent date key
             keys = sorted(data.keys(), reverse=True)
             for k in keys:
                 if isinstance(data[k], list):
@@ -62,45 +58,32 @@ def load_schedule():
 
     return items
 
-# ── BUILD JS ARRAY ──────────────────────────────────────────────────────
-def build_js(items):
-    lines = []
-    for item in items:
-        t   = item.get("startTime") or item.get("t") or "00:00"
-        n   = (item.get("name") or item.get("n") or "Unknown").replace("'", "\\'")
-        d   = int(item.get("duration") or item.get("d") or 0)
-        cat = get_cat(item)
-        lines.append(f"  {{t:\"{t}\",n:\"{n}\",d:{d},cat:\"{cat}\"}}")
+# ── BUILD JS ENTRY ──────────────────────────────────────────────────────
+def item_to_js(item):
+    t   = item.get("startTime") or item.get("t") or "00:00"
+    n   = (item.get("name") or item.get("n") or "Unknown").replace("'", "\\'")
+    d   = int(item.get("duration") or item.get("d") or 0)
+    cat = get_cat(item)
+    return f'  {{t:"{t}",n:"{n}",d:{d},cat:"{cat}"}}'
 
-    return "const TODAY_SCHEDULE = [\n" + ",\n".join(lines) + "\n];"
+# ── GET EXISTING SCHEDULE FROM HTML ────────────────────────────────────
+def get_existing_items(html):
+    match = re.search(r'const TODAY_SCHEDULE = \[([\s\S]*?)\];', html)
+    if not match:
+        return []
+    block = match.group(1)
+    # Parse existing entries
+    existing = re.findall(r'\{t:"([^"]+)",n:"([^"]+)",d:(\d+),cat:"([^"]*)"\}', block)
+    return [{"t": t, "n": n, "d": int(d), "cat": cat} for t, n, d, cat in existing]
 
 # ── INJECT INTO HTML ────────────────────────────────────────────────────
-def inject(js_block):
-    if not os.path.exists(HTML_FILE):
-        print(f"\n  ERROR: Cannot find {HTML_FILE}")
-        input("\n  Press Enter to close...")
-        sys.exit(1)
-
-    with open(HTML_FILE, "r", encoding="utf-8") as f:
-        html = f.read()
-
+def inject(js_block, html):
     pattern = r"const TODAY_SCHEDULE = \[[\s\S]*?\];"
     if not re.search(pattern, html):
         print("  ERROR: Could not find TODAY_SCHEDULE in schedule.html.")
-        print("  Make sure you are using the correct schedule.html file.")
         input("\n  Press Enter to close...")
         sys.exit(1)
-
-    # Backup
-    shutil.copy(HTML_FILE, BACKUP_FILE)
-    print(f"  Backup saved: schedule.html.bak")
-
-    new_html = re.sub(pattern, js_block, html)
-
-    with open(HTML_FILE, "w", encoding="utf-8") as f:
-        f.write(new_html)
-
-    print(f"  schedule.html updated successfully!")
+    return re.sub(pattern, js_block, html)
 
 # ── MAIN ────────────────────────────────────────────────────────────────
 def main():
@@ -109,20 +92,59 @@ def main():
     print("    FLM TV — Schedule Updater")
     print("  ==========================================")
     print()
-
-    items = load_schedule()
-    print(f"  Loaded {len(items)} items from FLM-TV-Schedule.json")
-
-    js_block = build_js(items)
-    inject(js_block)
-
+    print("  Choose mode:")
+    print("  [1] APPEND  — Add new shows after last show in current schedule")
+    print("  [2] REPLACE — Replace entire schedule with new JSON")
     print()
-    print(f"  Done! {len(items)} items injected into schedule.html")
+    mode = input("  Enter 1 or 2: ").strip()
+
+    if mode not in ("1", "2"):
+        print("  Invalid choice. Exiting.")
+        input("\n  Press Enter to close...")
+        sys.exit(1)
+
+    new_items = load_schedule()
+    print(f"\n  Loaded {len(new_items)} items from FLM-TV-Schedule.json")
+
+    if not os.path.exists(HTML_FILE):
+        print(f"\n  ERROR: Cannot find {HTML_FILE}")
+        input("\n  Press Enter to close...")
+        sys.exit(1)
+
+    with open(HTML_FILE, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    if mode == "1":
+        # APPEND MODE — keep existing, add new after last entry
+        existing = get_existing_items(html)
+        print(f"  Found {len(existing)} existing items in schedule.html")
+        combined = existing + [{"t": i.get("startTime") or i.get("t","00:00"),
+                                 "n": (i.get("name") or i.get("n","")).replace("'","\\'"),
+                                 "d": int(i.get("duration") or i.get("d",0)),
+                                 "cat": get_cat(i)} for i in new_items]
+        lines = [f'  {{t:"{i["t"]}",n:"{i["n"]}",d:{i["d"]},cat:"{i["cat"]}"}}' for i in combined]
+        js_block = "const TODAY_SCHEDULE = [\n" + ",\n".join(lines) + "\n];"
+        total = len(combined)
+        print(f"  Combined total: {total} items")
+    else:
+        # REPLACE MODE
+        lines = [item_to_js(i) for i in new_items]
+        js_block = "const TODAY_SCHEDULE = [\n" + ",\n".join(lines) + "\n];"
+        total = len(new_items)
+
+    # Backup and write
+    shutil.copy(HTML_FILE, BACKUP_FILE)
+    print(f"  Backup saved: schedule.html.bak")
+
+    new_html = inject(js_block, html)
+    with open(HTML_FILE, "w", encoding="utf-8") as f:
+        f.write(new_html)
+
+    print(f"\n  Done! {total} items in schedule.html")
     print()
     print("  Upload schedule.html to your site to go live.")
     print()
 
-    # Optional GitHub push
     ans = input("  Push to GitHub now? (y/n): ").strip().lower()
     if ans == "y":
         os.system('cd /d "%s" && git add schedule.html && git commit -m "Schedule update %s" && git push' % (
