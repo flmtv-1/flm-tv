@@ -161,51 +161,27 @@ function toMin(t) {
   return h*60+m;
 }
 
-// Build cumulative positions once so shows NEVER jump backwards
-// Each show gets an absolute startMin that is always >= previous show's endMin
-(function buildPositions() {
-  let cursor = 0;
-  let firstSet = false;
-  TODAY_SCHEDULE.forEach(s => {
-    const hintMin = toMin(s.t);
-    // On first non-yesterday show, set cursor to its hint time
-    if (!firstSet && s.phase !== 'yesterday') {
-      cursor = hintMin;
-      firstSet = true;
-    }
-    // Always advance — never go back
-    const startMin = Math.max(hintMin, cursor);
-    s._start = startMin;
-    s._end = startMin + s.d/60;
-    cursor = s._end;
-  });
-})();
-
+// Simple straight clock comparison - no phases, no jumping
 function getStatus(show) {
-  // phase:yesterday = always aired
-  if (show.phase === 'yesterday') return 'aired';
   const now = nowMin();
-  // Handle overnight shows (tomorrow phase) - add 1440 if we're past midnight
-  let start = show._start;
-  let end = show._end;
-  if (show.phase === 'tomorrow') {
-    // If current time is before 6am, these shows are airing now
-    if (now < 360) {
-      if (now >= (start % 1440) && now < (end % 1440)) return 'live';
-      if (now >= (end % 1440)) return 'aired';
-    }
-    return 'upcoming';
-  }
-  if (now >= start && now < end) return 'live';
-  if (now >= end) return 'aired';
+  const start = toMin(show.t);
+  const end = start + show.d/60;
+  // Handle overnight shows that cross midnight
+  const nowAdj = now < 6*60 ? now + 1440 : now;
+  const startAdj = start < 6*60 ? start + 1440 : start;
+  const endAdj = startAdj + show.d/60;
+  if (nowAdj >= startAdj && nowAdj < endAdj) return 'live';
+  if (nowAdj >= endAdj) return 'aired';
   return 'upcoming';
 }
 
 function getProgress(show) {
   const now = nowMin();
-  const start = show._start;
-  const end = show._end;
-  return Math.min(100, ((now - start)/(end - start))*100);
+  const nowAdj = now < 6*60 ? now + 1440 : now;
+  const start = toMin(show.t);
+  const startAdj = start < 6*60 ? start + 1440 : start;
+  const endAdj = startAdj + show.d/60;
+  return Math.min(100, ((nowAdj - startAdj)/(endAdj - startAdj))*100);
 }
 
 function fmt12(t) {
@@ -319,7 +295,7 @@ function downloadSchedule() {
 // ── OTHER FUNCTIONS ───────────────────────────────────────────────────
 function jumpToNow() {
   const el = document.getElementById('live-now-card');
-  if (!el) { alert('No show currently airing — check back later!'); return; }
+  if (!el) {  return; }
   el.scrollIntoView({behavior:'smooth',block:'center'});
   el.style.boxShadow='0 0 0 3px #00E676,0 0 40px rgba(0,230,118,0.35)';
   setTimeout(()=>{el.style.boxShadow='';},900);
