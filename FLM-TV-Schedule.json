@@ -245,24 +245,6 @@
     },
     {
       "startTime": "15:05",
-      "name": "Good Times ",
-      "path": "Z:\\#recycle\\SHOWS TO SORT-add\\Good Times 1974_1979  (Complete TV series in MP4 format)\\Good Times S06E01 (Florida's Homecoming - Pt1).mp4",
-      "duration": 1343.018957,
-      "inPoint": 0,
-      "outPoint": 1343.018957,
-      "category": ""
-    },
-    {
-      "startTime": "15:27",
-      "name": "Good Times 2",
-      "path": "Z:\\#recycle\\SHOWS TO SORT-add\\Good Times 1974_1979  (Complete TV series in MP4 format)\\Good Times S06E02 (Florida's Homecoming - Pt2).mp4",
-      "duration": 1343.066667,
-      "inPoint": 0,
-      "outPoint": 1343.066667,
-      "category": ""
-    },
-    {
-      "startTime": "15:49",
       "name": "Sanford and Son",
       "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 04\\Sanford and Son- (Season 4) Disc 2-A1_t02.mkv",
       "duration": 0,
@@ -271,12 +253,30 @@
       "category": ""
     },
     {
-      "startTime": "16:19",
+      "startTime": "15:35",
       "name": "The Jeffersons ",
       "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 6 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S06E23 The First Store.mkv",
       "duration": 1497.483,
       "inPoint": 0,
       "outPoint": 1497.483,
+      "category": ""
+    },
+    {
+      "startTime": "16:00",
+      "name": "Good Times ",
+      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 06\\Good Times S06E01 (Florida's Homecoming - Pt1).mp4",
+      "duration": 1343.018957,
+      "inPoint": 0,
+      "outPoint": 1343.018957,
+      "category": ""
+    },
+    {
+      "startTime": "16:22",
+      "name": "Good Times 2",
+      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 06\\Good Times S06E02 (Florida's Homecoming - Pt2).mp4",
+      "duration": 1343.066667,
+      "inPoint": 0,
+      "outPoint": 1343.066667,
       "category": ""
     },
     {
@@ -480,7 +480,7 @@
     {
       "startTime": "18:30",
       "name": "Zaina Juliette & Friends",
-      "path": "Z:\\#recycle\\MY STUFF\\DRIVE G files 2025\\Keith Commercials\\---ZJS with Chelsea Mac 90 Miles.mp4",
+      "path": "Y:\\Zaina-Files\\---ZJS with Chelsea Mac 90 Miles.mp4",
       "duration": 333.266271,
       "inPoint": 0,
       "outPoint": 333.266271,
@@ -641,15 +641,6 @@
     },
     {
       "startTime": "05:31",
-      "name": "Bruce Almighty ",
-      "path": "Y:\\#recycle\\MORE TO SORT\\Bruce Almighty.ia.mp4",
-      "duration": 6062.33551,
-      "inPoint": 0,
-      "outPoint": 6062.33551,
-      "category": ""
-    },
-    {
-      "startTime": "07:12",
       "name": "LallyForNV com",
       "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
       "duration": 30.046621,
@@ -658,7 +649,7 @@
       "category": ""
     },
     {
-      "startTime": "07:13",
+      "startTime": "05:32",
       "name": "JudgeMaryPerry com",
       "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
       "duration": 14.8148,
@@ -667,7 +658,7 @@
       "category": ""
     },
     {
-      "startTime": "07:13",
+      "startTime": "05:32",
       "name": "Lance4Judge com",
       "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
       "duration": 32.165467,
@@ -676,7 +667,7 @@
       "category": ""
     },
     {
-      "startTime": "07:14",
+      "startTime": "05:33",
       "name": "Lenna4NV com",
       "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
       "duration": 30.03,
@@ -685,7 +676,16 @@
       "category": ""
     },
     {
-      "startTime": "07:15",
+      "startTime": "05:34",
+      "name": "Flubber ia",
+      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2020\\sesame-street_202308\\Flubber.ia.mp4",
+      "duration": 5128.873833,
+      "inPoint": 0,
+      "outPoint": 5128.873833,
+      "category": ""
+    },
+    {
+      "startTime": "06:59",
       "name": "VoteScottBlack com",
       "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
       "duration": 30.03,
@@ -694,7 +694,7 @@
       "category": ""
     },
     {
-      "startTime": "07:16",
+      "startTime": "07:00",
       "name": "Sesame Street ",
       "path": "Y:\\KIDS WORLD-2\\sesame-street-s-42-e-05-shape-o-bots\\SEASON 42\\Sesame Street_S42E13_Siblings.ia.mp4",
       "duration": 3356.519833,
@@ -703,16 +703,16 @@
       "category": ""
     },
     {
-      "startTime": "08:12",
+      "startTime": "07:56",
       "name": "Sesame Street",
-      "path": "Y:\\#recycle\\KIDS WORLD-2\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5124 (April 22, 2021).mp4",
+      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5124 (April 22, 2021).mp4",
       "duration": 1559.024133,
       "inPoint": 0,
       "outPoint": 1559.024133,
       "category": ""
     },
     {
-      "startTime": "08:38",
+      "startTime": "08:22",
       "name": "NODDY",
       "path": "Y:\\KIDS WORLD-2\\Noddy\\SEASON 01\\NODDY_VOL017.mp4",
       "duration": 694.828161,
@@ -721,12 +721,21 @@
       "category": ""
     },
     {
-      "startTime": "08:50",
+      "startTime": "08:34",
       "name": "Super Why",
       "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 05\\Super Why!_S05E04_Dr_ Doolittle.ia.mp4",
       "duration": 1620.672,
       "inPoint": 0,
       "outPoint": 1620.672,
+      "category": ""
+    },
+    {
+      "startTime": "09:01",
+      "name": "Winnie the Pooh ",
+      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2020\\sesame-street_202308\\TNA of Winnie the Pooh S01E19 A Very, Very Large Animal + Fish Out of Water.mp4",
+      "duration": 1396.352,
+      "inPoint": 0,
+      "outPoint": 1396.352,
       "category": ""
     }
   ]
