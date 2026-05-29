@@ -140,7 +140,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <script>
-// ── TODAY'S SCHEDULE — Thursday May 28 2026 ──────────────────────────
+// ── TODAY'S SCHEDULE — Friday May 29 2026 ────────────────────────────
 const TODAY_SCHEDULE = [
   {t:"10:01",n:"Abbott and Costello ",d:1414,cat:""},
   {t:"10:25",n:"Get Smart ",d:1520,cat:""},
@@ -302,7 +302,7 @@ function renderSchedule() {
   const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
 
   const airedItems = TODAY_SCHEDULE.filter(s => getStatus(s)==='aired');
-  const keepAired = new Set(airedItems.slice(-5).map(s=>s.t+s.n));
+  const keepAired = new Set(airedItems.slice(-20).map(s=>s.t+s.n));
 
   let showCount=0, totalSec=0;
   TODAY_SCHEDULE.forEach(s => {
