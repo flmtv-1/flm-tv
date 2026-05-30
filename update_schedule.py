@@ -68,7 +68,7 @@ def item_to_js(item):
 
 # ── GET EXISTING SCHEDULE FROM HTML ────────────────────────────────────
 def get_existing_items(html):
-    match = re.search(r'const TODAY_SCHEDULE = \[([\s\S]*?)\];', html)
+    match = re.search(r'const TODAY_SCHEDULE = \[([\s\S]*?)\];(?=\s*\n)', html)
     if not match:
         return []
     block = match.group(1)
@@ -78,7 +78,7 @@ def get_existing_items(html):
 
 # ── INJECT INTO HTML ────────────────────────────────────────────────────
 def inject(js_block, html):
-    pattern = r"const TODAY_SCHEDULE = \[[\s\S]*?\];"
+    pattern = r"const TODAY_SCHEDULE = \[[\s\S]*?\];(?=\s*\n)"
     if not re.search(pattern, html):
         print("  ERROR: Could not find TODAY_SCHEDULE in schedule.html.")
         input("\n  Press Enter to close...")

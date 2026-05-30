@@ -1,741 +1,804 @@
 {
-  "2026-05-26": [
+  "2026-05-29": [
     {
-      "startTime": "09:46",
-      "name": "LM Elephant Tag 1080",
-      "path": "Y:\\CLIPS-FILLERS\\LM Elephant Tag 1080.mp4",
+      "startTime": "10:01",
+      "name": "Abbott and Costello ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\Abbot & Costello\\\\SEASON 01\\\\Abbott and Costello in Little Old Lady.ia.mp4",
+      "duration": 1414.256327,
+      "inPoint": 0,
+      "outPoint": 1414.256327,
+      "category": "show"
+    },
+    {
+      "startTime": "10:25",
+      "name": "Get Smart ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\Get Smart\\\\SEASON 01\\\\Get Smart S01E16 (Double Agent).ia.mp4",
+      "duration": 1520.683903,
+      "inPoint": 0,
+      "outPoint": 1520.683903,
+      "category": "show"
+    },
+    {
+      "startTime": "10:50",
+      "name": "Gilligan s Island ",
+      "path": "X:\\\\TV Clssics 2\\\\Gilligan Island\\\\Season 02\\\\Gilligan_s Island S02E19 Seer Gilligan.mkv",
+      "duration": 1520.32,
+      "inPoint": 0,
+      "outPoint": 1520.32,
+      "category": "show"
+    },
+    {
+      "startTime": "11:15",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": "promo"
+    },
+    {
+      "startTime": "11:16",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "11:17",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": "promo"
+    },
+    {
+      "startTime": "11:18",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": "promo"
+    },
+    {
+      "startTime": "11:18",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": "promo"
+    },
+    {
+      "startTime": "11:19",
+      "name": "Mister Ed ",
+      "path": "X:\\\\TV Clssics 2\\\\mister-ed-s-01\\\\SEASON 01\\\\Mister Ed S01E13 Ed the Tout.mp4",
+      "duration": 1533.073991,
+      "inPoint": 0,
+      "outPoint": 1533.073991,
+      "category": "show"
+    },
+    {
+      "startTime": "11:45",
+      "name": "Leave it to Beaver",
+      "path": "X:\\\\TV Clssics 2\\\\LEAVE IT TO BEAVER\\\\Leave It to Beaver (The Complete Series) [1957 - 1963]\\\\Season 1\\\\S01E22 - Perfect Father.ia.mp4",
+      "duration": 1554.219333,
+      "inPoint": 0,
+      "outPoint": 1554.219333,
+      "category": "show"
+    },
+    {
+      "startTime": "12:11",
+      "name": "Little Rascals ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\The Little Rascals - 80 Short Movies in MP4 format\\\\Little Rascals 61-80\\\\Little Rascals 71 (Pigskin Palooka).mp4",
+      "duration": 653.399989,
+      "inPoint": 0,
+      "outPoint": 653.399989,
+      "category": ""
+    },
+    {
+      "startTime": "12:22",
+      "name": "Little Rascals ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\The Little Rascals - 80 Short Movies in MP4 format\\\\Little Rascals 61-80\\\\Little Rascals 70 (Framing  Youth).mp4",
+      "duration": 652.533322,
+      "inPoint": 0,
+      "outPoint": 652.533322,
+      "category": "show"
+    },
+    {
+      "startTime": "12:33",
+      "name": "Charlie's Angels ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\Charlies Angeles\\\\SEASON 04\\\\Charlie's Angels S04e20 Harrigan's Angel.mkv",
+      "duration": 2940.792,
+      "inPoint": 0,
+      "outPoint": 2940.792,
+      "category": "show"
+    },
+    {
+      "startTime": "13:22",
+      "name": "Six Million Dollar Man ",
+      "path": "Y:\\\\AWESOME TV SHOWS-2\\\\The Six Million Dollar Man\\\\SEASON 02\\\\The Six Million Dollar Man S2 E30 - Look Alike.ia.mp4",
+      "duration": 3034.230467,
+      "inPoint": 0,
+      "outPoint": 3034.230467,
+      "category": "show"
+    },
+    {
+      "startTime": "14:13",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "14:14",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "14:14",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "14:15",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "14:16",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "14:17",
+      "name": "FLMTV.com",
+      "path": "Z:\\\\FLM TV GRAPHICS\\\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28.36,
+      "inPoint": 0,
+      "outPoint": 28.36,
+      "category": "promo"
+    },
+    {
+      "startTime": "14:17",
+      "name": "Whats Happening",
+      "path": "Y:\\\\AWESOME TV SHOWS-2\\\\WHATS HAPPENING!!\\\\SEASON-01\\\\Whats Happening S01E08.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": "show"
+    },
+    {
+      "startTime": "14:47",
+      "name": "Good Times ",
+      "path": "Z:\\\\#recycle\\\\SHOWS TO SORT-add\\\\Good Times 1974_1979  (Complete TV series in MP4 format)\\\\Good Times S06E07 (J.J. the Teacher.mp4",
+      "duration": 1465.033333,
+      "inPoint": 0,
+      "outPoint": 1465.033333,
+      "category": "show"
+    },
+    {
+      "startTime": "15:11",
+      "name": "Sanford and Son",
+      "path": "Y:\\\\AWESOME TV SHOWS-2\\\\SANFORD 2 fix\\\\Season 04\\\\Sanford and Son- (Season 4) Disc 2-A1_t05.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": "show"
+    },
+    {
+      "startTime": "15:41",
+      "name": "AshwaterProducts.com",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\Ashwater1-B.mp4",
+      "duration": 25.262993,
+      "inPoint": 0,
+      "outPoint": 25.262993,
+      "category": "commercial"
+    },
+    {
+      "startTime": "15:41",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": "promo"
+    },
+    {
+      "startTime": "15:42",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": "promo"
+    },
+    {
+      "startTime": "15:42",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": "promo"
+    },
+    {
+      "startTime": "15:43",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": "promo"
+    },
+    {
+      "startTime": "15:44",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": "promo"
+    },
+    {
+      "startTime": "15:45",
+      "name": "The Jeffersons",
+      "path": "Y:\\\\AWESOME TV SHOWS-2\\\\THE JEFFERSONS\\\\The Jeffersons 1975 Season 7 Complete AMZN WEBRip x264 [i_c]\\\\The Jeffersons S07E04 The Jeffersons Go to Hawaii (3).mkv",
+      "duration": 1480.554,
+      "inPoint": 0,
+      "outPoint": 1480.554,
+      "category": "show"
+    },
+    {
+      "startTime": "16:10",
+      "name": "The Jeffersons ",
+      "path": "Y:\\\\AWESOME TV SHOWS-2\\\\THE JEFFERSONS\\\\The Jeffersons 1975 Season 7 Complete AMZN WEBRip x264 [i_c]\\\\The Jeffersons S07E05 The Jeffersons Go to Hawaii (4).mkv",
+      "duration": 1496.981,
+      "inPoint": 0,
+      "outPoint": 1496.981,
+      "category": "show"
+    },
+    {
+      "startTime": "16:35",
+      "name": "FLMTV.com",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\LM Elephant Tag 1080.mp4",
+      "duration": 12.52,
+      "inPoint": 0,
+      "outPoint": 12.52,
+      "category": "promo"
+    },
+    {
+      "startTime": "16:35",
+      "name": "TARZAN II ",
+      "path": "X:\\\\_SORT-MOVIES\\\\FAMILY SHOWS MOVIES\\\\TARZAN II\\\\TARZAN II_ENGLISH.mkv",
+      "duration": 4291.5,
+      "inPoint": 0,
+      "outPoint": 4291.5,
+      "category": "movie"
+    },
+    {
+      "startTime": "17:47",
+      "name": "FLMTV.com",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\LM Elephant Tag 1080.mp4",
       "duration": 12.52,
       "inPoint": 0,
       "outPoint": 12.52,
       "category": ""
     },
     {
-      "startTime": "09:46",
-      "name": "Abbott & Costello in Las Vegas",
-      "path": "Y:\\CLASSIC TV-2\\Abbot & Costello\\SEASON 01\\Abbott and Costello in Las Vegas.ia.mp4",
-      "duration": 1406.988481,
-      "inPoint": 0,
-      "outPoint": 1406.988481,
-      "category": ""
-    },
-    {
-      "startTime": "10:09",
-      "name": "The Monkees",
-      "path": "Y:\\CLASSIC TV-2\\The-Monkees-Complete\\SEASON 05\\The Monkees 209 The Card Carrying Red Shoes.mp4",
-      "duration": 1502.772245,
-      "inPoint": 0,
-      "outPoint": 1502.772245,
-      "category": ""
-    },
-    {
-      "startTime": "10:34",
-      "name": "JudgeMaryPerry",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "10:34",
-      "name": "LallyForNV .com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
+      "startTime": "17:47",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
       "duration": 30.046621,
       "inPoint": 0,
       "outPoint": 30.046621,
-      "category": ""
+      "category": "promo"
     },
     {
-      "startTime": "10:35",
-      "name": "Lenna4NV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
-      "duration": 30.03,
+      "startTime": "17:48",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
       "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
+      "outPoint": 14.8148,
+      "category": "promo"
     },
     {
-      "startTime": "10:36",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "10:37",
+      "startTime": "17:48",
       "name": "Lance4Judge com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
       "duration": 32.165467,
       "inPoint": 0,
       "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "10:38",
-      "name": "Get Smart ",
-      "path": "Y:\\CLASSIC TV-2\\Get Smart\\SEASON 01\\Get Smart S01E14 (Weekend Vampire).ia.mp4",
-      "duration": 1517.764804,
-      "inPoint": 0,
-      "outPoint": 1517.764804,
-      "category": ""
-    },
-    {
-      "startTime": "11:03",
-      "name": "Leave it to Beaver",
-      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Leave It to Beaver (The Complete Series) [1957 - 1963]\\Season 1\\S01E20 - Lonesome Beaver.ia.mp4",
-      "duration": 1544.960083,
-      "inPoint": 0,
-      "outPoint": 1544.960083,
-      "category": ""
-    },
-    {
-      "startTime": "11:29",
-      "name": "Bewitched ",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 05\\Bewitched S05E22 Going Ape.mp4",
-      "duration": 1527.04,
-      "inPoint": 0,
-      "outPoint": 1527.04,
-      "category": ""
-    },
-    {
-      "startTime": "11:54",
-      "name": "Charlie's Angels",
-      "path": "Y:\\CLASSIC TV-2\\Charlies Angeles\\SEASON 04\\Charlie's Angels S04e19 Dancin' Angels.mkv",
-      "duration": 2940.792,
-      "inPoint": 0,
-      "outPoint": 2940.792,
-      "category": ""
-    },
-    {
-      "startTime": "12:43",
-      "name": "LallyForNV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
-      "duration": 30.046621,
-      "inPoint": 0,
-      "outPoint": 30.046621,
-      "category": ""
-    },
-    {
-      "startTime": "12:44",
-      "name": "JudgeMaryPerry.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "12:44",
-      "name": "Lance4Judge.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
-      "duration": 32.165467,
-      "inPoint": 0,
-      "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "12:45",
-      "name": "Lenna4NV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "12:46",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "12:47",
-      "name": "Six Million Dollar Man",
-      "path": "Y:\\AWESOME TV SHOWS-2\\The Six Million Dollar Man\\SEASON 02\\The Six Million Dollar Man S2 E27 - The Last Kamikaze.ia.mp4",
-      "duration": 3049.946167,
-      "inPoint": 0,
-      "outPoint": 3049.946167,
-      "category": ""
-    },
-    {
-      "startTime": "13:38",
-      "name": "Andy Griffith",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-02\\Andy Griffith S2 D3_t02.mkv",
-      "duration": 1507.882,
-      "inPoint": 0,
-      "outPoint": 1507.882,
-      "category": ""
-    },
-    {
-      "startTime": "14:03",
-      "name": "Andy Griffith 2",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-02\\Andy Griffith S2 D3_t03.mkv",
-      "duration": 1554.302,
-      "inPoint": 0,
-      "outPoint": 1554.302,
-      "category": ""
-    },
-    {
-      "startTime": "14:29",
-      "name": "LallyForNV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
-      "duration": 30.046621,
-      "inPoint": 0,
-      "outPoint": 30.046621,
-      "category": ""
-    },
-    {
-      "startTime": "14:30",
-      "name": "JudgeMaryPerry.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "14:30",
-      "name": "Lance4Judge.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
-      "duration": 32.165467,
-      "inPoint": 0,
-      "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "14:31",
-      "name": "Lenna4NV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "14:32",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "14:33",
-      "name": "Boxer",
-      "path": "X:\\COMMERCIALS-CLIPS\\Boxer.mp4",
-      "duration": 135.929615,
-      "inPoint": 0,
-      "outPoint": 135.929615,
-      "category": ""
-    },
-    {
-      "startTime": "14:35",
-      "name": "Whats Happening",
-      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-01\\Whats Happening S01E05.mkv",
-      "duration": 0,
-      "inPoint": 0,
-      "outPoint": 0,
-      "category": ""
-    },
-    {
-      "startTime": "15:05",
-      "name": "Sanford and Son",
-      "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 04\\Sanford and Son- (Season 4) Disc 2-A1_t02.mkv",
-      "duration": 0,
-      "inPoint": 0,
-      "outPoint": 0,
-      "category": ""
-    },
-    {
-      "startTime": "15:35",
-      "name": "The Jeffersons ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 6 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S06E23 The First Store.mkv",
-      "duration": 1497.483,
-      "inPoint": 0,
-      "outPoint": 1497.483,
-      "category": ""
-    },
-    {
-      "startTime": "16:00",
-      "name": "Good Times ",
-      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 06\\Good Times S06E01 (Florida's Homecoming - Pt1).mp4",
-      "duration": 1343.018957,
-      "inPoint": 0,
-      "outPoint": 1343.018957,
-      "category": ""
-    },
-    {
-      "startTime": "16:22",
-      "name": "Good Times 2",
-      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 06\\Good Times S06E02 (Florida's Homecoming - Pt2).mp4",
-      "duration": 1343.066667,
-      "inPoint": 0,
-      "outPoint": 1343.066667,
-      "category": ""
-    },
-    {
-      "startTime": "16:44",
-      "name": "LallyForNV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
-      "duration": 30.046621,
-      "inPoint": 0,
-      "outPoint": 30.046621,
-      "category": ""
-    },
-    {
-      "startTime": "16:45",
-      "name": "JudgeMaryPerry.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "16:45",
-      "name": "Lance4Judge.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
-      "duration": 32.165467,
-      "inPoint": 0,
-      "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "16:46",
-      "name": "Lenna4NV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "16:47",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "16:48",
-      "name": "Boxer",
-      "path": "X:\\COMMERCIALS-CLIPS\\Boxer.mp4",
-      "duration": 135.929615,
-      "inPoint": 0,
-      "outPoint": 135.929615,
-      "category": ""
-    },
-    {
-      "startTime": "16:50",
-      "name": "FLMTV.com",
-      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
-      "duration": 15.72,
-      "inPoint": 0,
-      "outPoint": 15.72,
-      "category": ""
-    },
-    {
-      "startTime": "16:50",
-      "name": "Elinor Wonders Why ",
-      "path": "Y:\\KIDS WORLD-2\\Elinor-Wonders Why\\SEASON 01\\Elinor Wonders Why_S01E13_Bubble House_The Syrup Tree.ia.mp4",
-      "duration": 1501.499583,
-      "inPoint": 0,
-      "outPoint": 1501.499583,
-      "category": ""
-    },
-    {
-      "startTime": "17:15",
-      "name": "Daffy Duck And Egghead ",
-      "path": "X:\\KIDS WORLD 1\\Daffy Duck and Egghead\\19380101_Daffy_Duck_And_Egghead_MM_Daffy_Duck_Eggh.mp4",
-      "duration": 454.829375,
-      "inPoint": 0,
-      "outPoint": 454.829375,
-      "category": ""
-    },
-    {
-      "startTime": "17:23",
-      "name": "Liberty's Kids ",
-      "path": "Y:\\KIDS WORLD-2\\Liberty Kids Series2002\\SEASON 01\\Liberty's.Kids.S01E14.New.York.New.York.AAC.2.0.1080p.WEBRip.AVC-PoF.ia.mp4",
-      "duration": 1396.914,
-      "inPoint": 0,
-      "outPoint": 1396.914,
-      "category": ""
-    },
-    {
-      "startTime": "17:46",
-      "name": "Schoolhouse Rock",
-      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\16 Unpack Your Adjectives.mkv",
-      "duration": 183.053,
-      "inPoint": 0,
-      "outPoint": 183.053,
-      "category": ""
+      "category": "promo"
     },
     {
       "startTime": "17:49",
-      "name": "Schoolhouse Rock",
-      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\17 Lolly Lolly Lolly Get Your Adverbs Here.mkv",
-      "duration": 192.764,
-      "inPoint": 0,
-      "outPoint": 192.764,
-      "category": ""
-    },
-    {
-      "startTime": "17:52",
-      "name": "Schoolhouse Rock",
-      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\18 Rufus Xavier Sasparilla.mkv",
-      "duration": 188.509,
-      "inPoint": 0,
-      "outPoint": 188.509,
-      "category": ""
-    },
-    {
-      "startTime": "17:55",
-      "name": "Schoolhouse Rock",
-      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\20 The Tale Of Mr Morton.mkv",
-      "duration": 187.768,
-      "inPoint": 0,
-      "outPoint": 187.768,
-      "category": ""
-    },
-    {
-      "startTime": "17:58",
-      "name": "LallyForNV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
-      "duration": 30.046621,
-      "inPoint": 0,
-      "outPoint": 30.046621,
-      "category": ""
-    },
-    {
-      "startTime": "17:59",
-      "name": "JudgeMaryPerry.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "17:59",
-      "name": "Lance4Judge.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
-      "duration": 32.165467,
-      "inPoint": 0,
-      "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "18:00",
-      "name": "Lenna4NV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
       "duration": 30.03,
       "inPoint": 0,
       "outPoint": 30.03,
-      "category": ""
+      "category": "promo"
     },
     {
-      "startTime": "18:01",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "startTime": "17:50",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
       "duration": 30.03,
       "inPoint": 0,
       "outPoint": 30.03,
-      "category": ""
+      "category": "promo"
     },
     {
-      "startTime": "18:02",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
+      "startTime": "17:51",
+      "name": "Here's LUCY",
+      "path": "Y:\\\\AWESOME TV SHOWS-2\\\\Here's Lucy (The Complete Series) [1968 - 1974]\\\\Season 4\\\\S04E12 - Lucy Helps David Frost Go Night-Night.mp4",
+      "duration": 1549.676553,
       "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
+      "outPoint": 1549.676553,
+      "category": "show"
     },
     {
-      "startTime": "18:03",
-      "name": "ZAINAJULIETTE .tv",
-      "path": "Y:\\FLM-TV\\CLIPS-FILLERS\\ZAINA JULIETTE-COMMERCIALflm.mp4",
-      "duration": 37.12,
+      "startTime": "18:17",
+      "name": "ZainaJuliette.tv",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\NEW COMMERCIAL 1-D 2026.mp4",
+      "duration": 171.75,
       "inPoint": 0,
-      "outPoint": 37.12,
-      "category": ""
+      "outPoint": 171.75,
+      "category": "promo"
     },
     {
-      "startTime": "18:04",
-      "name": "Lucy's Bonus Bounces",
-      "path": "Y:\\AWESOME TV SHOWS-2\\Here's Lucy (The Complete Series) [1968 - 1974]\\Season 4\\S04E16 - Lucy's Bonus Bounces.mp4",
-      "duration": 1550.698231,
-      "inPoint": 0,
-      "outPoint": 1550.698231,
-      "category": ""
-    },
-    {
-      "startTime": "18:30",
+      "startTime": "18:20",
       "name": "Zaina Juliette & Friends",
-      "path": "Y:\\Zaina-Files\\---ZJS with Chelsea Mac 90 Miles.mp4",
-      "duration": 333.266271,
+      "path": "Z:\\\\#recycle\\\\AWESOME TV SHOWS\\\\Zaina Juliette Show\\\\Zaina Juliette Show   Classic Entertainers 5.mp4",
+      "duration": 1708.175964,
       "inPoint": 0,
-      "outPoint": 333.266271,
-      "category": ""
+      "outPoint": 1708.175964,
+      "category": "show"
     },
     {
-      "startTime": "18:36",
-      "name": "Locals in Las Vegas",
-      "path": "X:\\TV SHOWS 2\\LOCALS IN LAS VEGAS-JESSICA\\Season 01\\Locals in Las Vegas-S01E06.mp4",
+      "startTime": "18:48",
+      "name": "GladiusTheShow.net",
+      "path": "Y:\\\\DOCUMENTARIES-2\\\\GLADIUS\\\\Meet the Gladius Belgians\\\\Meet the Gladius Belgians.mp4",
+      "duration": 208.329433,
+      "inPoint": 0,
+      "outPoint": 208.329433,
+      "category": "promo"
+    },
+    {
+      "startTime": "18:51",
+      "name": "Locals in Las Vegas ",
+      "path": "X:\\\\TV SHOWS 2\\\\LOCALS IN LAS VEGAS-JESSICA\\\\Season 01\\\\locals in las vegas-S01E04.mp4",
       "duration": 1709.974933,
       "inPoint": 0,
       "outPoint": 1709.974933,
-      "category": ""
+      "category": "promo"
     },
     {
-      "startTime": "19:04",
-      "name": "Friends ",
-      "path": "Z:\\#recycle\\AWESOME TV SHOWS\\FRIENDS\\Season 1\\Season 1-20250814T232244Z-1-009\\Season 1\\Friends (1994) - S01E09 - The One Where Underdog Gets Away (1080p BluRay x265 Silence).mkv",
-      "duration": 1366.825,
-      "inPoint": 0,
-      "outPoint": 1366.825,
-      "category": ""
-    },
-    {
-      "startTime": "19:27",
-      "name": "King of the Hill 1",
-      "path": "Y:\\AWESOME TV SHOWS-2\\KING OF THE HILL\\Season 03\\301 - Death Of A Propane Salesman.mp4",
-      "duration": 1369.216,
-      "inPoint": 0,
-      "outPoint": 1369.216,
-      "category": ""
-    },
-    {
-      "startTime": "19:50",
-      "name": "King of the Hill 2",
-      "path": "Y:\\AWESOME TV SHOWS-2\\KING OF THE HILL\\Season 03\\302 - And They Call It Bobby Love.mp4",
-      "duration": 1352.191,
-      "inPoint": 0,
-      "outPoint": 1352.191,
-      "category": ""
-    },
-    {
-      "startTime": "20:13",
-      "name": "Malcolm in the Middle",
-      "path": "X:\\TV SHOWS 2\\Malcolm In The Middle\\Season 1\\S01E05 - Malcolm Babysits.mp4",
-      "duration": 1357.504,
-      "inPoint": 0,
-      "outPoint": 1357.504,
-      "category": ""
-    },
-    {
-      "startTime": "20:36",
-      "name": "LallyForNV.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
-      "duration": 30.046621,
-      "inPoint": 0,
-      "outPoint": 30.046621,
-      "category": ""
-    },
-    {
-      "startTime": "20:37",
-      "name": "JudgeMaryPerry.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "20:37",
-      "name": "Lance4Judge com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
-      "duration": 32.165467,
-      "inPoint": 0,
-      "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "20:38",
-      "name": "Lenna4NV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "20:39",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "20:40",
+      "startTime": "19:19",
       "name": "Boxer",
-      "path": "X:\\COMMERCIALS-CLIPS\\Boxer.mp4",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\Boxer.mp4",
       "duration": 135.929615,
       "inPoint": 0,
       "outPoint": 135.929615,
       "category": ""
     },
     {
-      "startTime": "20:42",
+      "startTime": "19:21",
       "name": "FLMTV.com",
-      "path": "Z:\\FLM TV GRAPHICS\\FLMsummonsCOMMERCIAL.mp4",
-      "duration": 28.36,
+      "path": "Y:\\\\CLIPS-FILLERS\\\\FLM LOGO SAND SPHERE-3gold.mp4",
+      "duration": 12.133333,
       "inPoint": 0,
-      "outPoint": 28.36,
+      "outPoint": 12.133333,
       "category": ""
     },
     {
-      "startTime": "20:42",
-      "name": "The X Files",
-      "path": "X:\\TV SHOWS 2\\THE X FILES\\SEASON-01\\The X-Files, Season 1 Disc 2_t06.mkv",
-      "duration": 2719.675,
-      "inPoint": 0,
-      "outPoint": 2719.675,
-      "category": ""
-    },
-    {
-      "startTime": "21:27",
-      "name": "Taken",
-      "path": "X:\\Taken (2008) Liam Neeson 1080p.mp4",
-      "duration": 5605.349733,
-      "inPoint": 0,
-      "outPoint": 5605.349733,
-      "category": ""
-    },
-    {
-      "startTime": "23:00",
-      "name": "The Others 2",
-      "path": "X:\\MOVIES-5\\The Others 2001\\The Others 2001 Remastered.mkv",
-      "duration": 6240.547,
-      "inPoint": 0,
-      "outPoint": 6240.547,
-      "category": ""
-    },
-    {
-      "startTime": "00:44",
-      "name": "Avatar-The Way Of Water",
-      "path": "Y:\\MOVIES\\AVATAR\\Avatar-TheWayOfWater.mp4",
-      "duration": 11557.76,
-      "inPoint": 0,
-      "outPoint": 11557.76,
-      "category": ""
-    },
-    {
-      "startTime": "03:57",
-      "name": "Ace Ventura 2",
-      "path": "Y:\\MORE TO SORT\\Ace Ventura - When Nature Calls.ia.mp4",
-      "duration": 5643.6695,
-      "inPoint": 0,
-      "outPoint": 5643.6695,
-      "category": ""
-    },
-    {
-      "startTime": "05:31",
+      "startTime": "19:21",
       "name": "LallyForNV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
       "duration": 30.046621,
       "inPoint": 0,
       "outPoint": 30.046621,
       "category": ""
     },
     {
-      "startTime": "05:32",
+      "startTime": "19:22",
       "name": "JudgeMaryPerry com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
       "duration": 14.8148,
       "inPoint": 0,
       "outPoint": 14.8148,
       "category": ""
     },
     {
-      "startTime": "05:32",
+      "startTime": "19:22",
       "name": "Lance4Judge com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
       "duration": 32.165467,
       "inPoint": 0,
       "outPoint": 32.165467,
       "category": ""
     },
     {
-      "startTime": "05:33",
+      "startTime": "19:23",
       "name": "Lenna4NV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
       "duration": 30.03,
       "inPoint": 0,
       "outPoint": 30.03,
       "category": ""
     },
     {
-      "startTime": "05:34",
-      "name": "Flubber ia",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2020\\sesame-street_202308\\Flubber.ia.mp4",
-      "duration": 5128.873833,
-      "inPoint": 0,
-      "outPoint": 5128.873833,
-      "category": ""
-    },
-    {
-      "startTime": "06:59",
+      "startTime": "19:24",
       "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
       "duration": 30.03,
       "inPoint": 0,
       "outPoint": 30.03,
       "category": ""
     },
     {
-      "startTime": "07:00",
-      "name": "Sesame Street ",
-      "path": "Y:\\KIDS WORLD-2\\sesame-street-s-42-e-05-shape-o-bots\\SEASON 42\\Sesame Street_S42E13_Siblings.ia.mp4",
-      "duration": 3356.519833,
+      "startTime": "19:25",
+      "name": "Elvis On Tour (1972)",
+      "path": "X:\\\\MUSIC VIDEOS\\\\ELVIS ON TOUR 1972\\\\Elvis On Tour  (1972).mkv",
+      "duration": 5590.582,
       "inPoint": 0,
-      "outPoint": 3356.519833,
+      "outPoint": 5590.582,
+      "category": "movie"
+    },
+    {
+      "startTime": "20:58",
+      "name": "The X Files",
+      "path": "X:\\\\TV SHOWS 2\\\\THE X FILES\\\\SEASON-01\\\\The X-Files, Season 1 Disc 3_t00.mkv",
+      "duration": 2795.776,
+      "inPoint": 0,
+      "outPoint": 2795.776,
+      "category": "show"
+    },
+    {
+      "startTime": "21:45",
+      "name": "Kingdom -The Planet of The Apes",
+      "path": "Y:\\\\MOVIES\\\\Kingdom Of The Planet Of The Apes\\\\Kingdom Of The Planety Of The Apes.mp4",
+      "duration": 8680.736,
+      "inPoint": 0,
+      "outPoint": 8680.736,
+      "category": "movie"
+    },
+    {
+      "startTime": "00:10",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": "promo"
+    },
+    {
+      "startTime": "00:10",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": "promo"
+    },
+    {
+      "startTime": "00:11",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": "promo"
+    },
+    {
+      "startTime": "00:12",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": "promo"
+    },
+    {
+      "startTime": "00:13",
+      "name": "FLMTV.com",
+      "path": "Z:\\\\FLM TV GRAPHICS\\\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28.36,
+      "inPoint": 0,
+      "outPoint": 28.36,
+      "category": "promo"
+    },
+    {
+      "startTime": "00:13",
+      "name": "The Twilight Zone ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\TWILIGHT ZONE\\\\SEASON-01\\\\The Twilight Zone (1959) - S01E35 - The Mighty Casey (1080p BluRay x265 ImE).mkv",
+      "duration": 1554.644,
+      "inPoint": 0,
+      "outPoint": 1554.644,
+      "category": "show"
+    },
+    {
+      "startTime": "00:39",
+      "name": "The Twilight Zone ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\TWILIGHT ZONE\\\\SEASON-01\\\\The Twilight Zone (1959) - S01E36 - A World of His Own (1080p BluRay x265 ImE).mkv",
+      "duration": 1521.918,
+      "inPoint": 0,
+      "outPoint": 1521.918,
+      "category": "show"
+    },
+    {
+      "startTime": "01:04",
+      "name": "The Happening",
+      "path": "X:\\\\MOVIES-5\\\\The Happening\\\\The Happening.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
       "category": ""
     },
     {
-      "startTime": "07:56",
+      "startTime": "01:34",
+      "name": "FLMTV.com",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\FLM TV Tag Blue Aliens2.mp4",
+      "duration": 21.229542,
+      "inPoint": 0,
+      "outPoint": 21.229542,
+      "category": "promo"
+    },
+    {
+      "startTime": "01:34",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "01:35",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "01:35",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "01:36",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "01:37",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "01:38",
+      "name": "The Happening",
+      "path": "X:\\\\MOVIES-5\\\\The Happening\\\\The Happening.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": ""
+    },
+    {
+      "startTime": "02:08",
+      "name": "FLMTV.com",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\FLM TV Tag Blue Aliens2.mp4",
+      "duration": 21.229542,
+      "inPoint": 0,
+      "outPoint": 21.229542,
+      "category": ""
+    },
+    {
+      "startTime": "02:08",
+      "name": "A United Kingdom",
+      "path": "Y:\\\\MOVIES\\\\A United Kindom\\\\A United Kingdom (2016) Rosamund Pike 1080p.mp4",
+      "duration": 6664.657978,
+      "inPoint": 0,
+      "outPoint": 6664.657978,
+      "category": "movie"
+    },
+    {
+      "startTime": "03:59",
+      "name": "King Kong 2005",
+      "path": "X:\\\\MOVIES-5\\\\King.Kong.2005.1080p.Extended.Cut\\\\King.Kong.2005.mp4",
+      "duration": 12007.935,
+      "inPoint": 0,
+      "outPoint": 12007.935,
+      "category": ""
+    },
+    {
+      "startTime": "07:19",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "07:20",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "07:20",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "07:21",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "07:22",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "07:23",
+      "name": "Dancing Bear Logo1",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\Dancing Bear Logo1.mp4",
+      "duration": 16.975292,
+      "inPoint": 0,
+      "outPoint": 16.975292,
+      "category": ""
+    },
+    {
+      "startTime": "07:23",
       "name": "Sesame Street",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5124 (April 22, 2021).mp4",
-      "duration": 1559.024133,
+      "path": "Y:\\\\KIDS WORLD-2\\\\sesame-street-s-42-e-05-shape-o-bots\\\\SEASON 42\\\\Sesame Street_S42E23_What's in Big Bird's Nest_.ia.mp4",
+      "duration": 3275.8726,
       "inPoint": 0,
-      "outPoint": 1559.024133,
+      "outPoint": 3275.8726,
       "category": ""
     },
     {
-      "startTime": "08:22",
-      "name": "NODDY",
-      "path": "Y:\\KIDS WORLD-2\\Noddy\\SEASON 01\\NODDY_VOL017.mp4",
-      "duration": 694.828161,
+      "startTime": "08:18",
+      "name": "Sesame Street ",
+      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5033 (June 27, 2020).mp4",
+      "duration": 1556.0545,
       "inPoint": 0,
-      "outPoint": 694.828161,
+      "outPoint": 1556.0545,
+      "category": "show"
+    },
+    {
+      "startTime": "08:44",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\\\KIDS WORLD 1\\\\schoolhouse-rock-30th\\\\15 Interjections.mkv",
+      "duration": 192.087,
+      "inPoint": 0,
+      "outPoint": 192.087,
       "category": ""
     },
     {
-      "startTime": "08:34",
-      "name": "Super Why",
-      "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 05\\Super Why!_S05E04_Dr_ Doolittle.ia.mp4",
-      "duration": 1620.672,
+      "startTime": "08:47",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\\\KIDS WORLD 1\\\\schoolhouse-rock-30th\\\\12 A Noun Is A Person Place Or Thing.mkv",
+      "duration": 185.997,
       "inPoint": 0,
-      "outPoint": 1620.672,
+      "outPoint": 185.997,
       "category": ""
     },
     {
-      "startTime": "09:01",
-      "name": "Winnie the Pooh ",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2020\\sesame-street_202308\\TNA of Winnie the Pooh S01E19 A Very, Very Large Animal + Fish Out of Water.mp4",
-      "duration": 1396.352,
+      "startTime": "08:50",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\\\KIDS WORLD 1\\\\schoolhouse-rock-30th\\\\13 Verb Thats Whats Happening.mkv",
+      "duration": 194.184,
       "inPoint": 0,
-      "outPoint": 1396.352,
+      "outPoint": 194.184,
+      "category": ""
+    },
+    {
+      "startTime": "08:53",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\\\KIDS WORLD 1\\\\schoolhouse-rock-30th\\\\14 Conjunction Junction.mkv",
+      "duration": 186.09,
+      "inPoint": 0,
+      "outPoint": 186.09,
+      "category": ""
+    },
+    {
+      "startTime": "08:56",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "08:57",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "08:57",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "08:58",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "08:59",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
       "category": ""
     }
   ]
