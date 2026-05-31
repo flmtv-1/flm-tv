@@ -1,76 +1,517 @@
 {
   "2026-05-31": [
     {
-      "startTime": "06:49",
-      "name": "FLMTV.com",
-      "path": "Y:\\CLIPS-FILLERS\\FLM-ufo-purple-alien-Z-gold.mp4",
-      "duration": 25.6,
+      "startTime": "07:17",
+      "name": "Snail logo1 Z",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\Snail-logo1-Z.mp4",
+      "duration": 15.72,
       "inPoint": 0,
-      "outPoint": 25.6,
-      "category": "commercial"
+      "outPoint": 15.72,
+      "category": ""
     },
     {
-      "startTime": "06:49",
-      "name": "Sesame Street ",
-      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5132 (June 17, 2021).mp4",
-      "duration": 1558.990767,
+      "startTime": "07:17",
+      "name": "Sesame Street Episode 5009 (January 11, 2020)",
+      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5009 (January 11, 2020).mp4",
+      "duration": 1556.032,
       "inPoint": 0,
-      "outPoint": 1558.990767,
-      "category": "show"
+      "outPoint": 1556.032,
+      "category": ""
     },
     {
-      "startTime": "07:15",
-      "name": "Sesame Street",
-      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5133 (June 24, 2021).mp4",
-      "duration": 1559.024133,
+      "startTime": "07:43",
+      "name": "Sesame Street Episode 5008 (January 4, 2020)",
+      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5008 (January 4, 2020).mp4",
+      "duration": 1556.032,
       "inPoint": 0,
-      "outPoint": 1559.024133,
-      "category": "show"
+      "outPoint": 1556.032,
+      "category": ""
     },
     {
-      "startTime": "07:41",
+      "startTime": "08:09",
+      "name": "Little People Big Discoveries (Fisher Price)10",
+      "path": "Y:\\\\KIDS WORLD-2\\\\little-people-big-discoveries\\\\SEASON 01\\\\Little People - Big Discoveries (Fisher-Price)10.mp4",
+      "duration": 301.96,
+      "inPoint": 0,
+      "outPoint": 301.96,
+      "category": ""
+    },
+    {
+      "startTime": "08:14",
       "name": "Super Why",
-      "path": "X:\\\\KIDS WORLD 1\\\\SUPER WHY\\\\SEASON 05\\\\Super Why_S05E08_The Nutcracker.ia.mp4",
-      "duration": 1621.290667,
+      "path": "Y:\\\\KIDS WORLD-2\\\\super-why\\\\SEASON 06\\\\Super Why!_S06E01_The Comic Book_ Attack of the Eraser.ia.mp4",
+      "duration": 1621.674667,
       "inPoint": 0,
-      "outPoint": 1621.290667,
-      "category": "show"
+      "outPoint": 1621.674667,
+      "category": ""
     },
     {
-      "startTime": "08:08",
-      "name": "Tiny Tots Kitchen",
-      "path": "X:\\\\KIDS WORLD 1\\\\Tiny Tots Kitchen “Cinnamon Pecan Pinwheels”\\\\04-Tiny Tots Kitchen “Cinnamon Pecan Pinwheels”.ia.mp4",
-      "duration": 870.051701,
+      "startTime": "08:41",
+      "name": "Lazy Town ",
+      "path": "Y:\\\\KIDS WORLD-2\\\\lazytown-hd-episodes-collection\\\\SEASON 01\\\\LazyTown S01E26 LazyTown's New Superhero 1080p HD.ia.mp4",
+      "duration": 2679.304127,
       "inPoint": 0,
-      "outPoint": 870.051701,
-      "category": "show"
+      "outPoint": 2679.304127,
+      "category": ""
     },
     {
-      "startTime": "08:23",
-      "name": "Fireman Sam ",
-      "path": "X:\\\\KIDS WORLD 1\\\\Fireman Sam\\\\Fireman Sam_Saves the Day_(2006)_(UK).mp4",
-      "duration": 3052.750658,
+      "startTime": "09:26",
+      "name": "Nature Cat ",
+      "path": "Y:\\\\KIDS WORLD-2\\\\Nature Cat\\\\SEASON 03\\\\Nature.Cat.S03E01E02.Animal.Rescue.Crew-Nature.of.Dreams.1080p.AMZN.WEBRip.AAC2.0.x264.ia.mp4",
+      "duration": 1441.216,
       "inPoint": 0,
-      "outPoint": 3052.750658,
-      "category": "news"
+      "outPoint": 1441.216,
+      "category": ""
     },
     {
-      "startTime": "09:14",
-      "name": "God Never Leaves Us",
-      "path": "X:\\\\KIDS WORLD 1\\\\CHRISTIAN shows\\\\03 - “God Never Leaves Us” - 3ABN Kids Camp Sing-Along.ia.mp4",
-      "duration": 899.564263,
+      "startTime": "09:50",
+      "name": "Kids Camp Sing Along",
+      "path": "X:\\\\KIDS WORLD 1\\\\CHRISTIAN shows\\\\04 - “Become Great with God” - 3ABN Kids Camp Sing-Along.ia.mp4",
+      "duration": 900.051882,
       "inPoint": 0,
-      "outPoint": 899.564263,
-      "category": "show"
+      "outPoint": 900.051882,
+      "category": ""
     },
     {
-      "startTime": "09:29",
+      "startTime": "10:05",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "10:06",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "10:07",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "10:08",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "10:08",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "10:09",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "10:10",
+      "name": "LM Elephant Tag 1080",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\LM Elephant Tag 1080.mp4",
+      "duration": 12.52,
+      "inPoint": 0,
+      "outPoint": 12.52,
+      "category": ""
+    },
+    {
+      "startTime": "10:10",
+      "name": "Road Runner",
+      "path": "Y:\\KIDS WORLD-2\\the-road-runner-complete-collection-1940-2014\\COLLECTION\\E01 - Fast and Furry-ous.mkv",
+      "duration": 428.663583,
+      "inPoint": 0,
+      "outPoint": 428.663583,
+      "category": ""
+    },
+    {
+      "startTime": "10:17",
+      "name": "Road Runner",
+      "path": "Y:\\KIDS WORLD-2\\the-road-runner-complete-collection-1940-2014\\COLLECTION\\E02 - Beep, Beep.mkv",
+      "duration": 409.493,
+      "inPoint": 0,
+      "outPoint": 409.493,
+      "category": ""
+    },
+    {
+      "startTime": "10:24",
+      "name": "Snail logo1 Z",
+      "path": "Y:\\\\CLIPS-FILLERS\\\\Snail-logo1-Z.mp4",
+      "duration": 15.72,
+      "inPoint": 0,
+      "outPoint": 15.72,
+      "category": ""
+    },
+    {
+      "startTime": "10:24",
+      "name": "Good Gumbo",
+      "path": "X:\\\\DOCUMENTARIES 2\\\\Good Gumbo\\\\6 Cajun Braised Teal - The Filet Mignon of Duck\\\\6 Cajun Braised Teal - The Filet Mignon of Duck.mp4",
+      "duration": 311.317333,
+      "inPoint": 0,
+      "outPoint": 311.317333,
+      "category": ""
+    },
+    {
+      "startTime": "10:29",
+      "name": "Little Rascals ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\The Little Rascals - 80 Short Movies in MP4 format\\\\Little Rascals 41-60\\\\Little Rascals 44 (Mama's Little Pirate).mp4",
+      "duration": 1081.433322,
+      "inPoint": 0,
+      "outPoint": 1081.433322,
+      "category": ""
+    },
+    {
+      "startTime": "10:47",
+      "name": "Little Rascals ",
+      "path": "Y:\\\\CLASSIC TV-2\\\\The Little Rascals - 80 Short Movies in MP4 format\\\\Little Rascals 41-60\\\\Little Rascals 45 (Shrimps for a Day).mp4",
+      "duration": 1228.866655,
+      "inPoint": 0,
+      "outPoint": 1228.866655,
+      "category": ""
+    },
+    {
+      "startTime": "11:07",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "11:08",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "11:09",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "11:10",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "11:10",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "11:11",
+      "name": "The Neverending Story ",
+      "path": "X:\\\\MOVIES-5\\\\The Neverending Story\\\\The Neverending Story - 40th Anniversary.mp4",
+      "duration": 5645.541667,
+      "inPoint": 0,
+      "outPoint": 5645.541667,
+      "category": ""
+    },
+    {
+      "startTime": "12:45",
       "name": "Gnomeo and Juliet",
       "path": "X:\\\\_SORT-MOVIES\\\\FAMILY SHOWS MOVIES\\\\1x22 Gnomeo and Juliet\\\\1x22 Gnomeo and Juliet.mp4",
       "duration": 5031.06,
       "inPoint": 0,
       "outPoint": 5031.06,
-      "category": "movie"
+      "category": ""
+    },
+    {
+      "startTime": "14:09",
+      "name": "Bedknobs and Broomsticks",
+      "path": "X:\\\\_SORT-MOVIES\\\\FAMILY SHOWS MOVIES\\\\1x06 Bedknobs and Broomsticks\\\\1x06 Bedknobs and Broomsticks.mp4",
+      "duration": 7038.931,
+      "inPoint": 0,
+      "outPoint": 7038.931,
+      "category": ""
+    },
+    {
+      "startTime": "16:06",
+      "name": "Zaina Juliette Show Spotlights Michael Jackson (Part 2 with Tania Heaven)",
+      "path": "Z:\\\\TALK\\\\Zaina Juliette & Friends\\\\Zaina Juliette Show Spotlights Michael Jackson (Part 2 with Tania Heaven).mp4",
+      "duration": 1642.858231,
+      "inPoint": 0,
+      "outPoint": 1642.858231,
+      "category": ""
+    },
+    {
+      "startTime": "16:33",
+      "name": "Michael Jackson This Is It (2009)",
+      "path": "Y:\\\\MORE TO SORT\\\\MichaelJacksonThisIsIt2009DVDRipXviDMAXSPEEDWww.torentz.3xforum.ro\\\\Michael Jackson This Is It (2009).avi",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": ""
+    },
+    {
+      "startTime": "17:03",
+      "name": "Matilda 1996 720p",
+      "path": "X:\\MOVIES-5\\Matilda\\Matilda 1996 720p.mp4",
+      "duration": 5888.924709,
+      "inPoint": 0,
+      "outPoint": 5888.924709,
+      "category": ""
+    },
+    {
+      "startTime": "18:41",
+      "name": "Boxer",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\Boxer.mp4",
+      "duration": 135.929615,
+      "inPoint": 0,
+      "outPoint": 135.929615,
+      "category": ""
+    },
+    {
+      "startTime": "18:43",
+      "name": "VoteScottBlack com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "18:44",
+      "name": "Lenna4NV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "18:45",
+      "name": "Lance4Judge com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "18:46",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "18:46",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "18:47",
+      "name": "NEW COMMERCIAL 1 D 2026",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\NEW COMMERCIAL 1-D 2026.mp4",
+      "duration": 171.75,
+      "inPoint": 0,
+      "outPoint": 171.75,
+      "category": ""
+    },
+    {
+      "startTime": "18:50",
+      "name": "LallyForNV com",
+      "path": "X:\\\\COMMERCIALS-CLIPS\\\\POLITITIANS renamed\\\\LallyForNV.com.mp4",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "18:51",
+      "name": "1x26 Mary Poppins Returns",
+      "path": "X:\\\\_SORT-MOVIES\\\\FAMILY SHOWS MOVIES\\\\1x26 Mary Poppins Returns\\\\1x26 Mary Poppins Returns.mp4",
+      "duration": 7829.205,
+      "inPoint": 0,
+      "outPoint": 7829.205,
+      "category": ""
+    },
+    {
+      "startTime": "21:01",
+      "name": "The Lost World Jurassic Park",
+      "path": "X:\\\\MOVIES-5\\\\Jurassic Park-The Lost World\\\\The Lost World Jurassic Park.mp4",
+      "duration": 7726.677333,
+      "inPoint": 0,
+      "outPoint": 7726.677333,
+      "category": ""
+    },
+    {
+      "startTime": "23:10",
+      "name": "Misery (1990)",
+      "path": "Y:\\\\MOVIES\\\\MISERY\\\\Misery (1990).mp4",
+      "duration": 6445.018,
+      "inPoint": 0,
+      "outPoint": 6445.018,
+      "category": ""
+    },
+    {
+      "startTime": "00:57",
+      "name": "VoteScottBlack com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "00:58",
+      "name": "LallyForNV com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp49-b7af-492c-904e-f0b164fb97c1",
+      "duration": 30.046621,
+      "inPoint": 0,
+      "outPoint": 30.046621,
+      "category": ""
+    },
+    {
+      "startTime": "00:59",
+      "name": "JudgeMaryPerry com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
+      "duration": 14.8148,
+      "inPoint": 0,
+      "outPoint": 14.8148,
+      "category": ""
+    },
+    {
+      "startTime": "00:59",
+      "name": "Lance4Judge com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
+      "duration": 32.165467,
+      "inPoint": 0,
+      "outPoint": 32.165467,
+      "category": ""
+    },
+    {
+      "startTime": "01:00",
+      "name": "Forrest Gump (1994) ia",
+      "path": "Z:\\\\SHOWS TO SORT-add\\\\ford-vs-ferrari-2019\\\\Forrest Gump (1994).ia.mp4",
+      "duration": 2274.527811,
+      "inPoint": 0,
+      "outPoint": 2274.527811,
+      "category": ""
+    },
+    {
+      "startTime": "01:38",
+      "name": "O Brother Where Art Thou",
+      "path": "X:\\\\MOVIES-5\\\\O Brother Where Art Thou\\\\O.Brother.Where.Art.Thou.mkv",
+      "duration": 6429.471,
+      "inPoint": 0,
+      "outPoint": 6429.471,
+      "category": ""
+    },
+    {
+      "startTime": "03:25",
+      "name": "Lenna4NV com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "03:26",
+      "name": "The Lord Of The Rings The Two Towers 2002 EXTENDED 2160p 4K BluRay x265 10bit AAC5 1 [YTS MX]",
+      "path": "X:\\\\TV SHOWS 2\\\\LORD of THE RINGS\\\\The Lord Of The Rings The Two Towers\\\\The.Lord.Of.The.Rings.The.Two.Towers.2002.EXTENDED.2160p.4K.BluRay.x265.10bit.AAC5.1-[YTS.MX].mkv",
+      "duration": 14132.162,
+      "inPoint": 0,
+      "outPoint": 14132.162,
+      "category": ""
+    },
+    {
+      "startTime": "07:22",
+      "name": "Snail logo1 Z",
+      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
+      "duration": 15.72,
+      "inPoint": 0,
+      "outPoint": 15.72,
+      "category": ""
+    },
+    {
+      "startTime": "07:22",
+      "name": "Sesame Street S40E24 Abby's Tricycle ia",
+      "path": "Y:\\\\KIDS WORLD-2\\\\sesame-street-s-40-e-01-frankly-its-becoming-a-habitat\\\\SEASON 04\\\\Sesame Street_S40E24_Abby's Tricycle.ia.mp4",
+      "duration": 3366.432,
+      "inPoint": 0,
+      "outPoint": 3366.432,
+      "category": ""
+    },
+    {
+      "startTime": "08:18",
+      "name": "Sesame Street ",
+      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5135 (July 8, 2021).mp4",
+      "duration": 1556.0545,
+      "inPoint": 0,
+      "outPoint": 1556.0545,
+      "category": ""
+    },
+    {
+      "startTime": "08:44",
+      "name": "Ready Jet Go ",
+      "path": "Y:\\\\KIDS WORLD-2\\\\RJGTVSeries\\\\SEASON 01\\\\Ready.Jet.Go-S01E65-66-Space.Race.Jets.Time.Machine.WEBDL-1080p.mp4",
+      "duration": 1591.968,
+      "inPoint": 0,
+      "outPoint": 1591.968,
+      "category": ""
+    },
+    {
+      "startTime": "09:11",
+      "name": "Rolie Polie Olie ",
+      "path": "Y:\\\\KIDS WORLD-2\\\\Rolie Polie Olies\\\\SEASON 01\\\\Rolie Polie Olie_S01E05_Mutiny on the Bouncy_ Roll the Camera_ Pappy_s Boat.ia.mp4",
+      "duration": 1446.08,
+      "inPoint": 0,
+      "outPoint": 1446.08,
+      "category": ""
+    },
+    {
+      "startTime": "09:35",
+      "name": "Super Why",
+      "path": "X:\\KIDS WORLD 1\\SUPER WHY\\SEASON 06\\Super Why!_S06E02_The Beach Day Mystery.ia.mp4",
+      "duration": 1620.544,
+      "inPoint": 0,
+      "outPoint": 1620.544,
+      "category": ""
     }
   ]
 }
