@@ -299,7 +299,7 @@
     },
     {
       "startTime": "18:09",
-      "name": "Molly of Denali S01E07 Hot Springs Eternal Tooey’s Hero ia",
+      "name": "Molly of Denali ",
       "path": "Y:\\KIDS WORLD-2\\Molly of Denali\\SEASON 01\\Molly of Denali_S01E07_Hot Springs Eternal_Tooey’s Hero.ia.mp4",
       "duration": 1533.098667,
       "inPoint": 0,
@@ -345,10 +345,181 @@
     {
       "startTime": "20:27",
       "name": "Zaina Juliette Show",
-      "path": "blob:null/5471fbb9-12ed-40d2-b3e4-9cf85276d458",
+      "path": "X:\\TV SHOWS 2\\ZAINA JULIETTE SHOW\\COLLECTION 02\\Zaina Juliette Show with Kevin Black CW Network.mp4",
       "duration": 1727.843265,
       "inPoint": 0,
       "outPoint": 1727.843265,
+      "category": ""
+    },
+    {
+      "startTime": "20:56",
+      "name": "Malcom in The Middle",
+      "path": "blob:null/254dd842-51a7-4166-9b25-2398c2e95dba",
+      "duration": 1360.896,
+      "inPoint": 0,
+      "outPoint": 1360.896,
+      "category": ""
+    },
+    {
+      "startTime": "21:19",
+      "name": "The X Files",
+      "path": "X:\\THE X FILES\\SEASON-01\\The X-Files, Season 1 Disc 2_t04.mkv",
+      "duration": 2670.125,
+      "inPoint": 0,
+      "outPoint": 2670.125,
+      "category": ""
+    },
+    {
+      "startTime": "22:04",
+      "name": "Around The World In 80 Days",
+      "path": "X:\\MOVIES-5\\Around The World In 80 Days\\Around The World In 80 Days.mp4",
+      "duration": 7206.938934,
+      "inPoint": 0,
+      "outPoint": 7206.938934,
+      "category": ""
+    },
+    {
+      "startTime": "00:04",
+      "name": "Bruce Almighty",
+      "path": "X:\\MOVIES-5\\Bruce Almighty\\Bruce Almighty.ia\\Bruce Almighty.ia.mp4",
+      "duration": 6062.33551,
+      "inPoint": 0,
+      "outPoint": 6062.33551,
+      "category": ""
+    },
+    {
+      "startTime": "01:45",
+      "name": "Midnight In Paris ",
+      "path": "X:\\MOVIES-5\\Midnight in Paris\\Midnight In Paris (2011).mp4",
+      "duration": 5636.783311,
+      "inPoint": 0,
+      "outPoint": 5636.783311,
+      "category": ""
+    },
+    {
+      "startTime": "03:19",
+      "name": "The Twilight Zone 1",
+      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-01\\The Twilight Zone (1959) - S01E20 - Elegy (1080p BluRay x265 ImE).mkv",
+      "duration": 1553.364,
+      "inPoint": 0,
+      "outPoint": 1553.364,
+      "category": ""
+    },
+    {
+      "startTime": "03:45",
+      "name": "The Twilight Zone 2",
+      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-01\\The Twilight Zone (1959) - S01E21 - Mirror Image (1080p BluRay x265 ImE).mkv",
+      "duration": 1555.028,
+      "inPoint": 0,
+      "outPoint": 1555.028,
+      "category": ""
+    },
+    {
+      "startTime": "04:11",
+      "name": "The Twilight Zone 3",
+      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-01\\The Twilight Zone (1959) - S01E22 - The Monsters Are Due on Maple Street (1080p BluRay x265 ImE).mkv",
+      "duration": 1557.993,
+      "inPoint": 0,
+      "outPoint": 1557.993,
+      "category": ""
+    },
+    {
+      "startTime": "04:37",
+      "name": "Birdman of Alcatraz ",
+      "path": "Y:\\CLASSIC MOVIES-2\\Birdman of Alcatraz (1962) Burt Lancaster 1080p\\Birdman of Alcatraz (1962) Burt Lancaster 1080p.mp4",
+      "duration": 8914.947689,
+      "inPoint": 0,
+      "outPoint": 8914.947689,
+      "category": ""
+    },
+    {
+      "startTime": "07:06",
+      "name": "Three Stooges",
+      "path": "X:\\TV Clssics 2\\Three Stooges\\11 - Three Little Beers.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": ""
+    },
+    {
+      "startTime": "07:36",
+      "name": "Sesame Street ",
+      "path": "Y:\\KIDS WORLD-2\\sesame-street-s-40-e-01-frankly-its-becoming-a-habitat\\SEASON 04\\Sesame Street_S40E25_Jacks Grows His Own Beanstalk.ia.mp4",
+      "duration": 3363.072,
+      "inPoint": 0,
+      "outPoint": 3363.072,
+      "category": ""
+    },
+    {
+      "startTime": "08:32",
+      "name": "Sesame Street  2",
+      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5029 (May 30, 2020).mp4",
+      "duration": 1556.0545,
+      "inPoint": 0,
+      "outPoint": 1556.0545,
+      "category": ""
+    },
+    {
+      "startTime": "08:58",
+      "name": "Super Why ",
+      "path": "X:\\KIDS WORLD 1\\SUPER WHY\\SEASON 05\\Super Why_S05E08_The Nutcracker.ia.mp4",
+      "duration": 1621.290667,
+      "inPoint": 0,
+      "outPoint": 1621.290667,
+      "category": ""
+    },
+    {
+      "startTime": "09:25",
+      "name": "Lazy Town",
+      "path": "Y:\\KIDS WORLD-2\\lazytown-hd-episodes-collection\\SEASON 01\\LazyTown S01E10 Lazy Scouts 1080p HD.ia.mp4",
+      "duration": 1416.115374,
+      "inPoint": 0,
+      "outPoint": 1416.115374,
+      "category": ""
+    },
+    {
+      "startTime": "09:49",
+      "name": "Maya and Miguel ",
+      "path": "Y:\\KIDS WORLD-2\\Maya and Miguel\\SEASON 01\\Maya.and.Miguel.S01E06.La.Nueva.Cocinita.480p.AMZN.WEB-DL.AAC2.0.x264-AndreMor.ia.mp4",
+      "duration": 1391.424,
+      "inPoint": 0,
+      "outPoint": 1391.424,
+      "category": ""
+    },
+    {
+      "startTime": "10:12",
+      "name": "Schoolhouse Rock 6",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\06 I Got Six.mkv",
+      "duration": 182.0677,
+      "inPoint": 0,
+      "outPoint": 182.0677,
+      "category": ""
+    },
+    {
+      "startTime": "10:15",
+      "name": "Schoolhouse Rock 7",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\07 Lucky Seven Sampson.mkv",
+      "duration": 185.49,
+      "inPoint": 0,
+      "outPoint": 185.49,
+      "category": ""
+    },
+    {
+      "startTime": "10:18",
+      "name": "Schoolhouse Rock 8",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\08 Figure Eight.mkv",
+      "duration": 187.228,
+      "inPoint": 0,
+      "outPoint": 187.228,
+      "category": ""
+    },
+    {
+      "startTime": "10:21",
+      "name": "Schoolhouse Rock 9",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\09 Naughty Number Nine.mkv",
+      "duration": 188.665,
+      "inPoint": 0,
+      "outPoint": 188.665,
       "category": ""
     }
   ]
