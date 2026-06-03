@@ -140,55 +140,61 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <script>
-// ── TODAY'S SCHEDULE — Tuesday June 2 2026 ────────────────────────────
+// ── TODAY'S SCHEDULE — Wednesday June 3 2026 ───────────────────────
+// Each item has a {date:"YYYY-MM-DD"} so overnight shows never confuse
+// the scheduler. Past-midnight shows get date:"2026-06-04".
 const TODAY_SCHEDULE = [
-  {t:"10:01",n:"Jay Jay Mysteries ",d:817,cat:""},
-  {t:"10:15",n:"FLMTV.com/KidsCorner",d:15,cat:""},
-  {t:"10:15",n:"Abbott and Costello",d:1430,cat:""},
-  {t:"10:39",n:"Get Smart",d:1525,cat:""},
-  {t:"11:04",n:"Gilligan\'s Island ",d:1520,cat:""},
-  {t:"11:29",n:"Mister Ed ",d:1338,cat:""},
-  {t:"11:51",n:"Leave it to Beaver",d:1550,cat:""},
-  {t:"12:17",n:"FLMTV.com",d:25,cat:""},
-  {t:"12:17",n:"Little Rascals",d:649,cat:""},
-  {t:"12:28",n:"Little Rascals ",d:646,cat:""},
-  {t:"12:39",n:"The Twilight Zone ",d:1555,cat:""},
-  {t:"13:05",n:"The Twilight Zone ",d:1554,cat:""},
-  {t:"13:31",n:"Bewitched",d:1510,cat:""},
-  {t:"13:56",n:"Bewitched ",d:1507,cat:""},
-  {t:"14:21",n:"LallyForNV com",d:30,cat:""},
-  {t:"14:22",n:"Three Stooges",d:0,cat:""},
-  {t:"14:52",n:"JudgeMaryPerry com",d:14,cat:""},
-  {t:"14:52",n:"Lance4Judge com",d:32,cat:""},
-  {t:"14:53",n:"Lenna4NV com",d:30,cat:""},
-  {t:"14:54",n:"VoteScottBlack com",d:30,cat:""},
-  {t:"14:55",n:"FLMTV.com",d:28,cat:""},
-  {t:"14:55",n:"Andy Griffith ",d:1538,cat:""},
-  {t:"15:21",n:"Andy Griffith ",d:1511,cat:""},
-  {t:"15:46",n:"Friends ",d:1368,cat:""},
-  {t:"16:09",n:"Zaina Spotlights",d:60,cat:""},
-  {t:"16:10",n:"Friends ",d:1367,cat:""},
-  {t:"16:33",n:"Whats Happening ",d:0,cat:""},
-  {t:"17:03",n:"Good Times S06E09 (J J and the Plumber\'s Helper)",d:1457,cat:""},
-  {t:"17:27",n:"Sanford and Son (Season 4) Disc 2 A1 t06",d:0,cat:""},
-  {t:"17:57",n:"The Jeffersons ",d:1502,cat:""},
-  {t:"18:22",n:"Princess And The Frog",d:5847,cat:""},
-  {t:"19:59",n:"Here\'s Lucy",d:1548,cat:""},
-  {t:"20:25",n:"JudgeMaryPerry com",d:14,cat:""},
-  {t:"20:25",n:"LallyForNV com",d:30,cat:""},
-  {t:"20:26",n:"VoteScottBlack com",d:30,cat:""},
-  {t:"20:27",n:"Lenna4NV com",d:30,cat:""},
-  {t:"20:28",n:"Lance4Judge com",d:32,cat:""},
-  {t:"20:29",n:"Boxer",d:135,cat:""},
-  {t:"20:31",n:"MASH",d:1541,cat:""},
-  {t:"20:57",n:"Titanic ",d:11689,cat:""},
-  {t:"00:12",n:" Lord Of The Rings-Two Towers",d:14132,cat:""},
-  {t:"04:08",n:"The Shining (R)",d:8626,cat:""},
-  {t:"06:32",n:"The X Files",d:2681,cat:""},
-  {t:"07:17",n:"Sesame Street ",d:1559,cat:""},
-  {t:"07:43",n:"Sesame Street ",d:1559,cat:""},
-  {t:"08:09",n:"Super Why!",d:1621,cat:""},
-  {t:"08:36",n:"Disney Learning Adventure",d:3557,cat:""}
+  // ── MORNING WRAP (tail of previous schedule, already airing) ─────────
+  {t:"08:51",date:"2026-06-03",n:"Super Why",d:1620,cat:"kids"},
+  {t:"09:18",date:"2026-06-03",n:"Ready Jet Go",d:1591,cat:"kids"},
+  // ── TODAY — June 3 ───────────────────────────────────────────────────
+  {t:"10:01",date:"2026-06-03",n:"Jay Jay Mysteries",d:817,cat:"kids"},
+  {t:"10:15",date:"2026-06-03",n:"Abbott and Costello",d:1430,cat:""},
+  {t:"10:39",date:"2026-06-03",n:"Get Smart",d:1525,cat:""},
+  {t:"11:04",date:"2026-06-03",n:"Gilligan\'s Island",d:1520,cat:""},
+  {t:"11:29",date:"2026-06-03",n:"Mister Ed",d:1338,cat:""},
+  {t:"11:51",date:"2026-06-03",n:"Leave it to Beaver",d:1550,cat:""},
+  {t:"12:17",date:"2026-06-03",n:"FLMTV.com",d:25,cat:""},
+  {t:"12:17",date:"2026-06-03",n:"Little Rascals",d:649,cat:""},
+  {t:"12:28",date:"2026-06-03",n:"Little Rascals",d:646,cat:""},
+  {t:"12:39",date:"2026-06-03",n:"The Twilight Zone",d:1555,cat:""},
+  {t:"13:05",date:"2026-06-03",n:"The Twilight Zone",d:1554,cat:""},
+  {t:"13:31",date:"2026-06-03",n:"Bewitched",d:1510,cat:""},
+  {t:"13:56",date:"2026-06-03",n:"Bewitched",d:1507,cat:""},
+  {t:"14:21",date:"2026-06-03",n:"LallyForNV.com",d:30,cat:""},
+  {t:"14:22",date:"2026-06-03",n:"Three Stooges",d:1800,cat:""},
+  {t:"14:52",date:"2026-06-03",n:"JudgeMaryPerry.com",d:14,cat:""},
+  {t:"14:52",date:"2026-06-03",n:"Lance4Judge.com",d:32,cat:""},
+  {t:"14:53",date:"2026-06-03",n:"Lenna4NV.com",d:30,cat:""},
+  {t:"14:54",date:"2026-06-03",n:"VoteScottBlack.com",d:30,cat:""},
+  {t:"14:55",date:"2026-06-03",n:"FLMTV.com",d:28,cat:""},
+  {t:"14:55",date:"2026-06-03",n:"Andy Griffith",d:1538,cat:""},
+  {t:"15:21",date:"2026-06-03",n:"Andy Griffith",d:1511,cat:""},
+  {t:"15:46",date:"2026-06-03",n:"Friends",d:1368,cat:""},
+  {t:"16:09",date:"2026-06-03",n:"Zaina Juliette Spotlight",d:60,cat:"flm"},
+  {t:"16:10",date:"2026-06-03",n:"Friends",d:1367,cat:""},
+  {t:"16:33",date:"2026-06-03",n:"Whats Happening",d:1800,cat:""},
+  {t:"17:03",date:"2026-06-03",n:"Good Times",d:1457,cat:""},
+  {t:"17:27",date:"2026-06-03",n:"Sanford and Son",d:1800,cat:""},
+  {t:"17:57",date:"2026-06-03",n:"The Jeffersons",d:1502,cat:""},
+  {t:"18:22",date:"2026-06-03",n:"Princess And The Frog",d:5847,cat:"movie"},
+  {t:"19:59",date:"2026-06-03",n:"Here\'s Lucy",d:1548,cat:""},
+  {t:"20:25",date:"2026-06-03",n:"JudgeMaryPerry.com",d:14,cat:""},
+  {t:"20:25",date:"2026-06-03",n:"LallyForNV.com",d:30,cat:""},
+  {t:"20:26",date:"2026-06-03",n:"VoteScottBlack.com",d:30,cat:""},
+  {t:"20:27",date:"2026-06-03",n:"Lenna4NV.com",d:30,cat:""},
+  {t:"20:28",date:"2026-06-03",n:"Lance4Judge.com",d:32,cat:""},
+  {t:"20:29",date:"2026-06-03",n:"Boxer",d:135,cat:"flm"},
+  {t:"20:31",date:"2026-06-03",n:"MASH",d:1541,cat:""},
+  {t:"20:57",date:"2026-06-03",n:"Titanic",d:11689,cat:"movie"},
+  // ── OVERNIGHT → June 4 (date keeps these correctly marked as upcoming) ─
+  {t:"00:12",date:"2026-06-04",n:"Lord of the Rings: Two Towers",d:14132,cat:"movie"},
+  {t:"04:08",date:"2026-06-04",n:"The Shining",d:8626,cat:"movie"},
+  {t:"06:32",date:"2026-06-04",n:"The X-Files",d:2681,cat:""},
+  {t:"07:17",date:"2026-06-04",n:"Sesame Street",d:1559,cat:"kids"},
+  {t:"07:43",date:"2026-06-04",n:"Sesame Street",d:1559,cat:"kids"},
+  {t:"08:09",date:"2026-06-04",n:"Super Why",d:1621,cat:"kids"},
+  {t:"08:36",date:"2026-06-04",n:"Disney Learning Adventure",d:3557,cat:"kids"},
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────
@@ -202,27 +208,28 @@ function toMin(t) {
   return h*60+m;
 }
 
-// Simple straight clock comparison - no phases, no jumping
-function getStatus(show) {
-  const now = nowMin();
-  const start = toMin(show.t);
-  const end = start + show.d/60;
-  // Handle overnight shows that cross midnight
-  const nowAdj = now < 6*60 ? now + 1440 : now;
-  const startAdj = start < 6*60 ? start + 1440 : start;
-  const endAdj = startAdj + show.d/60;
-  if (nowAdj >= startAdj && nowAdj < endAdj) return 'live';
-  if (nowAdj >= endAdj) return 'aired';
+// Date-aware: each show has an optional {date:"YYYY-MM-DD"} field.
+// This means overnight shows and multi-day schedules are handled correctly.
+function showStart(s) {
+  const dateStr = s.date || new Date().toISOString().split('T')[0];
+  const [h,m] = s.t.split(':').map(Number);
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+function getStatus(s) {
+  const now = new Date();
+  const start = showStart(s);
+  const end = new Date(start.getTime() + s.d * 1000);
+  if (now >= start && now < end) return 'live';
+  if (now >= end) return 'aired';
   return 'upcoming';
 }
-
-function getProgress(show) {
-  const now = nowMin();
-  const nowAdj = now < 6*60 ? now + 1440 : now;
-  const start = toMin(show.t);
-  const startAdj = start < 6*60 ? start + 1440 : start;
-  const endAdj = startAdj + show.d/60;
-  return Math.min(100, ((nowAdj - startAdj)/(endAdj - startAdj))*100);
+function getProgress(s) {
+  const now = new Date();
+  const start = showStart(s);
+  const end = new Date(start.getTime() + s.d * 1000);
+  return Math.min(100, Math.max(0, (now - start)/(end - start)*100));
 }
 
 function fmt12(t) {
