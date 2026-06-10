@@ -1,454 +1,121 @@
 {
-  "2026-06-08": [
-    {
-      "startTime": "09:00",
-      "name": "Gilligan's Island",
-      "path": "X:\\TV Clssics 2\\Gilligan Island\\Season 02\\Gilligan_s Island S02E14 Mine Hero.mkv",
-      "duration": 1478.352,
-      "inPoint": 0,
-      "outPoint": 1478.352,
-      "category": "show"
-    },
-    {
-      "startTime": "09:25",
-      "name": "Mister Ed ",
-      "path": "X:\\TV Clssics 2\\mister-ed-s-01\\SEASON 01\\Mister Ed S01E10 The Missing Statue.mkv",
-      "duration": 1538.113,
-      "inPoint": 0,
-      "outPoint": 1538.113,
-      "category": ""
-    },
-    {
-      "startTime": "09:51",
-      "name": "Three Stooges",
-      "path": "X:\\TV Clssics 2\\Three Stooges\\12 - Ants in the Pantry.mkv",
-      "duration": 0,
-      "inPoint": 0,
-      "outPoint": 0,
-      "category": ""
-    },
-    {
-      "startTime": "10:21",
-      "name": "The Lucy Show",
-      "path": ":\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 1\\S01E03 - Lucy Is a Referee.ia.mp4",
-      "duration": 1547.579367,
-      "inPoint": 0,
-      "outPoint": 1547.579367,
-      "category": ""
-    },
-    {
-      "startTime": "10:47",
-      "name": "Little Rascals 43 (Washee Ironee)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 43 (Washee Ironee).mp4",
-      "duration": 941.866655,
-      "inPoint": 0,
-      "outPoint": 941.866655,
-      "category": ""
-    },
-    {
-      "startTime": "11:03",
-      "name": "Little Rascals 44 (Mama's Little Pirate)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 44 (Mama's Little Pirate).mp4",
-      "duration": 1081.433322,
-      "inPoint": 0,
-      "outPoint": 1081.433322,
-      "category": ""
-    },
-    {
-      "startTime": "11:21",
-      "name": "JudgeMaryPerry com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "11:21",
-      "name": "LallyForNV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
-      "duration": 30.046621,
-      "inPoint": 0,
-      "outPoint": 30.046621,
-      "category": ""
-    },
-    {
-      "startTime": "11:22",
-      "name": "Lance4Judge com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
-      "duration": 32.165467,
-      "inPoint": 0,
-      "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "11:23",
-      "name": "Lenna4NV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "11:24",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "11:25",
-      "name": "The Twilight Zone",
-      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-02\\The Twilight Zone (1959) - S02E03 - Nervous Man in a Four Dollar Room (1080p BluRay x265 ImE).mkv",
-      "duration": 1555.284,
-      "inPoint": 0,
-      "outPoint": 1555.284,
-      "category": ""
-    },
-    {
-      "startTime": "11:51",
-      "name": "The Twilight Zone ",
-      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-02\\The Twilight Zone (1959) - S02E04 - A Thing About Machines (1080p BluRay x265 ImE).mkv",
-      "duration": 1554.068,
-      "inPoint": 0,
-      "outPoint": 1554.068,
-      "category": ""
-    },
-    {
-      "startTime": "12:17",
-      "name": "Good Gumbo",
-      "path": "X:\\COOKING & More\\Good Gumbo\\5 Bananas Foster - The Flaming Dessert.mp4",
-      "duration": 274.373733,
-      "inPoint": 0,
-      "outPoint": 274.373733,
-      "category": ""
-    },
-    {
-      "startTime": "12:22",
-      "name": "Pioneer Woman",
-      "path": "X:\\COOKING & More\\Food-Network-Pioneer-Woman\\EPISODES 1-7\\1.1 Home On The Ranch\\1.1 Home On The Ranch.mp4",
-      "duration": 1260.714667,
-      "inPoint": 0,
-      "outPoint": 1260.714667,
-      "category": "show"
-    },
-    {
-      "startTime": "12:43",
-      "name": "Bewitched ",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 05\\Bewitched S05E27 Daddy Does His Thing.mp4",
-      "duration": 1520.533333,
-      "inPoint": 0,
-      "outPoint": 1520.533333,
-      "category": ""
-    },
-    {
-      "startTime": "13:08",
-      "name": "Bewitched ",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 05\\Bewitched S05E28 Samantha's Good News.mp4",
-      "duration": 1523.029333,
-      "inPoint": 0,
-      "outPoint": 1523.029333,
-      "category": ""
-    },
-    {
-      "startTime": "13:33",
-      "name": "Charlie's Angels S04e20 Harrigan's Angel",
-      "path": "Y:\\CLASSIC TV-2\\Charlies Angeles\\SEASON 04\\Charlie's Angels S04e20 Harrigan's Angel.mkv",
-      "duration": 2940.792,
-      "inPoint": 0,
-      "outPoint": 2940.792,
-      "category": ""
-    },
-    {
-      "startTime": "14:22",
-      "name": "Andy Griffith S3 D3 t07",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-03\\Andy Griffith S3 D3_t07.mkv",
-      "duration": 1542.332,
-      "inPoint": 0,
-      "outPoint": 1542.332,
-      "category": ""
-    },
-    {
-      "startTime": "14:48",
-      "name": "Andy Griffith S3 D3 t08",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-03\\Andy Griffith S3 D3_t08.mkv",
-      "duration": 1541.998,
-      "inPoint": 0,
-      "outPoint": 1541.998,
-      "category": ""
-    },
-    {
-      "startTime": "15:14",
-      "name": "JudgeMaryPerry com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\JudgeMaryPerry.com.mp4",
-      "duration": 14.8148,
-      "inPoint": 0,
-      "outPoint": 14.8148,
-      "category": ""
-    },
-    {
-      "startTime": "15:14",
-      "name": "LallyForNV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\LallyForNV.com.mp4",
-      "duration": 30.046621,
-      "inPoint": 0,
-      "outPoint": 30.046621,
-      "category": ""
-    },
-    {
-      "startTime": "15:15",
-      "name": "Lance4Judge com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lance4Judge.com.mov",
-      "duration": 32.165467,
-      "inPoint": 0,
-      "outPoint": 32.165467,
-      "category": ""
-    },
-    {
-      "startTime": "15:16",
-      "name": "Lenna4NV com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\Lenna4NV.com.mov",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "15:17",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "15:18",
-      "name": "Boxer",
-      "path": "X:\\COMMERCIALS-CLIPS\\Boxer.mp4",
-      "duration": 135.929615,
-      "inPoint": 0,
-      "outPoint": 135.929615,
-      "category": ""
-    },
-    {
-      "startTime": "15:20",
-      "name": "Whats Happening ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-01\\Whats Happening S01E12.mkv",
-      "duration": 0,
-      "inPoint": 0,
-      "outPoint": 0,
-      "category": ""
-    },
-    {
-      "startTime": "15:50",
-      "name": "Good Times",
-      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 06\\Good Times S06E11 (The Snow Storm).mp4",
-      "duration": 1473.066667,
-      "inPoint": 0,
-      "outPoint": 1473.066667,
-      "category": ""
-    },
-    {
-      "startTime": "16:15",
-      "name": "Sanford and Son ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 04\\Sanford and Son- (Season 4) Disc 2-A1_t07.mkv",
-      "duration": 0,
-      "inPoint": 0,
-      "outPoint": 0,
-      "category": "show"
-    },
-    {
-      "startTime": "16:45",
-      "name": "The Jeffersons ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 7 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S07E09 Calendar Girl.mkv",
-      "duration": 1502.613,
-      "inPoint": 0,
-      "outPoint": 1502.613,
-      "category": ""
-    },
-    {
-      "startTime": "17:10",
-      "name": "FLMTV.com",
-      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
-      "duration": 15.72,
-      "inPoint": 0,
-      "outPoint": 15.72,
-      "category": ""
-    },
-    {
-      "startTime": "17:10",
-      "name": "Toy Story 2 ",
-      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\TOY STORY 1999\\Toy.Story.2.1999.ENGLISH.mkv",
-      "duration": 5545.512,
-      "inPoint": 0,
-      "outPoint": 5545.512,
-      "category": ""
-    },
-    {
-      "startTime": "18:42",
-      "name": "A Year in Space",
-      "path": "X:\\DOCUMENTARIES 2\\A-Year-In-Space\\1. A Year in Space\\1. A Year in Space.mp4",
-      "duration": 3337.301333,
-      "inPoint": 0,
-      "outPoint": 3337.301333,
-      "category": ""
-    },
-    {
-      "startTime": "19:38",
-      "name": "That '70s Show ",
-      "path": "X:\\TV SHOWS 2\\THAT 70s SHOW\\SEASON 01\\That '70s Show (1998) - S08E15 - Keep Yourself Alive (1080p BluRay x265 FreetheFish).mkv",
-      "duration": 1300.329,
-      "inPoint": 0,
-      "outPoint": 1300.329,
-      "category": ""
-    },
+  "2026-06-10": [
     {
       "startTime": "20:00",
-      "name": "Malcolm in the Middle",
-      "path": "X:\\TV SHOWS 2\\Malcolm In The Middle\\Season 1\\S01E13 - Rollerskates.mp4",
-      "duration": 1351.874989,
+      "name": "Something Wicked This Way Comes",
+      "path": "X:\\MOVIES-5\\something-wicked-this-way-comes-1983-oldies\\Something Wicked This Way Comes (1983)Oldies.mp4",
+      "duration": 5703.069736,
       "inPoint": 0,
-      "outPoint": 1351.874989,
+      "outPoint": 5703.069736,
       "category": ""
     },
     {
-      "startTime": "20:23",
-      "name": "The X Files",
-      "path": "X:\\THE X FILES\\SEASON-01\\The X-Files, Season 1 Disc 3_t08.mkv",
-      "duration": 2752.207,
+      "startTime": "21:35",
+      "name": "Dune Part Two (2024)",
+      "path": "X:\\MOVIES-5\\Dune Pt 2\\Dune-Part-Two-(2024).mp4",
+      "duration": 9947.071,
       "inPoint": 0,
-      "outPoint": 2752.207,
-      "category": "show"
-    },
-    {
-      "startTime": "21:09",
-      "name": "The Others ",
-      "path": "X:\\MOVIES-5\\The Others 2001\\The.Others.2001.mp4",
-      "duration": 6254.165,
-      "inPoint": 0,
-      "outPoint": 6254.165,
+      "outPoint": 9947.071,
       "category": ""
     },
     {
-      "startTime": "22:53",
-      "name": "SheBoujay.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\SheBoujay COMMERCIAL VRS QRcode 1.mp4",
-      "duration": 60.2,
+      "startTime": "00:21",
+      "name": "The Rape Of Nanking",
+      "path": "X:\\DOCUMENTARIES 2\\The Rape Of Nanking\\The Rape Of Nanking (2007) hardcoded english subs.mp4",
+      "duration": 6195.022144,
       "inPoint": 0,
-      "outPoint": 60.2,
+      "outPoint": 6195.022144,
       "category": ""
     },
     {
-      "startTime": "22:54",
-      "name": "The Lost Boys",
-      "path": "X:\\_SORT-MOVIES\\thelostboys1987\\The.Lost.Boys.mkv",
-      "duration": 5846.123,
+      "startTime": "03:28",
+      "name": "Gone In 60 Seconds ",
+      "path": "X:\\MOVIES-5\\Dune Pt 2\\Dune-Part-Two-(2024).mp4",
+      "duration": 7076.444356,
       "inPoint": 0,
-      "outPoint": 5846.123,
+      "outPoint": 7076.444356,
       "category": ""
     },
     {
-      "startTime": "00:31",
-      "name": "The Shawshank Redemption",
-      "path": "X:\\MOVIES-5\\The Shawshank Redemption (1994) Morgan Freeman 1080p\\The Shawshank Redemption (1994) Morgan Freeman 1080p.mp4",
-      "duration": 8552.543978,
+      "startTime": "02:04",
+      "name": "Alien Interview Proof",
+      "path": "X:\\DOCUMENTARIES 2\\Alien Interview\\Alien Interview Proof.mp4",
+      "duration": 5067.731882,
       "inPoint": 0,
-      "outPoint": 8552.543978,
+      "outPoint": 5067.731882,
       "category": ""
     },
     {
-      "startTime": "02:54",
-      "name": "The Magnificent Seven ",
-      "path": "X:\\_SORT-MOVIES\\The Magnificent Seven 2016\\The Magnificent Seven 2016 1080p BluRay x264 DTS-JYK.mkv",
-      "duration": 7969.974,
+      "startTime": "03:28",
+      "name": "Mysterious and Strange Websites",
+      "path": "X:\\DOCUMENTARIES 2\\Strange Websites\\15_Mysterious_and_Strange_Websites.mkv",
+      "duration": 1419.621,
       "inPoint": 0,
-      "outPoint": 7969.974,
+      "outPoint": 1419.621,
       "category": ""
     },
     {
-      "startTime": "05:07",
-      "name": "Michael Collins",
-      "path": "X:\\_SORT-MOVIES\\Michael Collins (1996) Liam Neeson 1080p.mp4",
-      "duration": 7948.523889,
+      "startTime": "03:52",
+      "name": "Vertigo (1958) (Hitchcock) Jimmy Stewart, Kim Novak 1080p",
+      "path": "X:\\MOVIES-5\\Vertigo (1958)\\Vertigo (1958) (Hitchcock) Jimmy Stewart, Kim Novak 1080p.mp4",
+      "duration": 7711.620567,
       "inPoint": 0,
-      "outPoint": 7948.523889,
+      "outPoint": 7711.620567,
       "category": ""
     },
     {
-      "startTime": "07:19",
-      "name": "FLMTV.com",
-      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
-      "duration": 15.72,
+      "startTime": "06:01",
+      "name": "The Waterboy 1998",
+      "path": "X:\\MOVIES-5\\THE WATER BOY\\The Waterboy 1998.mkv\"X:\\MOVIES-5\\THE WATER BOY\\The Waterboy 1998.mkv",
+      "duration": 5377.493,
       "inPoint": 0,
-      "outPoint": 15.72,
+      "outPoint": 5377.493,
       "category": ""
     },
     {
-      "startTime": "07:19",
+      "startTime": "07:31",
       "name": "Sesame Street ",
-      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5029 (May 30, 2020).mp4",
-      "duration": 1556.0545,
+      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Elmo_and_Abby’s_Ocean_Adventure_Video___PBS_KIDS.ia.mp4",
+      "duration": 1555.971995,
       "inPoint": 0,
-      "outPoint": 1556.0545,
+      "outPoint": 1555.971995,
       "category": ""
     },
     {
-      "startTime": "07:45",
-      "name": "Sesame Street 2",
-      "path": "Y:\\KIDS WORLD-2\\sesame-street-s-40-e-01-frankly-its-becoming-a-habitat\\SEASON 04\\Sesame Street_S40E17_Squirmadega Car Race.ia.mp4",
-      "duration": 3363.426733,
+      "startTime": "07:57",
+      "name": "Sesame Street ",
+      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Elmo_Visits_the_Library_Video___PBS_KIDS.mp4",
+      "duration": 1555.971995,
       "inPoint": 0,
-      "outPoint": 3363.426733,
+      "outPoint": 1555.971995,
       "category": ""
     },
     {
-      "startTime": "08:41",
+      "startTime": "08:23",
       "name": "Super Why! ",
-      "path": "X:\\KIDS WORLD 1\\SUPER WHY\\SEASON 05\\Super Why!_S05E09_The Muddled-Up Fairytales.ia.mp4",
-      "duration": 1620.885333,
+      "path": "X:\\KIDS WORLD 1\\SUPER WHY\\SEASON 06\\Super Why!_S06E02_The Beach Day Mystery.ia.mp4",
+      "duration": 1620.544,
       "inPoint": 0,
-      "outPoint": 1620.885333,
+      "outPoint": 1620.544,
       "category": ""
     },
     {
-      "startTime": "09:08",
-      "name": "NODDY ",
-      "path": "Y:\\KIDS WORLD-2\\Noddy\\SEASON 01\\NODDY_VOL018.mp4",
-      "duration": 213.480147,
+      "startTime": "08:50",
+      "name": "Dinosaur Train ",
+      "path": "Y:\\KIDS WORLD-2\\dinosaur-train-season-1-s-01-e-01-elmer-elasmosaurus\\SEASON 01\\Dinosaur Train Season 1_S01E04_Shiny_s Sea Shells.ia.mp4",
+      "duration": 780.0452,
       "inPoint": 0,
-      "outPoint": 213.480147,
+      "outPoint": 780.0452,
       "category": ""
     },
     {
-      "startTime": "09:12",
-      "name": "Nature Cat ",
-      "path": "Y:\\KIDS WORLD-2\\Nature Cat\\SEASON 02\\Nature.Cat.S02E27E28.Daisys.Wildflower.Round.Up-A.Party.for.Squeeks.1080p.AMZN.WEBRip.AAC2.0.x264.ia.mp4",
-      "duration": 1441.312,
+      "startTime": "09:03",
+      "name": "Mars Needs Moms",
+      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\1x23 Mars Needs Moms\\1x23 Mars Needs Moms.mp4",
+      "duration": 5284.331,
       "inPoint": 0,
-      "outPoint": 1441.312,
+      "outPoint": 5284.331,
       "category": ""
-    },
-    {
-      "startTime": "09:36",
-      "name": "Dinosaur Train",
-      "path": "Y:\\KIDS WORLD-2\\dinosaur-train-season-1-s-01-e-01-elmer-elasmosaurus\\SEASON 01\\Dinosaur Train Season 1_S01E05_The Amazing Michelinoceras Brothers.ia.mp4",
-      "duration": 780.812633,
-      "inPoint": 0,
-      "outPoint": 780.812633,
-      "category": ""
-    },
-    {
-      "startTime": "09:49",
-      "name": "Aladdin",
-      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\Aladdin.1992.1080p.BluRay.H.265.Egy\\Aladdin-ENGLISH.mkv",
-      "duration": 5439.892,
-      "inPoint": 0,
-      "outPoint": 5439.892,
-      "category": "movie"
     }
   ]
 }
