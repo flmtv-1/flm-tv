@@ -1,121 +1,454 @@
 {
-  "2026-06-10": [
+  "2026-06-11": [
     {
-      "startTime": "20:00",
-      "name": "Something Wicked This Way Comes",
-      "path": "X:\\MOVIES-5\\something-wicked-this-way-comes-1983-oldies\\Something Wicked This Way Comes (1983)Oldies.mp4",
-      "duration": 5703.069736,
+      "startTime": "10:31",
+      "name": "FLMTV.com",
+      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
+      "duration": 15.72,
       "inPoint": 0,
-      "outPoint": 5703.069736,
+      "outPoint": 15.72,
+      "category": "promo"
+    },
+    {
+      "startTime": "10:31",
+      "name": "Get Smart ",
+      "path": "Y:\\CLASSIC TV-2\\Get Smart\\SEASON 01\\Get Smart S01E18 (The Dead Spy Scrawls).ia.mp4",
+      "duration": 1524.603837,
+      "inPoint": 0,
+      "outPoint": 1524.603837,
+      "category": "show"
+    },
+    {
+      "startTime": "10:56",
+      "name": "The Addams Family ",
+      "path": "Y:\\CLASSIC TV-2\\the-addams-family-1964\\SEASON 1\\The Addams Family S1 E02 - Morticia and the Psychiatrist.ia.mp4",
+      "duration": 1542.571247,
+      "inPoint": 0,
+      "outPoint": 1542.571247,
+      "category": "show"
+    },
+    {
+      "startTime": "11:22",
+      "name": "The Monkees ",
+      "path": "Y:\\CLASSIC TV-2\\The-Monkees-Complete\\SEASON 05\\The Monkees 209 The Card Carrying Red Shoes.mp4",
+      "duration": 1502.772245,
+      "inPoint": 0,
+      "outPoint": 1502.772245,
+      "category": "show"
+    },
+    {
+      "startTime": "11:47",
+      "name": "Bewitched",
+      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 05\\Bewitched S05E29 Samantha's Shopping Spree.mp4",
+      "duration": 1520.021333,
+      "inPoint": 0,
+      "outPoint": 1520.021333,
+      "category": "show"
+    },
+    {
+      "startTime": "12:12",
+      "name": "Bewitched  2",
+      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 05\\Bewitched S05E30 Samantha and Darrin in Mexico City.mp4",
+      "duration": 1520.021333,
+      "inPoint": 0,
+      "outPoint": 1520.021333,
+      "category": "show"
+    },
+    {
+      "startTime": "12:37",
+      "name": "Zaina Juliette Spotlights",
+      "path": "Y:\\CLIPS-FILLERS\\Zaina-Spotlight-TooDarnHot-M.mp4",
+      "duration": 336.48,
+      "inPoint": 0,
+      "outPoint": 336.48,
+      "category": "show"
+    },
+    {
+      "startTime": "12:43",
+      "name": "Beverly Hillbillies",
+      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-01\\S01EP03-Back At The Cabin.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": "show"
+    },
+    {
+      "startTime": "13:13",
+      "name": "Beverly Hillbillies",
+      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-01\\S01EP04-Clampetts Meet Mrs. Drysdale.mkv",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": "show"
+    },
+    {
+      "startTime": "13:43",
+      "name": "Leave it to Beaver",
+      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Leave It to Beaver (The Complete Series) [1957 - 1963]\\Season 2\\S02E02 - Eddie's Girl.mp4",
+      "duration": 0,
+      "inPoint": 0,
+      "outPoint": 0,
+      "category": "show"
+    },
+    {
+      "startTime": "14:13",
+      "name": "The Lucy Show",
+      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 1\\S01E03 - Lucy Is a Referee.ia.mp4",
+      "duration": 1547.579367,
+      "inPoint": 0,
+      "outPoint": 1547.579367,
       "category": ""
     },
     {
-      "startTime": "21:35",
-      "name": "Dune Part Two (2024)",
-      "path": "X:\\MOVIES-5\\Dune Pt 2\\Dune-Part-Two-(2024).mp4",
-      "duration": 9947.071,
+      "startTime": "14:39",
+      "name": "Little Rascals 46 ",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 46 (Anniversary Trouble).mp4",
+      "duration": 1150.166655,
       "inPoint": 0,
-      "outPoint": 9947.071,
+      "outPoint": 1150.166655,
       "category": ""
     },
     {
-      "startTime": "00:21",
-      "name": "The Rape Of Nanking",
-      "path": "X:\\DOCUMENTARIES 2\\The Rape Of Nanking\\The Rape Of Nanking (2007) hardcoded english subs.mp4",
-      "duration": 6195.022144,
+      "startTime": "14:58",
+      "name": "Little Rascals 47 ",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 47 (Beginner's Luck).mp4",
+      "duration": 1115.766655,
       "inPoint": 0,
-      "outPoint": 6195.022144,
+      "outPoint": 1115.766655,
       "category": ""
     },
     {
-      "startTime": "03:28",
-      "name": "Gone In 60 Seconds ",
-      "path": "X:\\MOVIES-5\\Dune Pt 2\\Dune-Part-Two-(2024).mp4",
-      "duration": 7076.444356,
+      "startTime": "15:17",
+      "name": "Andy Griffith Show",
+      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-05\\Andy Griffith S5 D3_t01.mkv",
+      "duration": 1480.917,
       "inPoint": 0,
-      "outPoint": 7076.444356,
+      "outPoint": 1480.917,
       "category": ""
     },
     {
-      "startTime": "02:04",
-      "name": "Alien Interview Proof",
-      "path": "X:\\DOCUMENTARIES 2\\Alien Interview\\Alien Interview Proof.mp4",
-      "duration": 5067.731882,
+      "startTime": "15:42",
+      "name": "What's Happening ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-01\\Whats Happening S01E14.mkv",
+      "duration": 0,
       "inPoint": 0,
-      "outPoint": 5067.731882,
+      "outPoint": 0,
+      "category": "show"
+    },
+    {
+      "startTime": "16:12",
+      "name": "AshwaterProducts.com",
+      "path": "Y:\\CLIPS-FILLERS\\Ashwater1-B.mp4",
+      "duration": 25.262993,
+      "inPoint": 0,
+      "outPoint": 25.262993,
+      "category": "commercial"
+    },
+    {
+      "startTime": "16:12",
+      "name": "Good Times ",
+      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 06\\Good Times S06E13 (House Hunting).mp4",
+      "duration": 1467.013515,
+      "inPoint": 0,
+      "outPoint": 1467.013515,
+      "category": "show"
+    },
+    {
+      "startTime": "16:36",
+      "name": "The Jeffersons",
+      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 7 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S07E11 God Bless Americans.mkv",
+      "duration": 1500.842,
+      "inPoint": 0,
+      "outPoint": 1500.842,
+      "category": "show"
+    },
+    {
+      "startTime": "17:01",
+      "name": "FLMTV.com",
+      "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28.36,
+      "inPoint": 0,
+      "outPoint": 28.36,
       "category": ""
     },
     {
-      "startTime": "03:28",
-      "name": "Mysterious and Strange Websites",
-      "path": "X:\\DOCUMENTARIES 2\\Strange Websites\\15_Mysterious_and_Strange_Websites.mkv",
-      "duration": 1419.621,
+      "startTime": "17:01",
+      "name": "Jackie Chan Adventures ",
+      "path": "Y:\\KIDS WORLD-2\\jackie-chan-adventures\\Season 2 (2001-02)\\Jackie Chan Adventures -  2x04 - Rumble In The Big House.mp4",
+      "duration": 1278.778779,
       "inPoint": 0,
-      "outPoint": 1419.621,
+      "outPoint": 1278.778779,
+      "category": "show"
+    },
+    {
+      "startTime": "17:22",
+      "name": "Molly of Denali ",
+      "path": "Y:\\KIDS WORLD-2\\Molly of Denali\\SEASON 01\\Molly of Denali_S01E06_Culture Clash_Party Moose.ia.mp4",
+      "duration": 1533.098667,
+      "inPoint": 0,
+      "outPoint": 1533.098667,
       "category": ""
     },
     {
-      "startTime": "03:52",
-      "name": "Vertigo (1958) (Hitchcock) Jimmy Stewart, Kim Novak 1080p",
-      "path": "X:\\MOVIES-5\\Vertigo (1958)\\Vertigo (1958) (Hitchcock) Jimmy Stewart, Kim Novak 1080p.mp4",
-      "duration": 7711.620567,
+      "startTime": "17:48",
+      "name": "Nature Cat ",
+      "path": "Y:\\KIDS WORLD-2\\Nature Cat\\SEASON 02\\Nature.Cat.S02E33E34.The.Deal.with.Eels-Skip.It.1080p.AMZN.WEBRip.AAC2.0.x264.ia.mp4",
+      "duration": 1441.344,
       "inPoint": 0,
-      "outPoint": 7711.620567,
+      "outPoint": 1441.344,
+      "category": "show"
+    },
+    {
+      "startTime": "18:12",
+      "name": "Ready Jet Go! ",
+      "path": "Y:\\KIDS WORLD-2\\RJGTVSeries\\SEASON 02\\Ready Jet Go! - S02E03-04 - Endless Summer + Jet Shrinks the Kids WEBDL-1080p.mp4",
+      "duration": 1581.856,
+      "inPoint": 0,
+      "outPoint": 1581.856,
       "category": ""
     },
     {
-      "startTime": "06:01",
-      "name": "The Waterboy 1998",
-      "path": "X:\\MOVIES-5\\THE WATER BOY\\The Waterboy 1998.mkv\"X:\\MOVIES-5\\THE WATER BOY\\The Waterboy 1998.mkv",
+      "startTime": "18:38",
+      "name": "SheBoujay.com",
+      "path": "X:\\COMMERCIALS-CLIPS\\SheBoujay COMMERCIAL VRS QRcode 1.mp4",
+      "duration": 60.2,
+      "inPoint": 0,
+      "outPoint": 60.2,
+      "category": "commercial"
+    },
+    {
+      "startTime": "18:39",
+      "name": "Here's Lucy",
+      "path": "Y:\\AWESOME TV SHOWS-2\\Here's Lucy (The Complete Series) [1968 - 1974]\\Season 4\\S04E24 - Kim Finally Cuts You-Know-Whose Apron Strings.mp4",
+      "duration": 1549.676553,
+      "inPoint": 0,
+      "outPoint": 1549.676553,
+      "category": "show"
+    },
+    {
+      "startTime": "19:05",
+      "name": "UP NEXT: The \"Z\"",
+      "path": "X:\\TV SHOWS 2\\ZAINA JULIETTE SHOW\\COLLECTION 01\\Zaina Juliette & Friends wanted in France  Commercial.mp4",
+      "duration": 67.430748,
+      "inPoint": 0,
+      "outPoint": 67.430748,
+      "category": ""
+    },
+    {
+      "startTime": "19:06",
+      "name": "FLMTV.com",
+      "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28.36,
+      "inPoint": 0,
+      "outPoint": 28.36,
+      "category": ""
+    },
+    {
+      "startTime": "19:06",
+      "name": "Locals in Las Vegas EP 10",
+      "path": "X:\\TV SHOWS 2\\LOCALS IN LAS VEGAS-JESSICA\\Season 01\\Locals in Las Vegas-S01E10.mp4",
+      "duration": 1709.974933,
+      "inPoint": 0,
+      "outPoint": 1709.974933,
+      "category": "promo"
+    },
+    {
+      "startTime": "19:34",
+      "name": "Zaina Juliette & Friends",
+      "path": "X:\\TV SHOWS 2\\ZAINA JULIETTE SHOW\\COLLECTION 02\\Zaina Juliette Show Discussing Condition Of Return Part 2.mp4",
+      "duration": 1708.175964,
+      "inPoint": 0,
+      "outPoint": 1708.175964,
+      "category": "show"
+    },
+    {
+      "startTime": "20:02",
+      "name": "Zaina Moves",
+      "path": "Y:\\CLIPS-FILLERS\\ZainaTappAM.mp4",
+      "duration": 29.3,
+      "inPoint": 0,
+      "outPoint": 29.3,
+      "category": ""
+    },
+    {
+      "startTime": "20:02",
+      "name": "Zaina Juliette, 90 Miles",
+      "path": "Y:\\Zaina-Files\\---ZJS with Chelsea Mac 90 Miles.mp4",
+      "duration": 333.266271,
+      "inPoint": 0,
+      "outPoint": 333.266271,
+      "category": "music"
+    },
+    {
+      "startTime": "20:08",
+      "name": "Friends ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\FRIENDS\\Season 2\\Friends (1994) - S02E01 - The One With Ross_s New Girlfriend (1080p BluRay x265 Silence).mkv",
+      "duration": 1333.396,
+      "inPoint": 0,
+      "outPoint": 1333.396,
+      "category": "show"
+    },
+    {
+      "startTime": "20:30",
+      "name": "3rd Rock from the Sun",
+      "path": "Y:\\AWESOME TV SHOWS-2\\3rd ROCK FROM THE SUN\\Season 1\\3rd.Rock.from.the.Sun.S01E10.mkv",
+      "duration": 1313.152,
+      "inPoint": 0,
+      "outPoint": 1313.152,
+      "category": "show"
+    },
+    {
+      "startTime": "20:52",
+      "name": "The X Files",
+      "path": "X:\\THE X FILES\\SEASON-01\\The X-Files, Season 1 Disc 6_t09.mkv",
+      "duration": 267.872,
+      "inPoint": 0,
+      "outPoint": 267.872,
+      "category": "show"
+    },
+    {
+      "startTime": "20:56",
+      "name": "FLMTV.com",
+      "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28.36,
+      "inPoint": 0,
+      "outPoint": 28.36,
+      "category": ""
+    },
+    {
+      "startTime": "20:56",
+      "name": "The Waterboy ",
+      "path": "X:\\MOVIES-5\\THE WATER BOY\\The Waterboy 1998.mkv",
       "duration": 5377.493,
       "inPoint": 0,
       "outPoint": 5377.493,
-      "category": ""
+      "category": "movie"
     },
     {
-      "startTime": "07:31",
-      "name": "Sesame Street ",
-      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Elmo_and_Abby’s_Ocean_Adventure_Video___PBS_KIDS.ia.mp4",
-      "duration": 1555.971995,
+      "startTime": "22:26",
+      "name": "Dolores Claiborne",
+      "path": "X:\\MOVIES-5\\Dolores Claiborne 1995\\Dolores Claiborne 1995 1080p BluRay x265 AAC 5.1-RBG.mp4",
+      "duration": 7891.925708,
       "inPoint": 0,
-      "outPoint": 1555.971995,
-      "category": ""
+      "outPoint": 7891.925708,
+      "category": "movie"
     },
     {
-      "startTime": "07:57",
-      "name": "Sesame Street ",
-      "path": "X:\\KIDS WORLD 1\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Elmo_Visits_the_Library_Video___PBS_KIDS.mp4",
-      "duration": 1555.971995,
+      "startTime": "03:45",
+      "name": "What's Eating Gilbert Grape ",
+      "path": "X:\\MOVIES-5\\WHATS EATING GILBERT GRAPE 1993\\Whats Eating Gilbert Grape 1993 1080p BluRay HEVC x265 5.1 BONE.mkv",
+      "duration": 7077.055,
       "inPoint": 0,
-      "outPoint": 1555.971995,
+      "outPoint": 7077.055,
+      "category": "movie"
+    },
+    {
+      "startTime": "03:45",
+      "name": "Inception",
+      "path": "Y:\\MORE TO SORT\\Inception.ia.mp4",
+      "duration": 8888.018367,
+      "inPoint": 0,
+      "outPoint": 8888.018367,
+      "category": "movie"
+    },
+    {
+      "startTime": "00:38",
+      "name": "Matilda ",
+      "path": "X:\\MOVIES-5\\Matilda\\Matilda 1996 720p.mp4",
+      "duration": 5888.924709,
+      "inPoint": 0,
+      "outPoint": 5888.924709,
+      "category": "movie"
+    },
+    {
+      "startTime": "02:16",
+      "name": "The Crush ",
+      "path": "X:\\MOVIES-5\\The Crush\\The Crush 1993.ia.mp4",
+      "duration": 5340.584822,
+      "inPoint": 0,
+      "outPoint": 5340.584822,
+      "category": "movie"
+    },
+    {
+      "startTime": "03:45",
+      "name": "All Creatures-You Got to Dream",
+      "path": "X:\\DOCUMENTARIES 2\\Masterpiece-All-Creatures\\1.1 You've Got to Dream.mp4",
+      "duration": 3185.7826,
+      "inPoint": 0,
+      "outPoint": 3185.7826,
+      "category": "movie"
+    },
+    {
+      "startTime": "04:38",
+      "name": "A Brilliant Young Mind ",
+      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\A Brilliant Young Mind\\A.Brilliant.Young.Mind.2014.1080p.BluRay.x264.YIFY.mp4",
+      "duration": 6686.083333,
+      "inPoint": 0,
+      "outPoint": 6686.083333,
+      "category": "movie"
+    },
+    {
+      "startTime": "06:29",
+      "name": "Cars ",
+      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\Cars.2006.1080p.BluRay.H.265.Egy\\Cars.2006.1080p.BluRay.H.265.Egy_track1.mkv",
+      "duration": 6996.009,
+      "inPoint": 0,
+      "outPoint": 6996.009,
+      "category": "movie"
+    },
+    {
+      "startTime": "08:26",
+      "name": "Sesame Street ",
+      "path": "Y:\\KIDS WORLD-2\\sesame-street-s-40-e-01-frankly-its-becoming-a-habitat\\SEASON 04\\Sesame Street_S40E26_Princess Show.ia.mp4",
+      "duration": 3363.232,
+      "inPoint": 0,
+      "outPoint": 3363.232,
       "category": ""
     },
     {
-      "startTime": "08:23",
+      "startTime": "09:22",
+      "name": "NODDY",
+      "path": "Y:\\KIDS WORLD-2\\Noddy\\SEASON 01\\NODDY_VOL014.mp4",
+      "duration": 694.227561,
+      "inPoint": 0,
+      "outPoint": 694.227561,
+      "category": "show"
+    },
+    {
+      "startTime": "09:34",
       "name": "Super Why! ",
-      "path": "X:\\KIDS WORLD 1\\SUPER WHY\\SEASON 06\\Super Why!_S06E02_The Beach Day Mystery.ia.mp4",
+      "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 06\\Super Why!_S06E02_The Beach Day Mystery.ia.mp4",
       "duration": 1620.544,
       "inPoint": 0,
       "outPoint": 1620.544,
-      "category": ""
+      "category": "show"
     },
     {
-      "startTime": "08:50",
-      "name": "Dinosaur Train ",
-      "path": "Y:\\KIDS WORLD-2\\dinosaur-train-season-1-s-01-e-01-elmer-elasmosaurus\\SEASON 01\\Dinosaur Train Season 1_S01E04_Shiny_s Sea Shells.ia.mp4",
-      "duration": 780.0452,
+      "startTime": "10:01",
+      "name": "Ready Jet Go!",
+      "path": "Y:\\KIDS WORLD-2\\RJGTVSeries\\SEASON 01\\Ready.Jet.Go-S01E21-22-Mission.To.Mars.Sounds.Abound.WEBDL-1080p.mp4",
+      "duration": 1591.232,
       "inPoint": 0,
-      "outPoint": 780.0452,
-      "category": ""
+      "outPoint": 1591.232,
+      "category": "show"
     },
     {
-      "startTime": "09:03",
-      "name": "Mars Needs Moms",
-      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\1x23 Mars Needs Moms\\1x23 Mars Needs Moms.mp4",
-      "duration": 5284.331,
+      "startTime": "10:28",
+      "name": "Robin Hood ",
+      "path": "Y:\\KIDS WORLD-2\\Robin Hood (1973)\\Robin Hood (1973).ia (1).mp4",
+      "duration": 4986.033334,
       "inPoint": 0,
-      "outPoint": 5284.331,
-      "category": ""
+      "outPoint": 4986.033334,
+      "category": "movie"
+    },
+    {
+      "startTime": "11:51",
+      "name": "FLMTV.com",
+      "path": "Y:\\CLIPS-FILLERS\\Dancing Bear Logo1.mp4",
+      "duration": 16.975292,
+      "inPoint": 0,
+      "outPoint": 16.975292,
+      "category": "promo"
     }
   ]
 }
