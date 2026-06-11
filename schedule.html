@@ -142,56 +142,55 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <script>
 // ── TODAY'S SCHEDULE — Saturday June 6 2026 ───────────────────────
 const TODAY_SCHEDULE = [
-  {t:"10:31",n:"FLMTV.com",d:15,cat:""},
-  {t:"10:31",n:"Get Smart ",d:1524,cat:""},
-  {t:"10:56",n:"The Addams Family ",d:1542,cat:""},
-  {t:"11:22",n:"The Monkees ",d:1502,cat:""},
-  {t:"11:47",n:"Bewitched",d:1520,cat:""},
-  {t:"12:12",n:"Bewitched  2",d:1520,cat:""},
-  {t:"12:37",n:"Zaina Juliette Spotlights",d:336,cat:""},
-  {t:"12:43",n:"Beverly Hillbillies",d:0,cat:""},
-  {t:"13:13",n:"Beverly Hillbillies",d:0,cat:""},
-  {t:"13:43",n:"Leave it to Beaver",d:0,cat:""},
-  {t:"14:13",n:"The Lucy Show",d:1547,cat:""},
-  {t:"14:39",n:"Little Rascals 46 ",d:1150,cat:""},
-  {t:"14:58",n:"Little Rascals 47 ",d:1115,cat:""},
-  {t:"15:17",n:"Andy Griffith Show",d:1480,cat:""},
-  {t:"15:42",n:"What\'s Happening ",d:0,cat:""},
-  {t:"16:12",n:"AshwaterProducts.com",d:25,cat:"ad"},
-  {t:"16:12",n:"Good Times ",d:1467,cat:""},
-  {t:"16:36",n:"The Jeffersons",d:1500,cat:""},
-  {t:"17:01",n:"FLMTV.com",d:28,cat:""},
-  {t:"17:01",n:"Jackie Chan Adventures ",d:1278,cat:""},
-  {t:"17:22",n:"Molly of Denali ",d:1533,cat:""},
-  {t:"17:48",n:"Nature Cat ",d:1441,cat:""},
-  {t:"18:12",n:"Ready Jet Go! ",d:1581,cat:""},
-  {t:"18:38",n:"SheBoujay.com",d:60,cat:"ad"},
-  {t:"18:39",n:"Here\'s Lucy",d:1549,cat:""},
-  {t:"19:05",n:"UP NEXT: The "Z"",d:67,cat:""},
-  {t:"19:06",n:"FLMTV.com",d:28,cat:""},
-  {t:"19:06",n:"Locals in Las Vegas EP 10",d:1709,cat:""},
-  {t:"19:34",n:"Zaina Juliette & Friends",d:1708,cat:""},
-  {t:"20:02",n:"Zaina Moves",d:29,cat:""},
-  {t:"20:02",n:"Zaina Juliette, 90 Miles",d:333,cat:""},
-  {t:"20:08",n:"Friends ",d:1333,cat:""},
-  {t:"20:30",n:"3rd Rock from the Sun",d:1313,cat:""},
-  {t:"20:52",n:"The X Files",d:267,cat:""},
-  {t:"20:56",n:"FLMTV.com",d:28,cat:""},
-  {t:"20:56",n:"The Waterboy ",d:5377,cat:"movie"},
-  {t:"22:26",n:"Dolores Claiborne",d:7891,cat:"movie"},
-  {t:"03:45",n:"What\'s Eating Gilbert Grape ",d:7077,cat:"movie"},
-  {t:"03:45",n:"Inception",d:8888,cat:"movie"},
-  {t:"00:38",n:"Matilda ",d:5888,cat:"movie"},
-  {t:"02:16",n:"The Crush ",d:5340,cat:"movie"},
-  {t:"03:45",n:"All Creatures-You Got to Dream",d:3185,cat:"movie"},
-  {t:"04:38",n:"A Brilliant Young Mind ",d:6686,cat:"movie"},
-  {t:"06:29",n:"Cars ",d:6996,cat:"movie"},
-  {t:"08:26",n:"Sesame Street ",d:3363,cat:""},
-  {t:"09:22",n:"NODDY",d:694,cat:""},
-  {t:"09:34",n:"Super Why! ",d:1620,cat:""},
-  {t:"10:01",n:"Ready Jet Go!",d:1591,cat:""},
-  {t:"10:28",n:"Robin Hood ",d:4986,cat:"movie"},
-  {t:"11:51",n:"FLMTV.com",d:16,cat:""}
+  {t:"10:49",n:"Get Smart",d:1524,cat:"",date:"2026-06-11"},
+  {t:"11:14",n:"The Addams Family",d:1542,cat:"",date:"2026-06-11"},
+  {t:"11:40",n:"The Monkees",d:1502,cat:"",date:"2026-06-11"},
+  {t:"12:05",n:"Bewitched",d:1520,cat:"",date:"2026-06-11"},
+  {t:"12:30",n:"Bewitched",d:1520,cat:"",date:"2026-06-11"},
+  {t:"12:55",n:"Zaina-Spotlights",d:336,cat:"flm",date:"2026-06-11"},
+  {t:"13:01",n:"Beverly Hillbillies",d:1922,cat:"",date:"2026-06-11"},
+  {t:"13:33",n:"Beverly Hillbillies",d:1541,cat:"",date:"2026-06-11"},
+  {t:"13:59",n:"Leave it to Beaver",d:1539,cat:"",date:"2026-06-11"},
+  {t:"14:24",n:"The Lucy Show",d:1547,cat:"",date:"2026-06-11"},
+  {t:"14:50",n:"Little Rascals",d:1150,cat:"",date:"2026-06-11"},
+  {t:"15:09",n:"Little Rascals",d:1115,cat:"",date:"2026-06-11"},
+  {t:"15:28",n:"Andy Griffith",d:1480,cat:"",date:"2026-06-11"},
+  {t:"15:52",n:"Whats Happening",d:1492,cat:"",date:"2026-06-11"},
+  {t:"16:17",n:"AshwaterProducts.com",d:25,cat:"ad",date:"2026-06-11"},
+  {t:"16:18",n:"Good Times",d:1467,cat:"",date:"2026-06-11"},
+  {t:"16:42",n:"The Jeffersons",d:1500,cat:"",date:"2026-06-11"},
+  {t:"17:07",n:"FLMTV.com",d:28,cat:"flm",date:"2026-06-11"},
+  {t:"17:08",n:"Jackie Chan Adventures",d:1278,cat:"kids",date:"2026-06-11"},
+  {t:"17:29",n:"Molly of Denali",d:1533,cat:"kids",date:"2026-06-11"},
+  {t:"17:55",n:"Nature Cat",d:1441,cat:"kids",date:"2026-06-11"},
+  {t:"18:19",n:"Ready Jet Go!",d:1581,cat:"kids",date:"2026-06-11"},
+  {t:"18:45",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-06-11"},
+  {t:"18:46",n:"Here\'s Lucy",d:1549,cat:"",date:"2026-06-11"},
+  {t:"19:12",n:"France Loves ZAINA",d:67,cat:"flm",date:"2026-06-11"},
+  {t:"19:13",n:"Locals in Las Vegas Ep 10",d:1709,cat:"flm",date:"2026-06-11"},
+  {t:"19:41",n:"FLMTV.com",d:28,cat:"flm",date:"2026-06-11"},
+  {t:"19:42",n:"Zaina Juliette & Friends",d:1708,cat:"flm",date:"2026-06-11"},
+  {t:"20:10",n:"Zaina Moves",d:29,cat:"flm",date:"2026-06-11"},
+  {t:"20:11",n:"Zaina Juliette - 90 Miles",d:333,cat:"flm",date:"2026-06-11"},
+  {t:"20:16",n:"Friends",d:1333,cat:"",date:"2026-06-11"},
+  {t:"20:38",n:"3rd Rock from the Sun",d:1313,cat:"",date:"2026-06-11"},
+  {t:"21:00",n:"The X-Files",d:267,cat:"",date:"2026-06-11"},
+  {t:"21:05",n:"FLMTV.com",d:28,cat:"flm",date:"2026-06-11"},
+  {t:"21:05",n:"The Waterboy",d:5377,cat:"movie",date:"2026-06-11"},
+  {t:"22:35",n:"Dolores Claiborne",d:7892,cat:"movie",date:"2026-06-11"},
+  {t:"00:46",n:"Whats Eating Gilbert Grape",d:7077,cat:"movie",date:"2026-06-12"},
+  {t:"02:44",n:"Inception",d:8888,cat:"movie",date:"2026-06-12"},
+  {t:"05:13",n:"Matilda",d:5888,cat:"movie",date:"2026-06-12"},
+  {t:"06:51",n:"The Crush",d:5340,cat:"movie",date:"2026-06-12"},
+  {t:"08:20",n:"All Creatures Ep 1",d:3185,cat:"",date:"2026-06-12"},
+  {t:"09:13",n:"A Brilliant Young Mind",d:6686,cat:"movie",date:"2026-06-12"},
+  {t:"11:04",n:"Cars",d:6996,cat:"movie",date:"2026-06-12"},
+  {t:"13:01",n:"Sesame Street",d:3363,cat:"kids",date:"2026-06-12"},
+  {t:"13:57",n:"NODDY",d:694,cat:"kids",date:"2026-06-12"},
+  {t:"14:08",n:"Super Why!",d:1620,cat:"kids",date:"2026-06-12"},
+  {t:"14:35",n:"Ready Jet Go!",d:1591,cat:"kids",date:"2026-06-12"},
+  {t:"15:02",n:"Robin Hood",d:4985,cat:"movie",date:"2026-06-12"},
+  {t:"16:25",n:"FLMTV.com",d:17,cat:"flm",date:"2026-06-12"}
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────
@@ -255,7 +254,10 @@ function fmtDur(s) {
 function renderSchedule() {
   const wrap = document.getElementById('scheduleWrap');
   wrap.innerHTML = '';
-  let lastDateShown = '';
+  const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+  wrap.insertAdjacentHTML('beforeend',
+    `<div class="time-block-header"><div class="time-block-label">${date}</div><div class="time-block-line"></div></div>`
+  );
 
   // Find the SINGLE live show (first match only) — prevents double highlight bug
   const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
@@ -273,16 +275,6 @@ function renderSchedule() {
   TODAY_SCHEDULE.forEach(s => {
     const status = getStatus(s);
     if (status==='aired' && !keepAired.has(s.t+s.n)) return;
-
-    // Insert a date header whenever the date changes
-    const showDate = s.date || new Date().toISOString().split('T')[0];
-    if (showDate !== lastDateShown) {
-      lastDateShown = showDate;
-      const dLabel = new Date(showDate+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-      wrap.insertAdjacentHTML('beforeend',
-        `<div class="time-block-header"><div class="time-block-label">${dLabel}</div><div class="time-block-line"></div></div>`
-      );
-    }
 
     // Only the ONE designated live show gets highlighted — all others stay upcoming/aired
     const isLive = liveShow && s.t === liveShow.t && s.n === liveShow.n;
