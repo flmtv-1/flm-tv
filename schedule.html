@@ -254,10 +254,7 @@ function fmtDur(s) {
 function renderSchedule() {
   const wrap = document.getElementById('scheduleWrap');
   wrap.innerHTML = '';
-  const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-  wrap.insertAdjacentHTML('beforeend',
-    `<div class="time-block-header"><div class="time-block-label">${date}</div><div class="time-block-line"></div></div>`
-  );
+  let lastDateShown = '';
 
   // Find the SINGLE live show (first match only) — prevents double highlight bug
   const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
@@ -275,6 +272,16 @@ function renderSchedule() {
   TODAY_SCHEDULE.forEach(s => {
     const status = getStatus(s);
     if (status==='aired' && !keepAired.has(s.t+s.n)) return;
+
+    // Insert date header when date changes
+    const showDate = s.date || new Date().toISOString().split('T')[0];
+    if (showDate !== lastDateShown) {
+      lastDateShown = showDate;
+      const dLabel = new Date(showDate+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
+      wrap.insertAdjacentHTML('beforeend',
+        `<div class="time-block-header"><div class="time-block-label">${dLabel}</div><div class="time-block-line"></div></div>`
+      );
+    }
 
     // Only the ONE designated live show gets highlighted — all others stay upcoming/aired
     const isLive = liveShow && s.t === liveShow.t && s.n === liveShow.n;
