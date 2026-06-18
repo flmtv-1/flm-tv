@@ -3150,6 +3150,11 @@
     }
 
     /* Firestick: hide ad panel, restore player to original centered layout */
+    @media (max-width: 768px) {
+        .lsc-row { gap: 0 !important; padding-bottom: 0 !important; }
+        .flm-ad-panel { margin-top: 0 !important; padding-top: 0 !important; }
+        .flm-ad-slideshow { margin-top: 0 !important; }
+    }
     .is-firestick .flm-ad-panel { display: none !important; }
     .is-firestick .lsc-row {
         display: block !important;
