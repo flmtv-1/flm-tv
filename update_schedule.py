@@ -64,21 +64,29 @@ def item_to_js(item):
     n   = (item.get("name") or item.get("n") or "Unknown").replace("'", "\\'")
     d   = int(item.get("duration") or item.get("d") or 0)
     cat = get_cat(item)
+    date = item.get("date") or item.get("airDate") or ""
+    if date:
+        return f'  {{t:"{t}",n:"{n}",d:{d},cat:"{cat}",date:"{date}"}}'
     return f'  {{t:"{t}",n:"{n}",d:{d},cat:"{cat}"}}'
 
 # ── GET EXISTING SCHEDULE FROM HTML ────────────────────────────────────
 def get_existing_items(html):
-    match = re.search(r'const TODAY_SCHEDULE = \[([\s\S]*?)\];(?=\s*\n)', html)
+    match = re.search(r'const TODAY_SCHEDULE = \[([\s\S]*?)\];', html)
     if not match:
         return []
     block = match.group(1)
-    # Parse existing entries
-    existing = re.findall(r'\{t:"([^"]+)",n:"([^"]+)",d:(\d+),cat:"([^"]*)"\}', block)
-    return [{"t": t, "n": n, "d": int(d), "cat": cat} for t, n, d, cat in existing]
+    items = []
+    # Match entries with or without trailing date field
+    for m in re.finditer(r'\{t:"([^"]+)",n:"([^"]+)",d:(\d+),cat:"([^"]*)"(?:,date:"([^"]*)")?\}', block):
+        entry = {"t": m.group(1), "n": m.group(2), "d": int(m.group(3)), "cat": m.group(4)}
+        if m.group(5):
+            entry["date"] = m.group(5)
+        items.append(entry)
+    return items
 
 # ── INJECT INTO HTML ────────────────────────────────────────────────────
 def inject(js_block, html):
-    pattern = r"const TODAY_SCHEDULE = \[[\s\S]*?\];(?=\s*\n)"
+    pattern = r"const TODAY_SCHEDULE = \[[\s\S]*?\];"
     if not re.search(pattern, html):
         print("  ERROR: Could not find TODAY_SCHEDULE in schedule.html.")
         input("\n  Press Enter to close...")
@@ -118,11 +126,13 @@ def main():
         # APPEND MODE — keep existing, add new after last entry
         existing = get_existing_items(html)
         print(f"  Found {len(existing)} existing items in schedule.html")
-        combined = existing + [{"t": i.get("startTime") or i.get("t","00:00"),
-                                 "n": (i.get("name") or i.get("n","")).replace("'","\\'"),
-                                 "d": int(i.get("duration") or i.get("d",0)),
-                                 "cat": get_cat(i)} for i in new_items]
-        lines = [f'  {{t:"{i["t"]}",n:"{i["n"]}",d:{i["d"]},cat:"{i["cat"]}"}}' for i in combined]
+        new_converted = [{"t": i.get("startTime") or i.get("t","00:00"),
+                          "n": (i.get("name") or i.get("n","")).replace("'","\\'"),
+                          "d": int(i.get("duration") or i.get("d",0)),
+                          "cat": get_cat(i),
+                          "date": i.get("date") or i.get("airDate") or ""} for i in new_items]
+        combined = existing + new_converted
+        lines = [item_to_js(i) for i in combined]
         js_block = "const TODAY_SCHEDULE = [\n" + ",\n".join(lines) + "\n];"
         total = len(combined)
         print(f"  Combined total: {total} items")
