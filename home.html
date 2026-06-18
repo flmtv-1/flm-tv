@@ -3037,8 +3037,31 @@
     .flm-ad-dot.active { background: #ffd700; }
     /* mobile: stack vertically */
     @media (max-width: 768px) {
-        .lsc-row { flex-direction: column; padding: 1rem; }
-        .flm-ad-panel { min-width: 100%; max-width: 100%; }
+        .lsc-row {
+            flex-direction: column;
+            padding: 0.5rem 1rem 0;
+            gap: 0.5rem;
+        }
+        .lsc-row .live-showcase-container {
+            flex: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        .flm-ad-panel {
+            min-width: 100%;
+            max-width: 100%;
+            flex-direction: row;
+            gap: 0.75rem;
+        }
+        .flm-ad-slideshow {
+            flex: 1;
+            aspect-ratio: 4/3;
+        }
+        .flm-tv-stations-card {
+            flex: 1;
+            min-height: 80px;
+        }
+        .flm-ad-header { display: none; }
         .flm-ad-slideshow { aspect-ratio: 16/5; }
     }
     /* ── TV STATIONS PROMO CARD ────────────────────────────────────── */
@@ -3267,7 +3290,7 @@
 
     <style>
     .live-showcase-section {
-        padding: 0 0 2rem;
+        padding: 0;
         background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
     }
 
