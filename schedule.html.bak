@@ -141,29 +141,32 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <script>
 // ── TODAY'S SCHEDULE — Saturday June 6 2026 ───────────────────────
-// Updated: 2026-06-15 00:57
+// Updated: 2026-06-16 17:36
 const TODAY_SCHEDULE = [
-  {t:"00:30",n:"Swing Kids",d:6824,cat:"movie"},
-  {t:"02:24",n:"Dolores Claiborne",d:7891,cat:"movie"},
-  {t:"04:35",n:"Misery",d:6445,cat:"movie"},
-  {t:"06:23",n:"My Cousin Vinny",d:7158,cat:"movie"},
-  {t:"08:22",n:"Angels with Dirty Faces",d:5838,cat:"movie"},
-  {t:"09:59",n:"Mister Ed",d:1535,cat:""},
-  {t:"10:25",n:"Sesame Street",d:1556,cat:"kids"},
-  {t:"10:51",n:"Sesame Street",d:1557,cat:"kids"},
-  {t:"11:17",n:"Super Why!",d:1531,cat:"kids"},
-  {t:"11:42",n:"Elinor Wonders Why",d:1501,cat:"kids"},
-  {t:"12:07",n:"Molly of Denali",d:1535,cat:"kids"},
-  {t:"12:33",n:"Schoolhouse Rock",d:186,cat:"kids"},
-  {t:"12:36",n:"Schoolhouse Rock",d:185,cat:"kids"},
-  {t:"12:39",n:"Schoolhouse Rock",d:185,cat:"kids"},
-  {t:"12:42",n:"Schoolhouse Rock",d:187,cat:"kids"},
-  {t:"12:45",n:"Gilligan\'s Island",d:1520,cat:""},
-  {t:"13:11",n:"Three Stooges",d:1108,cat:""},
-  {t:"13:29",n:"The Monkees",d:1504,cat:""},
-  {t:"13:54",n:"The Addams Family",d:1534,cat:""},
-  {t:"14:20",n:"Bewitched",d:1520,cat:""},
-  {t:"14:45",n:"Bewitched",d:1520,cat:""}
+  {t:"17:18",n:"Andy Griffith",d:1534,cat:"",date:"2026-06-16"},
+  {t:"17:43",n:"Whats Happening",d:1505,cat:"",date:"2026-06-16"},
+  {t:"18:08",n:"Good Times",d:1471,cat:"",date:"2026-06-16"},
+  {t:"18:33",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-06-16"},
+  {t:"18:34",n:"Sanford and Son",d:1503,cat:"",date:"2026-06-16"},
+  {t:"18:59",n:"The Jeffersons",d:1501,cat:"",date:"2026-06-16"},
+  {t:"19:24",n:"The Jeffersons",d:1501,cat:"",date:"2026-06-16"},
+  {t:"19:49",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-06-16"},
+  {t:"19:50",n:"Boxer",d:139,cat:"flm",date:"2026-06-16"},
+  {t:"19:52",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-06-16"},
+  {t:"19:53",n:"The Ice Age Adventures",d:4865,cat:"movie",date:"2026-06-16"},
+  {t:"21:14",n:"Here\'s Lucy",d:1517,cat:"",date:"2026-06-16"},
+  {t:"21:39",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-06-16"},
+  {t:"21:40",n:"The X-Files",d:2711,cat:"",date:"2026-06-16"},
+  {t:"22:25",n:"Boxer",d:139,cat:"flm",date:"2026-06-16"},
+  {t:"22:27",n:"My Cousin Vinny",d:7158,cat:"movie",date:"2026-06-16"},
+  {t:"00:27",n:"Dead Again",d:6462,cat:"movie",date:"2026-06-17"},
+  {t:"02:14",n:"A Bronx Tale",d:7250,cat:"movie",date:"2026-06-17"},
+  {t:"04:15",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-06-17"},
+  {t:"04:16",n:"SheBoujay",d:60,cat:"ad",date:"2026-06-17"},
+  {t:"04:17",n:"Forgive Me Father (R)",d:4606,cat:"movie",date:"2026-06-17"},
+  {t:"05:34",n:"The Sixth Sense",d:6443,cat:"movie",date:"2026-06-17"},
+  {t:"07:21",n:"28 Weeks Later (R)",d:6006,cat:"movie",date:"2026-06-17"},
+  {t:"09:01",n:"Dolores Claiborne (R)",d:7891,cat:"movie",date:"2026-06-17"}
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────

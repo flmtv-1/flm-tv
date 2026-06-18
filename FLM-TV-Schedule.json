@@ -1,209 +1,162 @@
-{
-  "2026-06-15": [
-    {
-      "startTime": "17:27",
-      "name": "Lucy's Big Break",
-      "duration": 1517,
-      "category": "TV Show",
-      "date": "2026-06-15"
-    },
-    {
-      "startTime": "17:52",
-      "name": "Impossible Fixes",
-      "duration": 2525,
-      "category": "TV Show",
-      "date": "2026-06-15"
-    },
-    {
-      "startTime": "18:34",
-      "name": "Weathered",
-      "duration": 596,
-      "category": "TV Show",
-      "date": "2026-06-15"
-    },
-    {
-      "startTime": "18:44",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
-      "category": "ad",
-      "date": "2026-06-15"
-    },
-    {
-      "startTime": "18:44",
-      "name": "The X-Files",
-      "duration": 2752,
-      "category": "TV Show",
-      "date": "2026-06-15"
-    },
-    {
-      "startTime": "19:30",
-      "name": "A Soldier's Story",
-      "duration": 6054,
-      "category": "movie",
-      "date": "2026-06-15"
-    },
-    {
-      "startTime": "21:11",
-      "name": "Edward Scissorhands",
-      "duration": 6300,
-      "category": "movie",
-      "date": "2026-06-15"
-    },
-    {
-      "startTime": "22:56",
-      "name": "Raising Arizona",
-      "duration": 5646,
-      "category": "movie",
-      "date": "2026-06-15"
-    }
-  ],
-  "2026-06-16": [
-    {
-      "startTime": "00:30",
-      "name": "Swing Kids",
-      "duration": 6824,
-      "category": "movie",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "02:24",
-      "name": "Dolores Claiborne",
-      "duration": 7891,
-      "category": "movie",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "04:35",
-      "name": "Misery",
-      "duration": 6445,
-      "category": "movie",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "06:23",
-      "name": "My Cousin Vinny",
-      "duration": 7158,
-      "category": "movie",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "08:22",
-      "name": "Angels with Dirty Faces",
-      "duration": 5838,
-      "category": "movie",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "09:59",
-      "name": "Mister Ed",
-      "duration": 1535,
-      "category": "",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "10:25",
-      "name": "Sesame Street",
-      "duration": 1556,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "10:51",
-      "name": "Sesame Street",
-      "duration": 1557,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "11:17",
-      "name": "Super Why!",
-      "duration": 1531,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "11:42",
-      "name": "Elinor Wonders Why",
-      "duration": 1501,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "12:07",
-      "name": "Molly of Denali",
-      "duration": 1535,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "12:33",
-      "name": "Schoolhouse Rock",
-      "duration": 186,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "12:36",
-      "name": "Schoolhouse Rock",
-      "duration": 185,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "12:39",
-      "name": "Schoolhouse Rock",
-      "duration": 185,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "12:42",
-      "name": "Schoolhouse Rock",
-      "duration": 187,
-      "category": "kids",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "12:45",
-      "name": "Gilligan's Island",
-      "duration": 1520,
-      "category": "TV Show",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "13:11",
-      "name": "Three Stooges",
-      "duration": 1108,
-      "category": "TV Show",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "13:29",
-      "name": "The Monkees",
-      "duration": 1504,
-      "category": "",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "13:54",
-      "name": "The Addams Family",
-      "duration": 1534,
-      "category": "",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "14:20",
-      "name": "Bewitched",
-      "duration": 1520,
-      "category": "TV Show",
-      "date": "2026-06-16"
-    },
-    {
-      "startTime": "14:45",
-      "name": "Bewitched",
-      "duration": 1520,
-      "category": "TV Show",
-      "date": "2026-06-16"
-    }
-  ]
-}
+[
+  {
+    "id": 1,
+    "title": "Ready Jet Go!",
+    "duration": "00:26:22",
+    "startTime": "08:44:00",
+    "endTime": "09:10:22",
+    "note": "Currently airing — ends ~9:10 AM"
+  },
+  {
+    "id": 2,
+    "title": "NODDY",
+    "duration": "00:03:33",
+    "startTime": "09:10:22",
+    "endTime": "09:13:55"
+  },
+  {
+    "id": 3,
+    "title": "Super Why!",
+    "duration": "00:27:00",
+    "startTime": "09:13:55",
+    "endTime": "09:40:55"
+  },
+  {
+    "id": 4,
+    "title": "Mars Needs Moms",
+    "duration": "01:28:04",
+    "startTime": "09:40:55",
+    "endTime": "11:08:59"
+  },
+  {
+    "id": 5,
+    "title": "The Monkees",
+    "duration": "00:25:03",
+    "startTime": "11:08:59",
+    "endTime": "11:34:02"
+  },
+  {
+    "id": 6,
+    "title": "The Addams Family",
+    "duration": "00:25:40",
+    "startTime": "11:34:02",
+    "endTime": "11:59:42"
+  },
+  {
+    "id": 7,
+    "title": "VoteScottBlack.com",
+    "duration": "00:00:30",
+    "startTime": "11:59:42",
+    "endTime": "12:00:12",
+    "type": "ad"
+  },
+  {
+    "id": 8,
+    "title": "Little Rascals - Small Talk",
+    "duration": "00:25:02",
+    "startTime": "12:00:12",
+    "endTime": "12:25:14"
+  },
+  {
+    "id": 9,
+    "title": "Little Rascals - Bargain Days",
+    "duration": "00:18:57",
+    "startTime": "12:25:14",
+    "endTime": "12:44:11"
+  },
+  {
+    "id": 10,
+    "title": "The Dick Van Dyke Show",
+    "duration": "00:25:22",
+    "startTime": "12:44:11",
+    "endTime": "13:09:33"
+  },
+  {
+    "id": 11,
+    "title": "ZainaJuliette.tv",
+    "duration": "00:00:37",
+    "startTime": "13:09:33",
+    "endTime": "13:10:10",
+    "type": "promo"
+  },
+  {
+    "id": 12,
+    "title": "VoteScottBlack.com",
+    "duration": "00:00:30",
+    "startTime": "13:10:10",
+    "endTime": "13:10:40",
+    "type": "ad"
+  },
+  {
+    "id": 13,
+    "title": "Six Million Dollar Man",
+    "duration": "00:50:08",
+    "startTime": "13:10:40",
+    "endTime": "14:00:48"
+  },
+  {
+    "id": 14,
+    "title": "Charlie's Angels",
+    "duration": "00:48:54",
+    "startTime": "14:00:48",
+    "endTime": "14:49:42"
+  },
+  {
+    "id": 15,
+    "title": "Leave it to Beaver",
+    "duration": "00:25:58",
+    "startTime": "14:49:42",
+    "endTime": "15:15:40"
+  },
+  {
+    "id": 16,
+    "title": "VoteScottBlack.com",
+    "duration": "00:00:30",
+    "startTime": "15:15:40",
+    "endTime": "15:16:10",
+    "type": "ad"
+  },
+  {
+    "id": 17,
+    "title": "The Lucy Show",
+    "duration": "00:25:47",
+    "startTime": "15:16:10",
+    "endTime": "15:41:57"
+  },
+  {
+    "id": 18,
+    "title": "Andy Griffith",
+    "duration": "00:25:47",
+    "startTime": "15:41:57",
+    "endTime": "16:07:44"
+  },
+  {
+    "id": 19,
+    "title": "SheBoujay.com",
+    "duration": "00:01:00",
+    "startTime": "16:07:44",
+    "endTime": "16:08:44",
+    "type": "ad"
+  },
+  {
+    "id": 20,
+    "title": "The Twilight Zone",
+    "duration": "00:25:57",
+    "startTime": "16:08:44",
+    "endTime": "16:34:41"
+  },
+  {
+    "id": 21,
+    "title": "The Twilight Zone",
+    "duration": "00:25:58",
+    "startTime": "16:34:41",
+    "endTime": "17:00:39"
+  },
+  {
+    "id": 22,
+    "title": "Beverly Hillbillies",
+    "duration": "00:25:37",
+    "startTime": "17:00:39",
+    "endTime": "17:26:16"
+  }
+]
