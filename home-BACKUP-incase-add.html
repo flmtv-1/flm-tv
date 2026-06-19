@@ -2852,15 +2852,9 @@
                 <div class="flm-ad-header">
                     <span class="flm-ad-label">SPONSORS</span>
                 </div>
-                <div class="flm-ad-slideshow" style="position:relative;border-radius:12px;overflow:hidden;background:#0a0f1a;border:1px solid rgba(255,215,0,0.15);aspect-ratio:4/3;">
+                <div class="flm-ad-slideshow" style="position:relative;border-radius:12px;overflow:hidden;background:#0a0f1a;border:1px solid rgba(255,215,0,0.15);aspect-ratio:4/3;cursor:pointer;" onclick="flmAdClick()">
                     <img id="flmAdImg" src="assets/images/Fashion1.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" alt="SheBoujay">
-                    <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:8px 10px 6px;text-align:center;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:6px;">
-                    <span style="color:#fff;font-family:Bebas Neue,Rajdhani,sans-serif;letter-spacing:2px;font-size:11px;">SheBoujay.com</span>
-                    <div style="display:flex;gap:5px;">
-                        <a href="https://SheBoujay.com" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#ffd700;color:#0a0f1a;font-family:Bebas Neue,Rajdhani,sans-serif;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:4px;text-decoration:none;">VISIT SITE</a>
-                        <span onclick="flmAdClick()" style="background:rgba(255,255,255,0.15);color:#fff;font-family:Bebas Neue,Rajdhani,sans-serif;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);">▶ WATCH AD</span>
-                    </div>
-                </div>
+                    <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));color:#fff;font-family:Bebas Neue,Rajdhani,sans-serif;letter-spacing:2px;font-size:11px;padding:14px 10px 6px;text-align:center;z-index:2;">SheBoujay.com — Click to Watch</div>
                     <div id="flmDots" style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;"></div>
                 </div>
                 <!-- TV STATIONS PROMO CARD -->
@@ -2906,7 +2900,8 @@
                 if(!m)return;
                 document.getElementById('flmAdIframe').src='https://www.youtube.com/embed/-YZrG4hoS0E?autoplay=1&rel=0';
                 document.getElementById('flmAdModalLabel').textContent='SHEBOUJAY.COM';
-                var ml=document.getElementById('flmAdModalLink'); ml.href='https://SheBoujay.com'; ml.target='_blank'; ml.rel='noopener'; ml.textContent='Visit SheBoujay.com';
+                document.getElementById('flmAdModalLink').href='https://SheBoujay.com';
+                document.getElementById('flmAdModalLink').textContent='Visit SheBoujay.com';
                 m.style.display='flex';
                 document.body.style.overflow='hidden';
             }
