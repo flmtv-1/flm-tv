@@ -40,16 +40,14 @@ def load_schedule():
     if isinstance(data, list):
         items = data
     elif isinstance(data, dict):
-        today = datetime.now().strftime("%Y-%m-%d")
-        if today in data:
-            items = data[today]
-        else:
-            keys = sorted(data.keys(), reverse=True)
-            for k in keys:
-                if isinstance(data[k], list):
-                    items = data[k]
-                    print(f"  Note: Using date key '{k}' (today '{today}' not found)")
-                    break
+        # Process ALL date keys in order — this supports multi-day schedules
+        for date_key in sorted(data.keys()):
+            if isinstance(data[date_key], list):
+                for item in data[date_key]:
+                    # *** FIX: stamp each item with its date key if it doesn't have one ***
+                    if not item.get("date") and not item.get("airDate"):
+                        item["date"] = item.get("startDate") or date_key
+                    items.append(item)
 
     if not items:
         print("  ERROR: No schedule items found in JSON file.")
@@ -60,10 +58,10 @@ def load_schedule():
 
 # ── BUILD JS ENTRY ──────────────────────────────────────────────────────
 def item_to_js(item):
-    t   = item.get("startTime") or item.get("t") or "00:00"
-    n   = (item.get("name") or item.get("n") or "Unknown").replace("'", "\\'")
-    d   = int(item.get("duration") or item.get("d") or 0)
-    cat = get_cat(item)
+    t    = item.get("startTime") or item.get("t") or "00:00"
+    n    = (item.get("name") or item.get("n") or "Unknown").replace("'", "\\'")
+    d    = int(item.get("duration") or item.get("d") or 0)
+    cat  = get_cat(item)
     date = item.get("date") or item.get("airDate") or ""
     if date:
         return f'  {{t:"{t}",n:"{n}",d:{d},cat:"{cat}",date:"{date}"}}'
@@ -76,7 +74,6 @@ def get_existing_items(html):
         return []
     block = match.group(1)
     items = []
-    # Match entries with or without trailing date field
     for m in re.finditer(r'\{t:"([^"]+)",n:"([^"]+)",d:(\d+),cat:"([^"]*)"(?:,date:"([^"]*)")?\}', block):
         entry = {"t": m.group(1), "n": m.group(2), "d": int(m.group(3)), "cat": m.group(4)}
         if m.group(5):
@@ -86,12 +83,13 @@ def get_existing_items(html):
 
 # ── INJECT INTO HTML ────────────────────────────────────────────────────
 def inject(js_block, html):
-    pattern = r"const TODAY_SCHEDULE = \[[\s\S]*?\];"
-    if not re.search(pattern, html):
+    pattern = r"(?:// Updated:.*\n)?const TODAY_SCHEDULE = \[[\s\S]*?\];"
+    if not re.search(r"const TODAY_SCHEDULE", html):
         print("  ERROR: Could not find TODAY_SCHEDULE in schedule.html.")
         input("\n  Press Enter to close...")
         sys.exit(1)
-    return re.sub(pattern, js_block, html)
+    timestamp = f"// Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n"
+    return re.sub(pattern, timestamp + js_block, html)
 
 # ── MAIN ────────────────────────────────────────────────────────────────
 def main():
@@ -123,7 +121,6 @@ def main():
         html = f.read()
 
     if mode == "1":
-        # APPEND MODE — keep existing, add new after last entry
         existing = get_existing_items(html)
         print(f"  Found {len(existing)} existing items in schedule.html")
         new_converted = [{"t": i.get("startTime") or i.get("t","00:00"),
@@ -137,12 +134,10 @@ def main():
         total = len(combined)
         print(f"  Combined total: {total} items")
     else:
-        # REPLACE MODE
         lines = [item_to_js(i) for i in new_items]
         js_block = "const TODAY_SCHEDULE = [\n" + ",\n".join(lines) + "\n];"
         total = len(new_items)
 
-    # Backup and write
     shutil.copy(HTML_FILE, BACKUP_FILE)
     print(f"  Backup saved: schedule.html.bak")
 

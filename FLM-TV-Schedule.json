@@ -1,58 +1,235 @@
 {
-  "2026-06-18": [
+  "2026-06-19": [
     {
-      "startTime": "09:18",
-      "name": "Sesame Street ",
-      "path": "Y:\\KIDS WORLD-2\\sesame-street-s-42-e-05-shape-o-bots\\SEASON 42\\Sesame Street_S42E09_The Good Bird's Club.ia.mp4",
-      "duration": 3356.119433,
-      "inPoint": 0,
-      "outPoint": 3356.119433,
-      "category": "show"
+      "startTime": "13:33",
+      "name": "Leave it to Beaver",
+      "duration": 1551,
+      "category": "",
+      "date": "2026-06-19"
     },
     {
-      "startTime": "10:14",
-      "name": "Super Why! ",
-      "path": "X:\\KIDS WORLD 1\\SUPER WHY\\SEASON 04\\Super Why!_S04E05_The Boy Who Drew Cats.ia.mp4",
-      "duration": 1621.248,
-      "inPoint": 0,
-      "outPoint": 1621.248,
-      "category": "show"
+      "startTime": "13:58",
+      "name": "Bewitched",
+      "duration": 1527,
+      "category": "",
+      "date": "2026-06-19"
     },
     {
-      "startTime": "10:41",
-      "name": "NODDY",
-      "path": "Y:\\KIDS WORLD-2\\Noddy\\SEASON 01\\NODDY_VOL018.mp4",
-      "duration": 213.480147,
-      "inPoint": 0,
-      "outPoint": 213.480147,
-      "category": "show"
+      "startTime": "14:24",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "category": "ad",
+      "date": "2026-06-19"
     },
     {
-      "startTime": "10:45",
-      "name": "Elinor Wonders Why",
-      "path": "Y:\\KIDS WORLD-2\\Elinor-Wonders Why\\SEASON 01\\Elinor Wonders Why_S01E14_The Paper Trail_Bath Time.ia.mp4",
-      "duration": 1501.499583,
-      "inPoint": 0,
-      "outPoint": 1501.499583,
-      "category": "show"
+      "startTime": "14:24",
+      "name": "Bewitched",
+      "duration": 1526,
+      "category": "",
+      "date": "2026-06-19"
     },
     {
-      "startTime": "11:10",
-      "name": "Dinosaur Train ",
-      "path": "Y:\\KIDS WORLD-2\\dinosaur-train-season-1-s-01-e-01-elmer-elasmosaurus\\SEASON 01\\Dinosaur Train Season 1_S01E05_The Amazing Michelinoceras Brothers.ia.mp4",
-      "duration": 780.812633,
-      "inPoint": 0,
-      "outPoint": 780.812633,
-      "category": ""
+      "startTime": "14:50",
+      "name": "Little Rascals",
+      "duration": 1222,
+      "category": "",
+      "date": "2026-06-19"
     },
     {
-      "startTime": "11:23",
-      "name": "The Wind in the Willows ",
-      "path": "Y:\\KIDS WORLD-2\\The Wind in The Willows\\The Wind in the Willows (1949).m4v",
-      "duration": 2081.662917,
-      "inPoint": 0,
-      "outPoint": 2081.662917,
-      "category": "show"
+      "startTime": "15:10",
+      "name": "Little Rascals",
+      "duration": 1267,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "15:31",
+      "name": "The Twilight Zone",
+      "duration": 1520,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "15:57",
+      "name": "The Twilight Zone",
+      "duration": 1555,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "16:22",
+      "name": "Andy Griffith",
+      "duration": 1516,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "16:48",
+      "name": "Andy Griffith",
+      "duration": 1477,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "17:12",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "category": "ad",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "17:13",
+      "name": "Whats Happening",
+      "duration": 1514,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "17:38",
+      "name": "SheBoujay.com",
+      "duration": 60,
+      "category": "ad",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "17:39",
+      "name": "Good Times",
+      "duration": 1471,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "18:04",
+      "name": "Sanford and Son",
+      "duration": 1512,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "18:29",
+      "name": "The Jeffersons",
+      "duration": 1500,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "18:54",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "category": "ad",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "18:54",
+      "name": "Buck Wild",
+      "duration": 4865,
+      "category": "movie",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "20:15",
+      "name": "Here's Lucy-Donny Osmand",
+      "duration": 1517,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "20:41",
+      "name": "Mars Mission",
+      "duration": 2525,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "21:23",
+      "name": "The X-Files",
+      "duration": 2681,
+      "category": "",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "22:07",
+      "name": "The Sixth Sense",
+      "duration": 6443,
+      "category": "movie",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "23:55",
+      "name": "SheBoujay COMMERCIAL",
+      "duration": 60,
+      "category": "ad",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "23:56",
+      "name": "Anger Management",
+      "duration": 6358,
+      "category": "movie",
+      "date": "2026-06-19"
+    },
+    {
+      "startTime": "01:42",
+      "name": "Aftermath",
+      "duration": 5740,
+      "category": "movie",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "03:17",
+      "name": "Equilibrium",
+      "duration": 6422,
+      "category": "movie",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "05:04",
+      "name": "Flubber",
+      "duration": 5128,
+      "category": "movie",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "06:30",
+      "name": "Despicable Me 3",
+      "duration": 5380,
+      "category": "movie",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "08:00",
+      "name": "Sesame Street",
+      "duration": 3356,
+      "category": "kids",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "08:56",
+      "name": "Rolie Polie Olie",
+      "duration": 1446,
+      "category": "kids",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "09:20",
+      "name": "Ready Jet Go",
+      "duration": 1591,
+      "category": "kids",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "09:46",
+      "name": "Super Why!",
+      "duration": 1620,
+      "category": "kids",
+      "date": "2026-06-20"
+    },
+    {
+      "startTime": "10:13",
+      "name": "Alice In Wonderland",
+      "duration": 4516,
+      "category": "movie",
+      "date": "2026-06-20"
     }
   ]
 }
