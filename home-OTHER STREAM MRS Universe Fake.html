@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+people <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2847,6 +2847,22 @@
                 </div>
             </div>
 
+            <!-- MRS. UNIVERSE EVENT CARD -->
+            <a href="miss-universe.html" class="mu-event-card" style="text-decoration:none;">
+                <div class="mu-event-badge"><div class="live-dot"></div> LIVE EVENT</div>
+                <img src="assets/images/Miss Universe Banner.jpeg"
+                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.55;pointer-events:none;z-index:1;"
+                     alt="Mrs. Universe Philippines" onerror="this.style.display='none'">
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 25%,rgba(5,10,30,0.15) 100%);z-index:2;"></div>
+                <div style="position:relative;z-index:5;padding:14px;width:100%;">
+                    <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.4rem;letter-spacing:3px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">MRS. UNIVERSE</div>
+                    <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1rem;letter-spacing:2px;color:#fff;line-height:1;margin-top:2px;">PHILIPPINES 2026</div>
+                    <div style="font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">🇵🇭 GRAND CORONATION NIGHT</div>
+                    <div style="font-size:9px;letter-spacing:1px;color:#22c55e;text-transform:uppercase;margin-top:4px;">⏰ STARTING SOON · ~4–5AM LAS WE WE ARE WAITING FOR THEM TO SEND THE LINK. </div>
+                    <div style="margin-top:12px;display:inline-flex;align-items:center;gap:7px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:12px;letter-spacing:2px;padding:6px 16px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH LIVE</div>
+                </div>
+            </a>
+
             <!-- AD PANEL + TV STATIONS CARD -->
             <div class="flm-ad-panel" id="flmAdPanel">
                 <div class="flm-ad-header">
@@ -2927,23 +2943,60 @@
         display: flex;
         align-items: flex-start;
         gap: 1.25rem;
-        max-width: 1100px;
+        max-width: 1400px;
         margin: 0 auto;
         padding: 1.5rem 2rem 0.75rem;
-        justify-content: flex-start;
+        justify-content: center;
     }
     .lsc-row .live-showcase-container {
-        flex: 0 0 700px;
-        width: 700px;
-        max-width: 700px !important;
+        flex: 0 0 620px;
+        width: 620px;
+        max-width: 620px !important;
         margin: 0 !important;
         padding: 0 !important;
     }
+    /* ── MISS UNIVERSE CARD ─────────────────────────────────────────── */
+    .mu-event-card {
+        flex: 0 0 460px;
+        width: 460px;
+        aspect-ratio: 16/9;
+        height: auto;
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        border: 2px solid rgba(255,215,0,0.5);
+        box-shadow: 0 0 24px rgba(255,215,0,0.2), 0 8px 32px rgba(0,0,0,0.6);
+        background: linear-gradient(135deg, #1a0533 0%, #0a0f1a 100%);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: flex-end;
+    }
+    .mu-event-card:hover {
+        border-color: #ffd700;
+        box-shadow: 0 0 40px rgba(255,215,0,0.35), 0 12px 40px rgba(0,0,0,0.7);
+        transform: scale(1.02);
+    }
+    .mu-event-badge {
+        position: absolute; top: 10px; left: 10px; z-index: 10;
+        display: flex; align-items: center; gap: 5px;
+        background: rgba(220,38,38,0.92);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 20px; padding: 3px 9px;
+        font-family: 'Bebas Neue','Rajdhani',sans-serif;
+        font-size: 11px; letter-spacing: 2px; color: #fff;
+    }
+    .mu-event-crown {
+        position: absolute; top: 8px; right: 10px;
+        font-size: 1.6rem; z-index: 10;
+        filter: drop-shadow(0 2px 6px rgba(255,215,0,0.7));
+    }
+    .is-firestick .mu-event-card { display: none !important; }
     /* ── AD PANEL ───────────────────────────────────────────────────── */
     .flm-ad-panel {
         flex: 1;
-        min-width: 220px;
-        max-width: 320px;
+        min-width: 280px;
+        max-width: 380px;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
