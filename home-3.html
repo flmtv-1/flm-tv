@@ -2848,21 +2848,32 @@
             </div>
 
             <!-- MISS UNIVERSE EVENT CARD -->
-            <a href="miss-universe.html" class="mu-event-card" style="text-decoration:none;">
-                <div class="mu-event-badge"><div class="live-dot"></div> LIVE EVENT</div>
+            <a href="miss-universe.html" class="mu-event-card" id="muEventCard" style="text-decoration:none;">
+                <div class="mu-event-badge">
+                    <div class="live-dot"></div>
+                    LIVE EVENT
+                </div>
                 <div class="mu-event-crown">👑</div>
-                <img src="assets/images/Miss Univers Filipina720.jpg"
-                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:0.45;pointer-events:none;z-index:1;"
-                     alt="Miss Universe" onerror="this.style.display='none'">
+
+                <!-- PRE-SHOW IMAGE / LOGO — swap src with their logo or promo image -->
+                <!-- Leave src blank or use their logo URL when you get it           -->
+                <img id="muPreShowImg"
+                     src="assets/images/Miss Univers Filipina720.jpg"
+                     class="mu-preshow-img"
+                     alt="Miss Universe"
+                     onerror="this.style.display='none'">
+
+                <!-- Fallback: Philippine flag tint when no image is set -->
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Flag_of_the_Philippines.svg/320px-Flag_of_the_Philippines.svg.png"
-                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.15;pointer-events:none;"
-                     alt="" onerror="this.style.display='none'">
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,5,30,0.97) 30%,rgba(10,5,30,0.25) 100%);z-index:2;"></div>
-                <div style="position:relative;z-index:5;padding:14px;width:100%;">
-                    <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.6rem;letter-spacing:3px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">MISS UNIVERSE</div>
-                    <div style="font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">🇵🇭 LIVE FROM THE PHILIPPINES</div>
-                    <div style="font-size:9px;letter-spacing:1px;color:#22c55e;text-transform:uppercase;margin-top:6px;">⏰ STARTING SOON · ~4–5AM LAS VEGAS TIME</div>
-                    <div style="margin-top:12px;display:inline-flex;align-items:center;gap:7px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:12px;letter-spacing:2px;padding:6px 16px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH LIVE</div>
+                     class="mu-flag-bg" alt="Philippines" onerror="this.style.display='none'">
+
+                <div class="mu-event-overlay"></div>
+                <div class="mu-event-content">
+                    <div class="mu-event-title">MISS UNIVERSE</div>
+                    <div class="mu-event-sub">🇵🇭 LIVE FROM THE PHILIPPINES</div>
+                    <div class="mu-event-cta">
+                        <i class="fas fa-play"></i> WATCH LIVE
+                    </div>
                 </div>
             </a>
 
@@ -2946,60 +2957,23 @@
         display: flex;
         align-items: flex-start;
         gap: 1.25rem;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 1.5rem 2rem 0.75rem;
-        justify-content: center;
+        max-width: 1100px;
+        margin: 0 0 0 2rem;
+        padding: 1.5rem 0 0.75rem 2rem;
+        justify-content: flex-start;
     }
     .lsc-row .live-showcase-container {
-        flex: 0 0 620px;
-        width: 620px;
-        max-width: 620px !important;
-        margin: 0 !important;
+        flex: 0 0 500px;
+        width: 500px;
+        max-width: 500px !important;
+        margin: 0 0 0 -40px !important;
         padding: 0 !important;
     }
-    /* ── MISS UNIVERSE CARD ─────────────────────────────────────────── */
-    .mu-event-card {
-        flex: 0 0 460px;
-        width: 460px;
-        aspect-ratio: 16/9;
-        height: auto;
-        border-radius: 14px;
-        overflow: hidden;
-        position: relative;
-        cursor: pointer;
-        border: 2px solid rgba(255,215,0,0.5);
-        box-shadow: 0 0 24px rgba(255,215,0,0.2), 0 8px 32px rgba(0,0,0,0.6);
-        background: linear-gradient(135deg, #1a0533 0%, #0a0f1a 100%);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: flex-end;
-    }
-    .mu-event-card:hover {
-        border-color: #ffd700;
-        box-shadow: 0 0 40px rgba(255,215,0,0.35), 0 12px 40px rgba(0,0,0,0.7);
-        transform: scale(1.02);
-    }
-    .mu-event-badge {
-        position: absolute; top: 10px; left: 10px; z-index: 10;
-        display: flex; align-items: center; gap: 5px;
-        background: rgba(220,38,38,0.92);
-        border: 1px solid rgba(255,255,255,0.25);
-        border-radius: 20px; padding: 3px 9px;
-        font-family: 'Bebas Neue','Rajdhani',sans-serif;
-        font-size: 11px; letter-spacing: 2px; color: #fff;
-    }
-    .mu-event-crown {
-        position: absolute; top: 8px; right: 10px;
-        font-size: 1.6rem; z-index: 10;
-        filter: drop-shadow(0 2px 6px rgba(255,215,0,0.7));
-    }
-    .is-firestick .mu-event-card { display: none !important; }
     /* ── AD PANEL ───────────────────────────────────────────────────── */
     .flm-ad-panel {
         flex: 1;
-        min-width: 280px;
-        max-width: 380px;
+        min-width: 220px;
+        max-width: 320px;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -3209,6 +3183,123 @@
         .flm-tv-stations-card { min-height: 70px; padding: 10px 12px; }
         .flm-tvs-title { font-size: 1.2rem; }
     }
+
+    /* ── MISS UNIVERSE EVENT CARD ──────────────────────────────────── */
+    .mu-event-card {
+        flex: 0 0 220px;
+        width: 220px;
+        min-height: 196px;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        border: 2px solid rgba(255,215,0,0.5);
+        box-shadow: 0 0 24px rgba(255,215,0,0.2), 0 8px 32px rgba(0,0,0,0.6);
+        background: linear-gradient(135deg, #1a0533 0%, #0a0f1a 100%);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: flex-end;
+    }
+    .mu-event-card:hover {
+        border-color: #ffd700;
+        box-shadow: 0 0 40px rgba(255,215,0,0.35), 0 12px 40px rgba(0,0,0,0.7);
+        transform: scale(1.02);
+    }
+    .mu-event-badge {
+        position: absolute;
+        top: 10px; left: 10px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(220,38,38,0.92);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 20px;
+        padding: 3px 9px;
+        font-family: 'Bebas Neue','Rajdhani',sans-serif;
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: #fff;
+        backdrop-filter: blur(4px);
+    }
+    .mu-event-crown {
+        position: absolute;
+        top: 8px; right: 10px;
+        font-size: 1.6rem;
+        z-index: 10;
+        filter: drop-shadow(0 2px 6px rgba(255,215,0,0.7));
+    }
+    .mu-flag-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+    /* Pre-show promo image — swap src to their logo/poster */
+    .mu-preshow-img {
+        position: absolute;
+        inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        object-position: center top;
+        opacity: 0.45;
+        pointer-events: none;
+        z-index: 1;
+    }
+    .mu-event-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10,5,30,0.97) 30%, rgba(10,5,30,0.25) 100%);
+        pointer-events: none;
+        z-index: 2;
+    }
+    .mu-event-content {
+        position: relative;
+        z-index: 5;
+        padding: 12px;
+        width: 100%;
+    }
+    .mu-event-title {
+        font-family: 'Bebas Neue','Rajdhani',sans-serif;
+        font-size: 1.5rem;
+        letter-spacing: 3px;
+        color: #ffd700;
+        line-height: 1;
+        text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    }
+    .mu-event-sub {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: rgba(255,255,255,0.7);
+        text-transform: uppercase;
+        margin-top: 4px;
+    }
+    .mu-event-cta {
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: #ffd700;
+        color: #000;
+        font-family: 'Bebas Neue','Rajdhani',sans-serif;
+        font-size: 11px;
+        letter-spacing: 2px;
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+    }
+    /* Mobile: card goes full width in a row */
+    @media (max-width: 768px) {
+        .mu-event-card {
+            flex: 1 1 140px;
+            min-height: 100px;
+            width: auto;
+        }
+    }
+    /* Firestick: hide event card (no click/hover nav support) */
+    .is-firestick .mu-event-card { display: none !important; }
 
     /* Firestick: hide ad panel, restore player to original centered layout */
     .is-firestick .flm-ad-panel { display: none !important; }

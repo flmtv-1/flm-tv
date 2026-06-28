@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Miss Universe 2025 — LIVE on FLM TV</title>
+<meta name="description" content="Watch Miss Universe 2025 LIVE from the Philippines, exclusively on FLM TV Channel 26.5 Las Vegas.">
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --red: #C0272D;
+  --black: #07070A;
+  --dark: #0E0E13;
+  --dark2: #14141A;
+  --dark3: #1C1C24;
+  --text: #F0EDE8;
+  --text-dim: #888898;
+  --text-muted: #444450;
+  --green: #22c55e;
+  --purple: #6d28d9;
+  --purple-light: #8b5cf6;
+}
+
+html, body {
+  height: 100%;
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+}
+
+/* ── LAYOUT ── */
+.app {
+  display: grid;
+  grid-template-rows: 54px 1fr;
+  grid-template-columns: 1fr 300px;
+  height: 100vh;
+}
+
+/* ── TOP NAV ── */
+.topnav {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(7,7,10,0.98);
+  border-bottom: 2px solid var(--gold);
+  z-index: 100;
+}
+
+.nav-left { display:flex; align-items:center; gap:16px; }
+
+.back-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold);
+  font-size: 12px; font-weight: 700;
+  text-decoration: none; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.back-btn:hover { background: var(--gold); color: #000; }
+
+.nav-logo {
+  font-size: 20px; font-weight: 900; letter-spacing: 2px;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo .flm { color: var(--gold); }
+.nav-logo .tv  { color: var(--green); }
+.nav-logo .sep { color: var(--text-muted); font-weight: 300; font-size: 16px; }
+.nav-logo .event-name {
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+.nav-logo .crown { font-size: 18px; }
+
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--red);
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 800; letter-spacing: 2px;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #fff; animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.nav-right { display:flex; align-items:center; gap:12px; }
+
+.ch-info { text-align:right; }
+.ch-name { font-size:13px; font-weight:700; color:var(--gold); }
+.ch-sub  { font-size:10px; color:var(--text-muted); }
+
+/* ── VIDEO AREA ── */
+.player-area {
+  position: relative;
+  background: #000;
+  overflow: hidden;
+}
+
+#liveVideo {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── CROWN WATERMARK ── */
+.crown-watermark {
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 5;
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,215,0,0.35);
+  border-radius: 20px;
+  padding: 4px 10px;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+.crown-watermark span {
+  font-size: 10px; letter-spacing: 2px;
+  font-weight: 800; color: rgba(255,215,0,0.85);
+  font-family: Arial, sans-serif;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: absolute; inset: 0;
+  background: var(--black);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; z-index: 10;
+  transition: opacity 0.4s;
+}
+.loading-overlay.hidden { opacity:0; pointer-events:none; }
+
+.loading-logo {
+  font-size: 56px;
+  animation: pulse-crown 2s ease-in-out infinite;
+}
+@keyframes pulse-crown {
+  0%,100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255,215,0,0.5)); }
+  50%      { transform: scale(1.1); filter: drop-shadow(0 0 20px rgba(255,215,0,0.9)); }
+}
+.loading-title {
+  font-size: 18px; font-weight: 900;
+  letter-spacing: 5px; color: var(--gold);
+  text-transform: uppercase;
+}
+.loading-sub {
+  font-size: 11px; letter-spacing: 3px;
+  color: var(--text-muted); text-transform: uppercase;
+}
+.loading-bar {
+  width: 180px; height: 2px;
+  background: rgba(201,168,76,0.15);
+  border-radius: 2px; overflow: hidden;
+}
+.loading-bar::after {
+  content:''; display:block; height:100%; width:40%;
+  background: var(--gold);
+  animation: slide 1s ease-in-out infinite;
+}
+@keyframes slide { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }
+
+/* Error overlay */
+.error-overlay {
+  position: absolute; inset: 0;
+  background: var(--black);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px; z-index: 10;
+}
+.error-overlay.show { display:flex; }
+.error-icon { font-size: 48px; opacity: 0.6; }
+.error-text { font-size: 14px; color: var(--text-dim); letter-spacing: 1px; text-align:center; max-width:300px; }
+.retry-btn {
+  padding: 10px 28px;
+  background: var(--gold); color: #000;
+  border: none; border-radius: 4px;
+  font-size: 13px; font-weight: 800;
+  cursor: pointer; letter-spacing: 1px;
+  transition: background 0.2s;
+}
+.retry-btn:hover { background: var(--gold-light); }
+
+/* Fullscreen player controls */
+.fs-controls {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 16px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 8;
+}
+.fs-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff; border-radius: 4px;
+  padding: 6px 14px; font-size: 14px;
+  cursor: pointer; transition: background 0.2s;
+}
+.fs-btn:hover, .fs-btn:focus { background: rgba(255,255,255,0.3); outline: none; }
+.fs-vol-bar {
+  width: 80px; height: 4px;
+  background: rgba(255,255,255,0.2); border-radius: 2px;
+  overflow: hidden; cursor: pointer;
+}
+.fs-vol-fill {
+  height: 100%; width: 100%;
+  background: var(--gold); border-radius: 2px;
+  transition: width 0.1s;
+}
+.fs-spacer { flex: 1; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--dark2);
+  border-left: 1px solid rgba(201,168,76,0.2);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-section {
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar-label {
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--gold); font-weight: 700;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+
+/* Event info card */
+.event-info-card {
+  background: linear-gradient(135deg, rgba(109,40,217,0.2) 0%, rgba(10,5,30,0.6) 100%);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+.event-crown-big { font-size: 2.2rem; margin-bottom: 6px; }
+.event-title-big {
+  font-size: 15px; font-weight: 900;
+  letter-spacing: 3px; color: var(--gold);
+  text-transform: uppercase;
+}
+.event-location {
+  font-size: 11px; color: var(--text-dim);
+  letter-spacing: 1.5px; margin-top: 4px;
+}
+.event-flm-tag {
+  margin-top: 10px;
+  display: inline-block;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 10px; letter-spacing: 2px; color: var(--gold);
+}
+
+/* Watch on list */
+.watch-on-list { display:flex; flex-direction:column; gap:8px; }
+.watch-on-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--text-dim);
+}
+.watch-on-item i { color: var(--gold); width: 16px; }
+
+/* Share section */
+.share-url-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  transition: background 0.2s;
+  word-break: break-all;
+}
+.share-url-box:hover { background: rgba(201,168,76,0.08); }
+.share-copy-icon { flex-shrink: 0; color: var(--text-muted); font-size: 13px; }
+.share-copied {
+  font-size: 10px; letter-spacing: 1px;
+  color: var(--green); margin-top: 5px;
+  display: none;
+}
+
+/* Bottom button */
+.stations-btn-wrap {
+  padding: 16px;
+  margin-top: auto;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
+.stations-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  background: var(--gold); color: #000;
+  text-decoration: none;
+  font-size: 13px; font-weight: 800;
+  letter-spacing: 2px; padding: 13px 16px;
+  border-radius: 3px; text-transform: uppercase;
+  transition: background 0.2s;
+}
+.stations-btn:hover { background: var(--gold-light); }
+.stations-note {
+  text-align: center; margin-top: 8px;
+  font-size: 10px; color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* ── FULLSCREEN hides sidebar & nav ── */
+:fullscreen .topnav,
+:-webkit-full-screen .topnav,
+:fullscreen .sidebar,
+:-webkit-full-screen .sidebar { display: none !important; }
+:fullscreen .app,
+:-webkit-full-screen .app {
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1fr !important;
+}
+:fullscreen .player-area,
+:-webkit-full-screen .player-area {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 / -1 !important;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 54px 1fr auto; }
+  .sidebar { border-left: none; border-top: 1px solid rgba(201,168,76,0.2); max-height: 260px; overflow-y: auto; }
+  .nav-logo .event-name { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="nav-left">
+      <a href="home.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> HOME
+      </a>
+      <div class="nav-logo">
+        <span class="flm">FLM</span><span class="tv">TV</span>
+        <span class="sep">|</span>
+        <span class="crown">👑</span>
+        <span class="event-name">MISS UNIVERSE</span>
+      </div>
+      <div class="live-badge">
+        <div class="live-dot"></div> LIVE
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="ch-info">
+        <div class="ch-name">🇵🇭 PHILIPPINES</div>
+        <div class="ch-sub">FLM TV · CH 26.5 LAS VEGAS</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PLAYER -->
+  <div class="player-area" id="playerArea"
+       onmousemove="showControls()" onclick="showControls()">
+
+    <video id="liveVideo" autoplay playsinline controls
+      style="width:100%;height:100%;object-fit:contain;display:block;"
+      poster="assets/images/Screenshots/NEW FLM TV Banner 1080, Z-pegusus.png">
+    </video>
+
+    <!-- Crown watermark -->
+    <div class="crown-watermark">
+      <span>👑 MISS UNIVERSE · FLM TV</span>
+    </div>
+
+    <!-- Fullscreen overlay controls -->
+    <div class="fs-controls" id="fsControls">
+      <button class="fs-btn" id="fsBtnPlay" onclick="togglePlay()">⏸</button>
+      <button class="fs-btn" id="fsBtnVolDown" onclick="changeVol(-0.1)">🔉</button>
+      <div class="fs-vol-bar">
+        <div class="fs-vol-fill" id="fsVolFill"></div>
+      </div>
+      <button class="fs-btn" id="fsBtnVolUp" onclick="changeVol(0.1)">🔊</button>
+      <button class="fs-btn" id="fsBtnMute" onclick="toggleMute()">🔇</button>
+      <div class="fs-spacer"></div>
+      <button class="fs-btn" id="fsBtnHome" onclick="window.location.href='home.html'">⌂ Home</button>
+      <button class="fs-btn" id="fsBtnFS" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-logo">👑</div>
+      <div class="loading-title">Miss Universe</div>
+      <div class="loading-sub">Live from the Philippines · FLM TV</div>
+      <div class="loading-bar"></div>
+    </div>
+
+    <!-- Error overlay -->
+    <div class="error-overlay" id="errorOverlay">
+      <div class="error-icon">👑</div>
+      <div class="error-text">Stream not yet available.<br>Please check back when the event goes live.</div>
+      <button class="retry-btn" onclick="initStream()">
+        <i class="fas fa-redo"></i> Retry
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Live Event</div>
+      <div class="event-info-card">
+        <div class="event-crown-big">👑</div>
+        <div class="event-title-big">Miss Universe</div>
+        <div class="event-location">🇵🇭 Live from the Philippines</div>
+        <div class="event-flm-tag">ON FLM TV NETWORK</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Watch FLM TV On</div>
+      <div class="watch-on-list">
+        <div class="watch-on-item"><i class="fas fa-globe"></i> FLMTV.com</div>
+        <div class="watch-on-item"><i class="fas fa-circle-dot"></i> Roku Channel</div>
+        <div class="watch-on-item"><i class="fas fa-broadcast-tower"></i> Las Vegas OTA Ch 26.5</div>
+        <div class="watch-on-item"><i class="fas fa-mobile-alt"></i> Fire TV App</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Share This Stream</div>
+      <div class="share-url-box" onclick="copyShareLink(this)">
+        <span>flmtv.com/miss-universe.html</span>
+        <i class="fas fa-copy share-copy-icon"></i>
+      </div>
+      <div class="share-copied" id="shareCopied">✓ Link copied!</div>
+    </div>
+
+    <div class="stations-btn-wrap">
+      <a href="home.html" class="stations-btn">
+        ← Back to FLM TV
+      </a>
+      <div class="stations-note">FLM TV · CHANNEL 26.5 LAS VEGAS</div>
+    </div>
+
+  </aside>
+
+</div>
+
+<script>
+// ── STREAM URL — paste the link here when you get it ──────────────
+var MU_STREAM_URL = ''; // ← PASTE URL HERE
+
+var video = document.getElementById('liveVideo');
+var loadingOverlay = document.getElementById('loadingOverlay');
+var errorOverlay   = document.getElementById('errorOverlay');
+
+function initStream() {
+  errorOverlay.classList.remove('show');
+  loadingOverlay.classList.remove('hidden');
+  var timeout = setTimeout(function() { loadingOverlay.classList.add('hidden'); }, 8000);
+
+  if (!MU_STREAM_URL) {
+    clearTimeout(timeout);
+    loadingOverlay.classList.add('hidden');
+    errorOverlay.classList.add('show');
+    return;
+  }
+
+  // HLS (.m3u8)
+  if (MU_STREAM_URL.indexOf('.m3u8') !== -1) {
+    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+      var hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+      hls.loadSource(MU_STREAM_URL);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function() {
+        clearTimeout(timeout);
+        loadingOverlay.classList.add('hidden');
+        video.play().catch(function(){});
+      });
+      hls.on(Hls.Events.ERROR, function(e, data) {
+        if (data.fatal) {
+          clearTimeout(timeout);
+          loadingOverlay.classList.add('hidden');
+          errorOverlay.classList.add('show');
+        }
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = MU_STREAM_URL;
+      video.addEventListener('loadedmetadata', function() {
+        clearTimeout(timeout);
+        loadingOverlay.classList.add('hidden');
+        video.play().catch(function(){});
+      }, { once: true });
+    }
+  } else {
+    // Direct MP4 or other
+    video.src = MU_STREAM_URL;
+    video.addEventListener('loadedmetadata', function() {
+      clearTimeout(timeout);
+      loadingOverlay.classList.add('hidden');
+      video.play().catch(function(){});
+    }, { once: true });
+    video.addEventListener('error', function() {
+      clearTimeout(timeout);
+      loadingOverlay.classList.add('hidden');
+      errorOverlay.classList.add('show');
+    }, { once: true });
+  }
+}
+
+// ── CONTROLS ─────────────────────────────────────────────────────
+var ctrlTimer;
+function showControls() {
+  var ctrl = document.getElementById('fsControls');
+  ctrl.style.opacity = '1';
+  ctrl.style.pointerEvents = 'auto';
+  clearTimeout(ctrlTimer);
+  ctrlTimer = setTimeout(function() {
+    ctrl.style.opacity = '0';
+    ctrl.style.pointerEvents = 'none';
+  }, 4000);
+}
+
+function togglePlay() {
+  if (video.paused) video.play(); else video.pause();
+  document.getElementById('fsBtnPlay').textContent = video.paused ? '▶' : '⏸';
+}
+
+function changeVol(delta) {
+  video.volume = Math.max(0, Math.min(1, video.volume + delta));
+  video.muted = false;
+  document.getElementById('fsVolFill').style.width = (video.volume * 100) + '%';
+}
+
+function toggleMute() {
+  video.muted = !video.muted;
+  document.getElementById('fsBtnMute').textContent = video.muted ? '🔈' : '🔇';
+  document.getElementById('fsVolFill').style.width = video.muted ? '0%' : (video.volume * 100) + '%';
+}
+
+function toggleFullscreen() {
+  var pa = document.getElementById('playerArea');
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    (pa.requestFullscreen || pa.webkitRequestFullscreen).call(pa);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+}
+
+document.addEventListener('fullscreenchange', function() {
+  var inFS = !!document.fullscreenElement;
+  document.getElementById('fsBtnFS').textContent = inFS ? '⊠ Exit FS' : '⛶ Fullscreen';
+});
+
+// ── SHARE ────────────────────────────────────────────────────────
+function copyShareLink(el) {
+  var url = 'https://flmtv.com/miss-universe.html';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      document.getElementById('shareCopied').style.display = 'block';
+      setTimeout(function() { document.getElementById('shareCopied').style.display = 'none'; }, 2500);
+    });
+  }
+}
+
+// ── KEYBOARD (Fire TV / d-pad) ───────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace' || e.key === 'Escape') {
+    e.preventDefault();
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else { window.location.href = 'home.html'; }
+  }
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); togglePlay(); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); changeVol(0.1); }
+  if (e.key === 'ArrowDown') { e.preventDefault(); changeVol(-0.1); }
+});
+
+// ── START ────────────────────────────────────────────────────────
+initStream();
+</script>
+</body>
+</html>

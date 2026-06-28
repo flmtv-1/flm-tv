@@ -1,235 +1,319 @@
 {
-  "2026-06-19": [
+  "2026-06-27": [
     {
-      "startTime": "13:33",
-      "name": "Leave it to Beaver",
-      "duration": 1551,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "13:58",
-      "name": "Bewitched",
-      "duration": 1527,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "14:24",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
-      "category": "ad",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "14:24",
-      "name": "Bewitched",
-      "duration": 1526,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "14:50",
-      "name": "Little Rascals",
-      "duration": 1222,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "15:10",
-      "name": "Little Rascals",
-      "duration": 1267,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "15:31",
-      "name": "The Twilight Zone",
-      "duration": 1520,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "15:57",
-      "name": "The Twilight Zone",
-      "duration": 1555,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "16:22",
-      "name": "Andy Griffith",
-      "duration": 1516,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "16:48",
-      "name": "Andy Griffith",
-      "duration": 1477,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "17:12",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
-      "category": "ad",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "17:13",
-      "name": "Whats Happening",
-      "duration": 1514,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "17:38",
-      "name": "SheBoujay.com",
-      "duration": 60,
-      "category": "ad",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "17:39",
-      "name": "Good Times",
-      "duration": 1471,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "18:04",
-      "name": "Sanford and Son",
-      "duration": 1512,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "18:29",
-      "name": "The Jeffersons",
-      "duration": 1500,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "18:54",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
-      "category": "ad",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "18:54",
-      "name": "Buck Wild",
-      "duration": 4865,
-      "category": "movie",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "20:15",
-      "name": "Here's Lucy-Donny Osmand",
-      "duration": 1517,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "20:41",
-      "name": "Mars Mission",
-      "duration": 2525,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "21:23",
-      "name": "The X-Files",
-      "duration": 2681,
-      "category": "",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "22:07",
-      "name": "The Sixth Sense",
-      "duration": 6443,
-      "category": "movie",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "23:55",
-      "name": "SheBoujay COMMERCIAL",
-      "duration": 60,
-      "category": "ad",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "23:56",
-      "name": "Anger Management",
-      "duration": 6358,
-      "category": "movie",
-      "date": "2026-06-19"
-    },
-    {
-      "startTime": "01:42",
-      "name": "Aftermath",
-      "duration": 5740,
-      "category": "movie",
-      "date": "2026-06-20"
-    },
-    {
-      "startTime": "03:17",
-      "name": "Equilibrium",
-      "duration": 6422,
-      "category": "movie",
-      "date": "2026-06-20"
-    },
-    {
-      "startTime": "05:04",
-      "name": "Flubber",
-      "duration": 5128,
-      "category": "movie",
-      "date": "2026-06-20"
-    },
-    {
-      "startTime": "06:30",
-      "name": "Despicable Me 3",
-      "duration": 5380,
-      "category": "movie",
-      "date": "2026-06-20"
-    },
-    {
-      "startTime": "08:00",
-      "name": "Sesame Street",
-      "duration": 3356,
-      "category": "kids",
-      "date": "2026-06-20"
-    },
-    {
-      "startTime": "08:56",
-      "name": "Rolie Polie Olie",
-      "duration": 1446,
-      "category": "kids",
-      "date": "2026-06-20"
-    },
-    {
-      "startTime": "09:20",
-      "name": "Ready Jet Go",
+      "startTime": "08:50",
+      "name": "Ready Jet Go ",
+      "path": "Y:\\KIDS WORLD-2\\RJGTVSeries\\SEASON 01\\Ready.Jet.Go-S01E77-78-A.Hammer.And.A.Feather.Commander.Mom.WEBDL-1080p.mp4",
       "duration": 1591,
-      "category": "kids",
-      "date": "2026-06-20"
+      "inPoint": 0,
+      "outPoint": 1591,
+      "category": "show"
     },
     {
-      "startTime": "09:46",
+      "startTime": "09:17",
       "name": "Super Why!",
+      "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 06\\Super Why!_S06E02_The Beach Day Mystery.ia.mp4",
       "duration": 1620,
-      "category": "kids",
-      "date": "2026-06-20"
+      "inPoint": 0,
+      "outPoint": 1620,
+      "category": "show"
     },
     {
-      "startTime": "10:13",
-      "name": "Alice In Wonderland",
-      "duration": 4516,
-      "category": "movie",
-      "date": "2026-06-20"
+      "startTime": "09:44",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\13 Verb Thats Whats Happening.mkv",
+      "duration": 194,
+      "inPoint": 0,
+      "outPoint": 194,
+      "category": "music"
+    },
+    {
+      "startTime": "09:47",
+      "name": "Conjunction Junction",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\14 Conjunction Junction.mkv",
+      "duration": 186,
+      "inPoint": 0,
+      "outPoint": 186,
+      "category": "music"
+    },
+    {
+      "startTime": "09:50",
+      "name": "Interjections",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\15 Interjections.mkv",
+      "duration": 192,
+      "inPoint": 0,
+      "outPoint": 192,
+      "category": "music"
+    },
+    {
+      "startTime": "09:53",
+      "name": "Unpack Your Adjectives",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\16 Unpack Your Adjectives.mkv",
+      "duration": 183,
+      "inPoint": 0,
+      "outPoint": 183,
+      "category": "music"
+    },
+    {
+      "startTime": "09:56",
+      "name": "Lolly Lolly Lolly Get Your Adverbs Here",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\17 Lolly Lolly Lolly Get Your Adverbs Here.mkv",
+      "duration": 192,
+      "inPoint": 0,
+      "outPoint": 192,
+      "category": "music"
+    },
+    {
+      "startTime": "09:59",
+      "name": "Tom and Jerry",
+      "path": "X:\\KIDS WORLD 1\\TOM and Jerry Chuck Collection_202309\\DISC_2.mp4",
+      "duration": 2940,
+      "inPoint": 0,
+      "outPoint": 2940,
+      "category": "show"
+    },
+    {
+      "startTime": "10:48",
+      "name": "FLMTV.com",
+      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
+      "duration": 15,
+      "inPoint": 0,
+      "outPoint": 15,
+      "category": "commercial"
+    },
+    {
+      "startTime": "10:48",
+      "name": "The Rescuers ",
+      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\The.Rescuers.1977.1080p.BluRay.H.265.Egy_track1.mkv",
+      "duration": 4633,
+      "inPoint": 0,
+      "outPoint": 4633,
+      "category": "show"
+    },
+    {
+      "startTime": "12:05",
+      "name": "VoteScottBlack com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "12:06",
+      "name": "Three Stooges",
+      "path": "X:\\TV Clssics 2\\Three Stooges\\19 - Slippery Silks.mkv",
+      "duration": 1041.24,
+      "inPoint": 0,
+      "outPoint": 1041.24,
+      "category": "show"
+    },
+    {
+      "startTime": "12:23",
+      "name": "The Lucy Show",
+      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 1\\S01E18 - Lucy and Viv Put in a Shower.ia.mp4",
+      "duration": 1547,
+      "inPoint": 0,
+      "outPoint": 1547,
+      "category": "show"
+    },
+    {
+      "startTime": "12:49",
+      "name": "Leave it to Beaver",
+      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 2\\S02E19 - Wally's Pug Nose.mp4",
+      "duration": 1555,
+      "inPoint": 0,
+      "outPoint": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "13:15",
+      "name": "Little Rascals",
+      "path": "Y:\\CLASSIC TV-2\\The Best Of The Little Rascals\\HI NEIGHBOR\\publichd-rascals.hi.neighbour.720p.mkv",
+      "duration": 1019,
+      "inPoint": 0,
+      "outPoint": 1019,
+      "category": "show"
+    },
+    {
+      "startTime": "13:32",
+      "name": "Little Rascals (Bedtime Worries)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 21-40\\Little Rascals 36 (Bedtime Worries).mp4",
+      "duration": 1215,
+      "inPoint": 0,
+      "outPoint": 1215,
+      "category": "show"
+    },
+    {
+      "startTime": "13:52",
+      "name": "Little Rascals (Wild Poses)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 21-40\\Little Rascals 37 (Wild Poses).mp4",
+      "duration": 1106,
+      "inPoint": 0,
+      "outPoint": 1106,
+      "category": "show"
+    },
+    {
+      "startTime": "14:10",
+      "name": "Pioneer Woman",
+      "path": "X:\\COOKING & More\\Food-Network-Pioneer-Woman\\EPISODES 1-7\\1.3 Cowgirls and Cowboys\\1.3 Cowgirls and Cowboys.mp4",
+      "duration": 1260,
+      "inPoint": 0,
+      "outPoint": 1260,
+      "category": "show"
+    },
+    {
+      "startTime": "14:31",
+      "name": "VoteScottBlack com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "14:32",
+      "name": "Boxer",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\final.mp4",
+      "duration": 135.929615,
+      "inPoint": 0,
+      "outPoint": 135.929615,
+      "category": ""
+    },
+    {
+      "startTime": "14:34",
+      "name": "Batman Begins ",
+      "path": "Z:\\SHOWS TO SORT-add\\Batman Begins (2005).mp4",
+      "duration": 8402,
+      "inPoint": 0,
+      "outPoint": 8402,
+      "category": "movie"
+    },
+    {
+      "startTime": "16:54",
+      "name": "Matilda ",
+      "path": "X:\\MOVIES-5\\Matilda\\Matilda 1996 720p.mp4",
+      "duration": 5888,
+      "inPoint": 0,
+      "outPoint": 5888,
+      "category": "movie"
+    },
+    {
+      "startTime": "18:32",
+      "name": "Up ",
+      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\Up.1080p.Bluray.H.265.Egy_track1.mkv",
+      "duration": 5797,
+      "inPoint": 0,
+      "outPoint": 5797,
+      "category": "movie"
+    },
+    {
+      "startTime": "20:09",
+      "name": "Charlie and the Chocolate Factory ",
+      "path": "Y:\\MOVIES\\Charlie and the Chocolate Factory.ia\\Charlie and the Chocolate Factory.ia.mp4",
+      "duration": 6923,
+      "inPoint": 0,
+      "outPoint": 6923,
+      "category": "movie"
+    },
+    {
+      "startTime": "22:04",
+      "name": "VoteScottBlack com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "22:05",
+      "name": "SheBoujay COMMERCIAL VRS QRcode 1",
+      "path": "X:\\COMMERCIALS-CLIPS\\SheBoujay COMMERCIAL VRS QRcode 1.mp4",
+      "duration": 60.2,
+      "inPoint": 0,
+      "outPoint": 60.2,
+      "category": ""
+    },
+    {
+      "startTime": "22:06",
+      "name": "The Unsinkable Titanic",
+      "path": "X:\\_SORT-MOVIES\\Titanic (1997) Kate Winslet, Leaonardo DiCaprio1080p.mp4",
+      "duration": 11689,
+      "inPoint": 0,
+      "outPoint": 11689,
+      "category": "movie"
+    },
+    {
+      "startTime": "01:21",
+      "name": "O Brother Where Art Thou",
+      "path": "X:\\MOVIES-5\\O Brother Where Art Thou\\O.Brother.Where.Art.Thou.mkv",
+      "duration": 6429,
+      "inPoint": 0,
+      "outPoint": 6429,
+      "category": "movie"
+    },
+    {
+      "startTime": "03:08",
+      "name": "The Amityville Horror ",
+      "path": "X:\\_SORT-MOVIES\\The Amityville Horror 1979 Remastered 1080p BluRay HEVC x265 5.1 BONE.mkv",
+      "duration": 7125,
+      "inPoint": 0,
+      "outPoint": 7125,
+      "category": "movie"
+    },
+    {
+      "startTime": "05:07",
+      "name": "The Popes Exorcist",
+      "path": "X:\\_SORT-MOVIES\\The Popes Exorcist (2023) [1080p] [WEBRip] [5.1] [YTS.MX]\\The.Popes.Exorcist.mp4",
+      "duration": 6209,
+      "inPoint": 0,
+      "outPoint": 6209,
+      "category": ""
+    },
+    {
+      "startTime": "06:50",
+      "name": "VoteScottBlack com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "promo"
+    },
+    {
+      "startTime": "06:51",
+      "name": "Dolores Claiborne",
+      "path": "X:\\_SORT-MOVIES\\Dolores Claiborne 1995 1080p BRRip x264 DTS 5.1 ESub- Hon3y\\Dolores Claiborne 1995 1080p BRRip x264 DTS 5.1 ESub- Hon3y.mkv",
+      "duration": 7891,
+      "inPoint": 0,
+      "outPoint": 7891,
+      "category": "movie"
+    },
+    {
+      "startTime": "09:03",
+      "name": "Avengers Infinity War",
+      "path": "X:\\MOVIES-5\\Avengers - Infinity War\\Avengers - Infinity War.mp4",
+      "duration": 8961,
+      "inPoint": 0,
+      "outPoint": 8961,
+      "category": "movie"
+    },
+    {
+      "startTime": "11:32",
+      "name": "Fireman Sam Saves the Day",
+      "path": "X:\\KIDS WORLD 1\\Fireman Sam\\Fireman Sam_Saves the Day_(2006)_(UK).mp4",
+      "duration": 3052,
+      "inPoint": 0,
+      "outPoint": 3052,
+      "category": "show"
+    },
+    {
+      "startTime": "12:23",
+      "name": "James And The Giant Peach",
+      "path": "X:\\KIDS WORLD 1\\DISNEY MOVIES\\James and The Giant Peach\\James And The Giant Peach.mp4",
+      "duration": 4765,
+      "inPoint": 0,
+      "outPoint": 4765,
+      "category": "show"
     }
   ]
 }
