@@ -141,7 +141,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <script>
 // ── TODAY'S SCHEDULE — Saturday June 6 2026 ───────────────────────
-// Updated: 2026-06-28 15:06
+// Updated: 2026-06-29 11:49
 const TODAY_SCHEDULE = [
   {t:"14:16",n:"Frozen II",d:6194,cat:"movie",date:"2026-06-28"},
   {t:"15:59",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-06-28"},
@@ -171,7 +171,55 @@ const TODAY_SCHEDULE = [
   {t:"13:41",n:"Schoolhouse Rock!",d:184,cat:"kids",date:"2026-06-29"},
   {t:"13:44",n:"Schoolhouse Rock!",d:184,cat:"kids",date:"2026-06-29"},
   {t:"13:47",n:"Schoolhouse Rock!",d:184,cat:"kids",date:"2026-06-29"},
-  {t:"13:50",n:"Schoolhouse Rock!",d:2689,cat:"kids",date:"2026-06-29"}
+  {t:"13:50",n:"Schoolhouse Rock!",d:2689,cat:"kids",date:"2026-06-29"},
+  {t:"11:05",n:"NODDY",d:3455,cat:"kids",date:"2026-06-29"},
+  {t:"12:03",n:"Sesame Street",d:3356,cat:"kids",date:"2026-06-29"},
+  {t:"12:59",n:"Super Why!",d:1621,cat:"kids",date:"2026-06-29"},
+  {t:"13:26",n:"Ready Jet Go",d:1406,cat:"kids",date:"2026-06-29"},
+  {t:"13:49",n:"Schoolhouse Rock!",d:184,cat:"kids",date:"2026-06-29"},
+  {t:"13:52",n:"Schoolhouse Rock!",d:184,cat:"kids",date:"2026-06-29"},
+  {t:"13:55",n:"Schoolhouse Rock!",d:184,cat:"kids",date:"2026-06-29"},
+  {t:"13:58",n:"Schoolhouse Rock!",d:2689,cat:"kids",date:"2026-06-29"},
+  {t:"14:43",n:"Jackie Chan Adventures",d:1278,cat:"kids",date:"2026-06-29"},
+  {t:"15:04",n:"Liberty\'s Kids",d:1398,cat:"kids",date:"2026-06-29"},
+  {t:"15:28",n:"Nature Cat",d:1441,cat:"kids",date:"2026-06-29"},
+  {t:"15:52",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-06-29"},
+  {t:"15:52",n:"FLMTV.com",d:28,cat:"ad",date:"2026-06-29"},
+  {t:"15:53",n:"Gilligan\'s Island",d:1517,cat:"",date:"2026-06-29"},
+  {t:"16:18",n:"Leave it to Beaver",d:1558,cat:"",date:"2026-06-29"},
+  {t:"16:44",n:"Andy Griffith",d:1500,cat:"",date:"2026-06-29"},
+  {t:"17:09",n:"Andy Griffith",d:1554,cat:"",date:"2026-06-29"},
+  {t:"17:35",n:"The Lucy Show",d:1545,cat:"",date:"2026-06-29"},
+  {t:"18:01",n:"Life With Lucy",d:1463,cat:"",date:"2026-06-29"},
+  {t:"18:25",n:"MASH",d:1541,cat:"",date:"2026-06-29"},
+  {t:"18:51",n:"The Twilight Zone",d:1544,cat:"",date:"2026-06-29"},
+  {t:"19:16",n:"The Twilight Zone",d:1553,cat:"",date:"2026-06-29"},
+  {t:"19:42",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-06-29"},
+  {t:"19:43",n:"Three Stooges",d:1017,cat:"",date:"2026-06-29"},
+  {t:"20:00",n:"Little Rascals",d:1071,cat:"",date:"2026-06-29"},
+  {t:"20:18",n:"Little Rascals",d:1047,cat:"",date:"2026-06-29"},
+  {t:"20:35",n:"Whats Happening",d:1514,cat:"",date:"2026-06-29"},
+  {t:"21:00",n:"Good Times",d:1576,cat:"",date:"2026-06-29"},
+  {t:"21:27",n:"FLMTV.com",d:25,cat:"ad",date:"2026-06-29"},
+  {t:"21:27",n:"Ashwater.com",d:25,cat:"ad",date:"2026-06-29"},
+  {t:"21:27",n:"Sanford and Son",d:1509,cat:"",date:"2026-06-29"},
+  {t:"21:53",n:"The Jeffersons 1",d:2955,cat:"",date:"2026-06-29"},
+  {t:"22:42",n:"The Jeffersons 2",d:1334,cat:"",date:"2026-06-29"},
+  {t:"23:04",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-06-29"},
+  {t:"23:05",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-06-29"},
+  {t:"23:06",n:"The Wacky Wabbit",d:441,cat:"",date:"2026-06-29"},
+  {t:"23:13",n:"Electric Earthquake",d:523,cat:"",date:"2026-06-29"},
+  {t:"23:22",n:"Volcano",d:475,cat:"",date:"2026-06-29"},
+  {t:"23:30",n:"Toy Story 4",d:6003,cat:"movie",date:"2026-06-29"},
+  {t:"01:10",n:"Impossible Fixes",d:2528,cat:"",date:"2026-06-30"},
+  {t:"01:52",n:"Here\'s Lucy",d:1517,cat:"",date:"2026-06-30"},
+  {t:"02:17",n:"Friends",d:1369,cat:"",date:"2026-06-30"},
+  {t:"02:40",n:"Malcolm in the Middle",d:1355,cat:"",date:"2026-06-30"},
+  {t:"03:02",n:"The X-Files",d:2727,cat:"",date:"2026-06-30"},
+  {t:"03:48",n:"Britain\'s Most Evil Killers",d:2665,cat:"",date:"2026-06-30"},
+  {t:"04:32",n:"Malcolm X",d:12101,cat:"movie",date:"2026-06-30"},
+  {t:"07:54",n:"Swing Kids",d:6824,cat:"movie",date:"2026-06-30"},
+  {t:"09:48",n:"The Shining",d:8626,cat:"movie",date:"2026-06-30"}
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────
