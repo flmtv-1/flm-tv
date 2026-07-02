@@ -228,26 +228,17 @@ function renderSchedule() {
   const wrap = document.getElementById('scheduleWrap');
   wrap.innerHTML = '';
 
-  // Get today's local date string YYYY-MM-DD
-  const now = new Date();
-  const todayStr = now.getFullYear() + '-' +
-    String(now.getMonth()+1).padStart(2,'0') + '-' +
-    String(now.getDate()).padStart(2,'0');
-
-  // Only today's shows
-  const todayShows = TODAY_SCHEDULE.filter(s => (s.date || todayStr) === todayStr);
-
   // Find the SINGLE live show
-  const liveShow = todayShows.find(s => getStatus(s) === 'live') || null;
+  const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
 
   let showCount=0, totalSec=0;
-  todayShows.forEach(s => {
+  TODAY_SCHEDULE.forEach(s => {
     if (s.cat!=='ad') { showCount++; totalSec+=s.d; }
   });
   document.getElementById('statTotal').textContent = showCount;
   document.getElementById('statHours').textContent = (totalSec/3600).toFixed(1);
 
-  todayShows.forEach(s => {
+  TODAY_SCHEDULE.forEach(s => {
     const status = getStatus(s);
     const isLive = liveShow && s.t === liveShow.t && s.n === liveShow.n;
     const isAired = !isLive && status==='aired';
