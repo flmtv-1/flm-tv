@@ -140,87 +140,30 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <script>
-// ── TODAY'S SCHEDULE — Saturday June 6 2026 ───────────────────────
-// Updated: 2026-07-01 08:34
+// ── TODAY'S SCHEDULE — Thursday July 2 2026 ───────────────────────
+// Updated: 2026-07-02
 const TODAY_SCHEDULE = [
-  {t:"10:59",n:"VoteScottBlack com",d:30,cat:"",date:"2026-06-30"},
-  {t:"11:00",n:"Get Smart ",d:1524,cat:"",date:"2026-06-30"},
-  {t:"11:25",n:"The Addams Family",d:1544,cat:"",date:"2026-06-30"},
-  {t:"11:51",n:"Bewitched ",d:1527,cat:"",date:"2026-06-30"},
-  {t:"12:16",n:"Mister Ed ",d:1533,cat:"",date:"2026-06-30"},
-  {t:"12:42",n:"VoteScottBlack com",d:30,cat:"",date:"2026-06-30"},
-  {t:"12:43",n:"Leave it to Beaver",d:1554,cat:"",date:"2026-06-30"},
-  {t:"13:09",n:"The Lucy Show",d:1548,cat:"",date:"2026-06-30"},
-  {t:"13:35",n:"SheBoujay.com",d:60,cat:"",date:"2026-06-30"},
-  {t:"13:36",n:"Andy Griffith ",d:1500,cat:"",date:"2026-06-30"},
-  {t:"14:01",n:"Andy Griffith",d:1554,cat:"",date:"2026-06-30"},
-  {t:"14:27",n:"The Twilight Zone ",d:1532,cat:"",date:"2026-06-30"},
-  {t:"14:53",n:"The Twilight Zone",d:1557,cat:"",date:"2026-06-30"},
-  {t:"15:19",n:"Zaina Juliette Spotlight ",d:313,cat:"",date:"2026-06-30"},
-  {t:"15:24",n:"Whats Happening ",d:1483,cat:"",date:"2026-06-30"},
-  {t:"15:49",n:"VoteScottBlack com",d:30,cat:"",date:"2026-06-30"},
-  {t:"15:50",n:"SheBoujay .com",d:60,cat:"ad",date:"2026-06-30"},
-  {t:"15:51",n:"Good Times  (Black Jesus)",d:1574,cat:"",date:"2026-06-30"},
-  {t:"16:17",n:"Sanford and Son",d:1499,cat:"",date:"2026-06-30"},
-  {t:"16:42",n:"The Jeffersons",d:1504,cat:"",date:"2026-06-30"},
-  {t:"17:07",n:"FLMTV.com",d:28,cat:"",date:"2026-06-30"},
-  {t:"17:07",n:"Boxer",d:135,cat:"",date:"2026-06-30"},
-  {t:"17:09",n:"The New Scooby",d:2507,cat:"",date:"2026-06-30"},
-  {t:"17:51",n:"SONIC BOOM",d:1379,cat:"",date:"2026-06-30"},
-  {t:"18:14",n:"Peter Pan II ",d:4352,cat:"movie",date:"2026-06-30"},
-  {t:"19:27",n:"Here\'s Lucy",d:1516,cat:"",date:"2026-06-30"},
-  {t:"19:52",n:"Impossible Fixes",d:2528,cat:"",date:"2026-06-30"},
-  {t:"20:34",n:"VoteScottBlack com",d:30,cat:"",date:"2026-06-30"},
-  {t:"20:35",n:"A Good Day to Die Hard",d:6071,cat:"movie",date:"2026-06-30"},
-  {t:"22:16",n:"SheBoujay.com",d:60,cat:"",date:"2026-06-30"},
-  {t:"22:17",n:"Taken 2",d:5908,cat:"movie",date:"2026-06-30"},
-  {t:"23:55",n:"VoteScottBlack com",d:30,cat:"",date:"2026-06-30"},
-  {t:"23:56",n:"The Crush ",d:5340,cat:"movie",date:"2026-06-30"},
-  {t:"01:25",n:"SheBoujay.com",d:60,cat:"",date:"2026-07-01"},
-  {t:"01:26",n:"King Kong ",d:12007,cat:"movie",date:"2026-07-01"},
-  {t:"04:46",n:"Gone In 60",d:7076,cat:"movie",date:"2026-07-01"},
-  {t:"06:44",n:"7 Days in Entebbe",d:6420,cat:"",date:"2026-07-01"},
-  {t:"08:31",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-01"},
-  {t:"08:32",n:"Sesame Street ",d:1555,cat:"",date:"2026-07-01"},
-  {t:"08:58",n:"Sesame Street Elmo’s Little Star Video PBS KIDS ia",d:1555,cat:"",date:"2026-07-01"},
-  {t:"09:24",n:"Super Why",d:1547,cat:"",date:"2026-07-01"},
-  {t:"09:50",n:"Charlie Brown",d:1344,cat:"",date:"2026-07-01"},
-  {t:"10:12",n:"Curious George",d:1422,cat:"",date:"2026-07-01"},
-  {t:"10:36",n:"Peter Pan",d:4603,cat:"",date:"2026-07-01"},
-  {t:"11:53",n:"Snail logo1 Z",d:15,cat:"",date:"2026-07-01"},
-  {t:"11:35",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-01"},
-  {t:"11:36",n:"Gilligan\'s Island ",d:1520,cat:"",date:"2026-07-01"},
-  {t:"12:01",n:"Three Stooges",d:1017,cat:"",date:"2026-07-01"},
-  {t:"12:18",n:"Mister Ed ",d:1532,cat:"",date:"2026-07-01"},
-  {t:"12:44",n:"Abbott and Costello ",d:1397,cat:"",date:"2026-07-01"},
-  {t:"13:07",n:"Leave it to Beaver",d:1557,cat:"",date:"2026-07-01"},
-  {t:"13:33",n:"The Lucy Show",d:1549,cat:"",date:"2026-07-01"},
-  {t:"13:59",n:"SheBoujay.com",d:60,cat:"",date:"2026-07-01"},
-  {t:"14:00",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-01"},
-  {t:"14:01",n:"Charlie\'s Angels ",d:2940,cat:"",date:"2026-07-01"},
-  {t:"14:50",n:"Andy Griffith",d:1550,cat:"",date:"2026-07-01"},
-  {t:"15:16",n:"Boxer",d:135,cat:"",date:"2026-07-01"},
-  {t:"15:18",n:"Whats Happening",d:1507,cat:"",date:"2026-07-01"},
-  {t:"15:43",n:"Good Times ",d:1571,cat:"",date:"2026-07-01"},
-  {t:"16:09",n:"The Jeffersons",d:1484,cat:"",date:"2026-07-01"},
-  {t:"16:34",n:"Meet The Robinsons",d:5620,cat:"",date:"2026-07-01"},
-  {t:"18:08",n:"Here\'s Lucy",d:1517,cat:"",date:"2026-07-01"},
-  {t:"18:33",n:"Andy Griffith ",d:1544,cat:"",date:"2026-07-01"},
-  {t:"18:59",n:"FLMTV.com",d:28,cat:"ad",date:"2026-07-01"},
-  {t:"18:59",n:"ZAINA JULIETTE COMMERCIALflm",d:37,cat:"",date:"2026-07-01"},
-  {t:"19:00",n:"The Rape Of Nanking",d:6195,cat:"",date:"2026-07-01"},
-  {t:"20:43",n:"Snail logo1 Z",d:15,cat:"",date:"2026-07-01"},
-  {t:"20:43",n:"The Sixth Sense ",d:6443,cat:"movie",date:"2026-07-01"},
-  {t:"22:30",n:"The Fault in Our Stars ",d:7974,cat:"movie",date:"2026-07-01"},
-  {t:"00:43",n:"Malcolm X",d:12101,cat:"movie",date:"2026-07-01"},
-  {t:"04:05",n:"Shawshank Redemption",d:8552,cat:"",date:"2026-07-01"},
-  {t:"06:28",n:"The Maze Runner (2014)",d:6806,cat:"",date:"2026-07-01"},
-  {t:"08:21",n:"The Others ",d:6240,cat:"movie",date:"2026-07-01"},
-  {t:"10:05",n:"Sesame Street",d:3356,cat:"",date:"2026-07-01"},
-  {t:"11:01",n:"Super Why!",d:1547,cat:"",date:"2026-07-01"},
-  {t:"11:27",n:"Ready Jet Go!",d:1581,cat:"",date:"2026-07-01"},
-  {t:"11:53",n:"Molly of Denal",d:1535,cat:"",date:"2026-07-01"},
-  {t:"12:19",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-01"}
+  {t:"06:28",n:"The Maze Runner (2014)",d:6806,cat:"movie",date:"2026-07-02"},
+  {t:"08:40",n:"Sesame Street",d:3356,cat:"kids",date:"2026-07-02"},
+  {t:"09:35",n:"Super Why!",d:1547,cat:"kids",date:"2026-07-02"},
+  {t:"10:01",n:"Ready Jet Go!",d:1581,cat:"kids",date:"2026-07-02"},
+  {t:"10:28",n:"Molly of Denali",d:1535,cat:"kids",date:"2026-07-02"},
+  {t:"10:53",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-02"},
+  {t:"10:54",n:"Curious George",d:1422,cat:"kids",date:"2026-07-02"},
+  {t:"11:17",n:"Abbott and Costello",d:1400,cat:"show",date:"2026-07-02"},
+  {t:"11:41",n:"Get Smart",d:1522,cat:"show",date:"2026-07-02"},
+  {t:"12:06",n:"Little Rascals",d:1081,cat:"show",date:"2026-07-02"},
+  {t:"12:24",n:"Little Rascals",d:1121,cat:"show",date:"2026-07-02"},
+  {t:"12:43",n:"The Addams Family",d:1542,cat:"show",date:"2026-07-02"},
+  {t:"13:08",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-02"},
+  {t:"13:09",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-07-02"},
+  {t:"13:10",n:"FLMTV.com",d:28,cat:"ad",date:"2026-07-02"},
+  {t:"13:10",n:"The Lucy Show",d:1547,cat:"show",date:"2026-07-02"},
+  {t:"13:36",n:"Leave it to Beaver",d:1556,cat:"show",date:"2026-07-02"},
+  {t:"14:02",n:"Bewitched",d:1526,cat:"show",date:"2026-07-02"},
+  {t:"14:28",n:"Whats Happening",d:1491,cat:"show",date:"2026-07-02"},
+  {t:"14:52",n:"Good Times",d:1574,cat:"show",date:"2026-07-02"},
+  {t:"15:19",n:"Sanford and Son",d:1496,cat:"show",date:"2026-07-02"},
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────
@@ -284,33 +227,28 @@ function fmtDur(s) {
 function renderSchedule() {
   const wrap = document.getElementById('scheduleWrap');
   wrap.innerHTML = '';
-  let lastDateShown = '';
 
+  // Get today's local date string YYYY-MM-DD
+  const now = new Date();
+  const todayStr = now.getFullYear() + '-' +
+    String(now.getMonth()+1).padStart(2,'0') + '-' +
+    String(now.getDate()).padStart(2,'0');
 
+  // Only today's shows
+  const todayShows = TODAY_SCHEDULE.filter(s => (s.date || todayStr) === todayStr);
 
-  // Find the SINGLE live show (first match only) — prevents double highlight bug
-  const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
+  // Find the SINGLE live show
+  const liveShow = todayShows.find(s => getStatus(s) === 'live') || null;
 
   let showCount=0, totalSec=0;
-  TODAY_SCHEDULE.forEach(s => {
+  todayShows.forEach(s => {
     if (s.cat!=='ad') { showCount++; totalSec+=s.d; }
   });
   document.getElementById('statTotal').textContent = showCount;
   document.getElementById('statHours').textContent = (totalSec/3600).toFixed(1);
 
-  TODAY_SCHEDULE.forEach(s => {
+  todayShows.forEach(s => {
     const status = getStatus(s);
-    // Insert date header when date changes
-    const showDate = s.date || new Date().toISOString().split('T')[0];
-    if (showDate !== lastDateShown) {
-      lastDateShown = showDate;
-      const dLabel = new Date(showDate+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-      wrap.insertAdjacentHTML('beforeend',
-        `<div class="time-block-header"><div class="time-block-label">${dLabel}</div><div class="time-block-line"></div></div>`
-      );
-    }
-
-    // Only the ONE designated live show gets highlighted — all others stay upcoming/aired
     const isLive = liveShow && s.t === liveShow.t && s.n === liveShow.n;
     const isAired = !isLive && status==='aired';
     const isAd = s.cat==='ad';
