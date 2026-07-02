@@ -286,11 +286,10 @@ function renderSchedule() {
   wrap.innerHTML = '';
   let lastDateShown = '';
 
+
+
   // Find the SINGLE live show (first match only) — prevents double highlight bug
   const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
-
-  const airedItems = TODAY_SCHEDULE.filter(s => getStatus(s)==='aired');
-  const keepAired = new Set(airedItems.slice(-5).map(s=>s.t+s.n));
 
   let showCount=0, totalSec=0;
   TODAY_SCHEDULE.forEach(s => {
@@ -301,8 +300,6 @@ function renderSchedule() {
 
   TODAY_SCHEDULE.forEach(s => {
     const status = getStatus(s);
-    if (status==='aired' && !keepAired.has(s.t+s.n)) return;
-
     // Insert date header when date changes
     const showDate = s.date || new Date().toISOString().split('T')[0];
     if (showDate !== lastDateShown) {
