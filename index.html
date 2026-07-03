@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" id="flmViewportMeta">
+<script>
+  // Fire TV viewport fix — real Firestick viewport is 960x540 CSS px, DPR=4
+  if (/AFT|FireTV|Silk/i.test(navigator.userAgent)) {
+    var flmVp = document.getElementById('flmViewportMeta');
+    if (flmVp) flmVp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+  }
+</script>
     <title>FLM TV</title>
     <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
     <link rel="manifest" href="/manifest.json">
