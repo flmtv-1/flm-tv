@@ -7,7 +7,6 @@
 <title>FLM TV Live — Channel 26.5 Las Vegas</title>
 <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;700&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -191,95 +190,27 @@ html, body {
 }
 .schedule-link:hover { color: var(--gold); }
 
-/* Stations button wrap */
+/* Stations button */
 .stations-btn-wrap {
   padding: 16px;
   margin-top: auto;
   border-top: 1px solid rgba(201,168,76,0.15);
 }
-
-/* ── TV STATIONS PROMO CARD (matches home.html) ── */
-.flm-tv-stations-card {
-    display: flex;
-    align-items: flex-end;
-    gap: 10px;
-    border: 1px solid rgba(255,215,0,0.35);
-    border-radius: 10px;
-    padding: 14px;
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-    min-height: 90px;
-    transition: border-color 0.25s;
+.stations-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  background: var(--gold); color: #000;
+  text-decoration: none;
+  font-size: 14px; font-weight: 800;
+  letter-spacing: 2px; padding: 14px 16px;
+  border-radius: 3px; text-transform: uppercase;
+  transition: background 0.2s;
 }
-.flm-tv-stations-card:hover { border-color: rgba(255,215,0,0.8); }
-.flm-tvs-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: right center;
-    opacity: 0.55;
-    pointer-events: none;
-}
-.flm-tvs-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(5,10,20,0.92) 40%, rgba(5,10,20,0.3) 100%);
-    pointer-events: none;
-}
-.flm-tvs-live-dot {
-    position: absolute;
-    top: 10px; right: 10px;
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 7px rgba(34,197,94,0.9);
-    animation: tvs-pulse 1.8s ease-in-out infinite;
-    z-index: 2;
-}
-@keyframes tvs-pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 7px rgba(34,197,94,0.9); }
-    50% { opacity: 0.55; box-shadow: 0 0 14px rgba(34,197,94,0.5); }
-}
-.flm-tvs-content {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-}
-.flm-tvs-title {
-    font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 3px;
-    color: #ffd700;
-    line-height: 1;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.9);
-}
-.flm-tvs-title .fas { font-size: 1.1rem; margin-right: 5px; }
-.flm-tvs-sub {
-    font-size: 11px;
-    color: rgba(255,255,255,0.65);
-    letter-spacing: 1.5px;
-    margin-top: 3px;
-}
-.flm-tvs-cta {
-    margin-top: 7px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(34,197,94,0.18);
-    border: 1px solid rgba(34,197,94,0.5);
-    border-radius: 20px;
-    padding: 3px 12px;
-    font-size: 11px;
-    font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
-    letter-spacing: 2px;
-    color: #22c55e;
-}
-.flm-tvs-cta .fas { font-size: 9px; }
-@media (max-width: 768px) {
-    .flm-tv-stations-card { min-height: 70px; padding: 10px 12px; }
-    .flm-tvs-title { font-size: 1.2rem; }
+.stations-btn:hover { background: var(--gold-light); }
+.stations-note {
+  text-align: center; margin-top: 8px;
+  font-size: 10px; color: var(--text-muted);
+  letter-spacing: 1px;
 }
 
 /* ── FULLSCREEN — hide sidebar and nav ── */
@@ -509,16 +440,10 @@ html, body {
     </div>
 
     <div class="stations-btn-wrap">
-      <a href="live-stations.html" class="flm-tv-stations-card">
-        <img src="assets/images/tv-stations.png" class="flm-tvs-bg" alt="">
-        <div class="flm-tvs-overlay"></div>
-        <div class="flm-tvs-live-dot"></div>
-        <div class="flm-tvs-content">
-          <div class="flm-tvs-title"><i class="fas fa-tv"></i> TV STATIONS</div>
-          <div class="flm-tvs-sub">2,500+ FREE Channels Worldwide</div>
-          <div class="flm-tvs-cta">Watch Free <i class="fas fa-play"></i></div>
-        </div>
+      <a href="live-stations.html" class="stations-btn">
+        📺 Browse 2,500+ TV Stations
       </a>
+      <div class="stations-note">FREE · NO SIGN IN REQUIRED</div>
     </div>
 
   </aside>
