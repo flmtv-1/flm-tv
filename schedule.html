@@ -235,8 +235,8 @@ function renderSchedule() {
     const isKids = cat === 'kids';
     const isFlm = cat === 'flm';
 
-    // Date separator when day changes
-    const dateStr = start.toDateString();
+    // Date separator when calendar date changes
+    const dateStr = start.getFullYear() + '-' + start.getMonth() + '-' + start.getDate();
     if (dateStr !== lastDateStr) {
       lastDateStr = dateStr;
       wrap.insertAdjacentHTML('beforeend', `
