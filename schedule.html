@@ -140,17 +140,53 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <script>
-// ── TODAY'S SCHEDULE ─────────────────────────────────────────────
+// ── SCHEDULE — Broadcast day starting 2026-07-02 ──────────────────
+// All shows stored under broadcast date 2026-07-02.
+// Overnight shows (01:xx, 04:xx etc) are chained automatically.
 const TODAY_SCHEDULE = [
-  {t:"04:13",n:"Dolores Claiborne",d:7891,cat:"movie",date:"2026-07-03"},
-  {t:"06:24",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-03"},
-  {t:"06:25",n:"Sesame Street",d:3399,cat:"kids",date:"2026-07-03"},
-  {t:"07:21",n:"Snail-logo1-Z",d:15,cat:"ad",date:"2026-07-03"},
-  {t:"07:21",n:"Sid The Science Kid",d:1322,cat:"kids",date:"2026-07-03"},
-  {t:"07:43",n:"Ready Jet Go!",d:1581,cat:"kids",date:"2026-07-03"},
-  {t:"08:10",n:"Super Why!",d:1546,cat:"kids",date:"2026-07-03"},
-  {t:"08:36",n:"Pippi Longstocking",d:5731,cat:"movie",date:"2026-07-03"},
-  {t:"10:11",n:"Atlantis Milos Return",d:4824,cat:"movie",date:"2026-07-03"}
+  {t:"10:54",n:"Curious George",d:1422,cat:"show",date:"2026-07-02"},
+  {t:"11:18",n:"Get Smart",d:1522,cat:"show",date:"2026-07-02"},
+  {t:"11:43",n:"Abbott and Costello",d:1400,cat:"show",date:"2026-07-02"},
+  {t:"12:06",n:"Little Rascals 39 (For Pete\'s Sake)",d:1082,cat:"show",date:"2026-07-02"},
+  {t:"12:24",n:"Little Rascals 40 (The First Round Up)",d:1121,cat:"show",date:"2026-07-02"},
+  {t:"12:43",n:"The Addams Family",d:1542,cat:"show",date:"2026-07-02"},
+  {t:"13:09",n:"VoteScottBlack com",d:30,cat:"show",date:"2026-07-02"},
+  {t:"13:10",n:"SheBoujay.com",d:60,cat:"show",date:"2026-07-02"},
+  {t:"13:11",n:"FLMTV.com",d:28,cat:"ad",date:"2026-07-02"},
+  {t:"13:11",n:"The Lucy Show",d:1547,cat:"show",date:"2026-07-02"},
+  {t:"13:37",n:"Leave it to Beaver",d:1556,cat:"show",date:"2026-07-02"},
+  {t:"14:03",n:"Bewitched",d:1526,cat:"show",date:"2026-07-02"},
+  {t:"14:28",n:"Whats Happening ",d:1491,cat:"show",date:"2026-07-02"},
+  {t:"14:53",n:"Good Times ",d:1574,cat:"show",date:"2026-07-02"},
+  {t:"15:19",n:"Sanford and Son ",d:1496,cat:"show",date:"2026-07-02"},
+  {t:"15:44",n:"The Jeffersons ",d:1502,cat:"show",date:"2026-07-02"},
+  {t:"16:09",n:"The Jeffersons Pt. 2",d:1617,cat:"show",date:"2026-07-02"},
+  {t:"16:36",n:"VoteScottBlack com",d:30,cat:"show",date:"2026-07-02"},
+  {t:"16:37",n:"SheBoujay COMMERCIAL VRS QRcode 1",d:60,cat:"show",date:"2026-07-02"},
+  {t:"16:38",n:"Monsters University ",d:6227,cat:"movie",date:"2026-07-02"},
+  {t:"18:22",n:"The Reluctant Dragon",d:4416,cat:"movie",date:"2026-07-02"},
+  {t:"19:36",n:"Here\'s Lucy",d:1517,cat:"show",date:"2026-07-02"},
+  {t:"20:01",n:"VoteScottBlack com",d:30,cat:"show",date:"2026-07-02"},
+  {t:"20:02",n:"Malcolm In The Middle",d:1343,cat:"show",date:"2026-07-02"},
+  {t:"20:24",n:"That 70s Show ",d:1331,cat:"show",date:"2026-07-02"},
+  {t:"20:46",n:"Here\'s Lucy",d:1517,cat:"show",date:"2026-07-02"},
+  {t:"21:11",n:"FLMTV.COM",d:21,cat:"ad",date:"2026-07-02"},
+  {t:"21:11",n:"The X Files",d:2714,cat:"show",date:"2026-07-02"},
+  {t:"21:56",n:"The Others ",d:6240,cat:"movie",date:"2026-07-02"},
+  {t:"23:40",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-07-02"},
+  {t:"23:41",n:"Close Encounters of The Third Kind",d:8085,cat:"movie",date:"2026-07-02"},
+  {t:"01:56",n:"SheBoujay COMMERCIAL VRS QRcode 1",d:60,cat:"show",date:"2026-07-02"},
+  {t:"01:57",n:"VoteScottBlack com",d:30,cat:"ad",date:"2026-07-02"},
+  {t:"01:58",n:"Dont Look Up 2021",d:8591,cat:"movie",date:"2026-07-02"},
+
+  {t:"06:00",n:"Dolores Claiborne ",d:7891,cat:"movie",date:"2026-07-02"},
+  {t:"08:12",n:"VoteScottBlack com",d:30,cat:"show",date:"2026-07-02"},
+  {t:"08:13",n:"FLMTV.com",d:15,cat:"ad",date:"2026-07-02"},
+  {t:"08:13",n:"Sesame Street ",d:3399,cat:"show",date:"2026-07-02"},
+  {t:"09:10",n:"Super Why! ",d:1546,cat:"show",date:"2026-07-02"},
+  {t:"09:36",n:"Sid The Science Kid ",d:1322,cat:"show",date:"2026-07-02"},
+  {t:"09:58",n:"Pippi Longstocking ",d:5731,cat:"movie",date:"2026-07-02"},
+  {t:"11:34",n:"Atlantis Milos Return",d:4824,cat:"movie",date:"2026-07-02"}
 ];
 
 // ── TIME UTILITIES ────────────────────────────────────────────────────
@@ -164,42 +200,92 @@ function toMin(t) {
   return h*60+m;
 }
 
-// Date-aware: each show has an optional {date:"YYYY-MM-DD"} field.
-// This means overnight shows and multi-day schedules are handled correctly.
-function showStart(s) {
-  const now = new Date();
-  const localDate = now.getFullYear() + '-' +
-    String(now.getMonth()+1).padStart(2,'0') + '-' +
-    String(now.getDate()).padStart(2,'0');
-  const dateStr = s.date || localDate;
-  const [h,m] = s.t.split(':').map(Number);
-  const d = new Date(dateStr + 'T00:00:00');
-  d.setHours(h, m, 0, 0);
-  return d;
-}
-function getStatus(s) {
-  const now = new Date();
-  const start = showStart(s);
-  const end = new Date(start.getTime() + s.d * 1000);
-  if (now >= start && now < end) return 'live';
-  if (now >= end) return 'aired';
-  return 'upcoming';
-}
-function getProgress(s) {
-  const now = new Date();
-  const start = showStart(s);
-  const end = new Date(start.getTime() + s.d * 1000);
-  return Math.min(100, Math.max(0, (now - start)/(end - start)*100));
+// ── CONTINUOUS BROADCAST TIMING ───────────────────────────────────
+// Treats the schedule as a real TV station — one continuous stream.
+// Chain start times from the first show's date+time, then just add
+// durations. No midnight resets. Works across days, weeks, or more.
+
+function buildChain() {
+  if (TODAY_SCHEDULE.length === 0) return [];
+  const chain = [];
+  // Use the date field of the first show to anchor the chain
+  const first = TODAY_SCHEDULE[0];
+  const anchorDate = first.date || new Date().toISOString().split('T')[0];
+  const [fh, fm] = first.t.split(':').map(Number);
+  let cursor = new Date(anchorDate + 'T00:00:00');
+  cursor.setHours(fh, fm, 0, 0);
+
+  for (let i = 0; i < TODAY_SCHEDULE.length; i++) {
+    const s = TODAY_SCHEDULE[i];
+    const start = new Date(cursor.getTime());
+    const end = new Date(cursor.getTime() + s.d * 1000);
+    chain.push({ s, start, end });
+    cursor = end;
+  }
+  return chain;
 }
 
-function fmt12(t) {
+let _chain = null;
+function getChain() {
+  if (!_chain) _chain = buildChain();
+  return _chain;
+}
+
+function showStart(s) {
+  const entry = getChain().find(e => e.s === s);
+  return entry ? entry.start : new Date();
+}
+
+function getStatus(s) {
+  const now = new Date();
+  const entry = getChain().find(e => e.s === s);
+  if (!entry) return 'upcoming';
+  if (now >= entry.start && now < entry.end) return 'live';
+  if (now >= entry.end) return 'aired';
+  return 'upcoming';
+}
+
+function getProgress(s) {
+  const now = new Date();
+  const entry = getChain().find(e => e.s === s);
+  if (!entry) return 0;
+  return Math.min(100, Math.max(0, (now - entry.start) / (entry.end - entry.start) * 100));
+}
+
+function showEnd(s) {
+  const entry = getChain().find(e => e.s === s);
+  return entry ? entry.end : new Date();
+}
+
+function fmt12(t, s) {
+  // If we have a show object use chain time, otherwise parse the string
+  if (s) {
+    const entry = getChain().find(e => e.s === s);
+    if (entry) {
+      const d = entry.start;
+      let h = d.getHours(), m = d.getMinutes();
+      const ap = h>=12?'PM':'AM';
+      h = h%12||12;
+      return `${h}:${String(m).padStart(2,'0')} ${ap}`;
+    }
+  }
   let [h,m] = t.split(':').map(Number);
   const ap = h>=12?'PM':'AM';
   h = h%12||12;
   return `${h}:${String(m).padStart(2,'0')} ${ap}`;
 }
 
-function fmtEnd(t, durSec) {
+function fmtEnd(t, durSec, s) {
+  if (s) {
+    const entry = getChain().find(e => e.s === s);
+    if (entry) {
+      const d = entry.end;
+      let h = d.getHours(), m = d.getMinutes();
+      const ap = h>=12?'PM':'AM';
+      h = h%12||12;
+      return `${h}:${String(m).padStart(2,'0')} ${ap}`;
+    }
+  }
   const [h,m] = t.split(':').map(Number);
   const total = h*60+m + durSec/60;
   const eh = Math.floor(total/60)%24, em = Math.round(total%60);
@@ -216,6 +302,7 @@ function fmtDur(s) {
 
 // ── RENDER ────────────────────────────────────────────────────────────
 function renderSchedule() {
+  _chain = null; // reset chain so times recalculate
   const wrap = document.getElementById('scheduleWrap');
   wrap.innerHTML = '';
 
@@ -259,8 +346,8 @@ function renderSchedule() {
     wrap.insertAdjacentHTML('beforeend', `
       <div class="${cardClass}" ${liveId} data-filter="${filterData}" tabindex="0">
         <div class="show-time">
-          <div class="show-time-start">${fmt12(s.t)}</div>
-          <div class="show-time-end">${fmtEnd(s.t,s.d)}</div>
+          <div class="show-time-start">${fmt12(s.t,s)}</div>
+          <div class="show-time-end">${fmtEnd(s.t,s.d,s)}</div>
         </div>
         <div class="show-info">
           <div class="show-name">${s.n}${isMovie?'<span class="movie-badge">MOVIE</span>':''}</div>
