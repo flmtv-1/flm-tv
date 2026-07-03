@@ -1,391 +1,380 @@
 {
-  "2026-07-02": [
+  "2026-07-03": [
     {
-      "startTime": "10:54",
-      "name": "Curious George",
-      "path": "X:\\KIDS WORLD 1\\curiousgeorge-season-12-15\\S04 E06-Guest Monkey; Charkie Goes to School.mp4",
-      "duration": 1422,
+      "startTime": "06:24",
+      "name": "Sesame Street",
+      "duration": 3400,
       "inPoint": 0,
-      "outPoint": 1422,
-      "category": "show"
+      "outPoint": 3400,
+      "category": "kids"
     },
     {
-      "startTime": "11:18",
-      "name": "Get Smart",
-      "path": "Y:\\CLASSIC TV-2\\Get Smart\\SEASON 02\\Get Smart S02E04 (The Only Way to Die).ia.mp4",
-      "duration": 1522,
+      "startTime": "07:20",
+      "name": "Sesame Street",
+      "duration": 1558,
       "inPoint": 0,
-      "outPoint": 1522,
-      "category": "show"
+      "outPoint": 1558,
+      "category": "kids"
     },
     {
-      "startTime": "11:43",
-      "name": "Abbott and Costello",
-      "path": "Y:\\CLASSIC TV-2\\Abbot & Costello\\SEASON 01\\Abbott and Costello in The Actors Home.ia.mp4",
-      "duration": 1400,
+      "startTime": "07:46",
+      "name": "Sesame Street",
+      "duration": 1558,
       "inPoint": 0,
-      "outPoint": 1400,
-      "category": "show"
-    },
-    {
-      "startTime": "12:06",
-      "name": "Little Rascals 39 (For Pete's Sake)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 21-40\\Little Rascals 39 (For Pete's Sake).mp4",
-      "duration": 1081.633322,
-      "inPoint": 0,
-      "outPoint": 1081.633322,
-      "category": ""
-    },
-    {
-      "startTime": "12:24",
-      "name": "Little Rascals 40 (The First Round Up)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 21-40\\Little Rascals 40 (The First Round-Up).mp4",
-      "duration": 1121.366655,
-      "inPoint": 0,
-      "outPoint": 1121.366655,
-      "category": ""
-    },
-    {
-      "startTime": "12:43",
-      "name": "The Addams Family",
-      "path": "Y:\\CLASSIC TV-2\\the-addams-family-1964\\SEASON 1\\The Addams Family S1 E14 - Art and the Addams Family.ia.mp4",
-      "duration": 1542,
-      "inPoint": 0,
-      "outPoint": 1542,
-      "category": ""
-    },
-    {
-      "startTime": "13:09",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "13:10",
-      "name": "SheBoujay.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\SheBoujay COMMERCIAL VRS QRcode 1.mp4",
-      "duration": 60,
-      "inPoint": 0,
-      "outPoint": 60,
-      "category": "show"
-    },
-    {
-      "startTime": "13:11",
-      "name": "FLMTV.com",
-      "path": "Z:\\FLM TV GRAPHICS\\FLMsummonsCOMMERCIAL.mp4",
-      "duration": 28,
-      "inPoint": 0,
-      "outPoint": 28,
-      "category": "commercial"
-    },
-    {
-      "startTime": "13:11",
-      "name": "The Lucy Show",
-      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 1\\S01E22 - Lucy and Viv Learn Judo.ia.mp4",
-      "duration": 1547,
-      "inPoint": 0,
-      "outPoint": 1547,
-      "category": "show"
-    },
-    {
-      "startTime": "13:37",
-      "name": "Leave it to Beaver",
-      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 2\\S02E24 - The Bus Ride.mp4",
-      "duration": 1556,
-      "inPoint": 0,
-      "outPoint": 1556,
-      "category": "show"
-    },
-    {
-      "startTime": "14:03",
-      "name": "Bewitched",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 06\\Bewitched S06E09 Samantha's Secret Spell.mp4",
-      "duration": 1526,
-      "inPoint": 0,
-      "outPoint": 1526,
-      "category": "show"
-    },
-    {
-      "startTime": "14:28",
-      "name": "Whats Happening ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-02\\Whats Happening S02E01.mkv",
-      "duration": 1491,
-      "inPoint": 0,
-      "outPoint": 1491,
-      "category": "show"
-    },
-    {
-      "startTime": "14:53",
-      "name": "Good Times ",
-      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 01\\Good Times S01E04 (God's Business is Good Business).mp4",
-      "duration": 1574,
-      "inPoint": 0,
-      "outPoint": 1574,
-      "category": "show"
-    },
-    {
-      "startTime": "15:19",
-      "name": "Sanford and Son ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 04\\Sanford and Son- (Season 4) Disc 3-A1_t01.mkv",
-      "duration": 1496,
-      "inPoint": 0,
-      "outPoint": 1496,
-      "category": "show"
-    },
-    {
-      "startTime": "15:44",
-      "name": "The Jeffersons ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 8 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S08E06 Florence Did it Different (1).mkv",
-      "duration": 1502,
-      "inPoint": 0,
-      "outPoint": 1502,
-      "category": "show"
-    },
-    {
-      "startTime": "16:09",
-      "name": "The Jeffersons Pt. 2",
-      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 8 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S08E07 Florence Did it Different (2).mkv",
-      "duration": 1617,
-      "inPoint": 0,
-      "outPoint": 1617,
-      "category": "show"
-    },
-    {
-      "startTime": "16:36",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "16:37",
-      "name": "SheBoujay COMMERCIAL VRS QRcode 1",
-      "path": "X:\\COMMERCIALS-CLIPS\\SheBoujay COMMERCIAL VRS QRcode 1.mp4",
-      "duration": 60.2,
-      "inPoint": 0,
-      "outPoint": 60.2,
-      "category": ""
-    },
-    {
-      "startTime": "16:38",
-      "name": "Monsters University ",
-      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\Monsters.University.2013.1080p.BluRay.x265_track0.mkv",
-      "duration": 6227,
-      "inPoint": 0,
-      "outPoint": 6227,
-      "category": "movie"
-    },
-    {
-      "startTime": "18:22",
-      "name": "The Reluctant Dragon",
-      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\1x01 The Reluctant Dragon\\1x01 The Reluctant Dragon_track0.mp4",
-      "duration": 4416,
-      "inPoint": 0,
-      "outPoint": 4416,
-      "category": "movie"
-    },
-    {
-      "startTime": "19:36",
-      "name": "Here's Lucy",
-      "path": "Y:\\AWESOME TV SHOWS-2\\Here's Lucy (The Complete Series) [1968 - 1974]\\Season 5\\S05E09 - Lucy and Jim Bailey.mp4",
-      "duration": 1517,
-      "inPoint": 0,
-      "outPoint": 1517,
-      "category": "show"
-    },
-    {
-      "startTime": "20:01",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "20:02",
-      "name": "Malcolm In The Middle",
-      "path": "X:\\TV SHOWS 2\\Malcolm In The Middle\\Season 2\\S02E01 - Traffic Jam.mp4",
-      "duration": 1343,
-      "inPoint": 0,
-      "outPoint": 1343,
-      "category": "show"
-    },
-    {
-      "startTime": "20:24",
-      "name": "That 70s Show ",
-      "path": "X:\\TV SHOWS 2\\THAT 70s SHOW\\SEASON-01\\Season 2\\That _70s Show (1998) - S02E04 - Laurie and the Professor (1080p BluRay x265 FreetheFish).mkv",
-      "duration": 1331,
-      "inPoint": 0,
-      "outPoint": 1331,
-      "category": "show"
-    },
-    {
-      "startTime": "20:46",
-      "name": "Here's Lucy",
-      "path": "Y:\\AWESOME TV SHOWS-2\\Here's Lucy (The Complete Series) [1968 - 1974]\\Season 5\\S05E09 - Lucy and Jim Bailey.mp4",
-      "duration": 1517,
-      "inPoint": 0,
-      "outPoint": 1517,
-      "category": "show"
-    },
-    {
-      "startTime": "21:11",
-      "name": "FLMTV.COM",
-      "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
-      "duration": 21,
-      "inPoint": 0,
-      "outPoint": 21,
-      "category": "commercial"
-    },
-    {
-      "startTime": "21:11",
-      "name": "The X Files",
-      "path": "blob:null/88662203-baf9-4e44-8bed-fd9cad4561db",
-      "duration": 2714,
-      "inPoint": 0,
-      "outPoint": 2714,
-      "category": "show"
-    },
-    {
-      "startTime": "21:56",
-      "name": "The Others ",
-      "path": "X:\\MOVIES-5\\The Others 2001\\The Others 2001 Remastered.mkv",
-      "duration": 6240,
-      "inPoint": 0,
-      "outPoint": 6240,
-      "category": "movie"
-    },
-    {
-      "startTime": "23:40",
-      "name": "SheBoujay.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\SheBoujay COMMERCIAL VRS QRcode 1.mp4",
-      "duration": 60,
-      "inPoint": 0,
-      "outPoint": 60,
-      "category": "commercial"
-    },
-    {
-      "startTime": "23:41",
-      "name": "Close Encounters of The Third Kind",
-      "path": "X:\\MOVIES-5\\Close.Encounters.Of.The.Third.Kind.1977.THEATRICAL.REMASTERED.1080p.BluRay.H264.AAC5.1 [88]\\Close.Encounters.Of.The.Third.Kind.1977.THEATRICAL.REMASTERED.1080p.BluRay.H264.AAC5.1.mp4",
-      "duration": 8085,
-      "inPoint": 0,
-      "outPoint": 8085,
-      "category": "movie"
-    },
-    {
-      "startTime": "01:56",
-      "name": "SheBoujay COMMERCIAL VRS QRcode 1",
-      "path": "X:\\COMMERCIALS-CLIPS\\SheBoujay COMMERCIAL VRS QRcode 1.mp4",
-      "duration": 60.2,
-      "inPoint": 0,
-      "outPoint": 60.2,
-      "category": ""
-    },
-    {
-      "startTime": "01:57",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30,
-      "inPoint": 0,
-      "outPoint": 30,
-      "category": "promo"
-    },
-    {
-      "startTime": "01:58",
-      "name": "Dont Look Up 2021",
-      "path": "X:\\MOVIES-5\\Dont Look Up\\Dont.Look.Up.2021.ia.mp4",
-      "duration": 8591,
-      "inPoint": 0,
-      "outPoint": 8591,
-      "category": "movie"
-    },
-    {
-      "startTime": "04:21",
-      "name": "Triangle",
-      "path": "Y:\\Triangle.2009.720p.BluRay.x264.YIFY\\Triangle.2009.720p.BluRay.x264.YIFY.mp4",
-      "duration": 5939,
-      "inPoint": 0,
-      "outPoint": 5939,
-      "category": "movie"
-    },
-    {
-      "startTime": "06:00",
-      "name": "Dolores Claiborne ",
-      "path": "X:\\_SORT-MOVIES\\Dolores Claiborne 1995 1080p BRRip x264 DTS 5.1 ESub- Hon3y\\Dolores Claiborne 1995 1080p BRRip x264 DTS 5.1 ESub- Hon3y.mkv",
-      "duration": 7891,
-      "inPoint": 0,
-      "outPoint": 7891,
-      "category": "movie"
+      "outPoint": 1558,
+      "category": "kids"
     },
     {
       "startTime": "08:12",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30.03,
-      "inPoint": 0,
-      "outPoint": 30.03,
-      "category": ""
-    },
-    {
-      "startTime": "08:13",
       "name": "FLMTV.com",
-      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
       "duration": 15,
       "inPoint": 0,
       "outPoint": 15,
       "category": "commercial"
     },
     {
-      "startTime": "08:13",
-      "name": "Sesame Street ",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\COLLECTION\\Sesame Street - Episode 4208 (January 25, 2010).mp4",
-      "duration": 3399,
-      "inPoint": 0,
-      "outPoint": 3399,
-      "category": "show"
-    },
-    {
-      "startTime": "09:10",
-      "name": "Super Why! ",
-      "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 06\\Super Why!_S06E04_Webby in Bathland.ia.mp4",
-      "duration": 1546,
-      "inPoint": 0,
-      "outPoint": 1546,
-      "category": "show"
-    },
-    {
-      "startTime": "09:36",
-      "name": "Sid The Science Kid ",
-      "path": "Y:\\KIDS WORLD-2\\Sid The Science Kid\\SEASON 01\\Sid.The.Science.Kid.S01E28.720p.Netflix.WEB-DL.DD2.0.x264-QOQ.mp4",
+      "startTime": "08:12",
+      "name": "Sid The Science Kid",
       "duration": 1322,
       "inPoint": 0,
       "outPoint": 1322,
-      "category": "show"
+      "category": "kids"
     },
     {
-      "startTime": "09:58",
-      "name": "Pippi Longstocking ",
-      "path": "Y:\\MOVIES\\Pippi.Longstocking.1969.DUBBED.1080p.BluRay.x265\\Pippi.Longstocking.1969.DUBBED.1080p.BluRay.x265.mp4",
+      "startTime": "08:34",
+      "name": "Ready Jet Go",
+      "duration": 1581,
+      "inPoint": 0,
+      "outPoint": 1581,
+      "category": "kids"
+    },
+    {
+      "startTime": "09:01",
+      "name": "Super Why!",
+      "duration": 1546,
+      "inPoint": 0,
+      "outPoint": 1546,
+      "category": "kids"
+    },
+    {
+      "startTime": "09:27",
+      "name": "Pippi Longstocking",
       "duration": 5731,
       "inPoint": 0,
       "outPoint": 5731,
       "category": "movie"
     },
     {
-      "startTime": "11:34",
+      "startTime": "11:02",
       "name": "Atlantis Milos Return",
-      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\Atlantis.Milos.Return.2003.1080p.BluRay.H.265.Egy\\Atlantis.Milos.Return.2003.1080p.BluRay.H.265.Egy_track1.mkv",
       "duration": 4824,
       "inPoint": 0,
       "outPoint": 4824,
       "category": "movie"
+    },
+    {
+      "startTime": "12:22",
+      "name": "Abbott and Costello",
+      "duration": 1533,
+      "inPoint": 0,
+      "outPoint": 1533,
+      "category": "show"
+    },
+    {
+      "startTime": "12:48",
+      "name": "Three Stooges",
+      "duration": 1069,
+      "inPoint": 0,
+      "outPoint": 1069,
+      "category": "show"
+    },
+    {
+      "startTime": "13:06",
+      "name": "Mister Ed",
+      "duration": 1558,
+      "inPoint": 0,
+      "outPoint": 1558,
+      "category": "show"
+    },
+    {
+      "startTime": "13:32",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "13:32",
+      "name": "Gilligan's Island",
+      "duration": 1520,
+      "inPoint": 0,
+      "outPoint": 1520,
+      "category": "show"
+    },
+    {
+      "startTime": "13:58",
+      "name": "The Lucy Show",
+      "duration": 1549,
+      "inPoint": 0,
+      "outPoint": 1549,
+      "category": "show"
+    },
+    {
+      "startTime": "14:23",
+      "name": "Leave it to Beaver",
+      "duration": 1558,
+      "inPoint": 0,
+      "outPoint": 1558,
+      "category": "show"
+    },
+    {
+      "startTime": "14:49",
+      "name": "Bewitched",
+      "duration": 1529,
+      "inPoint": 0,
+      "outPoint": 1529,
+      "category": "show"
+    },
+    {
+      "startTime": "15:15",
+      "name": "Bewitched",
+      "duration": 1527,
+      "inPoint": 0,
+      "outPoint": 1527,
+      "category": "show"
+    },
+    {
+      "startTime": "15:40",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "15:41",
+      "name": "Beverly Hillbillies",
+      "duration": 1610,
+      "inPoint": 0,
+      "outPoint": 1610,
+      "category": "show"
+    },
+    {
+      "startTime": "16:08",
+      "name": "Charlie's Angels",
+      "duration": 2943,
+      "inPoint": 0,
+      "outPoint": 2943,
+      "category": "show"
+    },
+    {
+      "startTime": "16:57",
+      "name": "Andy Griffith",
+      "duration": 1516,
+      "inPoint": 0,
+      "outPoint": 1516,
+      "category": "show"
+    },
+    {
+      "startTime": "17:22",
+      "name": "Andy Griffith",
+      "duration": 1538,
+      "inPoint": 0,
+      "outPoint": 1538,
+      "category": "show"
+    },
+    {
+      "startTime": "17:48",
+      "name": "Behind the Scenes with Z",
+      "duration": 72,
+      "inPoint": 0,
+      "outPoint": 72,
+      "category": "show"
+    },
+    {
+      "startTime": "17:49",
+      "name": "Whats Happening",
+      "duration": 1457,
+      "inPoint": 0,
+      "outPoint": 1457,
+      "category": "show"
+    },
+    {
+      "startTime": "18:13",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "18:14",
+      "name": "Good Times",
+      "duration": 1555,
+      "inPoint": 0,
+      "outPoint": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "18:39",
+      "name": "SheBoujay.com",
+      "duration": 60,
+      "inPoint": 0,
+      "outPoint": 60,
+      "category": "commercial"
+    },
+    {
+      "startTime": "18:40",
+      "name": "Schoolhouse Rock",
+      "duration": 184,
+      "inPoint": 0,
+      "outPoint": 184,
+      "category": "show"
+    },
+    {
+      "startTime": "18:44",
+      "name": "Schoolhouse Rock",
+      "duration": 191,
+      "inPoint": 0,
+      "outPoint": 191,
+      "category": "show"
+    },
+    {
+      "startTime": "18:47",
+      "name": "Schoolhouse Rock",
+      "duration": 185,
+      "inPoint": 0,
+      "outPoint": 185,
+      "category": "show"
+    },
+    {
+      "startTime": "18:50",
+      "name": "Schoolhouse Rock",
+      "duration": 186,
+      "inPoint": 0,
+      "outPoint": 186,
+      "category": "show"
+    },
+    {
+      "startTime": "18:53",
+      "name": "Charlie Brown",
+      "duration": 1349,
+      "inPoint": 0,
+      "outPoint": 1349,
+      "category": "show"
+    },
+    {
+      "startTime": "19:15",
+      "name": "Chance Of Meatballs",
+      "duration": 5393,
+      "inPoint": 0,
+      "outPoint": 5393,
+      "category": "movie"
+    },
+    {
+      "startTime": "20:45",
+      "name": "Here's Lucy",
+      "duration": 1518,
+      "inPoint": 0,
+      "outPoint": 1518,
+      "category": "show"
+    },
+    {
+      "startTime": "21:11",
+      "name": "Boxing",
+      "duration": 139,
+      "inPoint": 0,
+      "outPoint": 139,
+      "category": "show"
+    },
+    {
+      "startTime": "21:13",
+      "name": "SheBoujay.com",
+      "duration": 60,
+      "inPoint": 0,
+      "outPoint": 60,
+      "category": "commercial"
+    },
+    {
+      "startTime": "21:14",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "21:14",
+      "name": "Close Encounters of the 5th",
+      "duration": 7236,
+      "inPoint": 0,
+      "outPoint": 7236,
+      "category": "movie"
+    },
+    {
+      "startTime": "23:15",
+      "name": "Independence Day",
+      "duration": 7184,
+      "inPoint": 0,
+      "outPoint": 7184,
+      "category": "movie"
+    },
+    {
+      "startTime": "01:15",
+      "name": "FLMTV.COM",
+      "duration": 12,
+      "inPoint": 0,
+      "outPoint": 12,
+      "category": "commercial"
+    },
+    {
+      "startTime": "01:15",
+      "name": "I Am Legend",
+      "duration": 6234,
+      "inPoint": 0,
+      "outPoint": 6234,
+      "category": "movie"
+    },
+    {
+      "startTime": "02:59",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "02:59",
+      "name": "Flubber",
+      "duration": 5128,
+      "inPoint": 0,
+      "outPoint": 5128,
+      "category": "movie"
+    },
+    {
+      "startTime": "04:25",
+      "name": "Ghosted",
+      "duration": 6814,
+      "inPoint": 0,
+      "outPoint": 6814,
+      "category": "movie"
+    },
+    {
+      "startTime": "06:18",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "06:19",
+      "name": "SheBoujay.com",
+      "duration": 60,
+      "inPoint": 0,
+      "outPoint": 60,
+      "category": "commercial"
     }
   ]
 }
