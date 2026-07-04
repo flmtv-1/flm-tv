@@ -324,7 +324,7 @@ function updateProgress() {
 }
 
 // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
-// Updated: 2026-07-04 08:38
+// Updated: 2026-07-04 15:40
 const TODAY_SCHEDULE = [
   {t:"08:34",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-04"},
   {t:"08:34",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-07-04"},
@@ -379,6 +379,18 @@ const TODAY_SCHEDULE = [
 // Either workflow works — JSON fetch OR bat file injection.
 
 async function loadSchedule() {
+  // Use TODAY_SCHEDULE array first (injected by bat file)
+  // Only fetch JSON if the array is empty
+  if (TODAY_SCHEDULE && TODAY_SCHEDULE.length > 0) {
+    SCHEDULE = TODAY_SCHEDULE.map(s => ({
+      name: s.n, startTime: s.t, duration: s.d,
+      category: s.cat, date: s.date || ''
+    }));
+    renderSchedule();
+    jumpToNow();
+    return;
+  }
+  // Fallback: try to fetch FLM-TV-Schedule.json
   try {
     const res = await fetch('FLM-TV-Schedule.json?v=' + Date.now());
     if (!res.ok) throw new Error('File not found');
@@ -387,11 +399,9 @@ async function loadSchedule() {
     const shows = data[dateKey];
     SCHEDULE = shows.map(s => ({ ...s, date: s.date || dateKey }));
   } catch (e) {
-    // Fall back to TODAY_SCHEDULE array (injected by bat file)
-    SCHEDULE = TODAY_SCHEDULE.map(s => ({
-      name: s.n, startTime: s.t, duration: s.d,
-      category: s.cat, date: s.date || ''
-    }));
+    document.getElementById('scheduleWrap').innerHTML =
+      '<div class="error-msg">⚠ No schedule found. Run the bat file to update.</div>';
+    return;
   }
   renderSchedule();
   jumpToNow();
@@ -403,7 +413,6 @@ document.getElementById('heroDate').textContent =
 updateClock();
 setInterval(updateClock, 1000);
 setInterval(updateProgress, 10000);
-setInterval(() => { loadSchedule(); }, 60000); // reload JSON every minute
 loadSchedule();
 </script>
 
