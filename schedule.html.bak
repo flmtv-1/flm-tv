@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FLM TV — Today's Schedule</title>
+<title>FLM TV — Schedule</title>
 <link rel="icon" type="image/png" href="assets/logos/favicons-3/favicon-96x96.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -41,9 +41,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .ftab:hover{border-color:var(--gold-dim);color:var(--gold);}
 .ftab.active{background:var(--gold);border-color:var(--gold);color:#000;}
 .schedule-wrap{max-width:860px;margin:0 auto;padding:28px 32px 80px;}
-.time-block-header{display:flex;align-items:center;gap:14px;padding:24px 0 10px;}
-.time-block-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold-dim);white-space:nowrap;}
-.time-block-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.2),transparent);}
+.date-separator{display:flex;align-items:center;gap:14px;padding:28px 0 12px;margin-top:8px;}
+.date-separator-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold);white-space:nowrap;}
+.date-separator-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.4),transparent);}
 .show-card{display:grid;grid-template-columns:90px 1fr auto;align-items:stretch;gap:0;margin-bottom:3px;border-radius:4px;overflow:hidden;transition:transform 0.15s;position:relative;}
 .show-card:not(.live-now):hover{transform:translateX(3px);}
 .show-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;z-index:1;}
@@ -79,6 +79,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .show-card.flm-card .show-time,.show-card.flm-card .show-info,.show-card.flm-card .show-dur{background:rgba(201,168,76,0.03);}
 .movie-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:1px 6px;border-radius:2px;margin-left:8px;vertical-align:middle;}
 .show-card.hidden{display:none!important;}
+.error-msg{text-align:center;padding:60px 32px;color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:1px;}
 .schedule-footer{text-align:center;padding:40px 32px;border-top:1px solid rgba(201,168,76,0.1);color:var(--text-muted);font-size:12px;letter-spacing:1px;line-height:2;}
 .schedule-footer a{color:var(--gold-dim);text-decoration:none;}
 .schedule-footer a:hover{color:var(--gold);}
@@ -102,23 +103,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <section class="hero">
   <div class="hero-ghost">GUIDE</div>
   <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · WORLDWIDE</div>
-  <h1 class="hero-title">TODAY'S <em>PROGRAMMING</em></h1>
+  <h1 class="hero-title">FLM TV <em>SCHEDULE</em></h1>
   <div class="hero-date" id="heroDate">—</div>
   <div class="hero-stats">
-    <div><div class="stat-num" id="statTotal">—</div><div class="stat-label">Shows Today</div></div>
+    <div><div class="stat-num" id="statTotal">—</div><div class="stat-label">Shows</div></div>
     <div><div class="stat-num" id="statHours">—</div><div class="stat-label">Hours</div></div>
     <div><div class="stat-num">FREE</div><div class="stat-label">Always Free</div></div>
   </div>
 </section>
 
 <div class="jump-bar">
-  <button class="jump-btn" onclick="jumpToNow()">
-    <div class="live-dot" style="background:var(--live-green);"></div> Jump to Now Playing
-  </button>
-  <button class="jump-btn" onclick="downloadSchedule()" style="border-color:rgba(201,168,76,0.4);color:var(--gold);">
-    ⬇ Download Schedule
-  </button>
-  <div class="clock-display" id="clockDisplay">--:-- --</div>
+  <button class="jump-btn" onclick="jumpToNow()">⬤ Jump to Now</button>
+  <div class="clock-display" id="clockDisplay"></div>
 </div>
 
 <div class="filter-bar">
@@ -130,7 +126,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <button class="ftab" onclick="filterSchedule('upcoming',this)">Up Next</button>
 </div>
 
-<div class="schedule-wrap" id="scheduleWrap"></div>
+<div class="schedule-wrap" id="scheduleWrap">
+  <div class="error-msg">Loading schedule...</div>
+</div>
 
 <div class="schedule-footer">
   Schedule is updated as programming changes &nbsp;·&nbsp;
@@ -140,255 +138,273 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <script>
-// ── TODAY'S SCHEDULE — Thursday July 2 2026 ───────────────────────
-// Updated: 2026-07-02 10:01
-const TODAY_SCHEDULE = [
-  {t:"06:28",n:"The Maze Runner (2014)",d:6806,cat:"movie",date:"2026-07-02"},
-  {t:"08:40",n:"Sesame Street",d:3356,cat:"kids",date:"2026-07-02"},
-  {t:"09:35",n:"Super Why!",d:1547,cat:"kids",date:"2026-07-02"},
-  {t:"10:01",n:"Ready Jet Go!",d:1581,cat:"kids",date:"2026-07-02"},
-  {t:"10:28",n:"Molly of Denali",d:1535,cat:"kids",date:"2026-07-02"},
-  {t:"10:53",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-02"},
-  {t:"10:54",n:"Curious George",d:1422,cat:"kids",date:"2026-07-02"},
-  {t:"11:17",n:"Abbott and Costello",d:1400,cat:"",date:"2026-07-02"},
-  {t:"11:41",n:"Get Smart",d:1522,cat:"",date:"2026-07-02"},
-  {t:"12:06",n:"Little Rascals",d:1081,cat:"",date:"2026-07-02"},
-  {t:"12:24",n:"Little Rascals",d:1121,cat:"",date:"2026-07-02"},
-  {t:"12:43",n:"The Addams Family",d:1542,cat:"",date:"2026-07-02"},
-  {t:"13:08",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-02"},
-  {t:"13:09",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-07-02"},
-  {t:"13:10",n:"FLMTV.com",d:28,cat:"ad",date:"2026-07-02"},
-  {t:"13:10",n:"The Lucy Show",d:1547,cat:"",date:"2026-07-02"},
-  {t:"13:36",n:"Leave it to Beaver",d:1556,cat:"",date:"2026-07-02"},
-  {t:"14:02",n:"Bewitched",d:1526,cat:"",date:"2026-07-02"},
-  {t:"14:28",n:"Whats Happening",d:1491,cat:"",date:"2026-07-02"},
-  {t:"14:52",n:"Good Times",d:1574,cat:"",date:"2026-07-02"},
-  {t:"15:19",n:"Sanford and Son",d:1496,cat:"",date:"2026-07-02"},
-  {t:"10:54",n:"Curious George",d:1422,cat:"",date:"2026-07-02"},
-  {t:"11:18",n:"Get Smart",d:1522,cat:"",date:"2026-07-02"},
-  {t:"11:43",n:"Abbott and Costello",d:1400,cat:"",date:"2026-07-02"},
-  {t:"12:06",n:"Little Rascals 39 (For Pete\'s Sake)",d:1081,cat:"",date:"2026-07-02"},
-  {t:"12:24",n:"Little Rascals 40 (The First Round Up)",d:1121,cat:"",date:"2026-07-02"},
-  {t:"12:43",n:"The Addams Family",d:1542,cat:"",date:"2026-07-02"},
-  {t:"13:09",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-02"},
-  {t:"13:10",n:"SheBoujay.com",d:60,cat:"",date:"2026-07-02"},
-  {t:"13:11",n:"FLMTV.com",d:28,cat:"ad",date:"2026-07-02"},
-  {t:"13:11",n:"The Lucy Show",d:1547,cat:"",date:"2026-07-02"},
-  {t:"13:37",n:"Leave it to Beaver",d:1556,cat:"",date:"2026-07-02"},
-  {t:"14:03",n:"Bewitched",d:1526,cat:"",date:"2026-07-02"},
-  {t:"14:28",n:"Whats Happening ",d:1491,cat:"",date:"2026-07-02"},
-  {t:"14:53",n:"Good Times ",d:1574,cat:"",date:"2026-07-02"},
-  {t:"15:19",n:"Sanford and Son ",d:1496,cat:"",date:"2026-07-02"},
-  {t:"15:44",n:"The Jeffersons ",d:1502,cat:"",date:"2026-07-02"},
-  {t:"16:09",n:"The Jeffersons Pt. 2",d:1617,cat:"",date:"2026-07-02"},
-  {t:"16:36",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-02"},
-  {t:"16:37",n:"SheBoujay COMMERCIAL VRS QRcode 1",d:60,cat:"",date:"2026-07-02"},
-  {t:"16:38",n:"Monsters University ",d:6227,cat:"movie",date:"2026-07-02"},
-  {t:"18:22",n:"The Reluctant Dragon",d:4416,cat:"movie",date:"2026-07-02"},
-  {t:"19:36",n:"Here\'s Lucy",d:1517,cat:"",date:"2026-07-02"},
-  {t:"20:01",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-02"},
-  {t:"20:02",n:"Malcolm In The Middle",d:1343,cat:"",date:"2026-07-02"},
-  {t:"20:24",n:"That 70s Show ",d:1331,cat:"",date:"2026-07-02"},
-  {t:"20:46",n:"Here\'s Lucy",d:1517,cat:"",date:"2026-07-02"},
-  {t:"21:11",n:"FLMTV.COM",d:21,cat:"ad",date:"2026-07-02"},
-  {t:"21:11",n:"The X Files",d:2714,cat:"",date:"2026-07-02"},
-  {t:"21:56",n:"The Others ",d:6240,cat:"movie",date:"2026-07-02"},
-  {t:"23:40",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-07-02"},
-  {t:"23:41",n:"Close Encounters of The Third Kind",d:8085,cat:"movie",date:"2026-07-02"},
-  {t:"01:56",n:"SheBoujay COMMERCIAL VRS QRcode 1",d:60,cat:"",date:"2026-07-02"},
-  {t:"01:57",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-02"},
-  {t:"01:58",n:"Dont Look Up 2021",d:8591,cat:"movie",date:"2026-07-02"},
-  {t:"04:21",n:"Triangle",d:5939,cat:"movie",date:"2026-07-02"},
-  {t:"06:00",n:"Dolores Claiborne ",d:7891,cat:"movie",date:"2026-07-02"},
-  {t:"08:12",n:"VoteScottBlack com",d:30,cat:"",date:"2026-07-02"},
-  {t:"08:13",n:"FLMTV.com",d:15,cat:"ad",date:"2026-07-02"},
-  {t:"08:13",n:"Sesame Street ",d:3399,cat:"",date:"2026-07-02"},
-  {t:"09:10",n:"Super Why! ",d:1546,cat:"",date:"2026-07-02"},
-  {t:"09:36",n:"Sid The Science Kid ",d:1322,cat:"",date:"2026-07-02"},
-  {t:"09:58",n:"Pippi Longstocking ",d:5731,cat:"movie",date:"2026-07-02"},
-  {t:"11:34",n:"Atlantis Milos Return",d:4824,cat:"movie",date:"2026-07-02"}
-];
+// ── SCHEDULE ENGINE ───────────────────────────────────────────────
+// Reads FLM-TV-Schedule.json from the same folder.
+// Chains all shows continuously — no midnight resets.
+// Shows date separators when the broadcast day rolls over.
+// Just replace FLM-TV-Schedule.json to update the schedule.
 
-// ── TIME UTILITIES ────────────────────────────────────────────────────
-function nowMin() {
-  const d = new Date();
-  return d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+let SCHEDULE = []; // populated after JSON fetch
+let _chain = null;
+
+// Build a continuous chain from the first show's anchor date+time
+function buildChain() {
+  if (!SCHEDULE.length) return [];
+  const chain = [];
+  const first = SCHEDULE[0];
+  const anchorDate = first.date || new Date().toISOString().split('T')[0];
+  const timeStr = first.startTime || first.t || '00:00';
+  const [fh, fm] = timeStr.split(':').map(Number);
+  let cursor = new Date(anchorDate + 'T00:00:00');
+  cursor.setHours(fh, fm, 0, 0);
+  for (let i = 0; i < SCHEDULE.length; i++) {
+    const s = SCHEDULE[i];
+    const start = new Date(cursor.getTime());
+    const dur = Math.round((s.outPoint || s.duration || s.d || 0) - (s.inPoint || 0));
+    const end = new Date(cursor.getTime() + dur * 1000);
+    chain.push({ s, start, end, dur });
+    cursor = end;
+  }
+  return chain;
 }
 
-function toMin(t) {
-  const [h,m] = t.split(':').map(Number);
-  return h*60+m;
+function getChain() {
+  if (!_chain) _chain = buildChain();
+  return _chain;
 }
 
-// Date-aware: each show has an optional {date:"YYYY-MM-DD"} field.
-// This means overnight shows and multi-day schedules are handled correctly.
-function showStart(s) {
-  const dateStr = s.date || new Date().toISOString().split('T')[0];
-  const [h,m] = s.t.split(':').map(Number);
-  const d = new Date(dateStr + 'T00:00:00');
-  d.setHours(h, m, 0, 0);
-  return d;
-}
-function getStatus(s) {
+function getStatus(entry) {
   const now = new Date();
-  const start = showStart(s);
-  const end = new Date(start.getTime() + s.d * 1000);
-  if (now >= start && now < end) return 'live';
-  if (now >= end) return 'aired';
+  if (now >= entry.start && now < entry.end) return 'live';
+  if (now >= entry.end) return 'aired';
   return 'upcoming';
 }
-function getProgress(s) {
+
+function getProgress(entry) {
   const now = new Date();
-  const start = showStart(s);
-  const end = new Date(start.getTime() + s.d * 1000);
-  return Math.min(100, Math.max(0, (now - start)/(end - start)*100));
+  return Math.min(100, Math.max(0, (now - entry.start) / (entry.end - entry.start) * 100));
 }
 
-function fmt12(t) {
-  let [h,m] = t.split(':').map(Number);
-  const ap = h>=12?'PM':'AM';
-  h = h%12||12;
+function fmt12(date) {
+  let h = date.getHours(), m = date.getMinutes();
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
   return `${h}:${String(m).padStart(2,'0')} ${ap}`;
 }
 
-function fmtEnd(t, durSec) {
-  const [h,m] = t.split(':').map(Number);
-  const total = h*60+m + durSec/60;
-  const eh = Math.floor(total/60)%24, em = Math.round(total%60);
-  const ap = eh>=12?'PM':'AM';
-  return `${eh%12||12}:${String(em).padStart(2,'0')} ${ap}`;
+function fmtDur(sec) {
+  if (sec < 60) return sec + 's';
+  const m = Math.floor(sec / 60), h = Math.floor(m / 60);
+  if (h > 0) return h + 'h ' + (m % 60 > 0 ? m % 60 + 'm' : '');
+  return m + ' min';
 }
 
-function fmtDur(s) {
-  if (s<60) return s+'s';
-  const m=Math.floor(s/60), h=Math.floor(m/60);
-  if (h>0) return h+'h '+(m%60>0?m%60+'m':'');
-  return m+' min';
+function fmtDateLong(date) {
+  return date.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'}).toUpperCase();
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────
+// ── RENDER ────────────────────────────────────────────────────────
 function renderSchedule() {
+  _chain = null;
   const wrap = document.getElementById('scheduleWrap');
   wrap.innerHTML = '';
 
-  // Find the SINGLE live show
-  const liveShow = TODAY_SCHEDULE.find(s => getStatus(s) === 'live') || null;
+  const chain = getChain();
+  if (!chain.length) {
+    wrap.innerHTML = '<div class="error-msg">No schedule loaded. Place FLM-TV-Schedule.json in the same folder.</div>';
+    return;
+  }
 
-  let showCount=0, totalSec=0;
-  TODAY_SCHEDULE.forEach(s => {
-    if (s.cat!=='ad') { showCount++; totalSec+=s.d; }
-  });
-  document.getElementById('statTotal').textContent = showCount;
-  document.getElementById('statHours').textContent = (totalSec/3600).toFixed(1);
+  // Stats
+  const shows = chain.filter(e => e.s.category !== 'commercial' && e.s.category !== 'ad');
+  document.getElementById('statTotal').textContent = shows.length;
+  document.getElementById('statHours').textContent = (shows.reduce((t,e) => t + e.dur, 0) / 3600).toFixed(1);
 
-  TODAY_SCHEDULE.forEach(s => {
-    const status = getStatus(s);
-    const isLive = liveShow && s.t === liveShow.t && s.n === liveShow.n;
-    const isAired = !isLive && status==='aired';
-    const isAd = s.cat==='ad';
-    const isMovie = s.cat==='movie';
-    const isKids = s.cat==='kids';
-    const isFlm = s.cat==='flm';
+  // Find live show
+  const liveEntry = chain.find(e => getStatus(e) === 'live') || null;
+
+  let lastDateStr = '';
+
+  chain.forEach(entry => {
+    const { s, start, end, dur } = entry;
+    const status = getStatus(entry);
+    const isLive = liveEntry && entry === liveEntry;
+    const isAired = !isLive && status === 'aired';
+    const cat = ((s.category || s.cat) || '').toLowerCase();
+    const isAd = cat === 'commercial' || cat === 'ad' || cat === 'promo';
+    const isMovie = cat === 'movie';
+    const isKids = cat === 'kids';
+    const isFlm = cat === 'flm';
+
+    // Date separator when calendar date changes
+    const dateStr = start.getFullYear() + '-' + start.getMonth() + '-' + start.getDate();
+    if (dateStr !== lastDateStr) {
+      lastDateStr = dateStr;
+      wrap.insertAdjacentHTML('beforeend', `
+        <div class="date-separator">
+          <div class="date-separator-label">${fmtDateLong(start)}</div>
+          <div class="date-separator-line"></div>
+        </div>`);
+    }
 
     const cardClass = [
       'show-card',
-      isLive?'live-now':(isAired?'aired':'upcoming'),
-      isAd?'ad-card':'',
-      isFlm?'flm-card':''
+      isLive ? 'live-now' : (isAired ? 'aired' : 'upcoming'),
+      isAd ? 'ad-card' : '',
+      isFlm ? 'flm-card' : ''
     ].filter(Boolean).join(' ');
 
     const filterData = [
-      s.cat==='show'||s.cat==='flm'?'shows':'',
-      isMovie?'movies':'',
-      isKids?'kids':'',
-      isFlm?'flm':'',
-      status==='upcoming'?'upcoming':''
+      (!isAd && !isMovie && !isKids && !isFlm) ? 'shows' : '',
+      isMovie ? 'movies' : '',
+      isKids ? 'kids' : '',
+      isFlm ? 'flm' : '',
+      status === 'upcoming' ? 'upcoming' : ''
     ].filter(Boolean).join(' ');
 
-    const pct = isLive ? getProgress(s) : 0;
+    const pct = isLive ? getProgress(entry) : 0;
     const liveId = isLive ? 'id="live-now-card"' : '';
 
     wrap.insertAdjacentHTML('beforeend', `
       <div class="${cardClass}" ${liveId} data-filter="${filterData}" tabindex="0">
         <div class="show-time">
-          <div class="show-time-start">${fmt12(s.t)}</div>
-          <div class="show-time-end">${fmtEnd(s.t,s.d)}</div>
+          <div class="show-time-start">${fmt12(start)}</div>
+          <div class="show-time-end">${fmt12(end)}</div>
         </div>
         <div class="show-info">
-          <div class="show-name">${s.n}${isMovie?'<span class="movie-badge">MOVIE</span>':''}</div>
-          ${isLive?`<div class="live-badge"><span class="live-badge-dot"></span> ON AIR NOW</div>`:''}
-          ${isFlm?`<div class="show-meta">★ FLM ORIGINAL</div>`:''}
-          ${isKids?`<div class="show-meta">KIDS</div>`:''}
-          ${isLive?`<a href="live.html" class="watch-now-btn">▶ Watch Now</a>`:''}
+          <div class="show-name">${s.name||s.n}${isMovie ? '<span class="movie-badge">MOVIE</span>' : ''}</div>
+          ${isLive ? `<div class="live-badge"><span class="live-badge-dot"></span> ON AIR NOW</div>` : ''}
+          ${isKids ? `<div class="show-meta">KIDS</div>` : ''}
+          ${isFlm ? `<div class="show-meta">★ FLM ORIGINAL</div>` : ''}
+          ${isLive ? `<a href="live.html" class="watch-now-btn">▶ Watch Now</a>` : ''}
         </div>
-        <div class="show-dur">${fmtDur(s.d)}</div>
-        ${isLive?`<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${pct}%"></div></div>`:''}
+        <div class="show-dur">${fmtDur(dur)}</div>
+        ${isLive ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:${pct}%"></div></div>` : ''}
       </div>`);
   });
 }
 
-// ── DOWNLOAD ──────────────────────────────────────────────────────────
-function downloadSchedule() {
-  const date = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  let txt = `FLM TV — CHANNEL 26.5 · LAS VEGAS · WORLDWIDE\nTODAY'S PROGRAMMING — ${date}\n${'─'.repeat(50)}\n\n`;
-  TODAY_SCHEDULE.forEach(s => {
-    if (s.cat==='ad') return;
-    txt += `${fmt12(s.t).padEnd(12)} ${s.n}\n`;
-  });
-  const blob = new Blob([txt], {type:'text/plain'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `FLM-TV-Schedule-${new Date().toISOString().slice(0,10)}.txt`;
-  a.click();
-}
-
-// ── OTHER FUNCTIONS ───────────────────────────────────────────────────
 function jumpToNow() {
   const el = document.getElementById('live-now-card');
-  if (!el) {  return; }
-  el.scrollIntoView({behavior:'smooth',block:'center'});
-  el.style.boxShadow='0 0 0 3px #00E676,0 0 40px rgba(0,230,118,0.35)';
-  setTimeout(()=>{el.style.boxShadow='';},900);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.style.boxShadow = '0 0 0 3px #00E676,0 0 40px rgba(0,230,118,0.35)';
+  setTimeout(() => { el.style.boxShadow = ''; }, 900);
 }
 
 function filterSchedule(cat, btn) {
-  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.show-card').forEach(card=>{
-    const tags = card.dataset.filter||'';
+  document.querySelectorAll('.show-card').forEach(card => {
+    const tags = card.dataset.filter || '';
     let show = false;
-    if (cat==='all') show=true;
-    else if (cat==='shows') show=tags.includes('shows')&&!tags.includes('movies');
-    else if (cat==='movies') show=tags.includes('movies');
-    else if (cat==='kids') show=tags.includes('kids');
-    else if (cat==='flm') show=tags.includes('flm');
-    else if (cat==='upcoming') show=tags.includes('upcoming');
-    card.classList.toggle('hidden',!show);
+    if (cat === 'all') show = true;
+    else if (cat === 'shows') show = tags.includes('shows');
+    else if (cat === 'movies') show = tags.includes('movies');
+    else if (cat === 'kids') show = tags.includes('kids');
+    else if (cat === 'flm') show = tags.includes('flm');
+    else if (cat === 'upcoming') show = tags.includes('upcoming');
+    card.classList.toggle('hidden', !show);
   });
 }
 
 function updateClock() {
-  const d=new Date();
-  const h=d.getHours()%12||12, m=String(d.getMinutes()).padStart(2,'0'), s=String(d.getSeconds()).padStart(2,'0');
-  const el=document.getElementById('clockDisplay');
-  if(el) el.textContent=`${h}:${m}:${s} ${d.getHours()>=12?'PM':'AM'}`;
+  const d = new Date();
+  const h = d.getHours() % 12 || 12, m = String(d.getMinutes()).padStart(2,'0'), s = String(d.getSeconds()).padStart(2,'0');
+  const el = document.getElementById('clockDisplay');
+  if (el) el.textContent = `${h}:${m}:${s} ${d.getHours() >= 12 ? 'PM' : 'AM'}`;
 }
 
 function updateProgress() {
-  const fill=document.getElementById('progressFill');
-  if(!fill) return;
-  const live=TODAY_SCHEDULE.find(s=>getStatus(s)==='live');
-  if(live) fill.style.width=getProgress(live)+'%';
+  const fill = document.getElementById('progressFill');
+  if (!fill) return;
+  const chain = getChain();
+  const live = chain.find(e => getStatus(e) === 'live');
+  if (live) fill.style.width = getProgress(live) + '%';
+}
+
+// ── TODAY'S SCHEDULE ──────────────────────────────────────────────
+// Updated: 2026-07-04 08:38
+const TODAY_SCHEDULE = [
+  {t:"08:34",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-04"},
+  {t:"08:34",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-07-04"},
+  {t:"08:35",n:"FLMTV.COM",d:25,cat:"ad",date:"2026-07-04"},
+  {t:"08:35",n:"The Twilight Zone",d:1554,cat:"",date:"2026-07-04"},
+  {t:"09:01",n:"The Twilight Zone",d:1569,cat:"",date:"2026-07-04"},
+  {t:"09:27",n:"FLMTV.COM",d:15,cat:"ad",date:"2026-07-04"},
+  {t:"09:28",n:"The Twilight Zone",d:1555,cat:"",date:"2026-07-04"},
+  {t:"09:54",n:"Sesame Street",d:1555,cat:"kids",date:"2026-07-04"},
+  {t:"10:20",n:"Sesame Street",d:1555,cat:"kids",date:"2026-07-04"},
+  {t:"10:45",n:"Super Why!",d:1546,cat:"kids",date:"2026-07-04"},
+  {t:"11:11",n:"ZainaJuliette.tv",d:37,cat:"ad",date:"2026-07-04"},
+  {t:"11:12",n:"Martha Speaks",d:1441,cat:"kids",date:"2026-07-04"},
+  {t:"11:36",n:"Molly of Denali",d:1533,cat:"kids",date:"2026-07-04"},
+  {t:"12:01",n:"Winnie the Pooh",d:3783,cat:"movie",date:"2026-07-04"},
+  {t:"13:04",n:"American Dragon",d:1362,cat:"",date:"2026-07-04"},
+  {t:"13:27",n:"Charlie Brown and Snoopy",d:1345,cat:"",date:"2026-07-04"},
+  {t:"13:50",n:"America Charlie Brown",d:1458,cat:"",date:"2026-07-04"},
+  {t:"14:14",n:"Gilligan\'s Island",d:1505,cat:"",date:"2026-07-04"},
+  {t:"14:39",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-04"},
+  {t:"14:39",n:"Leave it to Beaver",d:1558,cat:"",date:"2026-07-04"},
+  {t:"15:05",n:"The Lucy Show",d:1547,cat:"",date:"2026-07-04"},
+  {t:"15:31",n:"Little Rascals",d:1042,cat:"",date:"2026-07-04"},
+  {t:"15:49",n:"Little Rascals",d:941,cat:"",date:"2026-07-04"},
+  {t:"16:04",n:"Andy Griffith",d:1486,cat:"",date:"2026-07-04"},
+  {t:"16:29",n:"Andy Griffith",d:1543,cat:"",date:"2026-07-04"},
+  {t:"16:55",n:"Whats Happening",d:1472,cat:"",date:"2026-07-04"},
+  {t:"17:19",n:"Good Times",d:1574,cat:"",date:"2026-07-04"},
+  {t:"17:46",n:"Sanford and Son",d:1512,cat:"",date:"2026-07-04"},
+  {t:"18:11",n:"The Jeffersons",d:1474,cat:"",date:"2026-07-04"},
+  {t:"18:35",n:"Alice in Wonderland",d:6514,cat:"movie",date:"2026-07-04"},
+  {t:"20:24",n:"Up",d:5797,cat:"movie",date:"2026-07-04"},
+  {t:"22:00",n:"Incredible Shrinking Man",d:4847,cat:"movie",date:"2026-07-04"},
+  {t:"23:21",n:"FLMTV.COM",d:25,cat:"ad",date:"2026-07-04"},
+  {t:"23:22",n:"Close Encounters of the 5th",d:7236,cat:"movie",date:"2026-07-04"},
+  {t:"01:22",n:"Close Encounters-MOVIE",d:8085,cat:"movie",date:"2026-07-04"},
+  {t:"03:37",n:"FLMTV.COM",d:12,cat:"ad",date:"2026-07-04"},
+  {t:"03:37",n:"National Treasure Book",d:7472,cat:"movie",date:"2026-07-04"},
+  {t:"05:42",n:"Equilibrium",d:6422,cat:"movie",date:"2026-07-04"},
+  {t:"07:29",n:"Dolores Claiborne",d:7891,cat:"movie",date:"2026-07-04"},
+  {t:"09:40",n:"Misery",d:6445,cat:"movie",date:"2026-07-04"},
+  {t:"11:28",n:"Ghosted",d:6814,cat:"movie",date:"2026-07-04"},
+  {t:"13:21",n:"G.I. Jane",d:7514,cat:"movie",date:"2026-07-04"},
+  {t:"15:27",n:"Bruce Almighty",d:6062,cat:"movie",date:"2026-07-04"},
+  {t:"17:08",n:"Exorcist The Beginning",d:6794,cat:"movie",date:"2026-07-04"}
+];
+
+// ── LOAD JSON & INIT ─────────────────────────────────────────────
+// Tries to fetch FLM-TV-Schedule.json first.
+// If not found, falls back to TODAY_SCHEDULE array above.
+// The bat file / update_schedule.py injects into TODAY_SCHEDULE.
+// Either workflow works — JSON fetch OR bat file injection.
+
+async function loadSchedule() {
+  try {
+    const res = await fetch('FLM-TV-Schedule.json?v=' + Date.now());
+    if (!res.ok) throw new Error('File not found');
+    const data = await res.json();
+    const dateKey = Object.keys(data)[0];
+    const shows = data[dateKey];
+    SCHEDULE = shows.map(s => ({ ...s, date: s.date || dateKey }));
+  } catch (e) {
+    // Fall back to TODAY_SCHEDULE array (injected by bat file)
+    SCHEDULE = TODAY_SCHEDULE.map(s => ({
+      name: s.n, startTime: s.t, duration: s.d,
+      category: s.cat, date: s.date || ''
+    }));
+  }
+  renderSchedule();
+  jumpToNow();
 }
 
 document.getElementById('heroDate').textContent =
-  new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}).toUpperCase();
-renderSchedule();
-jumpToNow();
+  new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' }).toUpperCase();
+
 updateClock();
-setInterval(updateClock,1000);
-setInterval(updateProgress,10000);
-setInterval(renderSchedule,60000);
+setInterval(updateClock, 1000);
+setInterval(updateProgress, 10000);
+setInterval(() => { loadSchedule(); }, 60000); // reload JSON every minute
+loadSchedule();
 </script>
 
 <script>

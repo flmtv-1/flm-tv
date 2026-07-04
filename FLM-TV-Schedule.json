@@ -1,55 +1,79 @@
 {
-  "2026-07-03": [
+  "2026-07-04": [
     {
-      "startTime": "06:24",
-      "name": "Sesame Street",
-      "duration": 3400,
+      "startTime": "08:34",
+      "name": "VoteScottBlack.com",
+      "duration": 30,
       "inPoint": 0,
-      "outPoint": 3400,
-      "category": "kids"
+      "outPoint": 30,
+      "category": "commercial"
     },
     {
-      "startTime": "07:20",
-      "name": "Sesame Street",
-      "duration": 1558,
+      "startTime": "08:34",
+      "name": "SheBoujay.com",
+      "duration": 60,
       "inPoint": 0,
-      "outPoint": 1558,
-      "category": "kids"
+      "outPoint": 60,
+      "category": "commercial"
     },
     {
-      "startTime": "07:46",
-      "name": "Sesame Street",
-      "duration": 1558,
+      "startTime": "08:35",
+      "name": "FLMTV.COM",
+      "duration": 25,
       "inPoint": 0,
-      "outPoint": 1558,
-      "category": "kids"
+      "outPoint": 25,
+      "category": "commercial"
     },
     {
-      "startTime": "08:12",
-      "name": "FLMTV.com",
+      "startTime": "08:35",
+      "name": "The Twilight Zone",
+      "duration": 1554,
+      "inPoint": 0,
+      "outPoint": 1554,
+      "category": "show"
+    },
+    {
+      "startTime": "09:01",
+      "name": "The Twilight Zone",
+      "duration": 1569,
+      "inPoint": 0,
+      "outPoint": 1569,
+      "category": "show"
+    },
+    {
+      "startTime": "09:27",
+      "name": "FLMTV.COM",
       "duration": 15,
       "inPoint": 0,
       "outPoint": 15,
       "category": "commercial"
     },
     {
-      "startTime": "08:12",
-      "name": "Sid The Science Kid",
-      "duration": 1322,
+      "startTime": "09:28",
+      "name": "The Twilight Zone",
+      "duration": 1555,
       "inPoint": 0,
-      "outPoint": 1322,
+      "outPoint": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "09:54",
+      "name": "Sesame Street",
+      "duration": 1555,
+      "inPoint": 0,
+      "outPoint": 1555,
       "category": "kids"
     },
     {
-      "startTime": "08:34",
-      "name": "Ready Jet Go",
-      "duration": 1581,
+      "startTime": "10:20",
+      "name": "Sesame Street",
+      "duration": 1555,
       "inPoint": 0,
-      "outPoint": 1581,
+      "outPoint": 1555,
       "category": "kids"
     },
     {
-      "startTime": "09:01",
+      "startTime": "10:45",
       "name": "Super Why!",
       "duration": 1546,
       "inPoint": 0,
@@ -57,47 +81,71 @@
       "category": "kids"
     },
     {
-      "startTime": "09:27",
-      "name": "Pippi Longstocking",
-      "duration": 5731,
+      "startTime": "11:11",
+      "name": "ZainaJuliette.tv",
+      "duration": 37,
       "inPoint": 0,
-      "outPoint": 5731,
-      "category": "movie"
+      "outPoint": 37,
+      "category": "commercial"
     },
     {
-      "startTime": "11:02",
-      "name": "Atlantis Milos Return",
-      "duration": 4824,
+      "startTime": "11:12",
+      "name": "Martha Speaks",
+      "duration": 1441,
       "inPoint": 0,
-      "outPoint": 4824,
-      "category": "movie"
+      "outPoint": 1441,
+      "category": "kids"
     },
     {
-      "startTime": "12:22",
-      "name": "Abbott and Costello",
+      "startTime": "11:36",
+      "name": "Molly of Denali",
       "duration": 1533,
       "inPoint": 0,
       "outPoint": 1533,
-      "category": "show"
+      "category": "kids"
     },
     {
-      "startTime": "12:48",
-      "name": "Three Stooges",
-      "duration": 1069,
+      "startTime": "12:01",
+      "name": "Winnie the Pooh",
+      "duration": 3783,
       "inPoint": 0,
-      "outPoint": 1069,
-      "category": "show"
+      "outPoint": 3783,
+      "category": "movie"
     },
     {
-      "startTime": "13:06",
-      "name": "Mister Ed",
-      "duration": 1558,
+      "startTime": "13:04",
+      "name": "American Dragon",
+      "duration": 1362,
       "inPoint": 0,
-      "outPoint": 1558,
+      "outPoint": 1362,
       "category": "show"
     },
     {
-      "startTime": "13:32",
+      "startTime": "13:27",
+      "name": "Charlie Brown and Snoopy",
+      "duration": 1345,
+      "inPoint": 0,
+      "outPoint": 1345,
+      "category": "show"
+    },
+    {
+      "startTime": "13:50",
+      "name": "America Charlie Brown",
+      "duration": 1458,
+      "inPoint": 0,
+      "outPoint": 1458,
+      "category": "show"
+    },
+    {
+      "startTime": "14:14",
+      "name": "Gilligan's Island",
+      "duration": 1505,
+      "inPoint": 0,
+      "outPoint": 1505,
+      "category": "show"
+    },
+    {
+      "startTime": "14:39",
       "name": "VoteScottBlack.com",
       "duration": 30,
       "inPoint": 0,
@@ -105,23 +153,7 @@
       "category": "commercial"
     },
     {
-      "startTime": "13:32",
-      "name": "Gilligan's Island",
-      "duration": 1520,
-      "inPoint": 0,
-      "outPoint": 1520,
-      "category": "show"
-    },
-    {
-      "startTime": "13:58",
-      "name": "The Lucy Show",
-      "duration": 1549,
-      "inPoint": 0,
-      "outPoint": 1549,
-      "category": "show"
-    },
-    {
-      "startTime": "14:23",
+      "startTime": "14:39",
       "name": "Leave it to Beaver",
       "duration": 1558,
       "inPoint": 0,
@@ -129,183 +161,111 @@
       "category": "show"
     },
     {
-      "startTime": "14:49",
-      "name": "Bewitched",
-      "duration": 1529,
+      "startTime": "15:05",
+      "name": "The Lucy Show",
+      "duration": 1547,
       "inPoint": 0,
-      "outPoint": 1529,
+      "outPoint": 1547,
       "category": "show"
     },
     {
-      "startTime": "15:15",
-      "name": "Bewitched",
-      "duration": 1527,
+      "startTime": "15:31",
+      "name": "Little Rascals",
+      "duration": 1042,
       "inPoint": 0,
-      "outPoint": 1527,
+      "outPoint": 1042,
       "category": "show"
     },
     {
-      "startTime": "15:40",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
+      "startTime": "15:49",
+      "name": "Little Rascals",
+      "duration": 941,
       "inPoint": 0,
-      "outPoint": 30,
-      "category": "commercial"
-    },
-    {
-      "startTime": "15:41",
-      "name": "Beverly Hillbillies",
-      "duration": 1610,
-      "inPoint": 0,
-      "outPoint": 1610,
+      "outPoint": 941,
       "category": "show"
     },
     {
-      "startTime": "16:08",
-      "name": "Charlie's Angels",
-      "duration": 2943,
-      "inPoint": 0,
-      "outPoint": 2943,
-      "category": "show"
-    },
-    {
-      "startTime": "16:57",
+      "startTime": "16:04",
       "name": "Andy Griffith",
-      "duration": 1516,
+      "duration": 1486,
       "inPoint": 0,
-      "outPoint": 1516,
+      "outPoint": 1486,
       "category": "show"
     },
     {
-      "startTime": "17:22",
+      "startTime": "16:29",
       "name": "Andy Griffith",
-      "duration": 1538,
+      "duration": 1543,
       "inPoint": 0,
-      "outPoint": 1538,
+      "outPoint": 1543,
       "category": "show"
     },
     {
-      "startTime": "17:48",
-      "name": "Behind the Scenes with Z",
-      "duration": 72,
-      "inPoint": 0,
-      "outPoint": 72,
-      "category": "show"
-    },
-    {
-      "startTime": "17:49",
+      "startTime": "16:55",
       "name": "Whats Happening",
-      "duration": 1457,
+      "duration": 1472,
       "inPoint": 0,
-      "outPoint": 1457,
+      "outPoint": 1472,
       "category": "show"
     },
     {
-      "startTime": "18:13",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
-      "inPoint": 0,
-      "outPoint": 30,
-      "category": "commercial"
-    },
-    {
-      "startTime": "18:14",
+      "startTime": "17:19",
       "name": "Good Times",
-      "duration": 1555,
+      "duration": 1574,
       "inPoint": 0,
-      "outPoint": 1555,
+      "outPoint": 1574,
       "category": "show"
     },
     {
-      "startTime": "18:39",
-      "name": "SheBoujay.com",
-      "duration": 60,
+      "startTime": "17:46",
+      "name": "Sanford and Son",
+      "duration": 1512,
       "inPoint": 0,
-      "outPoint": 60,
-      "category": "commercial"
-    },
-    {
-      "startTime": "18:40",
-      "name": "Schoolhouse Rock",
-      "duration": 184,
-      "inPoint": 0,
-      "outPoint": 184,
+      "outPoint": 1512,
       "category": "show"
     },
     {
-      "startTime": "18:44",
-      "name": "Schoolhouse Rock",
-      "duration": 191,
+      "startTime": "18:11",
+      "name": "The Jeffersons",
+      "duration": 1474,
       "inPoint": 0,
-      "outPoint": 191,
+      "outPoint": 1474,
       "category": "show"
     },
     {
-      "startTime": "18:47",
-      "name": "Schoolhouse Rock",
-      "duration": 185,
+      "startTime": "18:35",
+      "name": "Alice in Wonderland",
+      "duration": 6514,
       "inPoint": 0,
-      "outPoint": 185,
-      "category": "show"
-    },
-    {
-      "startTime": "18:50",
-      "name": "Schoolhouse Rock",
-      "duration": 186,
-      "inPoint": 0,
-      "outPoint": 186,
-      "category": "show"
-    },
-    {
-      "startTime": "18:53",
-      "name": "Charlie Brown",
-      "duration": 1349,
-      "inPoint": 0,
-      "outPoint": 1349,
-      "category": "show"
-    },
-    {
-      "startTime": "19:15",
-      "name": "Chance Of Meatballs",
-      "duration": 5393,
-      "inPoint": 0,
-      "outPoint": 5393,
+      "outPoint": 6514,
       "category": "movie"
     },
     {
-      "startTime": "20:45",
-      "name": "Here's Lucy",
-      "duration": 1518,
+      "startTime": "20:24",
+      "name": "Up",
+      "duration": 5797,
       "inPoint": 0,
-      "outPoint": 1518,
-      "category": "show"
+      "outPoint": 5797,
+      "category": "movie"
     },
     {
-      "startTime": "21:11",
-      "name": "Boxing",
-      "duration": 139,
+      "startTime": "22:00",
+      "name": "Incredible Shrinking Man",
+      "duration": 4847,
       "inPoint": 0,
-      "outPoint": 139,
-      "category": "show"
+      "outPoint": 4847,
+      "category": "movie"
     },
     {
-      "startTime": "21:13",
-      "name": "SheBoujay.com",
-      "duration": 60,
+      "startTime": "23:21",
+      "name": "FLMTV.COM",
+      "duration": 25,
       "inPoint": 0,
-      "outPoint": 60,
+      "outPoint": 25,
       "category": "commercial"
     },
     {
-      "startTime": "21:14",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
-      "inPoint": 0,
-      "outPoint": 30,
-      "category": "commercial"
-    },
-    {
-      "startTime": "21:14",
+      "startTime": "23:22",
       "name": "Close Encounters of the 5th",
       "duration": 7236,
       "inPoint": 0,
@@ -313,15 +273,15 @@
       "category": "movie"
     },
     {
-      "startTime": "23:15",
-      "name": "Independence Day",
-      "duration": 7184,
+      "startTime": "01:22",
+      "name": "Close Encounters-MOVIE",
+      "duration": 8085,
       "inPoint": 0,
-      "outPoint": 7184,
+      "outPoint": 8085,
       "category": "movie"
     },
     {
-      "startTime": "01:15",
+      "startTime": "03:37",
       "name": "FLMTV.COM",
       "duration": 12,
       "inPoint": 0,
@@ -329,31 +289,39 @@
       "category": "commercial"
     },
     {
-      "startTime": "01:15",
-      "name": "I Am Legend",
-      "duration": 6234,
+      "startTime": "03:37",
+      "name": "National Treasure Book",
+      "duration": 7472,
       "inPoint": 0,
-      "outPoint": 6234,
+      "outPoint": 7472,
       "category": "movie"
     },
     {
-      "startTime": "02:59",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
+      "startTime": "05:42",
+      "name": "Equilibrium",
+      "duration": 6422,
       "inPoint": 0,
-      "outPoint": 30,
-      "category": "commercial"
-    },
-    {
-      "startTime": "02:59",
-      "name": "Flubber",
-      "duration": 5128,
-      "inPoint": 0,
-      "outPoint": 5128,
+      "outPoint": 6422,
       "category": "movie"
     },
     {
-      "startTime": "04:25",
+      "startTime": "07:29",
+      "name": "Dolores Claiborne",
+      "duration": 7891,
+      "inPoint": 0,
+      "outPoint": 7891,
+      "category": "movie"
+    },
+    {
+      "startTime": "09:40",
+      "name": "Misery",
+      "duration": 6445,
+      "inPoint": 0,
+      "outPoint": 6445,
+      "category": "movie"
+    },
+    {
+      "startTime": "11:28",
       "name": "Ghosted",
       "duration": 6814,
       "inPoint": 0,
@@ -361,20 +329,28 @@
       "category": "movie"
     },
     {
-      "startTime": "06:18",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
+      "startTime": "13:21",
+      "name": "G.I. Jane",
+      "duration": 7514,
       "inPoint": 0,
-      "outPoint": 30,
-      "category": "commercial"
+      "outPoint": 7514,
+      "category": "movie"
     },
     {
-      "startTime": "06:19",
-      "name": "SheBoujay.com",
-      "duration": 60,
+      "startTime": "15:27",
+      "name": "Bruce Almighty",
+      "duration": 6062,
       "inPoint": 0,
-      "outPoint": 60,
-      "category": "commercial"
+      "outPoint": 6062,
+      "category": "movie"
+    },
+    {
+      "startTime": "17:08",
+      "name": "Exorcist The Beginning",
+      "duration": 6794,
+      "inPoint": 0,
+      "outPoint": 6794,
+      "category": "movie"
     }
   ]
 }
