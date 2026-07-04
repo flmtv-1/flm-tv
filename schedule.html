@@ -153,13 +153,14 @@ function buildChain() {
   const chain = [];
   const first = SCHEDULE[0];
   const anchorDate = first.date || new Date().toISOString().split('T')[0];
-  const [fh, fm] = first.startTime.split(':').map(Number);
+  const timeStr = first.startTime || first.t || '00:00';
+  const [fh, fm] = timeStr.split(':').map(Number);
   let cursor = new Date(anchorDate + 'T00:00:00');
   cursor.setHours(fh, fm, 0, 0);
   for (let i = 0; i < SCHEDULE.length; i++) {
     const s = SCHEDULE[i];
     const start = new Date(cursor.getTime());
-    const dur = Math.round((s.outPoint || s.duration) - (s.inPoint || 0));
+    const dur = Math.round((s.outPoint || s.duration || s.d || 0) - (s.inPoint || 0));
     const end = new Date(cursor.getTime() + dur * 1000);
     chain.push({ s, start, end, dur });
     cursor = end;
@@ -229,7 +230,7 @@ function renderSchedule() {
     const status = getStatus(entry);
     const isLive = liveEntry && entry === liveEntry;
     const isAired = !isLive && status === 'aired';
-    const cat = (s.category || '').toLowerCase();
+    const cat = ((s.category || s.cat) || '').toLowerCase();
     const isAd = cat === 'commercial' || cat === 'ad' || cat === 'promo';
     const isMovie = cat === 'movie';
     const isKids = cat === 'kids';
@@ -271,7 +272,7 @@ function renderSchedule() {
           <div class="show-time-end">${fmt12(end)}</div>
         </div>
         <div class="show-info">
-          <div class="show-name">${s.name}${isMovie ? '<span class="movie-badge">MOVIE</span>' : ''}</div>
+          <div class="show-name">${s.name||s.n}${isMovie ? '<span class="movie-badge">MOVIE</span>' : ''}</div>
           ${isLive ? `<div class="live-badge"><span class="live-badge-dot"></span> ON AIR NOW</div>` : ''}
           ${isKids ? `<div class="show-meta">KIDS</div>` : ''}
           ${isFlm ? `<div class="show-meta">★ FLM ORIGINAL</div>` : ''}
@@ -322,30 +323,78 @@ function updateProgress() {
   if (live) fill.style.width = getProgress(live) + '%';
 }
 
+// ── TODAY'S SCHEDULE ──────────────────────────────────────────────
+// Updated: 2026-07-04 08:35
+const TODAY_SCHEDULE = [
+  {t:"08:34",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-04"},
+  {t:"08:34",n:"SheBoujay.com",d:60,cat:"ad",date:"2026-07-04"},
+  {t:"08:35",n:"FLMTV.COM",d:25,cat:"ad",date:"2026-07-04"},
+  {t:"08:35",n:"The Twilight Zone",d:1554,cat:"",date:"2026-07-04"},
+  {t:"09:01",n:"The Twilight Zone",d:1569,cat:"",date:"2026-07-04"},
+  {t:"09:27",n:"FLMTV.COM",d:15,cat:"ad",date:"2026-07-04"},
+  {t:"09:28",n:"The Twilight Zone",d:1555,cat:"",date:"2026-07-04"},
+  {t:"09:54",n:"Sesame Street",d:1555,cat:"kids",date:"2026-07-04"},
+  {t:"10:20",n:"Sesame Street",d:1555,cat:"kids",date:"2026-07-04"},
+  {t:"10:45",n:"Super Why!",d:1546,cat:"kids",date:"2026-07-04"},
+  {t:"11:11",n:"ZainaJuliette.tv",d:37,cat:"ad",date:"2026-07-04"},
+  {t:"11:12",n:"Martha Speaks",d:1441,cat:"kids",date:"2026-07-04"},
+  {t:"11:36",n:"Molly of Denali",d:1533,cat:"kids",date:"2026-07-04"},
+  {t:"12:01",n:"Winnie the Pooh",d:3783,cat:"movie",date:"2026-07-04"},
+  {t:"13:04",n:"American Dragon",d:1362,cat:"",date:"2026-07-04"},
+  {t:"13:27",n:"Charlie Brown and Snoopy",d:1345,cat:"",date:"2026-07-04"},
+  {t:"13:50",n:"America Charlie Brown",d:1458,cat:"",date:"2026-07-04"},
+  {t:"14:14",n:"Gilligan\'s Island",d:1505,cat:"",date:"2026-07-04"},
+  {t:"14:39",n:"VoteScottBlack.com",d:30,cat:"ad",date:"2026-07-04"},
+  {t:"14:39",n:"Leave it to Beaver",d:1558,cat:"",date:"2026-07-04"},
+  {t:"15:05",n:"The Lucy Show",d:1547,cat:"",date:"2026-07-04"},
+  {t:"15:31",n:"Little Rascals",d:1042,cat:"",date:"2026-07-04"},
+  {t:"15:49",n:"Little Rascals",d:941,cat:"",date:"2026-07-04"},
+  {t:"16:04",n:"Andy Griffith",d:1486,cat:"",date:"2026-07-04"},
+  {t:"16:29",n:"Andy Griffith",d:1543,cat:"",date:"2026-07-04"},
+  {t:"16:55",n:"Whats Happening",d:1472,cat:"",date:"2026-07-04"},
+  {t:"17:19",n:"Good Times",d:1574,cat:"",date:"2026-07-04"},
+  {t:"17:46",n:"Sanford and Son",d:1512,cat:"",date:"2026-07-04"},
+  {t:"18:11",n:"The Jeffersons",d:1474,cat:"",date:"2026-07-04"},
+  {t:"18:35",n:"Alice in Wonderland",d:6514,cat:"movie",date:"2026-07-04"},
+  {t:"20:24",n:"Up",d:5797,cat:"movie",date:"2026-07-04"},
+  {t:"22:00",n:"Incredible Shrinking Man",d:4847,cat:"movie",date:"2026-07-04"},
+  {t:"23:21",n:"FLMTV.COM",d:25,cat:"ad",date:"2026-07-04"},
+  {t:"23:22",n:"Close Encounters of the 5th",d:7236,cat:"movie",date:"2026-07-04"},
+  {t:"01:22",n:"Close Encounters-MOVIE",d:8085,cat:"movie",date:"2026-07-04"},
+  {t:"03:37",n:"FLMTV.COM",d:12,cat:"ad",date:"2026-07-04"},
+  {t:"03:37",n:"National Treasure Book",d:7472,cat:"movie",date:"2026-07-04"},
+  {t:"05:42",n:"Equilibrium",d:6422,cat:"movie",date:"2026-07-04"},
+  {t:"07:29",n:"Dolores Claiborne",d:7891,cat:"movie",date:"2026-07-04"},
+  {t:"09:40",n:"Misery",d:6445,cat:"movie",date:"2026-07-04"},
+  {t:"11:28",n:"Ghosted",d:6814,cat:"movie",date:"2026-07-04"},
+  {t:"13:21",n:"G.I. Jane",d:7514,cat:"movie",date:"2026-07-04"},
+  {t:"15:27",n:"Bruce Almighty",d:6062,cat:"movie",date:"2026-07-04"},
+  {t:"17:08",n:"Exorcist The Beginning",d:6794,cat:"movie",date:"2026-07-04"}
+];
+
 // ── LOAD JSON & INIT ─────────────────────────────────────────────
-// Reads FLM-TV-Schedule.json from same folder as this HTML file.
-// The JSON has one key (the broadcast start date) with an array of shows.
-// Shows chain continuously — overnight shows just keep going past midnight.
+// Tries to fetch FLM-TV-Schedule.json first.
+// If not found, falls back to TODAY_SCHEDULE array above.
+// The bat file / update_schedule.py injects into TODAY_SCHEDULE.
+// Either workflow works — JSON fetch OR bat file injection.
 
 async function loadSchedule() {
   try {
     const res = await fetch('FLM-TV-Schedule.json?v=' + Date.now());
     if (!res.ok) throw new Error('File not found');
     const data = await res.json();
-
-    // Get the broadcast date key (first key in the JSON)
     const dateKey = Object.keys(data)[0];
     const shows = data[dateKey];
-
-    // Attach the broadcast date to each show
-    SCHEDULE = shows.map(s => ({ ...s, date: dateKey }));
-
-    renderSchedule();
-    jumpToNow();
+    SCHEDULE = shows.map(s => ({ ...s, date: s.date || dateKey }));
   } catch (e) {
-    document.getElementById('scheduleWrap').innerHTML =
-      '<div class="error-msg">⚠ Could not load FLM-TV-Schedule.json<br>Place the JSON file in the same folder as schedule.html</div>';
+    // Fall back to TODAY_SCHEDULE array (injected by bat file)
+    SCHEDULE = TODAY_SCHEDULE.map(s => ({
+      name: s.n, startTime: s.t, duration: s.d,
+      category: s.cat, date: s.date || ''
+    }));
   }
+  renderSchedule();
+  jumpToNow();
 }
 
 document.getElementById('heroDate').textContent =
