@@ -1,411 +1,247 @@
 {
-  "2026-07-04": [
+  "2026-07-06": [
     {
-      "startTime": "08:34",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
+      "startTime": "07:52",
+      "name": "Fireman Sam",
+      "path": "PATH_NEEDED",
+      "duration": 3020,
       "inPoint": 0,
-      "outPoint": 30,
-      "category": "commercial"
+      "outPoint": 3020,
+      "category": "show",
+      "live": true
     },
     {
-      "startTime": "08:34",
-      "name": "SheBoujay.com",
-      "duration": 60,
-      "inPoint": 0,
-      "outPoint": 60,
-      "category": "commercial"
-    },
-    {
-      "startTime": "08:35",
-      "name": "FLMTV.COM",
-      "duration": 25,
-      "inPoint": 0,
-      "outPoint": 25,
-      "category": "commercial"
-    },
-    {
-      "startTime": "08:35",
-      "name": "The Twilight Zone",
-      "duration": 1554,
-      "inPoint": 0,
-      "outPoint": 1554,
-      "category": "show"
-    },
-    {
-      "startTime": "09:01",
-      "name": "The Twilight Zone",
-      "duration": 1569,
-      "inPoint": 0,
-      "outPoint": 1569,
-      "category": "show"
-    },
-    {
-      "startTime": "09:27",
-      "name": "FLMTV.COM",
-      "duration": 15,
-      "inPoint": 0,
-      "outPoint": 15,
-      "category": "commercial"
-    },
-    {
-      "startTime": "09:28",
-      "name": "The Twilight Zone",
-      "duration": 1555,
-      "inPoint": 0,
-      "outPoint": 1555,
-      "category": "show"
-    },
-    {
-      "startTime": "09:54",
+      "startTime": "08:42",
       "name": "Sesame Street",
+      "path": "PATH_NEEDED",
       "duration": 1555,
       "inPoint": 0,
       "outPoint": 1555,
-      "category": "kids"
+      "category": "show"
     },
     {
-      "startTime": "10:20",
+      "startTime": "09:08",
       "name": "Sesame Street",
+      "path": "PATH_NEEDED",
       "duration": 1555,
       "inPoint": 0,
       "outPoint": 1555,
-      "category": "kids"
+      "category": "show"
     },
     {
-      "startTime": "10:45",
+      "startTime": "09:34",
       "name": "Super Why!",
+      "path": "PATH_NEEDED",
       "duration": 1546,
       "inPoint": 0,
       "outPoint": 1546,
-      "category": "kids"
+      "category": "show"
     },
     {
-      "startTime": "11:11",
-      "name": "ZainaJuliette.tv",
-      "duration": 37,
+      "startTime": "10:00",
+      "name": "LazyTown",
+      "path": "PATH_NEEDED",
+      "duration": 1394,
       "inPoint": 0,
-      "outPoint": 37,
-      "category": "commercial"
+      "outPoint": 1394,
+      "category": "show"
     },
     {
-      "startTime": "11:12",
-      "name": "Martha Speaks",
-      "duration": 1441,
+      "startTime": "10:23",
+      "name": "TARZAN II ENGLISH",
+      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\TARZAN II\\TARZAN II_ENGLISH.mkv",
+      "duration": 4291,
       "inPoint": 0,
-      "outPoint": 1441,
-      "category": "kids"
-    },
-    {
-      "startTime": "11:36",
-      "name": "Molly of Denali",
-      "duration": 1533,
-      "inPoint": 0,
-      "outPoint": 1533,
-      "category": "kids"
-    },
-    {
-      "startTime": "12:01",
-      "name": "Winnie the Pooh",
-      "duration": 3783,
-      "inPoint": 0,
-      "outPoint": 3783,
+      "outPoint": 4291,
       "category": "movie"
     },
     {
+      "startTime": "11:35",
+      "name": "VoteScottBlack com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
+      "inPoint": 0,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "11:36",
+      "name": "Gilligan s Island ",
+      "path": "X:\\TV Clssics 2\\Gilligan Island\\Season 02\\Gilligan_s Island S02E30 V for Vitamins.mkv",
+      "duration": 1520,
+      "inPoint": 0,
+      "outPoint": 1520,
+      "category": "show"
+    },
+    {
+      "startTime": "12:01",
+      "name": "The Monkees",
+      "path": "Y:\\CLASSIC TV-2\\The-Monkees-Complete\\SEASON 06\\The Monkees 218 Monstrous Monkee Mash.mp4",
+      "duration": 1495,
+      "inPoint": 0,
+      "outPoint": 1495,
+      "category": "show"
+    },
+    {
+      "startTime": "12:26",
+      "name": "Little Rascals (Bedtime Worries)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 21-40\\Little Rascals 36 (Bedtime Worries).mp4",
+      "duration": 1215,
+      "inPoint": 0,
+      "outPoint": 1215,
+      "category": "show"
+    },
+    {
+      "startTime": "12:46",
+      "name": "Little Rascals (Wild Poses)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 21-40\\Little Rascals 37 (Wild Poses).mp4",
+      "duration": 1106,
+      "inPoint": 0,
+      "outPoint": 1106,
+      "category": "show"
+    },
+    {
       "startTime": "13:04",
-      "name": "American Dragon",
-      "duration": 1362,
+      "name": "Little Rascals (For Pete's Sake)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 21-40\\Little Rascals 39 (For Pete's Sake).mp4",
+      "duration": 1081,
       "inPoint": 0,
-      "outPoint": 1362,
+      "outPoint": 1081,
       "category": "show"
     },
     {
-      "startTime": "13:27",
-      "name": "Charlie Brown and Snoopy",
-      "duration": 1345,
+      "startTime": "13:22",
+      "name": "Three Stooges",
+      "path": "X:\\TV Clssics 2\\Three Stooges\\72 - Higher Than a Kite.mkv",
+      "duration": 1057,
       "inPoint": 0,
-      "outPoint": 1345,
+      "outPoint": 1057,
       "category": "show"
     },
     {
-      "startTime": "13:50",
-      "name": "America Charlie Brown",
-      "duration": 1458,
-      "inPoint": 0,
-      "outPoint": 1458,
-      "category": "show"
-    },
-    {
-      "startTime": "14:14",
-      "name": "Gilligan's Island",
-      "duration": 1505,
-      "inPoint": 0,
-      "outPoint": 1505,
-      "category": "show"
-    },
-    {
-      "startTime": "14:39",
-      "name": "VoteScottBlack.com",
-      "duration": 30,
-      "inPoint": 0,
-      "outPoint": 30,
-      "category": "commercial"
-    },
-    {
-      "startTime": "14:39",
-      "name": "Leave it to Beaver",
-      "duration": 1558,
-      "inPoint": 0,
-      "outPoint": 1558,
-      "category": "show"
-    },
-    {
-      "startTime": "15:05",
+      "startTime": "13:40",
       "name": "The Lucy Show",
+      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 1\\S01E24 - Lucy Drives a Dump Truck.ia.mp4",
       "duration": 1547,
       "inPoint": 0,
       "outPoint": 1547,
       "category": "show"
     },
     {
-      "startTime": "15:31",
-      "name": "Little Rascals",
-      "duration": 1042,
+      "startTime": "14:06",
+      "name": "VoteScottBlack com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30.03,
       "inPoint": 0,
-      "outPoint": 1042,
+      "outPoint": 30.03,
+      "category": ""
+    },
+    {
+      "startTime": "14:07",
+      "name": "Leave it to Beaver",
+      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 2\\S02E25 - Beaver and Gilbert.mp4",
+      "duration": 1558,
+      "inPoint": 0,
+      "outPoint": 1558,
       "category": "show"
     },
     {
-      "startTime": "15:49",
-      "name": "Little Rascals",
-      "duration": 941,
+      "startTime": "14:33",
+      "name": "Bewitched",
+      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 06\\Bewitched S06E12 Samantha's Double Mother Trouble.mp4",
+      "duration": 1527,
       "inPoint": 0,
-      "outPoint": 941,
+      "outPoint": 1527,
       "category": "show"
     },
     {
-      "startTime": "16:04",
-      "name": "Andy Griffith",
-      "duration": 1486,
+      "startTime": "14:58",
+      "name": "Bewitched ",
+      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 06\\Bewitched S06E13 You're So Agreeable.mp4",
+      "duration": 1528,
       "inPoint": 0,
-      "outPoint": 1486,
+      "outPoint": 1528,
       "category": "show"
     },
     {
-      "startTime": "16:29",
-      "name": "Andy Griffith",
-      "duration": 1543,
+      "startTime": "15:23",
+      "name": "Andy Griffith ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D4_t02.mkv",
+      "duration": 1459,
       "inPoint": 0,
-      "outPoint": 1543,
+      "outPoint": 1459,
       "category": "show"
     },
     {
-      "startTime": "16:55",
-      "name": "Whats Happening",
-      "duration": 1472,
+      "startTime": "15:47",
+      "name": "Andy Griffith ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D4_t03.mkv",
+      "duration": 1548,
       "inPoint": 0,
-      "outPoint": 1472,
+      "outPoint": 1548,
       "category": "show"
     },
     {
-      "startTime": "17:19",
-      "name": "Good Times",
-      "duration": 1574,
+      "startTime": "16:13",
+      "name": "FLM TV Tag Blue Aliens2",
+      "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
+      "duration": 21.229542,
       "inPoint": 0,
-      "outPoint": 1574,
+      "outPoint": 21.229542,
+      "category": ""
+    },
+    {
+      "startTime": "16:13",
+      "name": "Whats Happening ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-02\\Whats Happening S02E04.mkv",
+      "duration": 1501,
+      "inPoint": 0,
+      "outPoint": 1501,
       "category": "show"
     },
     {
-      "startTime": "17:46",
-      "name": "Sanford and Son",
-      "duration": 1512,
+      "startTime": "16:38",
+      "name": "Good Times ",
+      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 01\\Good Times S01E07 (Sex and the Evans Family).mp4",
+      "duration": 1564,
       "inPoint": 0,
-      "outPoint": 1512,
+      "outPoint": 1564,
       "category": "show"
     },
     {
-      "startTime": "18:11",
-      "name": "The Jeffersons",
+      "startTime": "17:04",
+      "name": "Sanford and Son ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 04\\Sanford and Son- (Season 4) Disc 3-A1_t03.mkv",
+      "duration": 1490,
+      "inPoint": 0,
+      "outPoint": 1490,
+      "category": "show"
+    },
+    {
+      "startTime": "17:29",
+      "name": "The Jeffersons ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 8 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S08E08 The House That George Built.mkv",
       "duration": 1474,
       "inPoint": 0,
       "outPoint": 1474,
       "category": "show"
     },
     {
-      "startTime": "18:35",
-      "name": "Alice in Wonderland",
-      "duration": 6514,
+      "startTime": "17:54",
+      "name": "The Jeffersons ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 8 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S08E09 A Whole Lot of Trouble.mkv",
+      "duration": 1504,
       "inPoint": 0,
-      "outPoint": 6514,
-      "category": "movie"
-    },
-    {
-      "startTime": "20:24",
-      "name": "Up",
-      "duration": 5797,
-      "inPoint": 0,
-      "outPoint": 5797,
-      "category": "movie"
-    },
-    {
-      "startTime": "22:00",
-      "name": "Incredible Shrinking Man",
-      "duration": 4847,
-      "inPoint": 0,
-      "outPoint": 4847,
-      "category": "movie"
-    },
-    {
-      "startTime": "23:21",
-      "name": "FLMTV.COM",
-      "duration": 25,
-      "inPoint": 0,
-      "outPoint": 25,
-      "category": "commercial"
-    },
-    {
-      "startTime": "23:22",
-      "name": "Close Encounters of the 5th",
-      "duration": 7236,
-      "inPoint": 0,
-      "outPoint": 7236,
-      "category": "movie"
-    },
-    {
-      "startTime": "01:22",
-      "name": "Close Encounters-MOVIE",
-      "duration": 8085,
-      "inPoint": 0,
-      "outPoint": 8085,
-      "category": "movie"
-    },
-    {
-      "startTime": "03:37",
-      "name": "FLMTV.COM",
-      "duration": 12,
-      "inPoint": 0,
-      "outPoint": 12,
-      "category": "commercial"
-    },
-    {
-      "startTime": "03:37",
-      "name": "National Treasure Book",
-      "duration": 7472,
-      "inPoint": 0,
-      "outPoint": 7472,
-      "category": "movie"
-    },
-    {
-      "startTime": "05:42",
-      "name": "Equilibrium",
-      "duration": 6422,
-      "inPoint": 0,
-      "outPoint": 6422,
-      "category": "movie"
-    },
-    {
-      "startTime": "07:29",
-      "name": "Dolores Claiborne",
-      "duration": 7891,
-      "inPoint": 0,
-      "outPoint": 7891,
-      "category": "movie"
-    },
-    {
-      "startTime": "09:40",
-      "name": "Misery",
-      "duration": 6445,
-      "inPoint": 0,
-      "outPoint": 6445,
-      "category": "movie"
-    },
-    {
-      "startTime": "11:28",
-      "name": "Zaina Juliette Show",
-      "duration": 506,
-      "inPoint": 0,
-      "outPoint": 506,
-      "category": "flm"
-    },
-    {
-      "startTime": "11:36",
-      "name": "Locals in Las Vegas",
-      "duration": 1709,
-      "inPoint": 0,
-      "outPoint": 1709,
+      "outPoint": 1504,
       "category": "show"
     },
     {
-      "startTime": "12:05",
-      "name": "Sesame Street",
-      "duration": 1555,
+      "startTime": "18:19",
+      "name": "Hook ",
+      "path": "Y:\\MORE TO SORT\\Hook.ia.mp4",
+      "duration": 8505,
       "inPoint": 0,
-      "outPoint": 1555,
-      "category": "kids"
-    },
-    {
-      "startTime": "12:31",
-      "name": "Tinker Bell",
-      "duration": 4574,
-      "inPoint": 0,
-      "outPoint": 4574,
-      "category": "movie"
-    },
-    {
-      "startTime": "13:47",
-      "name": "Toy Story 4",
-      "duration": 6003,
-      "inPoint": 0,
-      "outPoint": 6003,
-      "category": "movie"
-    },
-    {
-      "startTime": "15:27",
-      "name": "Treasure Planet",
-      "duration": 5723,
-      "inPoint": 0,
-      "outPoint": 5723,
-      "category": "movie"
-    },
-    {
-      "startTime": "17:02",
-      "name": "Jurassic Park",
-      "duration": 7588,
-      "inPoint": 0,
-      "outPoint": 7588,
-      "category": "movie"
-    },
-    {
-      "startTime": "19:09",
-      "name": "Ghosted",
-      "duration": 6814,
-      "inPoint": 0,
-      "outPoint": 6814,
-      "category": "movie"
-    },
-    {
-      "startTime": "21:02",
-      "name": "G.I. Jane",
-      "duration": 7514,
-      "inPoint": 0,
-      "outPoint": 7514,
-      "category": "movie"
-    },
-    {
-      "startTime": "23:07",
-      "name": "Bruce Almighty",
-      "duration": 6062,
-      "inPoint": 0,
-      "outPoint": 6062,
-      "category": "movie"
-    },
-    {
-      "startTime": "00:49",
-      "name": "Exorcist The Beginning",
-      "duration": 6794,
-      "inPoint": 0,
-      "outPoint": 6794,
+      "outPoint": 8505,
       "category": "movie"
     }
   ]

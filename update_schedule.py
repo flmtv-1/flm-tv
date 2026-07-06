@@ -151,11 +151,47 @@ def main():
     print()
 
     ans = input("  Push to GitHub now? (y/n): ").strip().lower()
-    if ans == "y":
-        os.system('cd /d "%s" && git add schedule.html && git commit -m "Schedule update %s" && git push' % (
-            SCRIPT_DIR, datetime.now().strftime("%Y-%m-%d %H:%M")
-        ))
-        print("  Pushed to GitHub!")
+    if ans in ("y", "yes"):
+        import subprocess
+
+        def run_git(args):
+            result = subprocess.run(
+                args, cwd=SCRIPT_DIR, capture_output=True, text=True
+            )
+            out = (result.stdout or "").strip()
+            err = (result.stderr or "").strip()
+            if out:
+                print(f"    {out}")
+            if err:
+                print(f"    {err}")
+            return result.returncode
+
+        print()
+        print("  Running: git add schedule.html")
+        rc = run_git(["git", "add", "schedule.html"])
+        if rc != 0:
+            print(f"  ERROR: git add failed (exit code {rc}). Not pushed.")
+            input("\n  Press Enter to close...")
+            return
+
+        commit_msg = f"Schedule update {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+        print(f"  Running: git commit -m \"{commit_msg}\"")
+        rc = run_git(["git", "commit", "-m", commit_msg])
+        if rc != 0:
+            print(f"  NOTE: git commit exited with code {rc} (often means 'nothing to commit' — schedule.html may be identical to what's already committed, or this folder isn't the git repo). Not pushed.")
+            input("\n  Press Enter to close...")
+            return
+
+        print("  Running: git push")
+        rc = run_git(["git", "push"])
+        if rc != 0:
+            print(f"  ERROR: git push failed (exit code {rc}). Changes were committed locally but NOT pushed to GitHub.")
+            input("\n  Press Enter to close...")
+            return
+
+        print("  Confirmed: committed and pushed to GitHub successfully.")
+    elif ans not in ("n", "no", ""):
+        print(f"  Input '{ans}' not recognized as yes — skipping push. Run the bat file again if you meant to push.")
 
     print()
     input("  Press Enter to close...")
