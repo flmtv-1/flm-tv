@@ -1,0 +1,40 @@
+{
+  "2026-07-14": [
+    {
+      "startTime": "08:44",
+      "name": "Up",
+      "duration": 5797,
+      "category": "movie"
+    },
+    {
+      "startTime": "10:21",
+      "name": "Sesame Street",
+      "duration": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "10:47",
+      "name": "Sesame Street",
+      "duration": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "11:13",
+      "name": "Super Why!",
+      "duration": 392,
+      "category": "show"
+    },
+    {
+      "startTime": "11:20",
+      "name": "Dinosaur Train",
+      "duration": 780,
+      "category": "show"
+    },
+    {
+      "startTime": "11:33",
+      "name": "Mars Needs Moms",
+      "duration": 5284,
+      "category": "movie"
+    }
+  ]
+}
