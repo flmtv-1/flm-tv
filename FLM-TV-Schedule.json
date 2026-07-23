@@ -1,295 +1,97 @@
 {
-  "2026-07-14": [
+  "2026-06-22": [
     {
-      "startTime": "12:05",
-      "name": "The Lucy Show",
-      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 1\\S01E29 - Lucy and the Runaway Butterfly.ia.mp4",
-      "duration": 1548,
+      "startTime": "00:12",
+      "name": "FLMTV.com",
+      "path": "Z:\\FLM TV GRAPHICS\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28,
       "inPoint": 0,
-      "outPoint": 1548,
+      "outPoint": 28,
+      "category": "commercial"
+    },
+    {
+      "startTime": "00:12",
+      "name": "Gilligan s Island ",
+      "path": "X:\\TV Clssics 2\\Gilligan Island\\Season 02\\Gilligan_s Island S02E31 Mr. and Mrs..mkv",
+      "duration": 1509,
+      "inPoint": 0,
+      "outPoint": 1509,
       "category": "show"
     },
     {
-      "startTime": "12:31",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30,
+      "startTime": "00:37",
+      "name": "The Lucy Show",
+      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 2\\S02E05 - Lucy and the Safe Cracker.ia.mp4",
+      "duration": 1543,
       "inPoint": 0,
-      "outPoint": 30,
-      "category": ""
+      "outPoint": 1543,
+      "category": "show"
     },
     {
-      "startTime": "12:32",
+      "startTime": "01:03",
       "name": "Leave it to Beaver",
-      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 2\\S02E32 - Friendship.mp4",
+      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 2\\S02E38 - Found Money.mp4",
       "duration": 1556,
       "inPoint": 0,
       "outPoint": 1556,
       "category": "show"
     },
     {
-      "startTime": "12:58",
-      "name": "Three Stooges",
-      "path": "X:\\TV Clssics 2\\Three Stooges\\22 - Three Dumb Clucks.mkv",
-      "duration": 1017,
+      "startTime": "01:29",
+      "name": "VoteScottBlack.com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30,
       "inPoint": 0,
-      "outPoint": 1017,
-      "category": "show"
+      "outPoint": 30,
+      "category": "promo"
     },
     {
-      "startTime": "13:15",
-      "name": "The Andy Griffith Show",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D4_t06.mkv",
+      "startTime": "01:30",
+      "name": "Andy Griffith ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D3_t02.mkv",
       "duration": 1550,
       "inPoint": 0,
       "outPoint": 1550,
       "category": "show"
     },
     {
-      "startTime": "13:41",
-      "name": "The Andy Griffith Show",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D4_t07.mkv",
-      "duration": 1521,
+      "startTime": "01:56",
+      "name": "Andy Griffith ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D3_t03.mkv",
+      "duration": 1544,
       "inPoint": 0,
-      "outPoint": 1521,
+      "outPoint": 1544,
       "category": "show"
     },
     {
-      "startTime": "14:06",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30,
+      "startTime": "02:22",
+      "name": "Beverly Hillbillies",
+      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-01\\S01EP07-Hair Raising Holiday.mkv",
+      "duration": 1623,
       "inPoint": 0,
-      "outPoint": 30,
-      "category": ""
-    },
-    {
-      "startTime": "14:07",
-      "name": "What's Happening",
-      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-02\\Whats Happening S02E04.mkv",
-      "duration": 1501,
-      "inPoint": 0,
-      "outPoint": 1501,
+      "outPoint": 1623,
       "category": "show"
     },
     {
-      "startTime": "14:32",
-      "name": "Good Times ",
-      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 01\\Good Times S01E11 (The TV Commercial).mp4",
-      "duration": 1560,
-      "inPoint": 0,
-      "outPoint": 1560,
-      "category": "show"
-    },
-    {
-      "startTime": "14:58",
-      "name": "Sanford & Son ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 05\\D2\\Sanford & Son - Season 5- Disc 1-B1_t00.mkv",
-      "duration": 1502,
-      "inPoint": 0,
-      "outPoint": 1502,
-      "category": "show"
-    },
-    {
-      "startTime": "15:23",
-      "name": "The Jeffersons ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 8 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S08E14 Dog-Gone.mkv",
+      "startTime": "02:49",
+      "name": "Whats Happening ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-02\\Whats Happening S02E11.mkv",
       "duration": 1504,
       "inPoint": 0,
       "outPoint": 1504,
       "category": "show"
     },
     {
-      "startTime": "15:48",
-      "name": "VoteScottBlack com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30,
+      "startTime": "03:14",
+      "name": "Good Times ",
+      "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 02\\Good Times S02E06 (The Encyclopedia Hustle).mp4",
+      "duration": 1520,
       "inPoint": 0,
-      "outPoint": 30,
-      "category": ""
-    },
-    {
-      "startTime": "15:49",
-      "name": "FLMTV",
-      "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
-      "duration": 28,
-      "inPoint": 0,
-      "outPoint": 28,
-      "category": ""
-    },
-    {
-      "startTime": "15:49",
-      "name": "Frozen II ",
-      "path": "X:\\_SORT-MOVIES\\FAMILY SHOWS MOVIES\\Frozen.II.2019.1080p.BluRay.x265_track0.mkv",
-      "duration": 6194,
-      "inPoint": 0,
-      "outPoint": 6194,
-      "category": "movie"
-    },
-    {
-      "startTime": "17:32",
-      "name": "ZAINA JULIETTE ",
-      "path": "Y:\\FLM-TV\\CLIPS-FILLERS\\ZAINA JULIETTE-COMMERCIALflm.mp4",
-      "duration": 37,
-      "inPoint": 0,
-      "outPoint": 37,
-      "category": "commercial"
-    },
-    {
-      "startTime": "17:33",
-      "name": "Here's Lucy",
-      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 2\\S02E04 - Lucy Gets Locked in the Vault.ia.mp4",
-      "duration": 1541,
-      "inPoint": 0,
-      "outPoint": 1541,
+      "outPoint": 1520,
       "category": "show"
     },
     {
-      "startTime": "17:59",
-      "name": "Great Outdoors",
-      "path": "X:\\MOVIES-5\\GREAT OUTDOORS\\John Candy Great Outdoors.mp4",
-      "duration": 5426,
-      "inPoint": 0,
-      "outPoint": 5426,
-      "category": "movie"
-    },
-    {
-      "startTime": "19:29",
-      "name": "S06E04 Lucy the Wealthy Widow",
-      "path": "Y:\\AWESOME TV SHOWS-2\\Here's Lucy (The Complete Series) [1968 - 1974]\\Season 6\\S06E04 - Lucy the Wealthy Widow.mp4",
-      "duration": 1552.602268,
-      "inPoint": 0,
-      "outPoint": 1552.602268,
-      "category": ""
-    },
-    {
-      "startTime": "19:55",
-      "name": "FLMTV.com",
-      "path": "Y:\\CLIPS-FILLERS\\Snail-logo1-Z.mp4",
-      "duration": 15,
-      "inPoint": 0,
-      "outPoint": 15,
-      "category": "promo"
-    },
-    {
-      "startTime": "19:55",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30,
-      "inPoint": 0,
-      "outPoint": 30,
-      "category": "promo"
-    },
-    {
-      "startTime": "19:56",
-      "name": "Edward Scissorhands",
-      "path": "X:\\MOVIES-5\\Edward.Scissorhands.1990\\Edward Scissorhands 1990.mkv",
-      "duration": 6300,
-      "inPoint": 0,
-      "outPoint": 6300,
-      "category": "movie"
-    },
-    {
-      "startTime": "21:41",
-      "name": "Far From Heaven",
-      "path": "Y:\\MOVIES\\Far From Heaven\\Far From Heaven (2002) Julianne Moore 1080p.mp4",
-      "duration": 6440,
-      "inPoint": 0,
-      "outPoint": 6440,
-      "category": "movie"
-    },
-    {
-      "startTime": "23:28",
-      "name": "Eye for an Eye",
-      "path": "Y:\\MOVIES\\Eye for an Eye\\Eye for an Eye (1996) Sally Field 1080p.mp4",
-      "duration": 6075,
-      "inPoint": 0,
-      "outPoint": 6075,
-      "category": "movie"
-    },
-    {
-      "startTime": "01:09",
-      "name": "The Silence of the Lambs ",
-      "path": "X:\\MOVIES-5\\the-silence-of-the-lambs-1991_202405\\The Silence of the Lambs 1991.mp4",
-      "duration": 7111,
-      "inPoint": 0,
-      "outPoint": 7111,
-      "category": "movie"
-    },
-    {
-      "startTime": "03:08",
-      "name": "VoteScottBlack.com",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30,
-      "inPoint": 0,
-      "outPoint": 30,
-      "category": "promo"
-    },
-    {
-      "startTime": "03:09",
-      "name": "Cleopatra ",
-      "path": "Y:\\MORE TO SORT\\drive-download-20251116T074037Z-1-004\\Cleopatra (1963) 1080p.mp4",
-      "duration": 15068,
-      "inPoint": 0,
-      "outPoint": 15068,
-      "category": "show"
-    },
-    {
-      "startTime": "07:20",
-      "name": "Sesame Street",
-      "path": "Y:\\KIDS WORLD-2\\sesame-street-s-42-e-05-shape-o-bots\\SEASON 42\\Sesame Street_S42E01_Failure to Launch.ia.mp4",
-      "duration": 3143,
-      "inPoint": 0,
-      "outPoint": 3143,
-      "category": "show"
-    },
-    {
-      "startTime": "08:12",
-      "name": "Super Why!",
-      "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 06\\Super Why!_S06E05_Bedtime for Bear.ia.mp4",
-      "duration": 1547,
-      "inPoint": 6,
-      "outPoint": 1547,
-      "category": "show"
-    },
-    {
-      "startTime": "08:38",
-      "name": "Ready Jet Go! ",
-      "path": "Y:\\KIDS WORLD-2\\RJGTVSeries\\SEASON 02\\Ready Jet Go! - S02E03-04 - Endless Summer + Jet Shrinks the Kids WEBDL-1080p.mp4",
-      "duration": 1581,
-      "inPoint": 6,
-      "outPoint": 1581,
-      "category": "show"
-    },
-    {
-      "startTime": "09:04",
-      "name": "LazyTown ",
-      "path": "Y:\\KIDS WORLD-2\\lazytown-hd-episodes-collection\\SEASON 01\\LazyTown S01E16 Dear Diary 1080p HD.ia.mp4",
-      "duration": 1419,
-      "inPoint": 0,
-      "outPoint": 1419,
-      "category": "show"
-    },
-    {
-      "startTime": "09:28",
-      "name": "Nature Cat ",
-      "path": "Y:\\KIDS WORLD-2\\Nature Cat\\SEASON 02\\Nature.Cat.S02E21E22.Man.Oh.Mangrove-Northern.Lights.Sights.1080p.AMZN.WEBRip.AAC2.0.x264.ia.mp4",
-      "duration": 1441,
-      "inPoint": 5,
-      "outPoint": 1441,
-      "category": "show"
-    },
-    {
-      "startTime": "09:52",
-      "name": "The Monkees",
-      "path": "Y:\\CLASSIC TV-2\\The-Monkees-Complete\\SEASON 05\\The Monkees 209 The Card Carrying Red Shoes.mp4",
-      "duration": 1502,
-      "inPoint": 0,
-      "outPoint": 1502,
-      "category": "movie"
-    },
-    {
-      "startTime": "10:17",
+      "startTime": "03:39",
       "name": "VoteScottBlack",
       "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
       "duration": 30,
@@ -298,48 +100,354 @@
       "category": ""
     },
     {
-      "startTime": "10:18",
-      "name": "Get Smart",
-      "path": "Y:\\CLASSIC TV-2\\Get Smart\\SEASON 02\\Get Smart S02E01 (Anatomy of a Lover).ia.mp4",
-      "duration": 1523,
+      "startTime": "03:40",
+      "name": "AshWaterProducts.com",
+      "path": "Y:\\CLIPS-FILLERS\\AshWater1.mp4",
+      "duration": 25,
       "inPoint": 0,
-      "outPoint": 1523,
-      "category": "movie"
+      "outPoint": 25,
+      "category": "commercial"
     },
     {
-      "startTime": "10:43",
-      "name": "Bewitched",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 06\\Bewitched S06E01 Samantha and the Beanstalk.mp4",
-      "duration": 1527,
+      "startTime": "03:40",
+      "name": "Sanford & Son Season",
+      "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 05\\D2\\Sanford & Son - Season 5- Disc 1-B1_t03.mkv",
+      "duration": 1488,
       "inPoint": 0,
-      "outPoint": 1527,
+      "outPoint": 1488,
       "category": "show"
     },
     {
-      "startTime": "11:08",
-      "name": "Bewitched ",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 06\\Bewitched S06E02 Samantha's Yoo-Hoo Maid.mp4",
-      "duration": 1526,
+      "startTime": "04:05",
+      "name": "The Jeffersons ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 8 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S08E19 Guess Who's Not Coming to Dinner.mkv",
+      "duration": 1803,
       "inPoint": 0,
-      "outPoint": 1526,
+      "outPoint": 1803,
       "category": "show"
     },
     {
-      "startTime": "11:33",
-      "name": "Charlie's Angels ",
-      "path": "Y:\\CLASSIC TV-2\\Charlies Angeles\\SEASON 04\\Charlie's Angels S04e25 One Love...Two Angels (1).mkv",
-      "duration": 2968,
+      "startTime": "04:35",
+      "name": "TOM JERRY",
+      "path": "X:\\KIDS WORLD 1\\Tom-Jerry-Magical-Misadventure\\TOM_JERRY_MAGICAL_MISADVENTURE5.mp4",
+      "duration": 399,
       "inPoint": 0,
-      "outPoint": 2968,
+      "outPoint": 399,
+      "category": "show"
+    },
+    {
+      "startTime": "04:42",
+      "name": "TOM JERRY",
+      "path": "X:\\KIDS WORLD 1\\Tom-Jerry-Magical-Misadventure\\TOM_JERRY_MAGICAL_MISADVENTURE6.mp4",
+      "duration": 366,
+      "inPoint": 0,
+      "outPoint": 366,
+      "category": "show"
+    },
+    {
+      "startTime": "04:48",
+      "name": "Epic",
+      "path": "Y:\\MOVIES\\Epic\\Epic.ia.mp4",
+      "duration": 6149,
+      "inPoint": 0,
+      "outPoint": 6149,
       "category": "movie"
     },
     {
-      "startTime": "12:22",
-      "name": "Leave it to beaver",
-      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 2\\S02E33 - Dance Contest.mp4",
-      "duration": 1558,
+      "startTime": "06:30",
+      "name": "The Lucy Show",
+      "path": "Y:\\AWESOME TV SHOWS-2\\Here's Lucy (The Complete Series) [1968 - 1974]\\Season 6\\S06E09 - Lucy and Joan Rivers Do Jury Duty.mp4",
+      "duration": 1552,
       "inPoint": 0,
-      "outPoint": 1558,
+      "outPoint": 1552,
+      "category": "show"
+    },
+    {
+      "startTime": "06:56",
+      "name": "NOVA Wonders ",
+      "path": "X:\\_SORT-MOVIES\\PBS.NOVA.Wonders.Series.1.Part.3.Are.We.Alone.720p.HDTV.x264.AAC.MVGroup.org.mp4",
+      "duration": 3172,
+      "inPoint": 0,
+      "outPoint": 3172,
+      "category": "show"
+    },
+    {
+      "startTime": "07:49",
+      "name": "The X Files",
+      "path": "X:\\TV SHOWS 2\\THE X FILES\\SEASON-01\\The X-Files, Season 1 Disc 2_t00.mkv",
+      "duration": 2745,
+      "inPoint": 0,
+      "outPoint": 2745,
+      "category": "show"
+    },
+    {
+      "startTime": "08:35",
+      "name": "Friends",
+      "path": "Y:\\AWESOME TV SHOWS-2\\FRIENDS\\Season 1\\Friends (1994) - S01E05 - The One With The East German Laundry Detergent (1080p BluRay x265 Silence).mkv",
+      "duration": 1366,
+      "inPoint": 0,
+      "outPoint": 1366,
+      "category": "show"
+    },
+    {
+      "startTime": "08:58",
+      "name": "VoteScottBlack.com",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "promo"
+    },
+    {
+      "startTime": "08:59",
+      "name": "That 70s Show ",
+      "path": "X:\\TV SHOWS 2\\THAT 70s SHOW\\SEASON-01\\That _70s Show (1998) - S01E10 - Sunday, Bloody Sunday (1080p BluRay x265 FreetheFish).mkv",
+      "duration": 1349,
+      "inPoint": 0,
+      "outPoint": 1349,
+      "category": "show"
+    },
+    {
+      "startTime": "09:21",
+      "name": "FLMTV",
+      "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28,
+      "inPoint": 0,
+      "outPoint": 28,
+      "category": ""
+    },
+    {
+      "startTime": "09:21",
+      "name": "I Robot",
+      "path": "Y:\\MORE TO SORT\\I Robot.ia.mp4",
+      "duration": 6883,
+      "inPoint": 0,
+      "outPoint": 6883,
+      "category": "movie"
+    },
+    {
+      "startTime": "11:16",
+      "name": "I Am Legend ",
+      "path": "Y:\\MORE TO SORT\\I Am Legend (Alternate Ending).ia (1).mp4",
+      "duration": 6234,
+      "inPoint": 0,
+      "outPoint": 6234,
+      "category": "movie"
+    },
+    {
+      "startTime": "13:00",
+      "name": "Inception",
+      "path": "Y:\\MORE TO SORT\\Inception.ia.mp4",
+      "duration": 8888,
+      "inPoint": 0,
+      "outPoint": 8888,
+      "category": "movie"
+    },
+    {
+      "startTime": "15:28",
+      "name": "Frankenstein ",
+      "path": "Y:\\MOVIES\\Frankenstein.2025\\Frankenstein.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv",
+      "duration": 9145,
+      "inPoint": 0,
+      "outPoint": 9145,
+      "category": "movie"
+    },
+    {
+      "startTime": "18:00",
+      "name": "VoteScottBlack",
+      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": ""
+    },
+    {
+      "startTime": "18:01",
+      "name": "The Twilight Zone ",
+      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-03\\The Twilight Zone (1959) - S03E11 - Still Valley (1080p BluRay x265 ImE).mkv",
+      "duration": 1543,
+      "inPoint": 0,
+      "outPoint": 1543,
+      "category": "show"
+    },
+    {
+      "startTime": "18:27",
+      "name": "The Twilight Zone ",
+      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-03\\The Twilight Zone (1959) - S03E12 - The Jungle (1080p BluRay x265 ImE).mkv",
+      "duration": 1542,
+      "inPoint": 0,
+      "outPoint": 1542,
+      "category": "show"
+    },
+    {
+      "startTime": "18:53",
+      "name": "The Twilight Zone ",
+      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-03\\The Twilight Zone (1959) - S03E13 - Once Upon a Time (1080p BluRay x265 ImE).mkv",
+      "duration": 1542,
+      "inPoint": 0,
+      "outPoint": 1542,
+      "category": "show"
+    },
+    {
+      "startTime": "19:19",
+      "name": "The Twilight Zone ",
+      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-03\\The Twilight Zone (1959) - S03E14 - Five Characters in Search of an Exit (1080p BluRay x265 ImE).mkv",
+      "duration": 1545,
+      "inPoint": 0,
+      "outPoint": 1545,
+      "category": "show"
+    },
+    {
+      "startTime": "19:45",
+      "name": "FLMTV",
+      "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
+      "duration": 28,
+      "inPoint": 0,
+      "outPoint": 28,
+      "category": "commercial"
+    },
+    {
+      "startTime": "19:45",
+      "name": "Sesame Street ",
+      "path": "Y:\\KIDS WORLD-2\\sesame-street-s-40-e-01-frankly-its-becoming-a-habitat\\SEASON 04\\Sesame Street_S40E13_Abby Has the Sparkle Speckle Fairy Freckles.ia.mp4",
+      "duration": 3363,
+      "inPoint": 0,
+      "outPoint": 3363,
+      "category": "show"
+    },
+    {
+      "startTime": "20:41",
+      "name": "Super Why! ",
+      "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 06\\Super Why!_S06E09_Jasper_s Cowboy Wish.ia.mp4",
+      "duration": 1547,
+      "inPoint": 0,
+      "outPoint": 1547,
+      "category": "show"
+    },
+    {
+      "startTime": "21:07",
+      "name": "Ready Jet Go! ",
+      "path": "Y:\\KIDS WORLD-2\\RJGTVSeries\\SEASON 02\\Ready Jet Go! - S02E47-48 - Mars Rock for Mom + Sean Has a Cold WEBDL-1080p.mp4",
+      "duration": 1501,
+      "inPoint": 0,
+      "outPoint": 1501,
+      "category": "show"
+    },
+    {
+      "startTime": "21:32",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\12 A Noun Is A Person Place Or Thing.mkv",
+      "duration": 185,
+      "inPoint": 0,
+      "outPoint": 185,
+      "category": "music"
+    },
+    {
+      "startTime": "21:35",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\13 Verb Thats Whats Happening.mkv",
+      "duration": 194,
+      "inPoint": 0,
+      "outPoint": 194,
+      "category": "music"
+    },
+    {
+      "startTime": "21:38",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\14 Conjunction Junction.mkv",
+      "duration": 186,
+      "inPoint": 0,
+      "outPoint": 186,
+      "category": "music"
+    },
+    {
+      "startTime": "21:41",
+      "name": "Schoolhouse Rock",
+      "path": "X:\\KIDS WORLD 1\\schoolhouse-rock-30th\\15 Interjections.mkv",
+      "duration": 192,
+      "inPoint": 0,
+      "outPoint": 192,
+      "category": "music"
+    },
+    {
+      "startTime": "21:44",
+      "name": "Curious George",
+      "path": "X:\\KIDS WORLD 1\\curiousgeorge-season-12-15\\S04 E06-Guest Monkey; Charkie Goes to School.mp4",
+      "duration": 1422,
+      "inPoint": 0,
+      "outPoint": 1422,
+      "category": "show"
+    },
+    {
+      "startTime": "22:08",
+      "name": "Molly of Denali ",
+      "path": "Y:\\KIDS WORLD-2\\Molly of Denali\\SEASON 02\\Molly of Denali_S01E03_Berry Itchy Day_Herring Eggs or Bust.ia.mp4",
+      "duration": 1531,
+      "inPoint": 0,
+      "outPoint": 1531,
+      "category": "show"
+    },
+    {
+      "startTime": "22:34",
+      "name": "Dinosaur Train Season",
+      "path": "Y:\\KIDS WORLD-2\\dinosaur-train-season-1-s-01-e-01-elmer-elasmosaurus\\SEASON 01\\Dinosaur Train Season 1_S01E08_The Old Spinosaurus and the Sea.ia.mp4",
+      "duration": 781,
+      "inPoint": 0,
+      "outPoint": 781,
+      "category": "show"
+    },
+    {
+      "startTime": "22:47",
+      "name": "Three Stooges",
+      "path": "X:\\TV Clssics 2\\Three Stooges\\70 - Back From the Front.mkv",
+      "duration": 1078,
+      "inPoint": 0,
+      "outPoint": 1078,
+      "category": "show"
+    },
+    {
+      "startTime": "23:05",
+      "name": "Mister Ed ",
+      "path": "X:\\TV Clssics 2\\mister-ed-s-01\\SEASON 01\\Mister Ed S01E12 Ed's Mother.mkv",
+      "duration": 1535,
+      "inPoint": 0,
+      "outPoint": 1535,
+      "category": "show"
+    },
+    {
+      "startTime": "23:31",
+      "name": "The Lucy Show",
+      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 2\\S02E06 - Lucy Goes Duck Hunting.ia.mp4",
+      "duration": 1543,
+      "inPoint": 0,
+      "outPoint": 1543,
+      "category": "show"
+    },
+    {
+      "startTime": "23:57",
+      "name": "Leave it to Beaver",
+      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 2\\S02E37 - Beaver the Athlete.mp4",
+      "duration": 1557,
+      "inPoint": 0,
+      "outPoint": 1557,
+      "category": "show"
+    },
+    {
+      "startTime": "00:23",
+      "name": "Andy Griffith ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D3_t04.mkv",
+      "duration": 1532,
+      "inPoint": 0,
+      "outPoint": 1532,
+      "category": "show"
+    },
+    {
+      "startTime": "00:49",
+      "name": "Andy Griffith ",
+      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D3_t05.mkv",
+      "duration": 1469,
+      "inPoint": 0,
+      "outPoint": 1469,
       "category": "show"
     }
   ]

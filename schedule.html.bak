@@ -324,13 +324,18 @@ function updateProgress() {
 }
 
 // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
-// Updated: 2026-07-14 10:35
+// Updated: 2026-07-22 09:21
 const TODAY_SCHEDULE = [
-  {t:"09:17",n:"Up",d:5798,cat:"movie",date:"2026-07-14"},
-  {t:"10:54",n:"Sesame Street",d:1555,cat:"",date:"2026-07-14"},
-  {t:"11:20",n:"Sesame Street",d:1555,cat:"",date:"2026-07-14"},
-  {t:"11:46",n:"Super Why!",d:392,cat:"",date:"2026-07-14"},
-  {t:"11:53",n:"Dinosaur Train",d:780,cat:"",date:"2026-07-14"}
+  {t:"08:49",n:"Super Why! ",d:1620,cat:"",date:"2026-06-21"},
+  {t:"09:16",n:"WordWorld ",d:1627,cat:"",date:"2026-06-21"},
+  {t:"09:43",n:"Ready Jet Go! ",d:1501,cat:"",date:"2026-06-21"},
+  {t:"10:08",n:"Nature Cat ",d:1441,cat:"",date:"2026-06-21"},
+  {t:"10:32",n:"Molly of Denali ",d:1533,cat:"",date:"2026-06-21"},
+  {t:"10:58",n:"LazyTown ",d:1419,cat:"",date:"2026-06-21"},
+  {t:"11:22",n:"VoteScottBlack com",d:30,cat:"",date:"2026-06-21"},
+  {t:"11:23",n:"FLMTV.COM",d:15,cat:"ad",date:"2026-06-21"},
+  {t:"11:23",n:"Abbott and Costello i",d:1532,cat:"",date:"2026-06-21"},
+  {t:"11:49",n:"The Monkees ",d:1502,cat:"",date:"2026-06-21"}
 ];
 
 // ── LOAD JSON & INIT ─────────────────────────────────────────────
