@@ -2821,15 +2821,6 @@
     ────────────────────────────────────────────────────────────────────── */
     const MRS_UNIVERSE_ITEM_ID = '76fa04b430a2f5aa93084d685ec614e7';
     const MRS_UNIVERSE_TITLE = 'Mrs. Universe Philippines 2026 — Grand Coronation Night';
-
-    /* ── WE WANT THE FUNK (OZONE) EVENT VIDEO ────────────────────────────
-       Same pattern as the Mrs. Universe item above — this is the Jellyfin
-       library item for the commercial, already uploaded under TV Shows
-       in Zaina Zone.
-    ────────────────────────────────────────────────────────────────────── */
-    const OZONE_FUNK_ITEM_ID = 'a7f10c7072b5f4f93515057cd2c60bc3';
-    const OZONE_FUNK_TITLE = 'We Want The Funk — OZONE Live at Fox Theatre Pomona';
-    const OZONE_FUNK_TICKETS_URL = 'https://NoMoreLockedDoors.ticketspice.com/we-want-the-funk';
     </script>
 
     <section class="live-showcase-section">
@@ -2867,42 +2858,20 @@
                 </div>
             </div>
 
-            <!-- STACKED EVENT CARDS: Ozone Funk Band (top) + Mrs. Universe (bottom) -->
-            <div class="event-cards-col">
-
-                <!-- OZONE FUNK BAND / WE WANT THE FUNK EVENT CARD -->
-                <div onclick="openOzoneFunkCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
-                    <div class="mu-event-badge" style="background:rgba(234,88,12,0.92);"><i class="fas fa-calendar-days" style="font-size:0.65rem;"></i> UPCOMING</div>
-                    <img src="assets/images/we-want-the-funk-flyer.jpg"
-                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:0.5;pointer-events:none;z-index:1;"
-                         alt="We Want The Funk — OZONE at Fox Theatre Pomona" onerror="this.style.display='none'">
-                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 30%,rgba(5,10,30,0.35) 100%);z-index:2;"></div>
-                    <div style="position:relative;z-index:5;padding:12px 14px;width:100%;">
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:2px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">WE WANT THE FUNK</div>
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.9rem;letter-spacing:1.5px;color:#fff;line-height:1;margin-top:2px;">OZONE · LIVE AT FOX THEATRE POMONA</div>
-                        <div style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">📅 SAT, SEPT 12 · POMONA, CA · DOORS 5PM</div>
-                        <div style="margin-top:9px;display:flex;align-items:center;gap:8px;">
-                            <span style="display:inline-flex;align-items:center;gap:6px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH AD</span>
-                            <a href="https://NoMoreLockedDoors.ticketspice.com/we-want-the-funk" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);color:#fff;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);text-decoration:none;"><i class="fas fa-ticket"></i> GET TICKETS</a>
-                        </div>
-                    </div>
+            <!-- MRS. UNIVERSE EVENT CARD -->
+            <div onclick="openMrsUniverseCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
+                <div class="mu-event-badge"><div class="live-dot"></div> LIVE EVENT</div>
+                <img src="assets/images/Miss Universe Banner.jpeg"
+                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.55;pointer-events:none;z-index:1;"
+                     alt="Mrs. Universe Philippines" onerror="this.style.display='none'">
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 25%,rgba(5,10,30,0.15) 100%);z-index:2;"></div>
+                <div style="position:relative;z-index:5;padding:14px;width:100%;">
+                    <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.4rem;letter-spacing:3px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">MRS. UNIVERSE</div>
+                    <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1rem;letter-spacing:2px;color:#fff;line-height:1;margin-top:2px;">PHILIPPINES 2026</div>
+                    <div style="font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">🇵🇭 GRAND CORONATION NIGHT</div>
+                    <div style="font-size:9px;letter-spacing:1px;color:#22c55e;text-transform:uppercase;margin-top:4px;">⏰ PRE-RECORDED · FILMED IN THE PHILIIPPINES. </div>
+                    <div style="margin-top:12px;display:inline-flex;align-items:center;gap:7px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:12px;letter-spacing:2px;padding:6px 16px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH event</div>
                 </div>
-
-                <!-- MRS. UNIVERSE EVENT CARD -->
-                <div onclick="openMrsUniverseCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
-                    <div class="mu-event-badge"><div class="live-dot"></div> LIVE EVENT</div>
-                    <img src="assets/images/Miss Universe Banner.jpeg"
-                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.55;pointer-events:none;z-index:1;"
-                         alt="Mrs. Universe Philippines" onerror="this.style.display='none'">
-                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 25%,rgba(5,10,30,0.15) 100%);z-index:2;"></div>
-                    <div style="position:relative;z-index:5;padding:12px 14px;width:100%;">
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:2px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">MRS. UNIVERSE</div>
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.9rem;letter-spacing:1.5px;color:#fff;line-height:1;margin-top:2px;">PHILIPPINES 2026</div>
-                        <div style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">🇵🇭 GRAND CORONATION NIGHT</div>
-                        <div style="margin-top:9px;display:inline-flex;align-items:center;gap:6px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH EVENT</div>
-                    </div>
-                </div>
-
             </div>
 
             <!-- AD PANEL + TV STATIONS CARD -->
@@ -2997,20 +2966,12 @@
         margin: 0 !important;
         padding: 0 !important;
     }
-    /* ── STACKED EVENT CARDS COLUMN (Ozone Funk Band + Mrs. Universe) ── */
-    .event-cards-col {
+    /* ── MISS UNIVERSE CARD ─────────────────────────────────────────── */
+    .mu-event-card {
         flex: 0 0 460px;
         width: 460px;
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-    }
-    /* ── EVENT CARD (shared by Ozone Funk Band + Mrs. Universe) ───────── */
-    .mu-event-card {
-        flex: 0 0 auto;
-        width: 100%;
-        aspect-ratio: 460 / 168;
-        min-height: 0;
+        aspect-ratio: 16/9;
+        height: auto;
         border-radius: 14px;
         overflow: hidden;
         position: relative;
@@ -3042,7 +3003,6 @@
         filter: drop-shadow(0 2px 6px rgba(255,215,0,0.7));
     }
     .is-firestick .mu-event-card { display: none !important; }
-    .is-firestick .event-cards-col { display: none !important; }
     /* ── AD PANEL ───────────────────────────────────────────────────── */
     .flm-ad-panel {
         flex: 1;
@@ -5043,14 +5003,6 @@
                return;
            }
            playJellyfinItem(MRS_UNIVERSE_ITEM_ID);
-       }
-
-       function openOzoneFunkCard() {
-           if (!OZONE_FUNK_ITEM_ID) {
-               alert("🎶 We Want The Funk is coming soon!\n\nWe're waiting for the video file to be uploaded. Check back shortly!");
-               return;
-           }
-           playJellyfinItem(OZONE_FUNK_ITEM_ID);
        }
 
        async function playJellyfinItem(itemId, itemType) {
