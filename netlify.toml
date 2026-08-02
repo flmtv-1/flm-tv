@@ -1,7 +1,2 @@
-[build]
-  publish = "."
-
-[[redirects]]
-  from = "/live/*"
-  to = "http://flmtv26.duckdns.org:8080/:splat"
-  status = 200
+[functions]
+  directory = "netlify/functions"
