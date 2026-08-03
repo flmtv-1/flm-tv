@@ -2742,10 +2742,6 @@
                     <i class="fas fa-bell"></i>
                 </button>
                 
-                <button class="btn-icon-text" id="signInBtn" title="Sign Up / Membership">
-                    <i class="fas fa-user"></i> Sign Up / Membership
-                </button>
-                
                 <button class="btn-icon" id="parentLockBtn" title="Parental Controls">
                     <i class="fas fa-lock"></i>
                 </button>
@@ -3311,13 +3307,8 @@
     }
 
     // Close on backdrop click
-    document.addEventListener('DOMContentLoaded', function() {
-        const flmAdModalEl = document.getElementById('flmAdModal');
-        if (flmAdModalEl) {
-            flmAdModalEl.addEventListener('click', function(e) {
-                if (e.target === this) closeAdModal();
-            });
-        }
+    document.getElementById('flmAdModal').addEventListener('click', function(e) {
+        if (e.target === this) closeAdModal();
     });
     </script>
 
@@ -3717,44 +3708,41 @@
     <!--  SIGN IN MODAL                                                  -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
+    <!-- Sign In modal hidden - admin access only
     <div class="modal-overlay" id="signInModal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h3 class="modal-title" id="signInModalTitle" style="color: white;">Log In</h3>
+                <h3 class="modal-title" style="color: white;">Log In</h3>
                 <button class="modal-close" onclick="closeModal('signInModal')" style="background: none; border: none; color: white; font-size: 2rem; cursor: pointer; line-height: 1;">
                     ✕
                 </button>
             </div>
             <div class="modal-body" style="padding: 2rem;">
                 <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <input type="email" id="signInEmail" class="form-input" placeholder="Email Address" autocomplete="username" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: white; color: #333; font-size: 1rem; box-sizing: border-box;">
+                    <input type="email" class="form-input" placeholder="Email Address" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: white; color: #333; font-size: 1rem;">
                 </div>
                 <div class="form-group" style="margin-bottom: 1rem; position: relative;">
-                    <input type="password" id="signInPassword" class="form-input" placeholder="Password" autocomplete="current-password" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: #3a3a3a; color: white; font-size: 1rem; box-sizing: border-box;">
+                    <input type="password" id="signInPassword" class="form-input" placeholder="Password" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: #3a3a3a; color: white; font-size: 1rem;">
                     <button onclick="togglePassword('signInPassword')" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #999; cursor: pointer; font-size: 1.2rem;">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <div class="form-group" id="signInConfirmGroup" style="display: none; margin-bottom: 1rem;">
-                    <input type="password" id="signInConfirmPassword" class="form-input" placeholder="Confirm Password" autocomplete="new-password" style="width: 100%; padding: 1rem; border-radius: 0.25rem; border: 1px solid #444; background: #3a3a3a; color: white; font-size: 1rem; box-sizing: border-box;">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <a href="#" style="color: #999; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
                 </div>
-                <div id="signInForgotRow" style="text-align: center; margin-bottom: 1.5rem;">
-                    <a href="#" id="signInForgotLink" style="color: #999; text-decoration: none; font-size: 0.9rem;">Forgot Password?</a>
-                </div>
-                <button id="signInSubmitBtn" class="btn-modal btn-modal-primary" style="width: 100%; padding: 1rem; background: var(--secondary); color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
+                <button class="btn-modal btn-modal-primary" style="width: 100%; padding: 1rem; background: var(--secondary); color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
                     Log In
                 </button>
-                <div id="signInStatus" style="display: none; margin-bottom: 1rem; padding: 0.85rem; border-radius: 0.25rem; text-align: center; font-size: 0.9rem;"></div>
                 <div style="text-align: center; margin-bottom: 1.5rem; color: #999;">
-                    <span id="signInToggleLabel">Not a member?</span> <a href="#" id="signInToggleLink" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Sign Up</a>
+                    Not a member? <a href="#" style="color: var(--secondary); text-decoration: none; font-weight: 600;">Sign Up</a>
                 </div>
-                <button id="signInPaidBtn" style="width: 100%; padding: 1rem; background: #666; color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                    👑 Try Paid Membership <span style="font-weight: 400; font-size: 0.8rem; opacity: 0.8;">(Coming Soon)</span>
+                <button style="width: 100%; padding: 1rem; background: #666; color: white; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    👑 Try Paid Membership
                 </button>
             </div>
         </div>
     </div>
-    <!-- ═══════════════════════════════════════════════════════════════ -->
+    -->    <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  PARENT LOCK MODAL                                              -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     
@@ -4682,149 +4670,6 @@
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
-
-        // ═══════════════════════════════════════════════════════════════
-        //  REAL VIEWER SIGN IN / SIGN UP (individual accounts, own playlists)
-        // ═══════════════════════════════════════════════════════════════
-        let signInMode = 'login'; // 'login' | 'signup'
-
-        function renderSignInModal() {
-            const title = document.getElementById('signInModalTitle');
-            const submitBtn = document.getElementById('signInSubmitBtn');
-            const confirmGroup = document.getElementById('signInConfirmGroup');
-            const forgotRow = document.getElementById('signInForgotRow');
-            const toggleLabel = document.getElementById('signInToggleLabel');
-            const toggleLink = document.getElementById('signInToggleLink');
-            const status = document.getElementById('signInStatus');
-            status.style.display = 'none';
-
-            if (signInMode === 'login') {
-                title.textContent = 'Log In';
-                submitBtn.textContent = 'Log In';
-                confirmGroup.style.display = 'none';
-                forgotRow.style.display = 'block';
-                toggleLabel.textContent = 'Not a member?';
-                toggleLink.textContent = 'Sign Up';
-            } else {
-                title.textContent = 'Sign Up';
-                submitBtn.textContent = 'Create Account';
-                confirmGroup.style.display = 'block';
-                forgotRow.style.display = 'none';
-                toggleLabel.textContent = 'Already a member?';
-                toggleLink.textContent = 'Log In';
-            }
-        }
-
-        function showSignInStatus(msg, kind) {
-            const status = document.getElementById('signInStatus');
-            status.style.display = 'block';
-            status.textContent = msg;
-            const colors = {
-                loading: ['rgba(255,215,0,0.1)', '#ffd700'],
-                success: ['rgba(34,197,94,0.1)', '#22c55e'],
-                error:   ['rgba(239,68,68,0.1)', '#ef4444']
-            };
-            const [bg, fg] = colors[kind] || colors.loading;
-            status.style.background = bg;
-            status.style.color = fg;
-        }
-
-        document.getElementById('signInToggleLink').onclick = (e) => {
-            e.preventDefault();
-            signInMode = signInMode === 'login' ? 'signup' : 'login';
-            renderSignInModal();
-        };
-
-        document.getElementById('signInPaidBtn').onclick = () => {
-            showSignInStatus('Paid membership is coming soon — stay tuned!', 'loading');
-        };
-
-        document.getElementById('signInForgotLink').onclick = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signInEmail').value.trim();
-            if (!email) { showSignInStatus('Enter your email above first, then click Forgot Password.', 'error'); return; }
-            showSignInStatus('Sending reset link...', 'loading');
-            try {
-                const res = await fetch('/.netlify/functions/forgot-password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                const data = await res.json();
-                showSignInStatus(data.message || 'If that email has an account, a reset link has been sent.', 'success');
-            } catch {
-                showSignInStatus('Something went wrong. Please try again.', 'error');
-            }
-        };
-
-        async function viewerAuthenticate(server, email, password) {
-            const res = await fetch(`${server}/Users/AuthenticateByName`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-web-${Date.now()}", Version="1.0.0"`
-                },
-                body: JSON.stringify({ Username: email.toLowerCase(), Pw: password })
-            });
-            if (!res.ok) throw new Error('Incorrect email or password.');
-            return res.json();
-        }
-
-        document.getElementById('signInSubmitBtn').onclick = async () => {
-            const email = document.getElementById('signInEmail').value.trim();
-            const password = document.getElementById('signInPassword').value;
-            const submitBtn = document.getElementById('signInSubmitBtn');
-
-            if (!email || !password) { showSignInStatus('Please fill in all fields.', 'error'); return; }
-
-            if (signInMode === 'signup') {
-                const confirm = document.getElementById('signInConfirmPassword').value;
-                if (password !== confirm) { showSignInStatus('Passwords do not match.', 'error'); return; }
-                if (password.length < 6) { showSignInStatus('Password must be at least 6 characters.', 'error'); return; }
-            }
-
-            submitBtn.disabled = true;
-            showSignInStatus(signInMode === 'signup' ? 'Creating your account...' : 'Signing in...', 'loading');
-
-            try {
-                if (signInMode === 'signup') {
-                    const signupRes = await fetch('/.netlify/functions/jellyfin-signup', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, password })
-                    });
-                    const signupData = await signupRes.json();
-                    if (!signupRes.ok) throw new Error(signupData.error || 'Could not create account.');
-                }
-
-                const server = (typeof JELLYFIN_CONFIG !== 'undefined' && JELLYFIN_CONFIG.SERVER) || 'https://flmtv26.duckdns.org:8096';
-                const authData = await viewerAuthenticate(server, email, password);
-
-                const creds = {
-                    Servers: [{
-                        AccessToken: authData.AccessToken,
-                        UserId: authData.User.Id,
-                        Id: authData.ServerId || 'db6bb6388c8c4c70825698639853ede6',
-                        ManualAddress: server,
-                        LastConnectionMode: 2,
-                        Name: 'FLM TV Server',
-                        DateLastAccessed: Date.now()
-                    }]
-                };
-                localStorage.setItem('jellyfin_credentials', JSON.stringify(creds));
-                if (typeof JELLYFIN_CONFIG !== 'undefined') {
-                    JELLYFIN_CONFIG.ACCESS_TOKEN = authData.AccessToken;
-                    JELLYFIN_CONFIG.USER_ID = authData.User.Id;
-                }
-
-                showSignInStatus('Success! You\'re signed in.', 'success');
-                setTimeout(() => { closeModal('signInModal'); location.reload(); }, 900);
-
-            } catch (err) {
-                showSignInStatus(err.message, 'error');
-                submitBtn.disabled = false;
-            }
-        };
         
         function openPanel(panelId) {
             console.log('🔥 Opening panel:', panelId);
@@ -4912,25 +4757,6 @@
         
         async function autoAuthenticatePublic() {
             try {
-                // If a real signed-in viewer session already exists, leave it alone —
-                // don't overwrite it with the shared free-viewing account.
-                const existingCreds = localStorage.getItem('jellyfin_credentials');
-                if (existingCreds) {
-                    try {
-                        const parsed = JSON.parse(existingCreds);
-                        const server = parsed.Servers && parsed.Servers[0];
-                        if (server && server.AccessToken) {
-                            const hoursSinceAccess = (Date.now() - server.DateLastAccessed) / (1000 * 60 * 60);
-                            if (hoursSinceAccess < 24) {
-                                console.log('✅ Real viewer session already active, skipping shared auto-auth');
-                                JELLYFIN_CONFIG.ACCESS_TOKEN = server.AccessToken;
-                                JELLYFIN_CONFIG.USER_ID = server.UserId;
-                                return server.AccessToken;
-                            }
-                        }
-                    } catch (e) { /* fall through to shared auth below */ }
-                }
-
                 console.log('🔐 Auto-authenticating as Public user...');
                 
                 const response = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
@@ -4940,7 +4766,7 @@
                         'X-Emby-Authorization': `MediaBrowser Client="FLM Television Network", Device="Web Browser", DeviceId="flmtv-web", Version="1.0.0"`
                     },
                     body: JSON.stringify({
-                        Username: 'ENTER FLM',
+                        Username: 'Enter to Sign in',
                         Pw: ''
                     })
                 });
@@ -5011,7 +4837,7 @@
                         'Content-Type': 'application/json',
                         'X-Emby-Authorization': 'MediaBrowser Client="FLM TV", Device="Web", DeviceId="flmtv-home", Version="1.0.0"'
                     },
-                    body: JSON.stringify({ Username: 'ENTER FLM', Pw: '' })
+                    body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
                 });
 
                 if (resp.ok) {
@@ -5083,7 +4909,8 @@
             
             
             // Attach button click handlers
-            document.getElementById('signInBtn').onclick = () => { signInMode = 'signup'; renderSignInModal(); openModal('signInModal'); };
+            // Sign In button hidden - admin access only
+            // document.getElementById('signInBtn').onclick = () => openModal('signInModal');
             document.getElementById('parentLockBtn').onclick = () => window.location.href = 'parental-controls.html';
             
             // Load content
@@ -5252,45 +5079,25 @@
         return;
     }
 
-    // Use the real signed-in viewer's token if one exists; otherwise fall
-    // back to the shared free-viewing account so Jellyfin never shows a login page.
+    // Get fresh Public user token so Jellyfin never shows login page
     let token = JELLYFIN_CONFIG.ACCESS_TOKEN || '';
-    let usedRealSession = false;
     try {
-        const existingCreds = localStorage.getItem('jellyfin_credentials');
-        if (existingCreds) {
-            const parsed = JSON.parse(existingCreds);
-            const server = parsed.Servers && parsed.Servers[0];
-            if (server && server.AccessToken) {
-                const hoursSinceAccess = (Date.now() - server.DateLastAccessed) / (1000 * 60 * 60);
-                if (hoursSinceAccess < 24) {
-                    token = server.AccessToken;
-                    JELLYFIN_CONFIG.ACCESS_TOKEN = token;
-                    usedRealSession = true;
-                }
-            }
+        const authResp = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID || 'flmtv-web'}", Version="1.0.0"`
+            },
+            body: JSON.stringify({ Username: 'Enter to Sign in', Pw: '' })
+        });
+        if (authResp.ok) {
+            const authData = await authResp.json();
+            token = authData.AccessToken;
+            JELLYFIN_CONFIG.ACCESS_TOKEN = token;
+            console.log('✅ Got fresh Public token');
         }
-    } catch (e) { /* fall through to shared auth below */ }
-
-    if (!usedRealSession) {
-        try {
-            const authResp = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID || 'flmtv-web'}", Version="1.0.0"`
-                },
-                body: JSON.stringify({ Username: 'ENTER FLM', Pw: '' })
-            });
-            if (authResp.ok) {
-                const authData = await authResp.json();
-                token = authData.AccessToken;
-                JELLYFIN_CONFIG.ACCESS_TOKEN = token;
-                console.log('✅ Got fresh Public token');
-            }
-        } catch(e) {
-            token = JELLYFIN_CONFIG.API_KEY;
-        }
+    } catch(e) {
+        token = JELLYFIN_CONFIG.API_KEY;
     }
 
     if (itemType === 'Series') {
@@ -5327,43 +5134,24 @@
                 return;
             }
             
-            // Use the real signed-in viewer's token if one exists; otherwise
-            // authenticate as the shared free-viewing account.
+            // First, authenticate as Public user if not already authenticated
             try {
-                let accessToken = null;
-                try {
-                    const existingCreds = localStorage.getItem('jellyfin_credentials');
-                    if (existingCreds) {
-                        const parsed = JSON.parse(existingCreds);
-                        const server = parsed.Servers && parsed.Servers[0];
-                        if (server && server.AccessToken) {
-                            const hoursSinceAccess = (Date.now() - server.DateLastAccessed) / (1000 * 60 * 60);
-                            if (hoursSinceAccess < 24) accessToken = server.AccessToken;
-                        }
-                    }
-                } catch (e) { /* fall through to shared auth below */ }
-
-                let authResponse = { ok: !!accessToken };
-                if (!accessToken) {
-                    authResponse = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID}", Version="1.0.0"`
-                        },
-                        body: JSON.stringify({
-                            Username: 'ENTER FLM',
-                            Pw: ''
-                        })
-                    });
-                    if (authResponse.ok) {
-                        const authData = await authResponse.json();
-                        accessToken = authData.AccessToken;
-                    }
-                }
+                const authResponse = await fetch(`${JELLYFIN_CONFIG.SERVER}/Users/AuthenticateByName`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Emby-Authorization': `MediaBrowser Client="FLM TV", Device="Web Browser", DeviceId="${JELLYFIN_CONFIG.DEVICE_ID}", Version="1.0.0"`
+                    },
+                    body: JSON.stringify({
+                        Username: 'Enter to Sign in',
+                        Pw: ''
+                    })
+                });
                 
-                if (authResponse.ok && accessToken) {
-                    console.log('✅ Authenticated for playback');
+                if (authResponse.ok) {
+                    const authData = await authResponse.json();
+                    const accessToken = authData.AccessToken;
+                    console.log('✅ Authenticated as Public user');
                     
                     // Build URL with access token for auto-login
                     const playerUrl = `${JELLYFIN_CONFIG.SERVER}/web/index.html#!/item?id=${movieId}&serverId=${JELLYFIN_CONFIG.SERVER_ID}&X-Emby-Token=${accessToken}`;
