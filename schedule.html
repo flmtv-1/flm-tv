@@ -34,6 +34,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .jump-bar{display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 32px;background:var(--dark2);border-top:1px solid rgba(201,168,76,0.1);border-bottom:1px solid rgba(201,168,76,0.1);}
 .jump-btn{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(0,230,118,0.4);color:var(--live-green);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;padding:8px 20px;border-radius:2px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
 .jump-btn:hover{background:rgba(0,230,118,0.1);}
+.jump-btn.active-ph{background:rgba(74,158,255,0.15);border-color:var(--ad-blue)!important;color:var(--ad-blue)!important;}
 .clock-display{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--text-dim);letter-spacing:2px;}
 .filter-bar{display:flex;gap:8px;padding:16px 32px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.04);overflow-x:auto;}
 .filter-bar::-webkit-scrollbar{display:none;}
@@ -114,6 +115,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <div class="jump-bar">
   <button class="jump-btn" onclick="jumpToNow()">⬤ Jump to Now</button>
+  <button class="jump-btn" id="phToggleBtn" onclick="togglePHTime()" style="border-color:rgba(74,158,255,0.4);color:var(--ad-blue);">🇵🇭 PH Time</button>
   <div class="clock-display" id="clockDisplay"></div>
 </div>
 
@@ -146,8 +148,22 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 let SCHEDULE = []; // populated after JSON fetch
 let _chain = null;
+let showPHTime = false;
 
-// Build a continuous chain from the first show's anchor date+time
+// Current UTC offset for Las Vegas (handles PDT/PST automatically); falls back to -7 (PDT)
+function getLVOffsetHours() {
+  try {
+    const fmt = new Intl.DateTimeFormat('en-US', {timeZone:'America/Los_Angeles', timeZoneName:'shortOffset'});
+    const part = fmt.formatToParts(new Date()).find(p => p.type === 'timeZoneName').value;
+    const m = part.match(/GMT([+-]\d+)/);
+    return m ? parseInt(m[1], 10) : -7;
+  } catch (e) { return -7; }
+}
+const PH_OFFSET = 8; // Philippines is always UTC+8, no DST
+
+// Build a continuous chain from the first show's anchor date+time.
+// Anchored as an absolute UTC instant representing Las Vegas time, so every
+// viewer worldwide sees the correct show marked LIVE regardless of their own device clock/timezone.
 function buildChain() {
   if (!SCHEDULE.length) return [];
   const chain = [];
@@ -155,8 +171,9 @@ function buildChain() {
   const anchorDate = first.date || new Date().toISOString().split('T')[0];
   const timeStr = first.startTime || first.t || '00:00';
   const [fh, fm] = timeStr.split(':').map(Number);
-  let cursor = new Date(anchorDate + 'T00:00:00');
-  cursor.setHours(fh, fm, 0, 0);
+  const [ay, am, ad] = anchorDate.split('-').map(Number);
+  const lvOffset = getLVOffsetHours();
+  let cursor = new Date(Date.UTC(ay, am - 1, ad, fh - lvOffset, fm, 0));
   for (let i = 0; i < SCHEDULE.length; i++) {
     const s = SCHEDULE[i];
     const start = new Date(cursor.getTime());
@@ -186,7 +203,9 @@ function getProgress(entry) {
 }
 
 function fmt12(date) {
-  let h = date.getHours(), m = date.getMinutes();
+  const offset = showPHTime ? PH_OFFSET : getLVOffsetHours();
+  const shifted = new Date(date.getTime() + offset * 3600000);
+  let h = shifted.getUTCHours(), m = shifted.getUTCMinutes();
   const ap = h >= 12 ? 'PM' : 'AM';
   h = h % 12 || 12;
   return `${h}:${String(m).padStart(2,'0')} ${ap}`;
@@ -284,6 +303,16 @@ function renderSchedule() {
   });
 }
 
+function togglePHTime() {
+  showPHTime = !showPHTime;
+  const btn = document.getElementById('phToggleBtn');
+  if (btn) {
+    btn.textContent = showPHTime ? '🇺🇸 Vegas Time' : '🇵🇭 PH Time';
+    btn.classList.toggle('active-ph', showPHTime);
+  }
+  renderSchedule();
+}
+
 function jumpToNow() {
   const el = document.getElementById('live-now-card');
   if (!el) return;
@@ -310,9 +339,11 @@ function filterSchedule(cat, btn) {
 
 function updateClock() {
   const d = new Date();
-  const h = d.getHours() % 12 || 12, m = String(d.getMinutes()).padStart(2,'0'), s = String(d.getSeconds()).padStart(2,'0');
+  const offset = showPHTime ? PH_OFFSET : getLVOffsetHours();
+  const shifted = new Date(d.getTime() + offset * 3600000);
+  const h = shifted.getUTCHours() % 12 || 12, m = String(shifted.getUTCMinutes()).padStart(2,'0'), s = String(shifted.getUTCSeconds()).padStart(2,'0');
   const el = document.getElementById('clockDisplay');
-  if (el) el.textContent = `${h}:${m}:${s} ${d.getHours() >= 12 ? 'PM' : 'AM'}`;
+  if (el) el.textContent = `${h}:${m}:${s} ${shifted.getUTCHours() >= 12 ? 'PM' : 'AM'} ${showPHTime ? 'PHT' : 'PT'}`;
 }
 
 function updateProgress() {
