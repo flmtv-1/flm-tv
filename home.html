@@ -4355,7 +4355,7 @@
         // ═══════════════════════════════════════════════════════════════
         
         
-     async function jellyfinFetch(endpoint, params = {}) {
+     async function jellyfinFetch(endpoint, params = {}, _isRetry = false) {
     const baseUrl = JELLYFIN_CONFIG.SERVER;
     
     // Build query string manually — works with any base URL including paths
@@ -4370,13 +4370,20 @@
     const url = `${baseUrl}${endpoint}?${queryString.toString()}`;
     console.log('🔍 Fetching:', url);
     
+    // Guard against a slow/flaky connection (e.g. Firestick wifi) hanging
+    // forever and leaving the "Loading your content..." spinner stuck.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(function() { controller.abort(); }, 9000);
+    
     try {
         const response = await fetch(url, {
             method: 'GET',
             mode: 'cors',
             credentials: 'omit',
-            headers: { 'Accept': 'application/json' }
+            headers: { 'Accept': 'application/json' },
+            signal: controller.signal
         });
+        clearTimeout(timeoutId);
         
         if (!response.ok) {
             console.error('❌ Jellyfin API Error:', response.status, response.statusText);
@@ -4386,7 +4393,14 @@
         console.log('✅ Response:', data);
         return data;
     } catch (error) {
+        clearTimeout(timeoutId);
         console.error('❌ Fetch Error:', error);
+        // One automatic retry on timeout/network failure before giving up —
+        // helps on slower connections instead of failing on the first hiccup.
+        if (!_isRetry) {
+            console.log('🔁 Retrying once:', url);
+            return jellyfinFetch(endpoint, params, true);
+        }
         return null;
     }
 }
@@ -6961,8 +6975,13 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                 if (!el.getAttribute('tabindex')) {
                     el.setAttribute('tabindex', '0');
                 }
-                // Make sure onclick cards also respond to Enter
-                if (!el._tvReady) {
+                // Make sure onclick cards (divs/spans, not real buttons/links)
+                // also respond to Enter — real <button>/<a> elements already
+                // fire a native click on Enter/Space, so adding this again for
+                // them double-fires the action (this is what made the new
+                // scroll buttons feel jumpy/unstable).
+                var isNativelyClickable = (el.tagName === 'BUTTON' || el.tagName === 'A');
+                if (!el._tvReady && !isNativelyClickable) {
                     el._tvReady = true;
                     el.addEventListener('keydown', function(e) {
                         if (e.key === 'Enter' || e.key === ' ') {
