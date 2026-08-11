@@ -3260,6 +3260,10 @@
         max-width: 100% !important;
         margin-top: 0.75rem !important;
     }
+    .is-firestick .flm-ad-header {
+        grid-column: 1 / -1 !important;
+        margin-bottom: -0.3rem !important;
+    }
     .is-firestick .lsc-row {
         display: block !important;
         max-width: 920px !important;
@@ -6721,6 +6725,9 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
            All sizes calculated for 960px CSS viewport.
         ══════════════════════════════════════════════════════ */
 
+        /* Reduce Fire TV Silk browser's rubber-band scroll bounce */
+        html, body { overscroll-behavior-y: contain !important; }
+
         /* Header — fit in 960px */
         .header { padding: 0.4rem 0.8rem !important; }
         .header-content { flex-wrap: nowrap !important; gap: 0.4rem !important; }
@@ -6945,11 +6952,13 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         card.id = 'flmKidsCornerCard';
         card.onclick = function() { window.location.href = 'kids-corner.html'; };
         card.tabIndex = 0;
-        card.style.cssText = 'width:100%;max-width:100%;margin-top:0.75rem;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:2px solid rgba(255,215,0,0.6);box-shadow:0 0 24px rgba(255,215,0,0.2),0 8px 32px rgba(0,0,0,0.6);background:linear-gradient(135deg,#1a0533 0%,#0a0f1a 100%);min-height:80px;display:flex;align-items:center;padding:12px 14px;';
-        card.innerHTML = '<span style="font-size:1.8rem;margin-right:12px;">🌟</span>' +
-            '<span style="font-family:\'Bebas Neue\',\'Rajdhani\',sans-serif;">' +
-            '<span style="display:block;font-size:1.15rem;letter-spacing:2px;color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.5);line-height:1;">KIDS CORNER</span>' +
-            '<span style="display:block;font-size:0.8rem;letter-spacing:1px;color:rgba(255,255,255,0.85);margin-top:3px;">Safe, family-friendly shows &amp; movies</span></span>';
+        card.style.cssText = 'width:100%;max-width:100%;margin-top:0.75rem;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:2px solid rgba(255,215,0,0.6);box-shadow:0 0 24px rgba(255,215,0,0.2),0 8px 32px rgba(0,0,0,0.6);background:linear-gradient(135deg,#1a0533 0%,#0a0f1a 100%);min-height:110px;display:flex;align-items:flex-end;';
+        card.innerHTML =
+            '<img src="assets/images/kids-avatar.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0.45;pointer-events:none;" onerror="this.style.display=\'none\'">' +
+            '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.95) 35%,rgba(5,10,30,0.2) 100%);"></div>' +
+            '<div style="position:relative;z-index:2;padding:12px 14px;width:100%;">' +
+            '<span style="font-family:\'Bebas Neue\',\'Rajdhani\',sans-serif;font-size:1.15rem;letter-spacing:2px;color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.5);">🌟 KIDS CORNER</span>' +
+            '<span style="display:block;font-size:0.8rem;letter-spacing:1px;color:rgba(255,255,255,0.85);margin-top:3px;">Safe, family-friendly shows &amp; movies</span></div>';
 
         anchor.parentNode.insertBefore(card, anchor.nextSibling);
         return true;
