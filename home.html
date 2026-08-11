@@ -17,16 +17,6 @@
             if (viewport) viewport.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
         }
     </script>
-    <!-- TEMPORARY DEBUG STRIP — shows the device's browser ID directly on screen, no navigation needed.
-         Remove this whole <div> + <script> block once we've confirmed detection is working. -->
-    <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            var d = document.createElement('div');
-            d.textContent = 'DEBUG UA: ' + navigator.userAgent + ' | isFireTV match: ' + isFireTV;
-            d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#ff0000;color:#fff;font-size:14px;padding:6px;word-break:break-all;font-family:monospace;';
-            document.body.insertBefore(d, document.body.firstChild);
-        });
-    </script>
     <style>
         /* Fire TV Focus Styles - only visible when using remote */
         a:focus, button:focus, [onclick]:focus, .movie-card:focus, .category-card:focus, .nav-link:focus, .btn:focus {
