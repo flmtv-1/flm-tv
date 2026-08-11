@@ -2,34 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" id="flmViewportMeta">
     
     <!-- Fire TV Detection and D-pad Navigation -->
+    <!-- NOTE: navigation logic itself lives in ONE place only, near the end of <body>.
+         (Previously an old external "spatialnavigation" CDN library was also loaded here
+         and ran at the same time as the custom nav system below — the two fought over
+         focus/arrow keys, which is what caused the frozen, zoomed-out, non-scrolling view.) -->
     <script>
         var isFireTV = navigator.userAgent.indexOf('AFT') !== -1;
         if (isFireTV) {
-            var viewport = document.querySelector('meta[name="viewport"]');
-            if (viewport) viewport.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-        }
-    </script>
-    <script>
-        if (isFireTV) {
-            document.addEventListener('DOMContentLoaded', function() {
-                // Load spatial navigation for Fire TV remote
-                var script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/spatialnavigation@0.0.1/spatialnavigation.js';
-                script.onload = function() {
-                    if (typeof SpatialNavigation !== 'undefined') {
-                        SpatialNavigation.init();
-                        SpatialNavigation.add({
-                            selector: 'a, button, [onclick], .movie-card, .category-card, .nav-link, .btn, input, select'
-                        });
-                        SpatialNavigation.makeFocusable();
-                        SpatialNavigation.focus();
-                    }
-                };
-                document.head.appendChild(script);
-            });
+            document.documentElement.classList.add('is-firestick');
+            // NOTE: Do NOT force a fixed viewport width (e.g. width=960) here.
+            // That number was tuned for one specific Fire TV model's device-pixel-ratio.
+            // On any other Fire Stick/Cube it makes the real browser render the page
+            // as if the screen were that fixed width, then stretch it to fill the
+            // actual screen — this is what causes the "zoomed in, can't scroll" bug.
+            // Leaving the default width=device-width lets each device report its own
+            // real viewport, which the Firestick nav script below already adapts to.
         }
     </script>
     <style>
@@ -2694,6 +2684,10 @@
 </head>
 <body>
 
+<div style="position:fixed;top:0;left:0;right:0;z-index:999999;background:red;color:white;font-size:24px;font-weight:bold;text-align:center;padding:20px;">
+TEST MARKER 123 — IF YOU SEE THIS ON FIRESTICK, THE DEPLOY WORKED
+</div>
+
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HEADER                                                         -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -3045,8 +3039,6 @@
         font-size: 1.6rem; z-index: 10;
         filter: drop-shadow(0 2px 6px rgba(255,215,0,0.7));
     }
-    .is-firestick .mu-event-card { display: none !important; }
-    .is-firestick .event-cards-col { display: none !important; }
     /* ── AD PANEL ───────────────────────────────────────────────────── */
     .flm-ad-panel {
         flex: 1;
@@ -6676,6 +6668,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     var isFirestick = /AFT|FireTV|Silk/i.test(ua);
     if (!isFirestick) return;
 
+    document.documentElement.classList.add('is-firestick');
     console.log('📺 FLM TV: Firestick navigation active');
 
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
