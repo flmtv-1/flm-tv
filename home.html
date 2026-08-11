@@ -3262,6 +3262,15 @@
         width: 100% !important;
         max-width: 100% !important;
     }
+    .is-firestick .event-cards-col {
+        flex: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 0.75rem !important;
+    }
+    .is-firestick .mu-event-card {
+        width: 100% !important;
+    }
     </style>
 
     <script>
@@ -6667,6 +6676,39 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     document.documentElement.classList.add('is-firestick');
     console.log('📺 FLM TV: Firestick navigation active');
 
+    // ── 0. ALWAYS-VISIBLE SCROLL BUTTONS (works via Enter/Select click,
+    //      independent of whether arrow keys reach this page's JS at all) ──
+    var scrollBtnWrap = document.createElement('div');
+    scrollBtnWrap.id = 'flmFirestickScrollBtns';
+    scrollBtnWrap.style.cssText =
+        'position:fixed;right:16px;bottom:16px;z-index:999999;' +
+        'display:flex;flex-direction:column;gap:10px;';
+    scrollBtnWrap.innerHTML =
+        '<button class="flm-tv-scroll-btn" id="flmScrollUpBtn" tabindex="0" ' +
+        'style="width:64px;height:64px;border-radius:50%;background:rgba(20,25,40,0.9);' +
+        'border:2px solid #ffd700;color:#ffd700;font-size:26px;cursor:pointer;">▲</button>' +
+        '<button class="flm-tv-scroll-btn" id="flmScrollDownBtn" tabindex="0" ' +
+        'style="width:64px;height:64px;border-radius:50%;background:rgba(20,25,40,0.9);' +
+        'border:2px solid #ffd700;color:#ffd700;font-size:26px;cursor:pointer;">▼</button>';
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.appendChild(scrollBtnWrap);
+        document.getElementById('flmScrollUpBtn').addEventListener('click', function() {
+            window.scrollBy({ top: -500, behavior: 'smooth' });
+        });
+        document.getElementById('flmScrollDownBtn').addEventListener('click', function() {
+            window.scrollBy({ top: 500, behavior: 'smooth' });
+        });
+    });
+    if (document.readyState !== 'loading') {
+        document.body.appendChild(scrollBtnWrap);
+        document.getElementById('flmScrollUpBtn').addEventListener('click', function() {
+            window.scrollBy({ top: -500, behavior: 'smooth' });
+        });
+        document.getElementById('flmScrollDownBtn').addEventListener('click', function() {
+            window.scrollBy({ top: 500, behavior: 'smooth' });
+        });
+    }
+
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
     var style = document.createElement('style');
     style.textContent = `
@@ -6903,6 +6945,8 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.category-nav-item',
             '.content-card',
             '.movie-card',
+            '.mu-event-card',
+            '.flm-tv-scroll-btn',
             '.view-all-btn',
             '.bottom-nav-item',
             '.trailer-btn',
@@ -6964,6 +7008,8 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.category-nav-item, ' +
             '.content-card, ' +
             '.movie-card, ' +
+            '.mu-event-card, ' +
+            '.flm-tv-scroll-btn, ' +
             '.view-all-btn, ' +
             '.bottom-nav-item, ' +
             '.panel-close, ' +
@@ -7091,6 +7137,22 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                 setTimeout(function() {
                     var topEl = document.querySelector('.header-nav a');
                     if (topEl) { topEl.focus(); topEl.scrollIntoView({ block: 'center' }); }
+                }, 400);
+            } else if (direction === 'down') {
+                // No specific next card found — scroll the page down anyway so
+                // the remote never dead-ends, even if a new card class wasn't
+                // added to the focus list. After scrolling, try to focus the
+                // nearest focusable element to the new center of the screen.
+                window.scrollBy({ top: 400, behavior: 'smooth' });
+                setTimeout(function() {
+                    var centerY = window.innerHeight / 2;
+                    var closest = null, closestDist = Infinity;
+                    all.forEach(function(el) {
+                        var r = el.getBoundingClientRect();
+                        var dist = Math.abs((r.top + r.height / 2) - centerY);
+                        if (dist < closestDist) { closestDist = dist; closest = el; }
+                    });
+                    if (closest) closest.focus();
                 }, 400);
             }
         }
