@@ -4455,66 +4455,64 @@
             
             console.log('🎨 Building category navigation...');
             
-            for (const collection of JELLYFIN_CONFIG.COLLECTIONS) {
+            // Build a DOM element (or null) for one collection entry.
+            // Special cases (live-stations/kids-corner) build instantly, with
+            // no network call. Everything else needs Jellyfin data.
+            async function buildNavItem(collection) {
+                if (collection.id === 'live-tv') {
+                    return null; // it's already in the nav, skip
+                }
+
+                if (collection.id === 'live-stations') {
+                    const navItem = document.createElement('a');
+                    navItem.className = 'category-nav-item';
+                    navItem.href = 'live-stations.html';
+                    navItem.setAttribute('tabindex', '0');
+                    navItem.style.cssText = 'background: linear-gradient(135deg, #050a1a 0%, #0a1530 60%, #050a1a 100%); border: 2px solid rgba(192,39,45,0.5); position: relative; overflow: hidden; text-decoration: none; display: block;';
+                    navItem.innerHTML = `
+                        <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%, rgba(192,39,45,0.15) 0%, transparent 70%);pointer-events:none;"></div>
+                        <div class="category-nav-overlay" style="background:rgba(8,8,8,0.75);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;text-align:center;">
+                            <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+                                <div style="width:8px;height:8px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
+                                <span style="font-size:11px;color:#E8333A;font-weight:900;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;text-shadow:0 0 8px rgba(232,51,58,0.8);">LIVE</span>
+                            </div>
+                            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;line-height:1;letter-spacing:2px;">TV STATIONS</div>
+                            <div style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:2px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
+                        </div>
+                        <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
+                    `;
+                    return navItem;
+                }
+                if (collection.id === 'kids-corner' || collection.id === '9d7ad6afe9afa2dab1a2f6e00ad28fa6') {
+                    const navItem = document.createElement('div');
+                    navItem.className = 'category-nav-item';
+                    navItem.onclick = () => window.location.href = collection.url;
+                    navItem.innerHTML = `
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300" 
+                             alt="${collection.name}" 
+                             class="category-nav-image" loading="lazy">
+                        <div class="category-nav-overlay">
+                            <div class="category-nav-name">${collection.name}</div>
+                        </div>
+                    `;
+                    return navItem;
+                }
+
                 try {
-                    // ── SPECIAL: Live TV card — skip, it's in the nav ──
-                    if (collection.id === 'live-tv') {
-                        continue;
-                    }
+                    // These two run together instead of one waiting on the other
+                    const [collectionInfo, items] = await Promise.all([
+                        jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collection.id}`, {}),
+                        jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                            ParentId: collection.id,
+                            Limit: 5,
+                            SortBy: 'DateCreated',
+                            Recursive: true
+                        })
+                    ]);
 
-                    // ── SPECIAL: TV Stations card ──
-                    if (collection.id === 'live-stations') {
-                        const navItem = document.createElement('a');
-                        navItem.className = 'category-nav-item';
-                        navItem.href = 'live-stations.html';
-                        navItem.setAttribute('tabindex', '0');
-                        navItem.style.cssText = 'background: linear-gradient(135deg, #050a1a 0%, #0a1530 60%, #050a1a 100%); border: 2px solid rgba(192,39,45,0.5); position: relative; overflow: hidden; text-decoration: none; display: block;';
-                        navItem.innerHTML = `
-                            <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 50%, rgba(192,39,45,0.15) 0%, transparent 70%);pointer-events:none;"></div>
-                            <div class="category-nav-overlay" style="background:rgba(8,8,8,0.75);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;text-align:center;">
-                                <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
-                                    <div style="width:8px;height:8px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
-                                    <span style="font-size:11px;color:#E8333A;font-weight:900;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;text-shadow:0 0 8px rgba(232,51,58,0.8);">LIVE</span>
-                                </div>
-                                <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;line-height:1;letter-spacing:2px;">TV STATIONS</div>
-                                <div style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:2px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">2,500+ FREE CHANNELS</div>
-                            </div>
-                            <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
-                        `;
-                        navScroll.appendChild(navItem);
-                        continue;
-                    }
-                    if (collection.id === 'kids-corner' || collection.id === '9d7ad6afe9afa2dab1a2f6e00ad28fa6') {
-                        const navItem = document.createElement('div');
-                        navItem.className = 'category-nav-item';
-                        navItem.onclick = () => window.location.href = collection.url;
-                        navItem.innerHTML = `
-                            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300" 
-                                 alt="${collection.name}" 
-                                 class="category-nav-image" loading="lazy">
-                            <div class="category-nav-overlay">
-                                <div class="category-nav-name">${collection.name}</div>
-                            </div>
-                        `;
-                        navScroll.appendChild(navItem);
-                        continue;
-                    }
-
-                    // Get collection info to determine type
-                    const collectionInfo = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${collection.id}`, {});
-                    
-                    // Get 5 random items to find one with a good backdrop
-                    const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                        ParentId: collection.id,
-                        Limit: 5,
-                        SortBy: 'DateCreated',
-                        Recursive: true
-                    });
-                    
                     let backdropUrl = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300';
-                    
+
                     if (items && items.Items && items.Items.length > 0) {
-                        // Use backdrop (landscape) for category cards — that's the correct style
                         let foundBackdrop = false;
                         for (const item of items.Items) {
                             if (item.BackdropImageTags && item.BackdropImageTags.length > 0) {
@@ -4527,11 +4525,11 @@
                             backdropUrl = getImageUrl(items.Items[0].Id, items.Items[0].ImageTags.Primary, 'Primary');
                         }
                     }
-                    
+
                     const navItem = document.createElement('div');
                     navItem.className = 'category-nav-item';
                     navItem.onclick = () => openJellyfinCollection(collection.id);
-                    
+
                     navItem.innerHTML = `
                         <img src="${backdropUrl}" 
                              alt="${collection.name}" 
@@ -4541,13 +4539,23 @@
                             <div class="category-nav-name">${collection.name}</div>
                         </div>
                     `;
-                    
-                    navScroll.appendChild(navItem);
-                    
+                    return navItem;
                 } catch (error) {
                     console.error(`Error building nav for ${collection.name}:`, error);
+                    return null;
                 }
             }
+
+            // Fire off every collection's build at the same time, then append
+            // them in the original, correct order once they've all settled.
+            const results = await Promise.allSettled(
+                JELLYFIN_CONFIG.COLLECTIONS.map(buildNavItem)
+            );
+            results.forEach(function(result) {
+                if (result.status === 'fulfilled' && result.value) {
+                    navScroll.appendChild(result.value);
+                }
+            });
             
             console.log('✅ Category navigation built!');
         }
@@ -7160,19 +7168,24 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             } else if (direction === 'down') {
                 // No specific next card found — scroll the page down anyway so
                 // the remote never dead-ends, even if a new card class wasn't
-                // added to the focus list. After scrolling, try to focus the
-                // nearest focusable element to the new center of the screen.
-                window.scrollBy({ top: 400, behavior: 'smooth' });
-                setTimeout(function() {
-                    var centerY = window.innerHeight / 2;
-                    var closest = null, closestDist = Infinity;
-                    all.forEach(function(el) {
-                        var r = el.getBoundingClientRect();
-                        var dist = Math.abs((r.top + r.height / 2) - centerY);
-                        if (dist < closestDist) { closestDist = dist; closest = el; }
-                    });
-                    if (closest) closest.focus();
-                }, 400);
+                // added to the focus list. Guard against overlapping runs if
+                // the remote sends repeated keydowns quickly (this was
+                // causing the scroll to flicker/jump).
+                if (!window._flmDownFallbackRunning) {
+                    window._flmDownFallbackRunning = true;
+                    window.scrollBy({ top: 400, behavior: 'smooth' });
+                    setTimeout(function() {
+                        var centerY = window.innerHeight / 2;
+                        var closest = null, closestDist = Infinity;
+                        all.forEach(function(el) {
+                            var r = el.getBoundingClientRect();
+                            var dist = Math.abs((r.top + r.height / 2) - centerY);
+                            if (dist < closestDist) { closestDist = dist; closest = el; }
+                        });
+                        if (closest) closest.focus();
+                        window._flmDownFallbackRunning = false;
+                    }, 500);
+                }
             }
         }
 
