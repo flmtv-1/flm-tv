@@ -2961,6 +2961,10 @@
                 var ml=document.getElementById('flmAdModalLink'); ml.href='https://SheBoujay.com'; ml.target='_blank'; ml.rel='noopener'; ml.textContent='Visit SheBoujay.com';
                 m.style.display='flex';
                 document.body.style.overflow='hidden';
+                setTimeout(function() {
+                    var closeBtn = m.querySelector('button');
+                    if (closeBtn) closeBtn.focus();
+                }, 100);
             }
             </script>
 
@@ -3264,6 +3268,15 @@
         grid-column: 1 / -1 !important;
         margin-bottom: -0.3rem !important;
     }
+    /* Firestick: external "Visit Site" links aren't useful inside the app */
+    .is-firestick .flm-ad-slideshow a[href*="SheBoujay"] {
+        display: none !important;
+    }
+    .is-firestick .flm-ad-slideshow span[onclick="flmAdClick()"] {
+        width: 100% !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
     .is-firestick .lsc-row {
         display: block !important;
         max-width: 920px !important;
@@ -3312,6 +3325,10 @@
 
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        setTimeout(function() {
+            var closeBtn = modal.querySelector('button');
+            if (closeBtn) closeBtn.focus();
+        }, 100);
     }
 
     function closeAdModal() {
@@ -6745,6 +6762,9 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         /* Hide floating buttons on Firestick — they're now in the top bar */
         .floating-buttons { display: none !important; }
 
+        /* Sponsor ad modal — external "Visit Site" link isn't useful in-app */
+        #flmAdModalLink { display: none !important; }
+
         /* Nav actions rebuilt via JS — no need to hide individual buttons */
 
         /* Live card — 350px = 36% of 960px */
@@ -7041,6 +7061,14 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         var videoModal = document.querySelector('.video-modal.active');
         if (videoModal) {
             return Array.from(videoModal.querySelectorAll('.close-video, button')).filter(function(el) {
+                return el.offsetParent !== null;
+            });
+        }
+
+        // If sponsor ad modal open, only navigate its close button
+        var adModal = document.getElementById('flmAdModal');
+        if (adModal && adModal.style.display !== 'none' && adModal.offsetParent !== null) {
+            return Array.from(adModal.querySelectorAll('button')).filter(function(el) {
                 return el.offsetParent !== null;
             });
         }
