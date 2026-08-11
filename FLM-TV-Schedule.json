@@ -219,7 +219,7 @@
     {
       "startTime": "20:08",
       "name": "Good Gumbo",
-      "path": "X:\\DOCUMENTARIES 2\\Good Gumbo\\3 Calas - The Beignet’s Surprising (and Sweet) Predecessor\\3 Calas - The Beignet’s Surprising (and Sweet) Predecessor.mp4",
+      "path": "X:\\DOCUMENTARIES 2\\Good Gumbo\\3 Calas - The Beignet\u2019s Surprising (and Sweet) Predecessor\\3 Calas - The Beignet\u2019s Surprising (and Sweet) Predecessor.mp4",
       "duration": 507,
       "inPoint": 0,
       "outPoint": 507,
@@ -439,6 +439,528 @@
       "duration": 1517,
       "inPoint": 0,
       "outPoint": 1517,
+      "category": "show"
+    },
+    {
+      "startTime": "12:39",
+      "name": "FLMTV.com",
+      "path": "",
+      "duration": 28,
+      "inPoint": 0,
+      "outPoint": 28,
+      "category": "commercial"
+    },
+    {
+      "startTime": "12:39",
+      "name": "Abbott and Costello",
+      "path": "",
+      "duration": 1413,
+      "inPoint": 0,
+      "outPoint": 1413,
+      "category": "show"
+    },
+    {
+      "startTime": "13:03",
+      "name": "Get Smart",
+      "path": "",
+      "duration": 1524,
+      "inPoint": 0,
+      "outPoint": 1524,
+      "category": "show"
+    },
+    {
+      "startTime": "13:28",
+      "name": "VoteScottBlack.com",
+      "path": "",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "13:29",
+      "name": "OZONE in Concert",
+      "path": "",
+      "duration": 117,
+      "inPoint": 0,
+      "outPoint": 117,
+      "category": "commercial"
+    },
+    {
+      "startTime": "13:31",
+      "name": "The Monkees",
+      "path": "",
+      "duration": 1501,
+      "inPoint": 0,
+      "outPoint": 1501,
+      "category": "show"
+    },
+    {
+      "startTime": "13:56",
+      "name": "The Lucy Show",
+      "path": "",
+      "duration": 1545,
+      "inPoint": 0,
+      "outPoint": 1545,
+      "category": "show"
+    },
+    {
+      "startTime": "14:21",
+      "name": "SheBoujay.com",
+      "path": "",
+      "duration": 60,
+      "inPoint": 0,
+      "outPoint": 60,
+      "category": "commercial"
+    },
+    {
+      "startTime": "14:22",
+      "name": "ZAINA JULIETTE",
+      "path": "",
+      "duration": 37,
+      "inPoint": 0,
+      "outPoint": 37,
+      "category": "commercial"
+    },
+    {
+      "startTime": "14:23",
+      "name": "Leave it to Beaver",
+      "path": "",
+      "duration": 1556,
+      "inPoint": 0,
+      "outPoint": 1556,
+      "category": "show"
+    },
+    {
+      "startTime": "14:49",
+      "name": "Andy Griffith Show",
+      "path": "",
+      "duration": 1480,
+      "inPoint": 0,
+      "outPoint": 1480,
+      "category": "show"
+    },
+    {
+      "startTime": "15:14",
+      "name": "Andy Griffith",
+      "path": "",
+      "duration": 1545,
+      "inPoint": 0,
+      "outPoint": 1545,
+      "category": "show"
+    },
+    {
+      "startTime": "15:39",
+      "name": "Whats Happening",
+      "path": "",
+      "duration": 1497,
+      "inPoint": 0,
+      "outPoint": 1497,
+      "category": "show"
+    },
+    {
+      "startTime": "16:04",
+      "name": "Good Times",
+      "path": "",
+      "duration": 1559,
+      "inPoint": 0,
+      "outPoint": 1559,
+      "category": "show"
+    },
+    {
+      "startTime": "16:30",
+      "name": "Sanford and Son",
+      "path": "",
+      "duration": 1512,
+      "inPoint": 0,
+      "outPoint": 1512,
+      "category": "show"
+    },
+    {
+      "startTime": "16:56",
+      "name": "VoteScottBlack.com",
+      "path": "",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "16:56",
+      "name": "FLM TV",
+      "path": "",
+      "duration": 21,
+      "inPoint": 0,
+      "outPoint": 21,
+      "category": "commercial"
+    },
+    {
+      "startTime": "16:56",
+      "name": "OZONE in Concert",
+      "path": "",
+      "duration": 117,
+      "inPoint": 0,
+      "outPoint": 117,
+      "category": "commercial"
+    },
+    {
+      "startTime": "16:58",
+      "name": "The Jeffersons",
+      "path": "",
+      "duration": 1504,
+      "inPoint": 0,
+      "outPoint": 1504,
+      "category": "show"
+    },
+    {
+      "startTime": "17:23",
+      "name": "Jackie Chan Adventures",
+      "path": "",
+      "duration": 1277,
+      "inPoint": 0,
+      "outPoint": 1277,
+      "category": "show"
+    },
+    {
+      "startTime": "17:45",
+      "name": "Molly of Denali",
+      "path": "",
+      "duration": 1532,
+      "inPoint": 0,
+      "outPoint": 1532,
+      "category": "show"
+    },
+    {
+      "startTime": "18:10",
+      "name": "SONIC BOOM",
+      "path": "",
+      "duration": 1379,
+      "inPoint": 0,
+      "outPoint": 1379,
+      "category": "show"
+    },
+    {
+      "startTime": "18:33",
+      "name": "Space Mouse",
+      "path": "",
+      "duration": 332,
+      "inPoint": 0,
+      "outPoint": 332,
+      "category": "show"
+    },
+    {
+      "startTime": "18:39",
+      "name": "The Cinderella",
+      "path": "",
+      "duration": 375,
+      "inPoint": 0,
+      "outPoint": 375,
+      "category": "show"
+    },
+    {
+      "startTime": "18:45",
+      "name": "Solid Serenade",
+      "path": "",
+      "duration": 427,
+      "inPoint": 0,
+      "outPoint": 427,
+      "category": "show"
+    },
+    {
+      "startTime": "18:52",
+      "name": "Cat Fishin'",
+      "path": "",
+      "duration": 446,
+      "inPoint": 0,
+      "outPoint": 446,
+      "category": "show"
+    },
+    {
+      "startTime": "19:00",
+      "name": "FLMTV.com",
+      "path": "",
+      "duration": 15,
+      "inPoint": 0,
+      "outPoint": 15,
+      "category": "commercial"
+    },
+    {
+      "startTime": "19:00",
+      "name": "Here's Lucy",
+      "path": "",
+      "duration": 1552,
+      "inPoint": 0,
+      "outPoint": 1552,
+      "category": "show"
+    },
+    {
+      "startTime": "19:26",
+      "name": "Friends",
+      "path": "",
+      "duration": 1368,
+      "inPoint": 0,
+      "outPoint": 1368,
+      "category": "show"
+    },
+    {
+      "startTime": "19:48",
+      "name": "Malcolm in The Middle",
+      "path": "",
+      "duration": 1343,
+      "inPoint": 0,
+      "outPoint": 1343,
+      "category": "show"
+    },
+    {
+      "startTime": "20:11",
+      "name": "VoteScottBlack.com",
+      "path": "",
+      "duration": 30,
+      "inPoint": 0,
+      "outPoint": 30,
+      "category": "commercial"
+    },
+    {
+      "startTime": "20:11",
+      "name": "OZONE in Concert",
+      "path": "",
+      "duration": 117,
+      "inPoint": 0,
+      "outPoint": 117,
+      "category": "commercial"
+    },
+    {
+      "startTime": "20:13",
+      "name": "SheBoujay.com",
+      "path": "",
+      "duration": 60,
+      "inPoint": 0,
+      "outPoint": 60,
+      "category": "commercial"
+    },
+    {
+      "startTime": "20:14",
+      "name": "The Waterboy 1",
+      "path": "",
+      "duration": 5377,
+      "inPoint": 0,
+      "outPoint": 5377,
+      "category": "movie"
+    },
+    {
+      "startTime": "21:44",
+      "name": "Whats Eating Gilbert Grape",
+      "path": "",
+      "duration": 7077,
+      "inPoint": 0,
+      "outPoint": 7077,
+      "category": "movie"
+    },
+    {
+      "startTime": "23:42",
+      "name": "Edward Scissorhands",
+      "path": "",
+      "duration": 6300,
+      "inPoint": 0,
+      "outPoint": 6300,
+      "category": "movie"
+    },
+    {
+      "startTime": "01:27",
+      "name": "King Kong",
+      "path": "",
+      "duration": 12007,
+      "inPoint": 0,
+      "outPoint": 12007,
+      "category": "movie"
+    },
+    {
+      "startTime": "04:47",
+      "name": "ZAINA JULIETTE",
+      "path": "",
+      "duration": 37,
+      "inPoint": 0,
+      "outPoint": 37,
+      "category": "commercial"
+    },
+    {
+      "startTime": "04:48",
+      "name": "Swing Kids",
+      "path": "",
+      "duration": 6824,
+      "inPoint": 0,
+      "outPoint": 6824,
+      "category": "movie"
+    },
+    {
+      "startTime": "06:41",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1553,
+      "inPoint": 0,
+      "outPoint": 1553,
+      "category": "show"
+    },
+    {
+      "startTime": "07:07",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1544,
+      "inPoint": 0,
+      "outPoint": 1544,
+      "category": "show"
+    },
+    {
+      "startTime": "07:33",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1532,
+      "inPoint": 0,
+      "outPoint": 1532,
+      "category": "show"
+    },
+    {
+      "startTime": "07:58",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1557,
+      "inPoint": 0,
+      "outPoint": 1557,
+      "category": "show"
+    },
+    {
+      "startTime": "08:24",
+      "name": "FLMTV.com",
+      "path": "",
+      "duration": 15,
+      "inPoint": 0,
+      "outPoint": 15,
+      "category": "commercial"
+    },
+    {
+      "startTime": "08:25",
+      "name": "Sesame Street",
+      "path": "",
+      "duration": 3211,
+      "inPoint": 0,
+      "outPoint": 3211,
+      "category": "show"
+    },
+    {
+      "startTime": "09:18",
+      "name": "Sesame Street",
+      "path": "",
+      "duration": 1555,
+      "inPoint": 0,
+      "outPoint": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "09:44",
+      "name": "Sesame Street",
+      "path": "",
+      "duration": 1555,
+      "inPoint": 0,
+      "outPoint": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "10:10",
+      "name": "Super Why!",
+      "path": "",
+      "duration": 1546,
+      "inPoint": 0,
+      "outPoint": 1546,
+      "category": "show"
+    },
+    {
+      "startTime": "10:36",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 186,
+      "inPoint": 0,
+      "outPoint": 186,
+      "category": "music"
+    },
+    {
+      "startTime": "10:39",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 185,
+      "inPoint": 0,
+      "outPoint": 185,
+      "category": "music"
+    },
+    {
+      "startTime": "10:42",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 185,
+      "inPoint": 0,
+      "outPoint": 185,
+      "category": "music"
+    },
+    {
+      "startTime": "10:45",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 187,
+      "inPoint": 0,
+      "outPoint": 187,
+      "category": "music"
+    },
+    {
+      "startTime": "10:48",
+      "name": "Ready Jet Go!",
+      "path": "",
+      "duration": 1581,
+      "inPoint": 0,
+      "outPoint": 1581,
+      "category": "show"
+    },
+    {
+      "startTime": "11:15",
+      "name": "Nature Cat",
+      "path": "",
+      "duration": 1420,
+      "inPoint": 0,
+      "outPoint": 1420,
+      "category": "show"
+    },
+    {
+      "startTime": "11:38",
+      "name": "LazyTown",
+      "path": "",
+      "duration": 1416,
+      "inPoint": 0,
+      "outPoint": 1416,
+      "category": "show"
+    },
+    {
+      "startTime": "12:02",
+      "name": "FLMTV.com",
+      "path": "",
+      "duration": 15,
+      "inPoint": 0,
+      "outPoint": 15,
+      "category": "commercial"
+    },
+    {
+      "startTime": "12:02",
+      "name": "Charlie Brown and Snoopy",
+      "path": "",
+      "duration": 1349,
+      "inPoint": 0,
+      "outPoint": 1349,
+      "category": "show"
+    },
+    {
+      "startTime": "12:25",
+      "name": "Gilligan's Island",
+      "path": "",
+      "duration": 1518,
+      "inPoint": 0,
+      "outPoint": 1518,
       "category": "show"
     }
   ]
