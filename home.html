@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" id="flmViewportMeta">
     
     <!-- Fire TV Detection and D-pad Navigation -->
     <!-- NOTE: navigation logic itself lives in ONE place only, near the end of <body>.
@@ -13,9 +13,19 @@
         var isFireTV = navigator.userAgent.indexOf('AFT') !== -1;
         if (isFireTV) {
             document.documentElement.classList.add('is-firestick');
-            var viewport = document.querySelector('meta[name="viewport"]');
+            var viewport = document.getElementById('flmViewportMeta');
             if (viewport) viewport.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
         }
+    </script>
+    <!-- TEMPORARY DEBUG STRIP — shows the device's browser ID directly on screen, no navigation needed.
+         Remove this whole <div> + <script> block once we've confirmed detection is working. -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            var d = document.createElement('div');
+            d.textContent = 'DEBUG UA: ' + navigator.userAgent + ' | isFireTV match: ' + isFireTV;
+            d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#ff0000;color:#fff;font-size:14px;padding:6px;word-break:break-all;font-family:monospace;';
+            document.body.insertBefore(d, document.body.firstChild);
+        });
     </script>
     <style>
         /* Fire TV Focus Styles - only visible when using remote */
@@ -3030,8 +3040,6 @@
         font-size: 1.6rem; z-index: 10;
         filter: drop-shadow(0 2px 6px rgba(255,215,0,0.7));
     }
-    .is-firestick .mu-event-card { display: none !important; }
-    .is-firestick .event-cards-col { display: none !important; }
     /* ── AD PANEL ───────────────────────────────────────────────────── */
     .flm-ad-panel {
         flex: 1;
