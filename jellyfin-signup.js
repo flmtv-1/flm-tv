@@ -2,12 +2,16 @@
 // Runs server-side on Netlify. The admin API key lives ONLY here as an
 // environment variable — it is never sent to viewers' browsers.
 //
-// Set this in Netlify: Site settings → Environment variables →
+// Netlify env vars required:
 //   JELLYFIN_API_KEY = 62131ee22c0141c6b651be75a7444350
 
 const JELLYFIN_SERVER = 'https://flmtv26.duckdns.org:8920';
 // "ENTER FLM" account — used only as a permissions template for new users
 const TEMPLATE_USER_ID = '2562494c1df24f8789cd0ad8a38a7bf4';
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -19,15 +23,20 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'Server misconfigured: missing API key' }) };
   }
 
-  let username, password;
+  let email, password;
   try {
-    ({ username, password } = JSON.parse(event.body || '{}'));
+    ({ email, password } = JSON.parse(event.body || '{}'));
   } catch {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body' }) };
   }
 
-  if (!username || !password) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Username and password are required' }) };
+  email = (email || '').trim().toLowerCase();
+
+  if (!email || !password) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Email and password are required' }) };
+  }
+  if (!isValidEmail(email)) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Please enter a valid email address' }) };
   }
   if (password.length < 6) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Password must be at least 6 characters' }) };
@@ -36,17 +45,19 @@ exports.handler = async (event) => {
   const authHeader = `MediaBrowser Token="${ADMIN_API_KEY}"`;
 
   try {
-    // 1. Create the new Jellyfin user
+    // 1. Create the new Jellyfin user — the email address IS the Jellyfin
+    //    username. This is what lets password-reset look the account up
+    //    later with nothing more than the email typed into that form.
     const createRes = await fetch(`${JELLYFIN_SERVER}/Users/New`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
-      body: JSON.stringify({ Name: username, Password: password })
+      body: JSON.stringify({ Name: email, Password: password })
     });
 
     if (!createRes.ok) {
       const detail = await createRes.text();
       const msg = createRes.status === 400
-        ? 'That username is already taken. Please choose another.'
+        ? 'An account with that email already exists. Try logging in or resetting your password instead.'
         : 'Could not create account.';
       return { statusCode: createRes.status, body: JSON.stringify({ error: msg, detail }) };
     }
@@ -80,7 +91,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, userId: newUser.Id })
+      body: JSON.stringify({ success: true, userId: newUser.Id, email })
     };
 
   } catch (err) {

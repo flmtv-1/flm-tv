@@ -5,16 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=1.0, user-scalable=no">
     
     <!-- Fire TV Detection and D-pad Navigation -->
-    <!-- NOTE: navigation logic itself lives in ONE place only, near the end of <body>.
-         (Previously an old external "spatialnavigation" CDN library was also loaded here
-         and ran at the same time as the custom nav system below — the two fought over
-         focus/arrow keys, which is what caused the frozen, zoomed-out, non-scrolling view.) -->
     <script>
         var isFireTV = navigator.userAgent.indexOf('AFT') !== -1;
         if (isFireTV) {
-            document.documentElement.classList.add('is-firestick');
             var viewport = document.querySelector('meta[name="viewport"]');
             if (viewport) viewport.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        }
+    </script>
+    <script>
+        if (isFireTV) {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Load spatial navigation for Fire TV remote
+                var script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/spatialnavigation@0.0.1/spatialnavigation.js';
+                script.onload = function() {
+                    if (typeof SpatialNavigation !== 'undefined') {
+                        SpatialNavigation.init();
+                        SpatialNavigation.add({
+                            selector: 'a, button, [onclick], .movie-card, .category-card, .nav-link, .btn, input, select'
+                        });
+                        SpatialNavigation.makeFocusable();
+                        SpatialNavigation.focus();
+                    }
+                };
+                document.head.appendChild(script);
+            });
         }
     </script>
     <style>
@@ -6661,7 +6676,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     var isFirestick = /AFT|FireTV|Silk/i.test(ua);
     if (!isFirestick) return;
 
-    document.documentElement.classList.add('is-firestick');
     console.log('📺 FLM TV: Firestick navigation active');
 
     // ── 1. INJECT TV CSS ─────────────────────────────────────────
