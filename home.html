@@ -2954,17 +2954,8 @@
                 setInterval(function(){go(cur+1);},4000);
             })();
             function flmAdClick(){
-                var m=document.getElementById('flmAdModal');
-                if(!m)return;
-                document.getElementById('flmAdIframe').src='https://www.youtube.com/embed/-YZrG4hoS0E?autoplay=1&rel=0';
-                document.getElementById('flmAdModalLabel').textContent='SHEBOUJAY.COM';
-                var ml=document.getElementById('flmAdModalLink'); ml.href='https://SheBoujay.com'; ml.target='_blank'; ml.rel='noopener'; ml.textContent='Visit SheBoujay.com';
-                m.style.display='flex';
-                document.body.style.overflow='hidden';
-                setTimeout(function() {
-                    var closeBtn = m.querySelector('button');
-                    if (closeBtn) closeBtn.focus();
-                }, 100);
+                var SHEBOUJAY_AD_ITEM_ID = '3eb093e5872a8689c29f056e3afaaee8';
+                playJellyfinItem(SHEBOUJAY_AD_ITEM_ID);
             }
             </script>
 
@@ -7176,6 +7167,20 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
         var all = getFocusable();
         if (all.length === 0) return;
+
+        // If a modal (ad modal, video modal, etc.) has restricted focus to
+        // just itself, arrow keys should do nothing rather than falling
+        // through to the page-scroll fallback below — that fallback would
+        // otherwise scroll the page hidden behind the modal.
+        var adModalOpen = document.getElementById('flmAdModal');
+        adModalOpen = adModalOpen && adModalOpen.style.display !== 'none' && adModalOpen.offsetParent !== null;
+        var modalRestricted = adModalOpen || !!document.querySelector('.side-panel.active, .video-modal.active');
+        if (modalRestricted && (e.key === 'ArrowRight' || e.key === 'ArrowDown' ||
+            e.key === 'ArrowLeft' || e.key === 'ArrowUp')) {
+            e.preventDefault();
+            if (all.indexOf(document.activeElement) < 0 && all[0]) all[0].focus();
+            return;
+        }
 
         var focused = document.activeElement;
         var inList = all.indexOf(focused) >= 0;
