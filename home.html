@@ -6952,11 +6952,10 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         card.id = 'flmKidsCornerCard';
         card.onclick = function() { window.location.href = 'kids-corner.html'; };
         card.tabIndex = 0;
-        card.style.cssText = 'width:100%;max-width:100%;margin-top:0.75rem;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:2px solid rgba(255,215,0,0.6);box-shadow:0 0 24px rgba(255,215,0,0.2),0 8px 32px rgba(0,0,0,0.6);background:linear-gradient(135deg,#1a0533 0%,#0a0f1a 100%);min-height:110px;display:flex;align-items:flex-end;';
+        card.style.cssText = 'width:100%;max-width:100%;margin-top:0.75rem;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;border:2px solid rgba(255,215,0,0.6);box-shadow:0 0 24px rgba(255,215,0,0.2),0 8px 32px rgba(0,0,0,0.6);background:linear-gradient(135deg,#1a0533 0%,#0a0f1a 100%);min-height:90px;display:flex;align-items:center;padding:12px 16px;gap:14px;';
         card.innerHTML =
-            '<img src="assets/images/kids-avatar.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0.45;pointer-events:none;" onerror="this.style.display=\'none\'">' +
-            '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.95) 35%,rgba(5,10,30,0.2) 100%);"></div>' +
-            '<div style="position:relative;z-index:2;padding:12px 14px;width:100%;">' +
+            '<img src="assets/images/kids-avatar.png" alt="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid #ffd700;flex-shrink:0;" onerror="this.style.display=\'none\'">' +
+            '<div>' +
             '<span style="font-family:\'Bebas Neue\',\'Rajdhani\',sans-serif;font-size:1.15rem;letter-spacing:2px;color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.5);">🌟 KIDS CORNER</span>' +
             '<span style="display:block;font-size:0.8rem;letter-spacing:1px;color:rgba(255,255,255,0.85);margin-top:3px;">Safe, family-friendly shows &amp; movies</span></div>';
 
@@ -6985,6 +6984,9 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.movie-card',
             '.mu-event-card',
             '#flmKidsCornerCard',
+            '.flm-tv-stations-card',
+            '.flm-ad-slideshow a',
+            '.flm-ad-slideshow span[onclick]',
             '.flm-tv-scroll-btn',
             '.floating-btn-chat',
             '.floating-btn-ai',
@@ -7060,6 +7062,10 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.floating-btn-chat, ' +
             '.floating-btn-ai, ' +
             '.floating-btn-kids, ' +
+            '#flmKidsCornerCard, ' +
+            '.flm-tv-stations-card, ' +
+            '.flm-ad-slideshow a, ' +
+            '.flm-ad-slideshow span[onclick], ' +
             '.view-all-btn, ' +
             '.bottom-nav-item, ' +
             '.panel-close, ' +
