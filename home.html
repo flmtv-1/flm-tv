@@ -5101,13 +5101,17 @@
             console.log('📺 Live TV card ready (vMix version)');
             
             
-            // Attach button click handlers
-            document.getElementById('signInBtn').onclick = () => { signInMode = 'signup'; renderSignInModal(); openModal('signInModal'); };
-            document.getElementById('parentLockBtn').onclick = () => window.location.href = 'parental-controls.html';
+            // Attach button click handlers (null-safe — a missing element
+            // here must never be able to block the content loading below)
+            var _signInBtn = document.getElementById('signInBtn');
+            if (_signInBtn) _signInBtn.onclick = () => { signInMode = 'signup'; renderSignInModal(); openModal('signInModal'); };
+            var _parentLockBtn = document.getElementById('parentLockBtn');
+            if (_parentLockBtn) _parentLockBtn.onclick = () => window.location.href = 'parental-controls.html';
             
-            // Load content
-            buildCategoryNav();
-            loadContent();
+            // Load content — wrapped so a failure in one can never silently
+            // prevent the other from ever running
+            try { buildCategoryNav(); } catch (e) { console.error('buildCategoryNav failed:', e); }
+            try { loadContent(); } catch (e) { console.error('loadContent failed:', e); }
             
             // AI Panel Functionality
             const aiButton = document.getElementById('aiSearchButton');
