@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account - FLM TV</title>
+  <style>
+    :root { --hdr: 50px; --gold: #ffd700; --green: #22c55e; --red: #dc2626; }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { background: #000; overflow: hidden; }
+
+    #flmBar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--hdr);
+      background: rgba(0,0,0,0.92);
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 1rem;
+      z-index: 99999;
+    }
+
+    .flm-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-front {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .btn-front:hover { background: #ffe84d; }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-flag {
+      display: flex;
+      flex-direction: column;
+      width: 14px;
+      height: 20px;
+      gap: 2px;
+    }
+
+    .logo-flag span {
+      flex: 1;
+      border-radius: 1px;
+    }
+
+    .logo-flag span:nth-child(1) { background: #0038a8; }
+    .logo-flag span:nth-child(2) { background: var(--red); }
+    .logo-flag span:nth-child(3) { background: var(--gold); }
+
+    .logo-text { font-size: 16px; font-weight: 700; letter-spacing: 1.5px; }
+    .logo-text .flm { color: var(--gold); }
+    .logo-text .tv  { color: var(--green); }
+
+    .bar-spacer { flex: 1; }
+
+    #jellyfinFrame {
+      position: fixed;
+      top: var(--hdr);
+      left: 0; right: 0; bottom: 0;
+      width: 100%;
+      height: calc(100% - var(--hdr));
+      border: none;
+      background: #000;
+    }
+
+    #flmMsg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 1.1rem;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .flm-btn { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+      .logo-text { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="flmBar">
+  <a class="flm-btn btn-front" href="home.html" id="homeBtn">🏠 Home</a>
+  <div class="logo-wrap">
+    <div class="logo-flag"><span></span><span></span><span></span></div>
+    <div class="logo-text"><span class="flm">FLM</span> <span class="tv">TV</span></div>
+  </div>
+  <div class="bar-spacer"></div>
+</div>
+
+<iframe id="jellyfinFrame" allowfullscreen="" allow="autoplay; fullscreen; picture-in-picture" title="FLM TV My Account" style="display:none;"></iframe>
+<div id="flmMsg"></div>
+
+<script>
+const CONFIG = {
+  SERVER: 'https://flmtv26.duckdns.org:8920'
+};
+
+// Same real-member check used by The Vault on movie pages — this page is
+// just a direct shortcut to the same place, reachable from the home page
+// header instead of requiring a click into a movie first.
+const memberEmail = localStorage.getItem('flmtv_member_email');
+let session = null;
+try {
+  const creds = JSON.parse(localStorage.getItem('jellyfin_credentials') || 'null');
+  const server = creds && creds.Servers && creds.Servers[0];
+  if (server && server.UserId && server.AccessToken) session = server;
+} catch (e) {}
+
+if (!memberEmail || !session) {
+  document.getElementById('flmMsg').innerHTML =
+    'You need a free account to manage your profile.<br><br>' +
+    '<a href="home.html" class="flm-btn btn-front" style="text-decoration:none;">Go sign up on Home</a>';
+} else {
+  document.getElementById('jellyfinFrame').style.display = '';
+  document.getElementById('jellyfinFrame').src =
+    CONFIG.SERVER + '/web/index.html?flmuid=' + encodeURIComponent(session.UserId) +
+    '&flmtok=' + encodeURIComponent(session.AccessToken) + '#/home';
+}
+</script>
+
+</body></html>

@@ -2740,6 +2740,10 @@
                 <button class="btn-icon-text" id="signInBtn" title="Sign Up / Membership">
                     <i class="fas fa-user"></i> Sign Up / Membership
                 </button>
+
+                <button class="btn-icon" id="myAccountBtn" title="My Account" style="display:none;" onclick="window.location.href='my-account.html'">
+                    <i class="fas fa-user-gear"></i>
+                </button>
                 
                 <button class="btn-icon" id="parentLockBtn" title="Parental Controls">
                     <i class="fas fa-lock"></i>
@@ -5067,12 +5071,15 @@
             const btn = document.getElementById('signInBtn');
             if (!btn) return;
             const memberEmail = localStorage.getItem('flmtv_member_email');
+            const accountBtn = document.getElementById('myAccountBtn');
             if (memberEmail) {
                 btn.innerHTML = `<i class="fas fa-user-check"></i> ${memberEmail}`;
                 btn.onclick = () => {
                     if (confirm('Log out of FLM TV?')) flmLogOut();
                 };
+                if (accountBtn) accountBtn.style.display = '';
             } else {
+                if (accountBtn) accountBtn.style.display = 'none';
                 btn.innerHTML = `<i class="fas fa-user"></i> Sign Up / Membership`;
                 btn.onclick = () => { signInMode = 'signup'; renderSignInModal(); openModal('signInModal'); };
             }
