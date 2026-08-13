@@ -4739,9 +4739,24 @@
             }
         }
 
+        // Reads the signed-in member's own Jellyfin UserId directly from
+        // localStorage — synchronous, no dependency on autoAuthenticatePublic()
+        // or silentAuth() having finished yet. Used anywhere personal data
+        // (favorites, playlists) must never bleed from the shared account.
+        function getMemberUserId() {
+            try {
+                const creds = JSON.parse(localStorage.getItem('jellyfin_credentials') || 'null');
+                const server = creds && creds.Servers && creds.Servers[0];
+                return (server && server.UserId) ? server.UserId : null;
+            } catch (e) { return null; }
+        }
+
         async function loadMyListSection(container) {
             const memberEmail = localStorage.getItem('flmtv_member_email');
             if (!memberEmail) return; // Anonymous/shared-account viewers don't get a My List row
+
+            const memberUserId = getMemberUserId();
+            if (!memberUserId) return; // Session mismatch — nothing safe to show yet
 
             const section = document.createElement('section');
             section.className = 'category-section';
@@ -4764,7 +4779,7 @@
             container.insertBefore(section, container.firstChild);
 
             try {
-                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                const items = await jellyfinFetch(`/Users/${memberUserId}/Items`, {
                     Filters: 'IsFavorite',
                     Recursive: true,
                     IncludeItemTypes: 'Movie,Series,Book,MusicAlbum',
@@ -4821,6 +4836,9 @@
             const memberEmail = localStorage.getItem('flmtv_member_email');
             if (!memberEmail) return; // Playlists are personal — real account required
 
+            const memberUserId = getMemberUserId();
+            if (!memberUserId) return; // Session mismatch — nothing safe to show yet
+
             const section = document.createElement('section');
             section.className = 'category-section';
             section.id = 'section-my-playlists';
@@ -4828,6 +4846,9 @@
             section.innerHTML = `
                 <div class="category-header">
                     <h3 class="category-title" style="color:#22c55e;text-shadow:0 0 10px rgba(34,197,94,0.8);">My Playlists</h3>
+                    <a href="category-detail.html?id=my-playlists&name=My%20Playlists" class="view-all-btn" style="cursor:pointer;">
+                        View All <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
                 <div class="content-carousel" style="min-height:200px;">
                     <div style="display:flex;align-items:center;padding:2rem;color:#94a3b8;">
@@ -4845,7 +4866,7 @@
             }
 
             try {
-                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                const items = await jellyfinFetch(`/Users/${memberUserId}/Items`, {
                     IncludeItemTypes: 'Playlist',
                     Recursive: true,
                     SortBy: 'DateCreated',
@@ -4909,7 +4930,10 @@
             // as a blocking step before it — fixing a real slowdown this
             // introduced for logged-in members.
             const myListPromise = loadMyListSection(container).catch(e => console.error('My List failed:', e));
-            const myPlaylistsPromise = loadMyPlaylistsSection(container).catch(e => console.error('My Playlists failed:', e));
+            // My Playlists row removed again (2026-08-13): decided against it
+            // in favor of My List alone, which already covers what was wanted.
+            // loadMyPlaylistsSection() is left defined below (now correctly
+            // session-scoped) but not called anywhere.
 
             // Filter collections to show in carousel
             const visibleCollections = JELLYFIN_CONFIG.COLLECTIONS.filter(c =>
@@ -4940,7 +4964,6 @@
             // Now load all in parallel — each fills its own pre-placed section
             await Promise.all([
                 myListPromise,
-                myPlaylistsPromise,
                 ...visibleCollections.map((collection, i) => loadCollectionSection(collection, placeholders[i]))
             ]);
 
@@ -5217,8 +5240,31 @@
         
         async function autoAuthenticatePublic() {
             try {
-                // If a real signed-in viewer session already exists, leave it alone —
-                // don't overwrite it with the shared free-viewing account.
+                // A real signed-up member (flmtv_member_email set) must NEVER be
+                // silently swapped onto the shared public account. The old 24-hour
+                // timer was a guess, not a real check, and it was wrong — this
+                // caused real members to intermittently see the shared account's
+                // data (favorites, playlists) instead of their own.
+                const memberEmail = localStorage.getItem('flmtv_member_email');
+                if (memberEmail) {
+                    const existingCreds = localStorage.getItem('jellyfin_credentials');
+                    if (existingCreds) {
+                        try {
+                            const parsed = JSON.parse(existingCreds);
+                            const server = parsed.Servers && parsed.Servers[0];
+                            if (server && server.AccessToken && server.UserId) {
+                                console.log('✅ Real member session found, skipping shared auto-auth entirely');
+                                JELLYFIN_CONFIG.ACCESS_TOKEN = server.AccessToken;
+                                JELLYFIN_CONFIG.USER_ID = server.UserId;
+                                return server.AccessToken;
+                            }
+                        } catch (e) { /* malformed creds — fall through, member will need to re-login */ }
+                    }
+                    // Member email is set but no usable session — don't invent one
+                    // on the shared account. Let them see a normal signed-out state.
+                    return null;
+                }
+
                 const existingCreds = localStorage.getItem('jellyfin_credentials');
                 if (existingCreds) {
                     try {
@@ -5307,6 +5353,18 @@
                             return;
                         }
                     }
+                }
+
+                // If this belongs to a real signed-up member, don't paper over an
+                // invalid/expired token by quietly creating a shared ENTER FLM
+                // session in its place — that mismatch (UI still says "signed in"
+                // while data comes from the shared account) was the actual bug.
+                // Log them out cleanly instead; they'll see a normal sign-in prompt.
+                if (localStorage.getItem('flmtv_member_email')) {
+                    console.log('⚠️ Member session invalid — logging out cleanly instead of falling back to shared account');
+                    localStorage.removeItem('flmtv_member_email');
+                    localStorage.removeItem('jellyfin_credentials');
+                    return;
                 }
 
                 // Authenticate fresh

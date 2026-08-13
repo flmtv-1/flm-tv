@@ -11,6 +11,7 @@
   }
 </script>
     <title>Category - FLM TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #ffd700;
@@ -374,16 +375,17 @@ const CONFIG = {
 const categoryId   = new URLSearchParams(window.location.search).get('id');
 const categoryName = new URLSearchParams(window.location.search).get('name');
 
-// ── MY LIST / FAVORITES MODE ──
-// Triggered by id=my-list. Uses the REAL logged-in member's own account
-// (read from localStorage, same as home.html) instead of the page's
-// normal fixed/shared CONFIG.USER_ID — favorites are personal, so this
-// must reflect whoever is actually signed in, not a hardcoded account.
+// ── MY LIST / MY PLAYLISTS MODES ──
+// Both use the REAL logged-in member's own account (read from localStorage,
+// same as home.html) instead of the page's normal fixed/shared
+// CONFIG.USER_ID — personal data must reflect whoever is actually signed
+// in, never a hardcoded/shared account.
 const isMyListMode = categoryId === 'my-list';
+const isMyPlaylistsMode = categoryId === 'my-playlists';
 let ACTIVE_USER_ID = CONFIG.USER_ID;
 let ACTIVE_API_KEY = CONFIG.API_KEY; // fallback; overwritten below if a real session exists
 
-if (isMyListMode) {
+if (isMyListMode || isMyPlaylistsMode) {
     try {
         const creds = JSON.parse(localStorage.getItem('jellyfin_credentials') || 'null');
         const server = creds && creds.Servers && creds.Servers[0];
@@ -391,7 +393,7 @@ if (isMyListMode) {
             ACTIVE_USER_ID = server.UserId;
             ACTIVE_API_KEY = server.AccessToken;
         } else {
-            // No real member session — favorites can't be shown to an
+            // No real member session — personal content can't be shown to an
             // anonymous/shared-account viewer. Send them home.
             window.location.href = 'home.html';
         }
@@ -400,13 +402,16 @@ if (isMyListMode) {
     }
 }
 
-// Builds the Items query string for either normal ParentId browsing or
-// My List favorites mode, keeping every call site consistent.
+// Builds the Items query string for normal ParentId browsing, My List
+// favorites, or My Playlists — keeping every call site consistent.
 function buildItemsQuery(startIndex, extra) {
     extra = extra || '';
     const base = `${CONFIG.SERVER}/Users/${ACTIVE_USER_ID}/Items?SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${startIndex}&Limit=${ITEMS_PER_PAGE}${extra}&api_key=${ACTIVE_API_KEY}`;
     if (isMyListMode) {
         return base + '&Filters=IsFavorite&Recursive=true&IncludeItemTypes=Movie,Series,Book,MusicAlbum';
+    }
+    if (isMyPlaylistsMode) {
+        return base + '&Recursive=true&IncludeItemTypes=Playlist';
     }
     return base + `&ParentId=${categoryId}`;
 }
@@ -455,6 +460,54 @@ function filterByLetter(e, letter) {
     document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
     loadCategory();
+}
+
+// ── FAVORITES ──
+// Favorites always belong to the real signed-in member, independent of
+// ACTIVE_USER_ID (which for normal category browsing stays the shared
+// fixed account). Reads the same jellyfin_credentials session that
+// My List mode already uses above.
+function getMemberSession() {
+    try {
+        const creds = JSON.parse(localStorage.getItem('jellyfin_credentials') || 'null');
+        const server = creds && creds.Servers && creds.Servers[0];
+        if (server && server.UserId && server.AccessToken) {
+            return { userId: server.UserId, apiKey: server.AccessToken };
+        }
+    } catch (e) {}
+    return null;
+}
+
+async function toggleFavorite(itemId, btnEl) {
+    const session = getMemberSession();
+    if (!session) {
+        // This page has no sign-in modal — send anonymous/shared-account
+        // viewers to Home, where sign-up lives.
+        if (confirm('Sign up free on Home to save favorites and build your own playlist. Go there now?')) {
+            window.location.href = 'home.html';
+        }
+        return;
+    }
+
+    const isFav = btnEl.getAttribute('data-fav') === '1';
+    const icon = btnEl.querySelector('i');
+
+    // Optimistic UI update — flips instantly, reverts on failure
+    btnEl.setAttribute('data-fav', isFav ? '0' : '1');
+    btnEl.style.color = isFav ? '#fff' : '#ff4d6d';
+    icon.className = isFav ? 'far fa-heart' : 'fas fa-heart';
+
+    try {
+        const url = `${CONFIG.SERVER}/Users/${session.userId}/FavoriteItems/${itemId}?api_key=${session.apiKey}`;
+        const res = await fetch(url, { method: isFav ? 'DELETE' : 'POST' });
+        if (!res.ok) throw new Error('Favorite toggle failed: ' + res.status);
+    } catch (err) {
+        console.error('❌ toggleFavorite error:', err);
+        // Revert the optimistic update since the server call failed
+        btnEl.setAttribute('data-fav', isFav ? '1' : '0');
+        btnEl.style.color = isFav ? '#ff4d6d' : '#fff';
+        icon.className = isFav ? 'fas fa-heart' : 'far fa-heart';
+    }
 }
 
 // ── LOAD ──
@@ -512,10 +565,16 @@ function displayItems(items) {
             ? `${CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&maxWidth=300&quality=90`
             : '';
         const safeTitle = (item.Name || '').replace(/'/g, "\\'");
+        const isFav = item.UserData && item.UserData.IsFavorite;
         card.innerHTML = `
             ${posterUrl
                 ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy">`
                 : '<div class="item-poster"></div>'}
+            <button class="fav-toggle-btn" data-item-id="${item.Id}" data-fav="${isFav ? '1' : '0'}"
+                onclick="event.stopPropagation();toggleFavorite('${item.Id}', this)"
+                style="position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);color:${isFav ? '#ff4d6d' : '#fff'};font-size:1rem;">
+                <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
+            </button>
             ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${safeTitle}',${item.ProductionYear||'null'},'${item.Type}')">▶ Trailer</button>` : ''}
             <div class="item-info">
                 <div class="item-title">${item.OriginalTitle || item.Name}</div>
