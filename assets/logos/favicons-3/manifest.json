@@ -1,0 +1,23 @@
+{
+  "name": "FLM TV",
+  "short_name": "FLM TV",
+  "description": "FLM TV - Las Vegas & Worldwide Streaming",
+  "start_url": "/home",
+  "display": "standalone",
+  "background_color": "#0a0e27",
+  "theme_color": "#0a0e27",
+  "icons": [
+    {
+      "src": "assets/logos/favicons-3/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/logos/favicons-3/icon-transparent.baba78f2a106d9baee83.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
