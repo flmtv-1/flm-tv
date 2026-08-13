@@ -3260,6 +3260,27 @@
         max-width: 100% !important;
         margin-top: 0.75rem !important;
     }
+    .is-firestick .header {
+        padding: 0.5rem 0.75rem !important;
+    }
+    .is-firestick .header-content {
+        gap: 0.4rem !important;
+    }
+    .is-firestick .logo-container {
+        gap: 0.35rem !important;
+    }
+    .is-firestick .logo-container img {
+        height: 32px !important;
+    }
+    .is-firestick .logo-text {
+        font-size: 1.3rem !important;
+    }
+    .is-firestick .header-nav {
+        gap: 0.6rem !important;
+    }
+    .is-firestick .header-nav a {
+        font-size: 0.8rem !important;
+    }
     .is-firestick .flm-ad-header {
         grid-column: 1 / -1 !important;
         margin-bottom: -0.3rem !important;
@@ -4601,6 +4622,7 @@
                 signInMode = 'signup';
                 renderSignInModal();
                 openModal('signInModal');
+                showSignInStatus('Sign up free to save favorites and build your own playlist!', 'loading');
                 return;
             }
 
@@ -4750,7 +4772,15 @@
                 carousel.innerHTML = '';
 
                 if (!items || !items.Items || items.Items.length === 0) {
-                    section.style.display = 'none'; // nothing favorited yet — hide the row entirely
+                    carousel.innerHTML = `
+                        <div style="display:flex;align-items:center;gap:1rem;padding:1.5rem 1rem;color:#94a3b8;max-width:600px;">
+                            <i class="far fa-heart" style="font-size:1.8rem;color:#ff4d6d;flex-shrink:0;"></i>
+                            <div>
+                                <div style="color:#fff;font-weight:600;margin-bottom:0.25rem;">Your list is empty</div>
+                                <div style="font-size:0.9rem;">Click the <i class="far fa-heart" style="color:#ff4d6d;"></i> heart on any movie or show to save it here — build your own playlist in seconds!</div>
+                            </div>
+                        </div>
+                    `;
                     return;
                 }
 
@@ -4787,8 +4817,10 @@
             const container = document.getElementById('contentContainer');
             container.innerHTML = '';
 
-            // "My List" goes first, only shown for real logged-in members
-            try { await loadMyListSection(container); } catch (e) { console.error('My List failed:', e); }
+            // "My List" now runs IN PARALLEL with everything below, not
+            // as a blocking step before it — fixing a real slowdown this
+            // introduced for logged-in members.
+            const myListPromise = loadMyListSection(container).catch(e => console.error('My List failed:', e));
 
             // Filter collections to show in carousel
             const visibleCollections = JELLYFIN_CONFIG.COLLECTIONS.filter(c =>
@@ -4817,9 +4849,10 @@
             });
 
             // Now load all in parallel — each fills its own pre-placed section
-            await Promise.all(visibleCollections.map((collection, i) =>
-                loadCollectionSection(collection, placeholders[i])
-            ));
+            await Promise.all([
+                myListPromise,
+                ...visibleCollections.map((collection, i) => loadCollectionSection(collection, placeholders[i]))
+            ]);
 
             console.log('🎉 All content loaded!');
         }
@@ -4968,8 +5001,14 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
                     });
-                    const signupData = await signupRes.json();
-                    if (!signupRes.ok) throw new Error(signupData.error || 'Could not create account.');
+                    const rawText = await signupRes.text();
+                    let signupData = {};
+                    try { signupData = rawText ? JSON.parse(rawText) : {}; } catch (parseErr) { /* not JSON, fall through */ }
+                    if (!signupRes.ok) {
+                        const detail = signupData.error || rawText || `Server error (HTTP ${signupRes.status})`;
+                        console.error('❌ jellyfin-signup failed:', signupRes.status, rawText);
+                        throw new Error(`Could not create account: ${detail}`);
+                    }
                 }
 
                 const server = (typeof JELLYFIN_CONFIG !== 'undefined' && JELLYFIN_CONFIG.SERVER) || 'https://flmtv26.duckdns.org:8096';
@@ -7132,7 +7171,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.content-card',
             '.movie-card',
             '.mu-event-card',
-            '.fav-toggle-btn',
             '#flmKidsCornerCard',
             '.flm-tv-stations-card',
             '.flm-ad-slideshow a',
@@ -7216,7 +7254,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.content-card, ' +
             '.movie-card, ' +
             '.mu-event-card, ' +
-            '.fav-toggle-btn, ' +
             '.flm-tv-scroll-btn, ' +
             '.floating-btn-chat, ' +
             '.floating-btn-ai, ' +
