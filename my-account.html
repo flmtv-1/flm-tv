@@ -254,8 +254,10 @@ try {
 
 if (!memberEmail || !session) {
   document.getElementById('flmMsg').innerHTML =
-    'Sign in (or sign up free) on Home to manage your profile.<br><br>' +
-    '<a href="home.html" class="flm-btn btn-front" style="text-decoration:none;">Go to Home</a>';
+    '<div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">' +
+      '<div>Sign in (or sign up free) on Home to manage your profile.</div>' +
+      '<a href="home.html" class="flm-btn btn-front" style="text-decoration:none;">Go to Home</a>' +
+    '</div>';
 } else {
   document.getElementById('jellyfinFrame').style.display = '';
   document.getElementById('jellyfinFrame').src =
