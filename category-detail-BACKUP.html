@@ -374,43 +374,6 @@ const CONFIG = {
 const categoryId   = new URLSearchParams(window.location.search).get('id');
 const categoryName = new URLSearchParams(window.location.search).get('name');
 
-// ── MY LIST / FAVORITES MODE ──
-// Triggered by id=my-list. Uses the REAL logged-in member's own account
-// (read from localStorage, same as home.html) instead of the page's
-// normal fixed/shared CONFIG.USER_ID — favorites are personal, so this
-// must reflect whoever is actually signed in, not a hardcoded account.
-const isMyListMode = categoryId === 'my-list';
-let ACTIVE_USER_ID = CONFIG.USER_ID;
-let ACTIVE_API_KEY = CONFIG.API_KEY; // fallback; overwritten below if a real session exists
-
-if (isMyListMode) {
-    try {
-        const creds = JSON.parse(localStorage.getItem('jellyfin_credentials') || 'null');
-        const server = creds && creds.Servers && creds.Servers[0];
-        if (server && server.UserId && server.AccessToken) {
-            ACTIVE_USER_ID = server.UserId;
-            ACTIVE_API_KEY = server.AccessToken;
-        } else {
-            // No real member session — favorites can't be shown to an
-            // anonymous/shared-account viewer. Send them home.
-            window.location.href = 'home.html';
-        }
-    } catch (e) {
-        window.location.href = 'home.html';
-    }
-}
-
-// Builds the Items query string for either normal ParentId browsing or
-// My List favorites mode, keeping every call site consistent.
-function buildItemsQuery(startIndex, extra) {
-    extra = extra || '';
-    const base = `${CONFIG.SERVER}/Users/${ACTIVE_USER_ID}/Items?SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${startIndex}&Limit=${ITEMS_PER_PAGE}${extra}&api_key=${ACTIVE_API_KEY}`;
-    if (isMyListMode) {
-        return base + '&Filters=IsFavorite&Recursive=true&IncludeItemTypes=Movie,Series,Book,MusicAlbum';
-    }
-    return base + `&ParentId=${categoryId}`;
-}
-
 const ITEMS_PER_PAGE = 24;
 let currentPage = 0;
 let totalItems  = 0;
@@ -462,14 +425,14 @@ async function loadCategory() {
     try {
         if (categoryName) document.getElementById('categoryTitle').textContent = decodeURIComponent(categoryName);
         const lp  = nameFilter === '#' ? '&NameStartsWith=%23' : nameFilter ? `&NameStartsWith=${nameFilter}` : '';
-        const url = buildItemsQuery(currentPage*ITEMS_PER_PAGE, lp);
+        const url = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${CONFIG.API_KEY}`;
         const data = await (await fetch(url)).json();
         totalItems = data.TotalRecordCount || 0;
         let items = data.Items || [];
 
         // If items are Folders (e.g. Comics library subfolders), re-fetch recursively for actual books
         if (items.length > 0 && items[0].Type === 'Folder') {
-            const recursiveUrl = `${CONFIG.SERVER}/Users/${ACTIVE_USER_ID}/Items?ParentId=${categoryId}&Recursive=true&IncludeItemTypes=Book&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${ACTIVE_API_KEY}`;
+            const recursiveUrl = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&Recursive=true&IncludeItemTypes=Book&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${CONFIG.API_KEY}`;
             const recursiveData = await (await fetch(recursiveUrl)).json();
             totalItems = recursiveData.TotalRecordCount || 0;
             items = recursiveData.Items || [];
@@ -539,7 +502,7 @@ async function loadMore() {
     document.getElementById('loadingMore').style.display = 'block';
     document.getElementById('loadMoreBtn').disabled = true;
     const lp  = nameFilter === '#' ? '&NameStartsWith=%23' : nameFilter ? `&NameStartsWith=${nameFilter}` : '';
-    const url = buildItemsQuery(currentPage*ITEMS_PER_PAGE, lp);
+    const url = `${CONFIG.SERVER}/Users/${CONFIG.USER_ID}/Items?ParentId=${categoryId}&SortBy=SortName&Fields=PrimaryImageAspectRatio,BasicSyncInfo,Name,OriginalTitle&ImageTypeLimit=1&EnableImageTypes=Primary&StartIndex=${currentPage*ITEMS_PER_PAGE}&Limit=${ITEMS_PER_PAGE}${lp}&api_key=${CONFIG.API_KEY}`;
     try { displayItems((await (await fetch(url)).json()).Items); updatePaginationControls(); } catch(e) {}
     document.getElementById('loadingMore').style.display = 'none';
     document.getElementById('loadMoreBtn').disabled = false;

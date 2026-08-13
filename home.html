@@ -4746,9 +4746,13 @@
             const section = document.createElement('section');
             section.className = 'category-section';
             section.id = 'section-my-list';
+            section.style.cssText = 'border:2px solid #22c55e;border-radius:12px;padding:1rem 1rem 0.5rem;box-shadow:0 0 20px rgba(34,197,94,0.35);background:rgba(34,197,94,0.04);';
             section.innerHTML = `
                 <div class="category-header">
-                    <h3 class="category-title">My List</h3>
+                    <h3 class="category-title" style="color:#22c55e;text-shadow:0 0 10px rgba(34,197,94,0.8);">My List</h3>
+                    <a href="category-detail.html?id=my-list&name=My%20List" class="view-all-btn" style="cursor:pointer;">
+                        View All <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
                 <div class="content-carousel" style="min-height:200px;">
                     <div style="display:flex;align-items:center;padding:2rem;color:#94a3b8;">
@@ -4813,6 +4817,90 @@
             }
         }
 
+        async function loadMyPlaylistsSection(container) {
+            const memberEmail = localStorage.getItem('flmtv_member_email');
+            if (!memberEmail) return; // Playlists are personal — real account required
+
+            const section = document.createElement('section');
+            section.className = 'category-section';
+            section.id = 'section-my-playlists';
+            section.style.cssText = 'border:2px solid #22c55e;border-radius:12px;padding:1rem 1rem 0.5rem;box-shadow:0 0 20px rgba(34,197,94,0.35);background:rgba(34,197,94,0.04);margin-top:1rem;';
+            section.innerHTML = `
+                <div class="category-header">
+                    <h3 class="category-title" style="color:#22c55e;text-shadow:0 0 10px rgba(34,197,94,0.8);">My Playlists</h3>
+                </div>
+                <div class="content-carousel" style="min-height:200px;">
+                    <div style="display:flex;align-items:center;padding:2rem;color:#94a3b8;">
+                        <div class="spinner" style="width:24px;height:24px;border-width:3px;margin-right:1rem;"></div>
+                        Loading...
+                    </div>
+                </div>
+            `;
+            // Sits right after My List, before the regular category rows
+            const myListEl = document.getElementById('section-my-list');
+            if (myListEl) {
+                container.insertBefore(section, myListEl.nextSibling); // null nextSibling = inserted right after it
+            } else {
+                container.insertBefore(section, container.firstChild);
+            }
+
+            try {
+                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    IncludeItemTypes: 'Playlist',
+                    Recursive: true,
+                    SortBy: 'DateCreated',
+                    SortOrder: 'Descending'
+                });
+
+                const carousel = section.querySelector('.content-carousel');
+                carousel.innerHTML = '';
+
+                if (!items || !items.Items || items.Items.length === 0) {
+                    carousel.innerHTML = `
+                        <div style="display:flex;align-items:center;gap:1rem;padding:1.5rem 1rem;color:#94a3b8;max-width:650px;">
+                            <i class="fas fa-list-ul" style="font-size:1.8rem;color:#22c55e;flex-shrink:0;"></i>
+                            <div>
+                                <div style="color:#fff;font-weight:600;margin-bottom:0.25rem;">No playlists yet</div>
+                                <div style="font-size:0.9rem;">Open any movie or show, click "The Vault," then use "Add to Playlist" to create your first one — it'll show up here.</div>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                items.Items.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'content-card';
+                    card.onclick = () => { window.location.href = `movie-frame.html?id=${item.Id}`; };
+
+                    const hasImage = item.ImageTags?.Primary;
+                    const imageUrl = hasImage
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&fillWidth=200&fillHeight=300&quality=90&format=webp`
+                        : '';
+
+                    card.innerHTML = hasImage ? `
+                        <img src="${imageUrl}" alt="${item.Name}" class="content-card-image" loading="lazy">
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">${item.Name}</div>
+                            <div class="content-card-info">${item.ChildCount || 0} item${item.ChildCount === 1 ? '' : 's'}</div>
+                        </div>
+                    ` : `
+                        <div class="content-card-image" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a2e1a,#0f1f0f);height:100%;">
+                            <i class="fas fa-list-ul" style="font-size:2.2rem;color:#22c55e;margin-bottom:0.5rem;"></i>
+                        </div>
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">${item.Name}</div>
+                            <div class="content-card-info">${item.ChildCount || 0} item${item.ChildCount === 1 ? '' : 's'}</div>
+                        </div>
+                    `;
+                    carousel.appendChild(card);
+                });
+            } catch (err) {
+                console.error('❌ loadMyPlaylistsSection error:', err);
+                section.style.display = 'none';
+            }
+        }
+
         async function loadContent() {
             const container = document.getElementById('contentContainer');
             container.innerHTML = '';
@@ -4821,6 +4909,7 @@
             // as a blocking step before it — fixing a real slowdown this
             // introduced for logged-in members.
             const myListPromise = loadMyListSection(container).catch(e => console.error('My List failed:', e));
+            const myPlaylistsPromise = loadMyPlaylistsSection(container).catch(e => console.error('My Playlists failed:', e));
 
             // Filter collections to show in carousel
             const visibleCollections = JELLYFIN_CONFIG.COLLECTIONS.filter(c =>
@@ -4851,6 +4940,7 @@
             // Now load all in parallel — each fills its own pre-placed section
             await Promise.all([
                 myListPromise,
+                myPlaylistsPromise,
                 ...visibleCollections.map((collection, i) => loadCollectionSection(collection, placeholders[i]))
             ]);
 
