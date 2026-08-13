@@ -138,7 +138,8 @@ function openVault() {
   }
 
   document.getElementById('jellyfinFrame').src =
-    CONFIG.SERVER + '/web/index.html?api_key=' + session.AccessToken + '#/home';
+    CONFIG.SERVER + '/web/index.html?flmuid=' + encodeURIComponent(session.UserId) +
+    '&flmtok=' + encodeURIComponent(session.AccessToken) + '#/home';
 }
 
 const CONFIG = {
