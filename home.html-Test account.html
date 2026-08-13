@@ -4593,38 +4593,6 @@
         // ═══════════════════════════════════════════════════════════════
         
         // Fill a pre-existing section with items
-        async function toggleFavorite(itemId, btnEl) {
-            const memberEmail = localStorage.getItem('flmtv_member_email');
-            if (!memberEmail) {
-                // Anonymous/shared-account viewers don't have their own
-                // Jellyfin favorites — prompt them to create a real account.
-                signInMode = 'signup';
-                renderSignInModal();
-                openModal('signInModal');
-                return;
-            }
-
-            const isFav = btnEl.getAttribute('data-fav') === '1';
-            const icon = btnEl.querySelector('i');
-
-            // Optimistic UI update — flips instantly, reverts on failure
-            btnEl.setAttribute('data-fav', isFav ? '0' : '1');
-            btnEl.style.color = isFav ? '#fff' : '#ff4d6d';
-            icon.className = isFav ? 'far fa-heart' : 'fas fa-heart';
-
-            try {
-                const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/FavoriteItems/${itemId}?api_key=${JELLYFIN_CONFIG.API_KEY}`;
-                const res = await fetch(url, { method: isFav ? 'DELETE' : 'POST' });
-                if (!res.ok) throw new Error('Favorite toggle failed: ' + res.status);
-            } catch (err) {
-                console.error('❌ toggleFavorite error:', err);
-                // Revert the optimistic update since the server call failed
-                btnEl.setAttribute('data-fav', isFav ? '1' : '0');
-                btnEl.style.color = isFav ? '#ff4d6d' : '#fff';
-                icon.className = isFav ? 'fas fa-heart' : 'far fa-heart';
-            }
-        }
-
         async function loadCollectionSection(collection, section) {
             try {
                 // Collections row loads BoxSets faster with SortName
@@ -4680,18 +4648,12 @@
                             imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.ParentThumbItemId}/Images/Thumb?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ParentThumbImageTag}&fillWidth=200&fillHeight=300&quality=90&format=webp`;
                         }
 
-                        const isFav = item.UserData && item.UserData.IsFavorite;
                         card.innerHTML = `
                             <img src="${imageUrl}"
                                  alt="${item.Name}"
                                  class="content-card-image"
                                  loading="lazy"
                                  onerror="this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}'">
-                            <button class="fav-toggle-btn" data-item-id="${item.Id}" data-fav="${isFav ? '1' : '0'}"
-                                onclick="event.stopPropagation();toggleFavorite('${item.Id}', this)"
-                                style="position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);color:${isFav ? '#ff4d6d' : '#fff'};font-size:1rem;">
-                                <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
-                            </button>
                             <div class="content-card-overlay">
                                 <div class="content-card-title">${item.Name}</div>
                                 <div class="content-card-info">
@@ -4717,78 +4679,9 @@
             }
         }
 
-        async function loadMyListSection(container) {
-            const memberEmail = localStorage.getItem('flmtv_member_email');
-            if (!memberEmail) return; // Anonymous/shared-account viewers don't get a My List row
-
-            const section = document.createElement('section');
-            section.className = 'category-section';
-            section.id = 'section-my-list';
-            section.innerHTML = `
-                <div class="category-header">
-                    <h3 class="category-title">My List</h3>
-                </div>
-                <div class="content-carousel" style="min-height:200px;">
-                    <div style="display:flex;align-items:center;padding:2rem;color:#94a3b8;">
-                        <div class="spinner" style="width:24px;height:24px;border-width:3px;margin-right:1rem;"></div>
-                        Loading...
-                    </div>
-                </div>
-            `;
-            container.insertBefore(section, container.firstChild);
-
-            try {
-                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                    Filters: 'IsFavorite',
-                    Recursive: true,
-                    IncludeItemTypes: 'Movie,Series,Book,MusicAlbum',
-                    SortBy: 'DateCreated',
-                    SortOrder: 'Descending'
-                });
-
-                const carousel = section.querySelector('.content-carousel');
-                carousel.innerHTML = '';
-
-                if (!items || !items.Items || items.Items.length === 0) {
-                    section.style.display = 'none'; // nothing favorited yet — hide the row entirely
-                    return;
-                }
-
-                items.Items.filter(item => item.ImageTags?.Primary).forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'content-card';
-                    card.onclick = item.Type === 'Book'
-                        ? () => openComic(item.Id, item.Name)
-                        : () => playJellyfinItem(item.Id, item.Type);
-
-                    const imageUrl = `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?api_key=${JELLYFIN_CONFIG.API_KEY}&tag=${item.ImageTags.Primary}&fillWidth=200&fillHeight=300&quality=90&format=webp`;
-
-                    card.innerHTML = `
-                        <img src="${imageUrl}" alt="${item.Name}" class="content-card-image" loading="lazy">
-                        <button class="fav-toggle-btn" data-item-id="${item.Id}" data-fav="1"
-                            onclick="event.stopPropagation();toggleFavorite('${item.Id}', this)"
-                            style="position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);color:#ff4d6d;font-size:1rem;">
-                            <i class="fas fa-heart"></i>
-                        </button>
-                        <div class="content-card-overlay">
-                            <div class="content-card-title">${item.Name}</div>
-                            <div class="content-card-info">${item.ProductionYear || ''} ${item.OfficialRating ? '• ' + item.OfficialRating : ''}</div>
-                        </div>
-                    `;
-                    carousel.appendChild(card);
-                });
-            } catch (err) {
-                console.error('❌ loadMyListSection error:', err);
-                section.style.display = 'none';
-            }
-        }
-
         async function loadContent() {
             const container = document.getElementById('contentContainer');
             container.innerHTML = '';
-
-            // "My List" goes first, only shown for real logged-in members
-            try { await loadMyListSection(container); } catch (e) { console.error('My List failed:', e); }
 
             // Filter collections to show in carousel
             const visibleCollections = JELLYFIN_CONFIG.COLLECTIONS.filter(c =>
@@ -7132,7 +7025,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.content-card',
             '.movie-card',
             '.mu-event-card',
-            '.fav-toggle-btn',
             '#flmKidsCornerCard',
             '.flm-tv-stations-card',
             '.flm-ad-slideshow a',
@@ -7216,7 +7108,6 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.content-card, ' +
             '.movie-card, ' +
             '.mu-event-card, ' +
-            '.fav-toggle-btn, ' +
             '.flm-tv-scroll-btn, ' +
             '.floating-btn-chat, ' +
             '.floating-btn-ai, ' +
