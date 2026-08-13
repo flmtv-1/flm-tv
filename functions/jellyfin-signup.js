@@ -5,6 +5,8 @@
 // Netlify env vars required:
 //   JELLYFIN_API_KEY = 62131ee22c0141c6b651be75a7444350
 
+const fetch = require('node-fetch');
+
 const JELLYFIN_SERVER = 'https://flmtv26.duckdns.org:8920';
 // "ENTER FLM" account — used only as a permissions template for new users
 const TEMPLATE_USER_ID = '2562494c1df24f8789cd0ad8a38a7bf4';
