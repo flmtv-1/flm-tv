@@ -15,24 +15,6 @@ SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
 JSON_FILE    = os.path.join(SCRIPT_DIR, "FLM-TV-Schedule.json")
 HTML_FILE    = os.path.join(SCRIPT_DIR, "schedule.html")
 BACKUP_FILE  = os.path.join(SCRIPT_DIR, "schedule.html.bak")
-BACKUP_DIR   = os.path.join(SCRIPT_DIR, "schedule_backups")
-
-def timestamped_backup():
-    """Saves a dated copy on top of the existing single .bak file, so
-    more than just the last update can be undone."""
-    os.makedirs(BACKUP_DIR, exist_ok=True)
-    stamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    dest = os.path.join(BACKUP_DIR, f"schedule_{stamp}.html")
-    shutil.copy(HTML_FILE, dest)
-    return dest
-
-def latest_backup():
-    if not os.path.isdir(BACKUP_DIR):
-        return None
-    backups = sorted(
-        f for f in os.listdir(BACKUP_DIR) if f.startswith("schedule_") and f.endswith(".html")
-    )
-    return os.path.join(BACKUP_DIR, backups[-1]) if backups else None
 
 # ── CATEGORY MAP ────────────────────────────────────────────────────────
 def get_cat(item):
@@ -43,49 +25,7 @@ def get_cat(item):
     if c == "flm":                     return "flm"
     return ""
 
-# ── DUPLICATE CHECK ─────────────────────────────────────────────────────
-def find_duplicates(items):
-    """Flags shows that are almost certainly the same clip airing twice
-    by mistake. Matches on FILE PATH when available — two different
-    episodes always have different files, even if they happen to share
-    an identical runtime (e.g. Sesame Street episodes are consistently
-    the same length). Falls back to name+duration only when no path is
-    present. Short clips under 5 minutes are excluded — bumpers, ad
-    fillers, and short promos are DESIGNED to repeat many times a day.
-    """
-    MIN_DURATION_TO_CHECK = 300
-    seen = {}
-    dupes = []
-    for item in items:
-        d = int(item.get("duration") or item.get("d") or 0)
-        if d < MIN_DURATION_TO_CHECK:
-            continue
-        path = (item.get("path") or "").strip().lower()
-        name = (item.get("name") or item.get("n") or "").strip().lower()
-        key = ("path", path) if path else ("nameonly", name, d)
-        if key in seen:
-            dupes.append((seen[key], item))
-        else:
-            seen[key] = item
-    return dupes
-
-def confirm_no_duplicates(items):
-    dupes = find_duplicates(items)
-    if not dupes:
-        return True
-    print("\n  ⚠️  Possible duplicate shows detected:\n")
-    for first, second in dupes:
-        t1 = first.get("startTime") or first.get("t", "?")
-        t2 = second.get("startTime") or second.get("t", "?")
-        n = first.get("name") or first.get("n", "?")
-        same_path = bool((first.get("path") or "").strip())
-        reason = "same exact file" if same_path else "same name+runtime, no path to confirm"
-        print(f"     '{n}' at {t1} AND again at {t2} ({reason})")
-    print()
-    ans = input("  Continue anyway and write this schedule? [y/N]: ").strip().lower()
-    return ans == "y"
-
-
+# ── LOAD JSON ───────────────────────────────────────────────────────────
 def load_schedule():
     if not os.path.exists(JSON_FILE):
         print(f"\n  ERROR: Cannot find {JSON_FILE}")
@@ -161,34 +101,13 @@ def main():
     print("  Choose mode:")
     print("  [1] APPEND  — Add new shows after last show in current schedule")
     print("  [2] REPLACE — Replace entire schedule with new JSON")
-    print("  [3] UNDO    — Restore schedule.html from the last backup")
     print()
-    mode = input("  Enter 1, 2, or 3: ").strip()
+    mode = input("  Enter 1 or 2: ").strip()
 
-    if mode not in ("1", "2", "3"):
+    if mode not in ("1", "2"):
         print("  Invalid choice. Exiting.")
         input("\n  Press Enter to close...")
         sys.exit(1)
-
-    if mode == "3":
-        backup = latest_backup()
-        if not backup:
-            print("\n  No backups found in schedule_backups/ — nothing to undo.")
-            input("\n  Press Enter to close...")
-            sys.exit(1)
-        print(f"\n  This will restore schedule.html from:\n    {os.path.basename(backup)}")
-        ans = input("  Proceed? [y/N]: ").strip().lower()
-        if ans != "y":
-            print("  Cancelled.")
-            input("\n  Press Enter to close...")
-            sys.exit(0)
-        # Back up the current (about-to-be-overwritten) state too, just in case
-        if os.path.exists(HTML_FILE):
-            timestamped_backup()
-        shutil.copy(backup, HTML_FILE)
-        print(f"\n  Restored schedule.html from {os.path.basename(backup)}")
-        input("\n  Press Enter to close...")
-        sys.exit(0)
 
     new_items = load_schedule()
     print(f"\n  Loaded {len(new_items)} items from FLM-TV-Schedule.json")
@@ -210,26 +129,17 @@ def main():
                           "cat": get_cat(i),
                           "date": i.get("date") or i.get("airDate") or ""} for i in new_items]
         combined = existing + new_converted
-        if not confirm_no_duplicates(combined):
-            print("  Cancelled — nothing was changed.")
-            input("\n  Press Enter to close...")
-            sys.exit(0)
         lines = [item_to_js(i) for i in combined]
         js_block = "const TODAY_SCHEDULE = [\n" + ",\n".join(lines) + "\n];"
         total = len(combined)
         print(f"  Combined total: {total} items")
     else:
-        if not confirm_no_duplicates(new_items):
-            print("  Cancelled — nothing was changed.")
-            input("\n  Press Enter to close...")
-            sys.exit(0)
         lines = [item_to_js(i) for i in new_items]
         js_block = "const TODAY_SCHEDULE = [\n" + ",\n".join(lines) + "\n];"
         total = len(new_items)
 
     shutil.copy(HTML_FILE, BACKUP_FILE)
-    timestamped_backup()
-    print(f"  Backup saved: schedule.html.bak (and a dated copy in schedule_backups/)")
+    print(f"  Backup saved: schedule.html.bak")
 
     new_html = inject(js_block, html)
     with open(HTML_FILE, "w", encoding="utf-8") as f:
