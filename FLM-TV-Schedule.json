@@ -1,43 +1,16 @@
 {
   "2026-08-14": [
     {
-      "startTime": "22:06",
-      "name": "The Lucy Show",
-      "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 2\\S02E24 - Lucy Meets a Millionaire.ia.mp4",
-      "duration": 1544,
-      "inPoint": 0,
-      "outPoint": 1544,
-      "category": "show"
-    },
-    {
-      "startTime": "22:32",
-      "name": "Leave it to Beaver",
-      "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 3\\S03E14 - Tire Trouble.mp4",
-      "duration": 1600,
-      "inPoint": 0,
-      "outPoint": 1600,
-      "category": "show"
-    },
-    {
-      "startTime": "22:59",
+      "startTime": "13:06",
       "name": "OZONE in Concert",
       "path": "X:\\TV SHOWS 2\\OZONE BAND\\OZONE Commercial -FoxTheater-2.mp4",
       "duration": 117,
       "inPoint": 0,
       "outPoint": 117,
-      "category": ""
+      "category": "commercial"
     },
     {
-      "startTime": "23:01",
-      "name": "Three Stooges",
-      "path": "X:\\TV Clssics 2\\Three Stooges\\72 - Higher Than a Kite.mkv",
-      "duration": 1057,
-      "inPoint": 0,
-      "outPoint": 1057,
-      "category": "show"
-    },
-    {
-      "startTime": "23:19",
+      "startTime": "13:08",
       "name": "Archie Bunker's Place ",
       "path": "X:\\_SORT-MOVIES\\Archie Bunker 2\\Archie Bunker's Place - S01E02.ia.mp4",
       "duration": 1524,
@@ -46,7 +19,7 @@
       "category": "show"
     },
     {
-      "startTime": "23:44",
+      "startTime": "13:33",
       "name": "VoteScottBlack",
       "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
       "duration": 30,
@@ -55,16 +28,16 @@
       "category": ""
     },
     {
-      "startTime": "23:45",
-      "name": "ZAINA JULIETTE COMMERCIALflm",
+      "startTime": "13:34",
+      "name": "ZAINA JULIETTE",
       "path": "Y:\\FLM-TV\\CLIPS-FILLERS\\ZAINA JULIETTE-COMMERCIALflm.mp4",
-      "duration": 37.12,
+      "duration": 37,
       "inPoint": 0,
-      "outPoint": 37.12,
-      "category": ""
+      "outPoint": 37,
+      "category": "show"
     },
     {
-      "startTime": "23:46",
+      "startTime": "13:35",
       "name": "FLMTV.COM",
       "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
       "duration": 21,
@@ -73,7 +46,7 @@
       "category": "show"
     },
     {
-      "startTime": "23:46",
+      "startTime": "13:35",
       "name": "Andy Griffith",
       "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-03\\Andy Griffith S3 D3_t06.mkv",
       "duration": 1530,
@@ -82,7 +55,7 @@
       "category": "show"
     },
     {
-      "startTime": "00:12",
+      "startTime": "14:01",
       "name": "Andy Griffith ",
       "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-03\\Andy Griffith S3 D3_t07.mkv",
       "duration": 1542,
@@ -91,7 +64,7 @@
       "category": "show"
     },
     {
-      "startTime": "00:38",
+      "startTime": "14:27",
       "name": "Archie Bunker's Place ",
       "path": "X:\\TV SHOWS 2\\Archie Bunker 2\\Archie Bunker's Place - S01E02.ia.mp4",
       "duration": 1524,
@@ -100,7 +73,7 @@
       "category": "show"
     },
     {
-      "startTime": "01:03",
+      "startTime": "14:52",
       "name": "The Twilight Zone ",
       "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-02\\The Twilight Zone (1959) - S02E01 - King Nine Will Not Return.mkv",
       "duration": 1555,
@@ -109,7 +82,7 @@
       "category": "show"
     },
     {
-      "startTime": "01:29",
+      "startTime": "15:18",
       "name": "The Twilight Zone ",
       "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-02\\The Twilight Zone (1959) - S02E02 - The Man in the Bottle (1080p BluRay x265 ImE).mkv",
       "duration": 1556,
@@ -118,7 +91,7 @@
       "category": "show"
     },
     {
-      "startTime": "01:55",
+      "startTime": "15:44",
       "name": "FLMTV",
       "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
       "duration": 28,
@@ -127,7 +100,7 @@
       "category": ""
     },
     {
-      "startTime": "01:55",
+      "startTime": "15:44",
       "name": "Charlie's Angels ",
       "path": "Y:\\CLASSIC TV-2\\Charlies Angeles\\SEASON 01\\Charlie's Angels S01e02 The Mexican Connection.mkv",
       "duration": 3019,
@@ -136,7 +109,7 @@
       "category": "show"
     },
     {
-      "startTime": "02:45",
+      "startTime": "16:34",
       "name": "Bewitched ",
       "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 03\\Bewitched S03E07 Twitch or Treat.mp4",
       "duration": 1524,
@@ -145,7 +118,7 @@
       "category": "show"
     },
     {
-      "startTime": "03:10",
+      "startTime": "16:59",
       "name": "OZONE in Concert",
       "path": "X:\\TV SHOWS 2\\OZONE BAND\\OZONE Commercial -FoxTheater-2.mp4",
       "duration": 117,
@@ -154,7 +127,7 @@
       "category": ""
     },
     {
-      "startTime": "03:12",
+      "startTime": "17:01",
       "name": "Whats Happening",
       "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-03\\Whats Happening S03E01.mkv",
       "duration": 1510,
@@ -163,7 +136,7 @@
       "category": "show"
     },
     {
-      "startTime": "03:37",
+      "startTime": "17:26",
       "name": "Good Times",
       "path": "X:\\TV SHOWS 2\\GOOD TIMES 1974_1979\\SEASON 02\\Good Times S02E22 (The Enlistment).mp4",
       "duration": 1517,
@@ -172,7 +145,7 @@
       "category": "show"
     },
     {
-      "startTime": "04:02",
+      "startTime": "17:51",
       "name": "Sanford and Son",
       "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 04\\Sanford and Son- (Season 4) Disc 2-A1_t07.mkv",
       "duration": 1495,
@@ -181,7 +154,7 @@
       "category": "show"
     },
     {
-      "startTime": "04:27",
+      "startTime": "18:16",
       "name": "The Jeffersons ",
       "path": "Y:\\AWESOME TV SHOWS-2\\THE JEFFERSONS\\The Jeffersons 1975 Season 9 Complete AMZN WEBRip x264 [i_c]\\The Jeffersons S09E10 Appointment in 8-B.mkv",
       "duration": 1493,
@@ -190,7 +163,7 @@
       "category": "show"
     },
     {
-      "startTime": "04:52",
+      "startTime": "18:41",
       "name": "OZONE in Concert",
       "path": "X:\\TV SHOWS 2\\OZONE BAND\\OZONE Commercial -FoxTheater-2.mp4",
       "duration": 117,
@@ -199,7 +172,7 @@
       "category": ""
     },
     {
-      "startTime": "04:54",
+      "startTime": "18:43",
       "name": "Sundays @ 11 AM",
       "path": "Y:\\FLM-TV\\CLIPS-FILLERS\\Zaina Juliette Spotlight Clip-StormyWeather.mp4",
       "duration": 313,
@@ -208,7 +181,7 @@
       "category": "show"
     },
     {
-      "startTime": "04:59",
+      "startTime": "18:48",
       "name": "Charlie Brown",
       "path": "X:\\KIDS WORLD 1\\Charlie Brown-Snoopy\\SEASON 01\\Charlie Brown and Snoopy Show - 2x09 - Sally's Sweet Babboo.mp4",
       "duration": 1349,
@@ -217,7 +190,7 @@
       "category": "show"
     },
     {
-      "startTime": "05:21",
+      "startTime": "19:10",
       "name": "Curious George",
       "path": "X:\\KIDS WORLD 1\\curiousgeorge-season-12-15\\S01 E18-Candy Counter; Curious George, Rescue Monkey.mp4",
       "duration": 1419,
@@ -226,7 +199,7 @@
       "category": "show"
     },
     {
-      "startTime": "05:45",
+      "startTime": "19:34",
       "name": "Tom and Jerry",
       "path": "X:\\KIDS WORLD 1\\TOM and Jerry Chuck Collection_202309\\DISC_18.mp4",
       "duration": 347,
@@ -235,7 +208,7 @@
       "category": "show"
     },
     {
-      "startTime": "05:51",
+      "startTime": "19:40",
       "name": "Tom and Jerry",
       "path": "X:\\KIDS WORLD 1\\TOM and Jerry Chuck Collection_202309\\DISC_19.mp4",
       "duration": 398,
@@ -244,7 +217,7 @@
       "category": "show"
     },
     {
-      "startTime": "05:58",
+      "startTime": "19:47",
       "name": "Tom and Jerry",
       "path": "X:\\KIDS WORLD 1\\TOM and Jerry Chuck Collection_202309\\DISC_22.mp4",
       "duration": 370,
@@ -253,7 +226,7 @@
       "category": "show"
     },
     {
-      "startTime": "06:04",
+      "startTime": "19:53",
       "name": "Tom and Jerry",
       "path": "X:\\KIDS WORLD 1\\TOM and Jerry Chuck Collection_202309\\DISC_23.mp4",
       "duration": 377,
@@ -262,7 +235,7 @@
       "category": "show"
     },
     {
-      "startTime": "06:10",
+      "startTime": "19:59",
       "name": "The Incredibles",
       "path": "blob:null/4c3b7b1d-243f-4f8f-af7b-dd8d1639a0a3",
       "duration": 6925,
@@ -271,7 +244,7 @@
       "category": "movie"
     },
     {
-      "startTime": "08:05",
+      "startTime": "21:54",
       "name": "OZONE in Concert",
       "path": "X:\\TV SHOWS 2\\OZONE BAND\\OZONE Commercial -FoxTheater-2.mp4",
       "duration": 117,
@@ -280,7 +253,7 @@
       "category": ""
     },
     {
-      "startTime": "08:07",
+      "startTime": "21:56",
       "name": "Sundays @ 11 AM",
       "path": "Y:\\FLM-TV\\CLIPS-FILLERS\\ZAINA JULIETTE-COMMERCIALflm.mp4",
       "duration": 37,
@@ -289,7 +262,7 @@
       "category": "show"
     },
     {
-      "startTime": "08:08",
+      "startTime": "21:57",
       "name": "The UNIT ",
       "path": "X:\\TV SHOWS 2\\THE UNIT\\SEASON 01\\SEASON 01\\The UNIT - S01 E03 - 200th Hour (720p Web-DL).mp4",
       "duration": 2603,
@@ -298,7 +271,7 @@
       "category": "show"
     },
     {
-      "startTime": "08:51",
+      "startTime": "22:40",
       "name": "The X Files",
       "path": "X:\\TV SHOWS 2\\THE X FILES\\SEASON-01\\The X-Files, Season 1 Disc 3_t00.mkv",
       "duration": 2795,
@@ -307,7 +280,7 @@
       "category": "show"
     },
     {
-      "startTime": "09:38",
+      "startTime": "23:27",
       "name": "AshwaterProducts.com",
       "path": "Y:\\CLIPS-FILLERS\\Ashwater1-B.mp4",
       "duration": 25,
@@ -316,7 +289,7 @@
       "category": "commercial"
     },
     {
-      "startTime": "09:38",
+      "startTime": "23:27",
       "name": "FLM TV ",
       "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
       "duration": 21,
@@ -325,7 +298,7 @@
       "category": "commercial"
     },
     {
-      "startTime": "09:38",
+      "startTime": "23:27",
       "name": "OZONE in Concert",
       "path": "X:\\TV SHOWS 2\\OZONE BAND\\OZONE Commercial -FoxTheater-2.mp4",
       "duration": 117,
@@ -334,7 +307,7 @@
       "category": "commercial"
     },
     {
-      "startTime": "09:40",
+      "startTime": "23:29",
       "name": "The Lost World Jurassic Park",
       "path": "X:\\MOVIES-5\\Jurassic Park-The Lost World\\The Lost World Jurassic Park.mp4",
       "duration": 7726,
@@ -343,7 +316,7 @@
       "category": "movie"
     },
     {
-      "startTime": "11:49",
+      "startTime": "01:38",
       "name": "The Crush ",
       "path": "X:\\MOVIES-5\\The Crush\\The Crush 1993.ia.mp4",
       "duration": 5340,
@@ -352,7 +325,7 @@
       "category": "movie"
     },
     {
-      "startTime": "13:18",
+      "startTime": "03:07",
       "name": "The Shawshank Redemption",
       "path": "X:\\MOVIES-5\\The Shawshank Redemption (1994) Morgan Freeman 1080p\\The Shawshank Redemption (1994) Morgan Freeman 1080p.mp4",
       "duration": 8552,
@@ -361,7 +334,7 @@
       "category": "movie"
     },
     {
-      "startTime": "15:41",
+      "startTime": "05:30",
       "name": "Impossible Fixes",
       "path": "X:\\DOCUMENTARIES 2\\Impossible-Fixes\\5 Firefighting Water Bombers\\5 Firefighting Water Bombers.mp4",
       "duration": 2526,
@@ -370,7 +343,7 @@
       "category": "movie"
     },
     {
-      "startTime": "16:23",
+      "startTime": "06:12",
       "name": "Labyu with an Accent ",
       "path": "X:\\FILIPINO1\\Labyu with an Accent (2022) - Watch Full Pinoy Movies Online.mp4",
       "duration": 7171,
@@ -379,7 +352,7 @@
       "category": "movie"
     },
     {
-      "startTime": "18:23",
+      "startTime": "08:12",
       "name": "Herbie Rides Again",
       "path": "Y:\\MOVIES\\Herbie Rides Again\\(1974) Herbie Rides Again.mp4",
       "duration": 5305,
@@ -388,7 +361,7 @@
       "category": "movie"
     },
     {
-      "startTime": "19:51",
+      "startTime": "09:40",
       "name": "Sesame Street ",
       "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_The_Oct-dough-pus_Video___PBS_KIDS.ia.mp4",
       "duration": 1555,
@@ -397,7 +370,7 @@
       "category": "show"
     },
     {
-      "startTime": "20:17",
+      "startTime": "10:06",
       "name": "Sesame Street ",
       "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Use_That_Rice!_Video___PBS_KIDS.ia.mp4",
       "duration": 1555,
@@ -406,7 +379,7 @@
       "category": "show"
     },
     {
-      "startTime": "20:43",
+      "startTime": "10:32",
       "name": "Sesame Street ",
       "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5008 (January 4, 2020).mp4",
       "duration": 1556,
@@ -415,7 +388,7 @@
       "category": "show"
     },
     {
-      "startTime": "21:09",
+      "startTime": "10:58",
       "name": "Sesame Street",
       "path": "X:\\KIDS WORLD 1\\Sesame-Street-2020\\sesame-street_202308\\Sesame Street - Episode 5009 (January 11, 2020).mp4",
       "duration": 1556,
@@ -424,7 +397,7 @@
       "category": "show"
     },
     {
-      "startTime": "21:35",
+      "startTime": "11:24",
       "name": "Super Why!",
       "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 07\\Super Why!_S07E08_The Foolish Wishes.ia.mp4",
       "duration": 1650,
@@ -433,7 +406,7 @@
       "category": "show"
     },
     {
-      "startTime": "22:03",
+      "startTime": "11:52",
       "name": "Elinor Wonders Why ",
       "path": "Y:\\KIDS WORLD-2\\Elinor-Wonders Why\\SEASON 01\\Elinor Wonders Why_S01E13_Bubble House_The Syrup Tree.ia.mp4",
       "duration": 1501,
@@ -442,7 +415,7 @@
       "category": "show"
     },
     {
-      "startTime": "22:28",
+      "startTime": "12:17",
       "name": "Molly of Denali ",
       "path": "Y:\\KIDS WORLD-2\\Molly of Denali\\SEASON 01\\Molly of Denali_S01E16_The Night Manager_Not So Permafrost.ia.mp4",
       "duration": 1531,
@@ -451,7 +424,7 @@
       "category": "show"
     },
     {
-      "startTime": "22:54",
+      "startTime": "12:43",
       "name": "Garfield and Friends",
       "path": "Y:\\KIDS WORLD-2\\Garfield and Friends\\Garfield and Friends 1982 S1\\Garfield and Friends - 01x02 - Box o` Fun.mp4",
       "duration": 467,
@@ -460,7 +433,7 @@
       "category": "show"
     },
     {
-      "startTime": "23:02",
+      "startTime": "12:51",
       "name": "Garfield and Friends",
       "path": "Y:\\KIDS WORLD-2\\Garfield and Friends\\Garfield and Friends 1982 S1\\Garfield and Friends - 01x03 - Nighty Nightmare.mp4",
       "duration": 582,
@@ -469,7 +442,7 @@
       "category": "show"
     },
     {
-      "startTime": "23:12",
+      "startTime": "13:01",
       "name": "Garfield and Friends",
       "path": "Y:\\KIDS WORLD-2\\Garfield and Friends\\Garfield and Friends 1982 S1\\Garfield and Friends - 01x04 - Fraidy Cat.mp4",
       "duration": 491,
@@ -478,7 +451,7 @@
       "category": "show"
     },
     {
-      "startTime": "23:20",
+      "startTime": "13:09",
       "name": "FLMTV",
       "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
       "duration": 28,
@@ -487,7 +460,7 @@
       "category": ""
     },
     {
-      "startTime": "23:20",
+      "startTime": "13:09",
       "name": "Abbott and Costello ",
       "path": "Y:\\CLASSIC TV-2\\Abbot & Costello\\SEASON 01\\Abbott and Costello in The Actors Home.ia.mp4",
       "duration": 1400,
@@ -496,7 +469,7 @@
       "category": "show"
     },
     {
-      "startTime": "23:43",
+      "startTime": "13:32",
       "name": "The Dick Van Dyke Show ",
       "path": "Y:\\CLASSIC TV-2\\the-dick-van-dyke-show-season-2-of-5-mkv\\season 02\\The Dick Van Dyke Show - S02E03.mkv",
       "duration": 1531,
@@ -505,7 +478,7 @@
       "category": "show"
     },
     {
-      "startTime": "00:09",
+      "startTime": "13:58",
       "name": "The Lucy Show",
       "path": "X:\\TV Clssics 2\\LUCY - The Lucy Show\\The Lucy Show [1962 - 1968]\\Season 2\\S02E25 - Lucy Goes Into Politics.ia.mp4",
       "duration": 1542,
@@ -514,7 +487,7 @@
       "category": "show"
     },
     {
-      "startTime": "00:35",
+      "startTime": "14:24",
       "name": "Leave it to Beaver",
       "path": "X:\\TV Clssics 2\\LEAVE IT TO BEAVER\\Season 3\\S03E15 - Larry Hides Out.mp4",
       "duration": 1552,
