@@ -2892,18 +2892,18 @@
                     </div>
                 </div>
 
-                <!-- MRS. UNIVERSE EVENT CARD -->
-                <div onclick="openMrsUniverseCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
-                    <div class="mu-event-badge"><div class="live-dot"></div> LIVE EVENT</div>
-                    <img src="assets/images/Miss Universe Banner.jpeg"
+                <!-- DOLLY PARTON TRIBUTE CHANNEL CARD -->
+                <div onclick="openDollyPartonCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
+                    <div class="mu-event-badge"><div class="live-dot"></div> TRIBUTE</div>
+                    <img src="assets/images/dolly-parton-banner.webp"
                          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.55;pointer-events:none;z-index:1;"
-                         alt="Mrs. Universe Philippines" onerror="this.style.display='none'">
+                         alt="Dolly Parton Channel" onerror="this.style.display='none'">
                     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 25%,rgba(5,10,30,0.15) 100%);z-index:2;"></div>
                     <div style="position:relative;z-index:5;padding:12px 14px;width:100%;">
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:2px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">MRS. UNIVERSE</div>
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.9rem;letter-spacing:1.5px;color:#fff;line-height:1;margin-top:2px;">PHILIPPINES 2026</div>
-                        <div style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">🇵🇭 GRAND CORONATION NIGHT</div>
-                        <div style="margin-top:9px;display:inline-flex;align-items:center;gap:6px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH EVENT</div>
+                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:2px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">DOLLY PARTON</div>
+                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.9rem;letter-spacing:1.5px;color:#fff;line-height:1;margin-top:2px;">TRIBUTE CHANNEL</div>
+                        <div style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">💛 IN LOVING MEMORY</div>
+                        <div style="margin-top:9px;display:inline-flex;align-items:center;gap:6px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH CHANNEL</div>
                     </div>
                 </div>
 
@@ -5606,12 +5606,8 @@
            window.location.href = `comic-reader.html?id=${bookId}&name=${encodeURIComponent(bookName || 'Comic')}`;
        }
 
-       function openMrsUniverseCard() {
-           if (!MRS_UNIVERSE_ITEM_ID) {
-               alert("👑 Mrs. Universe Philippines 2026 is starting soon!\n\nWe're waiting for the video file to be uploaded. Check back shortly!");
-               return;
-           }
-           playJellyfinItem(MRS_UNIVERSE_ITEM_ID);
+       function openDollyPartonCard() {
+           window.location.href = "https://flmtv.com/movie-frame.html?id=917358f8f0af59b63ad0a46b3029ee09&catId=cabadb1afd83ba3edd464eb9c73f9bf0&catName=TV%20WONDER";
        }
 
        function openOzoneFunkCard() {
