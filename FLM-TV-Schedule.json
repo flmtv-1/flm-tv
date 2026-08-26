@@ -1,328 +1,313 @@
 {
-  "2026-08-22": [
+  "2026-08-26": [
     {
-      "startTime": "11:57",
-      "name": "Beverly Hillbillies",
-      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-03\\G2_t12.mkv",
-      "duration": 1610,
+      "startTime": "09:25",
+      "name": "Peter Pan",
+      "path": "",
+      "duration": 4604,
       "inPoint": 0,
-      "outPoint": 1610,
+      "outPoint": 4604,
+      "category": "movie"
+    },
+    {
+      "startTime": "10:42",
+      "name": "Mister Ed",
+      "path": "",
+      "duration": 1325,
+      "inPoint": 0,
+      "outPoint": 1325,
       "category": "show"
     },
     {
-      "startTime": "12:24",
-      "name": "Beverly Hillbillies",
-      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-03\\H2_t14.mkv",
-      "duration": 1620,
+      "startTime": "11:04",
+      "name": "The Lucy Show",
+      "path": "",
+      "duration": 1539,
       "inPoint": 0,
-      "outPoint": 1620,
+      "outPoint": 1539,
       "category": "show"
     },
     {
-      "startTime": "12:51",
-      "name": "227 ",
-      "path": "X:\\227 Series\\SEASON 01\\227 - S01E05.ia.mp4",
-      "duration": 1435,
+      "startTime": "11:29",
+      "name": "Life with Lucy",
+      "path": "",
+      "duration": 1490,
       "inPoint": 0,
-      "outPoint": 1435,
+      "outPoint": 1490,
       "category": "show"
     },
     {
-      "startTime": "13:15",
+      "startTime": "11:54",
+      "name": "Leave it to Beaver",
+      "path": "",
+      "duration": 1500,
+      "inPoint": 0,
+      "outPoint": 1500,
+      "category": "show"
+    },
+    {
+      "startTime": "12:19",
       "name": "OZONE in Concert",
-      "path": "X:\\TV SHOWS 2\\OZONE BAND\\OZONE Commercial -FoxTheater-2.mp4",
-      "duration": 117,
-      "inPoint": 0,
-      "outPoint": 117,
-      "category": ""
-    },
-    {
-      "startTime": "13:17",
-      "name": "VoteScottBlack",
-      "path": "X:\\COMMERCIALS-CLIPS\\POLITITIANS renamed\\VoteScottBlack.com.mp4",
-      "duration": 30,
-      "inPoint": 0,
-      "outPoint": 30,
-      "category": ""
-    },
-    {
-      "startTime": "13:18",
-      "name": "Archie Bunker's Place ",
-      "path": "X:\\_SORT-MOVIES\\Archie Bunker 2\\Archie Bunker's Place - S01E06.ia.mp4",
-      "duration": 1455,
-      "inPoint": 0,
-      "outPoint": 1455,
-      "category": "show"
-    },
-    {
-      "startTime": "13:42",
-      "name": "Here's Lucy",
-      "path": "Y:\\AWESOME TV SHOWS-2\\Here's Lucy (The Complete Series) [1968 - 1974]\\Season 1\\S01E01 - Mod, Mod Lucy.mp4",
-      "duration": 1529,
-      "inPoint": 0,
-      "outPoint": 1529,
-      "category": "show"
-    },
-    {
-      "startTime": "14:07",
-      "name": "Andy Griffith ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D1_t05.mkv",
-      "duration": 1516,
-      "inPoint": 0,
-      "outPoint": 1516,
-      "category": "show"
-    },
-    {
-      "startTime": "14:32",
-      "name": "Andy Griffith ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-04\\Andy Griffith S4 D1_t06.mkv",
-      "duration": 1477,
-      "inPoint": 0,
-      "outPoint": 1477,
-      "category": "show"
-    },
-    {
-      "startTime": "14:57",
-      "name": "FLMTV",
-      "path": "Y:\\CLIPS-FILLERS\\FLMsummonsCOMMERCIAL.mp4",
-      "duration": 28,
-      "inPoint": 0,
-      "outPoint": 28,
-      "category": ""
-    },
-    {
-      "startTime": "14:57",
-      "name": "Little Rascals  (Spooky Hooky)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 61-80\\Little Rascals 61 (Spooky Hooky).mp4",
-      "duration": 636,
-      "inPoint": 0,
-      "outPoint": 636,
-      "category": "show"
-    },
-    {
-      "startTime": "15:08",
-      "name": "Little Rascals (Reunion in Rhythm)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 61-80\\Little Rascals 62 (Reunion in Rythm.mp4",
-      "duration": 643,
-      "inPoint": 0,
-      "outPoint": 643,
-      "category": "show"
-    },
-    {
-      "startTime": "15:19",
-      "name": "Little Rascals (Glove Taps)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 61-80\\Little Rascals 63 (Glove Taps).mp4",
-      "duration": 639,
-      "inPoint": 0,
-      "outPoint": 639,
-      "category": "show"
-    },
-    {
-      "startTime": "15:30",
-      "name": "Zaina Juliette & Friends",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ZAINA JULIETTE SHOW\\Zaina Juliette & Friends Show  Breakdance  DJ Thump (S6E4).mp4",
-      "duration": 1710,
-      "inPoint": 0,
-      "outPoint": 1710,
-      "category": "show"
-    },
-    {
-      "startTime": "15:59",
-      "name": "Zaina Juliette Live",
-      "path": "X:\\COMMERCIALS-CLIPS\\Zaina Working Men Logo-teaser.mp4",
-      "duration": 108,
-      "inPoint": 0,
-      "outPoint": 108,
-      "category": "commercial"
-    },
-    {
-      "startTime": "16:01",
-      "name": "Rogue History",
-      "path": "Y:\\AWESOME TV SHOWS-2\\Rogue-History\\SEASON 02\\2.3 How A Spanish Chicken Farmer Tricked Hitler.mp4",
-      "duration": 567,
-      "inPoint": 0,
-      "outPoint": 567,
-      "category": "show"
-    },
-    {
-      "startTime": "16:10",
-      "name": "Rogue History  ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\Rogue-History\\SEASON 02\\2.4 This Gender Nonconforming Secret Agent Almost Caused a War.mp4",
-      "duration": 662,
-      "inPoint": 0,
-      "outPoint": 662,
-      "category": ""
-    },
-    {
-      "startTime": "16:21",
-      "name": "Whats Happening ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\WHATS HAPPENING!!\\SEASON-01\\Whats Happening S01E03.mkv",
-      "duration": 1502,
-      "inPoint": 0,
-      "outPoint": 1502,
-      "category": "show"
-    },
-    {
-      "startTime": "16:46",
-      "name": "Sanford & Son ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\SANFORD 2 fix\\Season 01\\Sanford & Son- Season One (Disc 1)-B1_t04.mkv",
-      "duration": 1560,
-      "inPoint": 0,
-      "outPoint": 1560,
-      "category": "show"
-    },
-    {
-      "startTime": "17:12",
-      "name": "The Tigger Movie",
-      "path": "X:\\_SORT-MOVIES\\The Tigger Movie.mp4",
-      "duration": 4627.388005,
-      "inPoint": 0,
-      "outPoint": 4627.388005,
-      "category": ""
-    },
-    {
-      "startTime": "18:29",
-      "name": "Back to the Future",
-      "path": "X:\\MOVIES-5\\Back to the Future\\Back to the Future.mp4",
-      "duration": 6949.2265,
-      "inPoint": 0,
-      "outPoint": 6949.2265,
-      "category": ""
-    },
-    {
-      "startTime": "20:25",
-      "name": "Raising Arizona ",
-      "path": "X:\\_SORT-MOVIES\\Raising.Arizona.1987.1080p.BluRay.DDP5.1.x265.10bit-GalaxyRG265[TGx]\\Raising.Arizona.1987.1080p.BluRay.DDP5.1.x265.10bit-GalaxyRG265.mkv",
-      "duration": 5646,
-      "inPoint": 0,
-      "outPoint": 5646,
-      "category": "movie"
-    },
-    {
-      "startTime": "21:59",
-      "name": "Unstoppable",
-      "path": "X:\\_SORT-MOVIES\\Unstoppable 2010 1080p Proper BluRay 10-Bit DTS-HD MA 5 1 x264-BluEvo\\Unstoppable 2010 1080p Proper BluRay 10-Bit DTS-HD MA 5 1 x264-BluEvo.mkv",
-      "duration": 5910,
-      "inPoint": 0,
-      "outPoint": 5910,
-      "category": "movie"
-    },
-    {
-      "startTime": "23:38",
-      "name": "Trading Places ",
-      "path": "X:\\_SORT-MOVIES\\Trading Places (1983) Dan Ackroyd, Eddie Murphy 1080p.mp4",
-      "duration": 6983,
-      "inPoint": 0,
-      "outPoint": 6983,
-      "category": "movie"
-    },
-    {
-      "startTime": "01:34",
-      "name": "Face Off ",
-      "path": "X:\\_SORT-MOVIES\\Face _ Off (1997).mp4",
-      "duration": 8336,
-      "inPoint": 0,
-      "outPoint": 8336,
-      "category": "movie"
-    },
-    {
-      "startTime": "03:53",
-      "name": "The Day After Tomorrow",
-      "path": "X:\\_SORT-MOVIES\\The Day After Tomorrow (2004).mp4",
-      "duration": 7420,
-      "inPoint": 0,
-      "outPoint": 7420,
-      "category": "movie"
-    },
-    {
-      "startTime": "05:57",
-      "name": "Misery",
-      "path": "Y:\\MOVIES\\MISERY\\Misery (1990).mp4",
-      "duration": 6445,
-      "inPoint": 0,
-      "outPoint": 6445,
-      "category": "movie"
-    },
-    {
-      "startTime": "07:44",
-      "name": "Sesame Street",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\COLLECTION\\Sesame Street - Episode 4227 (November 11, 2010).mp4",
-      "duration": 3356,
-      "inPoint": 0,
-      "outPoint": 3356,
-      "category": "show"
-    },
-    {
-      "startTime": "08:40",
-      "name": "Sesame Street ",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\COLLECTION\\Sesame Street - Episode 4228 (November 26, 2010).mp4",
-      "duration": 3356,
-      "inPoint": 0,
-      "outPoint": 3356,
-      "category": "show"
-    },
-    {
-      "startTime": "09:36",
-      "name": "Super Why!",
-      "path": "Y:\\KIDS WORLD-2\\super-why\\SEASON 07\\Super Why!_S07E08_The Foolish Wishes.ia.mp4",
-      "duration": 1650,
-      "inPoint": 0,
-      "outPoint": 1650,
-      "category": "show"
-    },
-    {
-      "startTime": "10:04",
-      "name": "Ready Jet Go ",
-      "path": "Y:\\KIDS WORLD-2\\RJGTVSeries\\SEASON 01\\Ready.Jet.Go-S01E67-68-Total.Eclipse.Of.The.Sunspot.Seans.Year.In.Space.WEBDL-1080p.mp4",
-      "duration": 1591,
-      "inPoint": 0,
-      "outPoint": 1591,
-      "category": "show"
-    },
-    {
-      "startTime": "10:31",
-      "name": "Nature Cat",
-      "path": "Y:\\KIDS WORLD-2\\Nature Cat\\SEASON 03\\Nature.Cat.S03E01E02.Animal.Rescue.Crew-Nature.of.Dreams.1080p.AMZN.WEBRip.AAC2.0.x264.ia.mp4",
-      "duration": 1441,
-      "inPoint": 0,
-      "outPoint": 1441,
-      "category": "show"
-    },
-    {
-      "startTime": "10:55",
-      "name": "OZONE in Concert",
-      "path": "X:\\TV SHOWS 2\\OZONE BAND\\OZONE Commercial -FoxTheater-2.mp4",
+      "path": "X:\\OZONE TV\\OZONE Commercial -FoxTheater-1.mp4",
       "duration": 117,
       "inPoint": 0,
       "outPoint": 117,
       "category": "commercial"
     },
     {
-      "startTime": "10:57",
-      "name": "Zaina Juliette in Concert",
-      "path": "X:\\COMMERCIALS-CLIPS\\Zaina Working Men Logo-teaser.mp4",
-      "duration": 108,
+      "startTime": "12:21",
+      "name": "Sundays @ 11am",
+      "path": "",
+      "duration": 37,
       "inPoint": 0,
-      "outPoint": 108,
+      "outPoint": 37,
       "category": "commercial"
     },
     {
-      "startTime": "10:59",
-      "name": "Zaina Juliette Show",
-      "path": "Y:\\ZAINA ZONE-2\\Zaina Juliette Show with Rodney Trotter, Charles Glenn & Kevin Black\\Zaina Juliette Show with Rodney Trotter, Charles Glenn & Kevin Black.mp4",
-      "duration": 1712,
+      "startTime": "12:22",
+      "name": "Commercial clip",
+      "path": "",
+      "duration": 5,
       "inPoint": 0,
-      "outPoint": 1712,
+      "outPoint": 5,
+      "category": "commercial"
+    },
+    {
+      "startTime": "12:22",
+      "name": "Andy Griffith",
+      "path": "",
+      "duration": 1546,
+      "inPoint": 0,
+      "outPoint": 1546,
       "category": "show"
     },
     {
-      "startTime": "11:28",
-      "name": "Locals in Las Vegas ",
-      "path": "X:\\TV SHOWS 2\\LOCALS IN LAS VEGAS-JESSICA\\Season 01\\Locals in Las Vegas-S01E18-FLM.mp4",
-      "duration": 1694,
+      "startTime": "12:48",
+      "name": "Beverly Hillbillies",
+      "path": "",
+      "duration": 1557,
       "inPoint": 0,
-      "outPoint": 1694,
-      "category": "promo"
+      "outPoint": 1557,
+      "category": "show"
+    },
+    {
+      "startTime": "13:14",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1541,
+      "inPoint": 0,
+      "outPoint": 1541,
+      "category": "show"
+    },
+    {
+      "startTime": "13:39",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1554,
+      "inPoint": 0,
+      "outPoint": 1554,
+      "category": "show"
+    },
+    {
+      "startTime": "14:05",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1543,
+      "inPoint": 0,
+      "outPoint": 1543,
+      "category": "show"
+    },
+    {
+      "startTime": "14:31",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1557,
+      "inPoint": 0,
+      "outPoint": 1557,
+      "category": "show"
+    },
+    {
+      "startTime": "14:57",
+      "name": "Whats Happening",
+      "path": "",
+      "duration": 1509,
+      "inPoint": 0,
+      "outPoint": 1509,
+      "category": "show"
+    },
+    {
+      "startTime": "15:22",
+      "name": "Good Times",
+      "path": "",
+      "duration": 1524,
+      "inPoint": 0,
+      "outPoint": 1524,
+      "category": "show"
+    },
+    {
+      "startTime": "15:47",
+      "name": "Sanford and Son",
+      "path": "",
+      "duration": 1488,
+      "inPoint": 0,
+      "outPoint": 1488,
+      "category": "show"
+    },
+    {
+      "startTime": "16:12",
+      "name": "The Jeffersons",
+      "path": "",
+      "duration": 1493,
+      "inPoint": 0,
+      "outPoint": 1493,
+      "category": "show"
+    },
+    {
+      "startTime": "16:37",
+      "name": "FLMTV.COM",
+      "path": "",
+      "duration": 15,
+      "inPoint": 0,
+      "outPoint": 15,
+      "category": ""
+    },
+    {
+      "startTime": "16:37",
+      "name": "Meet.The.Robinsons",
+      "path": "",
+      "duration": 5620,
+      "inPoint": 0,
+      "outPoint": 5620,
+      "category": "movie"
+    },
+    {
+      "startTime": "18:11",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 185,
+      "inPoint": 0,
+      "outPoint": 185,
+      "category": "show"
+    },
+    {
+      "startTime": "18:14",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 194,
+      "inPoint": 0,
+      "outPoint": 194,
+      "category": "show"
+    },
+    {
+      "startTime": "18:17",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 186,
+      "inPoint": 0,
+      "outPoint": 186,
+      "category": "show"
+    },
+    {
+      "startTime": "18:20",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 192,
+      "inPoint": 0,
+      "outPoint": 192,
+      "category": "show"
+    },
+    {
+      "startTime": "18:24",
+      "name": "Schoolhouse Rock",
+      "path": "",
+      "duration": 183,
+      "inPoint": 0,
+      "outPoint": 183,
+      "category": "show"
+    },
+    {
+      "startTime": "18:27",
+      "name": "9 to 5 - Dolly Parton",
+      "path": "",
+      "duration": 6561,
+      "inPoint": 0,
+      "outPoint": 6561,
+      "category": "movie"
+    },
+    {
+      "startTime": "20:16",
+      "name": "OZONE in Concert",
+      "path": "X:\\OZONE TV\\OZONE Commercial -FoxTheater-1.mp4",
+      "duration": 117,
+      "inPoint": 0,
+      "outPoint": 117,
+      "category": "commercial"
+    },
+    {
+      "startTime": "20:18",
+      "name": "That 70s Show",
+      "path": "",
+      "duration": 1332,
+      "inPoint": 0,
+      "outPoint": 1332,
+      "category": "show"
+    },
+    {
+      "startTime": "20:40",
+      "name": "Malcolm in the Middle",
+      "path": "",
+      "duration": 1343,
+      "inPoint": 0,
+      "outPoint": 1343,
+      "category": "show"
+    },
+    {
+      "startTime": "21:03",
+      "name": "Volcano",
+      "path": "",
+      "duration": 6231,
+      "inPoint": 0,
+      "outPoint": 6231,
+      "category": "movie"
+    },
+    {
+      "startTime": "22:46",
+      "name": "Close.Encounters",
+      "path": "",
+      "duration": 8085,
+      "inPoint": 0,
+      "outPoint": 8085,
+      "category": "movie"
+    }
+  ],
+  "2026-08-27": [
+    {
+      "startTime": "01:01",
+      "name": "Close Encounters of the 5th",
+      "path": "",
+      "duration": 7236,
+      "inPoint": 0,
+      "outPoint": 7236,
+      "category": "movie"
+    },
+    {
+      "startTime": "03:02",
+      "name": "Dont.Look.Up",
+      "path": "",
+      "duration": 8591,
+      "inPoint": 0,
+      "outPoint": 8591,
+      "category": "movie"
+    },
+    {
+      "startTime": "05:25",
+      "name": "Alien Resurrection",
+      "path": "",
+      "duration": 6968,
+      "inPoint": 0,
+      "outPoint": 6968,
+      "category": "movie"
+    
     }
   ]
 }
