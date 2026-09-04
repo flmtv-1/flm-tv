@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" id="flmViewportMeta">
+<script>
+  // Fire TV viewport fix — real Firestick viewport is 960x540 CSS px, DPR=4
+  if (/AFT|FireTV|Silk/i.test(navigator.userAgent)) {
+    var flmVp = document.getElementById('flmViewportMeta');
+    if (flmVp) flmVp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+  }
+</script>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Las Vegas Tonight TV with Dale Davidson — FLM TV Network</title>
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --red: #C0272D;
+  --black: #07070A;
+  --dark: #0E0E13;
+  --dark2: #14141A;
+  --dark3: #1C1C24;
+  --text: #F0EDE8;
+  --text-dim: #888898;
+  --text-muted: #444450;
+  --green: #22c55e;
+}
+
+html, body {
+  height: 100%;
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Arial', sans-serif;
+  overflow: hidden;
+}
+
+/* ── LAYOUT ── */
+.app {
+  display: grid;
+  grid-template-rows: 54px 1fr;
+  grid-template-columns: 1fr 300px;
+  height: 100vh;
+}
+
+/* ── TOP NAV ── */
+.topnav {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(7,7,10,0.98);
+  border-bottom: 2px solid var(--gold);
+  z-index: 100;
+}
+
+.nav-left { display:flex; align-items:center; gap:16px; }
+
+.back-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold);
+  font-size: 12px; font-weight: 700;
+  text-decoration: none; letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.back-btn:hover { background: var(--gold); color: #000; }
+
+.nav-logo {
+  font-size: 20px; font-weight: 900; letter-spacing: 2px;
+}
+.nav-logo .lv { color: var(--red); }
+.nav-logo .tonight { color: var(--gold); }
+
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--red);
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 800; letter-spacing: 2px;
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #fff; animation: blink 1s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.nav-right { display:flex; align-items:center; gap:12px; }
+
+.ch-info { text-align:right; }
+.ch-name { font-size:13px; font-weight:700; color:var(--gold); }
+.ch-sub { font-size:10px; color:var(--text-muted); }
+
+/* ── VIDEO AREA ── */
+.player-area {
+  position: relative;
+  background: #000;
+  overflow: hidden;
+}
+
+#liveVideo {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: absolute; inset: 0;
+  background: var(--black);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; z-index: 10;
+  transition: opacity 0.4s;
+}
+.loading-overlay.hidden { opacity:0; pointer-events:none; }
+
+.loading-logo { font-size: 34px; font-weight:900; letter-spacing:2px; text-align:center; }
+.loading-logo .lv { color: var(--red); }
+.loading-logo .tonight { color: var(--gold); }
+.loading-text { font-size:11px; letter-spacing:3px; color:var(--text-muted); text-transform:uppercase; }
+.loading-bar { width:140px; height:2px; background:rgba(201,168,76,0.15); border-radius:2px; overflow:hidden; }
+.loading-bar::after { content:''; display:block; height:100%; width:40%; background:var(--gold); animation:slide 1s ease-in-out infinite; }
+@keyframes slide { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }
+
+/* Offline / pending placeholder (shown when no stream URL is set yet) */
+.offline-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #14141A, #07070A);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; z-index: 10; text-align:center; padding: 2rem;
+}
+.offline-overlay.show { display:flex; }
+.offline-overlay img { width:120px; height:120px; object-fit:contain; opacity:0.9; margin-bottom:6px; border-radius:8px; }
+.offline-icon { font-size:36px; color:var(--gold-dim,var(--gold)); opacity:0.7; }
+.offline-title { font-size:15px; font-weight:700; color:var(--text); letter-spacing:0.5px; }
+.offline-text { font-size:12px; color:var(--text-dim); max-width:380px; line-height:1.6; }
+
+/* Error overlay */
+.error-overlay {
+  position: absolute; inset: 0;
+  background: var(--black);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px; z-index: 10;
+}
+.error-overlay.show { display:flex; }
+.error-icon { font-size:48px; color:var(--red); opacity:0.6; }
+.error-text { font-size:14px; color:var(--text-dim); letter-spacing:1px; }
+.retry-btn {
+  padding: 10px 28px;
+  background: var(--gold); color: #000;
+  border: none; border-radius: 4px;
+  font-size: 13px; font-weight: 800;
+  cursor: pointer; letter-spacing: 1px;
+  transition: background 0.2s;
+}
+.retry-btn:hover { background: var(--gold-light); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--dark2);
+  border-left: 1px solid rgba(201,168,76,0.2);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.sidebar-section {
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar-label {
+  font-size: 10px; letter-spacing: 2px;
+  color: var(--gold); font-weight: 700;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+
+/* Now playing */
+.now-playing-title {
+  font-size: 16px; font-weight: 700;
+  color: var(--text); margin-bottom: 4px;
+  font-family: 'Arial', sans-serif;
+}
+.now-playing-sub { font-size: 11px; color: var(--text-muted); }
+
+/* Watch on list */
+.watch-on-list { display:flex; flex-direction:column; gap:8px; }
+.watch-on-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--text-dim);
+}
+.watch-on-item i { color: var(--gold); width: 16px; }
+
+/* Schedule link */
+.schedule-link {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-dim); text-decoration: none;
+  font-size: 12px; letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.schedule-link:hover { color: var(--gold); }
+
+/* Stations button wrap */
+.stations-btn-wrap {
+  padding: 16px;
+  margin-top: auto;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
+
+/* ── TV STATIONS PROMO CARD (matches home.html) ── */
+.flm-tv-stations-card {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    border: 1px solid rgba(255,215,0,0.35);
+    border-radius: 10px;
+    padding: 14px;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    min-height: 90px;
+    transition: border-color 0.25s;
+}
+.flm-tv-stations-card:hover { border-color: rgba(255,215,0,0.8); }
+.flm-tvs-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    opacity: 0.55;
+    pointer-events: none;
+}
+.flm-tvs-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(5,10,20,0.92) 40%, rgba(5,10,20,0.3) 100%);
+    pointer-events: none;
+}
+.flm-tvs-live-dot {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 7px rgba(34,197,94,0.9);
+    animation: tvs-pulse 1.8s ease-in-out infinite;
+    z-index: 2;
+}
+@keyframes tvs-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 7px rgba(34,197,94,0.9); }
+    50% { opacity: 0.55; box-shadow: 0 0 14px rgba(34,197,94,0.5); }
+}
+.flm-tvs-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+.flm-tvs-title {
+    font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    color: #ffd700;
+    line-height: 1;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+}
+.flm-tvs-title .fas { font-size: 1.1rem; margin-right: 5px; }
+.flm-tvs-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 1.5px;
+    margin-top: 3px;
+}
+.flm-tvs-cta {
+    margin-top: 7px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(34,197,94,0.18);
+    border: 1px solid rgba(34,197,94,0.5);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+    letter-spacing: 2px;
+    color: #22c55e;
+}
+.flm-tvs-cta .fas { font-size: 9px; }
+@media (max-width: 768px) {
+    .flm-tv-stations-card { min-height: 70px; padding: 10px 12px; }
+    .flm-tvs-title { font-size: 1.2rem; }
+}
+
+/* ── FULLSCREEN — hide sidebar and nav ── */
+:fullscreen .topnav,
+:-webkit-full-screen .topnav,
+:-moz-full-screen .topnav,
+:fullscreen .sidebar,
+:-webkit-full-screen .sidebar,
+:-moz-full-screen .sidebar { display: none !important; }
+
+:fullscreen .app,
+:-webkit-full-screen .app,
+:-moz-full-screen .app {
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1fr !important;
+}
+
+:fullscreen .player-area,
+:-webkit-full-screen .player-area,
+:-moz-full-screen .player-area {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 / -1 !important;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 54px 1fr auto; }
+  .sidebar { border-left: none; border-top: 1px solid rgba(201,168,76,0.2); max-height: 280px; }
+  .nav-logo { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="nav-left">
+      <a href="dr-dale-christian-tv.html" class="back-btn">← Channel</a>
+      <div class="nav-logo"><span class="lv">LAS VEGAS</span> <span class="tonight">TONIGHT</span></div>
+      <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+    </div>
+    <div class="nav-right">
+      <div class="ch-info">
+        <div class="ch-name">Las Vegas Tonight</div>
+        <div class="ch-sub">with Dale Davidson</div>
+      </div>
+      <button id="fsBtn" onclick="toggleFullscreen()" title="Fullscreen" style="background:rgba(201,168,76,0.15);border:1px solid var(--gold);color:var(--gold);padding:6px 14px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all 0.2s;">
+        ⛶ FULLSCREEN
+      </button>
+    </div>
+  </nav>
+
+  <!-- VIDEO PLAYER -->
+  <div class="player-area" id="playerArea">
+    <video id="liveVideo" playsinline autoplay controls poster="assets/images/DaleLogo.jpg" style="width:100%;height:100%;object-fit:contain;"></video>
+
+    <!-- FIRESTICK CONTROL BAR — fades when idle, shows on any button press -->
+    <div id="fsOverlay" style="display:none;position:fixed;inset:0;z-index:99999;pointer-events:none;">
+      <div id="fsControls" style="
+        position:absolute;bottom:0;left:0;right:0;
+        background:linear-gradient(transparent,rgba(0,0,0,0.88));
+        padding:50px 24px 24px;
+        pointer-events:auto;
+        display:flex;align-items:center;gap:12px;
+        opacity:0;transition:opacity 0.5s ease;">
+        <button class="fs-btn" id="fsBtnHome">⌂ Home</button>
+        <button class="fs-btn" id="fsBtnPlay">⏸</button>
+        <button class="fs-btn" id="fsBtnVolDown">🔉</button>
+        <button class="fs-btn" id="fsBtnVolUp">🔊</button>
+        <button class="fs-btn" id="fsBtnMute">🔇</button>
+        <div style="flex:1;height:4px;background:rgba(255,255,255,0.2);border-radius:2px;">
+          <div id="fsVolFill" style="height:100%;background:#ffd700;border-radius:2px;width:100%;"></div>
+        </div>
+        <button class="fs-btn" id="fsBtnFS">⛶ Full</button>
+      </div>
+    </div>
+
+    <style>
+    .fs-btn { background:rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.4);color:white;padding:9px 16px;border-radius:8px;font-size:15px;cursor:pointer;white-space:nowrap;transition:all 0.2s;flex-shrink:0; }
+    .fs-btn:focus { outline:none !important;border-color:#ffd700 !important;background:rgba(255,215,0,0.2) !important;transform:scale(1.1); }
+    </style>
+
+    <script>
+    window.addEventListener('load', function() {
+        if (!/AFT|FireTV|Silk/i.test(navigator.userAgent)) return;
+
+        var vid  = document.getElementById('liveVideo');
+        var ctrl = document.getElementById('fsControls');
+        var fill = document.getElementById('fsVolFill');
+        document.getElementById('fsOverlay').style.display = 'block';
+        vid.removeAttribute('controls');
+
+        var btns = ['fsBtnHome','fsBtnPlay','fsBtnVolDown','fsBtnVolUp','fsBtnMute','fsBtnFS'];
+        var idx = 1, timer;
+
+        function show() {
+            ctrl.style.opacity = '1';
+            ctrl.style.pointerEvents = 'auto';
+            clearTimeout(timer);
+            timer = setTimeout(hide, 4000);
+        }
+        function hide() {
+            ctrl.style.opacity = '0';
+            ctrl.style.pointerEvents = 'none';
+        }
+        function focusBtn(i) {
+            idx = Math.max(0, Math.min(btns.length - 1, i));
+            var el = document.getElementById(btns[idx]);
+            if (el) el.focus();
+            show();
+        }
+        function updateVol() {
+            if (fill) fill.style.width = (vid.muted ? 0 : vid.volume * 100) + '%';
+        }
+
+        // Wire up button actions
+        document.getElementById('fsBtnHome').addEventListener('click', function() {
+            window.location.href = 'dr-dale-christian-tv.html';
+        });
+        document.getElementById('fsBtnPlay').addEventListener('click', function() {
+            if (vid.paused) vid.play(); else vid.pause();
+            this.textContent = vid.paused ? '▶' : '⏸';
+        });
+        document.getElementById('fsBtnVolDown').addEventListener('click', function() {
+            vid.volume = Math.max(0, vid.volume - 0.1);
+            vid.muted = false; updateVol();
+        });
+        document.getElementById('fsBtnVolUp').addEventListener('click', function() {
+            vid.volume = Math.min(1, vid.volume + 0.1);
+            vid.muted = false; updateVol();
+        });
+        document.getElementById('fsBtnMute').addEventListener('click', function() {
+            vid.muted = !vid.muted;
+            this.textContent = vid.muted ? '🔈' : '🔇';
+            updateVol();
+        });
+        document.getElementById('fsBtnFS').addEventListener('click', function() {
+            var pa = document.getElementById('playerArea');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                (pa.requestFullscreen || pa.webkitRequestFullscreen).call(pa);
+            } else {
+                (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+            }
+        });
+
+        // D-pad keyboard handler
+        document.addEventListener('keydown', function(e) {
+            var visible = ctrl.style.opacity === '1';
+            if (e.key === 'ArrowRight') { e.preventDefault(); visible ? focusBtn(idx + 1) : (show(), focusBtn(idx)); return; }
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); visible ? focusBtn(idx - 1) : (show(), focusBtn(idx)); return; }
+            if (e.key === 'ArrowUp')    { e.preventDefault(); show(); focusBtn(idx); return; }
+            if (e.key === 'ArrowDown')  { e.preventDefault(); visible ? hide() : (show(), focusBtn(idx)); return; }
+            if (e.key === 'Enter' || e.key === ' ') {
+                var f = document.activeElement;
+                if (f && f.classList && f.classList.contains('fs-btn')) {
+                    e.preventDefault(); f.click(); return;
+                }
+                e.preventDefault(); show(); focusBtn(1);
+                return;
+            }
+            if (e.key === 'Backspace' || e.key === 'Escape') {
+                e.preventDefault();
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+                } else { window.location.href = 'dr-dale-christian-tv.html'; }
+            }
+        }, true);
+    });
+    </script>
+
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-logo"><span class="lv">LAS VEGAS</span><br><span class="tonight">TONIGHT</span></div>
+      <div class="loading-text">Connecting to Las Vegas Tonight...</div>
+      <div class="loading-bar"></div>
+    </div>
+
+    <div class="offline-overlay" id="offlineOverlay">
+      <img src="assets/images/DaleLogo.jpg" alt="Las Vegas Tonight with Dale Davidson">
+      <div class="offline-title">Stream link pending</div>
+      <div class="offline-text">Once the HLS playback link for Las Vegas Tonight is added, the live feed will play here automatically.</div>
+    </div>
+
+    <div class="error-overlay" id="errorOverlay">
+      <div class="error-icon"><i class="fas fa-signal"></i></div>
+      <div class="error-text">Stream temporarily unavailable</div>
+      <button class="retry-btn" onclick="initStream()">
+        <i class="fas fa-redo"></i> Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Now Playing</div>
+      <div class="now-playing-title" id="nowPlayingTitle">Las Vegas Tonight TV with Dale Davidson</div>
+      <div class="now-playing-sub">Presented by FLM TV · Channel 26.5 · Las Vegas</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Watch On</div>
+      <div class="watch-on-list">
+        <div class="watch-on-item"><i class="fas fa-tv"></i> FLMTV.com</div>
+        <div class="watch-on-item"><i class="fas fa-circle-dot"></i> Roku Channel</div>
+        <div class="watch-on-item"><i class="fas fa-globe"></i> Worldwide Streaming</div>
+        <div class="watch-on-item"><i class="fas fa-broadcast-tower"></i> Las Vegas OTA Ch 26.5</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Today's Schedule</div>
+      <a href="schedule.html" class="schedule-link">
+        <i class="fas fa-calendar-day"></i>
+        View Today's Programming Guide →
+      </a>
+    </div>
+
+    <div class="sidebar-section" style="padding-top:0;">
+      <div style="position:relative;border-radius:12px;overflow:hidden;background:#0a0f1a;border:1px solid rgba(255,215,0,0.15);aspect-ratio:4/3;">
+        <img id="liveAdImg" src="assets/images/Fashion1.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#0a0f1a;" alt="SheBoujay">
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:8px 10px 6px;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:6px;">
+          <span style="color:#fff;font-family:Arial,sans-serif;letter-spacing:1px;font-size:10px;">👗 WOMEN'S FASHION<br><span style="color:#C9A84C;font-size:9px;">SheBoujay.com</span></span>
+          <div style="display:flex;gap:5px;flex-shrink:0;">
+            <a href="https://SheBoujay.com" target="_blank" rel="noopener" style="background:#C9A84C;color:#0a0f1a;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:4px;text-decoration:none;font-weight:700;">VISIT</a>
+            <span onclick="liveAdClick()" style="background:rgba(255,255,255,0.15);color:#fff;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);">▶ AD</span>
+          </div>
+        </div>
+        <div id="liveAdDots" style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;"></div>
+      </div>
+    </div>
+
+    <div class="stations-btn-wrap">
+      <a href="live-stations.html" class="flm-tv-stations-card">
+        <img src="assets/images/tv-stations.png" class="flm-tvs-bg" alt="">
+        <div class="flm-tvs-overlay"></div>
+        <div class="flm-tvs-live-dot"></div>
+        <div class="flm-tvs-content">
+          <div class="flm-tvs-title"><i class="fas fa-tv"></i> TV STATIONS</div>
+          <div class="flm-tvs-sub">2,500+ FREE Channels Worldwide</div>
+          <div class="flm-tvs-cta">Watch Free <i class="fas fa-play"></i></div>
+        </div>
+      </a>
+    </div>
+
+  </aside>
+
+</div>
+
+<script>
+// Replace this with the real HLS (.m3u8) URL once Dale's stream is live.
+const STREAM_URL = ''; // e.g. 'https://flmtv26.duckdns.org/hls/LasVegasTonight.m3u8'
+
+const video = document.getElementById('liveVideo');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const offlineOverlay = document.getElementById('offlineOverlay');
+const errorOverlay = document.getElementById('errorOverlay');
+
+function initStream() {
+  errorOverlay.classList.remove('show');
+  offlineOverlay.classList.remove('show');
+
+  if (!STREAM_URL) {
+    // No stream URL configured yet — show the pending placeholder, skip loading/error states.
+    loadingOverlay.classList.add('hidden');
+    offlineOverlay.classList.add('show');
+    return;
+  }
+
+  loadingOverlay.classList.remove('hidden');
+
+  // Safety timeout — hide loading after 6s
+  const timeout = setTimeout(() => loadingOverlay.classList.add('hidden'), 6000);
+
+  if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+    const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+    hls.loadSource(STREAM_URL);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      clearTimeout(timeout);
+      loadingOverlay.classList.add('hidden');
+      video.play().catch(() => {});
+    });
+    hls.on(Hls.Events.ERROR, (e, data) => {
+      if (data.fatal) {
+        clearTimeout(timeout);
+        loadingOverlay.classList.add('hidden');
+        errorOverlay.classList.add('show');
+      }
+    });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = STREAM_URL;
+    video.addEventListener('loadedmetadata', () => {
+      clearTimeout(timeout);
+      loadingOverlay.classList.add('hidden');
+      video.play().catch(() => {});
+    }, { once: true });
+    video.addEventListener('error', () => {
+      clearTimeout(timeout);
+      loadingOverlay.classList.add('hidden');
+      errorOverlay.classList.add('show');
+    }, { once: true });
+  } else {
+    clearTimeout(timeout);
+    loadingOverlay.classList.add('hidden');
+    errorOverlay.classList.add('show');
+  }
+}
+
+function toggleFullscreen() {
+  var playerArea = document.getElementById('playerArea');
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    var req = playerArea.requestFullscreen || playerArea.webkitRequestFullscreen || playerArea.mozRequestFullScreen;
+    if (req) req.call(playerArea);
+  } else {
+    exitFS();
+  }
+}
+
+function exitFS() {
+  var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
+  if (exit) exit.call(document);
+}
+
+function togglePlay() {
+  var v = document.getElementById('liveVideo');
+  if (v.paused) v.play(); else v.pause();
+  var btn = document.getElementById('fsBtnPlay');
+  if (btn) btn.textContent = v.paused ? '▶' : '⏸';
+}
+
+function changeVol(delta) {
+  var v = document.getElementById('liveVideo');
+  v.volume = Math.max(0, Math.min(1, v.volume + delta));
+  v.muted = false;
+  var fill = document.getElementById('fsVolFill');
+  if (fill) fill.style.width = (v.volume * 100) + '%';
+}
+
+function toggleMute() {
+  var v = document.getElementById('liveVideo');
+  v.muted = !v.muted;
+  var btn = document.getElementById('fsBtnMute');
+  if (btn) btn.textContent = v.muted ? '🔈' : '🔇';
+  var fill = document.getElementById('fsVolFill');
+  if (fill) fill.style.width = v.muted ? '0%' : (v.volume * 100) + '%';
+}
+
+function onFSChange() {
+  var inFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  var btn = document.getElementById('fsBtnFS');
+  if (btn) btn.textContent = inFS ? '⊠ Exit FS' : '⛶ Fullscreen';
+}
+document.addEventListener('fullscreenchange', onFSChange);
+document.addEventListener('webkitfullscreenchange', onFSChange);
+
+initStream();
+</script>
+<script>
+(function(){
+  var imgs=["assets/images/Fashion1.jpg","assets/images/fashion2.jpg","assets/images/fashion3.jpg","assets/images/fashion4.jpg","assets/images/fashion5.jpg","assets/images/fashion6.jpg"];
+  var cur=0,el=document.getElementById('liveAdImg'),dotsEl=document.getElementById('liveAdDots'),dots=[];
+  imgs.forEach(function(s,i){var d=document.createElement('span');d.style.cssText='display:inline-block;width:6px;height:6px;border-radius:50%;background:'+(i===0?'#C9A84C':'rgba(255,255,255,0.4)')+';cursor:pointer;';d.onclick=function(e){e.stopPropagation();go(i);};dotsEl.appendChild(d);dots.push(d);});
+  function go(n){cur=(n+imgs.length)%imgs.length;el.src=imgs[cur];dots.forEach(function(d,i){d.style.background=i===cur?'#C9A84C':'rgba(255,255,255,0.4)';});}
+  setInterval(function(){go(cur+1);},4000);
+})();
+function liveAdClick(){
+  var div=document.createElement('div');
+  div.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;';
+  div.innerHTML='<div style="position:relative;width:90%;max-width:640px;background:#0a0f1a;border:1px solid rgba(201,168,76,0.3);border-radius:14px;overflow:hidden;"><button onclick="this.closest(\'div\').parentElement.remove()" style="position:absolute;top:10px;right:12px;z-index:10;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.2);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">✕</button><div style="aspect-ratio:16/9;"><iframe src="https://www.youtube.com/embed/-YZrG4hoS0E?autoplay=1&rel=0" width="100%" height="100%" style="border:none;" allow="autoplay;encrypted-media" allowfullscreen></iframe></div><div style="padding:12px 16px;display:flex;justify-content:flex-end;"><a href="https://SheBoujay.com" target="_blank" style="background:#C9A84C;color:#000;padding:8px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">Visit SheBoujay.com</a></div></div>';
+  div.onclick=function(e){if(e.target===this)this.remove();};
+  document.body.appendChild(div);
+}
+</script>
+</body>
+</html>

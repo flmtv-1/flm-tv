@@ -4126,7 +4126,7 @@
         { id: '55a4ec8198568dc0d53d77ce31ef582e', name: 'COMIC BOOKS', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=55a4ec8198568dc0d53d77ce31ef582e&serverId=db6bb6388c8c4c70825698639853ede6' },
 	{ id: 'ba8b8bbcbf17886eaa65ec99bfa6dee6', name: 'INTERNATIONAL Films', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=ba8b8bbcbf17886eaa65ec99bfa6dee6&collectionType=movies' },
 	{ id: '122dc12e42527c115ef0629cc03f6c3d', name: 'TAMIL MOVIES', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=122dc12e42527c115ef0629cc03f6c3d&collectionType=tvshows' },
-	{ id: '63ff6090131c21287083a32e388a6914', name: 'Dale Wynn Davidson Ministries Channel Coming Soon ✝️✨🤍', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=63ff6090131c21287083a32e388a6914&collectionType=tvshows' },
+	{ id: 'dr-dale-christian-tv', name: 'Las Vegas Tonight TV with Dale Davidson', url: 'dr-dale-christian-tv.html', hideFromCarousel: true },
 	{ id: '42467de0337316ed377457e4ec31c7f0', name: 'ANIMATION ASIAN', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=42467de0337316ed377457e4ec31c7f0&collectionType=tvshows' },
 	{ id: '19116110a53a09d86550478370bfc335', name: 'ASIAN CINEMA', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=19116110a53a09d86550478370bfc335&collectionType=movies' },
 	{ id: '131eab8057d3d6c164acd5f90a827cb0', name: 'ASIAN TV', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=131eab8057d3d6c164acd5f90a827cb0&collectionType=tvshows' },
@@ -4546,6 +4546,29 @@
                     `;
                     return navItem;
                 }
+                if (collection.id === 'dr-dale-christian-tv') {
+                    const navItem = document.createElement('a');
+                    navItem.className = 'category-nav-item';
+                    navItem.href = 'dr-dale-christian-tv.html';
+                    navItem.setAttribute('tabindex', '0');
+                    navItem.style.cssText = 'background: linear-gradient(135deg, #0a0a0a 0%, #1a1408 60%, #0a0a0a 100%); border: 2px solid rgba(201,168,76,0.5); position: relative; overflow: hidden; text-decoration: none; display: block;';
+                    navItem.innerHTML = `
+                        <img src="assets/images/DaleLogo.jpg"
+                             alt="Las Vegas Tonight TV with Dale Davidson"
+                             class="category-nav-image" loading="lazy"
+                             style="opacity:0.55;">
+                        <div class="category-nav-overlay" style="background:rgba(8,8,8,0.7);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;text-align:center;">
+                            <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+                                <div style="width:8px;height:8px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></div>
+                                <span style="font-size:11px;color:#E8333A;font-weight:900;letter-spacing:3px;font-family:'Barlow Condensed',sans-serif;text-shadow:0 0 8px rgba(232,51,58,0.8);">LIVE</span>
+                            </div>
+                            <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;line-height:1.15;letter-spacing:1px;">LAS VEGAS TONIGHT</div>
+                            <div style="font-size:9px;color:rgba(255,255,255,0.65);margin-top:2px;letter-spacing:0.5px;font-family:'Barlow Condensed',sans-serif;">with Dale Davidson</div>
+                        </div>
+                        <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
+                    `;
+                    return navItem;
+                }
                 if (collection.id === 'kids-corner' || collection.id === '9d7ad6afe9afa2dab1a2f6e00ad28fa6') {
                     const navItem = document.createElement('div');
                     navItem.className = 'category-nav-item';
@@ -4936,6 +4959,45 @@
             }
         }
 
+        // "Las Vegas Tonight TV with Dale Davidson" isn't a Jellyfin
+        // collection (it's a standalone live stream page), so it can't go
+        // through loadCollectionSection like the others. Built by hand here
+        // instead, using the same .category-header/.content-carousel/.content-card
+        // markup as every other row so it looks and behaves identically —
+        // it just links straight to the stream page instead of opening a
+        // Jellyfin item.
+        function buildDaleDavidsonSection() {
+            const section = document.createElement('section');
+            section.className = 'category-section';
+            section.id = 'section-dr-dale-christian-tv';
+            section.setAttribute('data-collection-id', 'dr-dale-christian-tv');
+            section.innerHTML = `
+                <div class="category-header">
+                    <h3 class="category-title">Las Vegas Tonight TV with Dale Davidson</h3>
+                    <a href="dr-dale-christian-tv.html" class="view-all-btn" style="cursor:pointer;">
+                        Watch Live <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="content-carousel">
+                    <div class="content-card" onclick="window.location.href='dr-dale-christian-tv.html'">
+                        <img src="assets/images/DaleLogo.jpg"
+                             alt="Las Vegas Tonight TV with Dale Davidson"
+                             class="content-card-image" loading="lazy">
+                        <div style="position:absolute;top:6px;left:6px;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.6);padding:3px 9px;border-radius:12px;z-index:2;">
+                            <span style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></span>
+                            <span style="font-size:0.7rem;font-weight:800;color:#E8333A;letter-spacing:1px;">LIVE</span>
+                        </div>
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">Las Vegas Tonight</div>
+                            <div class="content-card-info">with Dale Davidson</div>
+                        </div>
+                    </div>
+                </div>
+                <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
+            `;
+            return section;
+        }
+
         async function loadContent() {
             const container = document.getElementById('contentContainer');
             container.innerHTML = '';
@@ -4974,6 +5036,17 @@
                 container.appendChild(section);
                 return section;
             });
+
+            // Pin the Dale Davidson row right after Kids World — this is a
+            // manual insert (not a Jellyfin collection) so it doesn't go
+            // through the placeholders loop above.
+            const kidsWorldSection = container.querySelector('[data-collection-id="721f4a924b7d17ff69c721701538b3be"]');
+            const daleSection = buildDaleDavidsonSection();
+            if (kidsWorldSection) {
+                kidsWorldSection.insertAdjacentElement('afterend', daleSection);
+            } else {
+                container.appendChild(daleSection);
+            }
 
             // Now load all in parallel — each fills its own pre-placed section
             await Promise.all([
@@ -5804,6 +5877,12 @@
     // Special handling for Live Stations
     if (collectionId === 'live-stations') {
         window.location.href = 'live-stations.html';
+        return;
+    }
+
+    // Special handling for Las Vegas Tonight TV with Dale Davidson
+    if (collectionId === 'dr-dale-christian-tv') {
+        window.location.href = 'dr-dale-christian-tv.html';
         return;
     }
     
