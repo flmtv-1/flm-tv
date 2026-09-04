@@ -167,20 +167,35 @@ const PH_OFFSET = 8; // Philippines is always UTC+8, no DST
 function buildChain() {
   if (!SCHEDULE.length) return [];
   const chain = [];
-  const first = SCHEDULE[0];
-  const anchorDate = first.date || new Date().toISOString().split('T')[0];
-  const timeStr = first.startTime || first.t || '00:00';
-  const [fh, fm] = timeStr.split(':').map(Number);
-  const [ay, am, ad] = anchorDate.split('-').map(Number);
   const lvOffset = getLVOffsetHours();
-  let cursor = new Date(Date.UTC(ay, am - 1, ad, fh - lvOffset, fm, 0));
+
+  // Anchor EVERY entry off its own listed date+startTime, not just the first.
+  // This is what keeps zero-duration entries from collapsing onto the same
+  // instant and throwing off which show gets marked live.
+  function toDate(s) {
+    const dateStr = s.date || new Date().toISOString().split('T')[0];
+    const timeStr = s.startTime || s.t || '00:00';
+    const [h, m] = timeStr.split(':').map(Number);
+    const [y, mo, d] = dateStr.split('-').map(Number);
+    return new Date(Date.UTC(y, mo - 1, d, h - lvOffset, m, 0));
+  }
+
   for (let i = 0; i < SCHEDULE.length; i++) {
     const s = SCHEDULE[i];
-    const start = new Date(cursor.getTime());
+    const start = toDate(s);
     const dur = Math.round((s.outPoint || s.duration || s.d || 0) - (s.inPoint || 0));
-    const end = new Date(cursor.getTime() + dur * 1000);
-    chain.push({ s, start, end, dur });
-    cursor = end;
+    let end;
+    if (i < SCHEDULE.length - 1) {
+      const nextStart = toDate(SCHEDULE[i + 1]);
+      // A show runs until the next one's listed start time. Only fall back to
+      // its own duration when the next entry shares the same timestamp
+      // (e.g. a short bumper stacked at the same minute as the next show).
+      end = nextStart > start ? nextStart : new Date(start.getTime() + Math.max(dur, 1) * 1000);
+    } else {
+      // Last entry of the day: use its duration, or default to 30 min if unknown.
+      end = new Date(start.getTime() + (dur || 1800) * 1000);
+    }
+    chain.push({ s, start, end, dur: (end - start) / 1000 });
   }
   return chain;
 }
@@ -355,7 +370,7 @@ function updateProgress() {
 }
 
 // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
-// Updated: 2026-09-04 09:00
+// Updated: 2026-09-04 09:18
 const TODAY_SCHEDULE = [
   {t:"08:49",n:"Super Why! ",d:0,cat:"",date:"2026-09-04"},
   {t:"09:19",n:"Schookhouse Rock - Three Is A Magic Number",d:0,cat:"",date:"2026-09-04"},
