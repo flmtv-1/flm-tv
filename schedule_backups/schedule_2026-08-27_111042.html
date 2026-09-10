@@ -167,35 +167,20 @@ const PH_OFFSET = 8; // Philippines is always UTC+8, no DST
 function buildChain() {
   if (!SCHEDULE.length) return [];
   const chain = [];
+  const first = SCHEDULE[0];
+  const anchorDate = first.date || new Date().toISOString().split('T')[0];
+  const timeStr = first.startTime || first.t || '00:00';
+  const [fh, fm] = timeStr.split(':').map(Number);
+  const [ay, am, ad] = anchorDate.split('-').map(Number);
   const lvOffset = getLVOffsetHours();
-
-  // Anchor EVERY entry off its own listed date+startTime, not just the first.
-  // This is what keeps zero-duration entries from collapsing onto the same
-  // instant and throwing off which show gets marked live.
-  function toDate(s) {
-    const dateStr = s.date || new Date().toISOString().split('T')[0];
-    const timeStr = s.startTime || s.t || '00:00';
-    const [h, m] = timeStr.split(':').map(Number);
-    const [y, mo, d] = dateStr.split('-').map(Number);
-    return new Date(Date.UTC(y, mo - 1, d, h - lvOffset, m, 0));
-  }
-
+  let cursor = new Date(Date.UTC(ay, am - 1, ad, fh - lvOffset, fm, 0));
   for (let i = 0; i < SCHEDULE.length; i++) {
     const s = SCHEDULE[i];
-    const start = toDate(s);
+    const start = new Date(cursor.getTime());
     const dur = Math.round((s.outPoint || s.duration || s.d || 0) - (s.inPoint || 0));
-    let end;
-    if (i < SCHEDULE.length - 1) {
-      const nextStart = toDate(SCHEDULE[i + 1]);
-      // A show runs until the next one's listed start time. Only fall back to
-      // its own duration when the next entry shares the same timestamp
-      // (e.g. a short bumper stacked at the same minute as the next show).
-      end = nextStart > start ? nextStart : new Date(start.getTime() + Math.max(dur, 1) * 1000);
-    } else {
-      // Last entry of the day: use its duration, or default to 30 min if unknown.
-      end = new Date(start.getTime() + (dur || 1800) * 1000);
-    }
-    chain.push({ s, start, end, dur: (end - start) / 1000 });
+    const end = new Date(cursor.getTime() + dur * 1000);
+    chain.push({ s, start, end, dur });
+    cursor = end;
   }
   return chain;
 }
@@ -370,43 +355,38 @@ function updateProgress() {
 }
 
 // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
-// Updated: 2026-09-10 08:31
+// Updated: 2026-08-27 11:05
 const TODAY_SCHEDULE = [
-  {t:"07:36",n:"Sesame Street",d:3260,cat:"",date:"2026-09-10"},
-  {t:"08:30",n:"Super Why!",d:1619,cat:"",date:"2026-09-10"},
-  {t:"08:57",n:"Charlie Brown",d:1350,cat:"",date:"2026-09-10"},
-  {t:"09:20",n:"Rugrats.In.Paris",d:4717,cat:"movie",date:"2026-09-10"},
-  {t:"10:38",n:"Despicable Me 3",d:5380,cat:"movie",date:"2026-09-10"},
-  {t:"12:08",n:"The Lucy Show",d:1539,cat:"",date:"2026-09-10"},
-  {t:"12:34",n:"Life with Lucy",d:1493,cat:"",date:"2026-09-10"},
-  {t:"12:58",n:"Leave it to Beaver",d:1555,cat:"",date:"2026-09-10"},
-  {t:"13:24",n:"Andy Griffith",d:1480,cat:"",date:"2026-09-10"},
-  {t:"13:49",n:"Andy Griffith2",d:1534,cat:"",date:"2026-09-10"},
-  {t:"14:15",n:"Bewitched",d:1493,cat:"",date:"2026-09-10"},
-  {t:"14:39",n:"Charlie\'s Angels",d:2988,cat:"",date:"2026-09-10"},
-  {t:"15:29",n:"The Twilight Zone 1",d:1554,cat:"",date:"2026-09-10"},
-  {t:"15:55",n:"The Twilight Zone 2",d:1543,cat:"",date:"2026-09-10"},
-  {t:"16:21",n:"Zaina Juliette Commercial",d:37,cat:"ad",date:"2026-09-10"},
-  {t:"16:21",n:"Zaina-Spotlight",d:60,cat:"ad",date:"2026-09-10"},
-  {t:"16:22",n:"The Door with Seven Locks",d:5482,cat:"movie",date:"2026-09-10"},
-  {t:"17:54",n:"Whats Happening",d:1510,cat:"",date:"2026-09-10"},
-  {t:"18:19",n:"Good Times",d:1523,cat:"",date:"2026-09-10"},
-  {t:"18:44",n:"The Jeffersons",d:1503,cat:"",date:"2026-09-10"},
-  {t:"19:09",n:"Archie Bunker\'s Place",d:1452,cat:"",date:"2026-09-10"},
-  {t:"19:34",n:"Sanford _Son",d:1497,cat:"",date:"2026-09-10"},
-  {t:"19:59",n:"OZONE",d:117,cat:"ad",date:"2026-09-10"},
-  {t:"20:01",n:"Classic Cartoons 1",d:420,cat:"",date:"2026-09-10"},
-  {t:"20:08",n:"Woody Woodpecker",d:418,cat:"",date:"2026-09-10"},
-  {t:"20:15",n:"Woody Woodpecker",d:418,cat:"",date:"2026-09-10"},
-  {t:"20:21",n:"Woody Woodpecker",d:408,cat:"",date:"2026-09-10"},
-  {t:"20:28",n:"Woody Woodpecker",d:416,cat:"",date:"2026-09-10"},
-  {t:"20:35",n:"Cinderella.III",d:4437,cat:"movie",date:"2026-09-10"},
-  {t:"21:49",n:"The.Golden.Compass",d:6795,cat:"movie",date:"2026-09-10"},
-  {t:"23:42",n:"Bedknobs _Broomsticks",d:7038,cat:"movie",date:"2026-09-10"},
-  {t:"01:40",n:"37 Days to war (BBC)",d:10282,cat:"movie",date:"2026-09-11"},
-  {t:"04:31",n:"Bruce Almighty",d:6062,cat:"movie",date:"2026-09-11"},
-  {t:"06:12",n:"The Maze Runner",d:6806,cat:"movie",date:"2026-09-11"},
-  {t:"08:06",n:"Dune-Part-Two",d:9947,cat:"movie",date:"2026-09-11"}
+  {t:"10:35",n:"Abbott and Costello",d:1523,cat:"",date:"2026-08-27"},
+  {t:"11:01",n:"The Dick Van Dyke Show",d:1522,cat:"",date:"2026-08-27"},
+  {t:"11:26",n:"The Monkees",d:1504,cat:"",date:"2026-08-27"},
+  {t:"11:51",n:"Dolly -Welcome Home",d:221,cat:"ad",date:"2026-08-27"},
+  {t:"11:55",n:"Dolly - 9 to 5 Promo",d:153,cat:"ad",date:"2026-08-27"},
+  {t:"11:57",n:"Dolly- Backwoods Barbie",d:205,cat:"ad",date:"2026-08-27"},
+  {t:"12:01",n:"The Lucy Show",d:1537,cat:"",date:"2026-08-27"},
+  {t:"12:26",n:"Leave it to Beaver",d:1518,cat:"",date:"2026-08-27"},
+  {t:"12:52",n:"Beverly Hillbillies",d:1610,cat:"",date:"2026-08-27"},
+  {t:"13:18",n:"Beverly Hillbillies",d:1628,cat:"",date:"2026-08-27"},
+  {t:"13:46",n:"The Addams Family",d:1540,cat:"",date:"2026-08-27"},
+  {t:"14:11",n:"Dolly Parton-The Sacrifice",d:215,cat:"ad",date:"2026-08-27"},
+  {t:"14:15",n:"Dolly-Together You and I",d:236,cat:"ad",date:"2026-08-27"},
+  {t:"14:19",n:"Andy Griffith",d:1501,cat:"",date:"2026-08-27"},
+  {t:"14:44",n:"Andy Griffith",d:1546,cat:"",date:"2026-08-27"},
+  {t:"15:10",n:"Charlie\'s Angels",d:2989,cat:"",date:"2026-08-27"},
+  {t:"15:59",n:"Trading Places",d:6983,cat:"movie",date:"2026-08-27"},
+  {t:"17:56",n:"Dolly Parton-Music Video",d:188,cat:"ad",date:"2026-08-27"},
+  {t:"17:59",n:"Dolly Parton - Home",d:211,cat:"ad",date:"2026-08-27"},
+  {t:"18:02",n:"OZONE in Concert",d:117,cat:"ad",date:"2026-08-27"},
+  {t:"18:04",n:"Good Times",d:1524,cat:"",date:"2026-08-27"},
+  {t:"18:30",n:"Sanford and Son",d:1490,cat:"",date:"2026-08-27"},
+  {t:"18:55",n:"The Jeffersons",d:1503,cat:"",date:"2026-08-27"},
+  {t:"19:20",n:"Tom and Jerry",d:416,cat:"",date:"2026-08-27"},
+  {t:"19:27",n:"Tom and Jerry",d:413,cat:"",date:"2026-08-27"},
+  {t:"19:33",n:"Nature.Cat.",d:1441,cat:"",date:"2026-08-27"},
+  {t:"19:57",n:"Dolly Parton-Imagination",d:143,cat:"ad",date:"2026-08-27"},
+  {t:"20:00",n:"Happy Feet 2",d:5969,cat:"movie",date:"2026-08-27"},
+  {t:"21:39",n:"The X-Files",d:2696,cat:"",date:"2026-08-27"},
+  {t:"22:24",n:"Angels and Demons",d:8775,cat:"movie",date:"2026-08-27"}
 ];
 
 // ── LOAD JSON & INIT ─────────────────────────────────────────────

@@ -1,16 +1,16 @@
 {
   "2026-09-10": [
     {
-      "startTime": "07:10",
+      "startTime": "07:36",
       "name": "Sesame Street",
       "path": "",
-      "duration": 3143,
+      "duration": 3260,
       "inPoint": 0,
-      "outPoint": 3143,
+      "outPoint": 3260,
       "category": "show"
     },
     {
-      "startTime": "08:03",
+      "startTime": "08:30",
       "name": "Super Why!",
       "path": "",
       "duration": 1619,
@@ -19,7 +19,7 @@
       "category": "show"
     },
     {
-      "startTime": "08:30",
+      "startTime": "08:57",
       "name": "Charlie Brown",
       "path": "",
       "duration": 1350,
@@ -28,7 +28,7 @@
       "category": "show"
     },
     {
-      "startTime": "08:52",
+      "startTime": "09:20",
       "name": "Rugrats.In.Paris",
       "path": "",
       "duration": 4717,
@@ -37,7 +37,7 @@
       "category": "movie"
     },
     {
-      "startTime": "10:11",
+      "startTime": "10:38",
       "name": "Despicable Me 3",
       "path": "",
       "duration": 5380,
@@ -46,7 +46,7 @@
       "category": "movie"
     },
     {
-      "startTime": "11:40",
+      "startTime": "12:08",
       "name": "The Lucy Show",
       "path": "",
       "duration": 1539,
@@ -55,7 +55,7 @@
       "category": "show"
     },
     {
-      "startTime": "12:06",
+      "startTime": "12:34",
       "name": "Life with Lucy",
       "path": "",
       "duration": 1493,
@@ -64,7 +64,7 @@
       "category": "show"
     },
     {
-      "startTime": "12:31",
+      "startTime": "12:58",
       "name": "Leave it to Beaver",
       "path": "",
       "duration": 1555,
@@ -73,7 +73,7 @@
       "category": "show"
     },
     {
-      "startTime": "12:57",
+      "startTime": "13:24",
       "name": "Andy Griffith",
       "path": "",
       "duration": 1480,
@@ -82,16 +82,16 @@
       "category": "show"
     },
     {
-      "startTime": "13:22",
-      "name": "Andy Griffith",
+      "startTime": "13:49",
+      "name": "Andy Griffith2",
       "path": "",
-      "duration": 12241,
+      "duration": 1534,
       "inPoint": 0,
-      "outPoint": 12241,
-      "category": "movie"
+      "outPoint": 1534,
+      "category": "show"
     },
     {
-      "startTime": "16:46",
+      "startTime": "14:15",
       "name": "Bewitched",
       "path": "",
       "duration": 1493,
@@ -100,13 +100,222 @@
       "category": "show"
     },
     {
-      "startTime": "17:10",
+      "startTime": "14:39",
       "name": "Charlie's Angels",
       "path": "",
       "duration": 2988,
       "inPoint": 0,
       "outPoint": 2988,
       "category": "show"
+    },
+    {
+      "startTime": "15:29",
+      "name": "The Twilight Zone 1",
+      "path": "",
+      "duration": 1554,
+      "inPoint": 0,
+      "outPoint": 1554,
+      "category": "show"
+    },
+    {
+      "startTime": "15:55",
+      "name": "The Twilight Zone 2",
+      "path": "",
+      "duration": 1543,
+      "inPoint": 0,
+      "outPoint": 1543,
+      "category": "show"
+    },
+    {
+      "startTime": "16:21",
+      "name": "Zaina Juliette Commercial",
+      "path": "",
+      "duration": 37,
+      "inPoint": 0,
+      "outPoint": 37,
+      "category": "commercial"
+    },
+    {
+      "startTime": "16:21",
+      "name": "Zaina-Spotlight",
+      "path": "",
+      "duration": 60,
+      "inPoint": 0,
+      "outPoint": 60,
+      "category": "commercial"
+    },
+    {
+      "startTime": "16:22",
+      "name": "Whats Happening",
+      "path": "",
+      "duration": 1510,
+      "inPoint": 0,
+      "outPoint": 1510,
+      "category": "show"
+    },
+    {
+      "startTime": "16:48",
+      "name": "Good Times",
+      "path": "",
+      "duration": 1523,
+      "inPoint": 0,
+      "outPoint": 1523,
+      "category": "show"
+    },
+    {
+      "startTime": "17:13",
+      "name": "The Jeffersons",
+      "path": "",
+      "duration": 1503,
+      "inPoint": 0,
+      "outPoint": 1503,
+      "category": "show"
+    },
+    {
+      "startTime": "17:38",
+      "name": "Archie Bunker's Place",
+      "path": "",
+      "duration": 1452,
+      "inPoint": 0,
+      "outPoint": 1452,
+      "category": "show"
+    },
+    {
+      "startTime": "18:02",
+      "name": "Sanford _Son",
+      "path": "",
+      "duration": 1497,
+      "inPoint": 0,
+      "outPoint": 1497,
+      "category": "show"
+    },
+    {
+      "startTime": "18:27",
+      "name": "OZONE",
+      "path": "",
+      "duration": 117,
+      "inPoint": 0,
+      "outPoint": 117,
+      "category": "commercial"
+    },
+    {
+      "startTime": "18:29",
+      "name": "Classic Cartoons 1",
+      "path": "",
+      "duration": 420,
+      "inPoint": 0,
+      "outPoint": 420,
+      "category": "show"
+    },
+    {
+      "startTime": "18:36",
+      "name": "Woody Woodpecker",
+      "path": "",
+      "duration": 418,
+      "inPoint": 0,
+      "outPoint": 418,
+      "category": "show"
+    },
+    {
+      "startTime": "18:43",
+      "name": "Woody Woodpecker",
+      "path": "",
+      "duration": 418,
+      "inPoint": 0,
+      "outPoint": 418,
+      "category": "show"
+    },
+    {
+      "startTime": "18:50",
+      "name": "Woody Woodpecker",
+      "path": "",
+      "duration": 408,
+      "inPoint": 0,
+      "outPoint": 408,
+      "category": "show"
+    },
+    {
+      "startTime": "18:57",
+      "name": "Woody Woodpecker",
+      "path": "",
+      "duration": 416,
+      "inPoint": 0,
+      "outPoint": 416,
+      "category": "show"
+    },
+    {
+      "startTime": "19:04",
+      "name": "Cinderella.III",
+      "path": "",
+      "duration": 4437,
+      "inPoint": 0,
+      "outPoint": 4437,
+      "category": "movie"
+    },
+    {
+      "startTime": "20:18",
+      "name": "The.Golden.Compass",
+      "path": "",
+      "duration": 6795,
+      "inPoint": 0,
+      "outPoint": 6795,
+      "category": "movie"
+    },
+    {
+      "startTime": "22:11",
+      "name": "Bedknobs _Broomsticks",
+      "path": "",
+      "duration": 7038,
+      "inPoint": 0,
+      "outPoint": 7038,
+      "category": "movie"
+    }
+  ],
+  "2026-09-11": [
+    {
+      "startTime": "00:08",
+      "name": "37 Days to war (BBC)",
+      "path": "",
+      "duration": 10282,
+      "inPoint": 0,
+      "outPoint": 10282,
+      "category": "movie"
+    },
+    {
+      "startTime": "03:00",
+      "name": "Bruce Almighty",
+      "path": "",
+      "duration": 6062,
+      "inPoint": 0,
+      "outPoint": 6062,
+      "category": "movie"
+    },
+    {
+      "startTime": "04:41",
+      "name": "The Maze Runner",
+      "path": "",
+      "duration": 6806,
+      "inPoint": 0,
+      "outPoint": 6806,
+      "category": "movie"
+    },
+    {
+      "startTime": "06:34",
+      "name": "Dune-Part-Two",
+      "path": "",
+      "duration": 9947,
+      "inPoint": 0,
+      "outPoint": 9947,
+      "category": "movie"
+    },
+    {
+      "startTime": "09:20",
+      "name": "The Door with Seven Locks",
+      "path": "",
+      "duration": 5482,
+      "inPoint": 0,
+      "outPoint": 5482,
+      "category": "movie"
     }
   ]
 }
