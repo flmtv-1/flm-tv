@@ -55,6 +55,7 @@
     
     <!-- CSP removed to allow Castr stream -->
     <link rel="icon" type="image/png" href="assets/logos/favicons-3/favicon-96x96.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;700&display=swap">
     <link rel="apple-touch-icon" href="assets/logos/favicons-3/web-app-manifest-512x512.png">
     <link rel="manifest" href="assets/logos/favicons-3/manifest.json">
     <meta name="theme-color" content="#0a0e27">
@@ -396,6 +397,47 @@
             transition: opacity 1s ease-in-out;
             background-size: cover;
             background-position: center;
+            background-color: #07070A;
+        }
+        .hero-slide.fit-contain {
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .hero-dots {
+            position: absolute;
+            bottom: 22px;
+            left: 5%;
+            z-index: 5;
+            display: flex;
+            gap: 6px;
+        }
+        .hero-dot-btn {
+            width: 34px;
+            height: 3px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.25);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        .hero-dot-btn:hover { background: rgba(255,255,255,0.45); }
+        .hero-dot-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; height: 100%;
+            width: 0%;
+            background: var(--gold, #C9A84C);
+        }
+        .hero-dot-btn.active::after {
+            width: 100%;
+            transition: width 5s linear;
+        }
+        .hero-dot-btn.filled::after {
+            width: 100%;
+            transition: none;
         }
         
         .hero-slide.active {
@@ -409,30 +451,51 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.3), rgba(15, 23, 42, 0.9));
+            background:
+                linear-gradient(to bottom, rgba(7,7,10,0.15) 0%, rgba(7,7,10,0.55) 55%, rgba(7,7,10,0.96) 100%),
+                linear-gradient(to right, rgba(7,7,10,0.85) 0%, rgba(7,7,10,0.25) 45%, rgba(7,7,10,0.1) 100%);
         }
         
         .hero-content {
             position: absolute;
-            bottom: 10%;
+            bottom: 15%;
             left: 5%;
-            max-width: 600px;
+            max-width: 640px;
             z-index: 2;
             color: white;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s;
+        }
+        .hero-slide.active .hero-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hero-eyebrow {
+            font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            color: var(--gold, #C9A84C);
+            margin-bottom: 0.6rem;
+            text-shadow: 0 0 12px rgba(201,168,76,0.5);
         }
         
         .hero-title {
-            font-size: 2.5rem;
-            font-weight: 900;
+            font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+            font-size: 3.4rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            line-height: 1;
             margin-bottom: 1rem;
-            color: var(--accent);
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
         }
         
         .hero-description {
-            font-size: 1.25rem;
-            color: white;
-            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 1.75rem;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
             line-height: 1.6;
         }
@@ -457,13 +520,16 @@
         }
         
         .btn-hero-primary {
-            background: var(--secondary);
-            color: white;
+            background: var(--gold, var(--secondary));
+            color: #000;
+            font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+            font-size: 1.15rem;
+            letter-spacing: 1.5px;
         }
         
         .btn-hero-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(206, 17, 38, 0.4);
+            box-shadow: 0 6px 20px rgba(201,168,76,0.4);
         }
         
         .btn-hero-secondary {
@@ -2869,7 +2935,7 @@
                 <!-- EZWAY TV NETWORK / PARTNER CHANNEL CARD -->
                 <div onclick="openEZWayCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #0d1b3d 0%, #07070A 75%);overflow:hidden;">
                     <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;"><div class="live-dot" style="background:#000;"></div> PARTNER CHANNEL</div>
-                    <iframe src="https://stream.ezway.tv/player/JSkxf5sz5LF3"
+                    <iframe src="https://stream.ezway.tv/player/JSkxf5sz5LF3?autoplay=1&muted=1&mute=1"
                             style="position:absolute;inset:0;width:100%;height:100%;border:none;opacity:0.35;z-index:1;pointer-events:none;"
                             allow="autoplay" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     <div style="position:absolute;inset:0;z-index:5;display:flex;align-items:center;gap:14px;padding:12px 16px;">
@@ -5640,7 +5706,8 @@
                 image: 'assets/images/ZainaShowTheaterBanner.jpg',
                 title: 'The Zaina Juliette Show',
                 description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
-                link: null
+                link: null,
+                fit: 'contain'
             });
 
             // FLM TV banner — made by Eric (eZWay TV)
@@ -5648,7 +5715,8 @@
                 image: 'assets/logos/assetslogosflm-tv-banner-ezway.jpg',
                 title: 'FLM TV',
                 description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas.',
-                link: null
+                link: null,
+                fit: 'contain'
             });
 
             // eZWay TV Network — featured launch slide (remove this block later
@@ -5659,7 +5727,8 @@
                 title: 'eZWay TV Network',
                 description: 'Our newest reciprocal partner channel — direct connections to celebrities, award-winning talent, and creators. No pitch, just real content.',
                 link: null,
-                customAction: "window.location.href='ezway-tv.html'"
+                customAction: "window.location.href='ezway-tv.html'",
+                fit: 'contain'
             });
             
             // Fetch featured content from Jellyfin
@@ -5693,12 +5762,13 @@
             // Build slides
             slides.forEach((slide, index) => {
                 const slideDiv = document.createElement('div');
-                slideDiv.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+                slideDiv.className = `hero-slide ${index === 0 ? 'active' : ''} ${slide.fit === 'contain' ? 'fit-contain' : ''}`;
                 slideDiv.style.backgroundImage = `url('${slide.image}')`;
                 
                 const content = document.createElement('div');
                 content.className = 'hero-content';
                 content.innerHTML = `
+                    <div class="hero-eyebrow">FEATURED</div>
                     <h2 class="hero-title">${slide.title}</h2>
                     <p class="hero-description">${slide.description}</p>
                     <div class="hero-buttons">
@@ -5711,15 +5781,50 @@
                 slideDiv.appendChild(content);
                 heroBanner.appendChild(slideDiv);
             });
-            
+
+            // Dot navigation — click any dot to jump straight to that slide.
+            // Dots behave like story progress bars: filled solid = already
+            // shown, animating fill = current, empty = still to come.
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'hero-dots';
+            slides.forEach((slide, index) => {
+                const dot = document.createElement('button');
+                dot.className = `hero-dot-btn ${index === 0 ? 'active' : ''}`;
+                dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+            heroBanner.appendChild(dotsContainer);
+
             // Auto-rotate slides every 5 seconds
             let currentSlide = 0;
-            setInterval(() => {
+            function updateActiveSlide(newIndex) {
                 const allSlides = heroBanner.querySelectorAll('.hero-slide');
+                const allDots = dotsContainer.querySelectorAll('.hero-dot-btn');
                 allSlides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % allSlides.length;
+                allDots.forEach((dot, i) => {
+                    dot.classList.remove('active');
+                    dot.classList.toggle('filled', i < newIndex);
+                });
+                currentSlide = newIndex;
                 allSlides[currentSlide].classList.add('active');
+                // Force a reflow so the fill animation restarts cleanly even
+                // when re-selecting a dot that was already 'active' before.
+                void allDots[currentSlide].offsetWidth;
+                allDots[currentSlide].classList.add('active');
+            }
+            let rotateTimer = setInterval(() => {
+                const allSlides = heroBanner.querySelectorAll('.hero-slide');
+                updateActiveSlide((currentSlide + 1) % allSlides.length);
             }, 5000);
+            function goToSlide(index) {
+                updateActiveSlide(index);
+                clearInterval(rotateTimer);
+                rotateTimer = setInterval(() => {
+                    const allSlides = heroBanner.querySelectorAll('.hero-slide');
+                    updateActiveSlide((currentSlide + 1) % allSlides.length);
+                }, 5000);
+            }
         }
         
        function openComic(bookId, bookName) {
