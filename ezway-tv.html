@@ -214,24 +214,30 @@ html, body {
   </div>
 
 <script>
-  // ── eZWAY TV SHOWS ────────────────────────────────────────────
-  // Add a new show any time by adding an entry here — no other
-  // code changes needed. Point `url` at that show's own stream/
-  // playback page once it has one; until then it can point at
-  // ezway-live.html or be left out of the array.
-  const EZWAY_SHOWS = [
-    {
-      name: 'eZWay TV Network',
-      host: 'Live Channel',
-      image: 'assets/images/ezwaylogo.jpeg',
-      url: 'ezway-live.html',
-      live: true
-    }
-  ];
+  // ── eZWAY TV — LIVE CHANNEL TILE (fixed) + JELLYFIN-LOADED SHOWS ──
+  // Same Jellyfin config/pattern used on kids-corner.html: pulls the
+  // folder set for eZWay TV in Jellyfin (ParentId below, from the
+  // eZWAYtv library) and lists whatever video files are in it —
+  // no manual editing needed when new files are added, just rescan
+  // the library in Jellyfin (or wait for the scheduled scan).
+  const JELLYFIN_CONFIG = {
+    SERVER: 'https://flmtv.com/jellyfin',
+    API_KEY: '62131ee22c0141c6b651be75a7444350',
+    USER_ID: '2562494c1df24f8789cd0ad8a38a7bf4',
+    EZWAY_LIBRARY_ID: 'ffac3dc415e1747a8d2abf7f72d40c7a'
+  };
+
+  const LIVE_CHANNEL_TILE = {
+    name: 'eZWay TV Network',
+    host: 'Live Channel',
+    image: 'assets/images/ezwaylogo.jpeg',
+    url: 'ezway-live.html',
+    live: true
+  };
 
   const grid = document.getElementById('showGrid');
 
-  EZWAY_SHOWS.forEach(show => {
+  function renderCard(show) {
     const card = document.createElement('a');
     card.className = 'show-card';
     card.href = show.url;
@@ -245,12 +251,47 @@ html, body {
       </div>
     `;
     grid.appendChild(card);
-  });
+  }
 
-  const addMore = document.createElement('div');
-  addMore.className = 'show-card add-more';
-  addMore.innerHTML = `<i class="fas fa-plus"></i><span>More shows coming soon</span>`;
-  grid.appendChild(addMore);
+  async function loadEZWayShows() {
+    // Live channel tile always shows first, regardless of Jellyfin load result.
+    renderCard(LIVE_CHANNEL_TILE);
+
+    try {
+      const url = `${JELLYFIN_CONFIG.SERVER}/Users/${JELLYFIN_CONFIG.USER_ID}/Items?ParentId=${JELLYFIN_CONFIG.EZWAY_LIBRARY_ID}&Recursive=true&IncludeItemTypes=Movie,Video&Fields=Path&SortBy=SortName&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const items = data.Items || [];
+
+      items.forEach(item => {
+        const imgUrl = item.ImageTags && item.ImageTags.Primary
+          ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?maxHeight=400&quality=90&tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
+          : 'assets/images/ezwaylogo.jpeg';
+        renderCard({
+          name: item.Name,
+          host: 'eZWay TV Network',
+          image: imgUrl,
+          url: `movie-frame.html?id=${item.Id}`,
+          live: false
+        });
+      });
+
+      if (items.length === 0) {
+        const addMore = document.createElement('div');
+        addMore.className = 'show-card add-more';
+        addMore.innerHTML = `<i class="fas fa-plus"></i><span>More shows coming soon</span>`;
+        grid.appendChild(addMore);
+      }
+    } catch (error) {
+      console.error('Error loading eZWay shows from Jellyfin:', error);
+      const addMore = document.createElement('div');
+      addMore.className = 'show-card add-more';
+      addMore.innerHTML = `<i class="fas fa-plus"></i><span>More shows coming soon</span>`;
+      grid.appendChild(addMore);
+    }
+  }
+
+  loadEZWayShows();
 </script>
 
 <script>
