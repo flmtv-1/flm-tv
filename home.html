@@ -2867,8 +2867,11 @@
             <div class="event-cards-col">
 
                 <!-- EZWAY TV NETWORK / PARTNER CHANNEL CARD -->
-                <div onclick="openEZWayCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #0d1b3d 0%, #07070A 75%);">
+                <div onclick="openEZWayCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #0d1b3d 0%, #07070A 75%);overflow:hidden;">
                     <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;"><div class="live-dot" style="background:#000;"></div> PARTNER CHANNEL</div>
+                    <iframe src="https://stream.ezway.tv/player/JSkxf5sz5LF3"
+                            style="position:absolute;inset:0;width:100%;height:100%;border:none;opacity:0.35;z-index:1;pointer-events:none;"
+                            allow="autoplay" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     <div style="position:absolute;inset:0;z-index:5;display:flex;align-items:center;gap:14px;padding:12px 16px;">
                         <img src="assets/images/ezwaylogo.jpeg"
                              style="height:110px;max-height:78%;width:auto;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.6));"
@@ -4986,6 +4989,42 @@
             return section;
         }
 
+        // "eZWayTV" — same situation as Dale's row: not a Jellyfin
+        // collection, a standalone partner live stream page. Built by
+        // hand using the identical markup pattern so it matches every
+        // other row on the page.
+        function buildEZWaySection() {
+            const section = document.createElement('section');
+            section.className = 'category-section';
+            section.id = 'section-ezway-tv';
+            section.setAttribute('data-collection-id', 'ezway-tv');
+            section.innerHTML = `
+                <div class="category-header">
+                    <h3 class="category-title">eZWayTV</h3>
+                    <a href="ezway-tv.html" class="view-all-btn" style="cursor:pointer;">
+                        Watch Live <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="content-carousel">
+                    <div class="content-card" onclick="window.location.href='ezway-tv.html'">
+                        <img src="assets/images/ezwaylogo.jpeg"
+                             alt="eZWayTV Network"
+                             class="content-card-image" loading="lazy">
+                        <div style="position:absolute;top:6px;left:6px;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.6);padding:3px 9px;border-radius:12px;z-index:2;">
+                            <span style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></span>
+                            <span style="font-size:0.7rem;font-weight:800;color:#E8333A;letter-spacing:1px;">LIVE</span>
+                        </div>
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">eZWayTV Network</div>
+                            <div class="content-card-info">Reciprocal Partner Channel</div>
+                        </div>
+                    </div>
+                </div>
+                <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
+            `;
+            return section;
+        }
+
         async function loadContent() {
             const container = document.getElementById('contentContainer');
             container.innerHTML = '';
@@ -5035,6 +5074,11 @@
             } else {
                 container.appendChild(daleSection);
             }
+
+            // Pin the eZWayTV row right after Dale's row — same manual-insert
+            // situation, kept next to the other partner/live-stream row.
+            const ezwaySection = buildEZWaySection();
+            daleSection.insertAdjacentElement('afterend', ezwaySection);
 
             // Now load all in parallel — each fills its own pre-placed section
             await Promise.all([
@@ -5606,6 +5650,17 @@
                 description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas.',
                 link: null
             });
+
+            // eZWay TV Network — featured launch slide (remove this block later
+            // once the partnership is no longer "new"; the card in the row
+            // below stays either way)
+            slides.push({
+                image: 'assets/images/ezwaylogo.jpeg',
+                title: 'eZWay TV Network',
+                description: 'Our newest reciprocal partner channel — direct connections to celebrities, award-winning talent, and creators. No pitch, just real content.',
+                link: null,
+                customAction: "window.location.href='ezway-tv.html'"
+            });
             
             // Fetch featured content from Jellyfin
             try {
@@ -5647,7 +5702,7 @@
                     <h2 class="hero-title">${slide.title}</h2>
                     <p class="hero-description">${slide.description}</p>
                     <div class="hero-buttons">
-                        <button class="btn btn-hero-primary" onclick="${slide.link ? `playJellyfinItem('${slide.link}')` : `alert('Coming soon!')`}">
+                        <button class="btn btn-hero-primary" onclick="${slide.link ? `playJellyfinItem('${slide.link}')` : (slide.customAction || `alert('Coming soon!')`)}">
                             <i class="fas fa-play"></i> ${slide.link ? 'Watch Now' : 'Learn More'}
                         </button>
                     </div>

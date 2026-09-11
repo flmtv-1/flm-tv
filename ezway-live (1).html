@@ -357,7 +357,9 @@ html, body {
 
   <!-- VIDEO PLAYER -->
   <div class="player-area" id="playerArea">
-    <video id="liveVideo" playsinline autoplay controls poster="assets/images/ezwaylogo.jpeg" style="width:100%;height:100%;object-fit:contain;"></video>
+    <iframe id="liveVideo" src="https://stream.ezway.tv/player/JSkxf5sz5LF3"
+            style="width:100%;height:100%;border:none;"
+            allowfullscreen allow="autoplay" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
     <!-- FIRESTICK CONTROL BAR — fades when idle, shows on any button press -->
     <div id="fsOverlay" style="display:none;position:fixed;inset:0;z-index:99999;pointer-events:none;">
@@ -390,13 +392,24 @@ html, body {
         if (!/AFT|FireTV|Silk/i.test(navigator.userAgent)) return;
 
         var vid  = document.getElementById('liveVideo');
+        var isIframe = vid.tagName === 'IFRAME'; // eZWay is in iframe-embed mode (CORS workaround) — can't control playback/volume on someone else's page from outside it
         var ctrl = document.getElementById('fsControls');
         var fill = document.getElementById('fsVolFill');
         document.getElementById('fsOverlay').style.display = 'block';
-        vid.removeAttribute('controls');
+        if (!isIframe) vid.removeAttribute('controls');
 
-        var btns = ['fsBtnHome','fsBtnPlay','fsBtnVolDown','fsBtnVolUp','fsBtnMute','fsBtnFS'];
+        var btns = isIframe
+            ? ['fsBtnHome', 'fsBtnFS']  // only Home + Fullscreen work when embedding via iframe
+            : ['fsBtnHome','fsBtnPlay','fsBtnVolDown','fsBtnVolUp','fsBtnMute','fsBtnFS'];
         var idx = 1, timer;
+
+        if (isIframe) {
+            // Hide the buttons we can't wire up safely for an iframe
+            ['fsBtnPlay','fsBtnVolDown','fsBtnVolUp','fsBtnMute'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+        }
 
         function show() {
             ctrl.style.opacity = '1';
@@ -415,13 +428,14 @@ html, body {
             show();
         }
         function updateVol() {
-            if (fill) fill.style.width = (vid.muted ? 0 : vid.volume * 100) + '%';
+            if (fill && !isIframe) fill.style.width = (vid.muted ? 0 : vid.volume * 100) + '%';
         }
 
         // Wire up button actions
         document.getElementById('fsBtnHome').addEventListener('click', function() {
             window.location.href = 'home.html';
         });
+        if (!isIframe) {
         document.getElementById('fsBtnPlay').addEventListener('click', function() {
             if (vid.paused) vid.play(); else vid.pause();
             this.textContent = vid.paused ? '▶' : '⏸';
@@ -439,6 +453,7 @@ html, body {
             this.textContent = vid.muted ? '🔈' : '🔇';
             updateVol();
         });
+        }
         document.getElementById('fsBtnFS').addEventListener('click', function() {
             var pa = document.getElementById('playerArea');
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
@@ -552,63 +567,26 @@ html, body {
 </div>
 
 <script>
-// Replace this with the real HLS (.m3u8) URL once eZWay TV's stream is live.
-const STREAM_URL = 'https://stream.ezway.tv/hls/7e5567f6b7ff4713985b0a791078a441.m3u8';
+// ── PLAYBACK MODE: IFRAME ──────────────────────────────────────
+// Eric's direct .m3u8 hit a CORS wall when loaded via HLS.js (cross-
+// domain video data fetch), so this page is currently using his
+// hosted player embed instead — an iframe loads HIS page/origin,
+// which sidesteps that restriction. His player handles its own
+// loading/offline/error states internally, so our overlays are
+// disabled below rather than deleted, in case we switch back to a
+// direct HLS.js setup later (e.g. once CORS is enabled on his end,
+// which is also needed for Roku/Fire TV where iframes don't work).
+const STREAM_URL = 'https://stream.ezway.tv/hls/7e5567f6b7ff4713985b0a791078a441.m3u8'; // kept for reference / future direct-HLS switch-back
 
-const video = document.getElementById('liveVideo');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const offlineOverlay = document.getElementById('offlineOverlay');
 const errorOverlay = document.getElementById('errorOverlay');
 
 function initStream() {
-  errorOverlay.classList.remove('show');
+  // No-op in iframe mode — hide all our overlays, Eric's player handles its own states.
+  loadingOverlay.classList.add('hidden');
   offlineOverlay.classList.remove('show');
-
-  if (!STREAM_URL) {
-    // No stream URL configured yet — show the pending placeholder, skip loading/error states.
-    loadingOverlay.classList.add('hidden');
-    offlineOverlay.classList.add('show');
-    return;
-  }
-
-  loadingOverlay.classList.remove('hidden');
-
-  // Safety timeout — hide loading after 6s
-  const timeout = setTimeout(() => loadingOverlay.classList.add('hidden'), 6000);
-
-  if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-    const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
-    hls.loadSource(STREAM_URL);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      clearTimeout(timeout);
-      loadingOverlay.classList.add('hidden');
-      video.play().catch(() => {});
-    });
-    hls.on(Hls.Events.ERROR, (e, data) => {
-      if (data.fatal) {
-        clearTimeout(timeout);
-        loadingOverlay.classList.add('hidden');
-        errorOverlay.classList.add('show');
-      }
-    });
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = STREAM_URL;
-    video.addEventListener('loadedmetadata', () => {
-      clearTimeout(timeout);
-      loadingOverlay.classList.add('hidden');
-      video.play().catch(() => {});
-    }, { once: true });
-    video.addEventListener('error', () => {
-      clearTimeout(timeout);
-      loadingOverlay.classList.add('hidden');
-      errorOverlay.classList.add('show');
-    }, { once: true });
-  } else {
-    clearTimeout(timeout);
-    loadingOverlay.classList.add('hidden');
-    errorOverlay.classList.add('show');
-  }
+  errorOverlay.classList.remove('show');
 }
 
 function toggleFullscreen() {
