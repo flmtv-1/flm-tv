@@ -2826,14 +2826,6 @@
     const MRS_UNIVERSE_ITEM_ID = '76fa04b430a2f5aa93084d685ec614e7';
     const MRS_UNIVERSE_TITLE = 'Mrs. Universe Philippines 2026 — Grand Coronation Night';
 
-    /* ── WE WANT THE FUNK (OZONE) EVENT VIDEO ────────────────────────────
-       Same pattern as the Mrs. Universe item above — this is the Jellyfin
-       library item for the commercial, already uploaded under TV Shows
-       in Zaina Zone.
-    ────────────────────────────────────────────────────────────────────── */
-    const OZONE_FUNK_ITEM_ID = 'a7f10c7072b5f4f93515057cd2c60bc3';
-    const OZONE_FUNK_TITLE = 'We Want The Funk — OZONE Live at Fox Theatre Pomona';
-    const OZONE_FUNK_TICKETS_URL = 'https://NoMoreLockedDoors.ticketspice.com/we-want-the-funk';
     </script>
 
     <section class="live-showcase-section">
@@ -2874,21 +2866,18 @@
             <!-- STACKED EVENT CARDS: Ozone Funk Band (top) + Mrs. Universe (bottom) -->
             <div class="event-cards-col">
 
-                <!-- OZONE FUNK BAND / WE WANT THE FUNK EVENT CARD -->
-                <div onclick="openOzoneFunkCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
-                    <div class="mu-event-badge" style="background:rgba(234,88,12,0.92);"><i class="fas fa-calendar-days" style="font-size:0.65rem;"></i> UPCOMING</div>
-                    <img src="assets/images/we-want-the-funk-flyer.jpg"
-                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:0.5;pointer-events:none;z-index:1;"
-                         alt="We Want The Funk — OZONE at Fox Theatre Pomona" onerror="this.style.display='none'">
+                <!-- EZWAY TV NETWORK / PARTNER CHANNEL CARD -->
+                <div onclick="openEZWayCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
+                    <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;"><div class="live-dot" style="background:#000;"></div> PARTNER CHANNEL</div>
+                    <img src="assets/images/EZWayLogo.jpg"
+                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.55;pointer-events:none;z-index:1;"
+                         alt="eZWay TV Network" onerror="this.style.display='none'">
                     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 30%,rgba(5,10,30,0.35) 100%);z-index:2;"></div>
                     <div style="position:relative;z-index:5;padding:12px 14px;width:100%;">
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:2px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">WE WANT THE FUNK</div>
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.9rem;letter-spacing:1.5px;color:#fff;line-height:1;margin-top:2px;">OZONE · LIVE AT FOX THEATRE POMONA</div>
-                        <div style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">📅 SAT, SEPT 12 · POMONA, CA · DOORS 5PM</div>
-                        <div style="margin-top:9px;display:flex;align-items:center;gap:8px;">
-                            <span style="display:inline-flex;align-items:center;gap:6px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH AD</span>
-                            <a href="https://NoMoreLockedDoors.ticketspice.com/we-want-the-funk" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);color:#fff;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);text-decoration:none;"><i class="fas fa-ticket"></i> GET TICKETS</a>
-                        </div>
+                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.25rem;letter-spacing:2px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">eZWAY TV</div>
+                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.9rem;letter-spacing:1.5px;color:#fff;line-height:1;margin-top:2px;">NETWORK · STREAMING PARTNER CHANNEL</div>
+                        <div style="font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:4px;">🤝 RECIPROCAL PARTNER · FLM TV NETWORK</div>
+                        <div style="margin-top:9px;display:inline-flex;align-items:center;gap:6px;background:#ffd700;color:#000;font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;padding:5px 13px;border-radius:20px;font-weight:700;"><i class="fas fa-play"></i> WATCH CHANNEL</div>
                     </div>
                 </div>
 
@@ -5683,12 +5672,8 @@
            window.location.href = "https://flmtv.com/movie-frame.html?id=917358f8f0af59b63ad0a46b3029ee09&catId=cabadb1afd83ba3edd464eb9c73f9bf0&catName=TV%20WONDER";
        }
 
-       function openOzoneFunkCard() {
-           if (!OZONE_FUNK_ITEM_ID) {
-               alert("🎶 We Want The Funk is coming soon!\n\nWe're waiting for the video file to be uploaded. Check back shortly!");
-               return;
-           }
-           playJellyfinItem(OZONE_FUNK_ITEM_ID);
+       function openEZWayCard() {
+           window.location.href = "ezway-tv.html";
        }
 
        async function playJellyfinItem(itemId, itemType) {
