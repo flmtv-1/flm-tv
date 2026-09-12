@@ -5073,7 +5073,7 @@
                 </div>
                 <div class="content-carousel">
                     <div class="content-card" onclick="window.location.href='ezway-tv.html'">
-                        <img src="assets/images/ezwaylogo.jpeg"
+                        <img id="ezwayContentImg" src="assets/images/ezwaylogo.jpeg"
                              alt="eZWayTV Network"
                              class="content-card-image" loading="lazy">
                         <div style="position:absolute;top:6px;left:6px;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.6);padding:3px 9px;border-radius:12px;z-index:2;">
@@ -5086,7 +5086,18 @@
                         </div>
                     </div>
                 </div>
-                <style>@keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}</style>
+                <style>
+                    @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
+                    /* eZWay logo is a wide banner shape, not a portrait poster like
+                       Dale's card — object-fit:cover crops it down to a sliver, so
+                       this card only gets object-fit:contain plus a matching dark
+                       background so the full logo shows without empty white edges. */
+                    #ezwayContentImg {
+                        object-fit: contain !important;
+                        background: radial-gradient(circle at 30% 30%, #0d1b3d 0%, #07070A 75%);
+                        padding: 24px;
+                    }
+                </style>
             `;
             return section;
         }
