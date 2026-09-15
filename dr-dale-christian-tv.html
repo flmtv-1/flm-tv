@@ -13,6 +13,7 @@
 <link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -194,7 +195,10 @@ html, body {
   <div class="container">
 
     <a href="dale-live.html" class="hero-card" id="heroCard" tabindex="0">
-      <img src="assets/images/DaleLogo.jpg" alt="Las Vegas Tonight TV with Dale Davidson" class="hero-bg">
+      <video id="heroVideo" class="hero-bg" muted defaultmuted autoplay playsinline
+        onerror="this.style.display='none';document.getElementById('heroFallback').style.display='block';"
+      ></video>
+      <img id="heroFallback" src="assets/images/DaleLogo.jpg" alt="Las Vegas Tonight TV with Dale Davidson" class="hero-bg" style="display:none;">
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge"><span class="hero-dot"></span> LIVE</div>
@@ -208,6 +212,40 @@ html, body {
     <div class="show-grid" id="showGrid"></div>
 
   </div>
+
+<script>
+  // Faded live preview in the hero banner — same stream as the "Watch Live"
+  // button leads to. Falls back to DaleLogo.jpg automatically if the stream
+  // can't load. Swap/remove this once dedicated show artwork/clips are ready.
+  (function() {
+    const vid = document.getElementById('heroVideo');
+    const fallback = document.getElementById('heroFallback');
+    const url = 'https://streams.vegasplus.us:8443/stream/vegastonight/playlist.m3u8';
+
+    function showFallback() {
+      vid.style.display = 'none';
+      if (fallback) fallback.style.display = 'block';
+    }
+
+    function init() {
+      vid.muted = true; vid.volume = 0; vid.defaultMuted = true;
+      if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        const h = new Hls();
+        h.loadSource(url);
+        h.attachMedia(vid);
+        h.on(Hls.Events.MANIFEST_PARSED, () => { vid.muted = true; vid.play().catch(() => {}); });
+        h.on(Hls.Events.ERROR, (e, data) => { if (data.fatal) showFallback(); });
+      } else if (vid.canPlayType('application/vnd.apple.mpegurl')) {
+        vid.src = url;
+        vid.play().catch(() => {});
+        vid.addEventListener('error', showFallback);
+      } else {
+        showFallback();
+      }
+    }
+    if (typeof Hls !== 'undefined') { init(); } else { window.addEventListener('load', init); }
+  })();
+</script>
 
 <script>
   // ── DALE'S SHOWS ──────────────────────────────────────────────
