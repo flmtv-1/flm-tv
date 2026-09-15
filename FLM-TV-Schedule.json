@@ -1,87 +1,249 @@
 {
-  "2026-09-11": [
+  "2026-09-14": [
     {
-      "startTime": "17:25",
-      "name": "Zaina Juliette Show",
+      "startTime": "18:28",
+      "name": "Andy Griffith 2",
       "path": "",
-      "duration": 1643,
+      "duration": 1521,
       "inPoint": 0,
-      "outPoint": 1643,
+      "outPoint": 1521,
       "category": "show"
     },
     {
-      "startTime": "17:52",
-      "name": "eZWay Connect App",
+      "startTime": "18:54",
+      "name": "Whats Happening",
       "path": "",
-      "duration": 86,
+      "duration": 1501,
       "inPoint": 0,
-      "outPoint": 86,
+      "outPoint": 1501,
+      "category": "show"
+    },
+    {
+      "startTime": "19:19",
+      "name": "Good Times",
+      "path": "",
+      "duration": 1560,
+      "inPoint": 0,
+      "outPoint": 1560,
+      "category": "show"
+    },
+    {
+      "startTime": "19:45",
+      "name": "Sanford _Son",
+      "path": "",
+      "duration": 1502,
+      "inPoint": 0,
+      "outPoint": 1502,
+      "category": "show"
+    },
+    {
+      "startTime": "20:10",
+      "name": "The Jeffersons",
+      "path": "",
+      "duration": 1504,
+      "inPoint": 0,
+      "outPoint": 1504,
+      "category": "show"
+    },
+    {
+      "startTime": "20:35",
+      "name": "FLMTV.com",
+      "path": "",
+      "duration": 28,
+      "inPoint": 0,
+      "outPoint": 28,
       "category": "commercial"
     },
     {
-      "startTime": "17:54",
-      "name": "Up",
+      "startTime": "20:35",
+      "name": "Frozen.II",
       "path": "",
-      "duration": 5797,
+      "duration": 6194,
       "inPoint": 0,
-      "outPoint": 5797,
+      "outPoint": 6194,
       "category": "movie"
     },
     {
-      "startTime": "19:30",
-      "name": "Annie",
+      "startTime": "22:19",
+      "name": "ZainaJuliette.tv",
       "path": "",
-      "duration": 7643,
+      "duration": 37,
       "inPoint": 0,
-      "outPoint": 7643,
-      "category": "movie"
+      "outPoint": 37,
+      "category": "commercial"
     },
     {
-      "startTime": "21:38",
-      "name": "Godzilla",
+      "startTime": "22:19",
+      "name": "The Lucy Show",
       "path": "",
-      "duration": 8323,
+      "duration": 1541,
       "inPoint": 0,
-      "outPoint": 8323,
-      "category": "movie"
+      "outPoint": 1541,
+      "category": "show"
     },
     {
-      "startTime": "23:57",
-      "name": "The.Lord.Of.The.Rings",
+      "startTime": "22:45",
+      "name": "Here's Lucy",
       "path": "",
-      "duration": 14132,
+      "duration": 1552,
       "inPoint": 0,
-      "outPoint": 14132,
+      "outPoint": 1552,
+      "category": "show"
+    },
+    {
+      "startTime": "23:11",
+      "name": "Great Outdoors",
+      "path": "",
+      "duration": 5426,
+      "inPoint": 0,
+      "outPoint": 5426,
       "category": "movie"
     }
   ],
-  "2026-09-12": [
+  "2026-09-15": [
     {
-      "startTime": "03:52",
-      "name": "Avatar",
+      "startTime": "00:41",
+      "name": "Snail-logo1-Z.mp4",
       "path": "",
-      "duration": 11557,
+      "duration": 15,
       "inPoint": 0,
-      "outPoint": 11557,
+      "outPoint": 15,
+      "category": "commercial"
+    },
+    {
+      "startTime": "00:41",
+      "name": "Edward Scissorhands",
+      "path": "",
+      "duration": 6300,
+      "inPoint": 0,
+      "outPoint": 6300,
       "category": "movie"
     },
     {
-      "startTime": "07:05",
-      "name": "Noah.2014.720p.BluRay.x264",
+      "startTime": "02:26",
+      "name": "Far From Heaven",
       "path": "",
-      "duration": 8273,
+      "duration": 6440,
       "inPoint": 0,
-      "outPoint": 8273,
+      "outPoint": 6440,
       "category": "movie"
     },
     {
-      "startTime": "09:23",
-      "name": "Ice.Age.Collision.Course.2016",
+      "startTime": "04:14",
+      "name": "Eye for an Eye",
       "path": "",
-      "duration": 5672,
+      "duration": 6075,
       "inPoint": 0,
-      "outPoint": 5672,
+      "outPoint": 6075,
       "category": "movie"
+    },
+    {
+      "startTime": "05:55",
+      "name": "The Silence of the Lambs",
+      "path": "",
+      "duration": 7111,
+      "inPoint": 0,
+      "outPoint": 7111,
+      "category": "movie"
+    },
+    {
+      "startTime": "07:53",
+      "name": "Sesame Street",
+      "path": "",
+      "duration": 3143,
+      "inPoint": 0,
+      "outPoint": 3143,
+      "category": "show"
+    },
+    {
+      "startTime": "08:46",
+      "name": "Super Why!",
+      "path": "",
+      "duration": 1547,
+      "inPoint": 0,
+      "outPoint": 1547,
+      "category": "show"
+    },
+    {
+      "startTime": "09:12",
+      "name": "Ready Jet Go!",
+      "path": "",
+      "duration": 1581,
+      "inPoint": 0,
+      "outPoint": 1581,
+      "category": "show"
+    },
+    {
+      "startTime": "09:38",
+      "name": "LazyTown",
+      "path": "",
+      "duration": 1419,
+      "inPoint": 0,
+      "outPoint": 1419,
+      "category": "show"
+    },
+    {
+      "startTime": "10:02",
+      "name": "Nature.Cat",
+      "path": "",
+      "duration": 1441,
+      "inPoint": 0,
+      "outPoint": 1441,
+      "category": "show"
+    },
+    {
+      "startTime": "10:26",
+      "name": "The Monkees",
+      "path": "",
+      "duration": 1502,
+      "inPoint": 0,
+      "outPoint": 1502,
+      "category": "show"
+    },
+    {
+      "startTime": "10:51",
+      "name": "Get Smart",
+      "path": "",
+      "duration": 1523,
+      "inPoint": 0,
+      "outPoint": 1523,
+      "category": "show"
+    },
+    {
+      "startTime": "11:16",
+      "name": "Bewitched",
+      "path": "",
+      "duration": 1527,
+      "inPoint": 0,
+      "outPoint": 1527,
+      "category": "show"
+    },
+    {
+      "startTime": "11:42",
+      "name": "Bewitched",
+      "path": "",
+      "duration": 1526,
+      "inPoint": 0,
+      "outPoint": 1526,
+      "category": "show"
+    },
+    {
+      "startTime": "12:07",
+      "name": "Charlie's Angels",
+      "path": "",
+      "duration": 2968,
+      "inPoint": 0,
+      "outPoint": 2968,
+      "category": "show"
+    },
+    {
+      "startTime": "12:56",
+      "name": "Dance Contest",
+      "path": "",
+      "duration": 1558,
+      "inPoint": 0,
+      "outPoint": 1558,
+      "category": "show"
     }
   ]
 }
