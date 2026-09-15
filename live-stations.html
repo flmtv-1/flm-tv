@@ -233,7 +233,11 @@ function renderChannels(channels) {
     const id = ch.Id;
     const name = ch.Name || 'Unknown';
     const number = ch.ChannelNumber || '';
-    const jellyfinUrl = `${JELLYFIN.server}/web/index.html#/details?id=${id}&serverId=${JELLYFIN.serverId}`;
+    // Route through our own movie-frame.html wrapper (same pattern as every
+    // other click-to-play on the site) instead of linking straight to the
+    // raw Jellyfin web client — that raw URL is what was showing Jellyfin's
+    // own tab title/favicon instead of FLM TV's.
+    const jellyfinUrl = `movie-frame.html?id=${id}`;
 
     // Image URL
     let imgHtml = '';
