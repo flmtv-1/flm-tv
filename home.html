@@ -2936,11 +2936,11 @@
                 <div onclick="openDaleCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #2a0d0d 0%, #07070A 75%);overflow:hidden;">
                     <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;"><div class="live-dot" style="background:#000;"></div> FEATURED CHANNEL</div>
                     <video id="daleCardVideo" muted defaultmuted autoplay playsinline
-                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.4;z-index:1;pointer-events:none;"
+                        style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.4;z-index:1;pointer-events:none;"
                         onerror="this.style.display='none';document.getElementById('daleCardFallback').style.display='block';"
                     ></video>
                     <img id="daleCardFallback" src="assets/images/DaleLogo.jpg"
-                         style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.5;z-index:1;pointer-events:none;"
+                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.5;z-index:1;pointer-events:none;"
                          alt="Las Vegas Tonight with Dale Davidson" onerror="this.style.display='none'">
                     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.9) 20%,rgba(5,10,30,0.25) 100%);z-index:2;"></div>
                     <div style="position:relative;z-index:5;padding:10px 14px;width:100%;">
@@ -3838,8 +3838,14 @@
             if (fallback) { fallback.style.display = 'block'; }
         }
 
+        function showVideo() {
+            vid.style.display = 'block';
+            if (fallback) { fallback.style.display = 'none'; }
+        }
+
         function init() {
             vid.muted = true; vid.volume = 0; vid.defaultMuted = true;
+            vid.addEventListener('playing', showVideo, { once: true });
             if (typeof Hls !== 'undefined' && Hls.isSupported()) {
                 var h = new Hls(); h.loadSource(url); h.attachMedia(vid);
                 h.on(Hls.Events.MANIFEST_PARSED, function() { vid.muted = true; vid.play().catch(function(){}); });

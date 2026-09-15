@@ -195,10 +195,10 @@ html, body {
   <div class="container">
 
     <a href="dale-live.html" class="hero-card" id="heroCard" tabindex="0">
-      <video id="heroVideo" class="hero-bg" muted defaultmuted autoplay playsinline
+      <video id="heroVideo" class="hero-bg" muted defaultmuted autoplay playsinline style="display:none;"
         onerror="this.style.display='none';document.getElementById('heroFallback').style.display='block';"
       ></video>
-      <img id="heroFallback" src="assets/images/DaleLogo.jpg" alt="Las Vegas Tonight TV with Dale Davidson" class="hero-bg" style="display:none;">
+      <img id="heroFallback" src="assets/images/DaleLogo.jpg" alt="Las Vegas Tonight TV with Dale Davidson" class="hero-bg">
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge"><span class="hero-dot"></span> LIVE</div>
@@ -227,8 +227,14 @@ html, body {
       if (fallback) fallback.style.display = 'block';
     }
 
+    function showVideo() {
+      vid.style.display = 'block';
+      if (fallback) fallback.style.display = 'none';
+    }
+
     function init() {
       vid.muted = true; vid.volume = 0; vid.defaultMuted = true;
+      vid.addEventListener('playing', showVideo, { once: true });
       if (typeof Hls !== 'undefined' && Hls.isSupported()) {
         const h = new Hls();
         h.loadSource(url);
