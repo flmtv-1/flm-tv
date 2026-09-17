@@ -1,249 +1,53 @@
 {
-  "2026-09-14": [
-    {
-      "startTime": "18:28",
-      "name": "Andy Griffith 2",
-      "path": "",
-      "duration": 1521,
-      "inPoint": 0,
-      "outPoint": 1521,
-      "category": "show"
-    },
-    {
-      "startTime": "18:54",
-      "name": "Whats Happening",
-      "path": "",
-      "duration": 1501,
-      "inPoint": 0,
-      "outPoint": 1501,
-      "category": "show"
-    },
-    {
-      "startTime": "19:19",
-      "name": "Good Times",
-      "path": "",
-      "duration": 1560,
-      "inPoint": 0,
-      "outPoint": 1560,
-      "category": "show"
-    },
-    {
-      "startTime": "19:45",
-      "name": "Sanford _Son",
-      "path": "",
-      "duration": 1502,
-      "inPoint": 0,
-      "outPoint": 1502,
-      "category": "show"
-    },
-    {
-      "startTime": "20:10",
-      "name": "The Jeffersons",
-      "path": "",
-      "duration": 1504,
-      "inPoint": 0,
-      "outPoint": 1504,
-      "category": "show"
-    },
-    {
-      "startTime": "20:35",
-      "name": "FLMTV.com",
-      "path": "",
-      "duration": 28,
-      "inPoint": 0,
-      "outPoint": 28,
-      "category": "commercial"
-    },
-    {
-      "startTime": "20:35",
-      "name": "Frozen.II",
-      "path": "",
-      "duration": 6194,
-      "inPoint": 0,
-      "outPoint": 6194,
-      "category": "movie"
-    },
-    {
-      "startTime": "22:19",
-      "name": "ZainaJuliette.tv",
-      "path": "",
-      "duration": 37,
-      "inPoint": 0,
-      "outPoint": 37,
-      "category": "commercial"
-    },
-    {
-      "startTime": "22:19",
-      "name": "The Lucy Show",
-      "path": "",
-      "duration": 1541,
-      "inPoint": 0,
-      "outPoint": 1541,
-      "category": "show"
-    },
-    {
-      "startTime": "22:45",
-      "name": "Here's Lucy",
-      "path": "",
-      "duration": 1552,
-      "inPoint": 0,
-      "outPoint": 1552,
-      "category": "show"
-    },
-    {
-      "startTime": "23:11",
-      "name": "Great Outdoors",
-      "path": "",
-      "duration": 5426,
-      "inPoint": 0,
-      "outPoint": 5426,
-      "category": "movie"
-    }
+  "2026-09-17": [
+    { "startTime": "07:17", "name": "Sesame Street", "duration": 3297, "category": "show" },
+    { "startTime": "08:12", "name": "Sesame Street", "duration": 3356, "category": "show" },
+    { "startTime": "09:08", "name": "Super Why!", "duration": 1620, "category": "show" },
+    { "startTime": "09:35", "name": "Ready Jet Go", "duration": 1581, "category": "show" },
+    { "startTime": "10:02", "name": "Ready Jet Go", "duration": 1591, "category": "show" },
+    { "startTime": "10:28", "name": "Schoolhouse Rock", "duration": 186, "category": "show" },
+    { "startTime": "10:31", "name": "Schoolhouse Rock", "duration": 194, "category": "show" },
+    { "startTime": "10:34", "name": "Schoolhouse Rock", "duration": 192, "category": "show" },
+    { "startTime": "10:38", "name": "Schoolhouse Rock", "duration": 183, "category": "show" },
+    { "startTime": "10:41", "name": "Schoolhouse Rock", "duration": 192, "category": "show" },
+    { "startTime": "10:44", "name": "The Rescuers", "duration": 4633, "category": "movie" },
+    { "startTime": "12:01", "name": "FLMTV.com", "duration": 15, "category": "" },
+    { "startTime": "12:01", "name": "Gilligan's Island", "duration": 1520, "category": "show" },
+    { "startTime": "12:27", "name": "Get Smart", "duration": 1525, "category": "show" },
+    { "startTime": "12:52", "name": "Three Stooges", "duration": 1041, "category": "show" },
+    { "startTime": "13:09", "name": "The Lucy Show", "duration": 1547, "category": "show" },
+    { "startTime": "13:35", "name": "Leave it to Beaver", "duration": 1555, "category": "show" },
+    { "startTime": "14:01", "name": "Little Rascals", "duration": 1019, "category": "show" },
+    { "startTime": "14:18", "name": "Little Rascals", "duration": 1215, "category": "show" },
+    { "startTime": "14:38", "name": "Little Rascals", "duration": 1106, "category": "show" },
+    { "startTime": "14:57", "name": "Pioneer Woman", "duration": 1260, "category": "show" },
+    { "startTime": "15:18", "name": "The Twilight Zone", "duration": 1548, "category": "show" },
+    { "startTime": "15:44", "name": "The Twilight Zone", "duration": 1542, "category": "show" },
+    { "startTime": "16:09", "name": "eZWay Connect App", "duration": 86, "category": "" },
+    { "startTime": "16:11", "name": "Whats Happening", "duration": 1510, "category": "show" },
+    { "startTime": "16:36", "name": "Sanford and Son", "duration": 1516, "category": "show" },
+    { "startTime": "17:01", "name": "The Jeffersons", "duration": 1503, "category": "show" },
+    { "startTime": "17:26", "name": "James and the Giant Peach", "duration": 4765, "category": "movie" },
+    { "startTime": "18:46", "name": "Princess and the Frog", "duration": 5847, "category": "movie" },
+    { "startTime": "20:23", "name": "Charlie and the Chocolate Factory", "duration": 6923, "category": "movie" },
+    { "startTime": "22:18", "name": "Batman Begins", "duration": 8402, "category": "movie" }
   ],
-  "2026-09-15": [
-    {
-      "startTime": "00:41",
-      "name": "Snail-logo1-Z.mp4",
-      "path": "",
-      "duration": 15,
-      "inPoint": 0,
-      "outPoint": 15,
-      "category": "commercial"
-    },
-    {
-      "startTime": "00:41",
-      "name": "Edward Scissorhands",
-      "path": "",
-      "duration": 6300,
-      "inPoint": 0,
-      "outPoint": 6300,
-      "category": "movie"
-    },
-    {
-      "startTime": "02:26",
-      "name": "Far From Heaven",
-      "path": "",
-      "duration": 6440,
-      "inPoint": 0,
-      "outPoint": 6440,
-      "category": "movie"
-    },
-    {
-      "startTime": "04:14",
-      "name": "Eye for an Eye",
-      "path": "",
-      "duration": 6075,
-      "inPoint": 0,
-      "outPoint": 6075,
-      "category": "movie"
-    },
-    {
-      "startTime": "05:55",
-      "name": "The Silence of the Lambs",
-      "path": "",
-      "duration": 7111,
-      "inPoint": 0,
-      "outPoint": 7111,
-      "category": "movie"
-    },
-    {
-      "startTime": "07:53",
-      "name": "Sesame Street",
-      "path": "",
-      "duration": 3143,
-      "inPoint": 0,
-      "outPoint": 3143,
-      "category": "show"
-    },
-    {
-      "startTime": "08:46",
-      "name": "Super Why!",
-      "path": "",
-      "duration": 1547,
-      "inPoint": 0,
-      "outPoint": 1547,
-      "category": "show"
-    },
-    {
-      "startTime": "09:12",
-      "name": "Ready Jet Go!",
-      "path": "",
-      "duration": 1581,
-      "inPoint": 0,
-      "outPoint": 1581,
-      "category": "show"
-    },
-    {
-      "startTime": "09:38",
-      "name": "LazyTown",
-      "path": "",
-      "duration": 1419,
-      "inPoint": 0,
-      "outPoint": 1419,
-      "category": "show"
-    },
-    {
-      "startTime": "10:02",
-      "name": "Nature.Cat",
-      "path": "",
-      "duration": 1441,
-      "inPoint": 0,
-      "outPoint": 1441,
-      "category": "show"
-    },
-    {
-      "startTime": "10:26",
-      "name": "The Monkees",
-      "path": "",
-      "duration": 1502,
-      "inPoint": 0,
-      "outPoint": 1502,
-      "category": "show"
-    },
-    {
-      "startTime": "10:51",
-      "name": "Get Smart",
-      "path": "",
-      "duration": 1523,
-      "inPoint": 0,
-      "outPoint": 1523,
-      "category": "show"
-    },
-    {
-      "startTime": "11:16",
-      "name": "Bewitched",
-      "path": "",
-      "duration": 1527,
-      "inPoint": 0,
-      "outPoint": 1527,
-      "category": "show"
-    },
-    {
-      "startTime": "11:42",
-      "name": "Bewitched",
-      "path": "",
-      "duration": 1526,
-      "inPoint": 0,
-      "outPoint": 1526,
-      "category": "show"
-    },
-    {
-      "startTime": "12:07",
-      "name": "Charlie's Angels",
-      "path": "",
-      "duration": 2968,
-      "inPoint": 0,
-      "outPoint": 2968,
-      "category": "show"
-    },
-    {
-      "startTime": "12:56",
-      "name": "Dance Contest",
-      "path": "",
-      "duration": 1558,
-      "inPoint": 0,
-      "outPoint": 1558,
-      "category": "show"
-    }
+  "2026-09-18": [
+    { "startTime": "00:38", "name": "Matilda", "duration": 5888, "category": "movie" },
+    { "startTime": "02:17", "name": "SheBoujay", "duration": 60, "category": "" },
+    { "startTime": "02:18", "name": "Titanic", "duration": 11689, "category": "movie" },
+    { "startTime": "05:32", "name": "O Brother, Where Art Thou?", "duration": 6429, "category": "movie" },
+    { "startTime": "07:20", "name": "Sesame Street", "duration": 3363, "category": "show" },
+    { "startTime": "08:16", "name": "Super Why!", "duration": 1621, "category": "show" },
+    { "startTime": "08:43", "name": "Ready Jet Go", "duration": 3152, "category": "show" },
+    { "startTime": "09:35", "name": "Fireman Sam", "duration": 3052, "category": "show" },
+    { "startTime": "10:26", "name": "Tom and Jerry", "duration": 508, "category": "show" },
+    { "startTime": "10:35", "name": "Tom and Jerry", "duration": 418, "category": "show" },
+    { "startTime": "10:41", "name": "Tom and Jerry", "duration": 399, "category": "show" },
+    { "startTime": "10:48", "name": "Mister Ed", "duration": 1533, "category": "show" },
+    { "startTime": "11:14", "name": "Three Stooges", "duration": 934, "category": "show" },
+    { "startTime": "11:29", "name": "Gilligan's Island", "duration": 1484, "category": "show" },
+    { "startTime": "11:54", "name": "Life with Lucy", "duration": 1495, "category": "show" },
+    { "startTime": "12:19", "name": "The Lucy Show", "duration": 1539, "category": "show" }
   ]
 }
