@@ -1,20 +1,31 @@
 {
-  "2026-09-19": [
-    { "startTime": "20:07", "name": "Big Daddy", "duration": 5585, "category": "movie" },
-    { "startTime": "21:40", "name": "Impossible Fixes", "duration": 2525, "category": "show" },
-    { "startTime": "22:22", "name": "AshWaterProducts.com", "duration": 38, "category": "" },
-    { "startTime": "22:22", "name": "Weathered", "duration": 622, "category": "show" }
-  ],
   "2026-09-20": [
-    { "startTime": "00:14", "name": "Tooth Fairy", "duration": 6088, "category": "movie" },
-    { "startTime": "02:02", "name": "The Sixth Sense", "duration": 6443, "category": "movie" },
-    { "startTime": "04:13", "name": "Dolores Claiborne", "duration": 7891, "category": "movie" },
-    { "startTime": "05:57", "name": "The Pope's Exorcist", "duration": 6209, "category": "movie" },
-    { "startTime": "08:06", "name": "The Quiet Man", "duration": 7784, "category": "movie" },
-    { "startTime": "09:01", "name": "Sesame Street", "duration": 3256, "category": "show" },
-    { "startTime": "09:57", "name": "Sesame Street", "duration": 3363, "category": "show" },
-    { "startTime": "10:19", "name": "Winnie the Pooh", "duration": 1364, "category": "show" },
-    { "startTime": "10:41", "name": "Tutenstein", "duration": 1329, "category": "show" },
-    { "startTime": "11:04", "name": "Bambi II", "duration": 4341, "category": "movie" }
+    { "startTime": "18:48", "name": "The Wizard of Oz", "duration": 6108, "category": "movie" },
+    { "startTime": "20:29", "name": "Unstoppable", "duration": 5910, "category": "movie" },
+    { "startTime": "22:08", "name": "Harry Potter", "duration": 9425, "category": "movie" }
+  ],
+  "2026-09-21": [
+    { "startTime": "00:45", "name": "The Addams Family", "duration": 5995, "category": "movie" },
+    { "startTime": "02:25", "name": "I, Robot", "duration": 6883, "category": "movie" },
+    { "startTime": "04:20", "name": "The Shawshank Redemption", "duration": 8552, "category": "movie" },
+    { "startTime": "06:42", "name": "Hellboy", "duration": 7949, "category": "movie" },
+    { "startTime": "08:55", "name": "Sesame Street", "duration": 3372, "category": "show" },
+    { "startTime": "09:51", "name": "Sesame Street", "duration": 3276, "category": "show" },
+    { "startTime": "10:45", "name": "Super Why!", "duration": 1620, "category": "show" },
+    { "startTime": "11:12", "name": "Ready Jet Go!", "duration": 1581, "category": "show" },
+    { "startTime": "11:39", "name": "NODDY", "duration": 694, "category": "show" },
+    { "startTime": "11:50", "name": "Nature Cat", "duration": 1441, "category": "show" },
+    { "startTime": "12:14", "name": "Tom and Jerry", "duration": 428, "category": "show" },
+    { "startTime": "12:22", "name": "Tom and Jerry", "duration": 427, "category": "show" },
+    { "startTime": "12:29", "name": "Tom and Jerry", "duration": 473, "category": "show" },
+    { "startTime": "12:37", "name": "Dick Van Dyke Show", "duration": 1522, "category": "show" },
+    { "startTime": "13:02", "name": "The Addams Family", "duration": 1542, "category": "show" },
+    { "startTime": "13:28", "name": "Gilligan's Island", "duration": 1509, "category": "show" },
+    { "startTime": "13:53", "name": "The Lucy Show", "duration": 1540, "category": "show" },
+    { "startTime": "14:18", "name": "Leave it to Beaver", "duration": 1558, "category": "show" },
+    { "startTime": "14:44", "name": "Leave it to Beaver", "duration": 1538, "category": "show" },
+    { "startTime": "15:10", "name": "Andy Griffith Show", "duration": 1534, "category": "show" },
+    { "startTime": "15:36", "name": "Andy Griffith Show", "duration": 1482, "category": "show" },
+    { "startTime": "16:00", "name": "227", "duration": 1430, "category": "show" }
   ]
 }
