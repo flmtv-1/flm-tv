@@ -2953,6 +2953,23 @@
                     </div>
                 </div>
 
+                <!-- EZWAY TV NETWORK / PARTNER CHANNEL CARD -->
+                <div onclick="openEZWayCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #0d1b3d 0%, #07070A 75%);overflow:hidden;">
+                    <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;left:auto;right:10px;"><div class="live-dot" style="background:#000;"></div> FEATURED CHANNEL</div>
+                    <iframe src="https://stream.ezway.tv/player/JSkxf5sz5LF3?autoplay=1&muted=1&mute=1"
+                            style="position:absolute;inset:0;width:100%;height:100%;border:none;opacity:0.35;z-index:1;pointer-events:none;"
+                            allow="autoplay" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div style="position:absolute;inset:0;z-index:5;display:flex;align-items:center;gap:14px;padding:8px 16px;">
+                        <img src="assets/images/ezwaylogo.jpeg"
+                             style="height:250px;max-height:none;width:auto;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.6));border:4px solid red;"
+                             alt="eZWay TV Network" onerror="this.style.display='none'">
+                    </div>
+                    <div style="position:absolute;bottom:10px;right:14px;z-index:6;display:flex;align-items:center;gap:6px;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e,0 0 14px rgba(34,197,94,0.7);animation:tvs-pulse 1.4s infinite;"></span>
+                        <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#22c55e;text-shadow:0 0 4px rgba(34,197,94,0.6);">WATCH CHANNEL</span>
+                    </div>
+                </div>
+
                 <!-- DOLLY PARTON TRIBUTE CHANNEL CARD -->
                 <div onclick="openDollyPartonCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
                     <div class="mu-event-badge"><div class="live-dot"></div> TRIBUTE</div>
@@ -3071,7 +3088,7 @@
     .mu-event-card {
         flex: 0 0 auto;
         width: 100%;
-        aspect-ratio: 460 / 171;
+        aspect-ratio: 460 / 108;
         min-height: 0;
         border-radius: 14px;
         overflow: hidden;

@@ -1,31 +1,7 @@
 {
-  "2026-09-20": [
-    { "startTime": "18:48", "name": "The Wizard of Oz", "duration": 6108, "category": "movie" },
-    { "startTime": "20:29", "name": "Unstoppable", "duration": 5910, "category": "movie" },
-    { "startTime": "22:08", "name": "Harry Potter", "duration": 9425, "category": "movie" }
-  ],
-  "2026-09-21": [
-    { "startTime": "00:45", "name": "The Addams Family", "duration": 5995, "category": "movie" },
-    { "startTime": "02:25", "name": "I, Robot", "duration": 6883, "category": "movie" },
-    { "startTime": "04:20", "name": "The Shawshank Redemption", "duration": 8552, "category": "movie" },
-    { "startTime": "06:42", "name": "Hellboy", "duration": 7949, "category": "movie" },
-    { "startTime": "08:55", "name": "Sesame Street", "duration": 3372, "category": "show" },
-    { "startTime": "09:51", "name": "Sesame Street", "duration": 3276, "category": "show" },
-    { "startTime": "10:45", "name": "Super Why!", "duration": 1620, "category": "show" },
-    { "startTime": "11:12", "name": "Ready Jet Go!", "duration": 1581, "category": "show" },
-    { "startTime": "11:39", "name": "NODDY", "duration": 694, "category": "show" },
-    { "startTime": "11:50", "name": "Nature Cat", "duration": 1441, "category": "show" },
-    { "startTime": "12:14", "name": "Tom and Jerry", "duration": 428, "category": "show" },
-    { "startTime": "12:22", "name": "Tom and Jerry", "duration": 427, "category": "show" },
-    { "startTime": "12:29", "name": "Tom and Jerry", "duration": 473, "category": "show" },
-    { "startTime": "12:37", "name": "Dick Van Dyke Show", "duration": 1522, "category": "show" },
-    { "startTime": "13:02", "name": "The Addams Family", "duration": 1542, "category": "show" },
-    { "startTime": "13:28", "name": "Gilligan's Island", "duration": 1509, "category": "show" },
-    { "startTime": "13:53", "name": "The Lucy Show", "duration": 1540, "category": "show" },
-    { "startTime": "14:18", "name": "Leave it to Beaver", "duration": 1558, "category": "show" },
-    { "startTime": "14:44", "name": "Leave it to Beaver", "duration": 1538, "category": "show" },
-    { "startTime": "15:10", "name": "Andy Griffith Show", "duration": 1534, "category": "show" },
-    { "startTime": "15:36", "name": "Andy Griffith Show", "duration": 1482, "category": "show" },
-    { "startTime": "16:00", "name": "227", "duration": 1430, "category": "show" }
+  "2026-09-27": [
+    { "startTime": "09:59", "name": "Good Gumbo", "duration": 274, "category": "show" },
+    { "startTime": "10:03", "name": "Pippi Longstocking", "duration": 5731, "category": "movie" },
+    { "startTime": "11:39", "name": "Zaina Juliette Show", "duration": 1708, "category": "show" }
   ]
 }
