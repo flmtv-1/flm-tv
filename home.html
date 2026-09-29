@@ -5764,27 +5764,15 @@
                 fit: 'contain'
             });
 
-            // FLM TV banner — made by Eric (eZWay TV)
+            // FLM TV billboard banner
             slides.push({
-                image: 'assets/logos/assetslogosflm-tv-banner-ezway.jpg',
+                image: 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
                 title: 'FLM TV',
                 description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas.',
                 link: null,
                 fit: 'contain'
             });
 
-            // eZWay TV Network — featured launch slide (remove this block later
-            // once the partnership is no longer "new"; the card in the row
-            // below stays either way)
-            slides.push({
-                image: 'assets/images/ezwaylogo.jpeg',
-                title: 'eZWay TV Network',
-                description: 'Direct connections to celebrities, award-winning talent, and creators. No pitch, just real content.',
-                link: null,
-                customAction: "window.location.href='ezway-tv.html'",
-                fit: 'contain'
-            });
-            
             // Fetch featured content from Jellyfin
             try {
                 const featured = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {

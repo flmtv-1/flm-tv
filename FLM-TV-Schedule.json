@@ -1,7 +1,17 @@
 {
-  "2026-09-27": [
-    { "startTime": "09:59", "name": "Good Gumbo", "duration": 274, "category": "show" },
-    { "startTime": "10:03", "name": "Pippi Longstocking", "duration": 5731, "category": "movie" },
-    { "startTime": "11:39", "name": "Zaina Juliette Show", "duration": 1708, "category": "show" }
+  "2026-09-28": [
+    { "startTime": "18:25", "name": "Shrek Forever After", "duration": 5588, "category": "movie" },
+    { "startTime": "19:58", "name": "Avengers", "duration": 8478, "category": "movie" },
+    { "startTime": "22:19", "name": "Moving Planet", "duration": 3253, "category": "movie" },
+    { "startTime": "23:13", "name": "Weathered", "duration": 643, "category": "show" },
+    { "startTime": "23:24", "name": "Weathered 2", "duration": 670, "category": "show" },
+    { "startTime": "23:35", "name": "Alice in Wonderland", "duration": 6514, "category": "movie" }
+  ],
+  "2026-09-29": [
+    { "startTime": "01:24", "name": "Around the World in 80 Days", "duration": 7206, "category": "movie" },
+    { "startTime": "03:24", "name": "2012", "duration": 9469, "category": "movie" },
+    { "startTime": "06:02", "name": "Aeon Flux", "duration": 5566, "category": "movie" },
+    { "startTime": "07:35", "name": "Achy Breaky Hearts", "duration": 7140, "category": "movie" },
+    { "startTime": "09:34", "name": "Ace Ventura: Nature Calls", "duration": 5643, "category": "movie" }
   ]
 }
