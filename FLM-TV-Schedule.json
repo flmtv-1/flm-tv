@@ -1,29 +1,32 @@
 {
-  "2026-09-29": [
-    { "startTime": "20:38", "name": "Matilda", "duration": 5889, "category": "movie" },
-    { "startTime": "22:16", "name": "Leave it to Beaver", "duration": 1557, "category": "show" },
-    { "startTime": "22:42", "name": "FLMtv.com", "duration": 28, "category": "" },
-    { "startTime": "22:42", "name": "The X-Files", "duration": 2709, "category": "show" },
-    { "startTime": "23:28", "name": "The Sixth Sense", "duration": 6443, "category": "movie" }
-  ],
   "2026-09-30": [
-    { "startTime": "01:15", "name": "Achy Breaky Hearts", "duration": 7140, "category": "movie" },
-    { "startTime": "03:14", "name": "Ace Ventura: Nature Calls", "duration": 5643, "category": "movie" },
-    { "startTime": "04:48", "name": "Lord of the Rings", "duration": 10705, "category": "movie" },
-    { "startTime": "07:46", "name": "Sesame Street", "duration": 1555, "category": "show" },
-    { "startTime": "08:12", "name": "Sesame Street 2", "duration": 1555, "category": "show" },
-    { "startTime": "08:38", "name": "Sesame Street 3", "duration": 1555, "category": "show" },
-    { "startTime": "09:04", "name": "Sesame Street 4", "duration": 1555, "category": "show" },
-    { "startTime": "09:30", "name": "Curious George", "duration": 1420, "category": "show" },
-    { "startTime": "09:54", "name": "Super Why!", "duration": 1620, "category": "show" },
-    { "startTime": "10:21", "name": "Ready Jet Go!", "duration": 1406, "category": "show" },
-    { "startTime": "10:44", "name": "Let's Go Luna!", "duration": 1498, "category": "show" },
-    { "startTime": "11:09", "name": "Charlie Brown", "duration": 1344, "category": "show" },
-    { "startTime": "11:32", "name": "Three Stooges", "duration": 1053, "category": "show" },
-    { "startTime": "11:49", "name": "Mister Ed", "duration": 1540, "category": "show" },
-    { "startTime": "12:15", "name": "Gilligan's Island", "duration": 1519, "category": "show" },
-    { "startTime": "12:40", "name": "Life with Lucy", "duration": 1493, "category": "show" },
-    { "startTime": "13:05", "name": "The Lucy Show", "duration": 1542, "category": "show" },
-    { "startTime": "13:31", "name": "Leave it to Beaver", "duration": 1533, "category": "show" }
+    { "startTime": "13:05", "name": "The Lucy Show", "duration": 1543, "category": "show" },
+    { "startTime": "13:30", "name": "Leave it to Beaver", "duration": 1533, "category": "show" },
+    { "startTime": "13:56", "name": "227", "duration": 1378, "category": "show" },
+    { "startTime": "14:19", "name": "Andy Griffith Show", "duration": 1519, "category": "show" },
+    { "startTime": "14:44", "name": "Andy Griffith Show 2", "duration": 1529, "category": "show" },
+    { "startTime": "15:10", "name": "Benson", "duration": 1508, "category": "show" },
+    { "startTime": "15:35", "name": "Good Times", "duration": 1523, "category": "show" },
+    { "startTime": "16:00", "name": "Sanford and Son", "duration": 1517, "category": "show" },
+    { "startTime": "16:26", "name": "Archie Bunker's Place", "duration": 1494, "category": "show" },
+    { "startTime": "16:50", "name": "The Jeffersons", "duration": 1478, "category": "show" },
+    { "startTime": "17:15", "name": "AshWaterProducts.com", "duration": 38, "category": "" },
+    { "startTime": "17:16", "name": "The Jackson 5ive", "duration": 1324, "category": "show" },
+    { "startTime": "17:38", "name": "The Osmonds", "duration": 1338, "category": "show" },
+    { "startTime": "18:00", "name": "Bugs Bunny (Classic)", "duration": 486, "category": "show" },
+    { "startTime": "18:08", "name": "Tom and Jerry", "duration": 460, "category": "show" },
+    { "startTime": "18:16", "name": "Tom and Jerry 2", "duration": 440, "category": "show" },
+    { "startTime": "18:23", "name": "Tom and Jerry 4", "duration": 446, "category": "show" },
+    { "startTime": "18:31", "name": "Nature Cat", "duration": 1441, "category": "show" },
+    { "startTime": "18:55", "name": "Curious George", "duration": 1419, "category": "show" },
+    { "startTime": "19:18", "name": "Cloudy with a Chance of Meatballs", "duration": 5689, "category": "movie" },
+    { "startTime": "20:53", "name": "Sundays @ 11am", "duration": 24, "category": "" },
+    { "startTime": "20:53", "name": "Back to the Future", "duration": 7086, "category": "movie" },
+    { "startTime": "22:52", "name": "We Shrunk Ourselves!", "duration": 4490, "category": "movie" }
+  ],
+  "2026-10-01": [
+    { "startTime": "00:06", "name": "Liar Liar", "duration": 5189, "category": "movie" },
+    { "startTime": "01:33", "name": "The Abyss", "duration": 10261, "category": "movie" },
+    { "startTime": "04:24", "name": "Tears of the Sun", "duration": 7255, "category": "movie" }
   ]
 }
