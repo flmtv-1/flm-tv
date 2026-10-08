@@ -1,32 +1,229 @@
 {
-  "2026-09-30": [
-    { "startTime": "13:05", "name": "The Lucy Show", "duration": 1543, "category": "show" },
-    { "startTime": "13:30", "name": "Leave it to Beaver", "duration": 1533, "category": "show" },
-    { "startTime": "13:56", "name": "227", "duration": 1378, "category": "show" },
-    { "startTime": "14:19", "name": "Andy Griffith Show", "duration": 1519, "category": "show" },
-    { "startTime": "14:44", "name": "Andy Griffith Show 2", "duration": 1529, "category": "show" },
-    { "startTime": "15:10", "name": "Benson", "duration": 1508, "category": "show" },
-    { "startTime": "15:35", "name": "Good Times", "duration": 1523, "category": "show" },
-    { "startTime": "16:00", "name": "Sanford and Son", "duration": 1517, "category": "show" },
-    { "startTime": "16:26", "name": "Archie Bunker's Place", "duration": 1494, "category": "show" },
-    { "startTime": "16:50", "name": "The Jeffersons", "duration": 1478, "category": "show" },
-    { "startTime": "17:15", "name": "AshWaterProducts.com", "duration": 38, "category": "" },
-    { "startTime": "17:16", "name": "The Jackson 5ive", "duration": 1324, "category": "show" },
-    { "startTime": "17:38", "name": "The Osmonds", "duration": 1338, "category": "show" },
-    { "startTime": "18:00", "name": "Bugs Bunny (Classic)", "duration": 486, "category": "show" },
-    { "startTime": "18:08", "name": "Tom and Jerry", "duration": 460, "category": "show" },
-    { "startTime": "18:16", "name": "Tom and Jerry 2", "duration": 440, "category": "show" },
-    { "startTime": "18:23", "name": "Tom and Jerry 4", "duration": 446, "category": "show" },
-    { "startTime": "18:31", "name": "Nature Cat", "duration": 1441, "category": "show" },
-    { "startTime": "18:55", "name": "Curious George", "duration": 1419, "category": "show" },
-    { "startTime": "19:18", "name": "Cloudy with a Chance of Meatballs", "duration": 5689, "category": "movie" },
-    { "startTime": "20:53", "name": "Sundays @ 11am", "duration": 24, "category": "" },
-    { "startTime": "20:53", "name": "Back to the Future", "duration": 7086, "category": "movie" },
-    { "startTime": "22:52", "name": "We Shrunk Ourselves!", "duration": 4490, "category": "movie" }
-  ],
-  "2026-10-01": [
-    { "startTime": "00:06", "name": "Liar Liar", "duration": 5189, "category": "movie" },
-    { "startTime": "01:33", "name": "The Abyss", "duration": 10261, "category": "movie" },
-    { "startTime": "04:24", "name": "Tears of the Sun", "duration": 7255, "category": "movie" }
+  "2026-10-07": [
+    {
+      "startTime": "14:22",
+      "name": "Little Rascals 16 (Love Business)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 16 (Love Business).mp4",
+      "duration": 1222,
+      "inPoint": 0,
+      "outPoint": 1222,
+      "category": "show"
+    },
+    {
+      "startTime": "14:42",
+      "name": "Little Rascals 17 (Little Daddy)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 17 (Little Daddy).mp4",
+      "duration": 1267.733322,
+      "inPoint": 0,
+      "outPoint": 1267.733322,
+      "category": ""
+    },
+    {
+      "startTime": "15:03",
+      "name": "Little Rascals 18 (Bargain Days)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 18 (Bargain Days).mp4",
+      "duration": 1137.333322,
+      "inPoint": 0,
+      "outPoint": 1137.333322,
+      "category": ""
+    },
+    {
+      "startTime": "15:22",
+      "name": "Little Rascals 20 (Big Ears)",
+      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 20 (Big Ears).mp4",
+      "duration": 1257.899989,
+      "inPoint": 0,
+      "outPoint": 1257.899989,
+      "category": ""
+    },
+    {
+      "startTime": "15:43",
+      "name": "Ashwater",
+      "path": "Y:\\CLIPS-FILLERS\\Ashwater1-B.mp4",
+      "duration": 25,
+      "inPoint": 0,
+      "outPoint": 25,
+      "category": "commercial"
+    },
+    {
+      "startTime": "15:43",
+      "name": "Whats Happening S01E00 CC",
+      "path": "V:\\WHATS HAPPENING!!\\SEASON-01\\Whats Happening S01E00_CC.mp4",
+      "duration": 1481.446633,
+      "inPoint": 0,
+      "outPoint": 1481.446633,
+      "category": ""
+    },
+    {
+      "startTime": "16:08",
+      "name": "Facts of Life (Overachieving)",
+      "path": "V:\\00-SORT\\The Facts of Life (Complete TV series in MP4 format)\\The Facts of Life - Season 1\\Facts of Life - S01E05 (Overachieving).mp4",
+      "duration": 1430,
+      "inPoint": 0,
+      "outPoint": 1430,
+      "category": ""
+    },
+    {
+      "startTime": "16:32",
+      "name": "Fame",
+      "path": "V:\\00-SORT\\FAME\\Fame (1982) - TV Series - Complete Seasons 1-6 - Kids From Fame Television Show\\Season 01\\S01E01 - Metamorphosis.m4v",
+      "duration": 2778,
+      "inPoint": 0,
+      "outPoint": 2778,
+      "category": ""
+    },
+    {
+      "startTime": "17:18",
+      "name": "FLM TV Tag Blue Aliens2",
+      "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
+      "duration": 21.229542,
+      "inPoint": 0,
+      "outPoint": 21.229542,
+      "category": ""
+    },
+    {
+      "startTime": "17:18",
+      "name": "Dumbo 70th Anniversary Edition 1941 ",
+      "path": "X:\\_SORT-MOVIES\\Dumbo.70th.Anniversary.Edition.1941.MULTi.REPACK.1080p.BluRay.H.265.Egy_track1.mkv",
+      "duration": 3836,
+      "inPoint": 0,
+      "outPoint": 3836,
+      "category": "movie"
+    },
+    {
+      "startTime": "18:22",
+      "name": "Cartoons Classics-The Raven",
+      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.04.03 - The Raven.ia.mp4",
+      "duration": 837,
+      "inPoint": 0,
+      "outPoint": 837,
+      "category": "show"
+    },
+    {
+      "startTime": "18:36",
+      "name": "Cartoons Classics-The Wabbit Who Came To Supper",
+      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.03.14 - The Wabbit Who Came To Supper.ia.mp4",
+      "duration": 486,
+      "inPoint": 0,
+      "outPoint": 486,
+      "category": "show"
+    },
+    {
+      "startTime": "18:44",
+      "name": "Cartoons Classics-The Magnetic Telescope",
+      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.04.24 - The Magnetic Telescope.ia.mp4",
+      "duration": 457,
+      "inPoint": 0,
+      "outPoint": 457,
+      "category": ""
+    },
+    {
+      "startTime": "18:52",
+      "name": "Cartoons Classics-The Wacky Wabbit",
+      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.05.02 - The Wacky Wabbit.ia.mp4",
+      "duration": 441,
+      "inPoint": 0,
+      "outPoint": 441,
+      "category": "movie"
+    },
+    {
+      "startTime": "18:59",
+      "name": "Beverly Hillbillies",
+      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-03\\G2_t12.mkv",
+      "duration": 1605,
+      "inPoint": 0,
+      "outPoint": 1605,
+      "category": "show"
+    },
+    {
+      "startTime": "19:26",
+      "name": "Beverly Hillbillies 2",
+      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-03\\H2_t14.mkv",
+      "duration": 1609,
+      "inPoint": 0,
+      "outPoint": 1609,
+      "category": "show"
+    },
+    {
+      "startTime": "19:53",
+      "name": "Sundays @ 11am",
+      "path": "X:\\COMMERCIALS-CLIPS\\NEW COMMERCIAL 1-D 1080.mp4",
+      "duration": 171,
+      "inPoint": 0,
+      "outPoint": 171,
+      "category": "show"
+    },
+    {
+      "startTime": "19:56",
+      "name": "FLM TV ",
+      "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
+      "duration": 21,
+      "inPoint": 0,
+      "outPoint": 21,
+      "category": "commercial"
+    },
+    {
+      "startTime": "19:56",
+      "name": "That 70s Show ",
+      "path": "X:\\TV SHOWS 2\\THAT 70s SHOW\\SEASON-02\\That _70s Show (1998) - S02E23 - Holy Crap! (1080p BluRay x265 FreetheFish).mkv",
+      "duration": 1331,
+      "inPoint": 0,
+      "outPoint": 1331,
+      "category": "show"
+    },
+    {
+      "startTime": "20:18",
+      "name": "Malcolm in the Middle",
+      "path": "X:\\TV SHOWS 2\\Malcolm In The Middle\\Season 2\\S02E14 - Hal Quits.mp4",
+      "duration": 1343,
+      "inPoint": 0,
+      "outPoint": 1343,
+      "category": "show"
+    },
+    {
+      "startTime": "20:40",
+      "name": "FLMTV.com",
+      "path": "Y:\\CLIPS-FILLERS\\FLM-ufo-purple-alien-Z-gold.mp4",
+      "duration": 25,
+      "inPoint": 0,
+      "outPoint": 25,
+      "category": "commercial"
+    },
+    {
+      "startTime": "20:40",
+      "name": "Ashwater",
+      "path": "Y:\\CLIPS-FILLERS\\Ashwater1-B.mp4",
+      "duration": 25,
+      "inPoint": 0,
+      "outPoint": 25,
+      "category": "commercial"
+    },
+    {
+      "startTime": "20:40",
+      "name": "The X Files,",
+      "path": "X:\\TV SHOWS 2\\THE X FILES\\SEASON-02\\The X-Files, Season 2 Disc 2_t03.mkv",
+      "duration": 2711,
+      "inPoint": 0,
+      "outPoint": 2711,
+      "category": "show"
+    },
+    {
+      "startTime": "21:25",
+      "name": "The Sixth Sense ",
+      "path": "X:\\_SORT-MOVIES\\The.Sixth.Sense.1999.1080p.BluRay.DDP5.1.x265.10bit-GalaxyRG265[TGx]\\The.Sixth.Sense.1999.1080p.BluRay.DDP5.1.x265.10bit-GalaxyRG265.mkv",
+      "duration": 6443,
+      "inPoint": 0,
+      "outPoint": 6443,
+      "category": "movie"
+    },
+    {
+      "startTime": "23:12",
+      "name": "后继有人 We Are Marshall ",
+      "path": "X:\\_SORT-MOVIES\\We.Are.Marshall.(2006)\\后继有人.We.Are.Marshall.2006.1080p.BluRay.x265.10bit.AC3-SSDSSE.mkv",
+      "duration": 7896,
+      "inPoint": 0,
+      "outPoint": 7896,
+      "category": "movie"
+    }
   ]
 }
