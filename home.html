@@ -5116,6 +5116,7 @@
                 </div>
                 <div class="content-carousel">
                     <div class="content-card" onclick="window.location.href='ezway-tv.html'">
+                        <div class="ezway-card-fill"><div></div></div>
                         <img id="ezwayContentImg" src="assets/images/ezwaylogo.jpg"
                              alt="eZWayTV Network"
                              class="content-card-image" loading="lazy">
@@ -5131,15 +5132,31 @@
                 </div>
                 <style>
                     @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
-                    /* eZWay logo is a wide banner shape, not a portrait poster like
-                       Dale's card — object-fit:cover crops it down to a sliver, so
-                       this card only gets object-fit:contain plus a matching dark
-                       background so the full logo shows without empty white edges. */
-                    #ezwayContentImg {
-                        object-fit: contain !important;
-                        background: radial-gradient(circle at 30% 30%, #0d1b3d 0%, #07070A 75%);
-                        padding: 24px;
+                    /* eZWay logo is a wide shape inside a tall poster card. Cropping
+                       it to fill would cut the logo text off, so instead: a blurred,
+                       zoomed copy of the logo fills the whole card behind it, and the
+                       real logo sits on top at full card width (no padding). */
+                    #section-ezway-tv .content-card { overflow: hidden; border-radius: 8px; }
+                    #section-ezway-tv .ezway-card-fill {
+                        position: absolute; inset: 0; z-index: 0;
+                        border-radius: 8px; overflow: hidden; pointer-events: none;
                     }
+                    #section-ezway-tv .ezway-card-fill > div {
+                        position: absolute; inset: 0;
+                        background: url('assets/images/ezwaylogo.jpg') center / cover no-repeat;
+                        filter: blur(14px) brightness(0.6) saturate(1.3);
+                        transform: scale(1.25);
+                    }
+                    #ezwayContentImg {
+                        position: relative; z-index: 1;
+                        object-fit: contain !important;
+                        object-position: center !important;
+                        background: transparent !important;
+                        padding: 0 !important;
+                        transform: scale(1.05);
+                        filter: drop-shadow(0 6px 18px rgba(0,0,0,0.7));
+                    }
+                    #section-ezway-tv .content-card-overlay { z-index: 3; }
                 </style>
             `;
             return section;
