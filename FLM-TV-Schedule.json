@@ -47,12 +47,12 @@
     },
     {
       "startTime": "15:43",
-      "name": "Whats Happening S01E00 CC",
+      "name": "Whats Happening ",
       "path": "V:\\WHATS HAPPENING!!\\SEASON-01\\Whats Happening S01E00_CC.mp4",
-      "duration": 1481.446633,
+      "duration": 1481,
       "inPoint": 0,
-      "outPoint": 1481.446633,
-      "category": ""
+      "outPoint": 1481,
+      "category": "show"
     },
     {
       "startTime": "16:08",
@@ -224,6 +224,60 @@
       "inPoint": 0,
       "outPoint": 7896,
       "category": "movie"
+    },
+    {
+      "startTime": "02:58",
+      "name": "Bad Asses",
+      "path": "V:\\04-MOVIES\\Bad Asses\\Bad Asses.mp4",
+      "duration": 5440,
+      "inPoint": 0,
+      "outPoint": 5440,
+      "category": "movie"
+    },
+    {
+      "startTime": "01:24",
+      "name": "All My Sons ",
+      "path": "V:\\05-CLASSIC MOVIES\\All My Sons (1948) +subtitle REMUXED in file.mp3",
+      "duration": 5641,
+      "inPoint": 0,
+      "outPoint": 5641,
+      "category": "movie"
+    },
+    {
+      "startTime": "02:58",
+      "name": "Cleopatra",
+      "path": "Y:\\MORE TO SORT\\drive-download-20251116T074037Z-1-004\\Cleopatra (1963) 1080p.mp4",
+      "duration": 15068,
+      "inPoint": 0,
+      "outPoint": 15068,
+      "category": "movie"
+    },
+    {
+      "startTime": "07:09",
+      "name": "Sesame Street ",
+      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Bert_and_Ernie’s_Opposite_Day_Video___PBS_KIDS.ia.mp4",
+      "duration": 1555,
+      "inPoint": 0,
+      "outPoint": 1555,
+      "category": "show"
+    },
+    {
+      "startTime": "07:35",
+      "name": "Sesame Street ",
+      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Brave_Bessie_by_Brave_Gabrielle_Video___PBS_KIDS.ia.mp4",
+      "duration": 1555,
+      "inPoint": 0,
+      "outPoint": 1555,
+      "category": ""
+    },
+    {
+      "startTime": "08:01",
+      "name": "Mr. Rogers",
+      "path": "V:\\01-KIDS 3\\MR. ROGERS NEIGHBORHOOD\\ipoy143season12\\1497.mp4",
+      "duration": 1719,
+      "inPoint": 0,
+      "outPoint": 1719,
+      "category": "show"
     }
   ]
 }

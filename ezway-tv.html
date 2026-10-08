@@ -197,7 +197,7 @@ html, body {
   <div class="container">
 
     <a href="ezway-live.html" class="hero-card" id="heroCard" tabindex="0">
-      <img src="assets/images/ezwaylogo.jpeg" alt="eZWay TV Network" class="hero-bg">
+      <img src="assets/images/ezwaylogo.jpg" alt="eZWay TV Network" class="hero-bg">
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge"><span class="hero-dot"></span> LIVE</div>
@@ -230,7 +230,7 @@ html, body {
   const LIVE_CHANNEL_TILE = {
     name: 'eZWay TV Network',
     host: 'Live Channel',
-    image: 'assets/images/ezwaylogo.jpeg',
+    image: 'assets/images/ezwaylogo.jpg',
     url: 'ezway-live.html',
     live: true
   };
@@ -266,7 +266,7 @@ html, body {
       items.forEach(item => {
         const imgUrl = item.ImageTags && item.ImageTags.Primary
           ? `${JELLYFIN_CONFIG.SERVER}/Items/${item.Id}/Images/Primary?maxHeight=400&quality=90&tag=${item.ImageTags.Primary}&api_key=${JELLYFIN_CONFIG.API_KEY}`
-          : 'assets/images/ezwaylogo.jpeg';
+          : 'assets/images/ezwaylogo.jpg';
         renderCard({
           name: item.Name,
           host: 'eZWay TV Network',
