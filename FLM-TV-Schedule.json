@@ -1,283 +1,288 @@
 {
-  "2026-10-07": [
+  "2026-10-09": [
     {
-      "startTime": "14:22",
-      "name": "Little Rascals 16 (Love Business)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 16 (Love Business).mp4",
-      "duration": 1222,
-      "inPoint": 0,
-      "outPoint": 1222,
+      "startTime": "06:51",
+      "name": "Sesame Street",
+      "duration": 3260,
       "category": "show"
     },
     {
-      "startTime": "14:42",
-      "name": "Little Rascals 17 (Little Daddy)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 17 (Little Daddy).mp4",
-      "duration": 1267.733322,
-      "inPoint": 0,
-      "outPoint": 1267.733322,
-      "category": ""
-    },
-    {
-      "startTime": "15:03",
-      "name": "Little Rascals 18 (Bargain Days)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 18 (Bargain Days).mp4",
-      "duration": 1137.333322,
-      "inPoint": 0,
-      "outPoint": 1137.333322,
-      "category": ""
-    },
-    {
-      "startTime": "15:22",
-      "name": "Little Rascals 20 (Big Ears)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 1-20\\Little Rascals 20 (Big Ears).mp4",
-      "duration": 1257.899989,
-      "inPoint": 0,
-      "outPoint": 1257.899989,
-      "category": ""
-    },
-    {
-      "startTime": "15:43",
-      "name": "Ashwater",
-      "path": "Y:\\CLIPS-FILLERS\\Ashwater1-B.mp4",
-      "duration": 25,
-      "inPoint": 0,
-      "outPoint": 25,
-      "category": "commercial"
-    },
-    {
-      "startTime": "15:43",
-      "name": "Whats Happening ",
-      "path": "V:\\WHATS HAPPENING!!\\SEASON-01\\Whats Happening S01E00_CC.mp4",
-      "duration": 1481,
-      "inPoint": 0,
-      "outPoint": 1481,
+      "startTime": "07:45",
+      "name": "Sesame Street 2",
+      "duration": 3299,
       "category": "show"
     },
     {
-      "startTime": "16:08",
-      "name": "Facts of Life (Overachieving)",
-      "path": "V:\\00-SORT\\The Facts of Life (Complete TV series in MP4 format)\\The Facts of Life - Season 1\\Facts of Life - S01E05 (Overachieving).mp4",
-      "duration": 1430,
-      "inPoint": 0,
-      "outPoint": 1430,
-      "category": ""
-    },
-    {
-      "startTime": "16:32",
-      "name": "Fame",
-      "path": "V:\\00-SORT\\FAME\\Fame (1982) - TV Series - Complete Seasons 1-6 - Kids From Fame Television Show\\Season 01\\S01E01 - Metamorphosis.m4v",
-      "duration": 2778,
-      "inPoint": 0,
-      "outPoint": 2778,
-      "category": ""
-    },
-    {
-      "startTime": "17:18",
-      "name": "FLM TV Tag Blue Aliens2",
-      "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
-      "duration": 21.229542,
-      "inPoint": 0,
-      "outPoint": 21.229542,
-      "category": ""
-    },
-    {
-      "startTime": "17:18",
-      "name": "Dumbo 70th Anniversary Edition 1941 ",
-      "path": "X:\\_SORT-MOVIES\\Dumbo.70th.Anniversary.Edition.1941.MULTi.REPACK.1080p.BluRay.H.265.Egy_track1.mkv",
-      "duration": 3836,
-      "inPoint": 0,
-      "outPoint": 3836,
-      "category": "movie"
-    },
-    {
-      "startTime": "18:22",
-      "name": "Cartoons Classics-The Raven",
-      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.04.03 - The Raven.ia.mp4",
-      "duration": 837,
-      "inPoint": 0,
-      "outPoint": 837,
-      "category": "show"
-    },
-    {
-      "startTime": "18:36",
-      "name": "Cartoons Classics-The Wabbit Who Came To Supper",
-      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.03.14 - The Wabbit Who Came To Supper.ia.mp4",
-      "duration": 486,
-      "inPoint": 0,
-      "outPoint": 486,
-      "category": "show"
-    },
-    {
-      "startTime": "18:44",
-      "name": "Cartoons Classics-The Magnetic Telescope",
-      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.04.24 - The Magnetic Telescope.ia.mp4",
-      "duration": 457,
-      "inPoint": 0,
-      "outPoint": 457,
-      "category": ""
-    },
-    {
-      "startTime": "18:52",
-      "name": "Cartoons Classics-The Wacky Wabbit",
-      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942.05.02 - The Wacky Wabbit.ia.mp4",
-      "duration": 441,
-      "inPoint": 0,
-      "outPoint": 441,
-      "category": "movie"
-    },
-    {
-      "startTime": "18:59",
-      "name": "Beverly Hillbillies",
-      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-03\\G2_t12.mkv",
-      "duration": 1605,
-      "inPoint": 0,
-      "outPoint": 1605,
-      "category": "show"
-    },
-    {
-      "startTime": "19:26",
-      "name": "Beverly Hillbillies 2",
-      "path": "X:\\_SORT-MOVIES\\BEVERLY HILLBILLIES\\SEASON 01\\D-03\\H2_t14.mkv",
-      "duration": 1609,
-      "inPoint": 0,
-      "outPoint": 1609,
-      "category": "show"
-    },
-    {
-      "startTime": "19:53",
-      "name": "Sundays @ 11am",
-      "path": "X:\\COMMERCIALS-CLIPS\\NEW COMMERCIAL 1-D 1080.mp4",
-      "duration": 171,
-      "inPoint": 0,
-      "outPoint": 171,
-      "category": "show"
-    },
-    {
-      "startTime": "19:56",
-      "name": "FLM TV ",
-      "path": "Y:\\CLIPS-FILLERS\\FLM TV Tag Blue Aliens2.mp4",
-      "duration": 21,
-      "inPoint": 0,
-      "outPoint": 21,
-      "category": "commercial"
-    },
-    {
-      "startTime": "19:56",
-      "name": "That 70s Show ",
-      "path": "X:\\TV SHOWS 2\\THAT 70s SHOW\\SEASON-02\\That _70s Show (1998) - S02E23 - Holy Crap! (1080p BluRay x265 FreetheFish).mkv",
-      "duration": 1331,
-      "inPoint": 0,
-      "outPoint": 1331,
-      "category": "show"
-    },
-    {
-      "startTime": "20:18",
-      "name": "Malcolm in the Middle",
-      "path": "X:\\TV SHOWS 2\\Malcolm In The Middle\\Season 2\\S02E14 - Hal Quits.mp4",
-      "duration": 1343,
-      "inPoint": 0,
-      "outPoint": 1343,
-      "category": "show"
-    },
-    {
-      "startTime": "20:40",
+      "startTime": "08:40",
       "name": "FLMTV.com",
-      "path": "Y:\\CLIPS-FILLERS\\FLM-ufo-purple-alien-Z-gold.mp4",
-      "duration": 25,
-      "inPoint": 0,
-      "outPoint": 25,
-      "category": "commercial"
-    },
-    {
-      "startTime": "20:40",
-      "name": "Ashwater",
-      "path": "Y:\\CLIPS-FILLERS\\Ashwater1-B.mp4",
-      "duration": 25,
-      "inPoint": 0,
-      "outPoint": 25,
-      "category": "commercial"
-    },
-    {
-      "startTime": "20:40",
-      "name": "The X Files,",
-      "path": "X:\\TV SHOWS 2\\THE X FILES\\SEASON-02\\The X-Files, Season 2 Disc 2_t03.mkv",
-      "duration": 2711,
-      "inPoint": 0,
-      "outPoint": 2711,
-      "category": "show"
-    },
-    {
-      "startTime": "21:25",
-      "name": "The Sixth Sense ",
-      "path": "X:\\_SORT-MOVIES\\The.Sixth.Sense.1999.1080p.BluRay.DDP5.1.x265.10bit-GalaxyRG265[TGx]\\The.Sixth.Sense.1999.1080p.BluRay.DDP5.1.x265.10bit-GalaxyRG265.mkv",
-      "duration": 6443,
-      "inPoint": 0,
-      "outPoint": 6443,
-      "category": "movie"
-    },
-    {
-      "startTime": "23:12",
-      "name": "后继有人 We Are Marshall ",
-      "path": "X:\\_SORT-MOVIES\\We.Are.Marshall.(2006)\\后继有人.We.Are.Marshall.2006.1080p.BluRay.x265.10bit.AC3-SSDSSE.mkv",
-      "duration": 7896,
-      "inPoint": 0,
-      "outPoint": 7896,
-      "category": "movie"
-    },
-    {
-      "startTime": "02:58",
-      "name": "Bad Asses",
-      "path": "V:\\04-MOVIES\\Bad Asses\\Bad Asses.mp4",
-      "duration": 5440,
-      "inPoint": 0,
-      "outPoint": 5440,
-      "category": "movie"
-    },
-    {
-      "startTime": "01:24",
-      "name": "All My Sons ",
-      "path": "V:\\05-CLASSIC MOVIES\\All My Sons (1948) +subtitle REMUXED in file.mp3",
-      "duration": 5641,
-      "inPoint": 0,
-      "outPoint": 5641,
-      "category": "movie"
-    },
-    {
-      "startTime": "02:58",
-      "name": "Cleopatra",
-      "path": "Y:\\MORE TO SORT\\drive-download-20251116T074037Z-1-004\\Cleopatra (1963) 1080p.mp4",
-      "duration": 15068,
-      "inPoint": 0,
-      "outPoint": 15068,
-      "category": "movie"
-    },
-    {
-      "startTime": "07:09",
-      "name": "Sesame Street ",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Bert_and_Ernie’s_Opposite_Day_Video___PBS_KIDS.ia.mp4",
-      "duration": 1555,
-      "inPoint": 0,
-      "outPoint": 1555,
-      "category": "show"
-    },
-    {
-      "startTime": "07:35",
-      "name": "Sesame Street ",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\the-feelings-fair-sesame-street-videos-pbs-kids\\Sesame_Street_-_Brave_Bessie_by_Brave_Gabrielle_Video___PBS_KIDS.ia.mp4",
-      "duration": 1555,
-      "inPoint": 0,
-      "outPoint": 1555,
+      "duration": 12,
       "category": ""
+    },
+    {
+      "startTime": "08:40",
+      "name": "Elinor Wonders Why",
+      "duration": 1501,
+      "category": "show"
+    },
+    {
+      "startTime": "09:05",
+      "name": "Molly of Denali",
+      "duration": 1531,
+      "category": "show"
+    },
+    {
+      "startTime": "09:31",
+      "name": "Tom and Jerry",
+      "duration": 410,
+      "category": "show"
+    },
+    {
+      "startTime": "09:38",
+      "name": "Tom and Jerry 2",
+      "duration": 429,
+      "category": "show"
+    },
+    {
+      "startTime": "09:45",
+      "name": "Tom and Jerry 3",
+      "duration": 427,
+      "category": "show"
+    },
+    {
+      "startTime": "09:52",
+      "name": "Tom and Jerry 4",
+      "duration": 408,
+      "category": "show"
+    },
+    {
+      "startTime": "09:59",
+      "name": "The Jackson 5ive",
+      "duration": 1335,
+      "category": "show"
+    },
+    {
+      "startTime": "10:21",
+      "name": "Winnie the Pooh",
+      "duration": 3783,
+      "category": "movie"
+    },
+    {
+      "startTime": "11:24",
+      "name": "The Princess and the Frog",
+      "duration": 5847,
+      "category": "movie"
+    },
+    {
+      "startTime": "13:01",
+      "name": "Rogue History",
+      "duration": 617,
+      "category": "show"
+    },
+    {
+      "startTime": "13:12",
+      "name": "Rogue History 2",
+      "duration": 549,
+      "category": "show"
+    },
+    {
+      "startTime": "13:21",
+      "name": "Beverly Hillbillies",
+      "duration": 1623,
+      "category": "show"
+    },
+    {
+      "startTime": "13:48",
+      "name": "Beverly Hillbillies 2",
+      "duration": 1537,
+      "category": "show"
+    },
+    {
+      "startTime": "14:14",
+      "name": "Andy Griffith 1",
+      "duration": 1510,
+      "category": "show"
+    },
+    {
+      "startTime": "14:39",
+      "name": "Andy Griffith 2",
+      "duration": 1527,
+      "category": "show"
+    },
+    {
+      "startTime": "15:04",
+      "name": "The Lucy Show",
+      "duration": 1543,
+      "category": "show"
+    },
+    {
+      "startTime": "15:30",
+      "name": "Here's Lucy",
+      "duration": 1552,
+      "category": "show"
+    },
+    {
+      "startTime": "15:56",
+      "name": "Leave it to Beaver",
+      "duration": 1499,
+      "category": "show"
+    },
+    {
+      "startTime": "16:21",
+      "name": "Three Stooges",
+      "duration": 1039,
+      "category": "show"
+    },
+    {
+      "startTime": "16:38",
+      "name": "What's Happening",
+      "duration": 1536,
+      "category": "show"
+    },
+    {
+      "startTime": "17:04",
+      "name": "The Jeffersons",
+      "duration": 1505,
+      "category": "show"
+    },
+    {
+      "startTime": "17:29",
+      "name": "The Jeffersons 2",
+      "duration": 1494,
+      "category": "show"
+    },
+    {
+      "startTime": "17:54",
+      "name": "Gladius the Show 2024",
+      "duration": 84,
+      "category": ""
+    },
+    {
+      "startTime": "17:55",
+      "name": "Gladius Horse Ranch Tour",
+      "duration": 386,
+      "category": "show"
+    },
+    {
+      "startTime": "18:01",
+      "name": "The Telescope",
+      "duration": 3291,
+      "category": "show"
+    },
+    {
+      "startTime": "18:56",
+      "name": "Tooth Fairy",
+      "duration": 6088,
+      "category": "movie"
+    },
+    {
+      "startTime": "20:38",
+      "name": "Unstoppable",
+      "duration": 5910,
+      "category": "movie"
+    },
+    {
+      "startTime": "22:16",
+      "name": "The Lord of the Rings",
+      "duration": 10705,
+      "category": "movie"
+    }
+  ],
+  "2026-10-10": [
+    {
+      "startTime": "01:15",
+      "name": "Zookeeper",
+      "duration": 6113,
+      "category": "movie"
+    },
+    {
+      "startTime": "02:57",
+      "name": "Boogeyman",
+      "duration": 5332,
+      "category": "movie"
+    },
+    {
+      "startTime": "04:25",
+      "name": "Godzilla",
+      "duration": 8323,
+      "category": "movie"
+    },
+    {
+      "startTime": "06:44",
+      "name": "The Twilight Zone 1",
+      "duration": 1537,
+      "category": "show"
+    },
+    {
+      "startTime": "07:10",
+      "name": "The Twilight Zone 2",
+      "duration": 1548,
+      "category": "show"
+    },
+    {
+      "startTime": "07:36",
+      "name": "The Twilight Zone 3",
+      "duration": 1542,
+      "category": "show"
     },
     {
       "startTime": "08:01",
-      "name": "Mr. Rogers",
-      "path": "V:\\01-KIDS 3\\MR. ROGERS NEIGHBORHOOD\\ipoy143season12\\1497.mp4",
-      "duration": 1719,
-      "inPoint": 0,
-      "outPoint": 1719,
+      "name": "The Twilight Zone 4",
+      "duration": 1563,
       "category": "show"
+    },
+    {
+      "startTime": "08:27",
+      "name": "The Ghastly Ghost Town",
+      "duration": 2586,
+      "category": "show"
+    },
+    {
+      "startTime": "09:10",
+      "name": "Sesame Street 3",
+      "duration": 3205,
+      "category": "show"
+    },
+    {
+      "startTime": "10:04",
+      "name": "Sesame Street 4",
+      "duration": 3355,
+      "category": "show"
+    },
+    {
+      "startTime": "11:00",
+      "name": "Super Why!",
+      "duration": 1620,
+      "category": "show"
+    },
+    {
+      "startTime": "11:27",
+      "name": "FLMTV.com",
+      "duration": 28,
+      "category": ""
+    },
+    {
+      "startTime": "11:27",
+      "name": "Andy Panda - Pop",
+      "duration": 423,
+      "category": "show"
+    },
+    {
+      "startTime": "11:34",
+      "name": "Andy Panda - Musical",
+      "duration": 475,
+      "category": "show"
+    },
+    {
+      "startTime": "11:42",
+      "name": "Curious George",
+      "duration": 1419,
+      "category": "show"
+    },
+    {
+      "startTime": "12:06",
+      "name": "Zaina Juliette-MJJ",
+      "duration": 1642,
+      "category": ""
     }
   ]
 }

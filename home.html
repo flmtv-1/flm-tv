@@ -913,6 +913,75 @@
             border: 3px solid var(--neon-green);
         }
         
+        /* ── TV GUIDE: gold, glowing, impossible to miss ── */
+        @keyframes flmGuideGlow {
+            0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.6), 0 0 0 0 rgba(255,215,0,0.55); }
+            50%      { box-shadow: 0 0 22px rgba(255,215,0,1), 0 0 0 8px rgba(255,215,0,0); }
+        }
+        .flm-guide-btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: #ffd700; color: #0a0f1a !important;
+            font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+            font-size: 1.05rem; letter-spacing: 2px; line-height: 1;
+            padding: 0.5rem 0.95rem; border-radius: 25px;
+            text-decoration: none; white-space: nowrap; flex-shrink: 0;
+            animation: flmGuideGlow 1.6s ease-in-out infinite;
+        }
+        .flm-guide-btn:hover { background: #ffe84d; transform: scale(1.05); }
+        .floating-btn-guide {
+            width: 60px; height: 60px; flex-direction: column; gap: 1px;
+            background: #ffd700; color: #0a0f1a; text-decoration: none;
+            font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+            animation: flmGuideGlow 1.6s ease-in-out infinite;
+        }
+        .floating-btn-guide i { font-size: 1.15rem; }
+        .floating-btn-guide span { font-size: 0.62rem; letter-spacing: 1px; line-height: 1; }
+        .floating-btn-help {
+            width: 44px; height: 44px; align-self: center; font-size: 1.1rem;
+            background: rgba(255,215,0,0.12); color: #ffd700;
+            border: 2px solid #ffd700; text-decoration: none;
+        }
+        .live-guide-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: transparent; color: #ffd700;
+            border: 2px solid #ffd700; padding: 8px 18px; border-radius: 6px;
+            font-weight: 800; font-size: 14px; text-decoration: none;
+            animation: flmGuideGlow 1.6s ease-in-out infinite;
+        }
+        .live-guide-btn:hover { background: rgba(255,215,0,0.15); }
+        .bottom-nav-guide, .bottom-nav-guide span { color: #ffd700 !important; }
+        .bottom-nav-guide i { text-shadow: 0 0 10px rgba(255,215,0,0.9); }
+
+        /* ── Viewer notice banner ── */
+        .flm-notice {
+            display: flex; align-items: center; gap: 0.75rem;
+            max-width: 1400px; margin: 0.75rem auto 0; padding: 0.6rem 1rem;
+            background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.4);
+            border-left: 4px solid #ffd700; border-radius: 8px;
+            font-size: 0.9rem; color: #e2e8f0; line-height: 1.4;
+        }
+        .flm-notice-icon { color: #ffd700; flex-shrink: 0; }
+        .flm-notice-text { flex: 1; }
+        .flm-notice-text strong { color: #ffd700; }
+        .flm-notice-link {
+            flex-shrink: 0; color: #0a0f1a; background: #ffd700;
+            padding: 0.35rem 0.85rem; border-radius: 6px; font-weight: 700;
+            font-size: 0.85rem; text-decoration: none; white-space: nowrap;
+        }
+        .flm-notice-close {
+            flex-shrink: 0; background: none; border: none; color: #94a3b8;
+            font-size: 1.4rem; cursor: pointer; line-height: 1; padding: 0 0.25rem;
+            min-height: 0 !important; min-width: 0 !important;
+        }
+        @media (max-width: 767px) {
+            .flm-notice { margin: 0.5rem 0.75rem 0; font-size: 0.8rem; flex-wrap: wrap; }
+            .flm-notice-text { flex-basis: calc(100% - 3rem); }
+            .flm-guide-btn { font-size: 0.95rem; padding: 0.45rem 0.8rem; }
+            .nav-actions .flm-guide-btn { order: -1; } /* first thing visible in the phone header */
+        }
+        .is-firestick .flm-notice { margin: 0.5rem 0.75rem 0; font-size: 0.75rem; padding: 0.4rem 0.75rem; }
+        .is-firestick .flm-guide-btn { font-size: 0.85rem; padding: 0.35rem 0.7rem; }
+
         .floating-btn-ai img {
             width: 100%;
             height: 100%;
@@ -2775,7 +2844,8 @@
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
                         <!-- Updated: 2026-08-22 - fixed LIVE button link -->
                         <li><a href="https://flmtv.com/live">LIVE</a></li>
-                        <li><a href="schedule.html">Schedule</a></li>
+                        <li><a href="schedule.html">TV Guide</a></li>
+                        <li><a href="help.html">Help</a></li>
                         <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
                     </ul>
                 </nav>
@@ -2800,6 +2870,10 @@
                     <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
                 </button>
                 
+                <a href="schedule.html" class="flm-guide-btn" title="TV Guide — what's on now">
+                    <i class="fas fa-calendar-day"></i> TV GUIDE
+                </a>
+
                 <button class="btn-icon" title="Notifications">
                     <i class="fas fa-bell"></i>
                 </button>
@@ -2823,6 +2897,27 @@
             </div>
         </div>
     </header>
+
+    <!-- ═══ VIEWER NOTICE (dismissible, links to help.html) ═══ -->
+    <div class="flm-notice" id="flmNotice">
+        <i class="fas fa-tools flm-notice-icon"></i>
+        <span class="flm-notice-text"><strong>FLM TV is new and still being built.</strong> If a show freezes, refresh the page. For antenna viewers, Ch&nbsp;26.5 reception can be affected by weather or your antenna.</span>
+        <a href="help.html" class="flm-notice-link">Viewer Help</a>
+        <button class="flm-notice-close" onclick="flmCloseNotice()" title="Hide this message" aria-label="Hide this message">&times;</button>
+    </div>
+    <script>
+    (function(){
+        // Hidden for 7 days after a viewer closes it, then shows again
+        try {
+            var t = parseInt(localStorage.getItem('flmNoticeHidden') || '0', 10);
+            if (t && Date.now() - t < 7*24*60*60*1000) document.getElementById('flmNotice').style.display = 'none';
+        } catch(e) {}
+    })();
+    function flmCloseNotice(){
+        document.getElementById('flmNotice').style.display = 'none';
+        try { localStorage.setItem('flmNoticeHidden', String(Date.now())); } catch(e) {}
+    }
+    </script>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HERO BANNER                                                    -->
@@ -2920,6 +3015,9 @@
                         <div class="live-showcase-actions">
                             <a href="live.html" class="live-watch-btn">
                                 <i class="fas fa-play"></i> Watch Live
+                            </a>
+                            <a href="schedule.html" class="live-guide-btn">
+                                <i class="fas fa-calendar-day"></i> TV Guide
                             </a>
                             <button class="live-vol-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
                                 <i class="fas fa-volume-mute"></i>
@@ -4178,6 +4276,13 @@
         <button class="floating-btn floating-btn-ai" onclick="openPanel('aiPanel')">
             <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI">
         </button>
+        <a href="schedule.html" class="floating-btn floating-btn-guide" title="TV Guide — what's on now">
+            <i class="fas fa-calendar-day"></i>
+            <span>TV GUIDE</span>
+        </a>
+        <a href="help.html" class="floating-btn floating-btn-help" title="Viewer Help">
+            <i class="fas fa-question"></i>
+        </a>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -7251,9 +7356,9 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         <i class="fas fa-tv"></i>
         <span>Live TV</span>
     </button>
-    <a href="schedule.html" class="bottom-nav-item">
+    <a href="schedule.html" class="bottom-nav-item bottom-nav-guide">
         <i class="fas fa-calendar-day"></i>
-        <span>Schedule</span>
+        <span>TV Guide</span>
     </a>
     <button class="bottom-nav-item" onclick="openPanel('aiPanel')">
         <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--neon-green);">
@@ -7580,6 +7685,13 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                 </button>
                 <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:1px;color:#22c55e;text-shadow:0 0 8px rgba(34,197,94,0.7);">PARENTAL</span>
             </span>
+            <a href="schedule.html" class="flm-guide-btn" title="TV Guide" tabindex="0">
+                <i class="fas fa-calendar-day"></i> TV GUIDE
+            </a>
+            <a href="help.html" title="Viewer Help" tabindex="0"
+                style="width:36px;height:36px;border-radius:50%;border:2px solid #ffd700;background:rgba(255,215,0,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ffd700;font-size:0.9rem;text-decoration:none;">
+                <i class="fas fa-question"></i>
+            </a>
         `;
         // Re-run makeFocusable so new buttons are D-pad navigable
         setTimeout(makeFocusable, 100);
@@ -7628,6 +7740,10 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.btn-icon-text',
             '.btn-hero-primary',
             '.live-watch-btn',
+            '.live-guide-btn',
+            '.flm-guide-btn',
+            '.flm-notice-link',
+            '.flm-notice-close',
             '.live-channel-card',
             '.category-nav-item',
             '.content-card',
@@ -7711,6 +7827,10 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.btn-icon-text:not([style*="display: none"]):not([style*="display:none"]), ' +
             '.btn-hero-primary, ' +
             '.live-watch-btn, ' +
+            '.live-guide-btn, ' +
+            '.flm-guide-btn, ' +
+            '.flm-notice-link, ' +
+            '.flm-notice-close, ' +
             '.live-channel-card, ' +
             '.category-nav-item, ' +
             '.content-card, ' +
