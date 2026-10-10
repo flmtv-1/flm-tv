@@ -3787,7 +3787,13 @@
         display: flex;
         gap: 10px;
         align-items: center;
-        margin-top: 15px;
+        margin-top: auto;      /* sit near the bottom of the card so faces stay clear */
+        margin-bottom: 40px;   /* just above the vMix lower-third banner */
+    }
+    .is-firestick .live-showcase-actions { margin-top: 15px !important; margin-bottom: 0 !important; }
+    @media (max-width: 600px) {
+        .live-showcase-overlay { padding: 44px 14px 12px 14px !important; }
+        .live-showcase-actions { margin-bottom: 0; }
     }
 
     .live-watch-btn {

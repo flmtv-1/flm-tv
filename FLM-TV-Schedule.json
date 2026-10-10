@@ -1,287 +1,427 @@
 {
-  "2026-10-09": [
-    {
-      "startTime": "06:51",
-      "name": "Sesame Street",
-      "duration": 3260,
-      "category": "show"
-    },
-    {
-      "startTime": "07:45",
-      "name": "Sesame Street 2",
-      "duration": 3299,
-      "category": "show"
-    },
-    {
-      "startTime": "08:40",
-      "name": "FLMTV.com",
-      "duration": 12,
-      "category": ""
-    },
-    {
-      "startTime": "08:40",
-      "name": "Elinor Wonders Why",
-      "duration": 1501,
-      "category": "show"
-    },
-    {
-      "startTime": "09:05",
-      "name": "Molly of Denali",
-      "duration": 1531,
-      "category": "show"
-    },
-    {
-      "startTime": "09:31",
-      "name": "Tom and Jerry",
-      "duration": 410,
-      "category": "show"
-    },
-    {
-      "startTime": "09:38",
-      "name": "Tom and Jerry 2",
-      "duration": 429,
-      "category": "show"
-    },
-    {
-      "startTime": "09:45",
-      "name": "Tom and Jerry 3",
-      "duration": 427,
-      "category": "show"
-    },
-    {
-      "startTime": "09:52",
-      "name": "Tom and Jerry 4",
-      "duration": 408,
-      "category": "show"
-    },
-    {
-      "startTime": "09:59",
-      "name": "The Jackson 5ive",
-      "duration": 1335,
-      "category": "show"
-    },
-    {
-      "startTime": "10:21",
-      "name": "Winnie the Pooh",
-      "duration": 3783,
-      "category": "movie"
-    },
-    {
-      "startTime": "11:24",
-      "name": "The Princess and the Frog",
-      "duration": 5847,
-      "category": "movie"
-    },
-    {
-      "startTime": "13:01",
-      "name": "Rogue History",
-      "duration": 617,
-      "category": "show"
-    },
-    {
-      "startTime": "13:12",
-      "name": "Rogue History 2",
-      "duration": 549,
-      "category": "show"
-    },
-    {
-      "startTime": "13:21",
-      "name": "Beverly Hillbillies",
-      "duration": 1623,
-      "category": "show"
-    },
-    {
-      "startTime": "13:48",
-      "name": "Beverly Hillbillies 2",
-      "duration": 1537,
-      "category": "show"
-    },
-    {
-      "startTime": "14:14",
-      "name": "Andy Griffith 1",
-      "duration": 1510,
-      "category": "show"
-    },
-    {
-      "startTime": "14:39",
-      "name": "Andy Griffith 2",
-      "duration": 1527,
-      "category": "show"
-    },
-    {
-      "startTime": "15:04",
-      "name": "The Lucy Show",
-      "duration": 1543,
-      "category": "show"
-    },
-    {
-      "startTime": "15:30",
-      "name": "Here's Lucy",
-      "duration": 1552,
-      "category": "show"
-    },
-    {
-      "startTime": "15:56",
-      "name": "Leave it to Beaver",
-      "duration": 1499,
-      "category": "show"
-    },
-    {
-      "startTime": "16:21",
-      "name": "Three Stooges",
-      "duration": 1039,
-      "category": "show"
-    },
-    {
-      "startTime": "16:38",
-      "name": "What's Happening",
-      "duration": 1536,
-      "category": "show"
-    },
-    {
-      "startTime": "17:04",
-      "name": "The Jeffersons",
-      "duration": 1505,
-      "category": "show"
-    },
-    {
-      "startTime": "17:29",
-      "name": "The Jeffersons 2",
-      "duration": 1494,
-      "category": "show"
-    },
-    {
-      "startTime": "17:54",
-      "name": "Gladius the Show 2024",
-      "duration": 84,
-      "category": ""
-    },
-    {
-      "startTime": "17:55",
-      "name": "Gladius Horse Ranch Tour",
-      "duration": 386,
-      "category": "show"
-    },
-    {
-      "startTime": "18:01",
-      "name": "The Telescope",
-      "duration": 3291,
-      "category": "show"
-    },
-    {
-      "startTime": "18:56",
-      "name": "Tooth Fairy",
-      "duration": 6088,
-      "category": "movie"
-    },
-    {
-      "startTime": "20:38",
-      "name": "Unstoppable",
-      "duration": 5910,
-      "category": "movie"
-    },
-    {
-      "startTime": "22:16",
-      "name": "The Lord of the Rings",
-      "duration": 10705,
-      "category": "movie"
-    }
-  ],
   "2026-10-10": [
     {
-      "startTime": "01:15",
-      "name": "Zookeeper",
-      "duration": 6113,
-      "category": "movie"
-    },
-    {
-      "startTime": "02:57",
-      "name": "Boogeyman",
-      "duration": 5332,
-      "category": "movie"
-    },
-    {
-      "startTime": "04:25",
-      "name": "Godzilla",
-      "duration": 8323,
-      "category": "movie"
-    },
-    {
-      "startTime": "06:44",
-      "name": "The Twilight Zone 1",
-      "duration": 1537,
-      "category": "show"
-    },
-    {
-      "startTime": "07:10",
-      "name": "The Twilight Zone 2",
-      "duration": 1548,
-      "category": "show"
-    },
-    {
-      "startTime": "07:36",
+      "startTime": "07:51",
       "name": "The Twilight Zone 3",
       "duration": 1542,
       "category": "show"
     },
     {
-      "startTime": "08:01",
+      "startTime": "08:17",
       "name": "The Twilight Zone 4",
       "duration": 1563,
       "category": "show"
     },
     {
-      "startTime": "08:27",
+      "startTime": "08:43",
+      "name": "AshWater",
+      "duration": 24,
+      "category": ""
+    },
+    {
+      "startTime": "08:43",
       "name": "The Ghastly Ghost Town",
       "duration": 2586,
       "category": "show"
     },
     {
-      "startTime": "09:10",
+      "startTime": "09:27",
       "name": "Sesame Street 3",
       "duration": 3205,
       "category": "show"
     },
     {
-      "startTime": "10:04",
+      "startTime": "10:20",
       "name": "Sesame Street 4",
       "duration": 3355,
       "category": "show"
     },
     {
-      "startTime": "11:00",
+      "startTime": "11:16",
       "name": "Super Why!",
       "duration": 1620,
       "category": "show"
     },
     {
-      "startTime": "11:27",
+      "startTime": "11:43",
       "name": "FLMTV.com",
       "duration": 28,
       "category": ""
     },
     {
-      "startTime": "11:27",
+      "startTime": "11:43",
       "name": "Andy Panda - Pop",
       "duration": 423,
       "category": "show"
     },
     {
-      "startTime": "11:34",
+      "startTime": "11:50",
       "name": "Andy Panda - Musical",
       "duration": 475,
       "category": "show"
     },
     {
-      "startTime": "11:42",
+      "startTime": "11:58",
       "name": "Curious George",
       "duration": 1419,
       "category": "show"
     },
     {
-      "startTime": "12:06",
+      "startTime": "12:22",
       "name": "Zaina Juliette-MJJ",
       "duration": 1642,
+      "category": ""
+    },
+    {
+      "startTime": "12:49",
+      "name": "Good Gumbo",
+      "duration": 348,
+      "category": ""
+    },
+    {
+      "startTime": "12:55",
+      "name": "Beverly Hillbillies",
+      "duration": 1557,
+      "category": "show"
+    },
+    {
+      "startTime": "13:21",
+      "name": "Beverly Hillbillies 2",
+      "duration": 1625,
+      "category": "show"
+    },
+    {
+      "startTime": "13:48",
+      "name": "Andy Griffith",
+      "duration": 1507,
+      "category": "show"
+    },
+    {
+      "startTime": "14:13",
+      "name": "Andy Griffith 2",
+      "duration": 1531,
+      "category": "show"
+    },
+    {
+      "startTime": "14:39",
+      "name": "The Lucy Show",
+      "duration": 1542,
+      "category": "show"
+    },
+    {
+      "startTime": "15:05",
+      "name": "Leave it to Beaver",
+      "duration": 1499,
+      "category": "show"
+    },
+    {
+      "startTime": "15:30",
+      "name": "FLMTV.com",
+      "duration": 21,
+      "category": ""
+    },
+    {
+      "startTime": "15:30",
+      "name": "Despicable Me",
+      "duration": 5681,
+      "category": "movie"
+    },
+    {
+      "startTime": "17:05",
+      "name": "AshWater",
+      "duration": 24,
+      "category": ""
+    },
+    {
+      "startTime": "17:05",
+      "name": "Harry Potter",
+      "duration": 8502,
+      "category": "movie"
+    },
+    {
+      "startTime": "19:27",
+      "name": "The Lord of the Rings 2",
+      "duration": 14132,
+      "category": "movie"
+    },
+    {
+      "startTime": "23:22",
+      "name": "Angels and Demons",
+      "duration": 8775,
+      "category": "movie"
+    }
+  ],
+  "2026-10-11": [
+    {
+      "startTime": "01:48",
+      "name": "Flubber",
+      "duration": 5128,
+      "category": "movie"
+    },
+    {
+      "startTime": "03:14",
+      "name": "Independence Day 2",
+      "duration": 7184,
+      "category": "movie"
+    },
+    {
+      "startTime": "05:14",
+      "name": "Zaina-Spotlight",
+      "duration": 141,
+      "category": ""
+    },
+    {
+      "startTime": "05:16",
+      "name": "Sesame Street",
+      "duration": 3205,
+      "category": "show"
+    },
+    {
+      "startTime": "06:09",
+      "name": "Sesame Street 2",
+      "duration": 3355,
+      "category": "show"
+    },
+    {
+      "startTime": "07:05",
+      "name": "Super Why!",
+      "duration": 1547,
+      "category": "show"
+    },
+    {
+      "startTime": "07:31",
+      "name": "Nature Cat",
+      "duration": 1441,
+      "category": "show"
+    },
+    {
+      "startTime": "07:55",
+      "name": "WordWorld",
+      "duration": 1628,
+      "category": "show"
+    },
+    {
+      "startTime": "08:22",
+      "name": "Ready Jet Go!",
+      "duration": 3152,
+      "category": "show"
+    },
+    {
+      "startTime": "09:15",
+      "name": "Mister Ed",
+      "duration": 1325,
+      "category": "show"
+    },
+    {
+      "startTime": "09:37",
+      "name": "The Lucy Show",
+      "duration": 1542,
+      "category": "show"
+    },
+    {
+      "startTime": "10:03",
+      "name": "The Lucy Show 2",
+      "duration": 1544,
+      "category": "show"
+    },
+    {
+      "startTime": "10:28",
+      "name": "Sundays @ 11am",
+      "duration": 171,
+      "category": ""
+    },
+    {
+      "startTime": "10:31",
+      "name": "Beverly Hillbillies 1",
+      "duration": 1605,
+      "category": "show"
+    },
+    {
+      "startTime": "10:58",
+      "name": "Zaina Commercial",
+      "duration": 108,
+      "category": ""
+    },
+    {
+      "startTime": "11:00",
+      "name": "Zaina Juliette & Friends",
+      "duration": 1710,
+      "category": ""
+    },
+    {
+      "startTime": "11:28",
+      "name": "Locals in Las Vegas",
+      "duration": 1709,
+      "category": ""
+    },
+    {
+      "startTime": "11:57",
+      "name": "Archie Bunker's Place",
+      "duration": 1455,
+      "category": "show"
+    },
+    {
+      "startTime": "12:21",
+      "name": "Here's Lucy",
+      "duration": 1529,
+      "category": "show"
+    },
+    {
+      "startTime": "12:46",
+      "name": "Andy Griffith",
+      "duration": 1516,
+      "category": "show"
+    },
+    {
+      "startTime": "13:12",
+      "name": "Andy Griffith 2",
+      "duration": 1477,
+      "category": "show"
+    },
+    {
+      "startTime": "13:36",
+      "name": "FLMTV.com",
+      "duration": 28,
+      "category": ""
+    },
+    {
+      "startTime": "13:37",
+      "name": "Little Rascals",
+      "duration": 636,
+      "category": "show"
+    },
+    {
+      "startTime": "13:47",
+      "name": "Little Rascals 62",
+      "duration": 643,
+      "category": "show"
+    },
+    {
+      "startTime": "13:58",
+      "name": "Little Rascals 63",
+      "duration": 639,
+      "category": "show"
+    },
+    {
+      "startTime": "14:09",
+      "name": "Zaina",
+      "duration": 108,
+      "category": ""
+    },
+    {
+      "startTime": "14:11",
+      "name": "Rogue History",
+      "duration": 567,
+      "category": "show"
+    },
+    {
+      "startTime": "14:20",
+      "name": "Rogue History 2",
+      "duration": 662,
+      "category": "show"
+    },
+    {
+      "startTime": "14:31",
+      "name": "What's Happening S01E03",
+      "duration": 1502,
+      "category": "show"
+    },
+    {
+      "startTime": "14:56",
+      "name": "Sanford and Son - Season One",
+      "duration": 1560,
+      "category": "show"
+    },
+    {
+      "startTime": "15:22",
+      "name": "The Tigger Movie",
+      "duration": 4627,
+      "category": "movie"
+    },
+    {
+      "startTime": "16:39",
+      "name": "Back to the Future",
+      "duration": 6949,
+      "category": "movie"
+    },
+    {
+      "startTime": "18:35",
+      "name": "Raising Arizona",
+      "duration": 5646,
+      "category": "movie"
+    },
+    {
+      "startTime": "20:09",
+      "name": "Trading Places",
+      "duration": 6983,
+      "category": "movie"
+    },
+    {
+      "startTime": "22:05",
+      "name": "Face Off",
+      "duration": 8336,
+      "category": "movie"
+    }
+  ],
+  "2026-10-12": [
+    {
+      "startTime": "00:24",
+      "name": "Unstoppable",
+      "duration": 5910,
+      "category": "movie"
+    },
+    {
+      "startTime": "02:03",
+      "name": "The Day After Tomorrow",
+      "duration": 7420,
+      "category": "movie"
+    },
+    {
+      "startTime": "04:07",
+      "name": "Misery",
+      "duration": 6445,
+      "category": "movie"
+    },
+    {
+      "startTime": "05:54",
+      "name": "Sesame Street 5",
+      "duration": 3356,
+      "category": "show"
+    },
+    {
+      "startTime": "06:50",
+      "name": "Sesame Street 6",
+      "duration": 3356,
+      "category": "show"
+    },
+    {
+      "startTime": "07:46",
+      "name": "Super Why! 2",
+      "duration": 1650,
+      "category": "show"
+    },
+    {
+      "startTime": "08:13",
+      "name": "Ready Jet Go! 2",
+      "duration": 1591,
+      "category": "show"
+    },
+    {
+      "startTime": "08:40",
+      "name": "Nature Cat 2",
+      "duration": 1441,
+      "category": "show"
+    },
+    {
+      "startTime": "09:04",
+      "name": "OZONE Commercial",
+      "duration": 117,
+      "category": ""
+    },
+    {
+      "startTime": "09:06",
+      "name": "Zaina Juliette Show",
+      "duration": 1712,
       "category": ""
     }
   ]
