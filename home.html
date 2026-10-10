@@ -927,6 +927,13 @@
             text-decoration: none; white-space: nowrap; flex-shrink: 0;
             animation: flmGuideGlow 1.6s ease-in-out infinite;
         }
+        .flm-guide-label { display: flex; flex-direction: column; line-height: 1; }
+        .flm-guide-label small {
+            font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+            font-size: 0.55rem; letter-spacing: 0.5px; font-weight: 700;
+            text-transform: uppercase; opacity: 0.75; margin-top: 2px;
+        }
+        .live-guide-btn .flm-guide-label small { font-size: 0.6rem; }
         .flm-guide-btn:hover { background: #ffe84d; transform: scale(1.05); }
         .floating-btn-guide {
             width: 60px; height: 60px; flex-direction: column; gap: 1px;
@@ -2871,7 +2878,8 @@
                 </button>
                 
                 <a href="schedule.html" class="flm-guide-btn" title="TV Guide — what's on now">
-                    <i class="fas fa-calendar-day"></i> TV GUIDE
+                    <i class="fas fa-calendar-day"></i>
+                    <span class="flm-guide-label">TV GUIDE<small>Daily Schedule</small></span>
                 </a>
 
                 <button class="btn-icon" title="Notifications">
@@ -2901,7 +2909,7 @@
     <!-- ═══ VIEWER NOTICE (dismissible, links to help.html) ═══ -->
     <div class="flm-notice" id="flmNotice">
         <i class="fas fa-tools flm-notice-icon"></i>
-        <span class="flm-notice-text"><strong>FLM TV is new and still being built.</strong> If a show freezes, refresh the page. For antenna viewers, Ch&nbsp;26.5 reception can be affected by weather or your antenna.</span>
+        <span class="flm-notice-text"><strong>FLM TV is new and still being built.</strong> If a show freezes, refresh the page. Antenna viewers: Ch&nbsp;26.5 reception depends on the broadcast station, the weather and your antenna.</span>
         <a href="help.html" class="flm-notice-link">Viewer Help</a>
         <button class="flm-notice-close" onclick="flmCloseNotice()" title="Hide this message" aria-label="Hide this message">&times;</button>
     </div>
@@ -3017,7 +3025,8 @@
                                 <i class="fas fa-play"></i> Watch Live
                             </a>
                             <a href="schedule.html" class="live-guide-btn">
-                                <i class="fas fa-calendar-day"></i> TV Guide
+                                <i class="fas fa-calendar-day"></i>
+                                <span class="flm-guide-label">TV Guide<small>Daily Schedule</small></span>
                             </a>
                             <button class="live-vol-btn" id="previewVolumeBtn" onclick="togglePreviewVolume(event)">
                                 <i class="fas fa-volume-mute"></i>
