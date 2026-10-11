@@ -171,6 +171,31 @@ a { color:inherit; }
   .gstrip .vcard { flex-basis:150px; }
 }
 
+
+/* affirmations */
+.affirm { display:flex; gap:36px; align-items:center; flex-wrap:wrap; padding:34px 36px; border-radius:22px; position:relative; overflow:hidden;
+  background: radial-gradient(circle at 12% 30%, rgba(255,214,10,0.18), transparent 45%), radial-gradient(circle at 90% 80%, rgba(79,124,255,0.25), transparent 50%), linear-gradient(135deg, #0b1a5c 0%, #071033 60%, #050a1f 100%);
+  border:1px solid rgba(255,214,10,0.45); box-shadow:0 0 40px rgba(29,63,216,0.25); }
+.affirm-26 { flex:0 0 auto; display:flex; align-items:center; gap:14px; }
+.affirm-26 .num { font-family:'Cinzel',serif; font-weight:800; font-size:clamp(5rem,10vw,8rem); line-height:0.9;
+  background:linear-gradient(180deg,#fff 0%,var(--gold-soft) 45%,var(--yellow) 100%); -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 24px rgba(255,214,10,0.45)); }
+.affirm-26 .lbl { font-family:'Cinzel',serif; font-weight:800; font-size:1.25rem; line-height:1.15; color:#fff; letter-spacing:1px; }
+.affirm-26 .lbl span { display:inline-block; margin-top:6px; font-family:'Montserrat',Arial,sans-serif; font-size:0.72rem; letter-spacing:2.5px; color:var(--yellow); text-transform:uppercase; }
+.affirm-body { flex:1 1 380px; min-width:0; }
+.affirm-lines { list-style:none; display:grid; gap:8px; }
+.affirm-lines li { font-family:'Cinzel',serif; font-weight:800; font-size:clamp(1.15rem,2.3vw,1.7rem); letter-spacing:1.5px; color:#fff;
+  display:flex; align-items:center; gap:12px; opacity:0; transform:translateX(-18px); transition:opacity .7s ease, transform .7s ease; }
+.affirm-lines li:nth-child(even) { color:var(--yellow); text-shadow:0 0 18px rgba(255,214,10,0.35); }
+.affirm-lines li .bfly { font-size:0.9em; filter:drop-shadow(0 0 8px rgba(79,124,255,0.8)); }
+.affirm.show .affirm-lines li { opacity:1; transform:none; }
+.affirm.show .affirm-lines li:nth-child(2) { transition-delay:.35s; } .affirm.show .affirm-lines li:nth-child(3) { transition-delay:.7s; }
+.affirm.show .affirm-lines li:nth-child(4) { transition-delay:1.05s; } .affirm.show .affirm-lines li:nth-child(5) { transition-delay:1.4s; }
+.affirm-text { margin-top:18px; color:#dfe5ff; line-height:1.65; font-size:1.02rem; max-width:720px; }
+.affirm-text b { color:var(--yellow); }
+@media (max-width:760px) { .affirm { padding:24px 20px; gap:18px; } .affirm-26 .lbl { font-size:1.05rem; } }
+@media (prefers-reduced-motion: reduce) { .affirm-lines li { opacity:1; transform:none; transition:none; } }
+
 /* lightbox */
 .lightbox { position:fixed; inset:0; z-index:500; background:rgba(2,5,15,0.94); display:none; align-items:center; justify-content:center; padding:24px; }
 .lightbox.open { display:flex; }
@@ -275,6 +300,26 @@ footer a { color:var(--gold); text-decoration:none; }
     </div>
     <p class="sec-lead">Real stories of hope, healing and courage from the Circle of Healing family, the galas, and the heroes who serve.</p>
     <div class="vgrid watch-grid" id="videoGrid"><div class="coming">🦋 Loading the channel…</div></div>
+  </section>
+
+  <!-- AFFIRMATIONS + 26 SURVIVORS & WARRIORS -->
+  <section class="section">
+    <div class="affirm">
+      <div class="affirm-26">
+        <div class="num">26</div>
+        <div class="lbl">Survivors<br>&amp; Warriors<br><span>Honored This Year</span></div>
+      </div>
+      <div class="affirm-body">
+        <ul class="affirm-lines">
+          <li><span class="bfly">🦋</span>YOU ARE NOT ALONE.</li>
+          <li><span class="bfly">🦋</span>YOU ARE ENOUGH.</li>
+          <li><span class="bfly">🦋</span>YOU ARE WORTHY.</li>
+          <li><span class="bfly">🦋</span>YOUR LIFE MATTERS.</li>
+          <li><span class="bfly">🦋</span>YOUR MENTAL HEALTH MATTERS.</li>
+        </ul>
+        <p class="affirm-text">This year, we are honoring <b>26 Survivors and Warriors</b> who have courageously shared their stories. We want to celebrate their lives and give them an experience that reminds them of their value, their strength, and their purpose.</p>
+      </div>
+    </div>
   </section>
 
   <!-- IT'S OKAY NOT TO BE OK -->
@@ -553,6 +598,38 @@ async function loadJellyfinVideos() {
     });
   }
   var gg = document.getElementById('galleryGrid');
+  // PHOTOS: everything in assets/mwf/gallery named "page 1.jpg", "page 2.png" ...
+  // is found automatically, in number order.
+  var EXTS = ['.jpg', '.jpeg', '.png', '.webp', '.JPG', '.JPEG', '.PNG'];
+  // accepted names: "page (1).jpg" (Windows group rename), "page 1.jpg", "page1.jpg", "Page 1.jpg", "photo (1).jpg" (and .png/.jpeg/.webp)
+  var NAMES = ['page (', 'Page (', 'page ', 'page', 'Page ', 'Page', 'photo ('];
+  var TRIES = [];
+  NAMES.forEach(function(nm) { EXTS.forEach(function(ex) { TRIES.push([nm, ex]); }); });
+  function findPhoto(n, k, done) {
+    if (k >= TRIES.length) return done(null);
+    var nm = TRIES[k][0], ex = TRIES[k][1];
+    var src = 'assets/mwf/gallery/' + nm + n + (nm.slice(-1) === '(' ? ')' : '') + ex;
+    var t = new Image();
+    t.onload = function() { done(src); };
+    t.onerror = function() { findPhoto(n, k + 1, done); };
+    t.src = encodeURI(src);
+  }
+  var photoBox = document.createElement('div'); photoBox.style.display = 'contents';
+  gg.appendChild(photoBox);
+  (function nextPhoto(n, misses) {
+    if (misses >= 3 || n > 500) return;                 // 3 numbers in a row missing = end of the list
+    findPhoto(n, 0, function(src) {
+      if (src) {
+        var a = document.createElement('a');
+        a.className = 'vcard tall'; a.href = '#';
+        a.innerHTML = '<div class="blurfill" style="background-image:url(\'' + esc(encodeURI(src)) + '\')"></div><img src="' + esc(encodeURI(src)) + '" alt="Photo" loading="lazy">';
+        a.onclick = function(e) { e.preventDefault(); openLightbox('<img src="' + esc(encodeURI(src)) + '" alt="Photo">'); };
+        photoBox.appendChild(a);
+      }
+      nextPhoto(n + 1, src ? 0 : misses + 1);
+    });
+  })(1, 0);
+
   FLYERS.concat(GALLERY).forEach(function(g) {
     var src = encodeURI(g.src);
     var a = document.createElement('a');
@@ -624,6 +701,15 @@ async function loadJellyfinVideos() {
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+
+// ── affirmations appear one by one when scrolled into view ──
+(function() {
+  var box = document.querySelector('.affirm'); if (!box) return;
+  if (!('IntersectionObserver' in window)) { box.classList.add('show'); return; }
+  var io = new IntersectionObserver(function(es) { if (es[0].isIntersecting) { box.classList.add('show'); io.disconnect(); } }, { threshold: 0.3 });
+  io.observe(box);
+  setTimeout(function(){ box.classList.add('show'); }, 8000);   // never stay hidden
 })();
 </script>
 </body>
