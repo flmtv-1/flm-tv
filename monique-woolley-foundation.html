@@ -50,7 +50,7 @@ a { color:inherit; }
 .nbtn:hover, .nbtn:focus { background:var(--yellow); color:var(--ink); outline:none; }
 
 /* ═════════ HERO BANNER ═════════ */
-.hero { position:relative; height:min(88vh, 860px); min-height:560px; overflow:hidden; isolation:isolate; }
+.hero { position:relative; min-height:calc(100vh - 110px); max-height:none; overflow:hidden; isolation:isolate; display:flex; }
 .hero-media { position:absolute; inset:0; z-index:-3; }
 .hero-media > * {
   position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
@@ -67,9 +67,9 @@ a { color:inherit; }
 }
 #butterflies { position:absolute; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; }
 
-.hero-inner { position:relative; height:100%; max-width:1400px; margin:0 auto; padding:40px 48px 64px;
+.hero-inner { position:relative; width:100%; max-width:1400px; margin:0 auto; padding:28px 48px 36px;
   display:flex; flex-direction:column; justify-content:flex-end; }
-.hero-logo { width:128px; height:128px; border-radius:50%; margin-bottom:18px;
+.hero-logo { width:clamp(64px, 9vh, 104px); height:clamp(64px, 9vh, 104px); border-radius:50%; margin-bottom:12px;
   box-shadow:0 0 0 3px rgba(255,214,10,0.7), 0 0 40px rgba(255,214,10,0.55), 0 0 90px rgba(79,124,255,0.5);
   animation:logoGlow 4s ease-in-out infinite; }
 @keyframes logoGlow { 50% { box-shadow:0 0 0 3px rgba(255,214,10,0.9), 0 0 60px rgba(255,214,10,0.8), 0 0 120px rgba(79,124,255,0.7); } }
@@ -78,31 +78,31 @@ a { color:inherit; }
 .hero-eyebrow .live i { width:7px; height:7px; border-radius:50%; background:#fff; animation:blink 1.2s infinite; }
 @keyframes blink { 50% { opacity:.2; } }
 .hero-title { font-family:'Cinzel',serif; font-weight:800; line-height:1.02; letter-spacing:1px;
-  font-size:clamp(2.3rem, 5.6vw, 4.6rem); max-width:820px;
+  font-size:clamp(2rem, min(4.4vw, 6.2vh), 3.8rem); max-width:820px;
   background:linear-gradient(180deg, #fff 0%, #fff 45%, var(--gold-soft) 70%, var(--gold) 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 4px 18px rgba(0,0,0,0.7)); }
-.hero-script { font-family:'Great Vibes',cursive; font-size:clamp(2rem, 4.2vw, 3.4rem); color:var(--yellow); margin:6px 0 4px;
+.hero-script { font-family:'Great Vibes',cursive; font-size:clamp(1.7rem, min(3.4vw, 5vh), 2.9rem); color:var(--yellow); margin:4px 0 4px;
   text-shadow:0 0 22px rgba(255,214,10,0.55), 0 2px 6px rgba(0,0,0,0.8); }
 .hero-script b { font-weight:400; color:#8fb0ff; text-shadow:0 0 22px rgba(79,124,255,0.7), 0 2px 6px rgba(0,0,0,0.8); }
-.hero-sub { font-size:1.08rem; color:#e3e8ff; max-width:640px; line-height:1.55; text-shadow:0 2px 8px rgba(0,0,0,0.9); }
+.hero-sub { font-size:1rem; color:#e3e8ff; max-width:640px; line-height:1.5; text-shadow:0 2px 8px rgba(0,0,0,0.9); }
 
 /* event + countdown card */
-.event-card { margin-top:24px; display:flex; align-items:stretch; gap:0; flex-wrap:wrap; max-width:860px;
+.event-card { margin-top:16px; display:flex; align-items:stretch; gap:0; flex-wrap:wrap; max-width:860px;
   background:rgba(10,20,60,0.62); border:1px solid rgba(255,214,10,0.45); border-radius:16px; overflow:hidden;
   backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); box-shadow:0 10px 40px rgba(0,0,0,0.5); }
-.event-info { flex:1 1 300px; padding:16px 20px; }
+.event-info { flex:1 1 300px; padding:12px 18px; }
 .event-info .tag { font-size:0.72rem; font-weight:800; letter-spacing:2.5px; color:var(--yellow); text-transform:uppercase; }
 .event-info .name { font-family:'Cinzel',serif; font-size:1.3rem; font-weight:800; margin:4px 0; }
 .event-info .meta { color:var(--dim); font-size:0.92rem; line-height:1.5; }
 .event-info .meta b { color:#fff; }
-.countdown { display:flex; gap:10px; align-items:center; padding:14px 18px; background:linear-gradient(135deg, rgba(29,63,216,0.55), rgba(10,26,92,0.7)); border-left:1px solid rgba(255,214,10,0.3); }
+.countdown { display:flex; gap:10px; align-items:center; padding:10px 16px; background:linear-gradient(135deg, rgba(29,63,216,0.55), rgba(10,26,92,0.7)); border-left:1px solid rgba(255,214,10,0.3); }
 .cd-box { text-align:center; min-width:62px; }
-.cd-num { font-family:'Cinzel',serif; font-size:2rem; font-weight:800; color:var(--yellow); line-height:1; text-shadow:0 0 14px rgba(255,214,10,0.5); }
+.cd-num { font-family:'Cinzel',serif; font-size:1.7rem; font-weight:800; color:var(--yellow); line-height:1; text-shadow:0 0 14px rgba(255,214,10,0.5); }
 .cd-lbl { font-size:0.62rem; font-weight:700; letter-spacing:2px; color:var(--dim); margin-top:4px; }
 
-.hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
-.btn { display:inline-flex; align-items:center; gap:10px; padding:13px 26px; border-radius:40px; font-weight:800; font-size:0.95rem; letter-spacing:0.5px; text-decoration:none; transition:all .25s; border:2px solid transparent; }
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+.btn { display:inline-flex; align-items:center; gap:10px; padding:11px 22px; border-radius:40px; font-weight:800; font-size:0.95rem; letter-spacing:0.5px; text-decoration:none; transition:all .25s; border:2px solid transparent; }
 .btn-gold { background:linear-gradient(180deg, var(--gold-soft), var(--yellow)); color:var(--ink); box-shadow:0 6px 24px rgba(255,214,10,0.45); }
 .btn-gold:hover, .btn-gold:focus { transform:translateY(-2px); box-shadow:0 10px 34px rgba(255,214,10,0.7); outline:none; }
 .btn-blue { background:rgba(29,63,216,0.35); color:#fff; border-color:rgba(143,176,255,0.7); }
@@ -143,6 +143,9 @@ a { color:inherit; }
 .vcard:hover, .vcard:focus { border-color:var(--yellow); box-shadow:0 0 26px rgba(255,214,10,0.4); outline:none; }
 .vcard .cap { position:absolute; left:0; right:0; bottom:0; padding:28px 14px 12px; background:linear-gradient(0deg, rgba(5,10,31,0.95), transparent); font-weight:700; font-size:0.95rem; }
 .vcard .play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:58px; height:58px; border-radius:50%; background:rgba(255,214,10,0.92); color:var(--ink); display:flex; align-items:center; justify-content:center; font-size:1.2rem; padding-left:4px; box-shadow:0 0 30px rgba(255,214,10,0.6); }
+.vcard.tall img { object-fit:contain; position:relative; z-index:1; }
+.vcard.tall .blurfill { position:absolute; inset:0; background-size:cover; background-position:center; filter:blur(18px) brightness(0.55); transform:scale(1.2); }
+.vcard .cap { z-index:2; }
 .coming { grid-column:1/-1; text-align:center; padding:28px; border:1px dashed rgba(255,214,10,0.35); border-radius:14px; color:var(--dim); }
 
 /* lightbox */
@@ -158,11 +161,17 @@ a { color:inherit; }
 footer { text-align:center; padding:28px 16px 40px; color:#6f7aa3; font-size:0.85rem; border-top:1px solid rgba(255,214,10,0.12); line-height:1.8; }
 footer a { color:var(--gold); text-decoration:none; }
 
+/* ── short laptop screens: keep the whole banner on one screen ── */
+@media (max-height:760px) and (min-width:761px) {
+  .hero-sub { display:none; }
+  .hero-logo { display:none; }
+}
+
 /* ── phones ── */
 @media (max-width:760px) {
   .topnav { padding:10px 14px; }
   .topnav .links .nbtn span { display:none; }
-  .hero { height:auto; min-height:0; }
+  .hero { min-height:0; }
   .hero-inner { padding:150px 18px 40px; }
   .hero-shade { background: linear-gradient(0deg, var(--ink) 0%, rgba(5,10,31,0.82) 45%, rgba(5,10,31,0.35) 100%); }
   .hero-logo { width:92px; height:92px; }
@@ -318,20 +327,23 @@ footer a { color:var(--gold); text-decoration:none; }
 // Banner background: plays in this order, then repeats.
 // Videos: short .mp4 clips (about 10 seconds, muted). Images get a slow zoom.
 var BANNER = [
-  { type:'video', src:'assets/mwf/clip1.mp4' },
+  { type:'video', src:'assets/mwf/WFBTY-feildOfPeople.mp4' },
   { type:'image', src:'assets/mwf/zaina-pegasus.webp' },
-  { type:'video', src:'assets/mwf/clip2.mp4' },
+  { type:'video', src:'assets/mwf/TheMagicField2.mp4' },
+  { type:'video', src:'assets/mwf/Hope1.mp4' },
   { type:'image', src:'assets/mwf/monique-angel.webp' },
-  { type:'video', src:'assets/mwf/clip3.mp4' },
+  { type:'video', src:'assets/mwf/Message1.mp4' },
+  { type:'video', src:'assets/mwf/TheMagicField3.mp4' },
+  { type:'image', src:'assets/mwf/ItsOK.jpg' },
+  { type:'video', src:'assets/mwf/AngelMessage1.mp4' },
+  { type:'video', src:'assets/mwf/Flags.mp4' },
   { type:'image', src:'assets/mwf/zaina-sky.webp' },
-  { type:'video', src:'assets/mwf/clip4.mp4' },
-  { type:'image', src:'assets/mwf/wfbty-cast.webp' },
-  { type:'video', src:'assets/mwf/clip5.mp4' },
-  { type:'image', src:'assets/mwf/ok-not-ok.webp' },
-  { type:'video', src:'assets/mwf/clip6.mp4' }
+  { type:'video', src:'assets/mwf/message2.mp4' },
+  { type:'video', src:'assets/mwf/TheMagicField4.mp4' },
+  { type:'image', src:'assets/mwf/Zaina Juliette Performance.00_11_50_10.Still004.jpg' }
 ];
-// Just drop clips named clip1.mp4 ... clip6.mp4 into assets/mwf.
-// Any clip that isn't there yet is skipped automatically.
+// File names must match exactly, including capital letters.
+// A clip or picture that isn't in the folder is simply skipped.
 var SLIDE_SECONDS = 9.5;  // every picture and clip changes at 9.5 seconds (just before a 10-second clip ends)
 
 // Event countdown (Los Angeles time). Change the hour once the show time is set.
@@ -354,12 +366,19 @@ var VIDEOS = [
 ];
 
 var GALLERY = [
+  { title:'6th Annual Fundraising Gala', src:'assets/mwf/gala-poster.jpg', tall:true },
+  { title:'The Monique Woolley Foundation', src:'assets/mwf/MWFposter1.jpg', tall:true },
+  { title:"It's OK Not To Be OK", src:'assets/mwf/ItsOKPoster1.jpg', tall:true },
   { title:'When Feeling Blue, Think Yellow', src:'assets/mwf/zaina-pegasus.webp' },
+  { title:'Zaina Juliette Live', src:'assets/mwf/Zaina Juliette Performance.00_11_50_10.Still004.jpg' },
+  { title:'Golden Angel', src:'assets/mwf/Golden_Angel_In_Heaven-orns-in-hands-glow-glow-glow.jpg' },
+  { title:"It's OK Not To Be OK", src:'assets/mwf/ItsOK.jpg' },
+  { title:'Think Yellow', src:'assets/mwf/ItsOK2.jpg' },
   { title:'The Monique Woolley Foundation', src:'assets/mwf/monique-angel.webp' },
-  { title:"It's Okay Not To Be OK", src:'assets/mwf/ok-not-ok.webp' },
   { title:'Rise Above the Storm', src:'assets/mwf/zaina-sky.webp' },
   { title:'You Are Not Alone', src:'assets/mwf/rain-hope.webp' },
   { title:'The Circle of Healing', src:'assets/mwf/wfbty-cast.webp' },
+  { title:'The Monique Woolley Foundation', src:'assets/mwf/LOGO-MWF.jpg' },
   { title:'WFBTY Circle of Healing', src:'assets/mwf/wfbty-logo.webp' }
 ];
 
@@ -376,10 +395,10 @@ var GALLERY = [
       el.muted = true; el.playsInline = true; el.preload = 'auto'; el.loop = false;
       el.setAttribute('muted', ''); el.setAttribute('playsinline', '');
       el.addEventListener('error', function() { drop(el); });   // clip not uploaded yet -> skip it
-      el.src = m.src;
+      el.src = encodeURI(m.src);
     } else {
       el = document.createElement('img');
-      el.alt = ''; el.src = m.src;
+      el.alt = ''; el.src = encodeURI(m.src);
       el.addEventListener('error', function() { drop(el); });
     }
     box.appendChild(el);
@@ -457,7 +476,7 @@ function cleanTitle(t) {
 async function loadJellyfinVideos() {
   if (!MWF_COLLECTION_ID) return [];
   var url = JELLYFIN.server + '/Users/' + JELLYFIN.userId + '/Items?api_key=' + JELLYFIN.apiKey +
-            '&ParentId=' + MWF_COLLECTION_ID + '&Recursive=true&IncludeItemTypes=Movie,Video,Episode,MusicVideo' +
+            '&ParentId=' + MWF_COLLECTION_ID + '&Recursive=true&MediaTypes=Video&IsFolder=false' +
             '&SortBy=PremiereDate,DateCreated,SortName&SortOrder=Descending&Fields=Overview&EnableImageTypes=Primary,Thumb,Backdrop';
   var res = await fetch(url, { credentials: 'omit' });
   if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -489,10 +508,14 @@ async function loadJellyfinVideos() {
   }
   var gg = document.getElementById('galleryGrid');
   GALLERY.forEach(function(g) {
+    var src = encodeURI(g.src);
     var a = document.createElement('a');
-    a.className = 'vcard'; a.href = '#';
-    a.innerHTML = '<img src="' + esc(g.src) + '" alt="' + esc(g.title) + '" loading="lazy"><div class="cap">' + esc(g.title) + '</div>';
-    a.onclick = function(e) { e.preventDefault(); openLightbox('<img src="' + esc(g.src) + '" alt="' + esc(g.title) + '">'); };
+    a.className = 'vcard' + (g.tall ? ' tall' : ''); a.href = '#';
+    a.innerHTML = (g.tall ? '<div class="blurfill" style="background-image:url(\'' + esc(src) + '\')"></div>' : '') +
+      '<img src="' + esc(src) + '" alt="' + esc(g.title) + '" loading="lazy"><div class="cap">' + esc(g.title) + '</div>';
+    var img = a.querySelector('img');
+    img.onerror = function() { a.remove(); };            // picture not uploaded -> hide its card
+    a.onclick = function(e) { e.preventDefault(); openLightbox('<img src="' + esc(src) + '" alt="' + esc(g.title) + '">'); };
     gg.appendChild(a);
   });
 })();
