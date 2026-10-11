@@ -318,19 +318,36 @@ footer a { color:var(--gold); text-decoration:none; }
 // Banner background: plays in this order, then repeats.
 // Videos: short .mp4 clips (about 10 seconds, muted). Images get a slow zoom.
 var BANNER = [
+  { type:'video', src:'assets/mwf/clip1.mp4' },
   { type:'image', src:'assets/mwf/zaina-pegasus.webp' },
+  { type:'video', src:'assets/mwf/clip2.mp4' },
   { type:'image', src:'assets/mwf/monique-angel.webp' },
+  { type:'video', src:'assets/mwf/clip3.mp4' },
   { type:'image', src:'assets/mwf/zaina-sky.webp' },
+  { type:'video', src:'assets/mwf/clip4.mp4' },
   { type:'image', src:'assets/mwf/wfbty-cast.webp' },
-  { type:'image', src:'assets/mwf/ok-not-ok.webp' }
-  // { type:'video', src:'assets/mwf/clip1.mp4' },
+  { type:'video', src:'assets/mwf/clip5.mp4' },
+  { type:'image', src:'assets/mwf/ok-not-ok.webp' },
+  { type:'video', src:'assets/mwf/clip6.mp4' }
 ];
-var IMAGE_SECONDS = 7;   // how long each banner picture stays up
+// Just drop clips named clip1.mp4 ... clip6.mp4 into assets/mwf.
+// Any clip that isn't there yet is skipped automatically.
+var SLIDE_SECONDS = 9.5;  // every picture and clip changes at 9.5 seconds (just before a 10-second clip ends)
 
 // Event countdown (Los Angeles time). Change the hour once the show time is set.
 var EVENT_DATE = '2026-12-06T18:00:00-08:00';
 
-// Videos in the "Watch" section. Each opens in a pop-up player.
+// Her videos live in Jellyfin. Put the folder in a Jellyfin library, then paste the
+// collection / folder id here (from its Jellyfin address: ...details?id=THIS_PART).
+// The Watch section then fills itself, and new videos added there show up on their own.
+var JELLYFIN = {
+  server: 'https://flmtv.com/jellyfin',
+  apiKey: '62131ee22c0141c6b651be75a7444350',
+  userId: '2562494c1df24f8789cd0ad8a38a7bf4'
+};
+var MWF_COLLECTION_ID = 'c05101ea19b31952ff91c8f3c632fe73';   // The Monique Woolley Foundation videos in Jellyfin
+
+// Extra videos can still be listed by hand (shown before the Jellyfin ones).
 // For a Jellyfin video use:  { title:'...', thumb:'...', jellyfinId:'abc123' }
 var VIDEOS = [
   // { title:'When Feeling Blue Think Yellow', thumb:'assets/mwf/zaina-pegasus.webp', src:'assets/mwf/promo.mp4' },
@@ -351,36 +368,49 @@ var GALLERY = [
 // ── banner slideshow (pictures and video clips) ──
 (function() {
   var box = document.getElementById('heroMedia');
-  var els = BANNER.map(function(m) {
+  var slides = [];
+  BANNER.forEach(function(m) {
     var el;
     if (m.type === 'video') {
       el = document.createElement('video');
-      el.src = m.src; el.muted = true; el.playsInline = true; el.preload = 'auto';
+      el.muted = true; el.playsInline = true; el.preload = 'auto'; el.loop = false;
       el.setAttribute('muted', ''); el.setAttribute('playsinline', '');
+      el.addEventListener('error', function() { drop(el); });   // clip not uploaded yet -> skip it
+      el.src = m.src;
     } else {
       el = document.createElement('img');
-      el.src = m.src; el.alt = '';
+      el.alt = ''; el.src = m.src;
+      el.addEventListener('error', function() { drop(el); });
     }
     box.appendChild(el);
-    return el;
+    slides.push(el);
   });
-  if (!els.length) return;
+  function drop(el) {
+    var k = slides.indexOf(el);
+    if (k < 0) return;
+    var wasOn = el.classList.contains('on');
+    slides.splice(k, 1); el.remove();
+    if (k <= i) i--;
+    if (wasOn) next();
+  }
   var i = -1, timer;
   function next() {
     clearTimeout(timer);
-    if (i >= 0) els[i].classList.remove('on');
-    i = (i + 1) % els.length;
-    var el = els[i];
+    if (!slides.length) return;
+    var prev = slides[i];
+    i = (i + 1) % slides.length;
+    var el = slides[i];
     if (el.tagName === 'IMG') { el.style.animation = 'none'; el.offsetHeight; el.style.animation = ''; }
-    el.classList.add('on');
-    if (el.tagName === 'VIDEO') {
-      el.currentTime = 0;
-      var p = el.play(); if (p && p.catch) p.catch(function(){ timer = setTimeout(next, 4000); });
-      el.onended = next;
-      timer = setTimeout(next, 20000);  // safety: never get stuck on one clip
-    } else {
-      timer = setTimeout(next, IMAGE_SECONDS * 1000);
+    else {
+      try { el.currentTime = 0; } catch (e) {}
+      var p = el.play(); if (p && p.catch) p.catch(function(){});
     }
+    el.classList.add('on');
+    if (prev && prev !== el) {
+      prev.classList.remove('on');
+      if (prev.tagName === 'VIDEO') setTimeout(function(){ prev.pause(); }, 1700);   // stop after it fades out
+    }
+    timer = setTimeout(next, SLIDE_SECONDS * 1000);
   }
   next();
 })();
@@ -419,15 +449,40 @@ document.addEventListener('keydown', function(e) {
 });
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
 
-(function() {
+function cleanTitle(t) {
+  return String(t || '').replace(/\s*\(\d\)\s*$/, '').replace(/\s*\((\d{3,4}p)?[^)]*\ben\)\s*$/i, '')
+    .replace(/\s*\(\d{3,4}p\)\s*$/i, '').replace(/\s+/g, ' ').trim();
+}
+
+async function loadJellyfinVideos() {
+  if (!MWF_COLLECTION_ID) return [];
+  var url = JELLYFIN.server + '/Users/' + JELLYFIN.userId + '/Items?api_key=' + JELLYFIN.apiKey +
+            '&ParentId=' + MWF_COLLECTION_ID + '&Recursive=true&IncludeItemTypes=Movie,Video,Episode,MusicVideo' +
+            '&SortBy=PremiereDate,DateCreated,SortName&SortOrder=Descending&Fields=Overview&EnableImageTypes=Primary,Thumb,Backdrop';
+  var res = await fetch(url, { credentials: 'omit' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  var data = await res.json();
+  return (data.Items || []).map(function(it) {
+    var tag = it.ImageTags || {};
+    var type = tag.Thumb ? 'Thumb' : (tag.Primary ? 'Primary' : ((it.BackdropImageTags || []).length ? 'Backdrop' : null));
+    return {
+      title: cleanTitle(it.Name),
+      jellyfinId: it.Id,
+      thumb: type ? (JELLYFIN.server + '/Items/' + it.Id + '/Images/' + type + '?api_key=' + JELLYFIN.apiKey + '&maxWidth=640&quality=82') : null
+    };
+  });
+}
+
+(async function() {
   var vg = document.getElementById('videoGrid');
+  try { VIDEOS = VIDEOS.concat(await loadJellyfinVideos()); } catch (e) { console.error('Jellyfin videos:', e); }
   if (!VIDEOS.length) {
     vg.innerHTML = '<div class="coming">🦋 New videos are on the way. Check back soon, and join us live on December 6.</div>';
   } else {
     VIDEOS.forEach(function(v) {
       var a = document.createElement('a');
       a.className = 'vcard'; a.href = v.jellyfinId ? ('movie-frame.html?id=' + v.jellyfinId) : '#';
-      a.innerHTML = '<img src="' + esc(v.thumb || 'assets/mwf/wfbty-logo.webp') + '" alt="" loading="lazy"><div class="play"><i class="fas fa-play"></i></div><div class="cap">' + esc(v.title) + '</div>';
+      a.innerHTML = '<img src="' + esc(v.thumb || 'assets/mwf/wfbty-logo.webp') + '" onerror="this.src=\'assets/mwf/wfbty-logo.webp\'" alt="" loading="lazy"><div class="play"><i class="fas fa-play"></i></div><div class="cap">' + esc(v.title) + '</div>';
       if (!v.jellyfinId) a.onclick = function(e) { e.preventDefault(); openLightbox('<video src="' + esc(v.src) + '" controls autoplay playsinline></video>'); };
       vg.appendChild(a);
     });

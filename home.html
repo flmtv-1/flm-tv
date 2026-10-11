@@ -3121,24 +3121,42 @@
             <!-- STACKED CHANNEL CARDS: Dale Davidson (top) + Mrs. Universe -->
             <div class="event-cards-col">
 
+                <!-- TOP: two featured channels side by side (temporary while the gala is coming up) -->
+                <div class="ec-pair">
                 <!-- LAS VEGAS TONIGHT TV / DALE DAVIDSON FEATURED CHANNEL CARD -->
-                <div onclick="openDaleCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #2a0d0d 0%, #07070A 75%);overflow:hidden;">
-                    <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;left:auto;right:10px;"><div class="live-dot" style="background:#000;"></div> FEATURED CHANNEL</div>
-                    <video id="daleCardVideo" muted defaultmuted autoplay playsinline
-                        style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.4;z-index:1;pointer-events:none;"
-                        onerror="this.style.display='none';document.getElementById('daleCardFallback').style.display='block';"
-                    ></video>
-                    <img id="daleCardFallback" src="assets/images/DaleLogo.jpg"
-                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.5;z-index:1;pointer-events:none;"
-                         alt="Las Vegas Tonight TV with Dale Davidson" onerror="this.style.display='none'">
-                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.9) 20%,rgba(5,10,30,0.25) 100%);z-index:2;"></div>
-                    <div style="position:relative;z-index:5;padding:10px 14px;width:100%;">
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">LAS VEGAS TONIGHT TV</div>
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">WITH DALE DAVIDSON</div>
+                    <div onclick="openDaleCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #2a0d0d 0%, #07070A 75%);overflow:hidden;">
+                        <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;left:auto;right:10px;"><div class="live-dot" style="background:#000;"></div> FEATURED CHANNEL</div>
+                        <video id="daleCardVideo" muted defaultmuted autoplay playsinline
+                            style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.4;z-index:1;pointer-events:none;"
+                            onerror="this.style.display='none';document.getElementById('daleCardFallback').style.display='block';"
+                        ></video>
+                        <img id="daleCardFallback" src="assets/images/DaleLogo.jpg"
+                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.5;z-index:1;pointer-events:none;"
+                             alt="Las Vegas Tonight TV with Dale Davidson" onerror="this.style.display='none'">
+                        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.9) 20%,rgba(5,10,30,0.25) 100%);z-index:2;"></div>
+                        <div style="position:relative;z-index:5;padding:10px 14px;width:100%;">
+                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">LAS VEGAS TONIGHT TV</div>
+                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">WITH DALE DAVIDSON</div>
+                        </div>
+                        <div class="mu-watch" style="position:absolute;bottom:10px;right:14px;z-index:6;display:flex;align-items:center;gap:6px;">
+                            <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e,0 0 14px rgba(34,197,94,0.7);animation:tvs-pulse 1.4s infinite;"></span>
+                            <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#22c55e;text-shadow:0 0 4px rgba(34,197,94,0.6);">WATCH CHANNEL</span>
+                        </div>
                     </div>
-                    <div style="position:absolute;bottom:10px;right:14px;z-index:6;display:flex;align-items:center;gap:6px;">
-                        <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e,0 0 14px rgba(34,197,94,0.7);animation:tvs-pulse 1.4s infinite;"></span>
-                        <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#22c55e;text-shadow:0 0 4px rgba(34,197,94,0.6);">WATCH CHANNEL</span>
+
+                <!-- MONIQUE WOOLLEY FOUNDATION FEATURED CHANNEL CARD -->
+                    <div onclick="window.location.href='monique-woolley-foundation.html'" class="mu-event-card mwf-event-card" style="text-decoration:none;cursor:pointer;">
+                        <div class="mu-event-badge" style="background:linear-gradient(90deg,#ffd60a,#f5c542);color:#0a1a5c;border-color:rgba(29,63,216,0.6);"><div class="live-dot" style="background:#1d3fd8;"></div> FEATURED</div>
+                        <img src="assets/mwf/monique-angel.webp"
+                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 22%;opacity:0.7;pointer-events:none;z-index:1;"
+                             alt="The Monique Woolley Foundation" onerror="this.style.display='none'">
+                        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,40,0.95) 18%,rgba(10,26,92,0.35) 70%,rgba(5,10,40,0.1) 100%);z-index:2;"></div>
+                        <div class="mwf-flutter" aria-hidden="true"><span>🦋</span><span>🦋</span><span>🦋</span></div>
+                        <div class="mwf-countdown" id="mwfCountdown" title="6th Annual WFBTY Gala · Dec 6"><span class="n" id="mwfCdNum">--</span><span class="l" id="mwfCdLbl">DAYS TO<br>THE GALA</span></div>
+                        <div style="position:relative;z-index:5;padding:8px 14px;width:100%;">
+                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd60a;line-height:1;text-shadow:0 0 18px rgba(255,214,10,0.6);">THE MONIQUE WOOLLEY FOUNDATION</div>
+                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">WHEN FEELING <span style="color:#8fb0ff;">BLUE</span>, THINK <span style="color:#ffd60a;">YELLOW</span></div>
+                        </div>
                     </div>
                 </div>
 
@@ -3292,6 +3310,48 @@
         font-size: 1.6rem; z-index: 10;
         filter: drop-shadow(0 2px 6px rgba(255,215,0,0.7));
     }
+    /* top slot: two featured channel cards side by side, same height as one full card */
+    .ec-pair { display:grid; grid-template-columns:1fr 1fr; gap:0.45rem; }
+    .ec-pair .mu-event-card { aspect-ratio: 226 / 171; }
+    .ec-pair .mu-watch { display:none !important; }
+    .ec-pair .mu-event-card:hover { transform: scale(1.03); }
+    .ec-pair .mwf-countdown { top: 38px; right: 10px; }
+    @media (max-width: 768px) {
+        .ec-pair { grid-template-columns:1fr; }
+        .ec-pair .mu-event-card { aspect-ratio: 460 / 171; }
+        .ec-pair .mu-watch { display:flex !important; }
+        .ec-pair .mwf-countdown { top: 9px; right: 12px; }
+        .event-cards-col { flex: none !important; width: 100% !important; max-width: 100% !important; }
+    }
+    .mwf-event-card {
+        background: radial-gradient(circle at 25% 30%, #1d3fd8 0%, #0a1a5c 45%, #050a1f 100%);
+        border-color: rgba(255,214,10,0.75) !important;
+        box-shadow: 0 0 26px rgba(255,214,10,0.28), 0 0 34px rgba(29,63,216,0.35), 0 8px 32px rgba(0,0,0,0.6) !important;
+    }
+    .mwf-event-card:hover { box-shadow: 0 0 40px rgba(255,214,10,0.5), 0 0 50px rgba(29,63,216,0.5) !important; }
+    .mwf-flutter { position:absolute; inset:0; z-index:3; pointer-events:none; overflow:hidden; }
+    .mwf-flutter span { position:absolute; font-size:14px; opacity:0; animation: mwfFly 7s linear infinite; filter: drop-shadow(0 0 6px rgba(255,214,10,0.8)); }
+    .mwf-flutter span:nth-child(1) { left:62%; animation-delay:0s; }
+    .mwf-flutter span:nth-child(2) { left:78%; animation-delay:2.3s; font-size:11px; filter: hue-rotate(160deg) drop-shadow(0 0 6px rgba(79,124,255,0.9)); }
+    .mwf-flutter span:nth-child(3) { left:90%; animation-delay:4.6s; font-size:12px; }
+    @keyframes mwfFly {
+        0% { top:105%; opacity:0; transform: translateX(0) rotate(-10deg); }
+        15% { opacity:1; }
+        50% { transform: translateX(-14px) rotate(8deg); }
+        85% { opacity:1; }
+        100% { top:-15%; opacity:0; transform: translateX(10px) rotate(-6deg); }
+    }
+    .is-firestick .mwf-flutter { display:none; }
+    .mwf-countdown {
+        position:absolute; right:12px; top:9px; z-index:6;
+        display:flex; align-items:center; gap:7px;
+        background:rgba(5,10,40,0.78); border:1px solid rgba(255,214,10,0.6);
+        border-radius:10px; padding:4px 10px 4px 9px;
+        box-shadow:0 0 14px rgba(255,214,10,0.25);
+    }
+    .mwf-countdown .n { font-family:'Bebas Neue','Rajdhani',sans-serif; font-size:1.35rem; line-height:1; color:#ffd60a; text-shadow:0 0 12px rgba(255,214,10,0.6); }
+    .mwf-countdown .l { font-family:'Bebas Neue','Rajdhani',sans-serif; font-size:0.62rem; letter-spacing:1.2px; line-height:1.05; color:#dfe5ff; }
+
     /* ── AD PANEL ───────────────────────────────────────────────────── */
     .flm-ad-panel {
         flex: 1;
@@ -3563,7 +3623,7 @@
     }
     .is-firestick .event-cards-col {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
         gap: 0.6rem !important;
         flex: none !important;
         width: 100% !important;
@@ -3573,6 +3633,8 @@
     .is-firestick .mu-event-card {
         width: 100% !important;
     }
+    .is-firestick .ec-pair { display: contents !important; }
+    .is-firestick .event-cards-col .mu-event-card { aspect-ratio: 460 / 230 !important; }
     </style>
 
     <script>
@@ -5503,6 +5565,99 @@ function wtvMatches(ch, catKey) {
             return section;
         }
 
+        // Countdown chip on the Monique Woolley Foundation card (top showcase)
+        (function mwfCountdown() {
+            var GALA = new Date('2026-12-06T18:00:00-08:00').getTime();
+            function tick() {
+                var num = document.getElementById('mwfCdNum'), lbl = document.getElementById('mwfCdLbl');
+                if (!num || !lbl) { setTimeout(tick, 1000); return; }
+                var ms = GALA - Date.now();
+                if (ms <= -6 * 3600000) { var box = document.getElementById('mwfCountdown'); if (box) box.style.display = 'none'; return; }
+                if (ms <= 0) { num.textContent = '★'; lbl.innerHTML = 'GALA<br>TONIGHT'; return; }
+                var days = Math.floor(ms / 86400000);
+                if (days >= 1) { num.textContent = days; lbl.innerHTML = (days === 1 ? 'DAY' : 'DAYS') + ' TO<br>THE GALA'; }
+                else { num.textContent = Math.max(1, Math.ceil(ms / 3600000)); lbl.innerHTML = 'HOURS TO<br>THE GALA'; }
+                setTimeout(tick, 60000);
+            }
+            tick();
+        })();
+
+        // "Featured Channels" — one row holding all the partner / special
+        // channels (each a standalone page, not a Jellyfin collection).
+        // Add another featured channel by copying one card block below.
+        function buildFeaturedChannelsSection() {
+            const section = document.createElement('section');
+            section.className = 'category-section';
+            section.id = 'section-featured-channels';
+            section.setAttribute('data-collection-id', 'featured-channels');
+            const live = `<div style="position:absolute;top:6px;left:6px;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.6);padding:3px 9px;border-radius:12px;z-index:4;">
+                            <span style="width:7px;height:7px;border-radius:50%;background:#E8333A;animation:liveDot 1.2s infinite;flex-shrink:0;"></span>
+                            <span style="font-size:0.7rem;font-weight:800;color:#E8333A;letter-spacing:1px;">LIVE</span>
+                          </div>`;
+            section.innerHTML = `
+                <div class="category-header">
+                    <h3 class="category-title">Featured Channels</h3>
+                </div>
+                <div class="content-carousel">
+                    <div class="content-card fc-mwf" onclick="window.location.href='monique-woolley-foundation.html'">
+                        <img src="assets/mwf/mwf-poster.webp" alt="The Monique Woolley Foundation" class="content-card-image" loading="lazy">
+                        <div style="position:absolute;top:6px;left:6px;display:flex;align-items:center;gap:5px;background:rgba(10,26,92,0.85);border:1px solid rgba(255,214,10,0.6);padding:3px 9px;border-radius:12px;z-index:4;">
+                            <span style="font-size:0.7rem;">🦋</span>
+                            <span style="font-size:0.66rem;font-weight:800;color:#ffd60a;letter-spacing:1px;">GALA DEC 6</span>
+                        </div>
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">The Monique Woolley Foundation</div>
+                            <div class="content-card-info">When Feeling Blue, Think Yellow</div>
+                        </div>
+                    </div>
+                    <div class="content-card" onclick="window.location.href='dr-dale-christian-tv.html'">
+                        <img src="assets/images/DaleLogo.jpg" alt="Las Vegas Tonight TV with Dale Davidson" class="content-card-image" loading="lazy">
+                        ${live}
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">Las Vegas Tonight TV</div>
+                            <div class="content-card-info">with Dale Davidson</div>
+                        </div>
+                    </div>
+                    <div class="content-card fc-ezway" onclick="window.location.href='ezway-tv.html'">
+                        <div class="ezway-card-fill"><div></div></div>
+                        <img src="assets/images/ezwaylogo.jpg" alt="eZWayTV Network" class="content-card-image fc-ezway-img" loading="lazy">
+                        ${live}
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">eZWayTV Network</div>
+                            <div class="content-card-info">Featured Channel</div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
+                    #section-featured-channels .content-card { overflow: hidden; border-radius: 8px; }
+                    #section-featured-channels .fc-mwf { box-shadow: 0 0 18px rgba(255,214,10,0.35), 0 0 22px rgba(29,63,216,0.35); }
+                    /* eZWay logo is wide: blurred copy fills the card, real logo sits on top uncropped */
+                    #section-featured-channels .ezway-card-fill {
+                        position: absolute; inset: 0; z-index: 0;
+                        border-radius: 8px; overflow: hidden; pointer-events: none;
+                    }
+                    #section-featured-channels .ezway-card-fill > div {
+                        position: absolute; inset: 0;
+                        background: url('assets/images/ezwaylogo.jpg') center / cover no-repeat;
+                        filter: blur(14px) brightness(0.6) saturate(1.3);
+                        transform: scale(1.25);
+                    }
+                    #section-featured-channels .fc-ezway-img {
+                        position: relative; z-index: 1;
+                        object-fit: contain !important;
+                        object-position: center !important;
+                        background: transparent !important;
+                        padding: 0 !important;
+                        transform: scale(1.05);
+                        filter: drop-shadow(0 6px 18px rgba(0,0,0,0.7));
+                    }
+                    #section-featured-channels .content-card-overlay { z-index: 3; }
+                </style>
+            `;
+            return section;
+        }
+
         async function loadContent() {
             const container = document.getElementById('contentContainer');
             container.innerHTML = '';
@@ -5550,21 +5705,16 @@ function wtvMatches(ch, catKey) {
             else if (placeholders.length) placeholders[0].insertAdjacentElement('afterend', worldTvSection);
             else container.appendChild(worldTvSection);
 
-            // Pin the Dale Davidson row right after Kids World — this is a
-            // manual insert (not a Jellyfin collection) so it doesn't go
-            // through the placeholders loop above.
+            // Featured Channels row (Monique Woolley Foundation, Dale Davidson,
+            // eZWayTV) pinned right after Kids World. The old separate Dale and
+            // eZWay rows are now inside this one row.
             const kidsWorldSection = container.querySelector('[data-collection-id="721f4a924b7d17ff69c721701538b3be"]');
-            const daleSection = buildDaleDavidsonSection();
+            const featuredSection = buildFeaturedChannelsSection();
             if (kidsWorldSection) {
-                kidsWorldSection.insertAdjacentElement('afterend', daleSection);
+                kidsWorldSection.insertAdjacentElement('afterend', featuredSection);
             } else {
-                container.appendChild(daleSection);
+                container.appendChild(featuredSection);
             }
-
-            // Pin the eZWayTV row right after Dale's row — same manual-insert
-            // situation, kept next to the other partner/live-stream row.
-            const ezwaySection = buildEZWaySection();
-            daleSection.insertAdjacentElement('afterend', ezwaySection);
 
             // Now load all in parallel — each fills its own pre-placed section
             await Promise.all([
