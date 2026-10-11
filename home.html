@@ -32,7 +32,89 @@
             z-index: 999;
             position: relative;
         }
-    </style>
+    
+    /* ═══ WORLD TV ROW (home page) ═══ */
+    #section-world-tv .wtv-banner {
+        display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+        margin:0 0 14px; padding:16px 20px; border-radius:12px;
+        background:
+          radial-gradient(circle at 92% 20%, rgba(34,197,94,0.22), transparent 45%),
+          radial-gradient(circle at 8% 90%, rgba(255,215,0,0.16), transparent 50%),
+          linear-gradient(120deg, #0b1424 0%, #101c33 55%, #0b1424 100%);
+        border:1px solid rgba(255,215,0,0.25);
+        position:relative; overflow:hidden;
+    }
+    #section-world-tv .wtv-banner::after {
+        content:'🌍'; position:absolute; right:-10px; top:-28px; font-size:150px;
+        opacity:0.08; pointer-events:none;
+        animation: wtvSpin 60s linear infinite;
+    }
+    @keyframes wtvSpin { to { transform: rotate(360deg); } }
+    #section-world-tv .wtv-text { flex:1 1 320px; min-width:0; position:relative; z-index:1; }
+    #section-world-tv .wtv-headline { font-size:1.35rem; font-weight:800; color:#fff; line-height:1.25; }
+    #section-world-tv .wtv-headline b { color:#ffd700; }
+    #section-world-tv .wtv-sub { color:#cbd5e1; font-size:0.95rem; margin-top:4px; }
+    #section-world-tv .wtv-best {
+        display:inline-flex; align-items:center; gap:6px; margin-top:8px;
+        background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.5);
+        color:#4ade80; font-weight:700; font-size:0.8rem; letter-spacing:0.5px;
+        padding:3px 10px; border-radius:20px;
+    }
+    #section-world-tv .wtv-chips { display:flex; flex-wrap:wrap; gap:8px; flex:2 1 420px; position:relative; z-index:1; }
+    #section-world-tv .wtv-chip {
+        display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+        background:rgba(255,255,255,0.06); border:1px solid rgba(255,215,0,0.35);
+        color:#f1f5f9; font-weight:700; font-size:0.9rem;
+        padding:7px 14px; border-radius:22px; white-space:nowrap;
+        flex:0 0 auto; width:auto; min-width:0; max-width:none;
+        transition:all 0.2s ease;
+    }
+    #section-world-tv .wtv-chip:hover, #section-world-tv .wtv-chip:focus {
+        background:#ffd700; color:#0a0f1a; border-color:#ffd700; transform:translateY(-2px);
+        outline:none; box-shadow:0 0 16px rgba(255,215,0,0.45);
+    }
+    #section-world-tv .wtv-row { display:flex; gap:14px; overflow-x:auto; padding:6px 2px 12px; scroll-snap-type:x mandatory; }
+    #section-world-tv .wtv-row::-webkit-scrollbar { height:6px; }
+    #section-world-tv .wtv-row::-webkit-scrollbar-thumb { background:rgba(255,215,0,0.3); border-radius:3px; }
+    #section-world-tv .wtv-card {
+        flex:0 0 220px; scroll-snap-align:start; text-decoration:none;
+        background:#141b2b; border:1px solid rgba(255,255,255,0.08); border-radius:10px;
+        overflow:hidden; position:relative; transition:all 0.25s ease;
+    }
+    #section-world-tv .wtv-card:hover, #section-world-tv .wtv-card:focus {
+        transform:scale(1.05); border-color:#22c55e; outline:none;
+        box-shadow:0 0 24px rgba(34,197,94,0.5), 0 8px 20px rgba(0,0,0,0.5);
+    }
+    #section-world-tv .wtv-logo {
+        aspect-ratio:16/9; display:flex; align-items:center; justify-content:center;
+        background:radial-gradient(circle at 50% 40%, #233150, #0d1322);
+    }
+    #section-world-tv .wtv-logo img { max-width:78%; max-height:72%; object-fit:contain; }
+    #section-world-tv .wtv-abbr { font-size:2rem; font-weight:900; color:rgba(255,215,0,0.6); letter-spacing:2px; }
+    #section-world-tv .wtv-live {
+        position:absolute; top:7px; left:7px; display:flex; align-items:center; gap:5px;
+        background:rgba(0,0,0,0.65); padding:2px 8px; border-radius:12px;
+        font-size:0.68rem; font-weight:800; color:#E8333A; letter-spacing:1px;
+    }
+    #section-world-tv .wtv-live span { width:7px; height:7px; border-radius:50%; background:#E8333A; animation:liveDot 1.2s infinite; }
+    #section-world-tv .wtv-name {
+        padding:8px 10px; color:#f1f5f9; font-weight:700; font-size:0.9rem;
+        white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        border-top:1px solid rgba(255,255,255,0.05);
+    }
+    #section-world-tv .wtv-loading { color:#94a3b8; padding:2rem 1rem; display:flex; align-items:center; gap:12px; }
+    @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
+    @media (max-width:768px) {
+        #section-world-tv .wtv-banner { padding:14px; gap:12px; }
+        #section-world-tv .wtv-headline { font-size:1.05rem; }
+        #section-world-tv .wtv-sub { font-size:0.85rem; }
+        #section-world-tv .wtv-chips { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; flex-basis:100%; width:100%; }
+        #section-world-tv .wtv-chip { flex:0 0 auto !important; }
+        #section-world-tv .wtv-chip { font-size:0.82rem; padding:6px 12px; }
+        #section-world-tv .wtv-card { flex-basis:160px; }
+    }
+    .is-firestick #section-world-tv .wtv-banner::after { animation:none; }
+</style>
     <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
     
     <!-- SEO Meta Tags -->
@@ -5179,6 +5261,136 @@
             }
         }
 
+// ── WORLD TV CATEGORIES (shared by home.html and live-stations.html) ──
+// Each category = words looked for in a station's name / genre. Add words anytime.
+var WTV_CATS = [
+  { key:'spanish', label:'En Español', icon:'🗣️', words:['español','espanol','spanish','latino','latina','telemundo','univision','unimas','azteca','televisa','mexico','méxico','argentina','colombia','chile','peru','perú','venezuela','ecuador','bolivia','uruguay','paraguay','honduras','guatemala','salvador','dominicana','puerto rico','cuba','tve','antena 3','telesur','noticias','novelas','canal 1','canal 2','canal 5','canal 13','caracol','rcn','estrella','tlnovelas','cine latino','deportes','en vivo','tv publica','televisión','televisión'] },
+  { key:'soccer', label:'Soccer', icon:'⚽', words:['soccer','football','fútbol','futbol','goal','fifa','liga','bein','premier league','calcio','bundesliga','serie a','tudn','fc '] },
+  { key:'sports', label:'Sports', icon:'🏆', words:['sport','sports','espn','nba','nfl','mlb','nhl','golf','racing','motor','fight','boxing','wrestling','ufc','tennis','bein','olymp','outdoor','fishing','hunting','fubo','stadium','tudn','deportes','deportivo','soccer','football','fútbol','futbol'] },
+  { key:'news', label:'News', icon:'📰', words:['news','noticias','cnn','bbc','abc','cbs','nbc','fox','bloomberg','cnbc','france 24','dw','euronews','sky','reuters','al jazeera','aljazeera','weather','newsmax','c-span','cspan','ndtv','cgtn','nhk world','trt world','i24','africanews','info','24/7','headline'] },
+  { key:'kids', label:'Cartoons & Kids', icon:'🧸', words:['kids','kid','cartoon','toon','junior','baby','nick','disney','pbs kids','anime','animation','children','infantil','niños','ninos','kartoon','pocoyo','smurf','teletubbies','family','familia'] },
+  { key:'music', label:'Music', icon:'🎵', words:['music','musica','música','mtv','vevo','hits','jazz','hip hop','hiphop','country','gospel','karaoke','rock','pop','r&b','reggae','salsa','banda','concert','radio'] },
+  { key:'movies', label:'Movies', icon:'🎬', words:['movie','movies','cinema','film','films','cine','classic','western','drama','novela','series','tv land'] },
+  { key:'middleeast', label:'Middle East', icon:'🕌', words:['arab','arabic','al jazeera','aljazeera','al arabiya','alarabiya','dubai','abu dhabi','saudi','qatar','kuwait','bahrain','oman','iraq','iran','persian','farsi','turk','trt','lebanon','egypt','mbc','rotana','jordan','syria','israel','i24','kurd','afghan','yemen','palestine'] },
+  { key:'asia', label:'Asia', icon:'🏯', words:['asia','india','hindi','tamil','telugu','punjabi','bangla','bengali','pakistan','urdu','china','chinese','cgtn','cctv','hong kong','taiwan','japan','nhk','korea','kbs','sbs','arirang','philippines','filipino','abs-cbn','gma','thai','vietnam','indonesia','malaysia','singapore','cambodia','nepal','sri lanka','zee','ndtv','aaj tak'] },
+  { key:'international', label:'International', icon:'🌍', words:['international','world','global','france','french','français','german','deutsch','dw','italia','italian','rai','russia','russian','africa','african','nigeria','ghana','kenya','brazil','brasil','portugal','portugu','greek','polska','euro','europe','uk','british','bbc','canada','cbc','australia','caribbean','jamaica','haiti','ireland','netherlands','sweden','norway','spain','españa','cgtn','nhk','arirang','trt','al jazeera','france 24'] }
+];
+function wtvCleanName(n) {
+  return (n || '').replace(/\s*\(\d{3,4}[pi]\)/gi, '').replace(/\s*\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
+}
+function wtvMatches(ch, catKey) {
+  var cat = null;
+  for (var i = 0; i < WTV_CATS.length; i++) if (WTV_CATS[i].key === catKey) cat = WTV_CATS[i];
+  if (!cat) return true;
+  var text = ' ' + ((ch.Name || '') + ' ' + (ch.Genres || []).join(' ') + ' ' + (ch.Tags || []).join(' ')).toLowerCase() + ' ';
+  for (var j = 0; j < cat.words.length; j++) {
+    var w = cat.words[j];
+    if (w.length <= 3) {   // short words must stand alone ("dw", "abc", "uk")
+      if (new RegExp('[^a-z0-9]' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[^a-z0-9]').test(text)) return true;
+    } else if (text.indexOf(w) >= 0) return true;
+  }
+  return false;
+}
+
+        // ── WORLD TV ROW: banner + category buttons + featured stations ──
+        // Featured = well-known stations, in this order (edit freely: part of the name, lowercase).
+        var WTV_FEATURED = ['abc news','cbs news','nbc news','bloomberg','al jazeera english','france 24 english',
+            'dw english','nasa','red bull','telemundo','univision','cnn en espa','tv azteca','bein','nhk world',
+            'arirang','cgtn','trt world','euronews','sky news','cbc news','pbs kids','mtv','cartoon','fifa'];
+        var WTV_MAX = 18;
+
+        function buildWorldTVSection() {
+            var section = document.createElement('section');
+            section.className = 'category-section';
+            section.id = 'section-world-tv';
+            section.setAttribute('data-collection-id', 'world-tv');
+            var chips = WTV_CATS.map(function(c) {
+                return '<a class="wtv-chip" href="live-stations.html?cat=' + c.key + '">' +
+                       '<span>' + c.icon + '</span>' + c.label + '</a>';
+            }).join('');
+            section.innerHTML =
+                '<div class="category-header">' +
+                  '<h3 class="category-title">World TV · Free Live Stations</h3>' +
+                  '<a href="live-stations.html" class="view-all-btn" style="cursor:pointer;">View All <i class="fas fa-arrow-right"></i></a>' +
+                '</div>' +
+                '<div class="wtv-banner">' +
+                  '<div class="wtv-text">' +
+                    '<div class="wtv-headline"><b>2,500+ FREE</b> channels from around the world</div>' +
+                    '<div class="wtv-sub">News, soccer, cartoons, music, TV en Español and more, live 24/7. Pick a category or search them all.</div>' +
+                    '<div class="wtv-best"><i class="fas fa-tv"></i> Best on PC &amp; TV</div>' +
+                  '</div>' +
+                  '<div class="wtv-chips">' + chips + '</div>' +
+                '</div>' +
+                '<div class="wtv-row" id="wtvRow"><div class="wtv-loading"><div class="spinner" style="width:22px;height:22px;border-width:3px;"></div>Tuning in to stations...</div></div>';
+
+            // load the stations only when the row scrolls near the screen (keeps the home page fast)
+            var started = false;
+            function start() { if (!started) { started = true; loadWorldTVFeatured(); } }
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function(entries) {
+                    if (entries.some(function(e) { return e.isIntersecting; })) { io.disconnect(); start(); }
+                }, { rootMargin: '600px' });
+                setTimeout(function() { io.observe(section); }, 0);
+            } else { setTimeout(start, 1500); }
+            return section;
+        }
+
+        async function loadWorldTVFeatured() {
+            var row = document.getElementById('wtvRow');
+            if (!row) return;
+            try {
+                var url = JELLYFIN_CONFIG.SERVER + '/LiveTv/Channels?api_key=' + JELLYFIN_CONFIG.API_KEY +
+                          '&UserId=' + JELLYFIN_CONFIG.USER_ID + '&EnableImages=true&ImageTypeLimit=1&EnableUserData=false&Limit=3000';
+                var ctrl = new AbortController();
+                var t = setTimeout(function() { ctrl.abort(); }, 20000);
+                var res = await fetch(url, { signal: ctrl.signal, credentials: 'omit' });
+                clearTimeout(t);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var data = await res.json();
+                var all = (data.Items || []).filter(function(ch) {
+                    return ch.Name && ch.Name.trim() && ch.Name.toLowerCase() !== 'unknown';
+                });
+                var withLogo = all.filter(function(ch) { return ch.ImageTags && ch.ImageTags.Primary; });
+                var picked = [], seen = {};
+                function add(ch) {
+                    var key = wtvCleanName(ch.Name).toLowerCase();
+                    if (seen[key] || seen['id' + ch.Id] || picked.length >= WTV_MAX) return;
+                    seen[key] = 1; seen['id' + ch.Id] = 1; picked.push(ch);
+                }
+                WTV_FEATURED.forEach(function(want) {
+                    var hit = withLogo.find(function(ch) { return ch.Name.toLowerCase().indexOf(want) >= 0; });
+                    if (hit) add(hit);
+                });
+                // top up with other stations that have a logo (a different mix each visit)
+                var rest = withLogo.slice().sort(function() { return Math.random() - 0.5; });
+                for (var i = 0; i < rest.length && picked.length < WTV_MAX; i++) add(rest[i]);
+                if (!picked.length) { row.innerHTML = '<div class="wtv-loading">Open <a href="live-stations.html" style="color:#ffd700;">all stations</a> to browse.</div>'; return; }
+
+                row.innerHTML = picked.map(function(ch) {
+                    var name = wtvCleanName(ch.Name);
+                    var safe = name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+                    var abbr = name.split(/\s+/).map(function(w) { return w[0] || ''; }).join('').toUpperCase().slice(0, 4);
+                    var img = JELLYFIN_CONFIG.SERVER + '/Items/' + ch.Id + '/Images/Primary?api_key=' + JELLYFIN_CONFIG.API_KEY + '&maxHeight=160&quality=85';
+                    return '<a class="wtv-card" href="movie-frame.html?id=' + ch.Id + '" title="' + safe + '">' +
+                             '<div class="wtv-logo"><img src="' + img + '" alt="' + safe + '" loading="lazy" ' +
+                               'onerror="this.outerHTML=\'<div class=&quot;wtv-abbr&quot;>' + abbr + '</div>\'"></div>' +
+                             '<div class="wtv-live"><span></span>LIVE</div>' +
+                             '<div class="wtv-name">' + safe + '</div>' +
+                           '</a>';
+                }).join('') +
+                '<a class="wtv-card" href="live-stations.html" title="See all stations">' +
+                  '<div class="wtv-logo"><div class="wtv-abbr" style="font-size:1.1rem;color:#ffd700;text-align:center;">SEE ALL<br>' + all.length.toLocaleString() + '<br>STATIONS</div></div>' +
+                  '<div class="wtv-name" style="color:#ffd700;">View All <i class="fas fa-arrow-right"></i></div>' +
+                '</a>';
+                if (document.documentElement.classList.contains('is-firestick') || document.body.classList.contains('is-firestick')) {
+                    row.querySelectorAll('.wtv-card').forEach(function(el) { el.setAttribute('tabindex', '0'); });
+                }
+            } catch (e) {
+                console.error('World TV row failed:', e);
+                row.innerHTML = '<div class="wtv-loading">Stations are busy right now. <a href="live-stations.html" style="color:#ffd700;">Browse all stations</a></div>';
+            }
+        }
+
         // "Las Vegas Tonight TV with Dale Davidson" isn't a Jellyfin
         // collection (it's a standalone live stream page), so it can't go
         // through loadCollectionSection like the others. Built by hand here
@@ -5320,6 +5532,11 @@
                 container.appendChild(section);
                 return section;
             });
+
+            // World TV row: 2nd row on the page so viewers find the free stations
+            const worldTvSection = buildWorldTVSection();
+            if (placeholders.length) placeholders[0].insertAdjacentElement('afterend', worldTvSection);
+            else container.appendChild(worldTvSection);
 
             // Pin the Dale Davidson row right after Kids World — this is a
             // manual insert (not a Jellyfin collection) so it doesn't go
@@ -7766,6 +7983,8 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.mu-event-card',
             '#flmKidsCornerCard',
             '.flm-tv-stations-card',
+            '.wtv-chip',
+            '.wtv-card',
             '.flm-ad-slideshow a',
             '.flm-ad-slideshow span[onclick]',
             '.flm-tv-scroll-btn',
@@ -7857,6 +8076,8 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.floating-btn-kids, ' +
             '#flmKidsCornerCard, ' +
             '.flm-tv-stations-card, ' +
+            '.wtv-chip, ' +
+            '.wtv-card, ' +
             '.flm-ad-slideshow a, ' +
             '.flm-ad-slideshow span[onclick], ' +
             '.view-all-btn, ' +

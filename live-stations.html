@@ -44,6 +44,9 @@ body { background:var(--black); color:var(--text); font-family:'Barlow',sans-ser
 .back-btn { display:inline-flex; align-items:center; gap:8px; background:transparent; border:1px solid rgba(201,168,76,0.3); color:var(--gold); font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; padding:8px 20px; border-radius:2px; text-decoration:none; text-transform:uppercase; transition:all 0.2s; }
 .back-btn:hover { background:rgba(201,168,76,0.1); }
 
+.hero-tip { font-size:13px; color:var(--text-dim); margin:-8px 0 20px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+.best-pill { display:inline-flex; align-items:center; gap:6px; background:rgba(0,230,118,0.12); border:1px solid rgba(0,230,118,0.45); color:var(--live-green); font-family:'Barlow Condensed',sans-serif; font-weight:700; letter-spacing:1px; padding:3px 12px; border-radius:20px; }
+
 /* CONTROLS */
 .controls-bar { display:flex; align-items:center; gap:12px; padding:14px 32px; background:var(--dark2); border-bottom:1px solid rgba(255,255,255,0.04); flex-wrap:wrap; }
 .search-box { display:flex; align-items:center; gap:8px; background:var(--dark3); border:1px solid rgba(201,168,76,0.2); border-radius:3px; padding:8px 14px; flex:1; min-width:200px; max-width:340px; }
@@ -129,6 +132,7 @@ body { background:var(--black); color:var(--text); font-family:'Barlow',sans-ser
   <div class="hero-eyebrow"><i class="fas fa-satellite-dish"></i>&nbsp; CHANNEL 26.5 · LAS VEGAS · WORLDWIDE</div>
   <h1 class="hero-title">LIVE <em>STATIONS</em></h1>
   <div class="hero-sub">2,500+ Free Live Channels • Powered by The Zaina Juliette Vault</div>
+  <div class="hero-tip"><span class="best-pill"><i class="fas fa-tv"></i> Best on PC &amp; TV</span> Free stations come and go. If one doesn't load, just try another.</div>
   <a href="live.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Live TV</a>
 </section>
 
@@ -137,13 +141,8 @@ body { background:var(--black); color:var(--text); font-family:'Barlow',sans-ser
     <i class="fas fa-search"></i>
     <input type="text" id="searchInput" placeholder="Search stations..." oninput="filterChannels()">
   </div>
-  <div class="filter-tabs">
-    <button class="ftab active" onclick="setFilter('all',this)">All</button>
-    <button class="ftab" onclick="setFilter('news',this)">News</button>
-    <button class="ftab" onclick="setFilter('music',this)">Music</button>
-    <button class="ftab" onclick="setFilter('sports',this)">Sports</button>
-    <button class="ftab" onclick="setFilter('movies',this)">Movies</button>
-    <button class="ftab" onclick="setFilter('kids',this)">Kids</button>
+  <div class="filter-tabs" id="filterTabs">
+    <button class="ftab active" data-cat="all" onclick="setFilter('all',this)">🌐 All</button>
   </div>
   <div class="channel-count" id="channelCount">Loading...</div>
 </div>
@@ -175,6 +174,37 @@ const JELLYFIN = {
   userId: '2562494c1df24f8789cd0ad8a38a7bf4'
 };
 
+// ── WORLD TV CATEGORIES (shared by home.html and live-stations.html) ──
+// Each category = words looked for in a station's name / genre. Add words anytime.
+var WTV_CATS = [
+  { key:'spanish', label:'En Español', icon:'🗣️', words:['español','espanol','spanish','latino','latina','telemundo','univision','unimas','azteca','televisa','mexico','méxico','argentina','colombia','chile','peru','perú','venezuela','ecuador','bolivia','uruguay','paraguay','honduras','guatemala','salvador','dominicana','puerto rico','cuba','tve','antena 3','telesur','noticias','novelas','canal 1','canal 2','canal 5','canal 13','caracol','rcn','estrella','tlnovelas','cine latino','deportes','en vivo','tv publica','televisión','televisión'] },
+  { key:'soccer', label:'Soccer', icon:'⚽', words:['soccer','football','fútbol','futbol','goal','fifa','liga','bein','premier league','calcio','bundesliga','serie a','tudn','fc '] },
+  { key:'sports', label:'Sports', icon:'🏆', words:['sport','sports','espn','nba','nfl','mlb','nhl','golf','racing','motor','fight','boxing','wrestling','ufc','tennis','bein','olymp','outdoor','fishing','hunting','fubo','stadium','tudn','deportes','deportivo','soccer','football','fútbol','futbol'] },
+  { key:'news', label:'News', icon:'📰', words:['news','noticias','cnn','bbc','abc','cbs','nbc','fox','bloomberg','cnbc','france 24','dw','euronews','sky','reuters','al jazeera','aljazeera','weather','newsmax','c-span','cspan','ndtv','cgtn','nhk world','trt world','i24','africanews','info','24/7','headline'] },
+  { key:'kids', label:'Cartoons & Kids', icon:'🧸', words:['kids','kid','cartoon','toon','junior','baby','nick','disney','pbs kids','anime','animation','children','infantil','niños','ninos','kartoon','pocoyo','smurf','teletubbies','family','familia'] },
+  { key:'music', label:'Music', icon:'🎵', words:['music','musica','música','mtv','vevo','hits','jazz','hip hop','hiphop','country','gospel','karaoke','rock','pop','r&b','reggae','salsa','banda','concert','radio'] },
+  { key:'movies', label:'Movies', icon:'🎬', words:['movie','movies','cinema','film','films','cine','classic','western','drama','novela','series','tv land'] },
+  { key:'middleeast', label:'Middle East', icon:'🕌', words:['arab','arabic','al jazeera','aljazeera','al arabiya','alarabiya','dubai','abu dhabi','saudi','qatar','kuwait','bahrain','oman','iraq','iran','persian','farsi','turk','trt','lebanon','egypt','mbc','rotana','jordan','syria','israel','i24','kurd','afghan','yemen','palestine'] },
+  { key:'asia', label:'Asia', icon:'🏯', words:['asia','india','hindi','tamil','telugu','punjabi','bangla','bengali','pakistan','urdu','china','chinese','cgtn','cctv','hong kong','taiwan','japan','nhk','korea','kbs','sbs','arirang','philippines','filipino','abs-cbn','gma','thai','vietnam','indonesia','malaysia','singapore','cambodia','nepal','sri lanka','zee','ndtv','aaj tak'] },
+  { key:'international', label:'International', icon:'🌍', words:['international','world','global','france','french','français','german','deutsch','dw','italia','italian','rai','russia','russian','africa','african','nigeria','ghana','kenya','brazil','brasil','portugal','portugu','greek','polska','euro','europe','uk','british','bbc','canada','cbc','australia','caribbean','jamaica','haiti','ireland','netherlands','sweden','norway','spain','españa','cgtn','nhk','arirang','trt','al jazeera','france 24'] }
+];
+function wtvCleanName(n) {
+  return (n || '').replace(/\s*\(\d{3,4}[pi]\)/gi, '').replace(/\s*\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
+}
+function wtvMatches(ch, catKey) {
+  var cat = null;
+  for (var i = 0; i < WTV_CATS.length; i++) if (WTV_CATS[i].key === catKey) cat = WTV_CATS[i];
+  if (!cat) return true;
+  var text = ' ' + ((ch.Name || '') + ' ' + (ch.Genres || []).join(' ') + ' ' + (ch.Tags || []).join(' ')).toLowerCase() + ' ';
+  for (var j = 0; j < cat.words.length; j++) {
+    var w = cat.words[j];
+    if (w.length <= 3) {   // short words must stand alone ("dw", "abc", "uk")
+      if (new RegExp('[^a-z0-9]' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[^a-z0-9]').test(text)) return true;
+    } else if (text.indexOf(w) >= 0) return true;
+  }
+  return false;
+}
+
 let allChannels = [];
 let currentFilter = 'all';
 
@@ -185,7 +215,7 @@ async function loadChannels() {
   document.getElementById('channelGrid').style.display = 'none';
 
   try {
-    const url = `${JELLYFIN.server}/LiveTv/Channels?api_key=${JELLYFIN.apiKey}&UserId=${JELLYFIN.userId}&Limit=2507&EnableImages=true&ImageTypeLimit=1&Fields=Overview,Genres`;
+    const url = `${JELLYFIN.server}/LiveTv/Channels?api_key=${JELLYFIN.apiKey}&UserId=${JELLYFIN.userId}&Limit=5000&EnableImages=true&ImageTypeLimit=1&Fields=Overview,Genres,Tags`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('API error: ' + res.status);
     const data = await res.json();
@@ -209,17 +239,11 @@ function renderChannels(channels) {
   const grid = document.getElementById('channelGrid');
   grid.innerHTML = '';
 
-  const visible = channels.filter(ch => {
-    if (currentFilter === 'all') return true;
-    const name = (ch.Name || '').toLowerCase();
-    const genres = (ch.Genres || []).join(' ').toLowerCase();
-    const combined = name + ' ' + genres;
-    return combined.includes(currentFilter);
-  });
+  const visible = channels.filter(ch => currentFilter === 'all' || wtvMatches(ch, currentFilter));
 
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
   const filtered = query
-    ? visible.filter(ch => (ch.Name || '').toLowerCase().includes(query))
+    ? visible.filter(ch => ((ch.Name || '') + ' ' + (ch.Genres || []).join(' ')).toLowerCase().includes(query))
     : visible;
 
   document.getElementById('channelCount').textContent = filtered.length + ' stations';
@@ -231,7 +255,7 @@ function renderChannels(channels) {
 
   filtered.forEach(ch => {
     const id = ch.Id;
-    const name = ch.Name || 'Unknown';
+    const name = wtvCleanName(ch.Name) || 'Unknown';
     const number = ch.ChannelNumber || '';
     // Route through our own movie-frame.html wrapper (same pattern as every
     // other click-to-play on the site) instead of linking straight to the
@@ -274,9 +298,35 @@ function renderChannels(channels) {
 // ── FILTER ────────────────────────────────────────────────────
 function setFilter(filter, btn) {
   currentFilter = filter;
-  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.ftab').forEach(b => b.classList.toggle('active', b.getAttribute('data-cat') === filter));
+  // keep the address bar in step, so the page can be shared or bookmarked per category
+  try {
+    const u = new URL(location.href);
+    if (filter === 'all') u.searchParams.delete('cat'); else u.searchParams.set('cat', filter);
+    history.replaceState(null, '', u);
+  } catch (e) {}
   renderChannels(allChannels);
+}
+
+function buildFilterTabs() {
+  const box = document.getElementById('filterTabs');
+  WTV_CATS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'ftab';
+    b.setAttribute('data-cat', c.key);
+    b.textContent = c.icon + ' ' + c.label;
+    b.onclick = function() { setFilter(c.key, b); };
+    box.appendChild(b);
+  });
+  // open straight to a category / search from the home page: live-stations.html?cat=soccer or ?q=bbc
+  const params = new URLSearchParams(location.search);
+  const cat = params.get('cat');
+  if (cat && WTV_CATS.some(c => c.key === cat)) {
+    currentFilter = cat;
+    document.querySelectorAll('.ftab').forEach(x => x.classList.toggle('active', x.getAttribute('data-cat') === cat));
+  }
+  const q = params.get('q');
+  if (q) document.getElementById('searchInput').value = q;
 }
 
 function filterChannels() {
@@ -289,6 +339,7 @@ function abbr(name) {
 }
 
 // ── INIT ──────────────────────────────────────────────────────
+buildFilterTabs();
 loadChannels();
 </script>
 
