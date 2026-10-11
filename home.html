@@ -3125,7 +3125,6 @@
                 <div class="ec-pair">
                 <!-- LAS VEGAS TONIGHT TV / DALE DAVIDSON FEATURED CHANNEL CARD -->
                     <div onclick="openDaleCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 30% 30%, #2a0d0d 0%, #07070A 75%);overflow:hidden;">
-                        <div class="mu-event-badge" style="background:rgba(201,168,76,0.92);color:#000;left:auto;right:10px;"><div class="live-dot" style="background:#000;"></div> FEATURED CHANNEL</div>
                         <video id="daleCardVideo" muted defaultmuted autoplay playsinline
                             style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.4;z-index:1;pointer-events:none;"
                             onerror="this.style.display='none';document.getElementById('daleCardFallback').style.display='block';"
@@ -3135,6 +3134,7 @@
                              alt="Las Vegas Tonight TV with Dale Davidson" onerror="this.style.display='none'">
                         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.9) 20%,rgba(5,10,30,0.25) 100%);z-index:2;"></div>
                         <div style="position:relative;z-index:5;padding:10px 14px;width:100%;">
+                            <div class="mu-event-badge in-flow" style="background:rgba(201,168,76,0.92);color:#000;left:auto;right:10px;"><div class="live-dot" style="background:#000;"></div> FEATURED CHANNEL</div>
                             <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">LAS VEGAS TONIGHT TV</div>
                             <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">WITH DALE DAVIDSON</div>
                         </div>
@@ -3146,7 +3146,6 @@
 
                 <!-- MONIQUE WOOLLEY FOUNDATION FEATURED CHANNEL CARD -->
                     <div onclick="window.location.href='monique-woolley-foundation.html'" class="mu-event-card mwf-event-card" style="text-decoration:none;cursor:pointer;">
-                        <div class="mu-event-badge" style="background:linear-gradient(90deg,#ffd60a,#f5c542);color:#0a1a5c;border-color:rgba(29,63,216,0.6);"><div class="live-dot" style="background:#1d3fd8;"></div> FEATURED</div>
                         <img src="assets/mwf/monique-angel.webp"
                              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 22%;opacity:0.7;pointer-events:none;z-index:1;"
                              alt="The Monique Woolley Foundation" onerror="this.style.display='none'">
@@ -3154,6 +3153,7 @@
                         <div class="mwf-flutter" aria-hidden="true"><span>🦋</span><span>🦋</span><span>🦋</span></div>
                         <div class="mwf-countdown" id="mwfCountdown" title="6th Annual WFBTY Gala · Dec 6"><span class="n" id="mwfCdNum">--</span><span class="l" id="mwfCdLbl">DAYS TO<br>THE GALA</span></div>
                         <div style="position:relative;z-index:5;padding:8px 14px;width:100%;">
+                            <div class="mu-event-badge in-flow" style="background:linear-gradient(90deg,#ffd60a,#f5c542);color:#0a1a5c;border-color:rgba(29,63,216,0.6);"><div class="live-dot" style="background:#1d3fd8;"></div> FEATURED</div>
                             <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd60a;line-height:1;text-shadow:0 0 18px rgba(255,214,10,0.6);">THE MONIQUE WOOLLEY FOUNDATION</div>
                             <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">WHEN FEELING <span style="color:#8fb0ff;">BLUE</span>, THINK <span style="color:#ffd60a;">YELLOW</span></div>
                         </div>
@@ -3315,7 +3315,9 @@
     .ec-pair .mu-event-card { aspect-ratio: 226 / 171; }
     .ec-pair .mu-watch { display:none !important; }
     .ec-pair .mu-event-card:hover { transform: scale(1.03); }
-    .ec-pair .mwf-countdown { top: 38px; right: 10px; }
+    /* FEATURED badges sit just above the titles, keeping faces clear */
+    .ec-pair .mu-event-badge.in-flow { position:static !important; display:inline-flex; margin:0 0 6px 0; }
+    .ec-pair .mwf-countdown { top: 9px; right: 10px; }
     @media (max-width: 768px) {
         .ec-pair { grid-template-columns:1fr; }
         .ec-pair .mu-event-card { aspect-ratio: 460 / 171; }
@@ -5600,11 +5602,14 @@ function wtvMatches(ch, catKey) {
                 </div>
                 <div class="content-carousel">
                     <div class="content-card fc-mwf" onclick="window.location.href='monique-woolley-foundation.html'">
-                        <img src="assets/mwf/mwf-poster.webp" alt="The Monique Woolley Foundation" class="content-card-image" loading="lazy">
-                        <div style="position:absolute;top:6px;left:6px;display:flex;align-items:center;gap:5px;background:rgba(10,26,92,0.85);border:1px solid rgba(255,214,10,0.6);padding:3px 9px;border-radius:12px;z-index:4;">
-                            <span style="font-size:0.7rem;">🦋</span>
-                            <span style="font-size:0.66rem;font-weight:800;color:#ffd60a;letter-spacing:1px;">GALA DEC 6</span>
+                        <div class="fc-mwf-fallback">
+                            <div class="b">🦋</div>
+                            <div class="t">THE MONIQUE<br>WOOLLEY<br>FOUNDATION</div>
+                            <div class="s">When Feeling <span>Blue</span>,<br>Think Yellow</div>
                         </div>
+                        <img src="assets/mwf/MWFposter1.jpg" alt="" class="content-card-image fc-mwf-img" loading="lazy"
+                             onerror="if(!this.dataset.f){this.dataset.f=1;this.src='assets/mwf/mwf-poster.webp'}else{this.style.display='none'}">
+                        <div class="fc-mwf-tag"><span>🦋</span> GALA DEC 6</div>
                         <div class="content-card-overlay">
                             <div class="content-card-title">The Monique Woolley Foundation</div>
                             <div class="content-card-info">When Feeling Blue, Think Yellow</div>
@@ -5632,6 +5637,14 @@ function wtvMatches(ch, catKey) {
                     @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
                     #section-featured-channels .content-card { overflow: hidden; border-radius: 8px; }
                     #section-featured-channels .fc-mwf { box-shadow: 0 0 18px rgba(255,214,10,0.35), 0 0 22px rgba(29,63,216,0.35); }
+                    #section-featured-channels .fc-mwf { position: relative; min-height: 300px; background: radial-gradient(circle at 50% 30%, #1d3fd8 0%, #0a1a5c 55%, #050a1f 100%); }
+                    #section-featured-channels .fc-mwf-fallback { position: absolute; inset: 0; z-index: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px; gap: 8px; }
+                    #section-featured-channels .fc-mwf-fallback .b { font-size: 2.6rem; filter: drop-shadow(0 0 12px rgba(255,214,10,0.8)); }
+                    #section-featured-channels .fc-mwf-fallback .t { font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 1.6rem; line-height: 1.05; letter-spacing: 1.5px; color: #ffd60a; text-shadow: 0 0 14px rgba(255,214,10,0.5); }
+                    #section-featured-channels .fc-mwf-fallback .s { font-size: 0.8rem; color: #fff; font-weight: 700; }
+                    #section-featured-channels .fc-mwf-fallback .s span { color: #8fb0ff; }
+                    #section-featured-channels .fc-mwf-img { position: relative; z-index: 1; }
+                    #section-featured-channels .fc-mwf-tag { position: absolute; top: 6px; left: 6px; z-index: 4; display: flex; align-items: center; gap: 5px; background: rgba(10,26,92,0.88); border: 1px solid rgba(255,214,10,0.6); padding: 3px 9px; border-radius: 12px; font-size: 0.66rem; font-weight: 800; color: #ffd60a; letter-spacing: 1px; }
                     /* eZWay logo is wide: blurred copy fills the card, real logo sits on top uncropped */
                     #section-featured-channels .ezway-card-fill {
                         position: absolute; inset: 0; z-index: 0;
