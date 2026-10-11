@@ -148,6 +148,29 @@ a { color:inherit; }
 .vcard .cap { z-index:2; }
 .coming { grid-column:1/-1; text-align:center; padding:28px; border:1px dashed rgba(255,214,10,0.35); border-radius:14px; color:var(--dim); }
 
+
+/* Watch: big and first */
+.watch-section { padding-top:36px; }
+.watch-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.watch-count { color:var(--yellow); font-weight:800; letter-spacing:1px; font-size:0.9rem; }
+.watch-grid { grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:18px; }
+.watch-grid .vcard:first-child { grid-column:span 2; grid-row:span 2; }
+.watch-grid .vcard:first-child .cap { font-size:1.25rem; padding:40px 18px 16px; }
+.watch-grid .vcard:first-child .play { width:78px; height:78px; font-size:1.6rem; }
+.watch-grid .vcard .cap span { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+/* Gallery: compact strip */
+.sec-title.small { font-size:1.3rem; }
+.gstrip { display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px; scroll-snap-type:x mandatory; }
+.gstrip .vcard { flex:0 0 200px; aspect-ratio:16/10; scroll-snap-align:start; }
+.gstrip .vcard.tall { flex-basis:150px; aspect-ratio:2/3; }
+.gstrip .vcard .cap { font-size:0.78rem; padding:18px 10px 8px; }
+.gstrip::-webkit-scrollbar { height:6px; } .gstrip::-webkit-scrollbar-thumb { background:rgba(255,214,10,0.3); border-radius:3px; }
+@media (max-width:760px) {
+  .watch-grid { grid-template-columns:1fr; }
+  .watch-grid .vcard:first-child { grid-column:auto; grid-row:auto; }
+  .gstrip .vcard { flex-basis:150px; }
+}
+
 /* lightbox */
 .lightbox { position:fixed; inset:0; z-index:500; background:rgba(2,5,15,0.94); display:none; align-items:center; justify-content:center; padding:24px; }
 .lightbox.open { display:flex; }
@@ -244,6 +267,16 @@ footer a { color:var(--gold); text-decoration:none; }
 
 <main class="wrap">
 
+  <!-- VIDEOS: the heart of the channel -->
+  <section class="section watch-section" id="videos">
+    <div class="watch-head">
+      <h2 class="sec-title"><span class="bf">🦋</span> On This Channel</h2>
+      <span class="watch-count" id="watchCount"></span>
+    </div>
+    <p class="sec-lead">Real stories of hope, healing and courage from the Circle of Healing family, the galas, and the heroes who serve.</p>
+    <div class="vgrid watch-grid" id="videoGrid"><div class="coming">🦋 Loading the channel…</div></div>
+  </section>
+
   <!-- IT'S OKAY NOT TO BE OK -->
   <section class="section">
     <div class="ok-band">
@@ -259,12 +292,8 @@ footer a { color:var(--gold); text-decoration:none; }
     </div>
   </section>
 
-  <!-- VIDEOS -->
-  <section class="section" id="videos">
-    <h2 class="sec-title"><span class="bf">🦋</span> Watch</h2>
-    <p class="sec-lead">Stories of hope, healing and remembrance from the Circle of Healing family.</p>
-    <div class="vgrid" id="videoGrid"></div>
-  </section>
+
+
 
   <!-- HONORING HEROES -->
   <section class="section">
@@ -289,12 +318,12 @@ footer a { color:var(--gold); text-decoration:none; }
     </div>
   </section>
 
-  <!-- GALLERY -->
+  <!-- GALLERY (small strip) -->
   <section class="section">
-    <h2 class="sec-title"><span class="bf">✨</span> Gallery</h2>
-    <p class="sec-lead">Artwork for the Circle of Healing and the 6th Annual Gala.</p>
-    <div class="vgrid" id="galleryGrid"></div>
+    <h2 class="sec-title small"><span class="bf">✨</span> Gallery</h2>
+    <div class="gstrip" id="galleryGrid"></div>
   </section>
+
 
   <div class="closing">
     <div class="script">Let's keep hope alive</div>
@@ -357,13 +386,18 @@ var JELLYFIN = {
   apiKey: '62131ee22c0141c6b651be75a7444350',
   userId: '2562494c1df24f8789cd0ad8a38a7bf4'
 };
-var MWF_COLLECTION_ID = 'c05101ea19b31952ff91c8f3c632fe73';   // The Monique Woolley Foundation videos in Jellyfin
+var MWF_COLLECTION_ID = '71622c31aaf739f17d0eda118ab0d703';   // The Monique Woolley Foundation videos in Jellyfin
 
 // Extra videos can still be listed by hand (shown before the Jellyfin ones).
 // For a Jellyfin video use:  { title:'...', thumb:'...', jellyfinId:'abc123' }
 var VIDEOS = [
   // { title:'When Feeling Blue Think Yellow', thumb:'assets/mwf/zaina-pegasus.webp', src:'assets/mwf/promo.mp4' },
 ];
+
+// FLYERS: drop them into assets/mwf named flyer1.jpg, flyer2.jpg ... flyer20.jpg
+// (or .png). They show first, in number order. Missing numbers are skipped.
+var FLYERS = [];
+for (var n = 1; n <= 20; n++) FLYERS.push({ title:'', src:'assets/mwf/flyer' + n + '.jpg', alt:'assets/mwf/flyer' + n + '.png', tall:true });
 
 var GALLERY = [
   { title:'6th Annual Fundraising Gala', src:'assets/mwf/gala-poster.jpg', tall:true },
@@ -475,19 +509,29 @@ function cleanTitle(t) {
 
 async function loadJellyfinVideos() {
   if (!MWF_COLLECTION_ID) return [];
-  var url = JELLYFIN.server + '/Users/' + JELLYFIN.userId + '/Items?api_key=' + JELLYFIN.apiKey +
-            '&ParentId=' + MWF_COLLECTION_ID + '&Recursive=true&MediaTypes=Video&IsFolder=false' +
-            '&SortBy=PremiereDate,DateCreated,SortName&SortOrder=Descending&Fields=Overview&EnableImageTypes=Primary,Thumb,Backdrop';
-  var res = await fetch(url, { credentials: 'omit' });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  var data = await res.json();
-  return (data.Items || []).map(function(it) {
+  var common = 'ParentId=' + MWF_COLLECTION_ID + '&Recursive=true&MediaTypes=Video&IsFolder=false' +
+               '&SortBy=DateCreated,SortName&SortOrder=Descending&Fields=Path&api_key=' + JELLYFIN.apiKey;
+  // 1) same way Kids Corner / eZWay load (as the viewer user)
+  var items = [];
+  try {
+    var r1 = await fetch(JELLYFIN.server + '/Users/' + JELLYFIN.userId + '/Items?' + common);
+    if (r1.ok) items = (await r1.json()).Items || [];
+  } catch (e) { console.warn('MWF videos (user):', e); }
+  // 2) if the viewer user can't see her library yet, ask Jellyfin directly
+  if (!items.length) {
+    try {
+      var r2 = await fetch(JELLYFIN.server + '/Items?' + common);
+      if (r2.ok) items = (await r2.json()).Items || [];
+    } catch (e) { console.warn('MWF videos (direct):', e); }
+  }
+  console.log('MWF videos found:', items.length);
+  return items.map(function(it) {
     var tag = it.ImageTags || {};
-    var type = tag.Thumb ? 'Thumb' : (tag.Primary ? 'Primary' : ((it.BackdropImageTags || []).length ? 'Backdrop' : null));
+    var type = tag.Primary ? 'Primary' : (tag.Thumb ? 'Thumb' : ((it.BackdropImageTags || []).length ? 'Backdrop' : null));
     return {
       title: cleanTitle(it.Name),
       jellyfinId: it.Id,
-      thumb: type ? (JELLYFIN.server + '/Items/' + it.Id + '/Images/' + type + '?api_key=' + JELLYFIN.apiKey + '&maxWidth=640&quality=82') : null
+      thumb: type ? (JELLYFIN.server + '/Items/' + it.Id + '/Images/' + type + '?maxWidth=720&quality=85&api_key=' + JELLYFIN.apiKey) : null
     };
   });
 }
@@ -495,27 +539,34 @@ async function loadJellyfinVideos() {
 (async function() {
   var vg = document.getElementById('videoGrid');
   try { VIDEOS = VIDEOS.concat(await loadJellyfinVideos()); } catch (e) { console.error('Jellyfin videos:', e); }
+  vg.innerHTML = '';
+  var wc = document.getElementById('watchCount'); if (wc && VIDEOS.length) wc.textContent = VIDEOS.length + ' VIDEOS';
   if (!VIDEOS.length) {
     vg.innerHTML = '<div class="coming">🦋 New videos are on the way. Check back soon, and join us live on December 6.</div>';
   } else {
     VIDEOS.forEach(function(v) {
       var a = document.createElement('a');
       a.className = 'vcard'; a.href = v.jellyfinId ? ('movie-frame.html?id=' + v.jellyfinId) : '#';
-      a.innerHTML = '<img src="' + esc(v.thumb || 'assets/mwf/wfbty-logo.webp') + '" onerror="this.src=\'assets/mwf/wfbty-logo.webp\'" alt="" loading="lazy"><div class="play"><i class="fas fa-play"></i></div><div class="cap">' + esc(v.title) + '</div>';
+      a.innerHTML = '<img src="' + esc(v.thumb || 'assets/mwf/wfbty-logo.webp') + '" onerror="this.src=\'assets/mwf/wfbty-logo.webp\'" alt="" loading="lazy"><div class="play"><i class="fas fa-play"></i></div><div class="cap"><span>' + esc(v.title) + '</span></div>';
       if (!v.jellyfinId) a.onclick = function(e) { e.preventDefault(); openLightbox('<video src="' + esc(v.src) + '" controls autoplay playsinline></video>'); };
       vg.appendChild(a);
     });
   }
   var gg = document.getElementById('galleryGrid');
-  GALLERY.forEach(function(g) {
+  FLYERS.concat(GALLERY).forEach(function(g) {
     var src = encodeURI(g.src);
     var a = document.createElement('a');
     a.className = 'vcard' + (g.tall ? ' tall' : ''); a.href = '#';
     a.innerHTML = (g.tall ? '<div class="blurfill" style="background-image:url(\'' + esc(src) + '\')"></div>' : '') +
-      '<img src="' + esc(src) + '" alt="' + esc(g.title) + '" loading="lazy"><div class="cap">' + esc(g.title) + '</div>';
+      '<img src="' + esc(src) + '" alt="' + esc(g.title || 'Flyer') + '" loading="lazy">' + (g.title ? '<div class="cap">' + esc(g.title) + '</div>' : '');
     var img = a.querySelector('img');
-    img.onerror = function() { a.remove(); };            // picture not uploaded -> hide its card
-    a.onclick = function(e) { e.preventDefault(); openLightbox('<img src="' + esc(src) + '" alt="' + esc(g.title) + '">'); };
+    img.onerror = function() {                             // picture not uploaded -> try .png, else hide its card
+      if (g.alt && !img.dataset.triedAlt) {
+        img.dataset.triedAlt = '1'; src = encodeURI(g.alt); img.src = src;
+        var bf = a.querySelector('.blurfill'); if (bf) bf.style.backgroundImage = "url('" + src + "')";
+      } else a.remove();
+    };
+    a.onclick = function(e) { e.preventDefault(); openLightbox('<img src="' + esc(src) + '" alt="' + esc(g.title || 'Flyer') + '">'); };
     gg.appendChild(a);
   });
 })();
