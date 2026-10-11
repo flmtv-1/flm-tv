@@ -5271,9 +5271,18 @@ var WTV_CATS = [
   { key:'kids', label:'Cartoons & Kids', icon:'🧸', words:['kids','kid','cartoon','toon','junior','baby','nick','disney','pbs kids','anime','animation','children','infantil','niños','ninos','kartoon','pocoyo','smurf','teletubbies','family','familia'] },
   { key:'music', label:'Music', icon:'🎵', words:['music','musica','música','mtv','vevo','hits','jazz','hip hop','hiphop','country','gospel','karaoke','rock','pop','r&b','reggae','salsa','banda','concert','radio'] },
   { key:'movies', label:'Movies', icon:'🎬', words:['movie','movies','cinema','film','films','cine','classic','western','drama','novela','series','tv land'] },
+  { key:'classic', label:'Classic TV', icon:'📺', words:['classic','retro','vintage','oldies','nostalgia','western','westerns','golden','throwback','tv land','metv','me tv','antenna tv','decades','rewind','black & white','70s','80s','90s'] },
+  { key:'comedy', label:'Comedy', icon:'😂', words:['comedy','comedia','funny','laugh','humor','humour','sitcom','stand-up','standup','jokes','comic'] },
+  { key:'faith', label:'Faith & Gospel', icon:'⛪', words:['gospel','church','christian','faith','jesus','god','bible','catholic','ewtn','tbn','daystar','worship','praise','ministry','ministries','evangel','iglesia','cristo','cristiana','dios','islam','quran','muslim','hindu','buddh','torah','jewish','prayer','hope','miracle'] },
+  { key:'docs', label:'Documentaries & Science', icon:'🔭', words:['documentary','documentaries','docu','science','nasa','space','nature','wild','wildlife','animal','history','discovery','geographic','explore','planet','earth','ocean','learn','education','knowledge','smithsonian','curiosity'] },
+  { key:'food', label:'Food & Travel', icon:'🍳', words:['food','cook','cooking','kitchen','chef','cuisine','recipe','travel','tourism','voyage','adventure','home & garden','lifestyle','fashion','style','beauty','home'] },
+  { key:'business', label:'Business', icon:'💼', words:['business','bloomberg','cnbc','finance','financial','money','market','markets','stock','economy','economic','fox business','yahoo finance','wall street','invest','trading','crypto'] },
   { key:'middleeast', label:'Middle East', icon:'🕌', words:['arab','arabic','al jazeera','aljazeera','al arabiya','alarabiya','dubai','abu dhabi','saudi','qatar','kuwait','bahrain','oman','iraq','iran','persian','farsi','turk','trt','lebanon','egypt','mbc','rotana','jordan','syria','israel','i24','kurd','afghan','yemen','palestine'] },
   { key:'asia', label:'Asia', icon:'🏯', words:['asia','india','hindi','tamil','telugu','punjabi','bangla','bengali','pakistan','urdu','china','chinese','cgtn','cctv','hong kong','taiwan','japan','nhk','korea','kbs','sbs','arirang','philippines','filipino','abs-cbn','gma','thai','vietnam','indonesia','malaysia','singapore','cambodia','nepal','sri lanka','zee','ndtv','aaj tak'] },
-  { key:'international', label:'International', icon:'🌍', words:['international','world','global','france','french','français','german','deutsch','dw','italia','italian','rai','russia','russian','africa','african','nigeria','ghana','kenya','brazil','brasil','portugal','portugu','greek','polska','euro','europe','uk','british','bbc','canada','cbc','australia','caribbean','jamaica','haiti','ireland','netherlands','sweden','norway','spain','españa','cgtn','nhk','arirang','trt','al jazeera','france 24'] }
+  { key:'africa', label:'Africa', icon:'🌍', words:['africa','african','nigeria','nigerian','ghana','kenya','south africa','ethiopia','uganda','tanzania','senegal','cameroon','zimbabwe','zambia','rwanda','congo','ivory coast','morocco','algeria','tunisia','nollywood','afro','arise','channels tv','sabc','nta','ktn','citizen tv'] },
+  { key:'europe', label:'Europe', icon:'🏰', words:['europe','euro','uk','british','bbc','itv','france','french','français','germany','german','deutsch','italy','italia','italian','rai','spain','españa','rtve','portugal','portugu','netherlands','dutch','belgium','swiss','austria','sweden','norway','denmark','finland','poland','polska','greece','greek','ireland','irish','rte','scotland','ukraine','czech','hungary','romania','serbia','croatia'] },
+  { key:'caribbean', label:'Caribbean', icon:'🌴', words:['caribbean','jamaica','jamaican','haiti','haitian','trinidad','tobago','barbados','bahamas','dominica','grenada','st lucia','saint lucia','cayman','aruba','curacao','curaçao','puerto rico','cuba','dominicana','reggae','soca','calypso'] },
+  { key:'international', label:'International', icon:'🌐', words:['international','world','global','france','french','français','german','deutsch','dw','italia','italian','rai','russia','russian','africa','african','nigeria','ghana','kenya','brazil','brasil','portugal','portugu','greek','polska','euro','europe','uk','british','bbc','canada','cbc','australia','caribbean','jamaica','haiti','ireland','netherlands','sweden','norway','spain','españa','cgtn','nhk','arirang','trt','al jazeera','france 24'] }
 ];
 function wtvCleanName(n) {
   return (n || '').replace(/\s*\(\d{3,4}[pi]\)/gi, '').replace(/\s*\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
@@ -5533,9 +5542,12 @@ function wtvMatches(ch, catKey) {
                 return section;
             });
 
-            // World TV row: 2nd row on the page so viewers find the free stations
+            // World TV row: free stations, under AWESOME TV SHOWS
             const worldTvSection = buildWorldTVSection();
-            if (placeholders.length) placeholders[0].insertAdjacentElement('afterend', worldTvSection);
+            // placed right under AWESOME TV SHOWS (falls back to the 2nd row if that row is ever removed)
+            const awesomeTvSection = container.querySelector('[data-collection-id="2bf52839930529f99103629d73a7eddf"]');
+            if (awesomeTvSection) awesomeTvSection.insertAdjacentElement('afterend', worldTvSection);
+            else if (placeholders.length) placeholders[0].insertAdjacentElement('afterend', worldTvSection);
             else container.appendChild(worldTvSection);
 
             // Pin the Dale Davidson row right after Kids World — this is a
