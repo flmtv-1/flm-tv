@@ -1,35 +1,134 @@
 {
-  "2026-10-11": [
+  "2026-10-14": [
     {
-      "startTime": "05:31",
-      "name": "Sesame Street",
+      "startTime": "18:22",
+      "name": "Pepito Chickeeto",
       "path": "",
-      "duration": 3205,
+      "duration": 383,
       "inPoint": 0,
-      "outPoint": 3205,
+      "outPoint": 383,
       "category": "show"
     },
     {
-      "startTime": "06:24",
-      "name": "LazyTown",
+      "startTime": "18:28",
+      "name": "Chilly Willy",
       "path": "",
-      "duration": 1419,
+      "duration": 365,
       "inPoint": 0,
-      "outPoint": 1419,
+      "outPoint": 365,
       "category": "show"
     },
     {
-      "startTime": "06:48",
-      "name": "Sesame Street 2",
+      "startTime": "18:34",
+      "name": "Woody",
       "path": "",
-      "duration": 3355,
+      "duration": 372,
       "inPoint": 0,
-      "outPoint": 3355,
+      "outPoint": 372,
       "category": "show"
     },
     {
-      "startTime": "07:44",
-      "name": "Super Why!",
+      "startTime": "18:41",
+      "name": "Witty Kitty",
+      "path": "",
+      "duration": 374,
+      "inPoint": 0,
+      "outPoint": 374,
+      "category": "show"
+    },
+    {
+      "startTime": "18:47",
+      "name": "Good Times",
+      "path": "",
+      "duration": 1517,
+      "inPoint": 0,
+      "outPoint": 1517,
+      "category": "show"
+    },
+    {
+      "startTime": "19:12",
+      "name": "Malcolm in the Middle",
+      "path": "",
+      "duration": 1340,
+      "inPoint": 0,
+      "outPoint": 1340,
+      "category": "show"
+    },
+    {
+      "startTime": "19:35",
+      "name": "Ashwater1-B.mp4",
+      "path": "",
+      "duration": 25,
+      "inPoint": 0,
+      "outPoint": 25,
+      "category": "commercial"
+    },
+    {
+      "startTime": "19:35",
+      "name": "That 70s Show",
+      "path": "",
+      "duration": 1332,
+      "inPoint": 0,
+      "outPoint": 1332,
+      "category": "show"
+    },
+    {
+      "startTime": "19:57",
+      "name": "Assassins-Creed",
+      "path": "",
+      "duration": 6930,
+      "inPoint": 0,
+      "outPoint": 6930,
+      "category": "movie"
+    },
+    {
+      "startTime": "21:53",
+      "name": "The X-Files",
+      "path": "",
+      "duration": 2711,
+      "inPoint": 0,
+      "outPoint": 2711,
+      "category": "show"
+    },
+    {
+      "startTime": "22:38",
+      "name": "Au Revoir Les Enfants",
+      "path": "",
+      "duration": 6300,
+      "inPoint": 0,
+      "outPoint": 6300,
+      "category": "movie"
+    },
+    {
+      "startTime": "00:23",
+      "name": "STAR WARS III",
+      "path": "",
+      "duration": 8406,
+      "inPoint": 0,
+      "outPoint": 8406,
+      "category": "movie"
+    },
+    {
+      "startTime": "02:43",
+      "name": "Sharknado 2",
+      "path": "",
+      "duration": 5701,
+      "inPoint": 0,
+      "outPoint": 5701,
+      "category": "movie"
+    },
+    {
+      "startTime": "04:18",
+      "name": "The Twilight Zone",
+      "path": "",
+      "duration": 1569,
+      "inPoint": 0,
+      "outPoint": 1569,
+      "category": "show"
+    },
+    {
+      "startTime": "04:44",
+      "name": "The Twilight Zone 2",
       "path": "",
       "duration": 1547,
       "inPoint": 0,
@@ -37,44 +136,17 @@
       "category": "show"
     },
     {
-      "startTime": "08:09",
-      "name": "Nature.Cat",
+      "startTime": "05:10",
+      "name": "The Twilight Zone 3",
       "path": "",
-      "duration": 1441,
+      "duration": 1547,
       "inPoint": 0,
-      "outPoint": 1441,
+      "outPoint": 1547,
       "category": "show"
     },
     {
-      "startTime": "08:33",
-      "name": "WordWorld",
-      "path": "",
-      "duration": 1628,
-      "inPoint": 0,
-      "outPoint": 1628,
-      "category": "show"
-    },
-    {
-      "startTime": "09:00",
-      "name": "Ready Jet Go!",
-      "path": "",
-      "duration": 3152,
-      "inPoint": 0,
-      "outPoint": 3152,
-      "category": "show"
-    },
-    {
-      "startTime": "09:53",
-      "name": "Mister Ed",
-      "path": "",
-      "duration": 1325,
-      "inPoint": 0,
-      "outPoint": 1325,
-      "category": "show"
-    },
-    {
-      "startTime": "10:15",
-      "name": "The Lucy Show",
+      "startTime": "05:36",
+      "name": "The Twilight Zone 4",
       "path": "",
       "duration": 1542,
       "inPoint": 0,
@@ -82,174 +154,66 @@
       "category": "show"
     },
     {
-      "startTime": "10:41",
-      "name": "Zaina Juliette _Friends",
+      "startTime": "06:01",
+      "name": "The Little Princess",
       "path": "",
-      "duration": 1710,
+      "duration": 5583,
       "inPoint": 0,
-      "outPoint": 1710,
+      "outPoint": 5583,
+      "category": "movie"
+    },
+    {
+      "startTime": "07:34",
+      "name": "Sesame Street",
+      "path": "",
+      "duration": 3356,
+      "inPoint": 0,
+      "outPoint": 3356,
       "category": "show"
     },
     {
-      "startTime": "11:09",
-      "name": "Locals in Las Vegas",
+      "startTime": "08:30",
+      "name": "Super Why!",
       "path": "",
-      "duration": 1709,
+      "duration": 1620,
       "inPoint": 0,
-      "outPoint": 1709,
+      "outPoint": 1620,
       "category": "show"
     },
     {
-      "startTime": "11:38",
-      "name": "The Lucy Show",
+      "startTime": "08:57",
+      "name": "Ready Jet Go!",
       "path": "",
-      "duration": 1544,
+      "duration": 1581,
       "inPoint": 0,
-      "outPoint": 1544,
+      "outPoint": 1581,
       "category": "show"
     },
     {
-      "startTime": "12:04",
-      "name": "Sundays @ 11am",
+      "startTime": "09:24",
+      "name": "MR. ROGERS",
       "path": "",
-      "duration": 171,
+      "duration": 1712,
       "inPoint": 0,
-      "outPoint": 171,
+      "outPoint": 1712,
       "category": "show"
     },
     {
-      "startTime": "12:06",
-      "name": "Beverly Hillbillies 1",
+      "startTime": "09:52",
+      "name": "BLUES ROOM",
       "path": "",
-      "duration": 1605,
+      "duration": 1476,
       "inPoint": 0,
-      "outPoint": 1605,
+      "outPoint": 1476,
       "category": "show"
     },
     {
-      "startTime": "12:33",
-      "name": "Zaina Commercial",
+      "startTime": "10:17",
+      "name": "Let's Go Luna!",
       "path": "",
-      "duration": 108,
+      "duration": 1501,
       "inPoint": 0,
-      "outPoint": 108,
-      "category": "commercial"
-    },
-    {
-      "startTime": "12:35",
-      "name": "Archie Bunker's Place",
-      "path": "",
-      "duration": 1455,
-      "inPoint": 0,
-      "outPoint": 1455,
-      "category": "show"
-    },
-    {
-      "startTime": "12:59",
-      "name": "Here's Lucy",
-      "path": "",
-      "duration": 1529,
-      "inPoint": 0,
-      "outPoint": 1529,
-      "category": "show"
-    },
-    {
-      "startTime": "13:25",
-      "name": "Andy Griffith",
-      "path": "",
-      "duration": 1516,
-      "inPoint": 0,
-      "outPoint": 1516,
-      "category": "show"
-    },
-    {
-      "startTime": "13:50",
-      "name": "Andy Griffith",
-      "path": "",
-      "duration": 1477,
-      "inPoint": 0,
-      "outPoint": 1477,
-      "category": "show"
-    },
-    {
-      "startTime": "14:15",
-      "name": "FLMTV.com",
-      "path": "",
-      "duration": 28,
-      "inPoint": 0,
-      "outPoint": 28,
-      "category": "commercial"
-    },
-    {
-      "startTime": "14:15",
-      "name": "Little Rascals",
-      "path": "",
-      "duration": 636,
-      "inPoint": 0,
-      "outPoint": 636,
-      "category": "show"
-    },
-    {
-      "startTime": "14:26",
-      "name": "Little Rascals 62",
-      "path": "",
-      "duration": 643,
-      "inPoint": 0,
-      "outPoint": 643,
-      "category": "show"
-    },
-    {
-      "startTime": "14:36",
-      "name": "Little Rascals 63",
-      "path": "",
-      "duration": 639,
-      "inPoint": 0,
-      "outPoint": 639,
-      "category": "show"
-    },
-    {
-      "startTime": "14:47",
-      "name": "Zaina",
-      "path": "",
-      "duration": 108,
-      "inPoint": 0,
-      "outPoint": 108,
-      "category": "commercial"
-    },
-    {
-      "startTime": "14:49",
-      "name": "Rogue History",
-      "path": "",
-      "duration": 567,
-      "inPoint": 0,
-      "outPoint": 567,
-      "category": "show"
-    },
-    {
-      "startTime": "14:58",
-      "name": "Rogue History 2",
-      "path": "",
-      "duration": 662,
-      "inPoint": 0,
-      "outPoint": 662,
-      "category": "show"
-    },
-    {
-      "startTime": "15:09",
-      "name": "Whats Happening S01E03.r",
-      "path": "",
-      "duration": 1502,
-      "inPoint": 0,
-      "outPoint": 1502,
-      "category": "show"
-    },
-    {
-      "startTime": "15:34",
-      "name": "Sanford _Son- Season One",
-      "path": "",
-      "duration": 1560,
-      "inPoint": 0,
-      "outPoint": 1560,
+      "outPoint": 1501,
       "category": "show"
     }
   ]
