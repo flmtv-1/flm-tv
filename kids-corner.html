@@ -468,6 +468,27 @@
             }
         }
 
+        /* Live Kids TV */
+        .tab-live { position: relative; }
+        .tab-live-dot { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: liveBlink 1.2s infinite; }
+        @keyframes liveBlink { 50% { opacity: 0.25; } }
+        .live-sub { text-align: center; margin: -1.2rem 0 2rem; font-size: 1.1rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+        .live-sub span { color: #ffd700; font-weight: 700; }
+        .live-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .live-card { position: relative; border-radius: 20px; overflow: hidden; cursor: pointer; background: rgba(255,255,255,0.95);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25); transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .live-card:hover, .live-card:focus { transform: scale(1.05) rotate(-1deg); box-shadow: 0 10px 30px rgba(255,215,0,0.5); outline: 4px solid #ffd700; }
+        .live-logo { aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; padding: 1rem;
+            background: radial-gradient(circle at 50% 40%, #ffffff, #e9e4ff); }
+        .live-logo img { max-width: 85%; max-height: 85%; object-fit: contain; }
+        .live-logo .abbr { font-size: 2.6rem; font-weight: 900; color: #764ba2; }
+        .live-name { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; text-align: center; font-weight: 800; font-size: 1.15rem; padding: 0.8rem 0.5rem; }
+        .live-badge { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 6px; background: #ef4444; color: #fff;
+            font-size: 0.8rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; letter-spacing: 1px; }
+        .live-badge i { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: liveBlink 1.2s infinite; }
+        .es-badge { position: absolute; top: 10px; right: 10px; background: #ffd700; color: #333; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; }
+        @media (max-width: 768px) { .live-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; } .live-name { font-size: 0.95rem; } .live-sub { font-size: 0.9rem; margin-top: -0.5rem; } }
+
         /* Coloring App Styles */
         .color-btn {
             width: 50px;
@@ -516,6 +537,10 @@
                 <i class="fas fa-tv"></i>
                 Cartoons
             </button>
+            <button class="tab-btn tab-live" onclick="showSection('livetv')">
+                <span class="tab-live-dot"></span>
+                Live Kids TV
+            </button>
             <button class="tab-btn" onclick="showSection('comics')">
                 <i class="fas fa-book"></i>
                 Big Kids Comics
@@ -542,6 +567,18 @@
                 <div class="loading">
                     <i class="fas fa-spinner"></i>
                     <p>Loading cartoons...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Kids TV Section -->
+        <div id="livetv-section" class="section-content">
+            <h1 class="section-title">📡 Live Kids TV</h1>
+            <p class="live-sub">Free channels playing right now, 24/7 · <span>Canales en Español</span></p>
+            <div class="live-grid" id="liveTvGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>Tuning in...</p>
                 </div>
             </div>
         </div>
@@ -694,7 +731,10 @@
             event.target.closest('.tab-btn').classList.add('active');
             
             if (!loadedSections[section]) {
-                if (section === 'comics') {
+                if (section === 'livetv') {
+                    loadLiveKidsTV();
+                    loadedSections.livetv = true;
+                } else if (section === 'comics') {
                     loadComics();
                     loadedSections.comics = true;
                 } else if (section === 'storybooks') {
@@ -930,6 +970,53 @@
                     <span class="book-type">📺 TV</span>
                 </div>
             `).join('');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LIVE KIDS TV — free stations picked from the TV Stations list.
+        // To add or remove one, edit this list (part of the station's name is enough).
+        // ═══════════════════════════════════════════════════════════════
+        const LIVE_KIDS_STATIONS = [
+            { find: 'kids movie club', label: 'Kids Movie Club' },
+            { find: 'kids flix',       label: 'Kids Flix' },
+            { find: 'cine familiar',   label: 'Cine Familiar', spanish: true },
+            { find: 'maxine family',   label: 'Maxine Family', spanish: true }
+        ];
+
+        async function loadLiveKidsTV() {
+            const grid = document.getElementById('liveTvGrid');
+            try {
+                const url = `${JELLYFIN_CONFIG.SERVER}/LiveTv/Channels?api_key=${JELLYFIN_CONFIG.API_KEY}&UserId=${JELLYFIN_CONFIG.USER_ID}&EnableImages=true&ImageTypeLimit=1&EnableUserData=false&Limit=5000`;
+                const response = await fetch(url);
+                const data = await response.json();
+                const all = data.Items || [];
+                const norm = t => (t || '').toLowerCase().replace(/[^a-z0-9]/g, '');   // ignore spaces and dashes
+                const picked = [];
+                LIVE_KIDS_STATIONS.forEach(st => {
+                    const matches = all.filter(ch => norm(ch.Name).includes(norm(st.find)));
+                    const ch = matches.find(c => c.ImageTags && c.ImageTags.Primary) || matches[0];
+                    if (ch) picked.push({ ch, st });
+                });
+                if (!picked.length) {
+                    grid.innerHTML = '<div class="loading"><p>Live channels are resting right now. Try again soon! 📺</p></div>';
+                    return;
+                }
+                grid.innerHTML = picked.map(({ ch, st }) => {
+                    const img = ch.ImageTags && ch.ImageTags.Primary
+                        ? `${JELLYFIN_CONFIG.SERVER}/Items/${ch.Id}/Images/Primary?maxHeight=240&quality=90&api_key=${JELLYFIN_CONFIG.API_KEY}`
+                        : null;
+                    const abbr = st.label.split(' ').map(w => w[0]).join('').toUpperCase();
+                    return `<div class="live-card book-card" tabindex="0" onclick="window.location.href='movie-frame.html?id=${ch.Id}'">
+                        <div class="live-logo">${img ? `<img src="${img}" alt="${st.label}" loading="lazy" onerror="this.outerHTML='<div class=&quot;abbr&quot;>${abbr}</div>'">` : `<div class="abbr">${abbr}</div>`}</div>
+                        <div class="live-badge"><i></i>LIVE</div>
+                        ${st.spanish ? '<div class="es-badge">🇲🇽 En Español</div>' : ''}
+                        <div class="live-name">${st.label}</div>
+                    </div>`;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading live kids TV:', error);
+                grid.innerHTML = '<div class="loading"><p style="color:#ff6b6b;">Could not load live channels</p></div>';
+            }
         }
 
         // ═══════════════════════════════════════════════════════════════

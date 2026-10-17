@@ -1,219 +1,63 @@
 {
-  "2026-10-14": [
+  "2026-10-17": [
     {
-      "startTime": "18:22",
-      "name": "Pepito Chickeeto",
-      "path": "",
-      "duration": 383,
-      "inPoint": 0,
-      "outPoint": 383,
-      "category": "show"
-    },
-    {
-      "startTime": "18:28",
-      "name": "Chilly Willy",
-      "path": "",
-      "duration": 365,
-      "inPoint": 0,
-      "outPoint": 365,
-      "category": "show"
-    },
-    {
-      "startTime": "18:34",
-      "name": "Woody",
-      "path": "",
-      "duration": 372,
-      "inPoint": 0,
-      "outPoint": 372,
-      "category": "show"
-    },
-    {
-      "startTime": "18:41",
-      "name": "Witty Kitty",
-      "path": "",
-      "duration": 374,
-      "inPoint": 0,
-      "outPoint": 374,
-      "category": "show"
-    },
-    {
-      "startTime": "18:47",
-      "name": "Good Times",
-      "path": "",
-      "duration": 1517,
-      "inPoint": 0,
-      "outPoint": 1517,
-      "category": "show"
-    },
-    {
-      "startTime": "19:12",
-      "name": "Malcolm in the Middle",
-      "path": "",
-      "duration": 1340,
-      "inPoint": 0,
-      "outPoint": 1340,
-      "category": "show"
-    },
-    {
-      "startTime": "19:35",
-      "name": "Ashwater1-B.mp4",
-      "path": "",
-      "duration": 25,
-      "inPoint": 0,
-      "outPoint": 25,
-      "category": "commercial"
-    },
-    {
-      "startTime": "19:35",
-      "name": "That 70s Show",
-      "path": "",
-      "duration": 1332,
-      "inPoint": 0,
-      "outPoint": 1332,
-      "category": "show"
-    },
-    {
-      "startTime": "19:57",
-      "name": "Assassins-Creed",
-      "path": "",
-      "duration": 6930,
-      "inPoint": 0,
-      "outPoint": 6930,
-      "category": "movie"
-    },
-    {
-      "startTime": "21:53",
-      "name": "The X-Files",
-      "path": "",
-      "duration": 2711,
-      "inPoint": 0,
-      "outPoint": 2711,
-      "category": "show"
-    },
-    {
-      "startTime": "22:38",
-      "name": "Au Revoir Les Enfants",
-      "path": "",
-      "duration": 6300,
-      "inPoint": 0,
-      "outPoint": 6300,
-      "category": "movie"
-    },
-    {
-      "startTime": "00:23",
-      "name": "STAR WARS III",
-      "path": "",
-      "duration": 8406,
-      "inPoint": 0,
-      "outPoint": 8406,
-      "category": "movie"
-    },
-    {
-      "startTime": "02:43",
-      "name": "Sharknado 2",
-      "path": "",
-      "duration": 5701,
-      "inPoint": 0,
-      "outPoint": 5701,
-      "category": "movie"
-    },
-    {
-      "startTime": "04:18",
-      "name": "The Twilight Zone",
-      "path": "",
-      "duration": 1569,
-      "inPoint": 0,
-      "outPoint": 1569,
-      "category": "show"
-    },
-    {
-      "startTime": "04:44",
-      "name": "The Twilight Zone 2",
-      "path": "",
-      "duration": 1547,
-      "inPoint": 0,
-      "outPoint": 1547,
-      "category": "show"
-    },
-    {
-      "startTime": "05:10",
-      "name": "The Twilight Zone 3",
-      "path": "",
-      "duration": 1547,
-      "inPoint": 0,
-      "outPoint": 1547,
-      "category": "show"
-    },
-    {
-      "startTime": "05:36",
-      "name": "The Twilight Zone 4",
-      "path": "",
-      "duration": 1542,
-      "inPoint": 0,
-      "outPoint": 1542,
-      "category": "show"
-    },
-    {
-      "startTime": "06:01",
-      "name": "The Little Princess",
-      "path": "",
-      "duration": 5583,
-      "inPoint": 0,
-      "outPoint": 5583,
-      "category": "movie"
-    },
-    {
-      "startTime": "07:34",
-      "name": "Sesame Street",
-      "path": "",
-      "duration": 3356,
-      "inPoint": 0,
-      "outPoint": 3356,
-      "category": "show"
-    },
-    {
-      "startTime": "08:30",
-      "name": "Super Why!",
-      "path": "",
-      "duration": 1620,
-      "inPoint": 0,
-      "outPoint": 1620,
-      "category": "show"
-    },
-    {
-      "startTime": "08:57",
-      "name": "Ready Jet Go!",
-      "path": "",
-      "duration": 1581,
-      "inPoint": 0,
-      "outPoint": 1581,
-      "category": "show"
-    },
-    {
-      "startTime": "09:24",
-      "name": "MR. ROGERS",
-      "path": "",
-      "duration": 1712,
-      "inPoint": 0,
-      "outPoint": 1712,
-      "category": "show"
-    },
-    {
-      "startTime": "09:52",
-      "name": "BLUES ROOM",
-      "path": "",
-      "duration": 1476,
-      "inPoint": 0,
-      "outPoint": 1476,
-      "category": "show"
-    },
-    {
-      "startTime": "10:17",
-      "name": "Let's Go Luna!",
-      "path": "",
+      "startTime": "11:29",
+      "name": "Elinor Wonders Why",
       "duration": 1501,
-      "inPoint": 0,
-      "outPoint": 1501,
+      "category": "show"
+    },
+    {
+      "startTime": "11:54",
+      "name": "The Fifth-Column Mouse",
+      "duration": 450,
+      "category": "show"
+    },
+    {
+      "startTime": "12:02",
+      "name": "Wackiki Wabbit",
+      "duration": 402,
+      "category": "show"
+    },
+    {
+      "startTime": "12:08",
+      "name": "Happy Daffy",
+      "duration": 480,
+      "category": "show"
+    },
+    {
+      "startTime": "12:16",
+      "name": "Elmer 2",
+      "duration": 476,
+      "category": "show"
+    },
+    {
+      "startTime": "12:24",
+      "name": "Here's Lucy 1",
+      "duration": 1549,
+      "category": "show"
+    },
+    {
+      "startTime": "12:50",
+      "name": "Here's Lucy 2",
+      "duration": 1550,
+      "category": "show"
+    },
+    {
+      "startTime": "13:16",
+      "name": "Facts of Life",
+      "duration": 1461,
+      "category": "show"
+    },
+    {
+      "startTime": "13:40",
+      "name": "Andy Griffith",
+      "duration": 1517,
+      "category": "show"
+    },
+    {
+      "startTime": "14:06",
+      "name": "Andy Griffith 2",
+      "duration": 1543,
       "category": "show"
     }
   ]
