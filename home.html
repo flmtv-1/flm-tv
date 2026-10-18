@@ -5166,7 +5166,7 @@
                                  alt="${item.Name}"
                                  class="content-card-image"
                                  loading="lazy"
-                                 onerror="this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name)}'">
+                                 onerror="this.onerror=null;this.src='https://placehold.co/200x300?text=${encodeURIComponent(item.Name).replace(/'/g, '%27')}'">
                             <button class="fav-toggle-btn" data-item-id="${item.Id}" data-fav="${isFav ? '1' : '0'}"
                                 onclick="event.stopPropagation();toggleFavorite('${item.Id}', this)"
                                 style="position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);color:${isFav ? '#ff4d6d' : '#fff'};font-size:1rem;">
@@ -5178,7 +5178,7 @@
                                     ${item.ProductionYear || ''} ${item.OfficialRating ? '• ' + item.OfficialRating : ''}
                                 </div>
                             </div>
-                            ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${item.Name.replace(/'/g,"\\'")}', ${item.ProductionYear || 'null'}, '${item.Type}')">▶ Trailer</button>` : ''}
+                            ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${item.Name.replace(/'/g,"\\'")}', ${item.ProductionYear || 'null'}, '${item.Type}', '${item.Id}')">▶ Trailer</button>` : ''}
                         `;
                         carousel.appendChild(card);
                     });
@@ -7648,102 +7648,241 @@ async function loadCollectionPage(collectionId, title) {
 // ═══════════════════════════════════════════════════════════════
 const TMDB_KEY = '34773a6e0f80645a5b07a1ee76ecc26b';
 
-async function fetchTrailer(title, year, type) {
-    const modal = document.getElementById('trailerModal');
-    const frame = document.getElementById('trailerFrame');
-    const titleEl = document.getElementById('trailerTitle');
+// ═══════════════════════════════════════════════════════════════
+//  FLM TRAILER PLAYER
+//  Order: 1) your own trailer file in Jellyfin (no YouTube at all)
+//         2) TMDB trailer hosted on Vimeo
+//         3) TMDB trailer hosted on YouTube, in a clean player with
+//            YouTube's own bars turned off and FLM's buttons instead
+//  If one won't play, it moves on to the next automatically.
+// ═══════════════════════════════════════════════════════════════
+let _trYT = null;          // { frame, list, index } while a YouTube trailer is up
+let _trMuted = false;
+let _trPaused = false;
 
-    // Show modal with loading state
-    titleEl.textContent = `Loading trailer for "${title}"...`;
-    frame.src = '';
-    modal.classList.add('active');
+function _trEls() {
+    return {
+        modal: document.getElementById('trailerModal'),
+        stage: document.getElementById('trailerStage'),
+        title: document.getElementById('trailerTitle'),
+        status: document.getElementById('trailerStatus'),
+        controls: document.getElementById('trailerControls')
+    };
+}
 
+function _trSetStatus(msg) {
+    const { status } = _trEls();
+    if (!status) return;
+    status.textContent = msg || '';
+    status.style.display = msg ? 'flex' : 'none';
+}
+
+function _trClearStage() {
+    const { stage } = _trEls();
+    _trYT = null;
+    if (!stage) return;
+    stage.querySelectorAll('video').forEach(v => { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} });
+    stage.querySelectorAll('iframe, video, .tr-shield').forEach(el => el.remove());
+}
+
+function _trShowControls(show) {
+    const { controls } = _trEls();
+    if (controls) controls.style.display = show ? 'flex' : 'none';
+    _trPaused = false; _trMuted = false;
+    const pp = document.getElementById('trPlayPause');
+    const mu = document.getElementById('trMute');
+    if (pp) pp.innerHTML = '<i class="fas fa-pause"></i>';
+    if (mu) mu.innerHTML = '<i class="fas fa-volume-up"></i>';
+}
+
+// 1) Your own trailer stored in Jellyfin
+async function _trTryLocal(itemId) {
+    if (!itemId || typeof jellyfinFetch !== 'function') return false;
     try {
-        // Search TMDB for the movie
+        const list = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items/${itemId}/LocalTrailers`, {});
+        if (!Array.isArray(list) || !list.length) return false;
+        const t = list[0];
+        const src = `${JELLYFIN_CONFIG.SERVER}/Videos/${t.Id}/stream?static=true&api_key=${JELLYFIN_CONFIG.API_KEY}`;
+        return await new Promise(resolve => {
+            const { stage } = _trEls();
+            const v = document.createElement('video');
+            v.src = src; v.autoplay = true; v.controls = true; v.playsInline = true;
+            v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;background:#000;';
+            let done = false;
+            v.addEventListener('playing', () => { if (!done) { done = true; resolve(true); } }, { once: true });
+            v.addEventListener('error', () => { if (!done) { done = true; v.remove(); resolve(false); } }, { once: true });
+            setTimeout(() => { if (!done) { done = true; if (v.readyState >= 2) resolve(true); else { v.remove(); resolve(false); } } }, 6000);
+            stage.appendChild(v);
+            v.play().catch(() => {});
+        });
+    } catch (e) { return false; }
+}
+
+// 2) / 3) TMDB trailers (Vimeo or YouTube)
+function _trPlayCandidate(list, index) {
+    const { stage } = _trEls();
+    if (index >= list.length) {
+        _trClearStage();
+        _trShowControls(false);
+        _trSetStatus('Sorry, this trailer is not available right now.');
+        return;
+    }
+    _trClearStage();
+    const c = list[index];
+    const f = document.createElement('iframe');
+    f.setAttribute('allow', 'autoplay; encrypted-media; fullscreen; picture-in-picture');
+    f.setAttribute('allowfullscreen', '');
+    // This setting is what fixes YouTube "Error 153" (player configuration error)
+    f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    f.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;background:#000;';
+
+    if (c.site === 'Vimeo') {
+        f.src = `https://player.vimeo.com/video/${c.key}?autoplay=1&title=0&byline=0&portrait=0&badge=0&dnt=1`;
+        stage.appendChild(f);
+        _trShowControls(false);   // Vimeo's own minimal controls are used
+        _trSetStatus('');
+        return;
+    }
+
+    // YouTube in a clean, TMDB-style player: no control bar, no
+    // suggested videos, no annotations. FLM buttons do the controls.
+    const origin = encodeURIComponent(window.location.origin);
+    f.src = `https://www.youtube-nocookie.com/embed/${c.key}?autoplay=1&controls=0&rel=0&iv_load_policy=3&playsinline=1&fs=0&disablekb=1&cc_load_policy=0&enablejsapi=1&origin=${origin}`;
+    stage.appendChild(f);
+    // Invisible layer on top of the video: a click pauses/plays the trailer
+    // instead of reaching any YouTube link, so viewers never leave flmtv.com
+    const shield = document.createElement('div');
+    shield.className = 'tr-shield';
+    shield.title = 'Play / Pause';
+    shield.addEventListener('click', trailerTogglePlay);
+    stage.appendChild(shield);
+    _trYT = { frame: f, list: list, index: index };
+    _trShowControls(true);
+    _trSetStatus('');
+    // Ask YouTube to report errors back, so a blocked video skips to the next one
+    f.addEventListener('load', () => {
+        try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'flmTrailer', channel: 'widget' }), '*'); } catch (e) {}
+    });
+}
+
+window.addEventListener('message', function(e) {
+    if (!_trYT || !/youtube(-nocookie)?\.com$/.test((e.origin || '').replace(/^https?:\/\/(www\.)?/, ''))) return;
+    if (e.source !== _trYT.frame.contentWindow) return;
+    let data = e.data;
+    try { if (typeof data === 'string') data = JSON.parse(data); } catch (err) { return; }
+    if (data && data.event === 'onError') {
+        _trPlayCandidate(_trYT.list, _trYT.index + 1);
+    } else if (data && data.event === 'onStateChange' && data.info === 0) {
+        // trailer finished: cover YouTube's end screen with an FLM "Watch again" screen
+        _trPaused = true;
+        const pp = document.getElementById('trPlayPause');
+        if (pp) pp.innerHTML = '<i class="fas fa-rotate-right"></i>';
+        _trSetStatus('▶  Watch again');
+        const st = document.getElementById('trailerStatus');
+        if (st) { st.classList.add('tr-replay'); st.onclick = trailerRestart; }
+    }
+});
+
+function _trCmd(func, args) {
+    if (!_trYT) return;
+    try { _trYT.frame.contentWindow.postMessage(JSON.stringify({ event: 'command', func: func, args: args || [] }), '*'); } catch (e) {}
+}
+
+function trailerTogglePlay() {
+    const pp = document.getElementById('trPlayPause');
+    const st = document.getElementById('trailerStatus');
+    if (st && st.classList.contains('tr-replay')) { trailerRestart(); return; }
+    if (_trPaused) { _trCmd('playVideo'); _trPaused = false; if (pp) pp.innerHTML = '<i class="fas fa-pause"></i>'; }
+    else { _trCmd('pauseVideo'); _trPaused = true; if (pp) pp.innerHTML = '<i class="fas fa-play"></i>'; }
+}
+function trailerToggleMute() {
+    const mu = document.getElementById('trMute');
+    if (_trMuted) { _trCmd('unMute'); _trMuted = false; if (mu) mu.innerHTML = '<i class="fas fa-volume-up"></i>'; }
+    else { _trCmd('mute'); _trMuted = true; if (mu) mu.innerHTML = '<i class="fas fa-volume-mute"></i>'; }
+}
+function _trHideReplay() {
+    const st = document.getElementById('trailerStatus');
+    if (st && st.classList.contains('tr-replay')) { st.classList.remove('tr-replay'); st.onclick = null; _trSetStatus(''); }
+}
+function trailerRestart() {
+    _trHideReplay();
+    _trCmd('seekTo', [0, true]); _trCmd('playVideo'); _trPaused = false;
+    const pp = document.getElementById('trPlayPause');
+    if (pp) pp.innerHTML = '<i class="fas fa-pause"></i>';
+}
+function trailerFullscreen() {
+    const box = document.getElementById('trailerBox');
+    if (!box) return;
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else if (box.requestFullscreen) box.requestFullscreen().catch(() => {});
+    else if (box.webkitRequestFullscreen) box.webkitRequestFullscreen();
+}
+
+async function fetchTrailer(title, year, type, itemId) {
+    const { modal, title: titleEl } = _trEls();
+    if (!modal) return;
+    _trClearStage();
+    _trShowControls(false);
+    titleEl.textContent = `${title}${year ? ' (' + year + ')' : ''}`;
+    _trSetStatus('Loading trailer...');
+    modal.classList.add('active');
+    setTimeout(() => { const c = document.getElementById('trClose'); if (c) c.focus(); }, 100);
+
+    // 1) Your own trailer file in Jellyfin
+    if (await _trTryLocal(itemId)) { _trSetStatus(''); return; }
+    if (!modal.classList.contains('active')) return; // closed while loading
+
+    // 2) + 3) Look the trailer up on TMDB
+    try {
         const isTv = type === 'Series';
         const searchType = isTv ? 'tv' : 'movie';
         const yearParam = isTv ? 'first_air_date_year' : 'year';
-        const searchUrl = `https://api.themoviedb.org/3/search/${searchType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}${year ? '&' + yearParam + '=' + year : ''}`;
-        const searchRes = await fetch(searchUrl);
+        const searchRes = await fetch(`https://api.themoviedb.org/3/search/${searchType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(title)}${year ? '&' + yearParam + '=' + year : ''}`);
         const searchData = await searchRes.json();
+        if (!searchData.results || !searchData.results.length) { _trSetStatus('Sorry, this trailer is not available right now.'); return; }
 
-        if (!searchData.results || searchData.results.length === 0) {
-            titleEl.textContent = `No trailer found for "${title}"`;
-            return;
-        }
-
-        const movieId = searchData.results[0].id;
-
-        // Fetch videos for the movie
-        const videosUrl = `https://api.themoviedb.org/3/${searchType}/${movieId}/videos?api_key=${TMDB_KEY}`;
-        const videosRes = await fetch(videosUrl);
+        const tmdbId = searchData.results[0].id;
+        const videosRes = await fetch(`https://api.themoviedb.org/3/${searchType}/${tmdbId}/videos?api_key=${TMDB_KEY}`);
         const videosData = await videosRes.json();
 
-        // Collect all trailers + teasers, prioritize "Official Trailer"
-        const candidates = (videosData.results || []).filter(v =>
-            v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')
-        ).sort((a, b) => {
-            // Prefer Trailer over Teaser, official over others
-            if (a.type === 'Trailer' && b.type !== 'Trailer') return -1;
-            if (b.type === 'Trailer' && a.type !== 'Trailer') return 1;
-            if (a.official && !b.official) return -1;
-            if (b.official && !a.official) return 1;
-            return 0;
-        });
+        const rank = v => (v.type === 'Trailer' ? 0 : 2) + (v.official ? 0 : 1) + (v.site === 'Vimeo' ? 0 : 0.5);
+        const list = (videosData.results || [])
+            .filter(v => (v.site === 'YouTube' || v.site === 'Vimeo') && (v.type === 'Trailer' || v.type === 'Teaser'))
+            .sort((a, b) => rank(a) - rank(b));
 
-        if (candidates.length === 0) {
-            titleEl.textContent = `No trailer available for "${title}"`;
-            return;
-        }
-
-        titleEl.textContent = `${title}${year ? ' (' + year + ')' : ''}`;
-
-        // Try each candidate until one loads without error
-        let loaded = false;
-        for (const candidate of candidates) {
-            // Use youtube-nocookie.com to reduce embedding restrictions
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${candidate.key}?autoplay=1&rel=0&modestbranding=1&origin=${encodeURIComponent(window.location.origin)}`;
-            frame.src = embedUrl;
-
-            // Wait briefly and check if iframe loaded (error 153 fires quickly)
-            const ok = await new Promise(resolve => {
-                let settled = false;
-                const onLoad = () => { if (!settled) { settled = true; resolve(true); } };
-                const onError = () => { if (!settled) { settled = true; resolve(false); } };
-                frame.addEventListener('load', onLoad, { once: true });
-                frame.addEventListener('error', onError, { once: true });
-                // YouTube embedding errors don't always fire 'error' — give it 2s
-                setTimeout(() => { if (!settled) { settled = true; resolve(true); } }, 2000);
-            });
-
-            if (ok) { loaded = true; break; }
-            frame.src = '';
-        }
-
-        if (!loaded) {
-            // All candidates failed — open on YouTube as last resort
-            titleEl.textContent = `Opening trailer for "${title}" on YouTube...`;
-            window.open(`https://www.youtube.com/watch?v=${candidates[0].key}`, '_blank');
-            closeTrailer();
-        }
-
+        if (!list.length) { _trSetStatus('Sorry, this trailer is not available right now.'); return; }
+        if (!modal.classList.contains('active')) return;
+        _trPlayCandidate(list, 0);
     } catch (err) {
-        titleEl.textContent = `Could not load trailer for "${title}"`;
         console.error('Trailer error:', err);
+        _trSetStatus('Sorry, this trailer could not load. Please try again.');
     }
 }
 
 function closeTrailer() {
-    const modal = document.getElementById('trailerModal');
-    const frame = document.getElementById('trailerFrame');
-    modal.classList.remove('active');
-    frame.src = ''; // Stop video
+    const { modal } = _trEls();
+    _trHideReplay();
+    if (document.fullscreenElement) { try { document.exitFullscreen(); } catch (e) {} }
+    _trClearStage();
+    _trShowControls(false);
+    _trSetStatus('');
+    if (modal) modal.classList.remove('active');
 }
 
-// Close trailer on backdrop click
-document.getElementById('trailerModal').addEventListener('click', function(e) {
-    if (e.target === this) closeTrailer();
+// Close trailer on backdrop click (the modal sits further down the page,
+// so this waits until the page has finished loading)
+document.addEventListener('DOMContentLoaded', function() {
+    const tm = document.getElementById('trailerModal');
+    if (tm) tm.addEventListener('click', function(e) { if (e.target === this) closeTrailer(); });
 });
+// Escape closes the trailer (computers)
+document.addEventListener('keydown', function(e) {
+    const tm = document.getElementById('trailerModal');
+    if ((e.key === 'Escape' || e.key === 'Backspace') && tm && tm.classList.contains('active') &&
+        !(document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName))) {
+        e.preventDefault(); e.stopImmediatePropagation(); closeTrailer();
+    }
+}, true);
 
 
 (function() {
@@ -7798,17 +7937,43 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <div id="trailerModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:99999;align-items:center;justify-content:center;padding:1rem;">
     <div style="width:100%;max-width:900px;position:relative;">
-        <button onclick="closeTrailer()" style="position:absolute;top:-44px;right:0;background:var(--secondary);border:none;color:white;width:38px;height:38px;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:10;">✕</button>
-        <div id="trailerTitle" style="color:var(--primary);font-size:1.2rem;font-weight:800;margin-bottom:0.75rem;"></div>
-        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:2px solid var(--primary);">
-            <iframe id="trailerFrame" src="" allow="autoplay;encrypted-media" allowfullscreen
-                style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+        <div class="tr-head">
+            <div id="trailerTitle" class="tr-title"></div>
+            <button id="trClose" class="tr-btn tr-close" onclick="closeTrailer()" title="Close" aria-label="Close trailer"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="trailerBox" class="tr-box">
+            <div id="trailerStage" class="tr-stage"></div>
+            <div id="trailerStatus" class="tr-status">Loading trailer...</div>
+            <div class="tr-badge">FLM <span>TV</span> · TRAILER</div>
+        </div>
+        <div id="trailerControls" class="tr-controls" style="display:none;">
+            <button id="trPlayPause" class="tr-btn" onclick="trailerTogglePlay()" title="Play / Pause" aria-label="Play or pause"><i class="fas fa-pause"></i></button>
+            <button class="tr-btn" onclick="trailerRestart()" title="Start over" aria-label="Start over"><i class="fas fa-backward-step"></i></button>
+            <button id="trMute" class="tr-btn" onclick="trailerToggleMute()" title="Sound on / off" aria-label="Sound on or off"><i class="fas fa-volume-up"></i></button>
+            <button class="tr-btn" onclick="trailerFullscreen()" title="Full screen" aria-label="Full screen"><i class="fas fa-expand"></i></button>
         </div>
     </div>
 </div>
 
 <style>
 #trailerModal.active { display: flex !important; }
+#trailerModal .tr-head { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:0.75rem; }
+#trailerModal .tr-title { color:#ffd700; font-family:'Bebas Neue','Rajdhani',sans-serif; font-size:1.6rem; letter-spacing:2px; line-height:1.1; text-shadow:0 0 14px rgba(255,215,0,0.4); }
+#trailerModal .tr-box { position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:12px; border:2px solid #ffd700; background:#000; box-shadow:0 0 40px rgba(255,215,0,0.2), 0 20px 60px rgba(0,0,0,0.8); }
+#trailerModal .tr-box:fullscreen { border:none; border-radius:0; }
+#trailerModal .tr-stage { position:absolute; inset:0; }
+#trailerModal .tr-status { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:1rem; color:#cbd5e1; font-size:1rem; z-index:2; background:#000; }
+#trailerModal .tr-shield { position:absolute; inset:0; z-index:1; cursor:pointer; background:transparent; }
+#trailerModal .tr-status.tr-replay { cursor:pointer; z-index:4; font-family:'Bebas Neue','Rajdhani',sans-serif; font-size:2rem; letter-spacing:3px; color:#ffd700; background:radial-gradient(circle at 50% 50%, #1a2440 0%, #000 75%); }
+#trailerModal .tr-status.tr-replay:hover { text-shadow:0 0 18px rgba(255,215,0,0.8); }
+#trailerModal .tr-badge { position:absolute; top:10px; left:12px; z-index:3; pointer-events:none; font-family:'Bebas Neue','Rajdhani',sans-serif; font-size:0.8rem; letter-spacing:2px; color:#ffd700; background:rgba(0,0,0,0.55); padding:3px 9px; border-radius:12px; }
+#trailerModal .tr-badge span { color:#22c55e; }
+#trailerModal .tr-controls { display:flex; justify-content:center; gap:0.75rem; margin-top:0.85rem; }
+#trailerModal .tr-btn { width:46px; height:46px; border-radius:50%; border:2px solid #ffd700; background:rgba(255,215,0,0.1); color:#ffd700; font-size:1.05rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s ease; }
+#trailerModal .tr-btn:hover, #trailerModal .tr-btn:focus { background:#ffd700; color:#0a0f1a; transform:scale(1.08); outline:none; box-shadow:0 0 16px rgba(255,215,0,0.6); }
+#trailerModal .tr-close { width:40px; height:40px; flex-shrink:0; border-color:#E8333A; color:#fff; background:rgba(232,51,58,0.85); }
+#trailerModal .tr-close:hover, #trailerModal .tr-close:focus { background:#E8333A; color:#fff; box-shadow:0 0 16px rgba(232,51,58,0.7); }
+@media (max-width: 600px) { #trailerModal .tr-title { font-size:1.2rem; } #trailerModal .tr-btn { width:42px; height:42px; } }
 .trailer-btn {
     position: absolute;
     bottom: 40px;
@@ -7827,7 +7992,19 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
     transition: opacity 0.2s;
     z-index: 5;
 }
-.content-card:hover .trailer-btn { opacity: 1; }
+.content-card:hover .trailer-btn, .content-card:focus .trailer-btn, .trailer-btn:focus { opacity: 1; }
+/* Keep the Trailer button in place when it is pressed or selected. The site-wide
+   focus style used to move it on mouse-down, so the click landed on the card and
+   opened the movie page instead of the trailer. */
+.content-card .trailer-btn:focus,
+.content-card .trailer-btn:focus-visible,
+.content-card .trailer-btn:active {
+    position: absolute !important;
+    transform: translateX(-50%) !important;
+    z-index: 6 !important;
+    outline: 2px solid #ffd700 !important;
+    outline-offset: 2px !important;
+}
 </style>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -8274,6 +8451,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                 if (!el._tvReady && !isNativelyClickable) {
                     el._tvReady = true;
                     el.addEventListener('keydown', function(e) {
+                        if (e.target !== el) return; // OK pressed on a button inside this card (e.g. Trailer)
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
                             e.stopPropagation();
@@ -8294,6 +8472,14 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                 'button, a, input, textarea, [tabindex="0"]'
             )).filter(function(el) {
                 return el.offsetParent !== null && el.offsetWidth > 0 && el.offsetHeight > 0;
+            });
+        }
+
+        // If the trailer is open, only navigate its buttons
+        var trModal = document.getElementById('trailerModal');
+        if (trModal && trModal.classList.contains('active')) {
+            return Array.from(trModal.querySelectorAll('button')).filter(function(el) {
+                return el.offsetParent !== null;
             });
         }
 
@@ -8342,6 +8528,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.flm-ad-slideshow a, ' +
             '.flm-ad-slideshow span[onclick], ' +
             '.view-all-btn, ' +
+            '.trailer-btn, ' +
             '.bottom-nav-item, ' +
             '.panel-close, ' +
             '.modal-close, ' +
@@ -8430,7 +8617,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
         // otherwise scroll the page hidden behind the modal.
         var adModalOpen = document.getElementById('flmAdModal');
         adModalOpen = adModalOpen && adModalOpen.style.display !== 'none' && adModalOpen.offsetParent !== null;
-        var modalRestricted = adModalOpen || !!document.querySelector('.side-panel.active, .video-modal.active');
+        var modalRestricted = adModalOpen || !!document.querySelector('.side-panel.active, .video-modal.active, #trailerModal.active');
         if (modalRestricted && (e.key === 'ArrowRight' || e.key === 'ArrowDown' ||
             e.key === 'ArrowLeft' || e.key === 'ArrowUp')) {
             e.preventDefault();
