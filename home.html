@@ -2925,17 +2925,19 @@
                     <img src="assets/logos/favicons-3/web-app-manifest-512x512.png" alt="FLM TV Logo">
                     <h1 class="logo-text">FLM TV</h1>
                 </div>
+
+                <!-- Corporate site, right after the FLM TV logo (hidden on Fire TV) -->
+                <a href="https://7RealmsTV.com" target="_blank" rel="noopener" class="btn-icon flm-corp-btn" title="7RealmsTV.com - Corporate Site" style="text-decoration: none; flex-shrink: 0;">
+                    <i class="fas fa-globe"></i>
+                </a>
+                <style>.is-firestick .flm-corp-btn { display: none !important; }</style>
                 
                 <nav>
                     <ul class="header-nav">
                         <li><a href="home.html">Home</a></li>
                         <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
-                        <!-- Updated: 2026-08-22 - fixed LIVE button link -->
-                        <li><a href="https://flmtv.com/live">LIVE</a></li>
-                        <li><a href="schedule.html">TV Guide</a></li>
                         <li><a href="help.html">Help</a></li>
-                        <li><a href="#" onclick="scrollToCategoryNav(); return false;">Categories</a></li>
                     </ul>
                 </nav>
             </div>
@@ -2947,16 +2949,13 @@
                     <img src="assets/images/kids-avatar.png" alt="Kids" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
                 </button>
                 
-                <a href="https://7RealmsTV.com" target="_blank" class="btn-icon" title="7RealmsTV.com - Corporate Site" style="text-decoration: none;">
-                    <i class="fas fa-globe"></i>
-                </a>
+                <!-- Zaina AI (kept next to Kids Corner) -->
+                <button class="btn-icon" onclick="openPanel('aiPanel')" title="Zaina AI" style="padding:0;overflow:hidden;border:2px solid var(--neon-green);border-radius:50%;width:44px;height:44px;">
+                    <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                </button>
                 
                 <button class="btn-icon-text" onclick="openPanel('chatPanel')" title="Chat">
                     <i class="fas fa-comments"></i> Chat
-                </button>
-                
-                <button class="btn-icon" onclick="openPanel('aiPanel')" title="Zaina AI" style="padding:0;overflow:hidden;border:2px solid var(--neon-green);border-radius:50%;width:44px;height:44px;">
-                    <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
                 </button>
                 
                 <a href="schedule.html" class="flm-guide-btn" title="TV Guide — what's on now">
@@ -2980,9 +2979,44 @@
                     <i class="fas fa-lock"></i>
                 </button>
                 
-                <a href="live-stations.html" class="btn-primary" style="text-decoration:none;display:flex;align-items:center;gap:0.4rem;">
-                    <i class="fas fa-tv"></i><span class="sign-in-text"> TV Stations</span>
+                <!-- TV STATIONS: small TV-shaped button -->
+                <a href="live-stations.html" class="flm-tvbtn" title="TV Stations: 2,500+ free channels" aria-label="TV Stations">
+                    <span class="flm-tvbtn-screen">
+                        <span class="flm-tvbtn-dot"></span>
+                        <span class="flm-tvbtn-tv">TV</span>
+                        <span class="flm-tvbtn-sub">STATIONS</span>
+                    </span>
+                    <span class="flm-tvbtn-stand"></span>
                 </a>
+                <style>
+                .flm-tvbtn {
+                    position: relative; display: inline-flex; flex-direction: column; align-items: center;
+                    text-decoration: none; flex-shrink: 0; margin-top: 9px; padding: 0 2px;
+                    min-height: 0 !important; min-width: 0 !important; transition: transform 0.2s ease;
+                }
+                /* antennas */
+                .flm-tvbtn::before, .flm-tvbtn::after {
+                    content: ''; position: absolute; top: -9px; left: 50%;
+                    width: 2px; height: 11px; background: #ffd700; border-radius: 2px;
+                    transform-origin: bottom center;
+                }
+                .flm-tvbtn::before { transform: translateX(-3px) rotate(-32deg); }
+                .flm-tvbtn::after  { transform: translateX(1px) rotate(32deg); }
+                .flm-tvbtn-screen {
+                    position: relative; width: 56px; height: 36px; border: 2px solid #ffd700; border-radius: 8px;
+                    background: radial-gradient(circle at 50% 40%, #22305a 0%, #0a0f1a 85%);
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    box-shadow: 0 0 10px rgba(255,215,0,0.45), inset 0 0 8px rgba(255,215,0,0.15);
+                    line-height: 1;
+                }
+                .flm-tvbtn-tv { font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 1rem; letter-spacing: 2px; color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.6); }
+                .flm-tvbtn-sub { font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 0.5rem; letter-spacing: 1px; color: #fff; margin-top: 2px; }
+                .flm-tvbtn-dot { position: absolute; top: 4px; right: 5px; width: 5px; height: 5px; border-radius: 50%; background: #E8333A; box-shadow: 0 0 6px #E8333A; animation: liveDot 1.2s infinite; }
+                .flm-tvbtn-stand { width: 22px; height: 3px; margin-top: 2px; background: #ffd700; border-radius: 2px; }
+                .flm-tvbtn:hover, .flm-tvbtn:focus { transform: scale(1.08); outline: none; }
+                .flm-tvbtn:hover .flm-tvbtn-screen, .flm-tvbtn:focus .flm-tvbtn-screen { box-shadow: 0 0 18px rgba(255,215,0,0.85), inset 0 0 10px rgba(255,215,0,0.25); }
+                @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
+                </style>
                 
             </div>
         </div>
@@ -5897,7 +5931,8 @@ function wtvMatches(ch, catKey) {
             const memberEmail = localStorage.getItem('flmtv_member_email');
             const accountBtn = document.getElementById('myAccountBtn');
             if (memberEmail) {
-                btn.innerHTML = `<i class="fas fa-user-check"></i> ${memberEmail}`;
+                btn.innerHTML = `<i class="fas fa-user-check"></i> Log Out`;
+                btn.title = 'Log out of FLM TV';
                 btn.onclick = () => {
                     if (confirm('Log out of FLM TV?')) flmLogOut();
                 };
@@ -8126,13 +8161,13 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
                 </button>
                 <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:2px;color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.7);">KIDS</span>
             </span>
-            <button onclick="openPanel('chatPanel')" title="Chat" tabindex="0"
-                style="width:36px;height:36px;border-radius:50%;padding:0;border:none;background:#22c55e;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem;color:white;">
-                <i class="fas fa-comments"></i>
-            </button>
             <button onclick="openPanel('aiPanel')" title="Zaina AI" tabindex="0"
                 style="width:36px;height:36px;border-radius:50%;padding:0;overflow:hidden;border:2px solid #22c55e;background:transparent;cursor:pointer;flex-shrink:0;">
                 <img src="assets/images/z-ai-avatar2.png" alt="Zaina AI" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+            </button>
+            <button onclick="openPanel('chatPanel')" title="Chat" tabindex="0"
+                style="width:36px;height:36px;border-radius:50%;padding:0;border:none;background:#22c55e;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem;color:white;">
+                <i class="fas fa-comments"></i>
             </button>
             <span style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
                 <button onclick="window.location.href='parental-controls.html'" id="parentLockBtn" title="Parental Controls" tabindex="0"
