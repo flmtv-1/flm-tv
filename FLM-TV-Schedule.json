@@ -1,63 +1,45 @@
 {
-  "2026-10-17": [
+  "2026-10-18": [
     {
-      "startTime": "11:29",
-      "name": "Elinor Wonders Why",
-      "duration": 1501,
+      "startTime": "08:32",
+      "name": "Sesame Street",
+      "duration": 3355,
       "category": "show"
     },
     {
-      "startTime": "11:54",
-      "name": "The Fifth-Column Mouse",
-      "duration": 450,
+      "startTime": "09:28",
+      "name": "Super Why!",
+      "duration": 1620,
       "category": "show"
     },
     {
-      "startTime": "12:02",
-      "name": "Wackiki Wabbit",
-      "duration": 402,
+      "startTime": "09:55",
+      "name": "Charlie Brown and Snoopy Show",
+      "duration": 1349,
       "category": "show"
     },
     {
-      "startTime": "12:08",
-      "name": "Happy Daffy",
-      "duration": 480,
+      "startTime": "10:18",
+      "name": "The Osmonds",
+      "duration": 1343,
       "category": "show"
     },
     {
-      "startTime": "12:16",
-      "name": "Elmer 2",
-      "duration": 476,
+      "startTime": "10:40",
+      "name": "Curious George",
+      "duration": 1420,
       "category": "show"
     },
     {
-      "startTime": "12:24",
-      "name": "Here's Lucy 1",
-      "duration": 1549,
-      "category": "show"
+      "startTime": "11:04",
+      "name": "Zaina Juliette & Friends",
+      "duration": 1705,
+      "category": ""
     },
     {
-      "startTime": "12:50",
-      "name": "Here's Lucy 2",
-      "duration": 1550,
-      "category": "show"
-    },
-    {
-      "startTime": "13:16",
-      "name": "Facts of Life",
-      "duration": 1461,
-      "category": "show"
-    },
-    {
-      "startTime": "13:40",
-      "name": "Andy Griffith",
-      "duration": 1517,
-      "category": "show"
-    },
-    {
-      "startTime": "14:06",
-      "name": "Andy Griffith 2",
-      "duration": 1543,
+      "startTime": "11:32",
+      "name": "Locals In Las Vegas",
+      "duration": 1709,
       "category": "show"
     }
   ]

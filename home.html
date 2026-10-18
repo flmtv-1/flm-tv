@@ -3179,21 +3179,31 @@
 
             </div>
 
-            <!-- AD PANEL + TV STATIONS CARD -->
+            <!-- FEATURED CHANNELS (FilAm TV + Kids Corner) + TV STATIONS CARD -->
             <div class="flm-ad-panel" id="flmAdPanel">
                 <div class="flm-ad-header">
-                    <span class="flm-ad-label">SPONSORS</span>
+                    <span class="flm-ad-label">FEATURED CHANNELS</span>
                 </div>
-                <div class="flm-ad-slideshow" style="position:relative;border-radius:12px;overflow:hidden;background:#0a0f1a;border:1px solid rgba(255,215,0,0.15);aspect-ratio:4/3;">
-                    <img id="flmAdImg" src="assets/images/Fashion1.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#0a0f1a;" alt="SheBoujay">
-                    <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.88));padding:8px 10px 6px;text-align:center;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:6px;">
-                    <span style="color:#fff;font-family:Bebas Neue,Rajdhani,sans-serif;letter-spacing:2px;font-size:11px;">SheBoujay.com</span>
-                    <div style="display:flex;gap:5px;">
-                        <a href="https://SheBoujay.com" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="background:#ffd700;color:#0a0f1a;font-family:Bebas Neue,Rajdhani,sans-serif;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:4px;text-decoration:none;">VISIT SITE</a>
-                        <span onclick="flmAdClick()" style="background:rgba(255,255,255,0.15);color:#fff;font-family:Bebas Neue,Rajdhani,sans-serif;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:4px;cursor:pointer;border:1px solid rgba(255,255,255,0.3);">▶ WATCH AD</span>
-                    </div>
-                </div>
-                    <div id="flmDots" style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3;"></div>
+                <div class="fp-pair">
+                    <!-- FILAM TV (no page yet: opens its category for now — swap to filam-tv.html when ready) -->
+                    <a href="category-detail.html?id=7bbd76b8a7145c260b38e3f1b1852154&amp;name=FilAm%20TV" class="fp-card fp-filam" title="FilAm TV">
+                        <div class="fp-filam-fill"></div>
+                        <img src="assets/images/FilAm.png" class="fp-filam-logo" alt="FilAm TV" onerror="this.style.display='none'">
+                        <div class="fp-shade"></div>
+                        <div class="fp-text">
+                            <div class="fp-title">FILAM TV</div>
+                            <div class="fp-sub">FOR FIL-AMS. BY FIL-AMS.</div>
+                        </div>
+                    </a>
+                    <!-- KIDS CORNER -->
+                    <a href="kids-corner.html" class="fp-card fp-kids" title="Kids Corner">
+                        <img src="assets/images/kids-avatar.png" class="fp-kids-img" alt="Kids Corner" onerror="this.style.display='none'">
+                        <div class="fp-shade"></div>
+                        <div class="fp-text">
+                            <div class="fp-title">🌟 KIDS CORNER</div>
+                            <div class="fp-sub">FAMILY-FRIENDLY SHOWS</div>
+                        </div>
+                    </a>
                 </div>
                 <!-- TV STATIONS PROMO CARD -->
                 <a href="live-stations.html" class="flm-tv-stations-card">
@@ -3207,37 +3217,48 @@
                     </div>
                 </a>
             </div>
-            <script>
-            (function(){
-                var imgs = ["assets/images/Fashion1.jpg",
-"assets/images/fashion2.jpg",
-"assets/images/fashion3.jpg",
-"assets/images/fashion4.jpg",
-"assets/images/fashion5.jpg",
-"assets/images/fashion6.jpg"];
-                var cur = 0;
-                var el = document.getElementById('flmAdImg');
-                var dotsEl = document.getElementById('flmDots');
-                var dots = [];
-                imgs.forEach(function(s,i){
-                    var d = document.createElement('span');
-                    d.style.cssText='display:inline-block;width:6px;height:6px;border-radius:50%;background:'+(i===0?'#ffd700':'rgba(255,255,255,0.4)')+';cursor:pointer;';
-                    d.onclick=function(e){e.stopPropagation();go(i);};
-                    dotsEl.appendChild(d);
-                    dots.push(d);
-                });
-                function go(n){
-                    cur=(n+imgs.length)%imgs.length;
-                    el.src=imgs[cur];
-                    dots.forEach(function(d,i){d.style.background=i===cur?'#ffd700':'rgba(255,255,255,0.4)';});
-                }
-                setInterval(function(){go(cur+1);},4000);
-            })();
-            function flmAdClick(){
-                var SHEBOUJAY_AD_ITEM_ID = '3eb093e5872a8689c29f056e3afaaee8';
-                playJellyfinItem(SHEBOUJAY_AD_ITEM_ID);
+            <style>
+            /* FilAm TV + Kids Corner cards (replaced the SheBoujay sponsor box) */
+            .fp-pair { display:grid; grid-template-columns:1fr 1fr; gap:0.45rem; }
+            .fp-card {
+                position:relative; display:block; aspect-ratio:4/5; border-radius:12px; overflow:hidden;
+                text-decoration:none; cursor:pointer;
+                border:2px solid rgba(255,215,0,0.5);
+                box-shadow:0 0 18px rgba(255,215,0,0.18), 0 8px 24px rgba(0,0,0,0.6);
+                transition:all 0.3s ease;
             }
-            </script>
+            .fp-card:hover, .fp-card:focus {
+                border-color:#ffd700; transform:scale(1.03); outline:none;
+                box-shadow:0 0 32px rgba(255,215,0,0.4), 0 10px 30px rgba(0,0,0,0.7);
+            }
+            .fp-filam { background:#000; }
+            .fp-filam-fill {
+                position:absolute; inset:0; z-index:0;
+                background:url('assets/images/FilAm.png') center / cover no-repeat;
+                filter:blur(14px) brightness(0.55) saturate(1.3); transform:scale(1.3);
+            }
+            .fp-filam-logo {
+                position:absolute; left:6%; right:6%; top:10%; width:88%; height:56%;
+                object-fit:contain; z-index:1; filter:drop-shadow(0 6px 16px rgba(0,0,0,0.75));
+            }
+            .fp-kids { background:radial-gradient(circle at 50% 30%, #3a1066 0%, #1a0533 50%, #0a0f1a 100%); }
+            .fp-kids-img {
+                position:absolute; top:11%; left:50%; transform:translateX(-50%); z-index:1;
+                width:58%; aspect-ratio:1/1; border-radius:50%; object-fit:cover; object-position:top center;
+                border:3px solid #ffd700; box-shadow:0 0 18px rgba(255,215,0,0.5);
+            }
+            .fp-shade { position:absolute; inset:0; z-index:2; background:linear-gradient(to top, rgba(5,10,30,0.95) 12%, rgba(5,10,30,0) 50%); pointer-events:none; }
+            .fp-text { position:absolute; left:0; right:0; bottom:0; z-index:3; padding:8px 10px; }
+            .fp-title { font-family:'Bebas Neue','Rajdhani',sans-serif; font-size:1rem; letter-spacing:1.5px; color:#ffd700; line-height:1; text-shadow:0 0 14px rgba(255,215,0,0.5); }
+            .fp-sub { font-family:'Bebas Neue','Rajdhani',sans-serif; font-size:0.68rem; letter-spacing:1px; color:#fff; line-height:1; margin-top:3px; }
+            @media (max-width: 768px) {
+                .flm-ad-panel { flex-direction:column !important; }
+                .fp-card { aspect-ratio:16/10; }
+                .fp-filam-logo { top:6%; height:58%; }
+                .fp-kids-img { top:7%; width:42%; }
+            }
+            .is-firestick .fp-pair { grid-column:1 / 2; }
+            </style>
 
         </div><!-- /.lsc-row -->
 
@@ -5632,9 +5653,37 @@ function wtvMatches(ch, catKey) {
                             <div class="content-card-info">Featured Channel</div>
                         </div>
                     </div>
+                    <div class="content-card fc-filam" onclick="window.location.href='category-detail.html?id=7bbd76b8a7145c260b38e3f1b1852154&name=FilAm%20TV'">
+                        <div class="fc-filam-fill"><div></div></div>
+                        <img src="assets/images/FilAm.png" alt="FilAm TV" class="content-card-image fc-filam-img" loading="lazy">
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">FilAm TV</div>
+                            <div class="content-card-info">For Fil-Ams. By Fil-Ams.</div>
+                        </div>
+                    </div>
+                    <div class="content-card fc-kids" onclick="window.location.href='kids-corner.html'">
+                        <div class="fc-kids-bg"></div>
+                        <img src="assets/images/kids-avatar.png" alt="Kids Corner" class="fc-kids-img" loading="lazy">
+                        <div class="fc-kids-label">🌟 KIDS CORNER</div>
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">Kids Corner</div>
+                            <div class="content-card-info">Safe, family-friendly shows</div>
+                        </div>
+                    </div>
                 </div>
                 <style>
                     @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
+                    /* FilAm TV: same blurred-fill method as eZWay so the full logo shows */
+                    #section-featured-channels .fc-filam { position: relative; background: #000; }
+                    #section-featured-channels .fc-filam-fill { position: absolute; inset: 0; z-index: 0; border-radius: 8px; overflow: hidden; pointer-events: none; }
+                    #section-featured-channels .fc-filam-fill > div { position: absolute; inset: 0; background: url('assets/images/FilAm.png') center / cover no-repeat; filter: blur(14px) brightness(0.6) saturate(1.3); transform: scale(1.25); }
+                    #section-featured-channels .fc-filam-img { position: relative; z-index: 1; object-fit: contain !important; object-position: center !important; background: transparent !important; padding: 0 !important; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.7)); }
+                    /* Kids Corner: avatar on a dark purple gradient */
+                    #section-featured-channels .fc-kids { position: relative; min-height: 300px; }
+                    #section-featured-channels .fc-kids-bg { position: absolute; inset: 0; z-index: 0; border-radius: 8px; background: radial-gradient(circle at 50% 35%, #3a1066 0%, #1a0533 50%, #0a0f1a 100%); }
+                    #section-featured-channels .fc-kids-img { position: absolute; top: 14%; left: 50%; transform: translateX(-50%); width: 62%; aspect-ratio: 1/1; border-radius: 50%; object-fit: cover; object-position: top center; border: 3px solid #ffd700; box-shadow: 0 0 18px rgba(255,215,0,0.5); z-index: 1; }
+                    #section-featured-channels .fc-kids-label { position: absolute; left: 0; right: 0; bottom: 18%; z-index: 2; text-align: center; font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 1.3rem; letter-spacing: 2px; color: #ffd700; text-shadow: 0 0 12px rgba(255,215,0,0.6); }
+                    @media (max-width: 767px) { #section-featured-channels .fc-kids { min-height: 0; aspect-ratio: 2 / 3; } #section-featured-channels .fc-kids-label { font-size: 1rem; } }
                     #section-featured-channels .content-card { overflow: hidden; border-radius: 8px; }
                     #section-featured-channels .fc-mwf { box-shadow: 0 0 18px rgba(255,214,10,0.35), 0 0 22px rgba(29,63,216,0.35); }
                     #section-featured-channels .fc-mwf { position: relative; min-height: 300px; background: radial-gradient(circle at 50% 30%, #1d3fd8 0%, #0a1a5c 55%, #050a1f 100%); }
@@ -8112,7 +8161,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
 
     // ── ADD KIDS CORNER CARD (Firestick only, appended after ad panel) ──
     function addKidsCornerCard() {
-        if (document.getElementById('flmKidsCornerCard')) return true;
+        if (document.getElementById('flmKidsCornerCard') || document.querySelector('.fp-kids')) return true;
         var adPanel = document.querySelector('.flm-ad-panel');
         var anchor = adPanel || document.querySelector('.event-cards-col');
         if (!anchor || !anchor.parentNode) return false;
@@ -8156,6 +8205,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.content-card',
             '.movie-card',
             '.mu-event-card',
+            '.fp-card',
             '#flmKidsCornerCard',
             '.flm-tv-stations-card',
             '.wtv-chip',
@@ -8245,6 +8295,7 @@ document.getElementById('trailerModal').addEventListener('click', function(e) {
             '.content-card, ' +
             '.movie-card, ' +
             '.mu-event-card, ' +
+            '.fp-card, ' +
             '.flm-tv-scroll-btn, ' +
             '.floating-btn-chat, ' +
             '.floating-btn-ai, ' +
