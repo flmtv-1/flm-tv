@@ -5247,6 +5247,31 @@
             }
         }
 
+        // Each home-page row's own folders on the drives (e.g. MOVIES = Y:\MOVIES,
+        // MORE MOVIES = X:\MOVIES-5). Used so a "Home" tag only counts in the
+        // row whose folder the title actually lives in.
+        let _flmLibPaths = null;
+        function getLibraryPaths() {
+            if (!_flmLibPaths) {
+                _flmLibPaths = jellyfinFetch('/Library/VirtualFolders', {})
+                    .then(list => {
+                        const map = {};
+                        (list || []).forEach(f => {
+                            map[f.ItemId] = (f.Locations || []).map(l =>
+                                String(l).replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase() + '/');
+                        });
+                        return map;
+                    })
+                    .catch(() => ({}));
+            }
+            return _flmLibPaths;
+        }
+        function inLibraryFolder(item, folders) {
+            const path = String(item.Path || '').replace(/\\/g, '/').toLowerCase();
+            if (!path) return false;
+            return folders.some(f => path.startsWith(f));
+        }
+
         async function loadCollectionSection(collection, section) {
             try {
                 // Collections row loads BoxSets faster with SortName
@@ -5266,7 +5291,7 @@
                         Recursive: true,
                         IncludeItemTypes: itemTypes,
                         Tags: homeTags.join('|'),
-                        Fields: 'Tags',
+                        Fields: 'Tags,Path',
                         SortBy: 'SortName',
                         Limit: 40
                     }).catch(() => null),
@@ -5289,8 +5314,12 @@
                     });
                     return best;
                 };
+                // Only keep picks that really live in THIS row's folder, so a title
+                // tagged in MOVIES (Y:) never shows up first in MORE MOVIES (X:).
+                const libFolders = (await getLibraryPaths())[collection.id] || [];
                 const pickedList = ((picked && picked.Items) || [])
                     .filter(it => homeRank(it) < 999)
+                    .filter(it => !libFolders.length || inLibraryFolder(it, libFolders))
                     .sort((a, b) => homeRank(a) - homeRank(b));
                 if (pickedList.length) {
                     const seen = new Set(pickedList.map(it => it.Id));

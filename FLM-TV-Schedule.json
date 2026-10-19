@@ -286,50 +286,56 @@
   },
   {
    "startTime": "19:48",
+   "name": "Finding Forrester",
+   "duration": 8170,
+   "category": "movie"
+  },
+  {
+   "startTime": "22:04",
    "name": "Matilda",
    "duration": 5888,
    "category": "movie"
   },
   {
-   "startTime": "21:26",
+   "startTime": "23:43",
    "name": "FLMTV.com",
    "duration": 28,
    "category": ""
   },
   {
-   "startTime": "21:27",
+   "startTime": "23:43",
    "name": "The X-Files",
    "duration": 2709,
    "category": "show"
-  },
-  {
-   "startTime": "22:12",
-   "name": "Ghost Rider",
-   "duration": 7405,
-   "category": "movie"
   }
  ],
  "2026-10-20": [
   {
-   "startTime": "00:15",
+   "startTime": "00:28",
+   "name": "Ghost Rider",
+   "duration": 7405,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:32",
    "name": "The Sixth Sense",
    "duration": 6443,
    "category": "movie"
   },
   {
-   "startTime": "02:03",
+   "startTime": "04:19",
    "name": "Harry Potter and the Chamber of Secrets",
    "duration": 10464,
    "category": "movie"
   },
   {
-   "startTime": "04:57",
+   "startTime": "07:13",
    "name": "The Bourne Ultimatum",
    "duration": 6919,
    "category": "movie"
   },
   {
-   "startTime": "06:52",
+   "startTime": "09:09",
    "name": "Lethal Weapon 4",
    "duration": 7643,
    "category": "movie"
