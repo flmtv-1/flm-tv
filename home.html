@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-flm-version="2026-10-18-live-cc">
 <head>
-    <!-- FLM TV home.html · VERSION 2026-10-18 · live CC button (search "VERSION" with Ctrl+U to check which file is live) -->
+    <!-- FLM TV home.html · VERSION 2026-10-19b · Home picks stay in their own row · live CC button (search "VERSION" with Ctrl+U to check which file is live) -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -5247,29 +5247,32 @@
             }
         }
 
-        // Each home-page row's own folders on the drives (e.g. MOVIES = Y:\MOVIES,
-        // MORE MOVIES = X:\MOVIES-5). Used so a "Home" tag only counts in the
-        // row whose folder the title actually lives in.
-        let _flmLibPaths = null;
-        function getLibraryPaths() {
-            if (!_flmLibPaths) {
-                _flmLibPaths = jellyfinFetch('/Library/VirtualFolders', {})
-                    .then(list => {
-                        const map = {};
-                        (list || []).forEach(f => {
-                            map[f.ItemId] = (f.Locations || []).map(l =>
-                                String(l).replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase() + '/');
-                        });
-                        return map;
-                    })
-                    .catch(() => ({}));
+        // HOME TAG PICKS: find every title tagged "Home" once, then ask Jellyfin
+        // which library each one really lives in (its "ancestors"). A pick only
+        // shows first in its OWN row, so a title from MOVIES (Y:) never leads
+        // MORE MOVIES (X:), even if Jellyfin's tag search ignores the row.
+        let _flmHomePicks = null;
+        function getHomePicks(homeTags) {
+            if (!_flmHomePicks) {
+                _flmHomePicks = jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    Recursive: true,
+                    IncludeItemTypes: 'Movie,Series,Book,MusicAlbum,BoxSet',
+                    Tags: homeTags.join('|'),
+                    Fields: 'Tags',
+                    SortBy: 'SortName',
+                    Limit: 300
+                }).then(async res => {
+                    const items = (res && res.Items) || [];
+                    await Promise.all(items.map(it =>
+                        jellyfinFetch(`/Items/${it.Id}/Ancestors`, { userId: JELLYFIN_CONFIG.USER_ID })
+                            .then(anc => { it._libs = new Set((anc || []).map(x => x.Id)); })
+                            .catch(() => { it._libs = new Set(); })
+                    ));
+                    console.log('🏠 Home-tag picks:', items.map(it => it.Name + ' -> ' + [...it._libs].join(',')));
+                    return items;
+                }).catch(() => []);
             }
-            return _flmLibPaths;
-        }
-        function inLibraryFolder(item, folders) {
-            const path = String(item.Path || '').replace(/\\/g, '/').toLowerCase();
-            if (!path) return false;
-            return folders.some(f => path.startsWith(f));
+            return _flmHomePicks;
         }
 
         async function loadCollectionSection(collection, section) {
@@ -5285,16 +5288,8 @@
                 const homeTags = ['Home', 'home', 'HOME'];
                 for (let n = 1; n <= 20; n++) homeTags.push('Home ' + n, 'home ' + n, 'Home' + n, 'home' + n);
 
-                let [picked, items] = await Promise.all([
-                    jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                        ParentId: collection.id,
-                        Recursive: true,
-                        IncludeItemTypes: itemTypes,
-                        Tags: homeTags.join('|'),
-                        Fields: 'Tags,Path',
-                        SortBy: 'SortName',
-                        Limit: 40
-                    }).catch(() => null),
+                let [allPicks, items] = await Promise.all([
+                    getHomePicks(homeTags),
                     jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
                         ParentId: collection.id,
                         Limit: 20,
@@ -5314,12 +5309,10 @@
                     });
                     return best;
                 };
-                // Only keep picks that really live in THIS row's folder, so a title
-                // tagged in MOVIES (Y:) never shows up first in MORE MOVIES (X:).
-                const libFolders = (await getLibraryPaths())[collection.id] || [];
-                const pickedList = ((picked && picked.Items) || [])
+                // Only picks that really live in THIS row's library
+                const pickedList = (allPicks || [])
+                    .filter(it => it._libs && it._libs.has(collection.id))
                     .filter(it => homeRank(it) < 999)
-                    .filter(it => !libFolders.length || inLibraryFolder(it, libFolders))
                     .sort((a, b) => homeRank(a) - homeRank(b));
                 if (pickedList.length) {
                     const seen = new Set(pickedList.map(it => it.Id));
