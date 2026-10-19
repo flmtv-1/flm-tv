@@ -1,46 +1,338 @@
 {
-  "2026-10-18": [
-    {
-      "startTime": "08:32",
-      "name": "Sesame Street",
-      "duration": 3355,
-      "category": "show"
-    },
-    {
-      "startTime": "09:28",
-      "name": "Super Why!",
-      "duration": 1620,
-      "category": "show"
-    },
-    {
-      "startTime": "09:55",
-      "name": "Charlie Brown and Snoopy Show",
-      "duration": 1349,
-      "category": "show"
-    },
-    {
-      "startTime": "10:18",
-      "name": "The Osmonds",
-      "duration": 1343,
-      "category": "show"
-    },
-    {
-      "startTime": "10:40",
-      "name": "Curious George",
-      "duration": 1420,
-      "category": "show"
-    },
-    {
-      "startTime": "11:04",
-      "name": "Zaina Juliette & Friends",
-      "duration": 1705,
-      "category": ""
-    },
-    {
-      "startTime": "11:32",
-      "name": "Locals In Las Vegas",
-      "duration": 1709,
-      "category": "show"
-    }
-  ]
+ "2026-10-18": [
+  {
+   "startTime": "12:09",
+   "name": "Avatar: The Way of Water",
+   "duration": 11558,
+   "category": "movie"
+  },
+  {
+   "startTime": "15:21",
+   "name": "Zaina Juliette & Friends",
+   "duration": 1709,
+   "category": ""
+  },
+  {
+   "startTime": "15:50",
+   "name": "Locals In Las Vegas",
+   "duration": 1709,
+   "category": "show"
+  },
+  {
+   "startTime": "16:18",
+   "name": "Cloudy with a Chance of Meatballs",
+   "duration": 5689,
+   "category": "movie"
+  },
+  {
+   "startTime": "17:53",
+   "name": "Dolly - Welcome Home",
+   "duration": 221,
+   "category": ""
+  },
+  {
+   "startTime": "17:57",
+   "name": "Zaina Juliette - The Moment",
+   "duration": 230,
+   "category": ""
+  },
+  {
+   "startTime": "18:01",
+   "name": "Ed Sullivan Show",
+   "duration": 381,
+   "category": "show"
+  },
+  {
+   "startTime": "18:07",
+   "name": "Facts of Life",
+   "duration": 1466,
+   "category": "show"
+  },
+  {
+   "startTime": "18:31",
+   "name": "227",
+   "duration": 1438,
+   "category": "show"
+  },
+  {
+   "startTime": "18:55",
+   "name": "The Bernie Mac Show 1",
+   "duration": 1335,
+   "category": "show"
+  },
+  {
+   "startTime": "19:18",
+   "name": "The Bernie Mac Show 2",
+   "duration": 1335,
+   "category": "show"
+  },
+  {
+   "startTime": "19:40",
+   "name": "Ashwater",
+   "duration": 24,
+   "category": ""
+  },
+  {
+   "startTime": "19:40",
+   "name": "Malcolm in the Middle 1",
+   "duration": 1343,
+   "category": "show"
+  },
+  {
+   "startTime": "20:03",
+   "name": "Malcolm in the Middle 2",
+   "duration": 1341,
+   "category": "show"
+  },
+  {
+   "startTime": "20:25",
+   "name": "The PJs",
+   "duration": 1350,
+   "category": "show"
+  },
+  {
+   "startTime": "20:48",
+   "name": "The Simpsons",
+   "duration": 1303,
+   "category": "show"
+  },
+  {
+   "startTime": "21:09",
+   "name": "Matilda",
+   "duration": 5888,
+   "category": "movie"
+  },
+  {
+   "startTime": "22:47",
+   "name": "Finding Forrester",
+   "duration": 8170,
+   "category": "movie"
+  }
+ ],
+ "2026-10-19": [
+  {
+   "startTime": "01:18",
+   "name": "Throw Momma from the Train",
+   "duration": 5245,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:45",
+   "name": "Jurassic Park III",
+   "duration": 4958,
+   "category": "movie"
+  },
+  {
+   "startTime": "04:08",
+   "name": "Ashwater",
+   "duration": 24,
+   "category": ""
+  },
+  {
+   "startTime": "04:08",
+   "name": "Ghost Rider",
+   "duration": 7405,
+   "category": "movie"
+  },
+  {
+   "startTime": "06:11",
+   "name": "Eclipse Over America",
+   "duration": 3181,
+   "category": "show"
+  },
+  {
+   "startTime": "07:04",
+   "name": "Sesame Street 1",
+   "duration": 1555,
+   "category": "show"
+  },
+  {
+   "startTime": "07:30",
+   "name": "Sesame Street 2",
+   "duration": 1555,
+   "category": "show"
+  },
+  {
+   "startTime": "07:56",
+   "name": "Super Why!",
+   "duration": 1620,
+   "category": "show"
+  },
+  {
+   "startTime": "08:23",
+   "name": "Lucky Seven Sampson",
+   "duration": 185,
+   "category": "show"
+  },
+  {
+   "startTime": "08:26",
+   "name": "Figure Eight",
+   "duration": 187,
+   "category": "show"
+  },
+  {
+   "startTime": "08:29",
+   "name": "Naughty Number Nine",
+   "duration": 188,
+   "category": "show"
+  },
+  {
+   "startTime": "08:33",
+   "name": "The Good Eleven",
+   "duration": 182,
+   "category": "show"
+  },
+  {
+   "startTime": "08:36",
+   "name": "FLM TV",
+   "duration": 15,
+   "category": ""
+  },
+  {
+   "startTime": "08:36",
+   "name": "Garfield Gets Real",
+   "duration": 4668,
+   "category": "movie"
+  },
+  {
+   "startTime": "09:54",
+   "name": "The Monkees",
+   "duration": 1504,
+   "category": "show"
+  },
+  {
+   "startTime": "10:19",
+   "name": "Life with Lucy",
+   "duration": 1496,
+   "category": "show"
+  },
+  {
+   "startTime": "10:44",
+   "name": "The Lucy Show",
+   "duration": 1517,
+   "category": "show"
+  },
+  {
+   "startTime": "11:09",
+   "name": "Leave It to Beaver",
+   "duration": 1557,
+   "category": "show"
+  },
+  {
+   "startTime": "11:35",
+   "name": "The Andy Griffith Show 1",
+   "duration": 1532,
+   "category": "show"
+  },
+  {
+   "startTime": "12:00",
+   "name": "The Andy Griffith Show 2",
+   "duration": 1469,
+   "category": "show"
+  },
+  {
+   "startTime": "12:25",
+   "name": "What's Happening!!",
+   "duration": 1516,
+   "category": "show"
+  },
+  {
+   "startTime": "12:50",
+   "name": "227",
+   "duration": 1435,
+   "category": "show"
+  },
+  {
+   "startTime": "13:14",
+   "name": "Good Times",
+   "duration": 1493,
+   "category": "show"
+  },
+  {
+   "startTime": "13:39",
+   "name": "The Jeffersons 1",
+   "duration": 1483,
+   "category": "show"
+  },
+  {
+   "startTime": "14:04",
+   "name": "The Jeffersons 2",
+   "duration": 1478,
+   "category": "show"
+  },
+  {
+   "startTime": "14:28",
+   "name": "SheBoujay",
+   "duration": 60,
+   "category": ""
+  },
+  {
+   "startTime": "14:29",
+   "name": "A Bug's Life",
+   "duration": 5693,
+   "category": "movie"
+  },
+  {
+   "startTime": "16:04",
+   "name": "Charlie and the Chocolate Factory",
+   "duration": 6923,
+   "category": "movie"
+  },
+  {
+   "startTime": "18:00",
+   "name": "Alice in Wonderland",
+   "duration": 6514,
+   "category": "movie"
+  },
+  {
+   "startTime": "19:48",
+   "name": "Matilda",
+   "duration": 5888,
+   "category": "movie"
+  },
+  {
+   "startTime": "21:26",
+   "name": "FLMTV.com",
+   "duration": 28,
+   "category": ""
+  },
+  {
+   "startTime": "21:27",
+   "name": "The X-Files",
+   "duration": 2709,
+   "category": "show"
+  },
+  {
+   "startTime": "22:12",
+   "name": "Ghost Rider",
+   "duration": 7405,
+   "category": "movie"
+  }
+ ],
+ "2026-10-20": [
+  {
+   "startTime": "00:15",
+   "name": "The Sixth Sense",
+   "duration": 6443,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:03",
+   "name": "Harry Potter and the Chamber of Secrets",
+   "duration": 10464,
+   "category": "movie"
+  },
+  {
+   "startTime": "04:57",
+   "name": "The Bourne Ultimatum",
+   "duration": 6919,
+   "category": "movie"
+  },
+  {
+   "startTime": "06:52",
+   "name": "Lethal Weapon 4",
+   "duration": 7643,
+   "category": "movie"
+  }
+ ]
 }
