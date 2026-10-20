@@ -329,16 +329,348 @@
    "category": "movie"
   },
   {
-   "startTime": "07:13",
+   "startTime": "07:15",
+   "name": "Sesame Street",
+   "duration": 3355,
+   "category": "show"
+  },
+  {
+   "startTime": "08:11",
+   "name": "Sesame Street 2",
+   "duration": 1558,
+   "category": "show"
+  },
+  {
+   "startTime": "08:37",
+   "name": "Super Why!",
+   "duration": 1546,
+   "category": "show"
+  },
+  {
+   "startTime": "09:02",
+   "name": "Ready Jet Go!",
+   "duration": 1581,
+   "category": "show"
+  },
+  {
+   "startTime": "09:29",
+   "name": "Nature Cat (Special)",
+   "duration": 3185,
+   "category": "show"
+  },
+  {
+   "startTime": "10:22",
+   "name": "The Three Stooges",
+   "duration": 973,
+   "category": "show"
+  },
+  {
+   "startTime": "10:38",
+   "name": "The Addams Family",
+   "duration": 1542,
+   "category": "show"
+  },
+  {
+   "startTime": "11:04",
+   "name": "Bewitched",
+   "duration": 1530,
+   "category": "show"
+  },
+  {
+   "startTime": "11:29",
+   "name": "Mister Ed",
+   "duration": 1534,
+   "category": "show"
+  },
+  {
+   "startTime": "11:55",
+   "name": "The Lucy Show",
+   "duration": 1507,
+   "category": "show"
+  },
+  {
+   "startTime": "12:20",
+   "name": "Leave It to Beaver",
+   "duration": 1549,
+   "category": "show"
+  },
+  {
+   "startTime": "12:46",
+   "name": "FLMTV.com",
+   "duration": 25,
+   "category": ""
+  },
+  {
+   "startTime": "12:46",
+   "name": "Zaina-Spotlight",
+   "duration": 60,
+   "category": ""
+  },
+  {
+   "startTime": "12:47",
+   "name": "Road Wars Trailer",
+   "duration": 91,
+   "category": ""
+  },
+  {
+   "startTime": "12:49",
+   "name": "ALF",
+   "duration": 1478,
+   "category": "show"
+  },
+  {
+   "startTime": "13:13",
+   "name": "Benson",
+   "duration": 1498,
+   "category": "show"
+  },
+  {
+   "startTime": "13:38",
+   "name": "227",
+   "duration": 1440,
+   "category": "show"
+  },
+  {
+   "startTime": "14:02",
+   "name": "Good Times",
+   "duration": 1493,
+   "category": "show"
+  },
+  {
+   "startTime": "14:27",
+   "name": "What's Happening!!",
+   "duration": 1530,
+   "category": "show"
+  },
+  {
+   "startTime": "14:53",
+   "name": "The Jeffersons",
+   "duration": 1478,
+   "category": "show"
+  },
+  {
+   "startTime": "15:17",
+   "name": "Chilly Willy",
+   "duration": 365,
+   "category": "show"
+  },
+  {
+   "startTime": "15:23",
+   "name": "Woody Woodpecker",
+   "duration": 372,
+   "category": "show"
+  },
+  {
+   "startTime": "15:30",
+   "name": "Witty Kitty",
+   "duration": 374,
+   "category": "show"
+  },
+  {
+   "startTime": "15:36",
+   "name": "Woody Woodpecker 2",
+   "duration": 374,
+   "category": "show"
+  },
+  {
+   "startTime": "15:42",
+   "name": "Greedy Gabby Gator",
+   "duration": 378,
+   "category": "show"
+  },
+  {
+   "startTime": "15:48",
+   "name": "Onward",
+   "duration": 6141,
+   "category": "movie"
+  },
+  {
+   "startTime": "17:31",
+   "name": "Ashwater",
+   "duration": 24,
+   "category": ""
+  },
+  {
+   "startTime": "17:31",
+   "name": "Zaina Juliette",
+   "duration": 86,
+   "category": ""
+  },
+  {
+   "startTime": "17:33",
+   "name": "The Andy Griffith Show 1",
+   "duration": 1541,
+   "category": "show"
+  },
+  {
+   "startTime": "17:58",
+   "name": "The Andy Griffith Show 2",
+   "duration": 1535,
+   "category": "show"
+  },
+  {
+   "startTime": "18:24",
+   "name": "Sanford and Son",
+   "duration": 1498,
+   "category": "show"
+  },
+  {
+   "startTime": "18:49",
+   "name": "Malcolm in the Middle",
+   "duration": 1343,
+   "category": "show"
+  },
+  {
+   "startTime": "19:11",
+   "name": "That '70s Show",
+   "duration": 1332,
+   "category": "show"
+  },
+  {
+   "startTime": "19:33",
+   "name": "The X-Files",
+   "duration": 2711,
+   "category": "show"
+  },
+  {
+   "startTime": "20:19",
    "name": "The Bourne Ultimatum",
    "duration": 6919,
    "category": "movie"
   },
   {
-   "startTime": "09:09",
+   "startTime": "22:14",
    "name": "Lethal Weapon 4",
    "duration": 7643,
    "category": "movie"
+  }
+ ],
+ "2026-10-21": [
+  {
+   "startTime": "00:21",
+   "name": "Finding Forrester",
+   "duration": 8170,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:37",
+   "name": "Big Mommas",
+   "duration": 6777,
+   "category": "movie"
+  },
+  {
+   "startTime": "04:30",
+   "name": "Impossible Fixes",
+   "duration": 2525,
+   "category": "show"
+  },
+  {
+   "startTime": "05:13",
+   "name": "Michael Jackson's This Is It",
+   "duration": 6677,
+   "category": "movie"
+  },
+  {
+   "startTime": "07:04",
+   "name": "Sesame Street 1",
+   "duration": 3143,
+   "category": "show"
+  },
+  {
+   "startTime": "07:56",
+   "name": "Sesame Street 2",
+   "duration": 1558,
+   "category": "show"
+  },
+  {
+   "startTime": "08:22",
+   "name": "Mister Rogers' Neighborhood",
+   "duration": 1727,
+   "category": "show"
+  },
+  {
+   "startTime": "08:51",
+   "name": "Super Why!",
+   "duration": 1620,
+   "category": "show"
+  },
+  {
+   "startTime": "09:18",
+   "name": "Schoolhouse Rock: Noun",
+   "duration": 185,
+   "category": "show"
+  },
+  {
+   "startTime": "09:21",
+   "name": "Schoolhouse Rock: Verb",
+   "duration": 194,
+   "category": "show"
+  },
+  {
+   "startTime": "09:24",
+   "name": "Schoolhouse Rock: Conjunction Junction",
+   "duration": 186,
+   "category": "show"
+  },
+  {
+   "startTime": "09:27",
+   "name": "Schoolhouse Rock: Interjections",
+   "duration": 192,
+   "category": "show"
+  },
+  {
+   "startTime": "09:31",
+   "name": "Schoolhouse Rock: Unpack Your Adjectives",
+   "duration": 183,
+   "category": "show"
+  },
+  {
+   "startTime": "09:34",
+   "name": "Schoolhouse Rock: Get Your Adverbs Here",
+   "duration": 192,
+   "category": "show"
+  },
+  {
+   "startTime": "09:37",
+   "name": "Peter Pan",
+   "duration": 4603,
+   "category": "movie"
+  },
+  {
+   "startTime": "10:54",
+   "name": "Gilligan's Island",
+   "duration": 1520,
+   "category": "show"
+  },
+  {
+   "startTime": "11:19",
+   "name": "The Facts of Life",
+   "duration": 1451,
+   "category": "show"
+  },
+  {
+   "startTime": "11:43",
+   "name": "The Andy Griffith Show 1",
+   "duration": 1550,
+   "category": "show"
+  },
+  {
+   "startTime": "12:09",
+   "name": "The Andy Griffith Show 2",
+   "duration": 1521,
+   "category": "show"
+  },
+  {
+   "startTime": "12:34",
+   "name": "The Lucy Show",
+   "duration": 1509,
+   "category": "show"
+  },
+  {
+   "startTime": "12:59",
+   "name": "Leave It to Beaver",
+   "duration": 1551,
+   "category": "show"
   }
  ]
 }

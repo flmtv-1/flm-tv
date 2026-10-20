@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-flm-version="2026-10-18-live-cc">
 <head>
-    <!-- FLM TV home.html · VERSION 2026-10-19b · Home picks stay in their own row · live CC button (search "VERSION" with Ctrl+U to check which file is live) -->
+    <!-- FLM TV home.html · VERSION 2026-10-20 · no Home picks · live CC button (search "VERSION" with Ctrl+U to check which file is live) -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -5247,78 +5247,19 @@
             }
         }
 
-        // HOME TAG PICKS: find every title tagged "Home" once, then ask Jellyfin
-        // which library each one really lives in (its "ancestors"). A pick only
-        // shows first in its OWN row, so a title from MOVIES (Y:) never leads
-        // MORE MOVIES (X:), even if Jellyfin's tag search ignores the row.
-        let _flmHomePicks = null;
-        function getHomePicks(homeTags) {
-            if (!_flmHomePicks) {
-                _flmHomePicks = jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                    Recursive: true,
-                    IncludeItemTypes: 'Movie,Series,Book,MusicAlbum,BoxSet',
-                    Tags: homeTags.join('|'),
-                    Fields: 'Tags',
-                    SortBy: 'SortName',
-                    Limit: 300
-                }).then(async res => {
-                    const items = (res && res.Items) || [];
-                    await Promise.all(items.map(it =>
-                        jellyfinFetch(`/Items/${it.Id}/Ancestors`, { userId: JELLYFIN_CONFIG.USER_ID })
-                            .then(anc => { it._libs = new Set((anc || []).map(x => x.Id)); })
-                            .catch(() => { it._libs = new Set(); })
-                    ));
-                    console.log('🏠 Home-tag picks:', items.map(it => it.Name + ' -> ' + [...it._libs].join(',')));
-                    return items;
-                }).catch(() => []);
-            }
-            return _flmHomePicks;
-        }
-
         async function loadCollectionSection(collection, section) {
             try {
                 // Collections row loads BoxSets faster with SortName
                 const isCollections = collection.name === 'Collections';
                 const itemTypes = isCollections ? 'BoxSet' : 'Movie,Series,Book,MusicAlbum';
 
-                // HAND-PICKED TITLES: in Jellyfin, add the tag "Home" to any title
-                // (Edit Metadata > Tags) and it shows first in its row here.
-                // For an exact order use "Home 1", "Home 2", "Home 3"... (up to 20).
-                // Untagged titles fill the rest of the row like before.
-                const homeTags = ['Home', 'home', 'HOME'];
-                for (let n = 1; n <= 20; n++) homeTags.push('Home ' + n, 'home ' + n, 'Home' + n, 'home' + n);
-
-                let [allPicks, items] = await Promise.all([
-                    getHomePicks(homeTags),
-                    jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                        ParentId: collection.id,
-                        Limit: 20,
-                        SortBy: isCollections ? 'SortName' : 'DateCreated',
-                        Recursive: true,
-                        IncludeItemTypes: itemTypes,
-                    })
-                ]);
-
-                // "Home 1" = 1, "Home 2" = 2 ... plain "Home" comes after the numbered ones
-                const homeRank = item => {
-                    let best = 999;
-                    (item.Tags || []).forEach(t => {
-                        const m = String(t).trim().match(/^home\s*(\d+)$/i);
-                        if (m) best = Math.min(best, parseInt(m[1], 10));
-                        else if (/^home$/i.test(String(t).trim()) && best === 999) best = 500;
-                    });
-                    return best;
-                };
-                // Only picks that really live in THIS row's library
-                const pickedList = (allPicks || [])
-                    .filter(it => it._libs && it._libs.has(collection.id))
-                    .filter(it => homeRank(it) < 999)
-                    .sort((a, b) => homeRank(a) - homeRank(b));
-                if (pickedList.length) {
-                    const seen = new Set(pickedList.map(it => it.Id));
-                    const rest = ((items && items.Items) || []).filter(it => !seen.has(it.Id));
-                    items = { Items: pickedList.concat(rest).slice(0, Math.max(20, pickedList.length)) };
-                }
+                const items = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                    ParentId: collection.id,
+                    Limit: 20,
+                    SortBy: isCollections ? 'SortName' : 'DateCreated',
+                    Recursive: true,
+                    IncludeItemTypes: itemTypes,
+                });
 
                 // Replace placeholder header with full header including View All
                 const header = document.createElement('div');

@@ -370,7 +370,7 @@ function updateProgress() {
 }
 
 // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
-// Updated: 2026-10-19 02:32
+// Updated: 2026-10-20 08:11
 const TODAY_SCHEDULE = [
   {t:"12:09",n:"Avatar: The Way of Water",d:11558,cat:"movie",date:"2026-10-18"},
   {t:"15:21",n:"Zaina Juliette & Friends",d:1709,cat:"",date:"2026-10-18"},
@@ -419,14 +419,43 @@ const TODAY_SCHEDULE = [
   {t:"14:29",n:"A Bug\'s Life",d:5693,cat:"movie",date:"2026-10-19"},
   {t:"16:04",n:"Charlie and the Chocolate Factory",d:6923,cat:"movie",date:"2026-10-19"},
   {t:"18:00",n:"Alice in Wonderland",d:6514,cat:"movie",date:"2026-10-19"},
-  {t:"19:48",n:"Matilda",d:5888,cat:"movie",date:"2026-10-19"},
-  {t:"21:26",n:"FLMTV.com",d:28,cat:"",date:"2026-10-19"},
-  {t:"21:27",n:"The X-Files",d:2709,cat:"",date:"2026-10-19"},
-  {t:"22:12",n:"Ghost Rider",d:7405,cat:"movie",date:"2026-10-19"},
-  {t:"00:15",n:"The Sixth Sense",d:6443,cat:"movie",date:"2026-10-20"},
-  {t:"02:03",n:"Harry Potter and the Chamber of Secrets",d:10464,cat:"movie",date:"2026-10-20"},
-  {t:"04:57",n:"The Bourne Ultimatum",d:6919,cat:"movie",date:"2026-10-20"},
-  {t:"06:52",n:"Lethal Weapon 4",d:7643,cat:"movie",date:"2026-10-20"}
+  {t:"19:48",n:"Finding Forrester",d:8170,cat:"movie",date:"2026-10-19"},
+  {t:"22:04",n:"Matilda",d:5888,cat:"movie",date:"2026-10-19"},
+  {t:"23:43",n:"FLMTV.com",d:28,cat:"",date:"2026-10-19"},
+  {t:"23:43",n:"The X-Files",d:2709,cat:"",date:"2026-10-19"},
+  {t:"00:28",n:"Ghost Rider",d:7405,cat:"movie",date:"2026-10-20"},
+  {t:"02:32",n:"The Sixth Sense",d:6443,cat:"movie",date:"2026-10-20"},
+  {t:"04:19",n:"Harry Potter and the Chamber of Secrets",d:10464,cat:"movie",date:"2026-10-20"},
+  {t:"07:15",n:"Sesame Street",d:3355,cat:"",date:"2026-10-20"},
+  {t:"08:11",n:"Sesame Street 2",d:1558,cat:"",date:"2026-10-20"},
+  {t:"08:37",n:"Super Why!",d:1546,cat:"",date:"2026-10-20"},
+  {t:"09:02",n:"Ready Jet Go!",d:1581,cat:"",date:"2026-10-20"},
+  {t:"09:29",n:"Nature Cat (Special)",d:3185,cat:"",date:"2026-10-20"},
+  {t:"10:22",n:"The Three Stooges",d:973,cat:"",date:"2026-10-20"},
+  {t:"10:38",n:"The Addams Family",d:1542,cat:"",date:"2026-10-20"},
+  {t:"11:04",n:"Bewitched",d:1530,cat:"",date:"2026-10-20"},
+  {t:"11:29",n:"Mister Ed",d:1534,cat:"",date:"2026-10-20"},
+  {t:"11:55",n:"The Lucy Show",d:1507,cat:"",date:"2026-10-20"},
+  {t:"12:20",n:"Leave It to Beaver",d:1549,cat:"",date:"2026-10-20"},
+  {t:"12:46",n:"FLMTV.com",d:25,cat:"",date:"2026-10-20"},
+  {t:"12:46",n:"Zaina-Spotlight",d:60,cat:"",date:"2026-10-20"},
+  {t:"12:47",n:"Road Wars Trailer",d:91,cat:"",date:"2026-10-20"},
+  {t:"12:49",n:"ALF",d:1478,cat:"",date:"2026-10-20"},
+  {t:"13:13",n:"Benson",d:1498,cat:"",date:"2026-10-20"},
+  {t:"13:38",n:"227",d:1440,cat:"",date:"2026-10-20"},
+  {t:"14:02",n:"Good Times",d:1493,cat:"",date:"2026-10-20"},
+  {t:"14:27",n:"What\'s Happening!!",d:1530,cat:"",date:"2026-10-20"},
+  {t:"14:53",n:"The Jeffersons",d:1478,cat:"",date:"2026-10-20"},
+  {t:"15:17",n:"Chilly Willy",d:365,cat:"",date:"2026-10-20"},
+  {t:"15:23",n:"Woody Woodpecker",d:372,cat:"",date:"2026-10-20"},
+  {t:"15:30",n:"Witty Kitty",d:374,cat:"",date:"2026-10-20"},
+  {t:"15:36",n:"Woody Woodpecker 2",d:374,cat:"",date:"2026-10-20"},
+  {t:"15:42",n:"Greedy Gabby Gator",d:378,cat:"",date:"2026-10-20"},
+  {t:"15:48",n:"Onward",d:6141,cat:"movie",date:"2026-10-20"},
+  {t:"17:31",n:"Ashwater",d:24,cat:"",date:"2026-10-20"},
+  {t:"17:31",n:"Zaina Juliette",d:86,cat:"",date:"2026-10-20"},
+  {t:"17:33",n:"The Bourne Ultimatum",d:6919,cat:"movie",date:"2026-10-20"},
+  {t:"19:28",n:"Lethal Weapon 4",d:7643,cat:"movie",date:"2026-10-20"}
 ];
 
 // ── LOAD JSON & INIT ─────────────────────────────────────────────
