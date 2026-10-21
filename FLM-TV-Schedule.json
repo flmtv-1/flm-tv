@@ -547,130 +547,258 @@
  ],
  "2026-10-21": [
   {
-   "startTime": "00:21",
+   "startTime": "00:19",
    "name": "Finding Forrester",
    "duration": 8170,
    "category": "movie"
   },
   {
-   "startTime": "02:37",
+   "startTime": "02:35",
    "name": "Big Mommas",
    "duration": 6777,
    "category": "movie"
   },
   {
-   "startTime": "04:30",
+   "startTime": "04:28",
    "name": "Impossible Fixes",
    "duration": 2525,
    "category": "show"
   },
   {
-   "startTime": "05:13",
+   "startTime": "05:10",
    "name": "Michael Jackson's This Is It",
    "duration": 6677,
    "category": "movie"
   },
   {
-   "startTime": "07:04",
+   "startTime": "07:01",
    "name": "Sesame Street 1",
    "duration": 3143,
    "category": "show"
   },
   {
-   "startTime": "07:56",
+   "startTime": "07:54",
    "name": "Sesame Street 2",
    "duration": 1558,
    "category": "show"
   },
   {
-   "startTime": "08:22",
+   "startTime": "08:20",
    "name": "Mister Rogers' Neighborhood",
    "duration": 1727,
    "category": "show"
   },
   {
-   "startTime": "08:51",
+   "startTime": "08:48",
    "name": "Super Why!",
    "duration": 1620,
    "category": "show"
   },
   {
-   "startTime": "09:18",
+   "startTime": "09:15",
    "name": "Schoolhouse Rock: Noun",
    "duration": 185,
    "category": "show"
   },
   {
-   "startTime": "09:21",
+   "startTime": "09:19",
    "name": "Schoolhouse Rock: Verb",
    "duration": 194,
    "category": "show"
   },
   {
-   "startTime": "09:24",
+   "startTime": "09:22",
    "name": "Schoolhouse Rock: Conjunction Junction",
    "duration": 186,
    "category": "show"
   },
   {
-   "startTime": "09:27",
+   "startTime": "09:25",
    "name": "Schoolhouse Rock: Interjections",
    "duration": 192,
    "category": "show"
   },
   {
-   "startTime": "09:31",
+   "startTime": "09:28",
    "name": "Schoolhouse Rock: Unpack Your Adjectives",
    "duration": 183,
    "category": "show"
   },
   {
-   "startTime": "09:34",
+   "startTime": "09:31",
    "name": "Schoolhouse Rock: Get Your Adverbs Here",
    "duration": 192,
    "category": "show"
   },
   {
-   "startTime": "09:37",
+   "startTime": "09:34",
    "name": "Peter Pan",
    "duration": 4603,
    "category": "movie"
   },
   {
-   "startTime": "10:54",
+   "startTime": "10:51",
    "name": "Gilligan's Island",
    "duration": 1520,
    "category": "show"
   },
   {
-   "startTime": "11:19",
+   "startTime": "11:16",
    "name": "The Facts of Life",
    "duration": 1451,
    "category": "show"
   },
   {
-   "startTime": "11:43",
+   "startTime": "11:41",
    "name": "The Andy Griffith Show 1",
    "duration": 1550,
    "category": "show"
   },
   {
-   "startTime": "12:09",
+   "startTime": "12:06",
    "name": "The Andy Griffith Show 2",
    "duration": 1521,
    "category": "show"
   },
   {
-   "startTime": "12:34",
+   "startTime": "12:32",
    "name": "The Lucy Show",
    "duration": 1509,
    "category": "show"
   },
   {
-   "startTime": "12:59",
+   "startTime": "12:57",
    "name": "Leave It to Beaver",
    "duration": 1551,
    "category": "show"
+  },
+  {
+   "startTime": "13:23",
+   "name": "My Three Sons",
+   "duration": 1550,
+   "category": "show"
+  },
+  {
+   "startTime": "13:49",
+   "name": "The Munsters",
+   "duration": 1528,
+   "category": "show"
+  },
+  {
+   "startTime": "14:14",
+   "name": "The Three Stooges",
+   "duration": 1085,
+   "category": "show"
+  },
+  {
+   "startTime": "14:32",
+   "name": "Bewitched",
+   "duration": 1528,
+   "category": "show"
+  },
+  {
+   "startTime": "14:58",
+   "name": "The Facts of Life",
+   "duration": 1461,
+   "category": "show"
+  },
+  {
+   "startTime": "15:22",
+   "name": "What's Happening!!",
+   "duration": 1536,
+   "category": "show"
+  },
+  {
+   "startTime": "15:48",
+   "name": "Good Times",
+   "duration": 1522,
+   "category": "show"
+  },
+  {
+   "startTime": "16:13",
+   "name": "Archie Bunker's Place",
+   "duration": 1452,
+   "category": "show"
+  },
+  {
+   "startTime": "16:37",
+   "name": "Ashwater",
+   "duration": 24,
+   "category": ""
+  },
+  {
+   "startTime": "16:38",
+   "name": "FLMTV.com",
+   "duration": 28,
+   "category": ""
+  },
+  {
+   "startTime": "16:38",
+   "name": "Sanford and Son",
+   "duration": 1510,
+   "category": "show"
+  },
+  {
+   "startTime": "17:03",
+   "name": "The Jeffersons",
+   "duration": 1498,
+   "category": "show"
+  },
+  {
+   "startTime": "17:28",
+   "name": "Let's Go Luna!",
+   "duration": 1501,
+   "category": "show"
+  },
+  {
+   "startTime": "17:53",
+   "name": "Despicable Me",
+   "duration": 5681,
+   "category": "movie"
+  },
+  {
+   "startTime": "19:28",
+   "name": "The Golden Compass",
+   "duration": 6795,
+   "category": "movie"
+  },
+  {
+   "startTime": "21:21",
+   "name": "Michael Jackson's This Is It",
+   "duration": 6677,
+   "category": "movie"
+  },
+  {
+   "startTime": "23:12",
+   "name": "Raising Arizona",
+   "duration": 5646,
+   "category": "movie"
+  }
+ ],
+ "2026-10-22": [
+  {
+   "startTime": "00:46",
+   "name": "O Brother, Where Art Thou?",
+   "duration": 6429,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:34",
+   "name": "Masterpiece: All Creatures Great and Small",
+   "duration": 3185,
+   "category": "show"
+  },
+  {
+   "startTime": "03:27",
+   "name": "The Shining (FLM Cut)",
+   "duration": 8470,
+   "category": "movie"
+  },
+  {
+   "startTime": "05:48",
+   "name": "Exorcist II: The Heretic",
+   "duration": 7061,
+   "category": "movie"
   }
  ]
 }

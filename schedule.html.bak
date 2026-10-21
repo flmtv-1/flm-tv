@@ -370,7 +370,7 @@ function updateProgress() {
 }
 
 // ── TODAY'S SCHEDULE ──────────────────────────────────────────────
-// Updated: 2026-10-20 08:11
+// Updated: 2026-10-20 09:24
 const TODAY_SCHEDULE = [
   {t:"12:09",n:"Avatar: The Way of Water",d:11558,cat:"movie",date:"2026-10-18"},
   {t:"15:21",n:"Zaina Juliette & Friends",d:1709,cat:"",date:"2026-10-18"},
@@ -454,8 +454,35 @@ const TODAY_SCHEDULE = [
   {t:"15:48",n:"Onward",d:6141,cat:"movie",date:"2026-10-20"},
   {t:"17:31",n:"Ashwater",d:24,cat:"",date:"2026-10-20"},
   {t:"17:31",n:"Zaina Juliette",d:86,cat:"",date:"2026-10-20"},
-  {t:"17:33",n:"The Bourne Ultimatum",d:6919,cat:"movie",date:"2026-10-20"},
-  {t:"19:28",n:"Lethal Weapon 4",d:7643,cat:"movie",date:"2026-10-20"}
+  {t:"17:33",n:"The Andy Griffith Show 1",d:1541,cat:"",date:"2026-10-20"},
+  {t:"17:58",n:"The Andy Griffith Show 2",d:1535,cat:"",date:"2026-10-20"},
+  {t:"18:24",n:"Sanford and Son",d:1498,cat:"",date:"2026-10-20"},
+  {t:"18:49",n:"Malcolm in the Middle",d:1343,cat:"",date:"2026-10-20"},
+  {t:"19:11",n:"That \'70s Show",d:1332,cat:"",date:"2026-10-20"},
+  {t:"19:33",n:"The X-Files",d:2711,cat:"",date:"2026-10-20"},
+  {t:"20:19",n:"The Bourne Ultimatum",d:6919,cat:"movie",date:"2026-10-20"},
+  {t:"22:14",n:"Lethal Weapon 4",d:7643,cat:"movie",date:"2026-10-20"},
+  {t:"00:21",n:"Finding Forrester",d:8170,cat:"movie",date:"2026-10-21"},
+  {t:"02:37",n:"Big Mommas",d:6777,cat:"movie",date:"2026-10-21"},
+  {t:"04:30",n:"Impossible Fixes",d:2525,cat:"",date:"2026-10-21"},
+  {t:"05:13",n:"Michael Jackson\'s This Is It",d:6677,cat:"movie",date:"2026-10-21"},
+  {t:"07:04",n:"Sesame Street 1",d:3143,cat:"",date:"2026-10-21"},
+  {t:"07:56",n:"Sesame Street 2",d:1558,cat:"",date:"2026-10-21"},
+  {t:"08:22",n:"Mister Rogers\' Neighborhood",d:1727,cat:"",date:"2026-10-21"},
+  {t:"08:51",n:"Super Why!",d:1620,cat:"",date:"2026-10-21"},
+  {t:"09:18",n:"Schoolhouse Rock: Noun",d:185,cat:"",date:"2026-10-21"},
+  {t:"09:21",n:"Schoolhouse Rock: Verb",d:194,cat:"",date:"2026-10-21"},
+  {t:"09:24",n:"Schoolhouse Rock: Conjunction Junction",d:186,cat:"",date:"2026-10-21"},
+  {t:"09:27",n:"Schoolhouse Rock: Interjections",d:192,cat:"",date:"2026-10-21"},
+  {t:"09:31",n:"Schoolhouse Rock: Unpack Your Adjectives",d:183,cat:"",date:"2026-10-21"},
+  {t:"09:34",n:"Schoolhouse Rock: Get Your Adverbs Here",d:192,cat:"",date:"2026-10-21"},
+  {t:"09:37",n:"Peter Pan",d:4603,cat:"movie",date:"2026-10-21"},
+  {t:"10:54",n:"Gilligan\'s Island",d:1520,cat:"",date:"2026-10-21"},
+  {t:"11:19",n:"The Facts of Life",d:1451,cat:"",date:"2026-10-21"},
+  {t:"11:43",n:"The Andy Griffith Show 1",d:1550,cat:"",date:"2026-10-21"},
+  {t:"12:09",n:"The Andy Griffith Show 2",d:1521,cat:"",date:"2026-10-21"},
+  {t:"12:34",n:"The Lucy Show",d:1509,cat:"",date:"2026-10-21"},
+  {t:"12:59",n:"Leave It to Beaver",d:1551,cat:"",date:"2026-10-21"}
 ];
 
 // ── LOAD JSON & INIT ─────────────────────────────────────────────

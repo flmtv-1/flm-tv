@@ -174,7 +174,103 @@ html, body {
 .show-card.add-more i { font-size: 1.6rem; margin-bottom: 0.6rem; color: var(--gold); opacity: 0.6; }
 .show-card.add-more span { font-size: 0.75rem; letter-spacing: 0.05em; }
 
+.show-card.selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+.show-count { font-size: 0.7rem; color: var(--gold); margin-top: 0.3rem; letter-spacing: 0.05em; }
+
+/* ── EPISODES ── */
+.ep-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+  margin: 3rem 0 1.25rem;
+}
+.ep-header .section-heading { margin: 0; }
+.ep-tools { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.ep-search {
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.85rem;
+  width: 230px; max-width: 100%;
+}
+.ep-search:focus { outline: none; border-color: var(--gold); }
+.ep-search::placeholder { color: var(--text-dim); }
+.sort-btn {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.5);
+  border-radius: 6px;
+  color: var(--gold);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer;
+}
+.sort-btn:hover { background: var(--gold); color: #000; }
+.ep-status { color: var(--text-dim); font-size: 0.9rem; padding: 2rem 0; text-align: center; }
+.ep-status .spin {
+  display: inline-block; width: 18px; height: 18px; margin-right: 10px; vertical-align: -4px;
+  border: 2px solid rgba(201,168,76,0.25); border-top-color: var(--gold);
+  border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.ep-status button { margin-top: 1rem; }
+
+.ep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px,1fr));
+  gap: 1.25rem;
+}
+.ep-card {
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--dark2);
+  border: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none; color: inherit;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.ep-card:hover { transform: translateY(-4px); border-color: var(--gold); }
+.ep-thumb { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; }
+.ep-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ep-thumb img.logo-fallback { object-fit: contain; }
+.ep-num {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(201,168,76,0.6);
+  color: var(--gold);
+  font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 1px;
+  padding: 1px 8px; border-radius: 4px;
+}
+.ep-time {
+  position: absolute; bottom: 8px; right: 8px;
+  background: rgba(0,0,0,0.75); color: #fff;
+  font-size: 0.7rem; padding: 2px 6px; border-radius: 3px;
+}
+.ep-play {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.35);
+  opacity: 0; transition: opacity 0.2s;
+  font-size: 2rem; color: var(--gold);
+}
+.ep-card:hover .ep-play, .ep-card:focus .ep-play { opacity: 1; }
+.ep-info { padding: 0.75rem 0.9rem 0.9rem; }
+.ep-guest { font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
+.ep-sub { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.25rem; }
+
+@media (max-width: 768px) {
+  .container { padding: 1.25rem 1rem 3rem; }
+  .ep-grid { grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 0.85rem; }
+  .ep-search { width: 100%; }
+  .ep-tools { width: 100%; }
+}
+
 /* Fire TV focus */
+.ep-card:focus, .sort-btn:focus, .ep-search:focus {
+  outline: 4px solid #ffd700 !important;
+  outline-offset: 3px !important;
+}
+.ep-card:focus { transform: scale(1.03); position: relative; z-index: 10; }
 .back-btn:focus, .hero-card:focus, .show-card:focus {
   outline: 4px solid #ffd700 !important;
   outline-offset: 3px !important;
@@ -210,6 +306,16 @@ html, body {
 
     <h2 class="section-heading">On This Channel</h2>
     <div class="show-grid" id="showGrid"></div>
+
+    <div class="ep-header" id="episodes">
+      <h2 class="section-heading" id="epHeading">Episodes</h2>
+      <div class="ep-tools">
+        <input type="search" class="ep-search" id="epSearch" placeholder="Search by guest name…" aria-label="Search episodes by guest name">
+        <button type="button" class="sort-btn" id="sortBtn">NEWEST FIRST</button>
+      </div>
+    </div>
+    <div class="ep-grid" id="epGrid"></div>
+    <div class="ep-status" id="epStatus"><span class="spin"></span>Loading episodes…</div>
 
   </div>
 
@@ -254,43 +360,232 @@ html, body {
 </script>
 
 <script>
-  // ── DALE'S SHOWS ──────────────────────────────────────────────
-  // Add a new show any time by adding an entry here — no other
-  // code changes needed. Point `url` at that show's own stream/
-  // playback page once it has one; until then it can point at
-  // dale-live.html or be left out of the array.
-  const DALE_SHOWS = [
-    {
-      name: 'Las Vegas Tonight',
-      host: 'with Dale Davidson',
-      image: 'assets/images/DaleLogo.jpg',
-      url: 'dale-live.html',
-      live: true
-    }
+  // ── DALE'S SHOWS + EPISODES (pulled live from Jellyfin) ─────────
+  // Shows and episodes come straight from the Jellyfin library that
+  // points at V:\DR. DALE. New episodes appear after a library scan,
+  // and any new show folder Dale adds next to "Las Vegas Tonight"
+  // gets its own card automatically — no edits to this page needed.
+  // Same server/key as home.html; episodes open in movie-frame.html.
+  const JELLYFIN = {
+    SERVER:  'https://flmtv.com/jellyfin',
+    API_KEY: '62131ee22c0141c6b651be75a7444350'
+  };
+
+  // Known show(s). Used to find the library and as a fallback list
+  // if the library lookup fails. Las Vegas Tonight is shown first.
+  const DALE_SERIES = [
+    { id: '214f0f8dfbfd1a8123455417bbd9c8a4', name: 'Las Vegas Tonight' }
   ];
+  const HOST_LINE = 'with Dale Davidson';
+  const FALLBACK_IMG = 'assets/images/DaleLogo.jpg';
 
-  const grid = document.getElementById('showGrid');
+  const showGrid  = document.getElementById('showGrid');
+  const epGrid    = document.getElementById('epGrid');
+  const epStatus  = document.getElementById('epStatus');
+  const epHeading = document.getElementById('epHeading');
+  const epSearch  = document.getElementById('epSearch');
+  const sortBtn   = document.getElementById('sortBtn');
 
-  DALE_SHOWS.forEach(show => {
-    const card = document.createElement('a');
-    card.className = 'show-card';
-    card.href = show.url;
-    card.setAttribute('tabindex', '0');
-    card.innerHTML = `
-      ${show.live ? `<div class="show-live-badge"><span class="dot"></span><span class="txt">LIVE</span></div>` : ''}
-      <div class="show-cover"><img src="${show.image}" alt="${show.name}" loading="lazy"></div>
-      <div class="show-info">
-        <div class="show-name">${show.name}</div>
-        <div class="show-host">${show.host}</div>
-      </div>
-    `;
-    grid.appendChild(card);
+  let seriesList = [];
+  let currentSeries = null;
+  let episodes = [];
+  let newestFirst = true;
+  let loadToken = 0;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+      ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+
+  async function jf(endpoint, params = {}, isRetry = false) {
+    const q = new URLSearchParams({ api_key: JELLYFIN.API_KEY });
+    Object.keys(params).forEach(k => { if (params[k] != null) q.append(k, params[k]); });
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 12000);
+    try {
+      const r = await fetch(`${JELLYFIN.SERVER}${endpoint}?${q}`, {
+        mode: 'cors', credentials: 'omit',
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal
+      });
+      clearTimeout(t);
+      if (!r.ok) return null;
+      return await r.json();
+    } catch (e) {
+      clearTimeout(t);
+      if (!isRetry) return jf(endpoint, params, true);
+      return null;
+    }
+  }
+
+  function img(itemId, tag, w) {
+    return `${JELLYFIN.SERVER}/Items/${itemId}/Images/Primary?api_key=${JELLYFIN.API_KEY}` +
+           (tag ? `&tag=${tag}` : '') + `&fillWidth=${w}&quality=85&format=webp`;
+  }
+
+  // "Las Vegas Tonight - S01E300 - Pete Allman" -> "Pete Allman"
+  function guestName(ep) {
+    const n = (ep.Name || '').replace(/^.*?S\d+\s*E\d+\s*-\s*/i, '').trim();
+    return n || (ep.Name || 'Episode');
+  }
+
+  function minutes(ticks) {
+    if (!ticks) return '';
+    const m = Math.round(ticks / 600000000);
+    return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m} min`;
+  }
+
+  // ── Shows ──
+  async function loadSeries() {
+    let list = null;
+    // Find the library folder the known show lives in, then list every show in it
+    const known = await jf('/Items', { Ids: DALE_SERIES[0].id, Fields: 'ParentId' });
+    const parentId = known && known.Items && known.Items[0] && known.Items[0].ParentId;
+    if (parentId) {
+      const res = await jf('/Items', {
+        ParentId: parentId, IncludeItemTypes: 'Series', Recursive: 'true',
+        SortBy: 'SortName', Fields: 'ChildCount,RecursiveItemCount',
+        EnableImages: 'true', ImageTypeLimit: '1'
+      });
+      if (res && res.Items && res.Items.length) list = res.Items;
+    }
+    if (!list) {
+      const res = await jf('/Items', {
+        Ids: DALE_SERIES.map(s => s.id).join(','),
+        Fields: 'ChildCount,RecursiveItemCount', EnableImages: 'true'
+      });
+      list = (res && res.Items && res.Items.length) ? res.Items
+           : DALE_SERIES.map(s => ({ Id: s.id, Name: s.name }));
+    }
+    // Las Vegas Tonight first, the rest alphabetical
+    const firstId = DALE_SERIES[0].id;
+    list.sort((a, b) => (b.Id === firstId) - (a.Id === firstId));
+    seriesList = list;
+    renderSeries();
+  }
+
+  function renderSeries() {
+    showGrid.innerHTML = '';
+    seriesList.forEach(s => {
+      const card = document.createElement('a');
+      card.className = 'show-card';
+      card.href = '#episodes';
+      card.setAttribute('tabindex', '0');
+      card.dataset.id = s.Id;
+      const tag = s.ImageTags && s.ImageTags.Primary;
+      const cover = tag ? img(s.Id, tag, 400) : FALLBACK_IMG;
+      const count = s.RecursiveItemCount ? `${s.RecursiveItemCount} episodes` : '';
+      card.innerHTML = `
+        <div class="show-cover"><img src="${cover}" alt="${esc(s.Name)}" loading="lazy"
+             onerror="this.onerror=null;this.src='${FALLBACK_IMG}'"></div>
+        <div class="show-info">
+          <div class="show-name">${esc(s.Name)}</div>
+          <div class="show-host">${HOST_LINE}</div>
+          ${count ? `<div class="show-count">${count}</div>` : ''}
+        </div>`;
+      card.addEventListener('click', e => {
+        e.preventDefault();
+        selectSeries(s, true);
+      });
+      showGrid.appendChild(card);
+    });
+    if (seriesList.length < 2) {
+      const more = document.createElement('div');
+      more.className = 'show-card add-more';
+      more.innerHTML = `<i class="fas fa-plus"></i><span>More shows coming soon</span>`;
+      showGrid.appendChild(more);
+    }
+    const wanted = new URLSearchParams(location.search).get('show');
+    const start = seriesList.find(s => s.Id === wanted) || seriesList[0];
+    if (start) selectSeries(start, !!wanted);
+  }
+
+  // ── Episodes ──
+  async function selectSeries(s, scroll) {
+    currentSeries = s;
+    showGrid.querySelectorAll('.show-card').forEach(c =>
+      c.classList.toggle('selected', c.dataset.id === s.Id));
+    epHeading.textContent = `${s.Name} · Episodes`;
+    epSearch.value = '';
+    epGrid.innerHTML = '';
+    setStatus('<span class="spin"></span>Loading episodes…');
+    if (scroll) document.getElementById('episodes').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const myToken = ++loadToken;
+    const res = await jf(`/Shows/${s.Id}/Episodes`, {
+      Fields: 'PrimaryImageAspectRatio', EnableImages: 'true', ImageTypeLimit: '1'
+    });
+    if (myToken !== loadToken) return; // a different show was picked meanwhile
+
+    if (!res || !res.Items) {
+      setStatus('Episodes are taking longer than usual to load.<br>' +
+        '<button type="button" class="sort-btn" id="retryBtn">TRY AGAIN</button>');
+      document.getElementById('retryBtn').onclick = () => selectSeries(s, false);
+      return;
+    }
+    episodes = res.Items;
+    renderEpisodes();
+  }
+
+  function setStatus(html) {
+    epStatus.innerHTML = html;
+    epStatus.style.display = html ? 'block' : 'none';
+  }
+
+  function renderEpisodes() {
+    const term = epSearch.value.trim().toLowerCase();
+    let list = episodes.slice().sort((a, b) =>
+      ((a.ParentIndexNumber || 0) - (b.ParentIndexNumber || 0)) ||
+      ((a.IndexNumber || 0) - (b.IndexNumber || 0)));
+    if (newestFirst) list.reverse();
+    if (term) list = list.filter(ep =>
+      guestName(ep).toLowerCase().includes(term) || String(ep.IndexNumber || '').includes(term));
+
+    const seriesTag = currentSeries && currentSeries.ImageTags && currentSeries.ImageTags.Primary;
+    const frag = document.createDocumentFragment();
+    list.forEach(ep => {
+      const a = document.createElement('a');
+      a.className = 'ep-card';
+      a.href = `movie-frame.html?id=${ep.Id}`;
+      a.setAttribute('tabindex', '0');
+      const guest = guestName(ep);
+      let thumb, fallbackCls = '';
+      if (ep.ImageTags && ep.ImageTags.Primary) thumb = img(ep.Id, ep.ImageTags.Primary, 480);
+      else if (ep.SeriesPrimaryImageTag) { thumb = img(ep.SeriesId, ep.SeriesPrimaryImageTag, 480); fallbackCls = 'logo-fallback'; }
+      else if (seriesTag) { thumb = img(currentSeries.Id, seriesTag, 480); fallbackCls = 'logo-fallback'; }
+      else { thumb = FALLBACK_IMG; fallbackCls = 'logo-fallback'; }
+      const num = ep.IndexNumber != null ? `EP ${ep.IndexNumber}` : '';
+      const time = minutes(ep.RunTimeTicks);
+      a.innerHTML = `
+        <div class="ep-thumb">
+          <img src="${thumb}" class="${fallbackCls}" alt="${esc(guest)}" loading="lazy"
+               onerror="this.onerror=null;this.src='${FALLBACK_IMG}';this.className='logo-fallback'">
+          ${num ? `<span class="ep-num">${num}</span>` : ''}
+          ${time ? `<span class="ep-time">${time}</span>` : ''}
+          <div class="ep-play"><i class="fas fa-play-circle"></i></div>
+        </div>
+        <div class="ep-info">
+          <div class="ep-guest">${esc(guest)}</div>
+          <div class="ep-sub">${esc(currentSeries ? currentSeries.Name : '')}</div>
+        </div>`;
+      frag.appendChild(a);
+    });
+    epGrid.innerHTML = '';
+    epGrid.appendChild(frag);
+
+    if (!episodes.length) setStatus('New episodes coming soon.');
+    else if (!list.length) setStatus(`No episodes match “${esc(epSearch.value.trim())}”.`);
+    else setStatus('');
+  }
+
+  epSearch.addEventListener('input', () => { if (episodes.length) renderEpisodes(); });
+  sortBtn.addEventListener('click', () => {
+    newestFirst = !newestFirst;
+    sortBtn.textContent = newestFirst ? 'NEWEST FIRST' : 'OLDEST FIRST';
+    if (episodes.length) renderEpisodes();
   });
 
-  const addMore = document.createElement('div');
-  addMore.className = 'show-card add-more';
-  addMore.innerHTML = `<i class="fas fa-plus"></i><span>More shows coming soon</span>`;
-  grid.appendChild(addMore);
+  loadSeries();
 </script>
 
 <script>
@@ -299,7 +594,7 @@ html, body {
   if (!/AFT|FireTV|Silk/i.test(navigator.userAgent)) return;
 
   function getFocusable() {
-    return Array.from(document.querySelectorAll('.back-btn, .hero-card, .show-card'))
+    return Array.from(document.querySelectorAll('.back-btn, .hero-card, .show-card:not(.add-more), .ep-search, .sort-btn, .ep-card'))
       .filter(el => el.offsetParent !== null && el.offsetWidth > 0);
   }
   function findBest(cur, all, dir) {
@@ -332,6 +627,11 @@ html, body {
     if (!all.length) return;
     const focused = document.activeElement;
     const inList = all.indexOf(focused) >= 0;
+
+    // While typing in the search box, let the keyboard behave normally
+    // (Backspace deletes, Enter/left/right edit). Up/Down still leave the box.
+    if (focused && focused.tagName === 'INPUT' &&
+        ['Backspace','Enter',' ','ArrowLeft','ArrowRight'].includes(e.key)) return;
 
     if (!inList) {
       if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
