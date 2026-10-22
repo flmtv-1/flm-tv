@@ -3223,8 +3223,8 @@
                     <span class="flm-ad-label">FEATURED CHANNELS</span>
                 </div>
                 <div class="fp-pair">
-                    <!-- FILAM TV (no page yet: opens its category for now — swap to filam-tv.html when ready) -->
-                    <a href="category-detail.html?id=7bbd76b8a7145c260b38e3f1b1852154&amp;name=FilAm%20TV" class="fp-card fp-filam" title="FilAm TV">
+                    <!-- FILAM TV — opens the FilAm TV channel page -->
+                    <a href="filam-tv.html" class="fp-card fp-filam" title="FilAm TV">
                         <div class="fp-filam-fill"></div>
                         <img src="assets/images/FilAm.png" class="fp-filam-logo" alt="FilAm TV" onerror="this.style.display='none'">
                         <div class="fp-shade"></div>
@@ -5831,7 +5831,7 @@ function wtvMatches(ch, catKey) {
                             <div class="content-card-info">Featured Channel</div>
                         </div>
                     </div>
-                    <div class="content-card fc-filam" onclick="window.location.href='category-detail.html?id=7bbd76b8a7145c260b38e3f1b1852154&name=FilAm%20TV'">
+                    <div class="content-card fc-filam" onclick="window.location.href='filam-tv.html'">
                         <div class="fc-filam-fill"><div></div></div>
                         <img src="assets/images/FilAm.png" alt="FilAm TV" class="content-card-image fc-filam-img" loading="lazy">
                         <div class="content-card-overlay">
@@ -6837,6 +6837,12 @@ function wtvMatches(ch, catKey) {
         return;
     }
     
+    // Special handling for FilAm TV - its own channel page
+    if (collectionId === '7bbd76b8a7145c260b38e3f1b1852154') {
+        window.location.href = 'filam-tv.html';
+        return;
+    }
+
     // Special handling for Collections - redirect to collections browser
     if (collectionName === '🎬 Collections' || collectionId === '9d7ad6afe9afa2dab1a2f6e00ad28fa6') {
         window.location.href = 'flm-collection-browser.html';
