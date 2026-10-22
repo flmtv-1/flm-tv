@@ -369,7 +369,7 @@ img { display: block; max-width: 100%; }
     <h1><span>Two flags. One heart.</span> <span>All our stories.</span></h1>
     <p class="tagline">For Fil-Ams. By Fil-Ams. On FreeTV. Shows made in our community, from Manila memories to Las Vegas nights.</p>
     <div class="hero-actions">
-      <a class="btn btn-sun" id="watchNewest" href="#episodes"><i class="fas fa-play"></i> Watch the newest episode</a>
+      <a class="btn btn-sun" id="watchNewest" href="#shows"><i class="fas fa-play"></i> Watch the newest</a>
       <a class="btn btn-ghost" href="#shows">Browse shows</a>
     </div>
     <div class="now-playing" id="newestNote"></div>
@@ -379,24 +379,9 @@ img { display: block; max-width: 100%; }
 <main>
   <section class="block wrap" id="shows">
     <h2>Our shows</h2>
-    <p class="lede">Pick a show to see every episode.</p>
+    <p class="lede">Pick a show to start watching.</p>
     <div class="shows" id="showGrid"></div>
     <div class="status" id="showStatus"><span class="spin"></span>Loading shows…</div>
-  </section>
-
-  <section class="block wrap" id="episodes">
-    <div class="ep-head">
-      <div>
-        <h2 id="epHeading">Episodes</h2>
-      </div>
-      <div class="ep-tools">
-        <input type="search" class="ep-search" id="epSearch" placeholder="Search episodes" aria-label="Search episodes">
-        <button type="button" class="sort-btn" id="sortBtn">Newest first</button>
-      </div>
-    </div>
-    <div class="seasons" id="seasonTabs"></div>
-    <div class="episodes" id="epGrid"></div>
-    <div class="status" id="epStatus" style="display:none"></div>
   </section>
 
   <section class="block wrap" id="movies">
@@ -587,14 +572,23 @@ img { display: block; max-width: 100%; }
   };
 
   // ── SHOWS ────────────────────────────────────────────────────────
-  let shows = [], current = null, episodes = [], season = 'all', newestFirst = true, loadToken = 0;
+  // FilAm TV is their own home page: each show card opens that show's own page
+  // (movie-frame.html, same as series and movies everywhere else on FLM TV).
+  let shows = [];
+
+  function showLink(s) {
+    if (s.Type === 'Series' || s.Type === 'Movie' || s.Type === 'Video' || s.Type === 'Episode' || s.Type === 'BoxSet')
+      return `movie-frame.html?id=${s.Id}`;
+    // A plain folder (for example a 2-part special) opens its category page
+    return `category-detail.html?id=${s.Id}&name=${encodeURIComponent(showName(s))}`;
+  }
 
   async function loadShows() {
     const res = await jf('/Items', {
       ParentId: FILAM_LIBRARY_ID, SortBy: 'SortName',
-      Fields: 'ChildCount,RecursiveItemCount', EnableImages: 'true', ImageTypeLimit: '1'
+      Fields: 'ChildCount,RecursiveItemCount,ProductionYear', EnableImages: 'true', ImageTypeLimit: '1'
     });
-    const items = (res && res.Items) ? res.Items.filter(i => i.IsFolder) : null;
+    const items = (res && res.Items) ? res.Items : null;
     if (!items) {
       $('showStatus').innerHTML = 'The shows are taking longer than usual to load.<br>' +
         '<button type="button" class="btn btn-ghost" id="retryShows">Try again</button>';
@@ -605,8 +599,6 @@ img { display: block; max-width: 100%; }
     $('showStatus').style.display = 'none';
     shows = items;
     renderShows();
-    const wanted = new URLSearchParams(location.search).get('show');
-    selectShow(shows.find(s => s.Id === wanted) || shows[0], !!wanted);
     findNewest();
   }
 
@@ -616,163 +608,47 @@ img { display: block; max-width: 100%; }
     shows.forEach(s => {
       const a = document.createElement('a');
       a.className = 'show-card';
-      a.href = `?show=${s.Id}#episodes`;
-      a.dataset.id = s.Id;
+      a.href = showLink(s);
       const tag = s.ImageTags && s.ImageTags.Primary;
       const count = s.RecursiveItemCount || s.ChildCount;
       const host = SHOW_HOSTS[s.Name];
+      let meta = '';
+      if (host) meta = host;
+      else if (s.Type === 'Movie' || s.Type === 'Video') meta = s.ProductionYear ? String(s.ProductionYear) : 'Special';
+      else if (count) meta = count === 1 ? '1 episode' : `${count} episodes`;
       a.innerHTML = `
         <div class="show-art"><img src="${tag ? img(s.Id, tag, 500) : LOGO}" alt="" loading="lazy"
              onerror="this.onerror=null;this.src='${LOGO}'"></div>
         <div class="show-name">${esc(showName(s))}</div>
-        <div class="show-meta">${host ? esc(host) : (count ? `${count} episodes` : '')}</div>`;
-      a.addEventListener('click', e => { e.preventDefault(); selectShow(s, true); });
+        <div class="show-meta">${esc(meta)}</div>`;
       grid.appendChild(a);
     });
   }
 
-  // ── EPISODES ─────────────────────────────────────────────────────
-  // Works whether Jellyfin files the show as a TV series or as plain folders.
-  function seasonOf(ep) {
-    if (ep.ParentIndexNumber != null && ep.Type === 'Episode') return ep.ParentIndexNumber;
-    const m = /season\s*0*(\d+)/i.exec(ep.Path || '') || /S(\d{1,2})\s*E\d+/i.exec(ep.Name || '');
-    return m ? parseInt(m[1], 10) : 1;
-  }
-  function numberOf(ep) {
-    if (ep.IndexNumber != null && ep.Type === 'Episode') return ep.IndexNumber;
-    const m = /S\d{1,2}\s*E(\d+)/i.exec(ep.Name || '') || /episode\s*(\d+)/i.exec(ep.Name || '');
-    return m ? parseInt(m[1], 10) : null;
-  }
   // "Locals in Las Vegas-S01E05 flm" -> "Episode 5";  "Show - S01E03 - Guest Name" -> "Guest Name"
   function titleOf(ep) {
     let n = ep.Name || '';
-    const se = /S\d{1,2}\s*E\d+/i.exec(n);
+    const se = /S\d{1,2}\s*E(\d+)/i.exec(n);
+    let num = ep.Type === 'Episode' && ep.IndexNumber != null ? ep.IndexNumber : (se ? parseInt(se[1], 10) : null);
     if (se) n = n.slice(se.index + se[0].length);
-    else { const e = /episode\s*\d+/i.exec(n); if (e) n = n.slice(e.index + e[0].length); }
+    else { const e = /episode\s*(\d+)/i.exec(n); if (e) { n = n.slice(e.index + e[0].length); if (num == null) num = parseInt(e[1], 10); } }
     n = n.replace(/\b(flm|final|new|v\d+)\b/gi, '').replace(/^[\s\-–—_:.]+|[\s\-–—_:.]+$/g, '').trim();
-    const num = numberOf(ep);
     if (!n) return num != null ? `Episode ${num}` : (ep.Name || 'Episode');
     return n;
   }
 
-  async function selectShow(s, scroll) {
-    current = s; season = 'all';
-    document.querySelectorAll('.show-card').forEach(c => c.classList.toggle('selected', c.dataset.id === s.Id));
-    $('epHeading').textContent = showName(s);
-    $('epSearch').value = '';
-    $('epGrid').innerHTML = '';
-    $('seasonTabs').innerHTML = '';
-    setStatus('<span class="spin"></span>Loading episodes…');
-    if (scroll) $('episodes').scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    const token = ++loadToken;
-    let res;
-    if (s.Type === 'Series') {
-      res = await jf(`/Shows/${s.Id}/Episodes`, { Fields: 'Path', EnableImages: 'true', ImageTypeLimit: '1' });
-    } else {
-      res = await jf('/Items', {
-        ParentId: s.Id, Recursive: 'true', MediaTypes: 'Video',
-        Fields: 'Path', EnableImages: 'true', ImageTypeLimit: '1', SortBy: 'SortName'
-      });
-    }
-    if (token !== loadToken) return;
-    if (!res || !res.Items) {
-      setStatus('The episodes are taking longer than usual to load.<br>' +
-        '<button type="button" class="btn btn-ghost" id="retryEps">Try again</button>');
-      $('retryEps').onclick = () => selectShow(s, false);
-      return;
-    }
-    episodes = res.Items.map(ep => ({ ep, season: seasonOf(ep), num: numberOf(ep), title: titleOf(ep) }));
-    // Short shows (like a 2-part special) read best in order; series start with the newest
-    newestFirst = episodes.length > 4;
-    $('sortBtn').textContent = newestFirst ? 'Newest first' : 'Oldest first';
-    renderSeasons();
-    renderEpisodes();
-  }
-
-  function renderSeasons() {
-    const box = $('seasonTabs');
-    const list = [...new Set(episodes.map(e => e.season))].sort((a, b) => a - b);
-    box.innerHTML = '';
-    if (list.length < 2) return;
-    ['all', ...list].forEach(sn => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'season-tab';
-      b.textContent = sn === 'all' ? 'All seasons' : `Season ${sn}`;
-      b.setAttribute('aria-pressed', String(sn === season));
-      b.onclick = () => { season = sn; renderSeasons(); renderEpisodes(); };
-      box.appendChild(b);
-    });
-  }
-
-  function setStatus(html) {
-    $('epStatus').innerHTML = html;
-    $('epStatus').style.display = html ? 'block' : 'none';
-  }
-
-  function renderEpisodes() {
-    const term = $('epSearch').value.trim().toLowerCase();
-    let list = episodes.filter(e => season === 'all' || e.season === season);
-    list.sort((a, b) => (a.season - b.season) ||
-      ((a.num == null ? 9999 : a.num) - (b.num == null ? 9999 : b.num)) ||
-      a.title.localeCompare(b.title));
-    if (newestFirst) list.reverse();
-    if (term) list = list.filter(e => e.title.toLowerCase().includes(term) || String(e.num || '').includes(term));
-
-    const showTag = current.ImageTags && current.ImageTags.Primary;
-    const frag = document.createDocumentFragment();
-    list.forEach(e => {
-      const ep = e.ep;
-      const a = document.createElement('a');
-      a.className = 'ep-card';
-      a.href = `movie-frame.html?id=${ep.Id}`;
-      let src, cls = '';
-      if (ep.ImageTags && ep.ImageTags.Primary) src = img(ep.Id, ep.ImageTags.Primary, 560);
-      else if (showTag) { src = img(current.Id, showTag, 560); cls = 'cover-fallback'; }
-      else { src = LOGO; cls = 'cover-fallback'; }
-      const manySeasons = new Set(episodes.map(x => x.season)).size > 1;
-      const sub = [manySeasons ? `Season ${e.season}` : '', e.num != null && !/^Episode \d+$/.test(e.title) ? `Episode ${e.num}` : '']
-                  .filter(Boolean).join(', ');
-      const len = minutes(ep.RunTimeTicks);
-      a.innerHTML = `
-        <div class="ep-thumb">
-          <img src="${src}" class="${cls}" alt="" loading="lazy"
-               onerror="this.onerror=null;this.src='${LOGO}';this.className='cover-fallback'">
-          ${len ? `<span class="ep-len">${len}</span>` : ''}
-          <span class="ep-play"><i class="fas fa-play"></i></span>
-        </div>
-        <div class="ep-title">${esc(e.title)}</div>
-        <div class="ep-sub">${esc(sub)}</div>`;
-      frag.appendChild(a);
-    });
-    $('epGrid').innerHTML = '';
-    $('epGrid').appendChild(frag);
-
-    if (!episodes.length) setStatus('New episodes are on the way.');
-    else if (!list.length) setStatus(`No episodes match "${esc($('epSearch').value.trim())}".`);
-    else setStatus('');
-  }
-
-  // "Watch the newest episode" — the most recently added video across all FilAm shows
+  // "Watch the newest episode" — the most recently added episode, special or movie on FilAm TV
   async function findNewest() {
     const res = await jf('/Items', {
-      ParentId: FILAM_LIBRARY_ID, Recursive: 'true', MediaTypes: 'Video', Fields: 'Path',
+      ParentId: FILAM_LIBRARY_ID, Recursive: 'true', IncludeItemTypes: 'Episode,Movie,Video',
       SortBy: 'DateCreated', SortOrder: 'Descending', Limit: '1'
     });
     const ep = res && res.Items && res.Items[0];
     if (!ep) return;
     $('watchNewest').href = `movie-frame.html?id=${ep.Id}`;
-    const parentShow = shows.find(s => s.Id === ep.SeriesId || s.Name === ep.SeriesName) || null;
-    const where = parentShow ? `, ${showName(parentShow)}` : '';
+    const where = ep.SeriesName ? `, ${SHOW_NAMES[ep.SeriesName] || ep.SeriesName}` : '';
     $('newestNote').textContent = `Newest: ${titleOf(ep)}${where}`;
   }
-
-  $('epSearch').addEventListener('input', () => { if (episodes.length) renderEpisodes(); });
-  $('sortBtn').addEventListener('click', () => {
-    newestFirst = !newestFirst;
-    $('sortBtn').textContent = newestFirst ? 'Newest first' : 'Oldest first';
-    if (episodes.length) renderEpisodes();
-  });
 
   // ── MOVIE ROWS ───────────────────────────────────────────────────
   async function loadMovieRows() {
@@ -834,7 +710,7 @@ img { display: block; max-width: 100%; }
   document.documentElement.classList.add('flm-tv');
 
   function getFocusable() {
-    return Array.from(document.querySelectorAll('.back-btn, .hero-actions .btn, .show-card, .season-tab, .ep-search, .sort-btn, .ep-card, .movie-card, .foot .btn'))
+    return Array.from(document.querySelectorAll('.back-btn, .hero-actions .btn, .show-card, .movie-card, .foot .btn'))
       .filter(el => el.offsetParent !== null && el.offsetWidth > 0);
   }
   function findBest(cur, all, dir) {
