@@ -240,6 +240,37 @@ img { display: block; max-width: 100%; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .status .btn { margin-top: 16px; }
 
+/* Movie rows — posters you scroll sideways */
+.row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 40px; }
+.row-head:first-of-type { margin-top: 26px; }
+.row-head h3 { font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: -0.4px; }
+.row-head a { color: var(--sun); font-weight: 700; font-size: 15px; text-decoration: none; }
+.row-head a:hover { text-decoration: underline; }
+.row-wrap { position: relative; }
+.row {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 180px; gap: 18px;
+  overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
+  padding: 16px 4px 18px; margin: 0 -4px;
+  scrollbar-width: thin; scrollbar-color: var(--night-3) transparent;
+}
+.movie-card { display: block; text-decoration: none; color: inherit; scroll-snap-align: start; border-radius: 10px; outline-offset: 4px; }
+.movie-poster { aspect-ratio: 2 / 3; border-radius: 10px; overflow: hidden; background: var(--night-2); transition: transform 0.25s, box-shadow 0.25s; }
+.movie-poster img { width: 100%; height: 100%; object-fit: cover; }
+.movie-card:hover .movie-poster { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--sun), 0 16px 34px rgba(0,0,0,0.5); }
+.movie-name { margin-top: 10px; font-weight: 700; font-size: 15px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.movie-year { margin-top: 2px; color: var(--mist); font-size: 13px; }
+.row-arrow {
+  position: absolute; top: calc(16px + 135px - 22px); z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(7,11,31,0.85); color: var(--sun); font-size: 16px;
+  box-shadow: inset 0 0 0 1.5px rgba(252,209,22,0.5);
+}
+.row-arrow:hover { background: var(--sun); color: var(--night); }
+.row-arrow.prev { left: -18px; } .row-arrow.next { right: -18px; }
+@media (max-width: 760px) { .row { grid-auto-columns: 132px; gap: 12px; } .row-arrow { display: none; } .row-head h3 { font-size: 21px; } }
+.flm-tv .row-arrow { display: none; }
+.flm-tv .movie-card:focus { outline: 4px solid var(--sun) !important; outline-offset: 4px !important; transform: scale(1.04); position: relative; z-index: 5; }
+
 /* Footer */
 .foot {
   margin-top: 90px; padding: 40px 0 60px;
@@ -367,6 +398,12 @@ img { display: block; max-width: 100%; }
     <div class="episodes" id="epGrid"></div>
     <div class="status" id="epStatus" style="display:none"></div>
   </section>
+
+  <section class="block wrap" id="movies">
+    <h2>Filipino movies</h2>
+    <p class="lede">Classics, romances and new favorites from the Philippines.</p>
+    <div id="movieRows"></div>
+  </section>
 </main>
 
 <footer class="foot">
@@ -415,6 +452,12 @@ img { display: block; max-width: 100%; }
     'LOCALS IN LAS VEGAS-JESSICA': 'Hosted by Jessica J. Rolla'
   };
   const LOGO = 'assets/images/filamtv-logo-dark.jpg';      // used when a picture is missing
+
+  // Movie rows under the shows. Add another row by adding a line (any Jellyfin library or folder id).
+  const MOVIE_ROWS = [
+    { id: '3846a8e881ba4c2bb0ca8f2fb30fd18b', title: 'Filipin TV' },
+    { id: '558227e929d6dfe796f836ae5900c8d2', title: 'Pinoy' }
+  ];
   // ════════════════════════════════════════════════════════════════
 
   const $ = id => document.getElementById(id);
@@ -731,8 +774,57 @@ img { display: block; max-width: 100%; }
     if (episodes.length) renderEpisodes();
   });
 
+  // ── MOVIE ROWS ───────────────────────────────────────────────────
+  async function loadMovieRows() {
+    const box = $('movieRows');
+    for (const row of MOVIE_ROWS) {
+      const head = document.createElement('div');
+      head.className = 'row-head';
+      head.innerHTML = `<h3>${esc(row.title)}</h3><a href="category-detail.html?id=${row.id}&name=${encodeURIComponent(row.title)}">See all</a>`;
+      const wrap = document.createElement('div');
+      wrap.className = 'row-wrap';
+      wrap.innerHTML = '<div class="status"><span class="spin"></span>Loading…</div>';
+      box.append(head, wrap);
+
+      const res = await jf('/Items', {
+        ParentId: row.id, Recursive: 'true', IncludeItemTypes: 'Movie,Series,Video',
+        SortBy: 'DateCreated,SortName', SortOrder: 'Descending', Limit: '40',
+        Fields: 'ProductionYear', EnableImages: 'true', ImageTypeLimit: '1'
+      });
+      const items = (res && res.Items) ? res.Items : null;
+      if (!items || !items.length) {
+        wrap.innerHTML = `<div class="status">${items ? 'Movies are on the way.' : 'This row is taking longer than usual to load.'}</div>`;
+        continue;
+      }
+      const track = document.createElement('div');
+      track.className = 'row';
+      items.forEach(m => {
+        const a = document.createElement('a');
+        a.className = 'movie-card';
+        a.href = `movie-frame.html?id=${m.Id}`;
+        const tag = m.ImageTags && m.ImageTags.Primary;
+        a.innerHTML = `
+          <div class="movie-poster"><img src="${tag ? img(m.Id, tag, 360) : LOGO}" alt="" loading="lazy"
+               onerror="this.onerror=null;this.src='${LOGO}'"></div>
+          <div class="movie-name">${esc(m.Name)}</div>
+          ${m.ProductionYear ? `<div class="movie-year">${m.ProductionYear}</div>` : ''}`;
+        track.appendChild(a);
+      });
+      const prev = document.createElement('button'), next = document.createElement('button');
+      prev.className = 'row-arrow prev'; next.className = 'row-arrow next';
+      prev.type = next.type = 'button';
+      prev.setAttribute('aria-label', `Scroll ${row.title} left`); next.setAttribute('aria-label', `Scroll ${row.title} right`);
+      prev.innerHTML = '<i class="fas fa-chevron-left"></i>'; next.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      prev.onclick = () => track.scrollBy({ left: -track.clientWidth * 0.85 });
+      next.onclick = () => track.scrollBy({ left: track.clientWidth * 0.85 });
+      wrap.innerHTML = '';
+      wrap.append(prev, track, next);
+    }
+  }
+
   hero.start();
   loadShows();
+  loadMovieRows();
 </script>
 
 <script>
@@ -742,7 +834,7 @@ img { display: block; max-width: 100%; }
   document.documentElement.classList.add('flm-tv');
 
   function getFocusable() {
-    return Array.from(document.querySelectorAll('.back-btn, .hero-actions .btn, .show-card, .season-tab, .ep-search, .sort-btn, .ep-card, .foot .btn'))
+    return Array.from(document.querySelectorAll('.back-btn, .hero-actions .btn, .show-card, .season-tab, .ep-search, .sort-btn, .ep-card, .movie-card, .foot .btn'))
       .filter(el => el.offsetParent !== null && el.offsetWidth > 0);
   }
   function findBest(cur, all, dir) {
