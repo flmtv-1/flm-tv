@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" id="flmViewportMeta">
+<script>
+  if (/AFT|FireTV|Silk/i.test(navigator.userAgent)) {
+    var flmVp = document.getElementById('flmViewportMeta');
+    if (flmVp) flmVp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+  }
+</script>
+<title>FilAm TV — FLM TV Network</title>
+<meta name="description" content="FilAm TV on FLM TV Network. For Fil-Ams. By Fil-Ams. On FreeTV.">
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;700&display=swap">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --night:   #070B1F;   /* Manila night sky — page background */
+  --night-2: #0E1533;   /* raised surfaces */
+  --night-3: #18214A;   /* hover / borders */
+  --blue:    #2457E6;   /* Philippine / US blue */
+  --red:     #D7182A;   /* flag red */
+  --sun:     #FCD116;   /* the sun and stars */
+  --paper:   #F5F2EA;   /* text */
+  --mist:    #9CA6C9;   /* secondary text */
+  --display: 'Bricolage Grotesque', 'Arial Black', sans-serif;
+  --body:    'Figtree', Arial, sans-serif;
+}
+
+html, body { background: var(--night); color: var(--paper); font-family: var(--body); }
+body { min-height: 100vh; overflow-x: hidden; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── NAV ── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 24px;
+  background: rgba(7,11,31,0.94);
+  backdrop-filter: blur(8px);
+}
+.topnav::after {               /* two-flag stripe instead of a plain rule */
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue) 0 50%, var(--red) 50% 100%);
+}
+.nav-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: 999px;
+  border: 1px solid rgba(252,209,22,0.5);
+  color: var(--sun); text-decoration: none;
+  font-weight: 700; font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+.back-btn:hover { background: var(--sun); color: var(--night); }
+.nav-logo { height: 34px; width: auto; background: #fff; border-radius: 6px; padding: 3px 8px; }
+.nav-logo-text { font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: -0.5px; }
+.nav-logo-text .f { color: #6E93FF; } .nav-logo-text .a { color: var(--sun); } .nav-logo-text .t { color: #FF4D5E; }
+.nav-right { font-size: 13px; color: var(--mist); white-space: nowrap; }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: min(78vh, 760px);
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hero-media { position: absolute; inset: 0; z-index: -3; background: var(--night); }
+.hero-media video, .hero-media .still {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.hero-media .on { opacity: 1; }
+.hero-media .still { background-size: cover; background-position: center; }
+.hero-media .still.on { animation: drift 9s ease-out forwards; }
+@keyframes drift { from { transform: scale(1.02); } to { transform: scale(1.1); } }
+
+.hero-shade {
+  position: absolute; inset: 0; z-index: -2;
+  background:
+    linear-gradient(90deg, rgba(7,11,31,0.96) 0%, rgba(7,11,31,0.78) 38%, rgba(7,11,31,0.15) 75%),
+    linear-gradient(0deg, var(--night) 0%, rgba(7,11,31,0) 35%);
+}
+
+/* The signature: the Philippine sun, rising behind the words */
+.sun {
+  position: absolute; z-index: -1;
+  left: -380px; top: 50%;
+  width: 760px; height: 760px;
+  margin-top: -380px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.sun .rays { transform-origin: 320px 320px; animation: rise 2.6s cubic-bezier(.2,.7,.2,1) both, turn 120s linear 2.6s infinite; }
+.sun .core { transform-origin: 320px 320px; animation: glow 2.6s ease-out both; }
+@keyframes rise { from { transform: rotate(-30deg) scale(0.6); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
+@keyframes turn { to { transform: rotate(360deg); } }
+@keyframes glow { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+.stars { position: absolute; z-index: -1; inset: 0; pointer-events: none; }
+.stars svg { position: absolute; width: 26px; height: 26px; fill: var(--sun); opacity: 0; animation: star 0.6s ease-out forwards; }
+.stars svg:nth-child(1) { left: 44%; top: 16%; animation-delay: 1.6s; }
+.stars svg:nth-child(2) { left: 52%; top: 34%; animation-delay: 1.9s; width: 20px; height: 20px; }
+.stars svg:nth-child(3) { left: 39%; top: 28%; animation-delay: 2.2s; width: 16px; height: 16px; }
+@keyframes star { from { opacity: 0; transform: scale(0.2) rotate(-40deg); } to { opacity: 0.95; transform: none; } }
+
+.hero-inner {
+  width: 100%; max-width: 1320px; margin: 0 auto;
+  padding: 120px 40px 56px;
+}
+.greeting {
+  font-family: var(--display); font-weight: 700; font-size: 20px;
+  color: var(--sun); margin-bottom: 14px;
+}
+.hero-logo { width: min(420px, 80vw); height: auto; background: #fff; border-radius: 12px; padding: 10px 16px; margin-bottom: 26px; box-shadow: 0 10px 40px rgba(0,0,0,0.45); }
+.hero-logo-text { font-family: var(--display); font-weight: 800; font-size: clamp(64px, 10vw, 128px); line-height: 0.9; letter-spacing: -3px; margin-bottom: 20px; }
+.hero-logo-text .f { color: #6E93FF; } .hero-logo-text .a { color: var(--sun); } .hero-logo-text .t { color: #FF4D5E; }
+.hero h1 {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(38px, 5.4vw, 72px);
+  line-height: 0.98; letter-spacing: -1.5px;
+  text-shadow: 0 2px 24px rgba(7,11,31,0.6);
+}
+.hero h1 span { display: block; }
+.hero .tagline { margin-top: 18px; font-size: 19px; color: #E3E7F5; max-width: 40ch; line-height: 1.5; text-shadow: 0 1px 12px rgba(7,11,31,0.8); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 26px; border-radius: 999px;
+  font-family: var(--body); font-weight: 700; font-size: 17px;
+  text-decoration: none; cursor: pointer; border: 0;
+  transition: transform 0.15s, background 0.2s, color 0.2s;
+}
+.btn-sun { background: var(--sun); color: var(--night); }
+.btn-sun:hover { background: #FFE04D; }
+.btn-ghost { background: rgba(255,255,255,0.08); color: var(--paper); box-shadow: inset 0 0 0 1.5px rgba(245,242,234,0.45); }
+.btn-ghost:hover { background: rgba(255,255,255,0.16); }
+.btn:active { transform: scale(0.97); }
+.now-playing { margin-top: 22px; font-size: 15px; color: #C9D0EA; min-height: 20px; text-shadow: 0 1px 10px rgba(7,11,31,0.9); }
+
+/* ── SECTIONS ── */
+.wrap { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+.block { padding-top: 64px; }
+.block h2 {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(30px, 3.4vw, 44px); letter-spacing: -0.8px; line-height: 1.05;
+}
+.block .lede { color: var(--mist); margin-top: 8px; font-size: 17px; max-width: 60ch; line-height: 1.5; }
+
+/* Shows — posters, because each show has real cover art */
+.shows {
+  display: grid; gap: 26px; margin-top: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+}
+.show-card {
+  display: block; text-decoration: none; color: inherit;
+  border-radius: 14px; outline-offset: 4px;
+  cursor: pointer;
+}
+.show-art {
+  position: relative; aspect-ratio: 1 / 1; border-radius: 14px; overflow: hidden;
+  background: var(--night-2);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.show-art img { width: 100%; height: 100%; object-fit: cover; }
+.show-card:hover .show-art { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--sun), 0 18px 40px rgba(0,0,0,0.5); }
+.show-card.selected .show-art { box-shadow: 0 0 0 3px var(--sun), 0 18px 40px rgba(0,0,0,0.5); }
+.show-card.selected .show-art::after {
+  content: 'Showing below'; position: absolute; left: 12px; bottom: 12px;
+  background: var(--sun); color: var(--night);
+  font-weight: 700; font-size: 13px; padding: 5px 11px; border-radius: 999px;
+}
+.show-name { margin-top: 14px; font-family: var(--display); font-weight: 700; font-size: 21px; line-height: 1.15; }
+.show-meta { margin-top: 4px; color: var(--mist); font-size: 14px; }
+
+/* Episodes */
+.ep-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; }
+.ep-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.seasons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.season-tab {
+  padding: 9px 18px; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--night-2); color: var(--paper);
+  font-family: var(--body); font-weight: 700; font-size: 15px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+.season-tab:hover { background: var(--night-3); }
+.season-tab[aria-pressed="true"] { background: var(--blue); box-shadow: none; }
+.ep-search {
+  width: 260px; max-width: 100%;
+  padding: 11px 16px; border-radius: 999px;
+  background: var(--night-2); color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-family: var(--body); font-size: 15px;
+}
+.ep-search::placeholder { color: var(--mist); }
+.ep-search:focus { outline: none; border-color: var(--sun); }
+.sort-btn {
+  padding: 11px 16px; border-radius: 999px; border: 0; cursor: pointer;
+  background: transparent; color: var(--sun);
+  box-shadow: inset 0 0 0 1px rgba(252,209,22,0.5);
+  font-family: var(--body); font-weight: 700; font-size: 14px;
+}
+.sort-btn:hover { background: rgba(252,209,22,0.12); }
+
+.episodes {
+  display: grid; gap: 22px; margin-top: 26px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+.ep-card { display: block; text-decoration: none; color: inherit; border-radius: 12px; outline-offset: 4px; }
+.ep-thumb {
+  position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden;
+  background: var(--night-2);
+}
+.ep-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+.ep-thumb img.cover-fallback { object-fit: contain; padding: 12%; background: radial-gradient(circle at 30% 70%, rgba(252,209,22,0.15), transparent 60%), var(--night-2); }
+.ep-card:hover .ep-thumb img { transform: scale(1.04); }
+.ep-play {
+  position: absolute; right: 12px; bottom: 12px;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--sun); color: var(--night); font-size: 16px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.ep-card:hover .ep-play, .ep-card:focus .ep-play { opacity: 1; transform: none; }
+.ep-len { position: absolute; left: 10px; bottom: 10px; background: rgba(7,11,31,0.85); font-size: 13px; padding: 3px 8px; border-radius: 6px; }
+.ep-title { margin-top: 12px; font-weight: 700; font-size: 17px; line-height: 1.3; }
+.ep-sub { margin-top: 3px; color: var(--mist); font-size: 14px; }
+
+.status { padding: 40px 0; color: var(--mist); font-size: 17px; }
+.status .spin { display: inline-block; width: 20px; height: 20px; margin-right: 12px; vertical-align: -4px; border: 3px solid rgba(252,209,22,0.2); border-top-color: var(--sun); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.status .btn { margin-top: 16px; }
+
+/* Footer */
+.foot {
+  margin-top: 90px; padding: 40px 0 60px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; align-items: center; }
+.foot p { color: var(--mist); font-size: 15px; line-height: 1.6; }
+.foot strong { color: var(--paper); }
+
+/* Focus — visible everywhere, big for the Firestick */
+.back-btn:focus-visible, .btn:focus-visible, .show-card:focus-visible, .season-tab:focus-visible,
+.sort-btn:focus-visible, .ep-card:focus-visible {
+  outline: 4px solid var(--sun); outline-offset: 4px;
+}
+.flm-tv :is(.back-btn, .btn, .show-card, .season-tab, .sort-btn, .ep-card):focus {
+  outline: 4px solid var(--sun) !important; outline-offset: 4px !important;
+}
+.flm-tv .ep-card:focus, .flm-tv .show-card:focus { transform: scale(1.03); position: relative; z-index: 5; }
+/* Firestick: fit the whole hero, buttons included, on one TV screen */
+.flm-tv .hero { min-height: 0; }
+.flm-tv .hero-inner { padding: 70px 40px 34px; }
+.flm-tv .hero-logo { width: 300px; margin-bottom: 18px; }
+.flm-tv .hero h1 { font-size: 46px; }
+.flm-tv .hero .tagline { font-size: 17px; margin-top: 12px; }
+.flm-tv .hero-actions { margin-top: 20px; }
+
+/* Mobile */
+@media (max-width: 760px) {
+  .topnav { padding: 10px 16px; }
+  .nav-right { display: none; }
+  .hero { min-height: 82vh; }
+  .hero-inner { padding: 100px 16px 40px; }
+  .hero-shade { background: linear-gradient(0deg, var(--night) 8%, rgba(7,11,31,0.7) 55%, rgba(7,11,31,0.35) 100%); }
+  .sun { width: 520px; height: 520px; left: -300px; margin-top: -260px; opacity: 0.4; }
+  .stars svg:nth-child(1) { left: 78%; top: 14%; }
+  .stars svg:nth-child(2) { left: 88%; top: 24%; }
+  .stars svg:nth-child(3) { left: 70%; top: 22%; }
+  .hero .tagline { font-size: 17px; }
+  .btn { padding: 13px 20px; font-size: 16px; }
+  .wrap { padding: 0 16px; }
+  .block { padding-top: 48px; }
+  .shows { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .show-name { font-size: 17px; }
+  .episodes { grid-template-columns: 1fr; }
+  .ep-search { width: 100%; }
+  .ep-tools { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .stars svg { opacity: 0.95; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-left">
+    <a href="home.html" class="back-btn"><i class="fas fa-arrow-left"></i> Home</a>
+    <img class="nav-logo" src="assets/images/filamtv-logo-wide.png" alt="FilAm TV"
+         onerror="this.outerHTML='<span class=\'nav-logo-text\'><span class=f>Fil</span><span class=a>Am</span><span class=t>TV</span></span>'">
+  </div>
+  <div class="nav-right">On FLM TV, Channel 26.5 Las Vegas</div>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="hero-media" id="heroMedia"></div>
+  <div class="hero-shade"></div>
+
+  <svg class="sun" viewBox="0 0 640 640" aria-hidden="true">
+    <defs>
+      <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFE45C"/>
+        <stop offset="60%" stop-color="#FCD116"/>
+        <stop offset="100%" stop-color="#F2A900"/>
+      </radialGradient>
+      <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="rgba(252,209,22,0.35)"/>
+        <stop offset="100%" stop-color="rgba(252,209,22,0)"/>
+      </radialGradient>
+    </defs>
+    <circle cx="320" cy="320" r="320" fill="url(#halo)"/>
+    <g class="rays" fill="#FCD116" opacity="0.85" id="sunRays"></g>
+    <circle class="core" cx="320" cy="320" r="92" fill="url(#sunGlow)"/>
+  </svg>
+  <div class="stars" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z"/></svg>
+  </div>
+
+  <div class="hero-inner">
+    <div class="greeting">Mabuhay, kababayan!</div>
+    <img class="hero-logo" src="assets/images/filamtv-logo-wide.png" alt="FilAm TV"
+         onerror="this.outerHTML='<div class=\'hero-logo-text\'><span class=f>Fil</span><span class=a>Am</span><span class=t>TV</span></div>'">
+    <h1><span>Two flags. One heart.</span> <span>All our stories.</span></h1>
+    <p class="tagline">For Fil-Ams. By Fil-Ams. On FreeTV. Shows made in our community, from Manila memories to Las Vegas nights.</p>
+    <div class="hero-actions">
+      <a class="btn btn-sun" id="watchNewest" href="#episodes"><i class="fas fa-play"></i> Watch the newest episode</a>
+      <a class="btn btn-ghost" href="#shows">Browse shows</a>
+    </div>
+    <div class="now-playing" id="newestNote"></div>
+  </div>
+</header>
+
+<main>
+  <section class="block wrap" id="shows">
+    <h2>Our shows</h2>
+    <p class="lede">Pick a show to see every episode.</p>
+    <div class="shows" id="showGrid"></div>
+    <div class="status" id="showStatus"><span class="spin"></span>Loading shows…</div>
+  </section>
+
+  <section class="block wrap" id="episodes">
+    <div class="ep-head">
+      <div>
+        <h2 id="epHeading">Episodes</h2>
+      </div>
+      <div class="ep-tools">
+        <input type="search" class="ep-search" id="epSearch" placeholder="Search episodes" aria-label="Search episodes">
+        <button type="button" class="sort-btn" id="sortBtn">Newest first</button>
+      </div>
+    </div>
+    <div class="seasons" id="seasonTabs"></div>
+    <div class="episodes" id="epGrid"></div>
+    <div class="status" id="epStatus" style="display:none"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>FilAm TV</strong> streams free on flmtv.com, the FLM TV Roku channel,<br>and over the air on Channel 26.5 in Las Vegas.</p>
+    <a class="btn btn-ghost" href="home.html"><i class="fas fa-house"></i> Back to FLM TV</a>
+  </div>
+</footer>
+
+<script>
+  // Draw the 8 rays of the Philippine sun (each ray is a long triangle with
+  // two thin side rays), so no image file is needed.
+  (function () {
+    var g = document.getElementById('sunRays'), html = '';
+    for (var i = 0; i < 8; i++) {
+      var a = i * 45;
+      html += '<g transform="rotate(' + a + ' 320 320)">' +
+        '<polygon points="320,40 336,200 304,200"/>' +
+        '<polygon points="280,70 290,205 276,207" opacity="0.7"/>' +
+        '<polygon points="360,70 364,207 350,205" opacity="0.7"/>' +
+      '</g>';
+    }
+    g.innerHTML = html;
+  })();
+</script>
+
+<script>
+  // ════════════════════════════════════════════════════════════════
+  //  FILAM TV SETTINGS — the only part you should ever need to edit
+  // ════════════════════════════════════════════════════════════════
+  const JELLYFIN = {
+    SERVER:  'https://flmtv.com/jellyfin',                 // lists + pictures (same as home.html)
+    VIDEO_SERVER: 'https://flmtv26.duckdns.org:8920',     // hero clips stream straight from here (skips Netlify)
+    API_KEY: '62131ee22c0141c6b651be75a7444350'
+  };
+  const FILAM_LIBRARY_ID = '7bbd76b8a7145c260b38e3f1b1852154';  // FilAm TV shows (X:\FilAm TV + V:\FilAM TV 2)
+  const FILAM_CLIPS_ID   = 'ee75511ae395034b1e7e657707b15125';  // SITE ASSETS \ filamtv (hero background clips)
+
+  // Nicer names for shows, if the Jellyfin name isn't how you want it shown.
+  // Left side: the name exactly as Jellyfin has it. Right side: what viewers see.
+  const SHOW_NAMES = {
+    'LOCALS IN LAS VEGAS-JESSICA': 'Locals in Las Vegas'
+  };
+  // A short line under each show's name. Leave a show out to show the episode count only.
+  const SHOW_HOSTS = {
+    'LOCALS IN LAS VEGAS-JESSICA': 'Hosted by Jessica J. Rolla'
+  };
+  const LOGO = 'assets/images/filamtv-logo-dark.jpg';      // used when a picture is missing
+  // ════════════════════════════════════════════════════════════════
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+
+  async function jf(endpoint, params = {}, isRetry = false) {
+    const q = new URLSearchParams({ api_key: JELLYFIN.API_KEY });
+    Object.keys(params).forEach(k => { if (params[k] != null) q.append(k, params[k]); });
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 12000);
+    try {
+      const r = await fetch(`${JELLYFIN.SERVER}${endpoint}?${q}`, {
+        mode: 'cors', credentials: 'omit', headers: { 'Accept': 'application/json' }, signal: ctl.signal
+      });
+      clearTimeout(t);
+      return r.ok ? await r.json() : null;
+    } catch (e) {
+      clearTimeout(t);
+      return isRetry ? null : jf(endpoint, params, true);
+    }
+  }
+
+  const img = (id, tag, w) =>
+    `${JELLYFIN.SERVER}/Items/${id}/Images/Primary?api_key=${JELLYFIN.API_KEY}${tag ? `&tag=${tag}` : ''}&fillWidth=${w}&quality=85&format=webp`;
+
+  function minutes(ticks) {
+    if (!ticks) return '';
+    const m = Math.round(ticks / 600000000);
+    return m >= 60 ? `${Math.floor(m / 60)} hr ${m % 60} min` : `${m} min`;
+  }
+
+  const showName = s => SHOW_NAMES[s.Name] || s.Name;
+
+  // ── HERO: rotate the clips from SITE ASSETS\filamtv ──────────────
+  const hero = {
+    media: $('heroMedia'), clips: [], photos: [], i: 0, layers: [], stills: false, timer: null,
+
+    async start() {
+      // The folder can hold video clips, still pictures, or both.
+      const res = await jf('/Items', {
+        ParentId: FILAM_CLIPS_ID, Recursive: 'true', IncludeItemTypes: 'Video,Photo',
+        SortBy: 'SortName', EnableImages: 'true', ImageTypeLimit: '1'
+      });
+      const all = (res && res.Items) ? res.Items : [];
+      this.photos = all.filter(i => i.Type === 'Photo' || i.MediaType === 'Photo');
+      this.clips  = all.filter(i => !(i.Type === 'Photo' || i.MediaType === 'Photo'));
+      for (let k = this.photos.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [this.photos[k], this.photos[j]] = [this.photos[j], this.photos[k]];
+      }
+      if (!this.clips.length) { this.useStills(this.photos); return; }
+      // shuffle so it feels fresh each visit
+      for (let k = this.clips.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [this.clips[k], this.clips[j]] = [this.clips[j], this.clips[k]];
+      }
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { this.useStills(this.photos.length ? this.photos : this.clips); return; }
+      this.layers = [this.makeVideo(), this.makeVideo()];
+      this.playNext(true);
+    },
+
+    makeVideo() {
+      const v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.playsInline = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.preload = 'auto';
+      this.media.appendChild(v);
+      return v;
+    },
+
+    playNext(first) {
+      if (this.stills) return;
+      const clip = this.clips[this.i % this.clips.length];
+      this.i++;
+      const [cur, next] = this.layers;
+      const tag = clip.ImageTags && clip.ImageTags.Primary;
+      if (tag) next.poster = img(clip.Id, tag, 1280);
+      next.src = `${JELLYFIN.VIDEO_SERVER}/Videos/${clip.Id}/stream?static=true&api_key=${JELLYFIN.API_KEY}`;
+      let failed = false;
+      const fail = () => {
+        if (failed) return; failed = true;
+        // Computer 2 / duckdns unreachable: fall back to a slow slideshow of the clips' pictures
+        this.useStills(this.photos.length ? this.photos : this.clips);
+      };
+      next.onerror = fail;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => { if (next.readyState < 2) fail(); }, first ? 15000 : 12000);
+      next.oncanplay = () => {
+        clearTimeout(this.timer);
+        next.play().catch(() => {});
+        next.classList.add('on');
+        cur.classList.remove('on');
+        setTimeout(() => { cur.pause(); }, 1500);
+        this.layers = [next, cur];
+        // move on when the clip ends, or after 12s for longer clips
+        const dur = isFinite(next.duration) && next.duration > 0 ? Math.min(next.duration, 12) : 10;
+        this.timer = setTimeout(() => this.playNext(false), Math.max(4, dur - 1.2) * 1000);
+        next.oncanplay = null;
+      };
+      next.load();
+    },
+
+    useStills(clips) {
+      if (this.stills) return;
+      this.stills = true;
+      clearTimeout(this.timer);
+      this.layers.forEach(v => { v.pause(); v.removeAttribute('src'); v.remove(); });
+      const pics = clips.filter(c => c.ImageTags && c.ImageTags.Primary)
+                        .map(c => img(c.Id, c.ImageTags.Primary, 1600));
+      if (!pics.length) pics.push(LOGO);
+      const a = document.createElement('div'), b = document.createElement('div');
+      a.className = b.className = 'still';
+      this.media.append(a, b);
+      let k = 0, layers = [a, b];
+      const show = () => {
+        const [cur, next] = layers;
+        next.style.backgroundImage = `url("${pics[k % pics.length]}")`;
+        next.classList.remove('on'); void next.offsetWidth; next.classList.add('on');
+        cur.classList.remove('on');
+        layers = [next, cur]; k++;
+      };
+      show();
+      if (pics.length > 1) setInterval(show, 8000);
+    }
+  };
+
+  // ── SHOWS ────────────────────────────────────────────────────────
+  let shows = [], current = null, episodes = [], season = 'all', newestFirst = true, loadToken = 0;
+
+  async function loadShows() {
+    const res = await jf('/Items', {
+      ParentId: FILAM_LIBRARY_ID, SortBy: 'SortName',
+      Fields: 'ChildCount,RecursiveItemCount', EnableImages: 'true', ImageTypeLimit: '1'
+    });
+    const items = (res && res.Items) ? res.Items.filter(i => i.IsFolder) : null;
+    if (!items) {
+      $('showStatus').innerHTML = 'The shows are taking longer than usual to load.<br>' +
+        '<button type="button" class="btn btn-ghost" id="retryShows">Try again</button>';
+      $('retryShows').onclick = () => { $('showStatus').innerHTML = '<span class="spin"></span>Loading shows…'; loadShows(); };
+      return;
+    }
+    if (!items.length) { $('showStatus').textContent = 'New shows are on the way.'; return; }
+    $('showStatus').style.display = 'none';
+    shows = items;
+    renderShows();
+    const wanted = new URLSearchParams(location.search).get('show');
+    selectShow(shows.find(s => s.Id === wanted) || shows[0], !!wanted);
+    findNewest();
+  }
+
+  function renderShows() {
+    const grid = $('showGrid');
+    grid.innerHTML = '';
+    shows.forEach(s => {
+      const a = document.createElement('a');
+      a.className = 'show-card';
+      a.href = `?show=${s.Id}#episodes`;
+      a.dataset.id = s.Id;
+      const tag = s.ImageTags && s.ImageTags.Primary;
+      const count = s.RecursiveItemCount || s.ChildCount;
+      const host = SHOW_HOSTS[s.Name];
+      a.innerHTML = `
+        <div class="show-art"><img src="${tag ? img(s.Id, tag, 500) : LOGO}" alt="" loading="lazy"
+             onerror="this.onerror=null;this.src='${LOGO}'"></div>
+        <div class="show-name">${esc(showName(s))}</div>
+        <div class="show-meta">${host ? esc(host) : (count ? `${count} episodes` : '')}</div>`;
+      a.addEventListener('click', e => { e.preventDefault(); selectShow(s, true); });
+      grid.appendChild(a);
+    });
+  }
+
+  // ── EPISODES ─────────────────────────────────────────────────────
+  // Works whether Jellyfin files the show as a TV series or as plain folders.
+  function seasonOf(ep) {
+    if (ep.ParentIndexNumber != null && ep.Type === 'Episode') return ep.ParentIndexNumber;
+    const m = /season\s*0*(\d+)/i.exec(ep.Path || '') || /S(\d{1,2})\s*E\d+/i.exec(ep.Name || '');
+    return m ? parseInt(m[1], 10) : 1;
+  }
+  function numberOf(ep) {
+    if (ep.IndexNumber != null && ep.Type === 'Episode') return ep.IndexNumber;
+    const m = /S\d{1,2}\s*E(\d+)/i.exec(ep.Name || '') || /episode\s*(\d+)/i.exec(ep.Name || '');
+    return m ? parseInt(m[1], 10) : null;
+  }
+  // "Locals in Las Vegas-S01E05 flm" -> "Episode 5";  "Show - S01E03 - Guest Name" -> "Guest Name"
+  function titleOf(ep) {
+    let n = ep.Name || '';
+    const se = /S\d{1,2}\s*E\d+/i.exec(n);
+    if (se) n = n.slice(se.index + se[0].length);
+    else { const e = /episode\s*\d+/i.exec(n); if (e) n = n.slice(e.index + e[0].length); }
+    n = n.replace(/\b(flm|final|new|v\d+)\b/gi, '').replace(/^[\s\-–—_:.]+|[\s\-–—_:.]+$/g, '').trim();
+    const num = numberOf(ep);
+    if (!n) return num != null ? `Episode ${num}` : (ep.Name || 'Episode');
+    return n;
+  }
+
+  async function selectShow(s, scroll) {
+    current = s; season = 'all';
+    document.querySelectorAll('.show-card').forEach(c => c.classList.toggle('selected', c.dataset.id === s.Id));
+    $('epHeading').textContent = showName(s);
+    $('epSearch').value = '';
+    $('epGrid').innerHTML = '';
+    $('seasonTabs').innerHTML = '';
+    setStatus('<span class="spin"></span>Loading episodes…');
+    if (scroll) $('episodes').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const token = ++loadToken;
+    let res;
+    if (s.Type === 'Series') {
+      res = await jf(`/Shows/${s.Id}/Episodes`, { Fields: 'Path', EnableImages: 'true', ImageTypeLimit: '1' });
+    } else {
+      res = await jf('/Items', {
+        ParentId: s.Id, Recursive: 'true', MediaTypes: 'Video',
+        Fields: 'Path', EnableImages: 'true', ImageTypeLimit: '1', SortBy: 'SortName'
+      });
+    }
+    if (token !== loadToken) return;
+    if (!res || !res.Items) {
+      setStatus('The episodes are taking longer than usual to load.<br>' +
+        '<button type="button" class="btn btn-ghost" id="retryEps">Try again</button>');
+      $('retryEps').onclick = () => selectShow(s, false);
+      return;
+    }
+    episodes = res.Items.map(ep => ({ ep, season: seasonOf(ep), num: numberOf(ep), title: titleOf(ep) }));
+    // Short shows (like a 2-part special) read best in order; series start with the newest
+    newestFirst = episodes.length > 4;
+    $('sortBtn').textContent = newestFirst ? 'Newest first' : 'Oldest first';
+    renderSeasons();
+    renderEpisodes();
+  }
+
+  function renderSeasons() {
+    const box = $('seasonTabs');
+    const list = [...new Set(episodes.map(e => e.season))].sort((a, b) => a - b);
+    box.innerHTML = '';
+    if (list.length < 2) return;
+    ['all', ...list].forEach(sn => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'season-tab';
+      b.textContent = sn === 'all' ? 'All seasons' : `Season ${sn}`;
+      b.setAttribute('aria-pressed', String(sn === season));
+      b.onclick = () => { season = sn; renderSeasons(); renderEpisodes(); };
+      box.appendChild(b);
+    });
+  }
+
+  function setStatus(html) {
+    $('epStatus').innerHTML = html;
+    $('epStatus').style.display = html ? 'block' : 'none';
+  }
+
+  function renderEpisodes() {
+    const term = $('epSearch').value.trim().toLowerCase();
+    let list = episodes.filter(e => season === 'all' || e.season === season);
+    list.sort((a, b) => (a.season - b.season) ||
+      ((a.num == null ? 9999 : a.num) - (b.num == null ? 9999 : b.num)) ||
+      a.title.localeCompare(b.title));
+    if (newestFirst) list.reverse();
+    if (term) list = list.filter(e => e.title.toLowerCase().includes(term) || String(e.num || '').includes(term));
+
+    const showTag = current.ImageTags && current.ImageTags.Primary;
+    const frag = document.createDocumentFragment();
+    list.forEach(e => {
+      const ep = e.ep;
+      const a = document.createElement('a');
+      a.className = 'ep-card';
+      a.href = `movie-frame.html?id=${ep.Id}`;
+      let src, cls = '';
+      if (ep.ImageTags && ep.ImageTags.Primary) src = img(ep.Id, ep.ImageTags.Primary, 560);
+      else if (showTag) { src = img(current.Id, showTag, 560); cls = 'cover-fallback'; }
+      else { src = LOGO; cls = 'cover-fallback'; }
+      const manySeasons = new Set(episodes.map(x => x.season)).size > 1;
+      const sub = [manySeasons ? `Season ${e.season}` : '', e.num != null && !/^Episode \d+$/.test(e.title) ? `Episode ${e.num}` : '']
+                  .filter(Boolean).join(', ');
+      const len = minutes(ep.RunTimeTicks);
+      a.innerHTML = `
+        <div class="ep-thumb">
+          <img src="${src}" class="${cls}" alt="" loading="lazy"
+               onerror="this.onerror=null;this.src='${LOGO}';this.className='cover-fallback'">
+          ${len ? `<span class="ep-len">${len}</span>` : ''}
+          <span class="ep-play"><i class="fas fa-play"></i></span>
+        </div>
+        <div class="ep-title">${esc(e.title)}</div>
+        <div class="ep-sub">${esc(sub)}</div>`;
+      frag.appendChild(a);
+    });
+    $('epGrid').innerHTML = '';
+    $('epGrid').appendChild(frag);
+
+    if (!episodes.length) setStatus('New episodes are on the way.');
+    else if (!list.length) setStatus(`No episodes match "${esc($('epSearch').value.trim())}".`);
+    else setStatus('');
+  }
+
+  // "Watch the newest episode" — the most recently added video across all FilAm shows
+  async function findNewest() {
+    const res = await jf('/Items', {
+      ParentId: FILAM_LIBRARY_ID, Recursive: 'true', MediaTypes: 'Video', Fields: 'Path',
+      SortBy: 'DateCreated', SortOrder: 'Descending', Limit: '1'
+    });
+    const ep = res && res.Items && res.Items[0];
+    if (!ep) return;
+    $('watchNewest').href = `movie-frame.html?id=${ep.Id}`;
+    const parentShow = shows.find(s => s.Id === ep.SeriesId || s.Name === ep.SeriesName) || null;
+    const where = parentShow ? `, ${showName(parentShow)}` : '';
+    $('newestNote').textContent = `Newest: ${titleOf(ep)}${where}`;
+  }
+
+  $('epSearch').addEventListener('input', () => { if (episodes.length) renderEpisodes(); });
+  $('sortBtn').addEventListener('click', () => {
+    newestFirst = !newestFirst;
+    $('sortBtn').textContent = newestFirst ? 'Newest first' : 'Oldest first';
+    if (episodes.length) renderEpisodes();
+  });
+
+  hero.start();
+  loadShows();
+</script>
+
+<script>
+// ── FIRESTICK D-PAD NAVIGATION ──────────────────────────────
+(function() {
+  if (!/AFT|FireTV|Silk/i.test(navigator.userAgent)) return;
+  document.documentElement.classList.add('flm-tv');
+
+  function getFocusable() {
+    return Array.from(document.querySelectorAll('.back-btn, .hero-actions .btn, .show-card, .season-tab, .ep-search, .sort-btn, .ep-card, .foot .btn'))
+      .filter(el => el.offsetParent !== null && el.offsetWidth > 0);
+  }
+  function findBest(cur, all, dir) {
+    const cr = cur.getBoundingClientRect();
+    const cx = cr.left + cr.width / 2, cy = cr.top + cr.height / 2;
+    const cands = all.filter(el => {
+      if (el === cur) return false;
+      const r = el.getBoundingClientRect();
+      const ex = r.left + r.width / 2, ey = r.top + r.height / 2;
+      if (dir === 'right') return ex > cr.right - 10;
+      if (dir === 'left')  return ex < cr.left + 10;
+      if (dir === 'down')  return ey > cr.bottom - 10;
+      if (dir === 'up')    return ey < cr.top + 10;
+    });
+    if (!cands.length) return null;
+    let best = null, bestScore = Infinity;
+    cands.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const dx = (r.left + r.width / 2) - cx, dy = (r.top + r.height / 2) - cy;
+      const primary = (dir === 'right' || dir === 'left') ? Math.abs(dx) : Math.abs(dy);
+      const secondary = (dir === 'right' || dir === 'left') ? Math.abs(dy) : Math.abs(dx);
+      const score = primary + secondary * 0.3;
+      if (score < bestScore) { bestScore = score; best = el; }
+    });
+    return best;
+  }
+
+  document.addEventListener('keydown', function(e) {
+    const all = getFocusable();
+    if (!all.length) return;
+    const focused = document.activeElement;
+    const inList = all.indexOf(focused) >= 0;
+
+    // Typing in the search box: let Backspace/Enter/left/right edit the text
+    if (focused && focused.tagName === 'INPUT' &&
+        ['Backspace','Enter',' ','ArrowLeft','ArrowRight'].includes(e.key)) return;
+
+    if (!inList) {
+      if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
+        e.preventDefault();
+        all[0].focus();
+        all[0].scrollIntoView({ block: 'center' });
+      }
+      return;
+    }
+
+    const dir = { ArrowRight:'right', ArrowLeft:'left', ArrowDown:'down', ArrowUp:'up' }[e.key];
+    if (dir) {
+      e.preventDefault();
+      const next = findBest(focused, all, dir);
+      if (next) { next.focus(); next.scrollIntoView({ behavior:'smooth', block:'center' }); }
+      else if (dir === 'up') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => document.querySelector('.back-btn').focus(), 400);
+      }
+    }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focused.click(); }
+    if (e.key === 'Backspace' || e.key === 'Escape') { e.preventDefault(); window.location.href = 'home.html'; }
+  }, true);
+})();
+</script>
+
+</body>
+</html>
