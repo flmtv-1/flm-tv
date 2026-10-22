@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-flm-version="2026-10-18-live-cc">
 <head>
-    <!-- FLM TV home.html · VERSION 2026-10-20 · no Home picks · live CC button (search "VERSION" with Ctrl+U to check which file is live) -->
+    <!-- FLM TV home.html · VERSION 2026-10-21 · speed fix restored · no Home picks · live CC button (search "VERSION" with Ctrl+U to check which file is live) -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -5195,15 +5195,33 @@
                 }
             }
 
-            // Fire off every collection's build at the same time, then append
-            // them in the original, correct order once they've all settled.
-            const results = await Promise.allSettled(
-                JELLYFIN_CONFIG.COLLECTIONS.map(buildNavItem)
-            );
-            results.forEach(function(result) {
-                if (result.status === 'fulfilled' && result.value) {
-                    navScroll.appendChild(result.value);
-                }
+            // SPEED FIX (restored 2026-10-21): a placeholder for every
+            // category appears instantly, in the right order, and its picture
+            // only loads once it scrolls into view. Before, every category
+            // fired 2 Jellyfin calls the moment the page opened (~50 calls),
+            // which swamped Jellyfin and left the strip and rows empty.
+            function fillNavItem(ph) {
+                buildNavItem(ph.__collection).then(function(el) {
+                    if (el) ph.replaceWith(el); else ph.remove();
+                }).catch(function() {});
+            }
+            const navIO = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting) return;
+                    navIO.unobserve(entry.target);
+                    fillNavItem(entry.target);
+                });
+            }, { rootMargin: '0px 400px' }) : null;
+            JELLYFIN_CONFIG.COLLECTIONS.forEach(function(collection) {
+                if (collection.id === 'live-tv') return;
+                const ph = document.createElement('div');
+                ph.className = 'category-nav-item';
+                ph.style.background = '#111827';
+                ph.innerHTML = '<div class="category-nav-overlay"><div class="category-nav-name"></div></div>';
+                ph.querySelector('.category-nav-name').textContent = collection.name;
+                ph.__collection = collection;
+                navScroll.appendChild(ph);
+                if (navIO) navIO.observe(ph); else fillNavItem(ph);
             });
             
             console.log('✅ Category navigation built!');
@@ -5956,13 +5974,30 @@ function wtvMatches(ch, catKey) {
                 container.appendChild(featuredSection);
             }
 
-            // Now load all in parallel — each fills its own pre-placed section
-            await Promise.all([
-                myListPromise,
-                ...visibleCollections.map((collection, i) => loadCollectionSection(collection, placeholders[i]))
-            ]);
+            // SPEED FIX (restored 2026-10-21): each row loads only when it's
+            // about to scroll into view, instead of all ~20 rows hitting
+            // Jellyfin at the same moment the page opens.
+            if ('IntersectionObserver' in window) {
+                const rowObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) return;
+                        rowObserver.unobserve(entry.target);
+                        const collection = entry.target.__collection;
+                        if (!collection) return;
+                        loadCollectionSection(collection, entry.target).catch(e =>
+                            console.error(`Error loading ${collection.name}:`, e));
+                    });
+                }, { rootMargin: '600px 0px' }); // start a little before it's on screen
+                visibleCollections.forEach((collection, i) => {
+                    placeholders[i].__collection = collection;
+                    rowObserver.observe(placeholders[i]);
+                });
+            } else {
+                visibleCollections.forEach((collection, i) => loadCollectionSection(collection, placeholders[i]));
+            }
+            await myListPromise;
 
-            console.log('🎉 All content loaded!');
+            console.log('🎉 Visible rows loading; the rest load as you scroll.');
         }
         
         // ═══════════════════════════════════════════════════════════════
