@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- FilAm TV filam-tv.html · VERSION 2026-10-21 · shows open their own page -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -577,10 +578,9 @@ img { display: block; max-width: 100%; }
   let shows = [];
 
   function showLink(s) {
-    if (s.Type === 'Series' || s.Type === 'Movie' || s.Type === 'Video' || s.Type === 'Episode' || s.Type === 'BoxSet')
-      return `movie-frame.html?id=${s.Id}`;
-    // A plain folder (for example a 2-part special) opens its category page
-    return `category-detail.html?id=${s.Id}&name=${encodeURIComponent(showName(s))}`;
+    // Every show card opens its own show page, whatever Jellyfin calls it
+    // (series, folder or movie), never the "View All" category page.
+    return `movie-frame.html?id=${s.Id}`;
   }
 
   async function loadShows() {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0070)https://flmtv.com/movie-frame.html?id=0b30a58fd5019e61d741097dfc9e628a -->
+<!-- FLM TV movie-frame.html · VERSION 2026-10-21 · backup player route (search "VERSION" with Ctrl+U) -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -149,6 +149,25 @@ const CONFIG = {
   SERVER_ID: 'db6bb6388c8c4c70825698639853ede6'
 };
 
+// BACKUP ROUTE: the player normally loads straight from Computer 2 on
+// port 8920. If 8920 doesn't answer (expired certificate, blocked port,
+// router change), the page switches to the flmtv.com/jellyfin route,
+// which goes through Netlify, so shows keep playing.
+// When 8920 works again, nothing changes: it is always tried first.
+const MAIN_SERVER   = 'https://flmtv26.duckdns.org:8920';
+const BACKUP_SERVER = 'https://flmtv.com/jellyfin';
+
+function pickServer() {
+  return new Promise(function(resolve) {
+    let done = false;
+    const finish = function(server) { if (!done) { done = true; resolve(server); } };
+    setTimeout(function() { finish(BACKUP_SERVER); }, 4000);
+    fetch(MAIN_SERVER + '/System/Info/Public', { cache: 'no-store' })
+      .then(function(r) { finish(r.ok ? MAIN_SERVER : BACKUP_SERVER); })
+      .catch(function() { finish(BACKUP_SERVER); });
+  });
+}
+
 const params   = new URLSearchParams(location.search);
 const ITEM_ID  = params.get('id') || '';
 const CAT_ID   = params.get('catId') || '';
@@ -157,7 +176,17 @@ const CAT_NAME = decodeURIComponent(params.get('catName') || '');
 // Home button always goes home
 document.getElementById('homeBtn').href = 'home.html';
 
-if (ITEM_ID) {
+function openDetails() {
+  document.getElementById('jellyfinFrame').src =
+    CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
+    '&serverId=' + CONFIG.SERVER_ID +
+    '&api_key=' + CONFIG.API_KEY;
+}
+
+pickServer().then(function(server) {
+  CONFIG.SERVER = server;
+  if (server !== MAIN_SERVER) console.warn('FLM TV: port 8920 not answering, using backup route', server);
+  if (!ITEM_ID) return;
   // If this is a Book, the Jellyfin reader cannot run inside an iframe.
   // Redirect the whole window directly to Jellyfin so the reader works.
   fetch(CONFIG.SERVER + '/Users/2562494c1df24f8789cd0ad8a38a7bf4/Items/' + ITEM_ID + '?api_key=' + CONFIG.API_KEY)
@@ -166,19 +195,11 @@ if (ITEM_ID) {
       if (data.Type === 'Book') {
         window.location.href = CONFIG.SERVER + '/web/index.html?api_key=' + CONFIG.API_KEY + '#/details?id=' + ITEM_ID + '&serverId=' + CONFIG.SERVER_ID;
       } else {
-        document.getElementById('jellyfinFrame').src =
-          CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
-          '&serverId=' + CONFIG.SERVER_ID +
-          '&api_key=' + CONFIG.API_KEY;
+        openDetails();
       }
     })
-    .catch(function() {
-      document.getElementById('jellyfinFrame').src =
-        CONFIG.SERVER + '/web/index.html#!/details?id=' + ITEM_ID +
-        '&serverId=' + CONFIG.SERVER_ID +
-        '&api_key=' + CONFIG.API_KEY;
-    });
-}
+    .catch(openDetails);
+});
 </script>
 
 
