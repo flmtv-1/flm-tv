@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- FilAm TV filam-tv.html · VERSION 2026-10-21 · shows open their own page -->
+<!-- FilAm TV filam-tv.html · VERSION 2026-10-26 · The Pulse episode row -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -270,6 +270,12 @@ img { display: block; max-width: 100%; }
 .row-arrow.prev { left: -18px; } .row-arrow.next { right: -18px; }
 @media (max-width: 760px) { .row { grid-auto-columns: 132px; gap: 12px; } .row-arrow { display: none; } .row-head h3 { font-size: 21px; } }
 .flm-tv .row-arrow { display: none; }
+/* Episode rows (16:9 pictures) */
+.row.eps { grid-auto-columns: 300px; }
+.row.eps .ep-card { scroll-snap-align: start; }
+.row.eps + .row-arrow, .eps-wrap .row-arrow { top: calc(16px + 84px - 22px); }
+@media (max-width: 760px) { .row.eps { grid-auto-columns: 240px; } }
+.flm-tv .row.eps .ep-card:focus { outline: 4px solid var(--sun) !important; outline-offset: 4px !important; transform: scale(1.04); position: relative; z-index: 5; }
 .flm-tv .movie-card:focus { outline: 4px solid var(--sun) !important; outline-offset: 4px !important; transform: scale(1.04); position: relative; z-index: 5; }
 
 /* Footer */
@@ -383,6 +389,7 @@ img { display: block; max-width: 100%; }
     <p class="lede">Pick a show to start watching.</p>
     <div class="shows" id="showGrid"></div>
     <div class="status" id="showStatus"><span class="spin"></span>Loading shows…</div>
+    <div id="episodeRows"></div>
   </section>
 
   <section class="block wrap" id="movies">
@@ -438,6 +445,13 @@ img { display: block; max-width: 100%; }
     'LOCALS IN LAS VEGAS-JESSICA': 'Hosted by Jessica J. Rolla'
   };
   const LOGO = 'assets/images/filamtv-logo-dark.jpg';      // used when a picture is missing
+
+  // Episode rows, right under the show cards. Use this for a show whose episodes sit in a
+  // plain folder (like The Pulse). id = the folder's id from Jellyfin's address bar
+  // (the part after "parentId="). The show's card scrolls down to its row.
+  const EPISODE_ROWS = [
+    { id: '289a0b599c9e927ae800f9142085ff91', title: 'The Pulse', newestFirst: true }
+  ];
 
   // Movie rows under the shows. Add another row by adding a line (any Jellyfin library or folder id).
   const MOVIE_ROWS = [
@@ -578,17 +592,58 @@ img { display: block; max-width: 100%; }
   let shows = [];
 
   function showLink(s) {
-    // Every show card opens its own show page, whatever Jellyfin calls it
-    // (series, folder or movie), never the "View All" category page.
+    const row = EPISODE_ROWS.find(r => r.id === s.Id || r.title.toLowerCase() === showName(s).toLowerCase());
+    if (row) return `#eprow-${row.id}`;
+    // Series, movies and specials open their own show page. A plain folder of
+    // videos (one Jellyfin didn't recognise as a series) opens its episode list.
+    if (s.Type === 'Folder') return `category-detail.html?id=${s.Id}&name=${encodeURIComponent(showName(s))}`;
     return `movie-frame.html?id=${s.Id}`;
   }
 
-  async function loadShows() {
-    const res = await jf('/Items', {
-      ParentId: FILAM_LIBRARY_ID, SortBy: 'SortName',
-      Fields: 'ChildCount,RecursiveItemCount,ProductionYear', EnableImages: 'true', ImageTypeLimit: '1'
+  // The FilAm TV library has two folders (X:\FilAm TV and V:\FilAm TV 2), and a
+  // show can sit one level deeper than the library itself. So instead of only the
+  // top level, look for every series in the whole library, plus top-level specials,
+  // plus any plain folder of videos that isn't just a container for other shows.
+  async function findAllShows() {
+    const common = { Fields: 'ChildCount,RecursiveItemCount,ProductionYear,ParentId',
+                     EnableImages: 'true', ImageTypeLimit: '1', SortBy: 'SortName' };
+    const [ser, top, fold] = await Promise.all([
+      jf('/Items', { ParentId: FILAM_LIBRARY_ID, Recursive: 'true', IncludeItemTypes: 'Series', ...common }),
+      jf('/Items', { ParentId: FILAM_LIBRARY_ID, ...common }),
+      jf('/Items', { ParentId: FILAM_LIBRARY_ID, Recursive: 'true', IncludeItemTypes: 'Folder', ...common })
+    ]);
+    if (!ser && !top) return null;
+    const series  = (ser && ser.Items) || [];
+    const topList = (top && top.Items) || [];
+    const folders = ((fold && fold.Items) || []).concat(topList.filter(i => i.Type === 'Folder'));
+
+    const byId = new Map();
+    series.forEach(s => byId.set(s.Id, s));
+    topList.forEach(i => { if (['Series', 'Movie', 'Video'].includes(i.Type)) byId.set(i.Id, i); });
+
+    // a folder that holds other shows (like "FilAm TV 2") is a container, not a show
+    const parents = new Set();
+    series.concat(folders).forEach(i => { if (i.ParentId) parents.add(i.ParentId); });
+    const seriesIds = new Set(series.map(s => s.Id));
+    folders.forEach(f => {
+      if (byId.has(f.Id) || parents.has(f.Id) || seriesIds.has(f.ParentId)) return;
+      if ((f.RecursiveItemCount || f.ChildCount || 0) > 0) byId.set(f.Id, f);
     });
-    const items = (res && res.Items) ? res.Items : null;
+    // Same show in two places (e.g. Locals in Las Vegas on X: and V:)? Show it once:
+    // keep whichever copy has the most episodes.
+    const byName = new Map();
+    byId.forEach(i => {
+      const k = showName(i).toLowerCase().trim();
+      const n = i.RecursiveItemCount || i.ChildCount || 0;
+      const had = byName.get(k);
+      if (!had || n > (had.RecursiveItemCount || had.ChildCount || 0)) byName.set(k, i);
+    });
+    return Array.from(byName.values())
+      .sort((a, b) => showName(a).localeCompare(showName(b), undefined, { sensitivity: 'base' }));
+  }
+
+  async function loadShows() {
+    const items = await findAllShows();
     if (!items) {
       $('showStatus').innerHTML = 'The shows are taking longer than usual to load.<br>' +
         '<button type="button" class="btn btn-ghost" id="retryShows">Try again</button>';
@@ -631,8 +686,8 @@ img { display: block; max-width: 100%; }
     const se = /S\d{1,2}\s*E(\d+)/i.exec(n);
     let num = ep.Type === 'Episode' && ep.IndexNumber != null ? ep.IndexNumber : (se ? parseInt(se[1], 10) : null);
     if (se) n = n.slice(se.index + se[0].length);
-    else { const e = /episode\s*(\d+)/i.exec(n); if (e) { n = n.slice(e.index + e[0].length); if (num == null) num = parseInt(e[1], 10); } }
-    n = n.replace(/\b(flm|final|new|v\d+)\b/gi, '').replace(/^[\s\-–—_:.]+|[\s\-–—_:.]+$/g, '').trim();
+    else { const e = /episode[\s_\-]*(\d+)/i.exec(n); if (e) { n = n.slice(e.index + e[0].length); if (num == null) num = parseInt(e[1], 10); } }
+    n = n.replace(/_/g, ' ').replace(/\b(flm|final|new|v\d+)\b/gi, '').replace(/^[\s\-–—_:.]+|[\s\-–—_:.]+$/g, '').trim();
     if (!n) return num != null ? `Episode ${num}` : (ep.Name || 'Episode');
     return n;
   }
@@ -698,8 +753,74 @@ img { display: block; max-width: 100%; }
     }
   }
 
+  // ── EPISODE ROWS ─────────────────────────────────────────────────
+  const epNum = ep => {
+    if (ep.Type === 'Episode' && ep.IndexNumber != null) return ep.IndexNumber;
+    const m = /S\d{1,2}\s*E(\d+)/i.exec(ep.Name || '') || /episode[\s_\-]*(\d+)/i.exec(ep.Name || '');
+    return m ? parseInt(m[1], 10) : null;
+  };
+
+  async function loadEpisodeRows() {
+    const box = $('episodeRows');
+    for (const row of EPISODE_ROWS) {
+      const head = document.createElement('div');
+      head.className = 'row-head';
+      head.id = `eprow-${row.id}`;
+      head.style.scrollMarginTop = '80px';
+      head.innerHTML = `<h3>${esc(row.title)}</h3><a href="category-detail.html?id=${row.id}&name=${encodeURIComponent(row.title)}">See all</a>`;
+      const wrap = document.createElement('div');
+      wrap.className = 'row-wrap eps-wrap';
+      wrap.innerHTML = '<div class="status"><span class="spin"></span>Loading episodes…</div>';
+      box.append(head, wrap);
+
+      const res = await jf('/Items', {
+        ParentId: row.id, Recursive: 'true', IncludeItemTypes: 'Episode,Video,Movie',
+        SortBy: 'SortName', Limit: '500', Fields: 'RunTimeTicks', EnableImages: 'true', ImageTypeLimit: '1'
+      });
+      const items = (res && res.Items) ? res.Items : null;
+      if (!items || !items.length) {
+        wrap.innerHTML = `<div class="status">${items ? 'Episodes are on the way.' : 'This show is taking longer than usual to load.'}</div>`;
+        continue;
+      }
+      // order by episode number (newest first if asked), name as a tie-break
+      items.sort((a, b) => {
+        const na = epNum(a), nb = epNum(b);
+        if (na != null && nb != null && na !== nb) return row.newestFirst ? nb - na : na - nb;
+        return (a.Name || '').localeCompare(b.Name || '', undefined, { numeric: true });
+      });
+      const track = document.createElement('div');
+      track.className = 'row eps';
+      items.forEach(ep => {
+        const a = document.createElement('a');
+        a.className = 'ep-card';
+        a.href = `movie-frame.html?id=${ep.Id}`;
+        const tag = ep.ImageTags && ep.ImageTags.Primary;
+        const len = minutes(ep.RunTimeTicks);
+        const num = epNum(ep);
+        a.innerHTML = `
+          <div class="ep-thumb"><img src="${tag ? img(ep.Id, tag, 600) : LOGO}" alt="" loading="lazy"
+               class="${tag ? '' : 'cover-fallback'}" onerror="this.onerror=null;this.src='${LOGO}';this.className='cover-fallback'">
+            ${len ? `<span class="ep-len">${len}</span>` : ''}
+            <span class="ep-play"><i class="fas fa-play"></i></span></div>
+          <div class="ep-title">${esc(titleOf(ep))}</div>
+          ${num != null && !/^Episode \d+$/.test(titleOf(ep)) ? `<div class="ep-sub">Episode ${num}</div>` : ''}`;
+        track.appendChild(a);
+      });
+      const prev = document.createElement('button'), next = document.createElement('button');
+      prev.className = 'row-arrow prev'; next.className = 'row-arrow next';
+      prev.type = next.type = 'button';
+      prev.setAttribute('aria-label', `Scroll ${row.title} left`); next.setAttribute('aria-label', `Scroll ${row.title} right`);
+      prev.innerHTML = '<i class="fas fa-chevron-left"></i>'; next.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      prev.onclick = () => track.scrollBy({ left: -track.clientWidth * 0.85 });
+      next.onclick = () => track.scrollBy({ left: track.clientWidth * 0.85 });
+      wrap.innerHTML = '';
+      wrap.append(prev, track, next);
+    }
+  }
+
   hero.start();
   loadShows();
+  loadEpisodeRows();
   loadMovieRows();
 </script>
 
@@ -710,7 +831,7 @@ img { display: block; max-width: 100%; }
   document.documentElement.classList.add('flm-tv');
 
   function getFocusable() {
-    return Array.from(document.querySelectorAll('.back-btn, .hero-actions .btn, .show-card, .movie-card, .foot .btn'))
+    return Array.from(document.querySelectorAll('.back-btn, .hero-actions .btn, .show-card, .row.eps .ep-card, .movie-card, .foot .btn'))
       .filter(el => el.offsetParent !== null && el.offsetWidth > 0);
   }
   function findBest(cur, all, dir) {
