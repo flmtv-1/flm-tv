@@ -773,10 +773,23 @@ img { display: block; max-width: 100%; }
       wrap.innerHTML = '<div class="status"><span class="spin"></span>Loading episodes…</div>';
       box.append(head, wrap);
 
-      const res = await jf('/Items', {
-        ParentId: row.id, Recursive: 'true', IncludeItemTypes: 'Episode,Video,Movie',
+      const epQuery = pid => jf('/Items', {
+        ParentId: pid, Recursive: 'true', IncludeItemTypes: 'Episode,Video,Movie',
         SortBy: 'SortName', Limit: '500', Fields: 'RunTimeTicks', EnableImages: 'true', ImageTypeLimit: '1'
       });
+      let res = await epQuery(row.id);
+      // If the episodes get renamed (S01E01 style), Jellyfin may turn the folder into a
+      // series with a new id. Find the show by its name so the row keeps working.
+      if (!res || !res.Items || !res.Items.length) {
+        const found = await jf('/Items', { ParentId: FILAM_LIBRARY_ID, Recursive: 'true',
+          IncludeItemTypes: 'Series,Folder', SearchTerm: row.title, Limit: '5' });
+        const match = found && found.Items && found.Items.find(i => (i.Name || '').toLowerCase() === row.title.toLowerCase());
+        if (match) {
+          res = await epQuery(match.Id);
+          const card = Array.from(document.querySelectorAll('.show-card')).find(c => c.getAttribute('href') === `#eprow-${row.id}`);
+          head.querySelector('a').href = `category-detail.html?id=${match.Id}&name=${encodeURIComponent(row.title)}`;
+        }
+      }
       const items = (res && res.Items) ? res.Items : null;
       if (!items || !items.length) {
         wrap.innerHTML = `<div class="status">${items ? 'Episodes are on the way.' : 'This show is taking longer than usual to load.'}</div>`;
