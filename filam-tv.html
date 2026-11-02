@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- FilAm TV filam-tv.html · VERSION 2026-10-26 · The Pulse episode row -->
+<!-- FilAm TV filam-tv.html · VERSION 2026-11-01 · The Pulse show card + episode row -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -649,6 +649,19 @@ img { display: block; max-width: 100%; }
         '<button type="button" class="btn btn-ghost" id="retryShows">Try again</button>';
       $('retryShows').onclick = () => { $('showStatus').innerHTML = '<span class="spin"></span>Loading shows…'; loadShows(); };
       return;
+    }
+    // Every show in EPISODE_ROWS (like The Pulse) also gets its own card up here,
+    // even when Jellyfin files it as a plain folder of videos.
+    const missing = EPISODE_ROWS.filter(r => !items.some(s =>
+      s.Id === r.id || showName(s).toLowerCase() === r.title.toLowerCase()));
+    if (missing.length) {
+      const extra = await jf('/Items', { Ids: missing.map(r => r.id).join(','),
+        Fields: 'ChildCount,RecursiveItemCount', EnableImages: 'true', ImageTypeLimit: '1' });
+      missing.forEach(r => {
+        const it = extra && extra.Items && extra.Items.find(i => i.Id === r.id);
+        items.push(Object.assign({}, it || { Id: r.id, Type: 'Folder' }, { Name: r.title }));
+      });
+      items.sort((a, b) => showName(a).localeCompare(showName(b), undefined, { sensitivity: 'base' }));
     }
     if (!items.length) { $('showStatus').textContent = 'New shows are on the way.'; return; }
     $('showStatus').style.display = 'none';
