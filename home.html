@@ -2942,7 +2942,25 @@
                         <li><a href="#" onclick="scrollToCollection('6fcfa6221b9a5741d5fdcf30f78f946b'); return false;">Movies</a></li>
                         <li><a href="#" onclick="scrollToCollection('7e2a5d7fd8bd73b8768e302be39536df'); return false;">TV Shows</a></li>
                         <li><a href="help.html">Help</a></li>
+                        <li class="flm-submit-nav"><a href="submit.html" class="flm-creators-btn" title="Filmmakers, series creators &amp; music video artists: submit your work to air on FLM TV"><i class="fas fa-clapperboard"></i><span class="flm-creators-label">CALLING ALL CREATORS<small>Get Your Show On Air</small></span></a></li>
                     </ul>
+                    <style>
+                    .is-firestick .flm-submit-nav { display: none !important; }
+                    .header-nav a.flm-creators-btn {
+                        display: inline-flex; align-items: center; gap: 0.5rem;
+                        padding: 0.35rem 0.85rem; border: 2px solid #ffd700; border-radius: 999px;
+                        color: #ffd700; text-decoration: none; white-space: nowrap; line-height: 1;
+                        background: rgba(255,215,0,0.08); box-shadow: 0 0 10px rgba(255,215,0,0.35);
+                        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+                    }
+                    .header-nav a.flm-creators-btn::after { display: none !important; }
+                    .header-nav a.flm-creators-btn i { font-size: 1rem; }
+                    .flm-creators-label { display: flex; flex-direction: column; font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 0.95rem; letter-spacing: 1.5px; }
+                    .flm-creators-label small { font-family: Arial, Helvetica, sans-serif; font-size: 0.6rem; letter-spacing: 0.5px; color: #fff; margin-top: 3px; text-transform: none; }
+                    .header-nav a.flm-creators-btn:hover, .header-nav a.flm-creators-btn:focus {
+                        transform: scale(1.05); background: rgba(255,215,0,0.18); box-shadow: 0 0 18px rgba(255,215,0,0.8); outline: none;
+                    }
+                    </style>
                 </nav>
             </div>
             
