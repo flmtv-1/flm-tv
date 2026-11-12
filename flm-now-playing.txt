@@ -1,0 +1,257 @@
+' ============================================================
+' FLM TV - "Now Playing" + "Up Next" title script for vMix (VB.NET)
+' Shows the SHOW NAME (not the file name) for the current show and
+' for "Up Next", with "Up Next" in green.
+' Works with lists from the FLM Scheduler (M3U with titles) and lists
+' built by hand in vMix (titles learned earlier are remembered in
+' Documents\flm-title-library.txt).
+' Run only THIS script for Title 4 (stop any older Now Playing script).
+' ============================================================
+
+' ---- SET ONCE ------------------------------------------------
+Dim titleInput As String = "Title 4- Bright.gtzip"
+Dim titleField As String = "Headline.Text"
+Dim maxUpNext As Integer = 28
+Dim upNextColour As String = "#22C55E"
+Dim normalColour As String = "#FFFFFF"
+' --------------------------------------------------------------
+
+Dim userHome As String = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
+Dim candidates() As String = New String() {System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), System.IO.Path.Combine(userHome, "Documents"), System.IO.Path.Combine(userHome, "OneDrive\Documents")}
+Dim m3uFolders As New System.Collections.Generic.List(Of String)
+For Each cand As String In candidates
+    If cand <> "" AndAlso System.IO.Directory.Exists(cand) Then
+        Dim already As Boolean = False
+        For Each f0 As String In m3uFolders
+            If String.Equals(f0.TrimEnd("\"c), cand.TrimEnd("\"c), System.StringComparison.OrdinalIgnoreCase) Then already = True
+        Next
+        If Not already Then m3uFolders.Add(cand)
+    End If
+Next
+Dim homeFolder As String = candidates(0)
+If m3uFolders.Count > 0 Then homeFolder = m3uFolders(0)
+Dim libraryFile As String = System.IO.Path.Combine(homeFolder, "flm-title-library.txt")
+Dim logFile As String = System.IO.Path.Combine(homeFolder, "flm-title-log.txt")
+Dim tabChar As String = System.Convert.ToChar(9).ToString()
+Dim nl As String = System.Environment.NewLine
+
+Dim titlesByPath As New System.Collections.Generic.Dictionary(Of String, String)(System.StringComparer.OrdinalIgnoreCase)
+Dim titlesByName As New System.Collections.Generic.Dictionary(Of String, String)(System.StringComparer.OrdinalIgnoreCase)
+Dim lastFolderStamp As String = ""
+Dim lastLibraryStamp As Long = -1
+Dim lastFolderCheck As DateTime = DateTime.MinValue
+Dim m3uCount As Integer = 0
+
+Dim lastIdx As Integer = -1
+Dim lastLoggedIdx As Integer = -1
+Dim shownMiddle As Boolean = False
+Dim shownEnd As Boolean = False
+
+Dim extinfRx As New System.Text.RegularExpressions.Regex("^#EXTINF:\s*-?[\d.]+((\s+[^=\s]+=""[^""]*"")*)\s*,(.*)$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+
+While True
+    Try
+        If (DateTime.Now - lastFolderCheck).TotalSeconds >= 30 Then
+            lastFolderCheck = DateTime.Now
+
+            ' ---- 1) Load the permanent Title Library (also picks up your hand edits) ----
+            If System.IO.File.Exists(libraryFile) Then
+                Dim libStamp As Long = System.IO.File.GetLastWriteTimeUtc(libraryFile).Ticks
+                If libStamp <> lastLibraryStamp Then
+                    lastLibraryStamp = libStamp
+                    For Each raw As String In System.IO.File.ReadAllLines(libraryFile, System.Text.Encoding.UTF8)
+                        Dim tab As Integer = raw.IndexOf(tabChar)
+                        If tab > 0 Then
+                            Dim k As String = raw.Substring(0, tab).Trim()
+                            Dim v As String = raw.Substring(tab + 1).Trim()
+                            If k <> "" AndAlso v <> "" Then titlesByName(k) = v
+                        End If
+                    Next
+                    lastFolderStamp = ""
+                End If
+            End If
+
+            ' ---- 2) Read scheduler playlists from every Documents folder ----
+            Dim files As New System.Collections.Generic.List(Of System.IO.FileInfo)
+            For Each folder As String In m3uFolders
+                For Each f As String In System.IO.Directory.GetFiles(folder, "*.m3u*")
+                    files.Add(New System.IO.FileInfo(f))
+                Next
+            Next
+            files.Sort(Function(a, b) a.LastWriteTimeUtc.CompareTo(b.LastWriteTimeUtc))
+            m3uCount = files.Count
+
+            Dim stamp As String = ""
+            For Each fi As System.IO.FileInfo In files
+                stamp &= fi.FullName & "|" & fi.LastWriteTimeUtc.Ticks.ToString() & "|" & fi.Length.ToString() & ";"
+            Next
+
+            If stamp <> lastFolderStamp Then
+                lastFolderStamp = stamp
+                titlesByPath.Clear()
+                Dim learnedSomething As Boolean = False
+                For Each fi As System.IO.FileInfo In files
+                    Dim pendingTitle As String = ""
+                    For Each raw As String In System.IO.File.ReadAllLines(fi.FullName, System.Text.Encoding.UTF8)
+                        Dim line As String = raw.Trim().TrimStart(System.Convert.ToChar(&HFEFF))
+                        If line.StartsWith("#EXTINF", System.StringComparison.OrdinalIgnoreCase) Then
+                            Dim m As System.Text.RegularExpressions.Match = extinfRx.Match(line)
+                            If m.Success Then
+                                pendingTitle = m.Groups(3).Value.Trim()
+                            Else
+                                Dim comma As Integer = line.IndexOf(",")
+                                If comma >= 0 Then pendingTitle = line.Substring(comma + 1).Trim() Else pendingTitle = ""
+                            End If
+                        ElseIf line <> "" AndAlso Not line.StartsWith("#") Then
+                            If pendingTitle <> "" Then
+                                Dim p As String = line.Replace("/", "\")
+                                If p.StartsWith("file:\\\", System.StringComparison.OrdinalIgnoreCase) Then p = System.Uri.UnescapeDataString(p.Substring(8))
+                                Dim n As String = System.IO.Path.GetFileNameWithoutExtension(p)
+                                titlesByPath(p) = pendingTitle
+                                If Not titlesByName.ContainsKey(n) OrElse titlesByName(n) <> pendingTitle Then
+                                    titlesByName(n) = pendingTitle
+                                    learnedSomething = True
+                                End If
+                            End If
+                            pendingTitle = ""
+                        End If
+                    Next
+                Next
+                If learnedSomething Then
+                    Dim outLines As New System.Collections.Generic.List(Of String)
+                    For Each kv As System.Collections.Generic.KeyValuePair(Of String, String) In titlesByName
+                        outLines.Add(kv.Key & tabChar & kv.Value)
+                    Next
+                    outLines.Sort(System.StringComparer.OrdinalIgnoreCase)
+                    System.IO.File.WriteAllLines(libraryFile, outLines.ToArray(), New System.Text.UTF8Encoding(False))
+                    lastLibraryStamp = System.IO.File.GetLastWriteTimeUtc(libraryFile).Ticks
+                End If
+            End If
+        End If
+
+        ' ---- 3) Normal vMix logic ----
+        Dim xml As String = API.XML()
+        Dim doc As New System.Xml.XmlDocument()
+        doc.LoadXml(xml)
+
+        Dim activeNode As System.Xml.XmlNode = doc.SelectSingleNode("/vmix/active")
+        If Not activeNode Is Nothing Then
+            Dim inputNode As System.Xml.XmlNode = doc.SelectSingleNode("/vmix/inputs/input[@number='" & activeNode.InnerText & "']")
+            If Not inputNode Is Nothing Then
+                Dim currentShow As String = ""
+                Dim upNextShow As String = ""
+                Dim titleAttr As System.Xml.XmlAttribute = inputNode.Attributes("title")
+                If Not titleAttr Is Nothing Then currentShow = titleAttr.Value
+
+                Dim typeAttr As System.Xml.XmlAttribute = inputNode.Attributes("type")
+                If Not typeAttr Is Nothing AndAlso typeAttr.Value = "VideoList" Then
+                    Dim items As System.Xml.XmlNodeList = inputNode.SelectNodes("list/item")
+                    Dim cur As Integer = -1
+                    For i As Integer = 0 To items.Count - 1
+                        Dim sel As System.Xml.XmlAttribute = items(i).Attributes("selected")
+                        If Not sel Is Nothing AndAlso sel.Value.ToLower() = "true" Then cur = i
+                    Next
+                    If cur < 0 Then
+                        Dim selIdx As Integer = 0
+                        Dim selAttr As System.Xml.XmlAttribute = inputNode.Attributes("selectedIndex")
+                        If Not selAttr Is Nothing Then Integer.TryParse(selAttr.Value, selIdx)
+                        cur = selIdx
+                    End If
+                    If cur <> lastIdx Then
+                        lastIdx = cur
+                        shownMiddle = False
+                        shownEnd = False
+                    End If
+
+                    ' Work out the show name for the current item (step 0) and the next item (step 1)
+                    Dim logText As String = ""
+                    For stepNo As Integer = 0 To 1
+                        Dim idx As Integer = cur + stepNo
+                        If idx >= 0 AndAlso idx < items.Count Then
+                            Dim fullPath As String = items(idx).InnerText.Trim().Replace("/", "\")
+                            Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(fullPath)
+                            Dim itemTitle As String = ""
+                            If Not items(idx).Attributes("title") Is Nothing Then itemTitle = items(idx).Attributes("title").Value.Trim()
+                            Dim show As String = ""
+                            Dim source As String = ""
+                            ' Show name comes from the scheduler M3U / Title Library FIRST.
+                            ' The vMix list title is used only if neither knows this file,
+                            ' because vMix can fill that title with the EPISODE name from
+                            ' the file's own tags (e.g. "June's Birthday").
+                            If titlesByPath.ContainsKey(fullPath) Then
+                                show = titlesByPath(fullPath)
+                                source = "scheduler M3U"
+                            ElseIf titlesByName.ContainsKey(fileName) Then
+                                show = titlesByName(fileName)
+                                source = "title library"
+                            ElseIf itemTitle <> "" AndAlso Not String.Equals(itemTitle, fileName, System.StringComparison.OrdinalIgnoreCase) AndAlso Not String.Equals(itemTitle, System.IO.Path.GetFileName(fullPath), System.StringComparison.OrdinalIgnoreCase) Then
+                                show = itemTitle
+                                source = "vMix list"
+                            Else
+                                show = fileName.Replace("_", " ").Replace(".", " ")
+                                While show.Contains("  ")
+                                    show = show.Replace("  ", " ")
+                                End While
+                                source = "FILE NAME (no title found)"
+                            End If
+                            show = System.Text.RegularExpressions.Regex.Replace(show, "\s*[\(\[][^\)\]]*(\d{3,4}p|\ben\b|HD|\d)[^\)\]]*[\)\]]\s*$", "")
+                            show = System.Text.RegularExpressions.Regex.Replace(show, "[^\w\s&'!?.,:;\-]", "").Trim(" -_.".ToCharArray())
+                            If stepNo = 0 Then
+                                currentShow = show
+                                logText &= "  NOW:  " & show & "   <- " & source & "   [" & fullPath & "]" & nl
+                            Else
+                                If show.Length > maxUpNext Then
+                                    Dim cut As Integer = show.LastIndexOf(" ", maxUpNext)
+                                    If cut < 15 Then cut = maxUpNext
+                                    show = show.Substring(0, cut).TrimEnd(" ,.-".ToCharArray()) & "..."
+                                End If
+                                upNextShow = show
+                                logText &= "  NEXT: " & show & "   <- " & source & "   [" & fullPath & "]" & nl
+                            End If
+                        End If
+                    Next
+
+                    ' Small log, only when the show changes, so missing titles are easy to track down
+                    If cur <> lastLoggedIdx Then
+                        lastLoggedIdx = cur
+                        If System.IO.File.Exists(logFile) AndAlso New System.IO.FileInfo(logFile).Length > 200000 Then System.IO.File.Delete(logFile)
+                        System.IO.File.AppendAllText(logFile, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "   M3Us found: " & m3uCount & ", titles known: " & titlesByName.Count & nl & logText, New System.Text.UTF8Encoding(False))
+                    End If
+                End If
+
+                If currentShow <> "" Then API.Function("SetText", Input:=titleInput, SelectedName:=titleField, Value:=currentShow)
+
+                Dim duration As Integer = 0
+                Dim position As Integer = 0
+                Dim isPlaying As Boolean = False
+                Dim durAttr As System.Xml.XmlAttribute = inputNode.Attributes("duration")
+                Dim posAttr As System.Xml.XmlAttribute = inputNode.Attributes("position")
+                Dim stateAttr As System.Xml.XmlAttribute = inputNode.Attributes("state")
+                If Not durAttr Is Nothing Then Integer.TryParse(durAttr.Value, duration)
+                If Not posAttr Is Nothing Then Integer.TryParse(posAttr.Value, position)
+                If Not stateAttr Is Nothing AndAlso stateAttr.Value = "Running" Then isPlaying = True
+
+                If isPlaying AndAlso upNextShow <> "" AndAlso duration > 15000 Then
+                    If position > (duration * 0.48) AndAlso position < (duration * 0.55) AndAlso Not shownMiddle Then
+                        API.Function("SetTextColour", Input:=titleInput, SelectedName:=titleField, Value:=upNextColour)
+                        API.Function("SetText", Input:=titleInput, SelectedName:=titleField, Value:="Up Next: " & upNextShow)
+                        System.Threading.Thread.Sleep(7000)
+                        API.Function("SetText", Input:=titleInput, SelectedName:=titleField, Value:=currentShow)
+                        API.Function("SetTextColour", Input:=titleInput, SelectedName:=titleField, Value:=normalColour)
+                        shownMiddle = True
+                    End If
+                    If position > (duration - 25000) AndAlso position < (duration - 8000) AndAlso Not shownEnd Then
+                        API.Function("SetTextColour", Input:=titleInput, SelectedName:=titleField, Value:=upNextColour)
+                        API.Function("SetText", Input:=titleInput, SelectedName:=titleField, Value:="Coming Up Next: " & upNextShow)
+                        System.Threading.Thread.Sleep(7000)
+                        API.Function("SetText", Input:=titleInput, SelectedName:=titleField, Value:=currentShow)
+                        API.Function("SetTextColour", Input:=titleInput, SelectedName:=titleField, Value:=normalColour)
+                        shownEnd = True
+                    End If
+                End If
+            End If
+        End If
+    Catch ex As Exception
+    End Try
+    System.Threading.Thread.Sleep(1000)
+End While

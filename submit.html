@@ -93,6 +93,7 @@
     <!-- Netlify Forms: submissions appear in Netlify > Forms > "flm-submissions" -->
     <form id="submitForm" name="flm-submissions" method="POST" data-netlify="true" netlify-honeypot="bot-field">
       <input type="hidden" name="form-name" value="flm-submissions">
+      <input type="hidden" name="subject" id="subjectField" value="FLM TV Content Submission">
       <p style="display:none"><label>Leave this empty: <input name="bot-field"></label></p>
       <div class="row">
         <div>
@@ -210,6 +211,8 @@
   document.getElementById('submitForm').addEventListener('submit', async function (e) {
     var form = e.target;
     e.preventDefault();
+    var t = document.getElementById('title').value.trim();
+    document.getElementById('subjectField').value = 'FLM TV Content Submission' + (t ? ': ' + t : '');
     try {
       var res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() });
       if (!res.ok) throw new Error();
