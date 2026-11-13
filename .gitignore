@@ -12,3 +12,6 @@ config.js
 # System files
 .DS_Store
 Thumbs.db
+
+schedule_backup_*.html
+*.bak

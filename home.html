@@ -519,7 +519,7 @@
         }
         .hero-dot-btn.active::after {
             width: 100%;
-            transition: width 5s linear;
+            transition: width var(--fill-time, 5s) linear;
         }
         .hero-dot-btn.filled::after {
             width: 100%;
@@ -529,6 +529,26 @@
         .hero-slide.active {
             opacity: 1;
         }
+
+        /* Sizzle reel video slide */
+        .hero-slide::before { z-index: 1; }
+        .hero-video {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0; background: #07070A;
+        }
+        .hero-slide.has-video::before {
+            background:
+                linear-gradient(to bottom, rgba(7,7,10,0) 0%, rgba(7,7,10,0.25) 60%, rgba(7,7,10,0.9) 100%),
+                linear-gradient(to right, rgba(7,7,10,0.6) 0%, rgba(7,7,10,0.1) 45%, rgba(7,7,10,0) 100%);
+        }
+        .hero-sound-btn {
+            position: absolute; right: 5%; bottom: 22px; z-index: 6;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 999px; cursor: pointer;
+            background: rgba(7,7,10,0.6); color: #ffd700; border: 1px solid rgba(255,215,0,0.6);
+            font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 0.85rem; letter-spacing: 1.5px;
+        }
+        .hero-sound-btn:hover, .hero-sound-btn:focus { background: rgba(255,215,0,0.2); outline: none; }
         
         .hero-slide::before {
             content: '';
@@ -6563,6 +6583,41 @@ function wtvMatches(ch, catKey) {
         async function initHeroBanner() {
             const heroBanner = document.getElementById('heroBanner');
             const slides = [];
+
+            // ── FLM TV SIZZLE REEL (plays first, from Jellyfin) ──────────────
+            // The clip lives in V:\SITE ASSETS (same as the FilAm / Monique pages).
+            // Option A: leave itemId null and it finds the video by its name.
+            // Option B (most reliable): paste the Jellyfin Item ID here
+            //   (Jellyfin > open the video > copy the id=... from the address bar).
+            const HERO_SIZZLE = {
+                itemId: null,
+                name: 'FLMTV Sizzle',
+                title: 'FLM TV',
+                description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas, streaming worldwide.'
+            };
+            try {
+                let sizzleId = HERO_SIZZLE.itemId;
+                if (!sizzleId) {
+                    const found = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
+                        SearchTerm: HERO_SIZZLE.name,
+                        Recursive: true,
+                        IncludeItemTypes: 'Movie,Video,Episode',
+                        Limit: 1
+                    });
+                    if (found && found.Items && found.Items[0]) sizzleId = found.Items[0].Id;
+                }
+                if (sizzleId) {
+                    slides.push({
+                        video: `${JELLYFIN_CONFIG.SERVER}/Videos/${sizzleId}/stream?static=true&api_key=${JELLYFIN_CONFIG.API_KEY}`,
+                        image: 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
+                        title: HERO_SIZZLE.title,
+                        description: HERO_SIZZLE.description,
+                        link: null
+                    });
+                }
+            } catch (e) {
+                console.warn('Sizzle reel not loaded:', e);
+            }
             
             // Add your Zaina Show banner first
             slides.push({
@@ -6629,6 +6684,37 @@ function wtvMatches(ch, catKey) {
                     </div>
                 `;
                 
+                if (slide.video) {
+                    slideDiv.classList.add('has-video');
+                    slideDiv.style.backgroundImage = 'none';
+                    const v = document.createElement('video');
+                    v.className = 'hero-video';
+                    v.src = slide.video;
+                    v.muted = true; v.defaultMuted = true;
+                    v.playsInline = true; v.setAttribute('playsinline', '');
+                    v.preload = 'auto';
+                    v.poster = slide.image;
+                    v.addEventListener('error', () => {
+                        v.remove();
+                        slideDiv.classList.remove('has-video');
+                        slideDiv.classList.add('fit-contain');
+                        slideDiv.style.backgroundImage = `url('${slide.image}')`;
+                    });
+                    slideDiv.appendChild(v);
+
+                    const sound = document.createElement('button');
+                    sound.className = 'hero-sound-btn';
+                    sound.innerHTML = '<i class="fas fa-volume-xmark"></i> SOUND ON';
+                    sound.addEventListener('click', (ev) => {
+                        ev.stopPropagation();
+                        v.muted = !v.muted;
+                        sound.innerHTML = v.muted
+                            ? '<i class="fas fa-volume-xmark"></i> SOUND ON'
+                            : '<i class="fas fa-volume-high"></i> SOUND OFF';
+                    });
+                    slideDiv.appendChild(sound);
+                }
+
                 slideDiv.appendChild(content);
                 heroBanner.appendChild(slideDiv);
             });
@@ -6647,8 +6733,39 @@ function wtvMatches(ch, catKey) {
             });
             heroBanner.appendChild(dotsContainer);
 
-            // Auto-rotate slides every 5 seconds
+            // Auto-rotate slides every 5 seconds (a sizzle reel plays to the end first)
             let currentSlide = 0;
+            function syncHeroVideos() {
+                heroBanner.querySelectorAll('.hero-slide').forEach((sl, i) => {
+                    const v = sl.querySelector('.hero-video');
+                    if (!v) return;
+                    if (i === currentSlide) {
+                        try { v.currentTime = 0; } catch (e) {}
+                        v.play().catch(() => {});
+                    } else {
+                        v.pause();
+                        v.muted = true;
+                        const b = sl.querySelector('.hero-sound-btn');
+                        if (b) b.innerHTML = '<i class="fas fa-volume-xmark"></i> SOUND ON';
+                    }
+                });
+            }
+            function heroVideoStillPlaying() {
+                const sl = heroBanner.querySelectorAll('.hero-slide')[currentSlide];
+                const v = sl && sl.querySelector('.hero-video');
+                return !!(v && !v.paused && !v.ended && !v.error);
+            }
+            heroBanner.querySelectorAll('.hero-video').forEach(v => {
+                v.addEventListener('ended', () => {
+                    const allSlides = heroBanner.querySelectorAll('.hero-slide');
+                    updateActiveSlide((currentSlide + 1) % allSlides.length);
+                });
+                v.addEventListener('loadedmetadata', () => {
+                    const idx = Array.from(heroBanner.querySelectorAll('.hero-slide')).indexOf(v.closest('.hero-slide'));
+                    const dot = dotsContainer.querySelectorAll('.hero-dot-btn')[idx];
+                    if (dot && isFinite(v.duration)) dot.style.setProperty('--fill-time', v.duration + 's');
+                });
+            });
             function updateActiveSlide(newIndex) {
                 const allSlides = heroBanner.querySelectorAll('.hero-slide');
                 const allDots = dotsContainer.querySelectorAll('.hero-dot-btn');
@@ -6663,18 +6780,19 @@ function wtvMatches(ch, catKey) {
                 // when re-selecting a dot that was already 'active' before.
                 void allDots[currentSlide].offsetWidth;
                 allDots[currentSlide].classList.add('active');
+                syncHeroVideos();
             }
-            let rotateTimer = setInterval(() => {
+            function heroTick() {
+                if (heroVideoStillPlaying()) return; // let the sizzle finish
                 const allSlides = heroBanner.querySelectorAll('.hero-slide');
                 updateActiveSlide((currentSlide + 1) % allSlides.length);
-            }, 5000);
+            }
+            syncHeroVideos();
+            let rotateTimer = setInterval(heroTick, 5000);
             function goToSlide(index) {
                 updateActiveSlide(index);
                 clearInterval(rotateTimer);
-                rotateTimer = setInterval(() => {
-                    const allSlides = heroBanner.querySelectorAll('.hero-slide');
-                    updateActiveSlide((currentSlide + 1) % allSlides.length);
-                }, 5000);
+                rotateTimer = setInterval(heroTick, 5000);
             }
         }
         
