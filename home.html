@@ -5648,7 +5648,7 @@
 // ── WORLD TV CATEGORIES (shared by home.html and live-stations.html) ──
 // Each category = words looked for in a station's name / genre. Add words anytime.
 var WTV_CATS = [
-  { key:'escape', label:'Escape · Relax', icon:'🌿', words:['relax','meditat','medita','mindful','calm','chill','lofi','lo-fi','ambient','zen','yoga','spa','sleep','serenity','serene','tranquil','peaceful','soothing','healing music','nature','scenic','slow tv','aquarium','fireplace',' rain ','rainfall','ocean waves','waves','waterfall','forest','birdsong','sunset','stillness','4k relax','drone'] },
+  { key:'escape', label:'Escape · Relax', icon:'🌿', words:['relax','meditat','medita','mindful','calm','chill','lofi','lo-fi','ambient','zen','yoga','spa','sleep','serenity','serene','tranquil','peaceful','soothing','healing music','nature','scenic','slow tv','aquarium','fireplace',' rain ','rainfall','ocean waves','waves','waterfall','forest','birdsong','sunset','stillness','4k relax','drone','naturescape','ambiance','ambience','ambient tv','scenery','scenic','landscape','ocean','beach','seaside','mountain','aerial','earth touch','travel earth','relaxation','peace of mind','screensaver','moods','4k uhd','8k','dreamscape'] },
   { key:'spanish', label:'En Español', icon:'🗣️', words:['español','espanol','spanish','latino','latina','telemundo','univision','unimas','azteca','televisa','mexico','méxico','argentina','colombia','chile','peru','perú','venezuela','ecuador','bolivia','uruguay','paraguay','honduras','guatemala','salvador','dominicana','puerto rico','cuba','tve','antena 3','telesur','noticias','novelas','canal 1','canal 2','canal 5','canal 13','caracol','rcn','estrella','tlnovelas','cine latino','deportes','en vivo','tv publica','televisión','televisión'] },
   { key:'soccer', label:'Soccer', icon:'⚽', words:['soccer','football','fútbol','futbol','goal','fifa','liga','bein','premier league','calcio','bundesliga','serie a','tudn','fc '] },
   { key:'sports', label:'Sports', icon:'🏆', words:['sport','sports','espn','nba','nfl','mlb','nhl','golf','racing','motor','fight','boxing','wrestling','ufc','tennis','bein','olymp','outdoor','fishing','hunting','fubo','stadium','tudn','deportes','deportivo','soccer','football','fútbol','futbol'] },
@@ -5807,7 +5807,7 @@ function wtvMatches(ch, catKey) {
             { key:'escape', id:'escape-stations', title:'🌿 Escape · Relax & Meditate',
               headline:'<b>Breathe.</b> Unwind. Escape.',
               sub:'Peaceful scenery, meditation and calm music, streaming live 24/7.',
-              theme:'escape', picks:[], hide:[], folderId:'', max:24 },
+              theme:'escape', picks:[], hide:['hbo'], folderId:'', max:24 },
             { key:'music', id:'music-stations', title:'🎵 Music Stations',
               headline:'<b>Turn it up.</b> Music around the clock.',
               sub:'Hits, jazz, gospel, R&amp;B, country, Latin and more, live from around the world.',
