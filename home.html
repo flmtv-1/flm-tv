@@ -118,6 +118,71 @@
         #section-world-tv .wtv-card { flex-basis:160px; }
     }
     .is-firestick #section-world-tv .wtv-banner::after { animation:none; }
+
+    /* ═══ ESCAPE + MUSIC STATIONS ROWS (home page) ═══ */
+    .stn-section .wtv-row { display:flex; gap:14px; overflow-x:auto; padding:6px 2px 12px; scroll-snap-type:x mandatory; }
+    .stn-section .wtv-row::-webkit-scrollbar { height:6px; }
+    .stn-section .wtv-row::-webkit-scrollbar-thumb { background:rgba(255,215,0,0.3); border-radius:3px; }
+    .stn-section .wtv-card {
+        flex:0 0 220px; scroll-snap-align:start; text-decoration:none;
+        background:#141b2b; border:1px solid rgba(255,255,255,0.08); border-radius:10px;
+        overflow:hidden; position:relative; transition:all 0.25s ease;
+    }
+    .stn-section .wtv-card:hover, .stn-section .wtv-card:focus {
+        transform:scale(1.05); border-color:#22c55e; outline:none;
+        box-shadow:0 0 24px rgba(34,197,94,0.5), 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .stn-section .wtv-logo {
+        aspect-ratio:16/9; display:flex; align-items:center; justify-content:center;
+        background:radial-gradient(circle at 50% 40%, #233150, #0d1322);
+    }
+    .stn-section .wtv-logo img { max-width:78%; max-height:72%; object-fit:contain; }
+    .stn-section .wtv-abbr { font-size:2rem; font-weight:900; color:rgba(255,215,0,0.6); letter-spacing:2px; }
+    .stn-section .wtv-live {
+        position:absolute; top:7px; left:7px; display:flex; align-items:center; gap:5px;
+        background:rgba(0,0,0,0.65); padding:2px 8px; border-radius:12px;
+        font-size:0.68rem; font-weight:800; color:#E8333A; letter-spacing:1px;
+    }
+    .stn-section .wtv-live span { width:7px; height:7px; border-radius:50%; background:#E8333A; animation:liveDot 1.2s infinite; }
+    .stn-section .wtv-name {
+        padding:8px 10px; color:#f1f5f9; font-weight:700; font-size:0.9rem;
+        white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        border-top:1px solid rgba(255,255,255,0.05);
+    }
+    .stn-section .wtv-loading { color:#94a3b8; padding:2rem 1rem; display:flex; align-items:center; gap:12px; }
+    .stn-section .stn-banner {
+        margin:0 0 14px; padding:16px 20px; border-radius:12px; position:relative; overflow:hidden;
+        border:1px solid rgba(255,255,255,0.12);
+    }
+    .stn-section .stn-headline { font-size:1.35rem; font-weight:800; color:#fff; line-height:1.25; position:relative; z-index:1; }
+    .stn-section .stn-sub { color:#d6dbe6; font-size:0.95rem; margin-top:4px; position:relative; z-index:1; }
+    .stn-section .stn-own { color:#ffd700 !important; }
+    .stn-escape .stn-banner {
+        background: radial-gradient(circle at 85% 30%, rgba(125,211,252,0.25), transparent 50%),
+                    radial-gradient(circle at 10% 90%, rgba(167,139,250,0.25), transparent 55%),
+                    linear-gradient(120deg, #0b1f2a 0%, #14233d 55%, #1d1838 100%);
+        border-color: rgba(125,211,252,0.35);
+    }
+    .stn-escape .stn-headline b { color:#7dd3fc; }
+    .stn-escape .stn-banner::after { content:'🌿'; position:absolute; right:10px; top:-22px; font-size:120px; opacity:0.10; animation: stnFloat 8s ease-in-out infinite; }
+    .stn-escape .wtv-card:hover, .stn-escape .wtv-card:focus { border-color:#7dd3fc; box-shadow:0 0 24px rgba(125,211,252,0.5), 0 8px 20px rgba(0,0,0,0.5); }
+    .stn-music .stn-banner {
+        background: radial-gradient(circle at 88% 25%, rgba(236,72,153,0.28), transparent 50%),
+                    radial-gradient(circle at 8% 90%, rgba(255,215,0,0.18), transparent 55%),
+                    linear-gradient(120deg, #1a0b24 0%, #2a1033 55%, #140b1f 100%);
+        border-color: rgba(236,72,153,0.4);
+    }
+    .stn-music .stn-headline b { color:#f472b6; }
+    .stn-music .stn-banner::after { content:'🎵'; position:absolute; right:14px; top:-20px; font-size:120px; opacity:0.10; animation: stnFloat 6s ease-in-out infinite; }
+    .stn-music .wtv-card:hover, .stn-music .wtv-card:focus { border-color:#f472b6; box-shadow:0 0 24px rgba(236,72,153,0.5), 0 8px 20px rgba(0,0,0,0.5); }
+    @keyframes stnFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+    @media (max-width:768px) {
+        .stn-section .stn-banner { padding:14px; }
+        .stn-section .stn-headline { font-size:1.05rem; }
+        .stn-section .stn-sub { font-size:0.85rem; }
+        .stn-section .wtv-card { flex-basis:160px; }
+    }
+    .is-firestick .stn-section .stn-banner::after { animation:none; }
 </style>
     <title>FLM TV - OUT OF THIS WORLD Streaming | Channel 26.5 Las Vegas</title>
     
@@ -5583,6 +5648,7 @@
 // ── WORLD TV CATEGORIES (shared by home.html and live-stations.html) ──
 // Each category = words looked for in a station's name / genre. Add words anytime.
 var WTV_CATS = [
+  { key:'escape', label:'Escape · Relax', icon:'🌿', words:['relax','meditat','medita','mindful','calm','chill','lofi','lo-fi','ambient','zen','yoga','spa','sleep','serenity','serene','tranquil','peaceful','soothing','healing music','nature','scenic','slow tv','aquarium','fireplace',' rain ','rainfall','ocean waves','waves','waterfall','forest','birdsong','sunset','stillness','4k relax','drone'] },
   { key:'spanish', label:'En Español', icon:'🗣️', words:['español','espanol','spanish','latino','latina','telemundo','univision','unimas','azteca','televisa','mexico','méxico','argentina','colombia','chile','peru','perú','venezuela','ecuador','bolivia','uruguay','paraguay','honduras','guatemala','salvador','dominicana','puerto rico','cuba','tve','antena 3','telesur','noticias','novelas','canal 1','canal 2','canal 5','canal 13','caracol','rcn','estrella','tlnovelas','cine latino','deportes','en vivo','tv publica','televisión','televisión'] },
   { key:'soccer', label:'Soccer', icon:'⚽', words:['soccer','football','fútbol','futbol','goal','fifa','liga','bein','premier league','calcio','bundesliga','serie a','tudn','fc '] },
   { key:'sports', label:'Sports', icon:'🏆', words:['sport','sports','espn','nba','nfl','mlb','nhl','golf','racing','motor','fight','boxing','wrestling','ufc','tennis','bein','olymp','outdoor','fishing','hunting','fubo','stadium','tudn','deportes','deportivo','soccer','football','fútbol','futbol'] },
@@ -5627,6 +5693,27 @@ function wtvMatches(ch, catKey) {
             'arirang','cgtn','trt world','euronews','sky news','cbc news','pbs kids','mtv','cartoon','fifa'];
         var WTV_MAX = 18;
 
+        // One shared download of the free station list (World TV, Escape and Music rows all use it)
+        var _wtvChannelsPromise = null;
+        function getWtvChannels() {
+            if (_wtvChannelsPromise) return _wtvChannelsPromise;
+            _wtvChannelsPromise = (async function() {
+                var url = JELLYFIN_CONFIG.SERVER + '/LiveTv/Channels?api_key=' + JELLYFIN_CONFIG.API_KEY +
+                          '&UserId=' + JELLYFIN_CONFIG.USER_ID + '&EnableImages=true&ImageTypeLimit=1&EnableUserData=false&Limit=3000&Fields=Genres,Tags';
+                var ctrl = new AbortController();
+                var t = setTimeout(function() { ctrl.abort(); }, 20000);
+                var res = await fetch(url, { signal: ctrl.signal, credentials: 'omit' });
+                clearTimeout(t);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var data = await res.json();
+                return (data.Items || []).filter(function(ch) {
+                    return ch.Name && ch.Name.trim() && ch.Name.toLowerCase() !== 'unknown';
+                });
+            })();
+            _wtvChannelsPromise.catch(function() { _wtvChannelsPromise = null; }); // allow a retry later
+            return _wtvChannelsPromise;
+        }
+
         function buildWorldTVSection() {
             var section = document.createElement('section');
             section.className = 'category-section';
@@ -5667,17 +5754,7 @@ function wtvMatches(ch, catKey) {
             var row = document.getElementById('wtvRow');
             if (!row) return;
             try {
-                var url = JELLYFIN_CONFIG.SERVER + '/LiveTv/Channels?api_key=' + JELLYFIN_CONFIG.API_KEY +
-                          '&UserId=' + JELLYFIN_CONFIG.USER_ID + '&EnableImages=true&ImageTypeLimit=1&EnableUserData=false&Limit=3000';
-                var ctrl = new AbortController();
-                var t = setTimeout(function() { ctrl.abort(); }, 20000);
-                var res = await fetch(url, { signal: ctrl.signal, credentials: 'omit' });
-                clearTimeout(t);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                var data = await res.json();
-                var all = (data.Items || []).filter(function(ch) {
-                    return ch.Name && ch.Name.trim() && ch.Name.toLowerCase() !== 'unknown';
-                });
+                var all = await getWtvChannels();
                 var withLogo = all.filter(function(ch) { return ch.ImageTags && ch.ImageTags.Primary; });
                 var picked = [], seen = {};
                 function add(ch) {
@@ -5716,6 +5793,120 @@ function wtvMatches(ch, catKey) {
             } catch (e) {
                 console.error('World TV row failed:', e);
                 row.innerHTML = '<div class="wtv-loading">Stations are busy right now. <a href="live-stations.html" style="color:#ffd700;">Browse all stations</a></div>';
+            }
+        }
+
+        // ── ESCAPE + MUSIC STATIONS ROWS ─────────────────────────────────
+        // Two home-page rows of free live stations, picked by category words (WTV_CATS above).
+        //   picks:  station names to show FIRST, in this order (part of the name, lowercase).
+        //           Add your favorites here, e.g. 'calm', 'relax 4k', 'jazz'.
+        //   hide:   stations you never want in the row (part of the name, lowercase).
+        //   folderId: optional Jellyfin folder of YOUR OWN videos to show first (e.g. your
+        //           Escape meditation folder). Paste its id from the address bar, or leave ''.
+        var STATION_ROWS = [
+            { key:'escape', id:'escape-stations', title:'🌿 Escape · Relax & Meditate',
+              headline:'<b>Breathe.</b> Unwind. Escape.',
+              sub:'Peaceful scenery, meditation and calm music, streaming live 24/7.',
+              theme:'escape', picks:[], hide:[], folderId:'', max:24 },
+            { key:'music', id:'music-stations', title:'🎵 Music Stations',
+              headline:'<b>Turn it up.</b> Music around the clock.',
+              sub:'Hits, jazz, gospel, R&amp;B, country, Latin and more, live from around the world.',
+              theme:'music', picks:[], hide:[], folderId:'', max:24 }
+        ];
+
+        function stnCard(href, img, name, live) {
+            var safe = String(name).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+            var abbr = String(name).split(/\s+/).map(function(w) { return w[0] || ''; }).join('').toUpperCase().slice(0, 4);
+            return '<a class="wtv-card" href="' + href + '" title="' + safe + '">' +
+                     '<div class="wtv-logo">' + (img ? '<img src="' + img + '" alt="' + safe + '" loading="lazy" ' +
+                       'onerror="this.outerHTML=\'<div class=&quot;wtv-abbr&quot;>' + abbr + '</div>\'">' : '<div class="wtv-abbr">' + abbr + '</div>') + '</div>' +
+                     (live ? '<div class="wtv-live"><span></span>LIVE</div>' : '<div class="wtv-live stn-own">FLM TV</div>') +
+                     '<div class="wtv-name">' + safe + '</div>' +
+                   '</a>';
+        }
+
+        function buildStationRowSection(cfg) {
+            var section = document.createElement('section');
+            section.className = 'category-section stn-section stn-' + cfg.theme;
+            section.id = 'section-' + cfg.id;
+            section.setAttribute('data-collection-id', cfg.id);
+            section.innerHTML =
+                '<div class="category-header">' +
+                  '<h3 class="category-title">' + cfg.title + '</h3>' +
+                  '<a href="live-stations.html?cat=' + cfg.key + '" class="view-all-btn" style="cursor:pointer;">View All <i class="fas fa-arrow-right"></i></a>' +
+                '</div>' +
+                '<div class="stn-banner"><div class="stn-headline">' + cfg.headline + '</div><div class="stn-sub">' + cfg.sub + '</div></div>' +
+                '<div class="wtv-row" id="row-' + cfg.id + '"><div class="wtv-loading"><div class="spinner" style="width:22px;height:22px;border-width:3px;"></div>Tuning in...</div></div>';
+            var started = false;
+            function start() { if (!started) { started = true; loadStationRow(cfg); } }
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function(entries) {
+                    if (entries.some(function(e) { return e.isIntersecting; })) { io.disconnect(); start(); }
+                }, { rootMargin: '600px' });
+                setTimeout(function() { io.observe(section); }, 0);
+            } else { setTimeout(start, 1500); }
+            return section;
+        }
+
+        async function loadStationRow(cfg) {
+            var row = document.getElementById('row-' + cfg.id);
+            if (!row) return;
+            var html = '';
+            // your own Jellyfin videos first (optional)
+            if (cfg.folderId) {
+                try {
+                    var own = await jellyfinFetch('/Items', { ParentId: cfg.folderId, Recursive: true,
+                        IncludeItemTypes: 'Movie,Video,Episode,Series', SortBy: 'SortName', Limit: 40,
+                        EnableImages: true, ImageTypeLimit: 1 });
+                    (own && own.Items || []).forEach(function(it) {
+                        var tag = it.ImageTags && it.ImageTags.Primary;
+                        var img = tag ? JELLYFIN_CONFIG.SERVER + '/Items/' + it.Id + '/Images/Primary?api_key=' + JELLYFIN_CONFIG.API_KEY + '&maxHeight=200&quality=85' : '';
+                        html += stnCard('movie-frame.html?id=' + it.Id, img, it.Name, false);
+                    });
+                } catch (e) { console.warn(cfg.id + ' own videos:', e); }
+            }
+            try {
+                var all = await getWtvChannels();
+                var hide = (cfg.hide || []).map(function(h) { return h.toLowerCase(); });
+                var matches = all.filter(function(ch) {
+                    var n = ch.Name.toLowerCase();
+                    return wtvMatches(ch, cfg.key) && !hide.some(function(h) { return n.indexOf(h) >= 0; });
+                });
+                var picked = [], seen = {};
+                function add(ch) {
+                    var k = wtvCleanName(ch.Name).toLowerCase();
+                    if (seen[k] || picked.length >= cfg.max) return;
+                    seen[k] = 1; picked.push(ch);
+                }
+                (cfg.picks || []).forEach(function(want) {
+                    var w = want.toLowerCase();
+                    var hit = all.find(function(ch) { return ch.Name.toLowerCase().indexOf(w) >= 0; });
+                    if (hit) add(hit);
+                });
+                var withLogo = matches.filter(function(ch) { return ch.ImageTags && ch.ImageTags.Primary; })
+                                      .sort(function() { return Math.random() - 0.5; });
+                var noLogo = matches.filter(function(ch) { return !(ch.ImageTags && ch.ImageTags.Primary); });
+                withLogo.concat(noLogo).forEach(add);
+                picked.forEach(function(ch) {
+                    var img = ch.ImageTags && ch.ImageTags.Primary
+                        ? JELLYFIN_CONFIG.SERVER + '/Items/' + ch.Id + '/Images/Primary?api_key=' + JELLYFIN_CONFIG.API_KEY + '&maxHeight=160&quality=85' : '';
+                    html += stnCard('movie-frame.html?id=' + ch.Id, img, wtvCleanName(ch.Name), true);
+                });
+                if (picked.length) {
+                    html += '<a class="wtv-card" href="live-stations.html?cat=' + cfg.key + '" title="See all">' +
+                              '<div class="wtv-logo"><div class="wtv-abbr" style="font-size:1.1rem;color:#ffd700;text-align:center;">SEE ALL<br>' + matches.length + '<br>STATIONS</div></div>' +
+                              '<div class="wtv-name" style="color:#ffd700;">View All <i class="fas fa-arrow-right"></i></div></a>';
+                }
+            } catch (e) {
+                console.error(cfg.id + ' stations failed:', e);
+            }
+            if (!html) {
+                row.innerHTML = '<div class="wtv-loading">Stations are busy right now. <a href="live-stations.html?cat=' + cfg.key + '" style="color:#ffd700;">Browse them here</a></div>';
+                return;
+            }
+            row.innerHTML = html;
+            if (document.documentElement.classList.contains('is-firestick') || document.body.classList.contains('is-firestick')) {
+                row.querySelectorAll('.wtv-card').forEach(function(el) { el.setAttribute('tabindex', '0'); });
             }
         }
 
@@ -6000,6 +6191,14 @@ function wtvMatches(ch, catKey) {
             if (awesomeTvSection) awesomeTvSection.insertAdjacentElement('afterend', worldTvSection);
             else if (placeholders.length) placeholders[0].insertAdjacentElement('afterend', worldTvSection);
             else container.appendChild(worldTvSection);
+
+            // Escape + Music Stations rows, right under World TV
+            var stnAfter = worldTvSection;
+            STATION_ROWS.forEach(function(cfg) {
+                var sec = buildStationRowSection(cfg);
+                stnAfter.insertAdjacentElement('afterend', sec);
+                stnAfter = sec;
+            });
 
             // Featured Channels row (Monique Woolley Foundation, Dale Davidson,
             // eZWayTV) pinned right after Kids World. The old separate Dale and

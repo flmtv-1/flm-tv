@@ -267,7 +267,7 @@
    "category": "show"
   },
   {
-   "startTime": "10:00",
+   "startTime": "09:59",
    "name": "Curious George",
    "duration": 1420,
    "category": "show"
@@ -279,7 +279,7 @@
    "category": "show"
   },
   {
-   "startTime": "10:51",
+   "startTime": "10:50",
    "name": "Zaina Spotlight",
    "duration": 336,
    "category": ""
@@ -291,7 +291,7 @@
    "category": "show"
   },
   {
-   "startTime": "11:20",
+   "startTime": "11:19",
    "name": "Get Smart",
    "duration": 1524,
    "category": "show"
@@ -303,7 +303,7 @@
    "category": "show"
   },
   {
-   "startTime": "12:11",
+   "startTime": "12:10",
    "name": "The Dick Van Dyke Show",
    "duration": 1530,
    "category": "show"
@@ -333,10 +333,118 @@
    "category": "show"
   },
   {
-   "startTime": "14:17",
+   "startTime": "14:16",
    "name": "Charlie's Angels",
    "duration": 2958,
    "category": "show"
+  },
+  {
+   "startTime": "15:06",
+   "name": "Andy Griffith",
+   "duration": 1521,
+   "category": "show"
+  },
+  {
+   "startTime": "15:31",
+   "name": "Andy Griffith",
+   "duration": 1547,
+   "category": "show"
+  },
+  {
+   "startTime": "15:57",
+   "name": "227",
+   "duration": 1437,
+   "category": "show"
+  },
+  {
+   "startTime": "16:21",
+   "name": "Good Times",
+   "duration": 1523,
+   "category": "show"
+  },
+  {
+   "startTime": "16:46",
+   "name": "Sanford and Son",
+   "duration": 1500,
+   "category": "show"
+  },
+  {
+   "startTime": "17:11",
+   "name": "The Jeffersons",
+   "duration": 1499,
+   "category": "show"
+  },
+  {
+   "startTime": "17:36",
+   "name": "AshWater",
+   "duration": 38,
+   "category": ""
+  },
+  {
+   "startTime": "17:37",
+   "name": "ZJS Commercial",
+   "duration": 24,
+   "category": ""
+  },
+  {
+   "startTime": "17:37",
+   "name": "George Shrinks",
+   "duration": 1585,
+   "category": "show"
+  },
+  {
+   "startTime": "18:04",
+   "name": "Let's Go Luna!",
+   "duration": 1498,
+   "category": "show"
+  },
+  {
+   "startTime": "18:28",
+   "name": "Daffy's Southern Exposure",
+   "duration": 451,
+   "category": "show"
+  },
+  {
+   "startTime": "18:36",
+   "name": "The Wacky Wabbit",
+   "duration": 441,
+   "category": "show"
+  },
+  {
+   "startTime": "18:43",
+   "name": "Scooby-Doo",
+   "duration": 1446,
+   "category": "show"
+  },
+  {
+   "startTime": "19:07",
+   "name": "Postcards from Buster",
+   "duration": 1583,
+   "category": "show"
+  },
+  {
+   "startTime": "19:34",
+   "name": "Power Rangers",
+   "duration": 1354,
+   "category": "show"
+  },
+  {
+   "startTime": "19:56",
+   "name": "Malcolm in the Middle",
+   "duration": 1341,
+   "category": "show"
+  },
+  {
+   "startTime": "20:19",
+   "name": "The Bernie Mac Show",
+   "duration": 1335,
+   "category": "show"
+  },
+  {
+   "startTime": "20:41",
+   "name": "Twister",
+   "duration": 6784,
+   "category": "movie"
   }
  ]
 }
