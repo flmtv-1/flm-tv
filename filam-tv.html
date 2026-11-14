@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- FilAm TV filam-tv.html · VERSION 2026-11-01 · The Pulse show card + episode row -->
+<!-- FilAm TV filam-tv.html · VERSION 2026-11-14 · Originals on top, Filipino movies & series in poster rows below -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -385,15 +385,15 @@ img { display: block; max-width: 100%; }
 
 <main>
   <section class="block wrap" id="shows">
-    <h2>Our shows</h2>
-    <p class="lede">Pick a show to start watching.</p>
+    <h2>FilAm TV Originals</h2>
+    <p class="lede">Our own shows, made in our community. Pick one to start watching.</p>
     <div class="shows" id="showGrid"></div>
     <div class="status" id="showStatus"><span class="spin"></span>Loading shows…</div>
     <div id="episodeRows"></div>
   </section>
 
   <section class="block wrap" id="movies">
-    <h2>Filipino movies</h2>
+    <h2>Filipino movies &amp; TV</h2>
     <p class="lede">Classics, romances and new favorites from the Philippines.</p>
     <div id="movieRows"></div>
   </section>
@@ -453,11 +453,18 @@ img { display: block; max-width: 100%; }
     { id: '289a0b599c9e927ae800f9142085ff91', title: 'The Pulse', newestFirst: true }
   ];
 
-  // Movie rows under the shows. Add another row by adding a line (any Jellyfin library or folder id).
-  const MOVIE_ROWS = [
-    { id: '3846a8e881ba4c2bb0ca8f2fb30fd18b', title: 'Filipin TV' },
-    { id: '558227e929d6dfe796f836ae5900c8d2', title: 'Pinoy' }
+  // FILAM TV ORIGINALS: the only shows in the top row. Use the show's folder name or
+  // Jellyfin name. Add a new original show by adding its name here.
+  const ORIGINAL_SHOWS = ['LOCALS IN LAS VEGAS-JESSICA', 'Locals in Las Vegas', 'The Pulse'];
+
+  // Everything else in the FilAm TV library (the Pinoy and Filipin TV movies and series)
+  // goes in poster rows below. These two rows fill themselves from the library.
+  const LIBRARY_ROWS = [
+    { title: 'Filipino Movies',    types: 'Movie,Video' },
+    { title: 'Filipino TV Series', types: 'Series' }
   ];
+  // Extra rows from any other Jellyfin folder or library id, if you ever want one.
+  const MOVIE_ROWS = [];
   // ════════════════════════════════════════════════════════════════
 
   const $ = id => document.getElementById(id);
@@ -491,6 +498,15 @@ img { display: block; max-width: 100%; }
   }
 
   const showName = s => SHOW_NAMES[s.Name] || s.Name;
+  const norm = t => String(t || '').toLowerCase().trim();
+  const ORIGINAL_SET = new Set(ORIGINAL_SHOWS.concat(EPISODE_ROWS.map(r => r.title)).map(norm));
+  const isOriginal = s => ORIGINAL_SET.has(norm(s.Name)) || ORIGINAL_SET.has(norm(showName(s)));
+  // true when an item's file sits inside an original show's folder (e.g. The Pulse episodes)
+  const inOriginalFolder = i => {
+    const p = norm(i.Path).replace(/\\/g, '/');
+    return ORIGINAL_SHOWS.concat(EPISODE_ROWS.map(r => r.title))
+      .some(n => p.includes('/' + norm(n) + '/'));
+  };
 
   // ── HERO: rotate the clips from SITE ASSETS\filamtv ──────────────
   const hero = {
@@ -638,7 +654,9 @@ img { display: block; max-width: 100%; }
       const had = byName.get(k);
       if (!had || n > (had.RecursiveItemCount || had.ChildCount || 0)) byName.set(k, i);
     });
+    // Only FilAm TV Originals go in the top row; movies and other series go in the rows below.
     return Array.from(byName.values())
+      .filter(isOriginal)
       .sort((a, b) => showName(a).localeCompare(showName(b), undefined, { sensitivity: 'base' }));
   }
 
@@ -707,11 +725,14 @@ img { display: block; max-width: 100%; }
 
   // "Watch the newest episode" — the most recently added episode, special or movie on FilAm TV
   async function findNewest() {
-    const res = await jf('/Items', {
-      ParentId: FILAM_LIBRARY_ID, Recursive: 'true', IncludeItemTypes: 'Episode,Movie,Video',
-      SortBy: 'DateCreated', SortOrder: 'Descending', Limit: '1'
-    });
-    const ep = res && res.Items && res.Items[0];
+    // newest episode from the FilAm TV Originals only (not the movies)
+    const lists = await Promise.all(shows.map(s => jf('/Items', {
+      ParentId: s.Id, Recursive: 'true', IncludeItemTypes: 'Episode,Movie,Video',
+      SortBy: 'DateCreated', SortOrder: 'Descending', Limit: '1', Fields: 'DateCreated'
+    })));
+    const eps = lists.map(r => r && r.Items && r.Items[0]).filter(Boolean)
+      .sort((a, b) => new Date(b.DateCreated || 0) - new Date(a.DateCreated || 0));
+    const ep = eps[0];
     if (!ep) return;
     $('watchNewest').href = `movie-frame.html?id=${ep.Id}`;
     const where = ep.SeriesName ? `, ${SHOW_NAMES[ep.SeriesName] || ep.SeriesName}` : '';
@@ -721,7 +742,8 @@ img { display: block; max-width: 100%; }
   // ── MOVIE ROWS ───────────────────────────────────────────────────
   async function loadMovieRows() {
     const box = $('movieRows');
-    for (const row of MOVIE_ROWS) {
+    const rows = LIBRARY_ROWS.map(r => Object.assign({ id: FILAM_LIBRARY_ID, fromLibrary: true }, r)).concat(MOVIE_ROWS);
+    for (const row of rows) {
       const head = document.createElement('div');
       head.className = 'row-head';
       head.innerHTML = `<h3>${esc(row.title)}</h3><a href="category-detail.html?id=${row.id}&name=${encodeURIComponent(row.title)}">See all</a>`;
@@ -731,11 +753,23 @@ img { display: block; max-width: 100%; }
       box.append(head, wrap);
 
       const res = await jf('/Items', {
-        ParentId: row.id, Recursive: 'true', IncludeItemTypes: 'Movie,Series,Video',
-        SortBy: 'DateCreated,SortName', SortOrder: 'Descending', Limit: '40',
-        Fields: 'ProductionYear', EnableImages: 'true', ImageTypeLimit: '1'
+        ParentId: row.id, Recursive: 'true', IncludeItemTypes: row.types || 'Movie,Series,Video',
+        SortBy: 'DateCreated,SortName', SortOrder: 'Descending', Limit: row.fromLibrary ? '300' : '40',
+        Fields: 'ProductionYear,Path', EnableImages: 'true', ImageTypeLimit: '1'
       });
-      const items = (res && res.Items) ? res.Items : null;
+      let items = (res && res.Items) ? res.Items : null;
+      if (items && row.fromLibrary) {
+        // leave out the Originals (they're in the top row) and their episode files,
+        // and show each title only once if the same movie sits in two folders
+        const seen = new Set();
+        items = items.filter(m => {
+          if (isOriginal(m) || inOriginalFolder(m)) return false;
+          const k = norm(m.Name) + '|' + (m.ProductionYear || '');
+          if (seen.has(k)) return false;
+          seen.add(k); return true;
+        });
+        if (!items.length) { head.remove(); wrap.remove(); continue; }
+      }
       if (!items || !items.length) {
         wrap.innerHTML = `<div class="status">${items ? 'Movies are on the way.' : 'This row is taking longer than usual to load.'}</div>`;
         continue;

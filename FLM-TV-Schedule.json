@@ -1,328 +1,342 @@
 {
-  "2026-11-12": [
-    {
-      "startTime": "11:58",
-      "name": "227 ",
-      "path": "V:\\02-TV SHOWS\\227-complete_TV_Series_CTV\\SEASON 01\\227 - S01E22.ia.mp4",
-      "duration": 1426,
-      "inPoint": 0,
-      "outPoint": 1426,
-      "category": "show"
-    },
-    {
-      "startTime": "12:22",
-      "name": "Andy Griffith S5 D2 t01",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-05\\Andy Griffith S5 D2_t01.mkv",
-      "duration": 1542.762,
-      "inPoint": 0,
-      "outPoint": 1542.762,
-      "category": ""
-    },
-    {
-      "startTime": "12:48",
-      "name": "Andy Griffith S5 D2 t02",
-      "path": "Y:\\AWESOME TV SHOWS-2\\ANDY GRIFFITH SHOW\\SEASON-05\\Andy Griffith S5 D2_t02.mkv",
-      "duration": 1541.642,
-      "inPoint": 0,
-      "outPoint": 1541.642,
-      "category": ""
-    },
-    {
-      "startTime": "13:14",
-      "name": "Bewitched ",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 04\\Bewitched S04E18 Once in a Vial.mp4",
-      "duration": 1526,
-      "inPoint": 0,
-      "outPoint": 1526,
-      "category": "show"
-    },
-    {
-      "startTime": "13:39",
-      "name": "Bewitched 2",
-      "path": "Y:\\CLASSIC TV-2\\BEWITCHED-ALL\\SEASON 04\\Bewitched S04E19 Snob in the Grass.mp4",
-      "duration": 1527,
-      "inPoint": 0,
-      "outPoint": 1527,
-      "category": "show"
-    },
-    {
-      "startTime": "14:04",
-      "name": "Little Rascals 41 (Honkey Donkey)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 41 (Honkey Donkey).mp4",
-      "duration": 998.667,
-      "inPoint": 0,
-      "outPoint": 998.667,
-      "category": ""
-    },
-    {
-      "startTime": "14:21",
-      "name": "Little Rascals 42 (Mike Fright)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 42 (Mike Fright).mp4",
-      "duration": 1042.367,
-      "inPoint": 0,
-      "outPoint": 1042.367,
-      "category": ""
-    },
-    {
-      "startTime": "14:38",
-      "name": "Little Rascals 43 (Washee Ironee)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 43 (Washee Ironee).mp4",
-      "duration": 941.867,
-      "inPoint": 0,
-      "outPoint": 941.867,
-      "category": ""
-    },
-    {
-      "startTime": "14:54",
-      "name": "Little Rascals 44 (Mama's Little Pirate)",
-      "path": "Y:\\CLASSIC TV-2\\The Little Rascals - 80 Short Movies in MP4 format\\Little Rascals 41-60\\Little Rascals 44 (Mama's Little Pirate).mp4",
-      "duration": 1081.433,
-      "inPoint": 0,
-      "outPoint": 1081.433,
-      "category": ""
-    },
-    {
-      "startTime": "15:12",
-      "name": "FLMtv.com",
-      "path": "C:\\Users\\Dale\\Documents\\GitHub\\flm-tv\\assets\\videos\\FLMsummonsCOMMERCIAL.mp4",
-      "duration": 28,
-      "inPoint": 0,
-      "outPoint": 28,
-      "category": "commercial"
-    },
-    {
-      "startTime": "15:12",
-      "name": "Charlie's Angels",
-      "path": "Y:\\CLASSIC TV-2\\Charlies Angeles\\SEASON 01\\Charlie's Angels S01e09 Bullseye.mkv",
-      "duration": 2958,
-      "inPoint": 0,
-      "outPoint": 2958,
-      "category": "show"
-    },
-    {
-      "startTime": "16:01",
-      "name": "The Twilight Zone (1959) Showdown with Rance McGrew",
-      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-03\\The Twilight Zone (1959) - S03E20 - Showdown with Rance McGrew (1080p BluRay x265 ImE).mkv",
-      "duration": 1554,
-      "inPoint": 0,
-      "outPoint": 1554,
-      "category": "show"
-    },
-    {
-      "startTime": "16:27",
-      "name": "The Twilight Zone (1959) Kick the Can ",
-      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-03\\The Twilight Zone (1959) - S03E21 - Kick the Can (1080p BluRay x265 ImE).mkv",
-      "duration": 1543,
-      "inPoint": 0,
-      "outPoint": 1543,
-      "category": "movie"
-    },
-    {
-      "startTime": "16:53",
-      "name": "The Twilight Zone (1959) A Piano in the House",
-      "path": "Y:\\CLASSIC TV-2\\TWILIGHT ZONE\\SEASON-03\\The Twilight Zone (1959) - S03E22 - A Piano in the House (1080p BluRay x265 ImE).mkv",
-      "duration": 1557,
-      "inPoint": 0,
-      "outPoint": 1557,
-      "category": ""
-    },
-    {
-      "startTime": "17:19",
-      "name": "Let s Go Luna! S01E08 Hoopin’ Hopper A Chopsticky Situation ia",
-      "path": "X:\\_SORT-MOVIES\\let-s-go-luna-s-01-e-01-hola-mariachi-loco-for-cocoa\\Let_s Go Luna!_S01E08_Hoopin’ Hopper _ A Chopsticky Situation.ia.mp4",
-      "duration": 1501.958,
-      "inPoint": 0,
-      "outPoint": 1501.958,
-      "category": ""
-    },
-    {
-      "startTime": "17:44",
-      "name": "Chilly Willy",
-      "path": "V:\\00-SORT\\Woody and More\\488 (Chilly Willy) - Fractured Friendship (1965) (BD).mkv",
-      "duration": 370,
-      "inPoint": 0,
-      "outPoint": 370,
-      "category": "kids"
-    },
-    {
-      "startTime": "17:50",
-      "name": "(Woody) Rough Riding Hood",
-      "path": "V:\\00-SORT\\Woody and More\\498 (Woody) - Rough Riding Hood (1966) (BD).mkv",
-      "duration": 376,
-      "inPoint": 0,
-      "outPoint": 376,
-      "category": "kids"
-    },
-    {
-      "startTime": "17:56",
-      "name": "The Dover Boys ",
-      "path": "X:\\KIDS WORLD 1\\CARTOONS 1942\\1942E31. The Dover Boys At Pimento University or The Rivals of Roquefort Hall (Dover Boys)(382) [Blu-Ray] - ...1480x1080 08m58s_001641.mp4",
-      "duration": 538,
-      "inPoint": 0,
-      "outPoint": 538,
-      "category": "kids"
-    },
-    {
-      "startTime": "18:05",
-      "name": "Porky Pig's Feat Porky, Daffy Duck",
-      "path": "V:\\01-KIDS 3\\Woody Woodpecker and More\\1943-07-17b - Porky Pig's Feat - Porky, Daffy Duck COLORIZED (laserdisc) - HandBrake 1.3.3 2020061300 1450x1...1450x1076 08m37s_000784.mp4",
-      "duration": 517,
-      "inPoint": 0,
-      "outPoint": 517,
-      "category": "kids"
-    },
-    {
-      "startTime": "18:14",
-      "name": "Nature Cat- Backyard Bigfoot ",
-      "path": "Y:\\KIDS WORLD-2\\Nature Cat\\SEASON 02\\Nature.Cat.S02E19E20.Backyard.Bigfoot-Imperfect.Produce.1080p.AMZN.WEBRip.AAC2.0.x264.ia.mp4",
-      "duration": 1441,
-      "inPoint": 0,
-      "outPoint": 1441,
-      "category": "kids"
-    },
-    {
-      "startTime": "18:38",
-      "name": "The Bernie Mac Show ",
-      "path": "V:\\02-TV SHOWS\\Bernie Mac Show\\bernie-mac-season-1\\The.Bernie.Mac.Show.S01E09.Hot.Hot.Hot.640p.TUBI.WEB-DL.AAC2.0.H.264.mkv",
-      "duration": 1334,
-      "inPoint": 0,
-      "outPoint": 1334,
-      "category": "show"
-    },
-    {
-      "startTime": "19:00",
-      "name": "Malcolm in the Middle - Bowling",
-      "path": "X:\\TV SHOWS 2\\Malcolm In The Middle\\Season 2\\S02E20 - Bowling.mp4",
-      "duration": 1341,
-      "inPoint": 0,
-      "outPoint": 1341,
-      "category": "show"
-    },
-    {
-      "startTime": "19:22",
-      "name": "AshWater",
-      "path": "X:\\COMMERCIALS-CLIPS\\VID_20251207_175038.mp4",
-      "duration": 38,
-      "inPoint": 0,
-      "outPoint": 38,
-      "category": "show"
-    },
-    {
-      "startTime": "19:23",
-      "name": "That 70s Show ",
-      "path": "X:\\TV SHOWS 2\\THAT 70s SHOW\\SEASON-02\\That _70s Show (1998) - S02E21 - Kelso_s Serenade (1080p BluRay x265 FreetheFish).mkv",
-      "duration": 1331,
-      "inPoint": 0,
-      "outPoint": 1331,
-      "category": "show"
-    },
-    {
-      "startTime": "19:45",
-      "name": "The X Files",
-      "path": "X:\\THE X FILES\\SEASON-02\\The X-Files, Season 2 Disc 2_t03.mkv",
-      "duration": 2711,
-      "inPoint": 0,
-      "outPoint": 2711,
-      "category": "show"
-    },
-    {
-      "startTime": "20:30",
-      "name": "Cast Away",
-      "path": "V:\\04-MOVIES\\Cast Away\\Cast Away.mkv",
-      "duration": 8626,
-      "inPoint": 0,
-      "outPoint": 8626,
-      "category": "movie"
-    },
-    {
-      "startTime": "22:54",
-      "name": "Midnight In Paris",
-      "path": "X:\\MOVIES-5\\Midnight in Paris\\Midnight In Paris (2011).mp4",
-      "duration": 5636,
-      "inPoint": 0,
-      "outPoint": 5636,
-      "category": "movie"
-    },
-    {
-      "startTime": "00:28",
-      "name": "Chinatown",
-      "path": "blob:null/ef12184d-af9f-4b4c-8177-8e2e2ae6036d",
-      "duration": 7829,
-      "inPoint": 0,
-      "outPoint": 7829,
-      "category": "movie"
-    },
-    {
-      "startTime": "02:38",
-      "name": "World’s Most Evil Killers ",
-      "path": "Y:\\AWESOME TV SHOWS-2\\most-evil-killers\\SEASON 01\\2018-03-18 - World’s Most Evil Killers - S01E02 - Joachim Georg Kroll (18 March 2018).mp4",
-      "duration": 2628,
-      "inPoint": 0,
-      "outPoint": 2628,
-      "category": "documentary"
-    },
-    {
-      "startTime": "03:22",
-      "name": "Ghost Rider (2007)",
-      "path": "V:\\00-SORT\\Ghost Rider (2007).mp4",
-      "duration": 7405.504,
-      "inPoint": 0,
-      "outPoint": 7405.504,
-      "category": ""
-    },
-    {
-      "startTime": "05:25",
-      "name": "I Still Know What You Did Last Summer (1998)",
-      "path": "V:\\00-SORT\\I Still Know What You Did Last Summer (1998).mp4",
-      "duration": 6034,
-      "inPoint": 0,
-      "outPoint": 6034,
-      "category": "movie"
-    },
-    {
-      "startTime": "07:06",
-      "name": "Sesame Street ",
-      "path": "Y:\\KIDS WORLD-2\\Sesame-Street-2010s\\COLLECTION\\Sesame Street - Episode 4227 (November 11, 2010).mp4",
-      "duration": 3356,
-      "inPoint": 0,
-      "outPoint": 3356,
-      "category": ""
-    },
-    {
-      "startTime": "08:02",
-      "name": "Super Why! ",
-      "path": "X:\\KIDS WORLD 1\\SUPER WHY\\SEASON 07\\Super Why!_S07E08_The Foolish Wishes.ia.mp4",
-      "duration": 1650,
-      "inPoint": 0,
-      "outPoint": 1650,
-      "category": "kids"
-    },
-    {
-      "startTime": "08:30",
-      "name": "Ready Jet Go!",
-      "path": "Y:\\KIDS WORLD-2\\RJGTVSeries\\SEASON 02\\Ready Jet Go! - S02E11-12 - Eye in the Sky + Total Eclipse Block Party WEBDL-1080p.mp4",
-      "duration": 1581,
-      "inPoint": 0,
-      "outPoint": 1581,
-      "category": "kids"
-    },
-    {
-      "startTime": "08:56",
-      "name": "Mr Rogers",
-      "path": "V:\\01-KIDS 3\\MR. ROGERS NEIGHBORHOOD\\ipoy143season17\\Mr. Rogers_S17E10.mp4",
-      "duration": 1716,
-      "inPoint": 0,
-      "outPoint": 1716,
-      "category": "kids"
-    },
-    {
-      "startTime": "09:25",
-      "name": "My Three Sons ",
-      "path": "V:\\03-CLASSIC TV SHOWS\\My Three Sons\\My Three Sons 1960 Season 2 Complete TVRips x264 [i_c]\\My Three Sons S02E05 A Perfect Memory.mkv",
-      "duration": 1540,
-      "inPoint": 0,
-      "outPoint": 1540,
-      "category": "show"
-    }
-  ]
+ "2026-11-13": [
+  {
+   "startTime": "07:10",
+   "name": "Sesame Street",
+   "duration": 3175,
+   "category": "show"
+  },
+  {
+   "startTime": "08:03",
+   "name": "Super Why!",
+   "duration": 1644,
+   "category": "show"
+  },
+  {
+   "startTime": "08:31",
+   "name": "Ready Jet Go!",
+   "duration": 1575,
+   "category": "show"
+  },
+  {
+   "startTime": "08:57",
+   "name": "Mr. Rogers",
+   "duration": 1716,
+   "category": "show"
+  },
+  {
+   "startTime": "09:25",
+   "name": "Curious George",
+   "duration": 1420,
+   "category": "show"
+  },
+  {
+   "startTime": "09:49",
+   "name": "My Three Sons",
+   "duration": 1540,
+   "category": "show"
+  },
+  {
+   "startTime": "10:15",
+   "name": "Abbott and Costello",
+   "duration": 1428,
+   "category": "show"
+  },
+  {
+   "startTime": "10:39",
+   "name": "Get Smart",
+   "duration": 1524,
+   "category": "show"
+  },
+  {
+   "startTime": "11:04",
+   "name": "The Dick Van Dyke Show",
+   "duration": 1484,
+   "category": "show"
+  },
+  {
+   "startTime": "11:29",
+   "name": "Mister Ed",
+   "duration": 1534,
+   "category": "show"
+  },
+  {
+   "startTime": "11:54",
+   "name": "The Lucy Show",
+   "duration": 1508,
+   "category": "show"
+  },
+  {
+   "startTime": "12:19",
+   "name": "Leave it to Beaver",
+   "duration": 1555,
+   "category": "show"
+  },
+  {
+   "startTime": "12:45",
+   "name": "Andy Griffith",
+   "duration": 1553,
+   "category": "show"
+  },
+  {
+   "startTime": "13:11",
+   "name": "Benson",
+   "duration": 1509,
+   "category": "show"
+  },
+  {
+   "startTime": "13:36",
+   "name": "227",
+   "duration": 1438,
+   "category": "show"
+  },
+  {
+   "startTime": "14:00",
+   "name": "What's Happening",
+   "duration": 1457,
+   "category": "show"
+  },
+  {
+   "startTime": "14:25",
+   "name": "FLMTV.com",
+   "duration": 9,
+   "category": ""
+  },
+  {
+   "startTime": "14:25",
+   "name": "ZAINA JULIETTE",
+   "duration": 37,
+   "category": ""
+  },
+  {
+   "startTime": "14:25",
+   "name": "AshWater",
+   "duration": 38,
+   "category": ""
+  },
+  {
+   "startTime": "14:26",
+   "name": "Good Times",
+   "duration": 1515,
+   "category": "show"
+  },
+  {
+   "startTime": "14:51",
+   "name": "Sanford and Son",
+   "duration": 1473,
+   "category": "show"
+  },
+  {
+   "startTime": "15:16",
+   "name": "The Jeffersons",
+   "duration": 1500,
+   "category": "show"
+  },
+  {
+   "startTime": "15:41",
+   "name": "The Sleeping Princess",
+   "duration": 599,
+   "category": "show"
+  },
+  {
+   "startTime": "15:51",
+   "name": "Andy Panda Goes Fishing",
+   "duration": 534,
+   "category": "show"
+  },
+  {
+   "startTime": "16:00",
+   "name": "Kittens' Mittens",
+   "duration": 524,
+   "category": "show"
+  },
+  {
+   "startTime": "16:08",
+   "name": "Ice Age: Continental Drift",
+   "duration": 5265,
+   "category": "movie"
+  },
+  {
+   "startTime": "17:37",
+   "name": "Darby O'Gill and the Little People",
+   "duration": 5436,
+   "category": "movie"
+  },
+  {
+   "startTime": "19:08",
+   "name": "The Bernie Mac Show",
+   "duration": 1335,
+   "category": "show"
+  },
+  {
+   "startTime": "19:30",
+   "name": "That '70s Show",
+   "duration": 1332,
+   "category": "show"
+  },
+  {
+   "startTime": "19:52",
+   "name": "Chariots of Fire",
+   "duration": 7413,
+   "category": "movie"
+  },
+  {
+   "startTime": "21:56",
+   "name": "A Good Day to Die Hard",
+   "duration": 6071,
+   "category": "movie"
+  },
+  {
+   "startTime": "23:37",
+   "name": "Volcano",
+   "duration": 6231,
+   "category": "movie"
+  }
+ ],
+ "2026-11-14": [
+  {
+   "startTime": "01:21",
+   "name": "I Still Know What You Did Last Summer",
+   "duration": 6034,
+   "category": "movie"
+  },
+  {
+   "startTime": "03:01",
+   "name": "Conclave",
+   "duration": 7223,
+   "category": "movie"
+  },
+  {
+   "startTime": "05:02",
+   "name": "The Twilight Zone",
+   "duration": 1555,
+   "category": "show"
+  },
+  {
+   "startTime": "05:27",
+   "name": "The Twilight Zone",
+   "duration": 1555,
+   "category": "show"
+  },
+  {
+   "startTime": "05:53",
+   "name": "The Twilight Zone",
+   "duration": 1557,
+   "category": "show"
+  },
+  {
+   "startTime": "06:19",
+   "name": "The Twilight Zone",
+   "duration": 1556,
+   "category": "show"
+  },
+  {
+   "startTime": "06:45",
+   "name": "The Little Rascals",
+   "duration": 1187,
+   "category": "show"
+  },
+  {
+   "startTime": "07:05",
+   "name": "Sesame Street",
+   "duration": 3356,
+   "category": "show"
+  },
+  {
+   "startTime": "08:01",
+   "name": "Sesame Street",
+   "duration": 3260,
+   "category": "show"
+  },
+  {
+   "startTime": "08:55",
+   "name": "Super Why!",
+   "duration": 1621,
+   "category": "show"
+  },
+  {
+   "startTime": "09:22",
+   "name": "Kipper - The Umbrella",
+   "duration": 525,
+   "category": "show"
+  },
+  {
+   "startTime": "09:31",
+   "name": "Mr. Rogers",
+   "duration": 1716,
+   "category": "show"
+  },
+  {
+   "startTime": "10:00",
+   "name": "Curious George",
+   "duration": 1420,
+   "category": "show"
+  },
+  {
+   "startTime": "10:23",
+   "name": "Postcards from Buster",
+   "duration": 1648,
+   "category": "show"
+  },
+  {
+   "startTime": "10:51",
+   "name": "Zaina Spotlight",
+   "duration": 336,
+   "category": ""
+  },
+  {
+   "startTime": "10:56",
+   "name": "Abbott and Costello",
+   "duration": 1397,
+   "category": "show"
+  },
+  {
+   "startTime": "11:20",
+   "name": "Get Smart",
+   "duration": 1524,
+   "category": "show"
+  },
+  {
+   "startTime": "11:45",
+   "name": "The Addams Family",
+   "duration": 1542,
+   "category": "show"
+  },
+  {
+   "startTime": "12:11",
+   "name": "The Dick Van Dyke Show",
+   "duration": 1530,
+   "category": "show"
+  },
+  {
+   "startTime": "12:36",
+   "name": "The Lucy Show",
+   "duration": 1507,
+   "category": "show"
+  },
+  {
+   "startTime": "13:01",
+   "name": "Leave it to Beaver",
+   "duration": 1556,
+   "category": "show"
+  },
+  {
+   "startTime": "13:27",
+   "name": "The Facts of Life",
+   "duration": 1491,
+   "category": "show"
+  },
+  {
+   "startTime": "13:52",
+   "name": "The Facts of Life",
+   "duration": 1480,
+   "category": "show"
+  },
+  {
+   "startTime": "14:17",
+   "name": "Charlie's Angels",
+   "duration": 2958,
+   "category": "show"
+  }
+ ]
 }
