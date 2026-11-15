@@ -4789,6 +4789,7 @@
 	{ id: '1a174c52bb41600a050fba01721b7bd9', name: 'GOLDEN CLASSICS', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=1a174c52bb41600a050fba01721b7bd9&collectionType=movies' },
 	{ id: '6c07148bd4a279527dbc82db475e16b7', name: 'DOCUMENTARIES', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=6c07148bd4a279527dbc82db475e16b7&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: '8e7412f4cf963490c5e64cc64c367b18', name: 'FAMILY', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=8e7412f4cf963490c5e64cc64c367b18&serverId=db6bb6388c8c4c70825698639853ede6' },
+        { id: '082c6738a8de513108f80741b1072c5a', name: 'FAMILY SHOWS IN ARABIC · عائلة', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=082c6738a8de513108f80741b1072c5a&serverId=db6bb6388c8c4c70825698639853ede6' },
         { id: '721f4a924b7d17ff69c721701538b3be', name: 'KIDS WORLD', url: 'http://flmtv26.duckdns.org:8096/web/#/tv?topParentId=721f4a924b7d17ff69c721701538b3be&collectionType=tvshows' },
         { id: '55a4ec8198568dc0d53d77ce31ef582e', name: 'COMIC BOOKS', url: 'http://flmtv26.duckdns.org:8096/web/index.html#/list?parentId=55a4ec8198568dc0d53d77ce31ef582e&serverId=db6bb6388c8c4c70825698639853ede6' },
 	{ id: 'ba8b8bbcbf17886eaa65ec99bfa6dee6', name: 'INTERNATIONAL Films', url: 'http://flmtv26.duckdns.org:8096/web/#/movies?topParentId=ba8b8bbcbf17886eaa65ec99bfa6dee6&collectionType=movies' },
@@ -5648,7 +5649,7 @@
 // ── WORLD TV CATEGORIES (shared by home.html and live-stations.html) ──
 // Each category = words looked for in a station's name / genre. Add words anytime.
 var WTV_CATS = [
-  { key:'escape', label:'Escape · Relax', icon:'🌿', words:['relax','meditat','medita','mindful','calm','chill','lofi','lo-fi','ambient','zen','yoga','spa','sleep','serenity','serene','tranquil','peaceful','soothing','healing music','nature','scenic','slow tv','aquarium','fireplace',' rain ','rainfall','ocean waves','waves','waterfall','forest','birdsong','sunset','stillness','4k relax','drone','naturescape','ambiance','ambience','ambient tv','scenery','scenic','landscape','ocean','beach','seaside','mountain','aerial','earth touch','travel earth','relaxation','peace of mind','screensaver','moods','4k uhd','8k','dreamscape'] },
+  { key:'escape', label:'Escape · Relax', icon:'🌿', not:['hbo signature','news','sport','cinema','movie'], words:['relax','meditat','medita','mindful','calm','chill','lofi','lo-fi','ambient','zen','yoga','spa','sleep','serenity','serene','tranquil','peaceful','soothing','healing music','nature','scenic','slow tv','aquarium','fireplace',' rain ','rainfall','ocean waves','waves','waterfall','forest','birdsong','sunset','stillness','4k relax','drone','naturescape','ambiance','ambience','ambient tv','scenery','scenic','landscape','ocean','beach','seaside','mountain','aerial','earth touch','travel earth','relaxation','peace of mind','screensaver','moods','4k uhd','8k','dreamscape'] },
   { key:'spanish', label:'En Español', icon:'🗣️', words:['español','espanol','spanish','latino','latina','telemundo','univision','unimas','azteca','televisa','mexico','méxico','argentina','colombia','chile','peru','perú','venezuela','ecuador','bolivia','uruguay','paraguay','honduras','guatemala','salvador','dominicana','puerto rico','cuba','tve','antena 3','telesur','noticias','novelas','canal 1','canal 2','canal 5','canal 13','caracol','rcn','estrella','tlnovelas','cine latino','deportes','en vivo','tv publica','televisión','televisión'] },
   { key:'soccer', label:'Soccer', icon:'⚽', words:['soccer','football','fútbol','futbol','goal','fifa','liga','bein','premier league','calcio','bundesliga','serie a','tudn','fc '] },
   { key:'sports', label:'Sports', icon:'🏆', words:['sport','sports','espn','nba','nfl','mlb','nhl','golf','racing','motor','fight','boxing','wrestling','ufc','tennis','bein','olymp','outdoor','fishing','hunting','fubo','stadium','tudn','deportes','deportivo','soccer','football','fútbol','futbol'] },
@@ -5676,6 +5677,10 @@ function wtvMatches(ch, catKey) {
   var cat = null;
   for (var i = 0; i < WTV_CATS.length; i++) if (WTV_CATS[i].key === catKey) cat = WTV_CATS[i];
   if (!cat) return true;
+  if (cat.not) {   // names that never belong in this category
+    var nm = (ch.Name || '').toLowerCase();
+    for (var x = 0; x < cat.not.length; x++) if (nm.indexOf(cat.not[x]) >= 0) return false;
+  }
   var text = ' ' + ((ch.Name || '') + ' ' + (ch.Genres || []).join(' ') + ' ' + (ch.Tags || []).join(' ')).toLowerCase() + ' ';
   for (var j = 0; j < cat.words.length; j++) {
     var w = cat.words[j];
@@ -5807,7 +5812,7 @@ function wtvMatches(ch, catKey) {
             { key:'escape', id:'escape-stations', title:'🌿 Escape · Relax & Meditate',
               headline:'<b>Breathe.</b> Unwind. Escape.',
               sub:'Peaceful scenery, meditation and calm music, streaming live 24/7.',
-              theme:'escape', picks:[], hide:['hbo'], folderId:'', max:24 },
+              theme:'escape', picks:['naturescape','the spa','ondambiental','baraza'], hide:['hbo signature'], folderId:'', max:24 },
             { key:'music', id:'music-stations', title:'🎵 Music Stations',
               headline:'<b>Turn it up.</b> Music around the clock.',
               sub:'Hits, jazz, gospel, R&amp;B, country, Latin and more, live from around the world.',
