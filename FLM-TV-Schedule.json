@@ -1,198 +1,4 @@
 {
- "2026-11-13": [
-  {
-   "startTime": "07:10",
-   "name": "Sesame Street",
-   "duration": 3175,
-   "category": "show"
-  },
-  {
-   "startTime": "08:03",
-   "name": "Super Why!",
-   "duration": 1644,
-   "category": "show"
-  },
-  {
-   "startTime": "08:31",
-   "name": "Ready Jet Go!",
-   "duration": 1575,
-   "category": "show"
-  },
-  {
-   "startTime": "08:57",
-   "name": "Mr. Rogers",
-   "duration": 1716,
-   "category": "show"
-  },
-  {
-   "startTime": "09:25",
-   "name": "Curious George",
-   "duration": 1420,
-   "category": "show"
-  },
-  {
-   "startTime": "09:49",
-   "name": "My Three Sons",
-   "duration": 1540,
-   "category": "show"
-  },
-  {
-   "startTime": "10:15",
-   "name": "Abbott and Costello",
-   "duration": 1428,
-   "category": "show"
-  },
-  {
-   "startTime": "10:39",
-   "name": "Get Smart",
-   "duration": 1524,
-   "category": "show"
-  },
-  {
-   "startTime": "11:04",
-   "name": "The Dick Van Dyke Show",
-   "duration": 1484,
-   "category": "show"
-  },
-  {
-   "startTime": "11:29",
-   "name": "Mister Ed",
-   "duration": 1534,
-   "category": "show"
-  },
-  {
-   "startTime": "11:54",
-   "name": "The Lucy Show",
-   "duration": 1508,
-   "category": "show"
-  },
-  {
-   "startTime": "12:19",
-   "name": "Leave it to Beaver",
-   "duration": 1555,
-   "category": "show"
-  },
-  {
-   "startTime": "12:45",
-   "name": "Andy Griffith",
-   "duration": 1553,
-   "category": "show"
-  },
-  {
-   "startTime": "13:11",
-   "name": "Benson",
-   "duration": 1509,
-   "category": "show"
-  },
-  {
-   "startTime": "13:36",
-   "name": "227",
-   "duration": 1438,
-   "category": "show"
-  },
-  {
-   "startTime": "14:00",
-   "name": "What's Happening",
-   "duration": 1457,
-   "category": "show"
-  },
-  {
-   "startTime": "14:25",
-   "name": "FLMTV.com",
-   "duration": 9,
-   "category": ""
-  },
-  {
-   "startTime": "14:25",
-   "name": "ZAINA JULIETTE",
-   "duration": 37,
-   "category": ""
-  },
-  {
-   "startTime": "14:25",
-   "name": "AshWater",
-   "duration": 38,
-   "category": ""
-  },
-  {
-   "startTime": "14:26",
-   "name": "Good Times",
-   "duration": 1515,
-   "category": "show"
-  },
-  {
-   "startTime": "14:51",
-   "name": "Sanford and Son",
-   "duration": 1473,
-   "category": "show"
-  },
-  {
-   "startTime": "15:16",
-   "name": "The Jeffersons",
-   "duration": 1500,
-   "category": "show"
-  },
-  {
-   "startTime": "15:41",
-   "name": "The Sleeping Princess",
-   "duration": 599,
-   "category": "show"
-  },
-  {
-   "startTime": "15:51",
-   "name": "Andy Panda Goes Fishing",
-   "duration": 534,
-   "category": "show"
-  },
-  {
-   "startTime": "16:00",
-   "name": "Kittens' Mittens",
-   "duration": 524,
-   "category": "show"
-  },
-  {
-   "startTime": "16:08",
-   "name": "Ice Age: Continental Drift",
-   "duration": 5265,
-   "category": "movie"
-  },
-  {
-   "startTime": "17:37",
-   "name": "Darby O'Gill and the Little People",
-   "duration": 5436,
-   "category": "movie"
-  },
-  {
-   "startTime": "19:08",
-   "name": "The Bernie Mac Show",
-   "duration": 1335,
-   "category": "show"
-  },
-  {
-   "startTime": "19:30",
-   "name": "That '70s Show",
-   "duration": 1332,
-   "category": "show"
-  },
-  {
-   "startTime": "19:52",
-   "name": "Chariots of Fire",
-   "duration": 7413,
-   "category": "movie"
-  },
-  {
-   "startTime": "21:56",
-   "name": "A Good Day to Die Hard",
-   "duration": 6071,
-   "category": "movie"
-  },
-  {
-   "startTime": "23:37",
-   "name": "Volcano",
-   "duration": 6231,
-   "category": "movie"
-  }
- ],
  "2026-11-14": [
   {
    "startTime": "01:21",
@@ -442,9 +248,247 @@
   },
   {
    "startTime": "20:41",
+   "name": "The X-Files",
+   "duration": 2711,
+   "category": "show"
+  },
+  {
+   "startTime": "21:26",
+   "name": "Twister",
+   "duration": 3415,
+   "category": "movie"
+  },
+  {
+   "startTime": "22:23",
+   "name": "Dick Tracy",
+   "duration": 6305,
+   "category": "movie"
+  }
+ ],
+ "2026-11-15": [
+  {
+   "startTime": "00:08",
+   "name": "Die Hard",
+   "duration": 7927,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:20",
+   "name": "Big Mommas House",
+   "duration": 6777,
+   "category": "movie"
+  },
+  {
+   "startTime": "04:13",
+   "name": "Murder Mystery",
+   "duration": 5454,
+   "category": "movie"
+  },
+  {
+   "startTime": "05:44",
+   "name": "A Soldier's Story",
+   "duration": 6054,
+   "category": "movie"
+  },
+  {
+   "startTime": "07:25",
+   "name": "Sesame Street",
+   "duration": 3363,
+   "category": "show"
+  },
+  {
+   "startTime": "08:21",
+   "name": "Super Why!",
+   "duration": 1650,
+   "category": "show"
+  },
+  {
+   "startTime": "08:49",
+   "name": "Road Runner",
+   "duration": 551,
+   "category": "show"
+  },
+  {
+   "startTime": "08:58",
+   "name": "Tom and Jerry",
+   "duration": 460,
+   "category": "show"
+  },
+  {
+   "startTime": "09:05",
+   "name": "Schoolhouse Rock 2",
+   "duration": 192,
+   "category": ""
+  },
+  {
+   "startTime": "09:09",
+   "name": "Schoolhouse Rock 3",
+   "duration": 188,
+   "category": ""
+  },
+  {
+   "startTime": "09:12",
+   "name": "Schoolhouse Rock 4",
+   "duration": 195,
+   "category": ""
+  },
+  {
+   "startTime": "09:15",
+   "name": "Schoolhouse Rock 5",
+   "duration": 187,
+   "category": ""
+  },
+  {
+   "startTime": "09:18",
+   "name": "Schoolhouse Rock 6",
+   "duration": 193,
+   "category": ""
+  },
+  {
+   "startTime": "09:20",
+   "name": "Mars Needs Moms",
+   "duration": 5284,
+   "category": "movie"
+  },
+  {
+   "startTime": "10:48",
+   "name": "Zaina Juliette Spotlight",
+   "duration": 923,
+   "category": ""
+  },
+  {
+   "startTime": "11:04",
+   "name": "Zaina Juliette & Friends",
+   "duration": 1712,
+   "category": ""
+  },
+  {
+   "startTime": "11:32",
+   "name": "Locals in Las Vegas",
+   "duration": 1709,
+   "category": "show"
+  },
+  {
+   "startTime": "12:01",
+   "name": "Stormy Weather",
+   "duration": 4659,
+   "category": "movie"
+  },
+  {
+   "startTime": "13:18",
+   "name": "The Incredible Shrinking Man",
+   "duration": 4847,
+   "category": "movie"
+  },
+  {
+   "startTime": "14:39",
+   "name": "Honey, We Shrunk Ourselves",
+   "duration": 4490,
+   "category": "movie"
+  },
+  {
+   "startTime": "15:54",
    "name": "Twister",
    "duration": 6784,
    "category": "movie"
+  },
+  {
+   "startTime": "17:47",
+   "name": "FLMTV.com",
+   "duration": 28,
+   "category": ""
+  },
+  {
+   "startTime": "17:48",
+   "name": "Abbott and Costello",
+   "duration": 1398,
+   "category": "show"
+  },
+  {
+   "startTime": "18:11",
+   "name": "Andy Griffith",
+   "duration": 1548,
+   "category": "show"
+  },
+  {
+   "startTime": "18:37",
+   "name": "Here's Lucy",
+   "duration": 1552,
+   "category": "show"
+  },
+  {
+   "startTime": "19:03",
+   "name": "Back to the Future Part 3",
+   "duration": 7086,
+   "category": "movie"
+  },
+  {
+   "startTime": "21:01",
+   "name": "Beauty and the Beast",
+   "duration": 5504,
+   "category": "movie"
+  },
+  {
+   "startTime": "22:32",
+   "name": "Hocus Pocus",
+   "duration": 5767,
+   "category": "movie"
+  }
+ ],
+ "2026-11-16": [
+  {
+   "startTime": "00:08",
+   "name": "Ghost Rider",
+   "duration": 7405,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:12",
+   "name": "Kingsman: The Secret Service",
+   "duration": 7717,
+   "category": "movie"
+  },
+  {
+   "startTime": "04:20",
+   "name": "Leave the World Behind",
+   "duration": 8502,
+   "category": "movie"
+  },
+  {
+   "startTime": "06:42",
+   "name": "The Twilight Zone 1",
+   "duration": 1557,
+   "category": "show"
+  },
+  {
+   "startTime": "07:08",
+   "name": "The Twilight Zone 2",
+   "duration": 1556,
+   "category": "show"
+  },
+  {
+   "startTime": "07:34",
+   "name": "The Twilight Zone 3",
+   "duration": 1558,
+   "category": "show"
+  },
+  {
+   "startTime": "08:00",
+   "name": "The Twilight Zone 4",
+   "duration": 1559,
+   "category": "show"
+  },
+  {
+   "startTime": "08:26",
+   "name": "Sesame Street 1",
+   "duration": 1559,
+   "category": "show"
+  },
+  {
+   "startTime": "08:52",
+   "name": "Sesame Street 2",
+   "duration": 1559,
+   "category": "show"
   }
  ]
 }
