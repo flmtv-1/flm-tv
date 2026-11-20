@@ -3002,6 +3002,47 @@
 </head>
 <body>
 
+    <!-- ═══ FLM OFF-AIR TICKER — START (delete from here to "TICKER — END" to remove) ═══ -->
+    <div id="flmOffAirTicker" role="status" aria-label="FLM TV Channel 26.5 is temporarily off air due to a network update. It will be back 5 times better and more powerful. Still streaming live on FLMTV.com.">
+        <div class="flm-ticker-label"><i class="fas fa-satellite-dish"></i> ALERT</div>
+        <div class="flm-ticker-window">
+            <div class="flm-ticker-track">
+                <span class="flm-ticker-item">FLM TV CHANNEL 26.5 IS TEMPORARILY OFF AIR DUE TO A NETWORK UPDATE &nbsp;★&nbsp; WE'LL BE BACK 5 TIMES BETTER AND MORE POWERFUL &nbsp;★&nbsp; STILL STREAMING LIVE RIGHT HERE ON FLMTV.COM &nbsp;★&nbsp;&nbsp;</span>
+                <span class="flm-ticker-item" aria-hidden="true">FLM TV CHANNEL 26.5 IS TEMPORARILY OFF AIR DUE TO A NETWORK UPDATE &nbsp;★&nbsp; WE'LL BE BACK 5 TIMES BETTER AND MORE POWERFUL &nbsp;★&nbsp; STILL STREAMING LIVE RIGHT HERE ON FLMTV.COM &nbsp;★&nbsp;&nbsp;</span>
+            </div>
+        </div>
+    </div>
+    <style>
+        #flmOffAirTicker {
+            display: flex; align-items: stretch; width: 100%; height: 38px; overflow: hidden;
+            background: linear-gradient(90deg, #8b0000, #d10000 50%, #8b0000);
+            border-bottom: 2px solid #ff4d4d; box-shadow: 0 2px 12px rgba(255, 0, 0, 0.45);
+            position: relative; z-index: 101;
+        }
+        #flmOffAirTicker .flm-ticker-label {
+            flex-shrink: 0; display: flex; align-items: center; gap: 0.4rem; padding: 0 0.9rem;
+            background: #fff; color: #c00000; font-family: 'Bebas Neue', 'Rajdhani', Arial, sans-serif;
+            font-size: 1.15rem; letter-spacing: 2px; animation: flmTickerPulse 1.2s ease-in-out infinite;
+        }
+        #flmOffAirTicker .flm-ticker-window { flex: 1; overflow: hidden; display: flex; align-items: center; }
+        #flmOffAirTicker .flm-ticker-track {
+            display: flex; width: max-content; white-space: nowrap;
+            animation: flmTickerScroll 35s linear infinite;
+        }
+        #flmOffAirTicker .flm-ticker-item {
+            color: #fff; font-family: 'Bebas Neue', 'Rajdhani', Arial, sans-serif; font-size: 1.25rem;
+            letter-spacing: 1.5px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); padding-left: 1rem;
+        }
+        @keyframes flmTickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes flmTickerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+        @media (max-width: 768px) {
+            #flmOffAirTicker { height: 32px; }
+            #flmOffAirTicker .flm-ticker-item { font-size: 1.05rem; }
+            #flmOffAirTicker .flm-ticker-label { font-size: 0.95rem; padding: 0 0.6rem; }
+        }
+    </style>
+    <!-- ═══ FLM OFF-AIR TICKER — END ═══ -->
+
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HEADER                                                         -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
