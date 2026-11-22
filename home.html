@@ -6941,7 +6941,14 @@ function wtvMatches(ch, catKey) {
                 // folder such as V:\SITE ASSETS\flmtv-hero, give the ENTER FLM user
                 // access, then paste that library's id here. Every clip you drop in
                 // that folder joins the banner automatically.
-                promoLibraryId: null,
+                promoLibraryId: '096bdf80f24e9fc4c43aea5e96525a7f',   // V:\SITE ASSETS\flmtv-hero
+
+                // Titles shown on library clips (by Jellyfin id). Clips not listed show as "FLM TV".
+                promoTitles: {
+                    '515e8020b089fafda16af7014cc8b8cc': { title: 'FLM TV', description: 'Out of this world entertainment — Channel 26.5 Las Vegas, streaming worldwide.' },
+                    '9e33abe6583553185f6b45a2357c3538': { title: 'FLM TV', description: 'Film • Live • Music — streaming worldwide on FLMTV.com.' },
+                    '546acaec2896e24afd7f26668bfe8fca': { title: 'FLM TV', description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas.' }
+                },
 
                 // Or list clips one by one. Each can use:
                 //   itemId — the Jellyfin id (most reliable), or
@@ -6949,8 +6956,8 @@ function wtvMatches(ch, catKey) {
                 //   url    — a direct .mp4 link (e.g. Cloudinary)
                 promoVideos: [
                     {
-                        name: 'FLMTV Sizzle',
-                        itemId: null,
+                        name: 'FLM TV SIZZLE REEL',
+                        itemId: '6393d031acfe598d364f0dc28e34103f',
                         url: null,
                         eyebrow: 'FLM TV · SIZZLE',
                         title: 'FLM TV',
@@ -6967,7 +6974,7 @@ function wtvMatches(ch, catKey) {
                     title: 'The Zaina Juliette Show',
                     description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
                     // Optional clip: put a Jellyfin id, part of a name, or a direct .mp4 link
-                    videoItemId: null, videoName: null, videoUrl: null,
+                    videoItemId: '9e18c00e61b733aadd6f5868e9cd85ce', videoName: null, videoUrl: null,   // ZAINA JULIETTE-COMMERCIALflm
                     buttonText: 'Learn More', buttonUrl: null   // e.g. 'https://zainajuliette.tv'
                 },
 
@@ -7038,12 +7045,14 @@ function wtvMatches(ch, catKey) {
                         ParentId: S.promoLibraryId, Recursive: true, IncludeItemTypes: 'Video,Movie',
                         SortBy: 'SortName', EnableUserData: false
                     });
+                    const used = S.promoVideos.map(p => p.itemId).concat([S.zainaShow.videoItemId]).filter(Boolean);
                     (lib && lib.Items || []).forEach(v => {
-                        if (promoSlides.some(s => s.video === streamUrl(v.Id))) return;
+                        if (used.includes(v.Id) || promoSlides.some(s => s.video === streamUrl(v.Id))) return;
+                        const t = (S.promoTitles && S.promoTitles[v.Id]) || {};
                         promoSlides.push({ kind: 'promo', video: streamUrl(v.Id),
                             image: v.ImageTags && v.ImageTags.Primary ? imgUrl(v.Id, 'Primary', v.ImageTags.Primary, 1920) : 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
-                            fit: 'contain', eyebrow: 'ON FLM TV', title: cleanTitle(v.Name),
-                            description: v.Overview || 'Now on FLM TV — Channel 26.5 Las Vegas.',
+                            fit: 'contain', eyebrow: t.eyebrow || 'ON FLM TV', title: t.title || 'FLM TV',
+                            description: t.description || v.Overview || 'Now on FLM TV — Channel 26.5 Las Vegas.',
                             buttonText: 'Watch Live', buttonUrl: '/live' });
                     });
                 } catch (e) { console.warn('Hero promo library not loaded:', e); }
