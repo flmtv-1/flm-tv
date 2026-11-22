@@ -719,6 +719,24 @@
 
         /* ── HERO v2: trailer-reel look ─────────────────────────────── */
 
+        /* OPTION B: clip fills most of the banner (slightly zoomed out),
+           fading into a blurred moving copy of itself on the left */
+        .hero-video-fill {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0; transition: opacity 0.8s ease;
+            filter: blur(32px) brightness(0.5) saturate(1.3);
+            transform: scale(1.2);
+        }
+        .hero-slide.has-video .hero-video-fill { opacity: 1; }
+        @media (min-width: 768px) {
+            .hero-banner .hero-slide.fit-contain .hero-video {
+                left: auto; right: 0; width: 64%;
+                object-fit: cover; object-position: center;
+                -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 24%);
+                mask-image: linear-gradient(to right, transparent 0%, #000 24%);
+            }
+        }
+
         /* Notice now sits under the search bar */
         .search-container + .flm-notice, #flmNotice { margin: 0 auto 1.25rem; }
         @media (max-width: 767px) { #flmNotice { margin: 0 0.75rem 1rem; } }
@@ -7313,6 +7331,24 @@ function wtvMatches(ch, catKey) {
                     }
                 });
             }
+            // Blurred moving copy of the clip behind it (drawn from the same video — no extra download)
+            function startFill(el, v) {
+                let c = el.querySelector('.hero-video-fill');
+                if (!c) {
+                    c = document.createElement('canvas');
+                    c.className = 'hero-video-fill';
+                    c.width = 192; c.height = 108;
+                    el.insertBefore(c, v);
+                }
+                const ctx = c.getContext('2d');
+                let last = 0;
+                function draw(t) {
+                    if (v.paused || v.ended || !el.classList.contains('active')) return;
+                    if (t - last > 66) { try { ctx.drawImage(v, 0, 0, c.width, c.height); } catch (e) {} last = t; }
+                    requestAnimationFrame(draw);
+                }
+                requestAnimationFrame(draw);
+            }
             function playVideo(i, src, capSeconds) {
                 const el = els[i];
                 let v = el.querySelector('.hero-video');
@@ -7328,6 +7364,9 @@ function wtvMatches(ch, catKey) {
                         if (current === i) schedule(S.imageSeconds);
                     });
                     v.addEventListener('ended', () => { if (current === i) next(); });
+                    if (el.classList.contains('fit-contain') && !isTV) {
+                        v.addEventListener('playing', () => startFill(el, v));
+                    }
                     v.src = src;
                     el.insertBefore(v, el.querySelector('.hero-content'));
                 }
