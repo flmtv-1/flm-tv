@@ -716,6 +716,101 @@
             background: rgba(34, 197, 94, 0.2);
             border-color: var(--neon-green);
         }
+
+        /* ── HERO v2: trailer-reel look ─────────────────────────────── */
+        .hero-dots .hero-dot-btn {
+            min-width: 0 !important; min-height: 0 !important;
+            width: 34px !important; height: 3px !important;
+            padding: 0 !important; margin: 0 !important; border: none !important;
+        }
+        @media (max-width: 767px) {
+            .hero-dots { bottom: 12px; gap: 4px; }
+            .hero-dots .hero-dot-btn { width: 18px !important; }
+        }
+        .hero-banner { background: #07070A; }
+        .hero-slide {
+            visibility: hidden;
+            transition: opacity 1s ease-in-out, visibility 0s linear 1s;
+        }
+        .hero-slide.active {
+            visibility: visible;
+            transition: opacity 1s ease-in-out, visibility 0s linear 0s;
+        }
+        .hero-bg, .hero-bg-blur {
+            position: absolute; inset: 0; z-index: 0;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+        }
+        /* Wide banners (Zaina show, FLM billboard): whole picture shown, blurred copy fills the sides */
+        .hero-slide.fit-contain .hero-bg { background-size: contain; }
+        .hero-bg-blur {
+            filter: blur(28px) brightness(0.45) saturate(1.2);
+            transform: scale(1.15);
+        }
+        /* Slow cinematic zoom on movie/show backdrops */
+        .hero-title-slide .hero-bg { background-position: center 25%; will-change: transform; }
+        .hero-title-slide.active .hero-bg { animation: heroKenBurns 12s ease-out forwards; }
+        .hero-title-slide.kb-a .hero-bg { transform-origin: 70% 30%; }
+        .hero-title-slide.kb-b .hero-bg { transform-origin: 30% 40%; }
+        .hero-title-slide.kb-c .hero-bg { transform-origin: 60% 70%; }
+        .hero-title-slide.kb-d .hero-bg { transform-origin: 40% 20%; }
+        @keyframes heroKenBurns {
+            from { transform: scale(1.0); }
+            to   { transform: scale(1.12); }
+        }
+        .hero-no-motion .hero-title-slide.active .hero-bg { animation: none; }
+        /* Trailer preview fades in over the backdrop */
+        .hero-title-slide .hero-video { opacity: 0; transition: opacity 0.8s ease; }
+        .hero-title-slide.has-video .hero-video { opacity: 1; }
+
+        .hero-logo {
+            display: block;
+            max-width: min(440px, 70vw);
+            max-height: 130px;
+            width: auto; height: auto;
+            object-fit: contain; object-position: left bottom;
+            filter: drop-shadow(0 4px 14px rgba(0,0,0,0.8));
+        }
+        .hero-meta {
+            display: flex; flex-wrap: wrap; align-items: center;
+            gap: 6px 14px;
+            margin: -0.25rem 0 0.9rem;
+            font-size: 0.9rem; font-weight: 600;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
+        }
+        .hero-meta span + span::before {
+            content: '•'; margin-right: 14px; color: var(--gold, #C9A84C);
+        }
+        .hero-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .hero-buttons .hero-trailer-btn.trailer-btn {
+            position: static; transform: none; opacity: 1;
+            padding: 1rem 1.6rem; border-radius: 8px;
+            font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+            font-size: 1.15rem; font-weight: 400; letter-spacing: 1.5px;
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.55);
+            color: #fff;
+            backdrop-filter: blur(8px);
+        }
+        .hero-buttons .hero-trailer-btn.trailer-btn:hover,
+        .hero-buttons .hero-trailer-btn.trailer-btn:focus {
+            background: rgba(255,215,0,0.18);
+            border-color: var(--gold, #C9A84C);
+            color: #ffd700;
+        }
+        @media (max-width: 767px) {
+            .hero-logo { max-height: 70px; max-width: 60vw; }
+            .hero-meta { font-size: 0.75rem; gap: 4px 10px; margin-bottom: 0.5rem; }
+            .hero-meta span + span::before { margin-right: 10px; }
+            .hero-buttons .hero-trailer-btn.trailer-btn,
+            .hero-buttons .btn-hero-primary { padding: 0.6rem 1rem; font-size: 0.95rem; }
+            .hero-sound-btn { bottom: 16px; font-size: 0.75rem; padding: 4px 10px; }
+        }
         
         /* ═══════════════════════════════════════════════════════════════ */
         /*  CATEGORY NAVIGATION                                            */
@@ -6826,223 +6921,438 @@ function wtvMatches(ch, catKey) {
         });
         
         // ═══════════════════════════════════════════════════════════════
-        //  HERO BANNER SLIDESHOW
+        //  HERO BANNER — "TRAILER REEL"  (v2, Nov 2026)
+        //  • Pinned promo videos (FLM TV Sizzle etc.) + The Zaina Juliette Show
+        //  • Then random titles from the whole Jellyfin library — new picks on
+        //    every visit, big backdrops with a slow cinematic zoom, title logo,
+        //    year / rating / genre, Watch Now + Trailer buttons
+        //  • On PC, a title's own trailer (if saved in Jellyfin) plays silently
+        //  • Family-safe: R / NC-17 / TV-MA titles never show here
         // ═══════════════════════════════════════════════════════════════
-        
+
         async function initHeroBanner() {
+            const HERO_SETTINGS = {
+                imageSeconds: 8,              // how long each picture slide stays up
+                trailerPreviewSeconds: 20,    // how much of a title's trailer plays in the banner
+                randomTitles: 7,              // how many random movies/shows per visit
+
+                // ── PROMO VIDEOS ─────────────────────────────────────────────
+                // EASIEST: make a Jellyfin library (type "Home Videos") pointing at a
+                // folder such as V:\SITE ASSETS\flmtv-hero, give the ENTER FLM user
+                // access, then paste that library's id here. Every clip you drop in
+                // that folder joins the banner automatically.
+                promoLibraryId: null,
+
+                // Or list clips one by one. Each can use:
+                //   itemId — the Jellyfin id (most reliable), or
+                //   name   — part of the video's name in Jellyfin, or
+                //   url    — a direct .mp4 link (e.g. Cloudinary)
+                promoVideos: [
+                    {
+                        name: 'FLMTV Sizzle',
+                        itemId: null,
+                        url: null,
+                        eyebrow: 'FLM TV · SIZZLE',
+                        title: 'FLM TV',
+                        description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas, streaming worldwide.',
+                        poster: 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
+                        buttonText: 'Watch Live', buttonUrl: '/live'
+                    }
+                ],
+
+                // ── THE ZAINA JULIETTE SHOW (always in the banner) ──────────
+                zainaShow: {
+                    image: 'assets/images/ZainaShowTheaterBanner.jpg',
+                    eyebrow: 'FEATURED',
+                    title: 'The Zaina Juliette Show',
+                    description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
+                    // Optional clip: put a Jellyfin id, part of a name, or a direct .mp4 link
+                    videoItemId: null, videoName: null, videoUrl: null,
+                    buttonText: 'Learn More', buttonUrl: null   // e.g. 'https://zainajuliette.tv'
+                },
+
+                // Ratings and genres that never appear in the banner
+                blockedRatings: ['R', 'NC-17', 'TV-MA', 'X', 'XXX', 'AO', '18', '18+', 'R18'],
+                blockedGenres: ['Horror']
+            };
+
             const heroBanner = document.getElementById('heroBanner');
+            if (!heroBanner) return;
+            const S = HERO_SETTINGS;
+            const J = JELLYFIN_CONFIG;
+            const ua = navigator.userAgent || '';
+            const isTV = /AFT|FireTV|Silk/i.test(ua);
+            const isPhone = window.innerWidth < 768;
+            const saveData = !!(navigator.connection && navigator.connection.saveData);
+            const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const allowTrailerPreviews = !isTV && !isPhone && !saveData;
+
+            const streamUrl = id => `${J.SERVER}/Videos/${id}/stream?static=true&api_key=${J.API_KEY}`;
+            const imgUrl = (id, type, tag, w) =>
+                `${J.SERVER}/Items/${id}/Images/${type}?api_key=${J.API_KEY}&tag=${tag}&maxWidth=${w}&quality=85&format=webp`;
+
+            async function findVideoByName(name) {
+                const found = await jellyfinFetch(`/Users/${J.USER_ID}/Items`, {
+                    SearchTerm: name, Recursive: true,
+                    IncludeItemTypes: 'Movie,Video', Limit: 10, EnableUserData: false
+                });
+                const want = name.toLowerCase();
+                const hit = found && found.Items && found.Items.find(i => (i.Name || '').toLowerCase().includes(want));
+                return hit ? hit.Id : null;
+            }
+            async function resolveVideo(itemId, name, url) {
+                if (url) return url;
+                let id = itemId;
+                if (!id && name) { try { id = await findVideoByName(name); } catch (e) {} }
+                return id ? streamUrl(id) : null;
+            }
+
+            // Tidy up file-style names like "pingu-series-1" or "Show (Complete TV series in MP4 format)"
+            function cleanTitle(name) {
+                let t = (name || '').replace(/\s*\((?:[^)]*(?:complete|mp4|series|season|1080p|720p)[^)]*)\)\s*/gi, ' ').trim();
+                if (!/\s/.test(t) && /[-_]/.test(t)) {
+                    t = t.replace(/[-_]+/g, ' ').replace(/\b(series|season)\s*\d+$/i, '').trim()
+                         .replace(/\b\w/g, c => c.toUpperCase());
+                }
+                return t || name;
+            }
+            function ratingBlocked(r) {
+                if (!r) return false;
+                const bare = String(r).toUpperCase().replace(/^[A-Z]{2}-(?=\S)/, '');   // "DE-18" → "18"
+                return S.blockedRatings.some(b => b.toUpperCase() === bare || b.toUpperCase() === String(r).toUpperCase());
+            }
+
             const slides = [];
 
-            // ── FLM TV SIZZLE REEL (plays first, from Jellyfin) ──────────────
-            // The clip lives in V:\SITE ASSETS (same as the FilAm / Monique pages).
-            // Option A: leave itemId null and it finds the video by its name.
-            // Option B (most reliable): paste the Jellyfin Item ID here
-            //   (Jellyfin > open the video > copy the id=... from the address bar).
-            const HERO_SIZZLE = {
-                itemId: null,
-                name: 'FLMTV Sizzle',
-                title: 'FLM TV',
-                description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas, streaming worldwide.'
-            };
-            try {
-                let sizzleId = HERO_SIZZLE.itemId;
-                if (!sizzleId) {
-                    const found = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                        SearchTerm: HERO_SIZZLE.name,
-                        Recursive: true,
-                        IncludeItemTypes: 'Movie,Video,Episode',
-                        Limit: 1
-                    });
-                    if (found && found.Items && found.Items[0]) sizzleId = found.Items[0].Id;
-                }
-                if (sizzleId) {
-                    slides.push({
-                        video: `${JELLYFIN_CONFIG.SERVER}/Videos/${sizzleId}/stream?static=true&api_key=${JELLYFIN_CONFIG.API_KEY}`,
-                        image: 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
-                        title: HERO_SIZZLE.title,
-                        description: HERO_SIZZLE.description,
-                        link: null
-                    });
-                }
-            } catch (e) {
-                console.warn('Sizzle reel not loaded:', e);
+            // ── 1. Promo videos ──────────────────────────────────────────
+            const promoSlides = [];
+            for (const p of S.promoVideos) {
+                const src = await resolveVideo(p.itemId, p.name, p.url).catch(() => null);
+                if (src) promoSlides.push({ kind: 'promo', video: src, image: p.poster, fit: 'contain',
+                    eyebrow: p.eyebrow, title: p.title, description: p.description,
+                    buttonText: p.buttonText, buttonUrl: p.buttonUrl });
             }
-            
-            // Add your Zaina Show banner first
-            slides.push({
-                image: 'assets/images/ZainaShowTheaterBanner.jpg',
-                title: 'The Zaina Juliette Show',
-                description: 'Experience award-winning entertainment with music, theatrics, and holographic experiences at Planet Hollywood.',
-                link: null,
-                fit: 'contain'
-            });
+            if (S.promoLibraryId) {
+                try {
+                    const lib = await jellyfinFetch(`/Users/${J.USER_ID}/Items`, {
+                        ParentId: S.promoLibraryId, Recursive: true, IncludeItemTypes: 'Video,Movie',
+                        SortBy: 'SortName', EnableUserData: false
+                    });
+                    (lib && lib.Items || []).forEach(v => {
+                        if (promoSlides.some(s => s.video === streamUrl(v.Id))) return;
+                        promoSlides.push({ kind: 'promo', video: streamUrl(v.Id),
+                            image: v.ImageTags && v.ImageTags.Primary ? imgUrl(v.Id, 'Primary', v.ImageTags.Primary, 1920) : 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
+                            fit: 'contain', eyebrow: 'ON FLM TV', title: cleanTitle(v.Name),
+                            description: v.Overview || 'Now on FLM TV — Channel 26.5 Las Vegas.',
+                            buttonText: 'Watch Live', buttonUrl: '/live' });
+                    });
+                } catch (e) { console.warn('Hero promo library not loaded:', e); }
+            }
+            // First promo (the sizzle) opens the banner
+            if (promoSlides.length) slides.push(promoSlides.shift());
 
-            // FLM TV billboard banner
-            slides.push({
-                image: 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
-                title: 'FLM TV',
-                description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas.',
-                link: null,
-                fit: 'contain'
-            });
+            // ── 2. The Zaina Juliette Show ───────────────────────────────
+            const Z = S.zainaShow;
+            const zVideo = await resolveVideo(Z.videoItemId, Z.videoName, Z.videoUrl).catch(() => null);
+            slides.push({ kind: 'promo', video: zVideo, image: Z.image, fit: 'contain',
+                eyebrow: Z.eyebrow, title: Z.title, description: Z.description,
+                buttonText: Z.buttonText, buttonUrl: Z.buttonUrl });
 
-            // Fetch featured content from Jellyfin
+            // Fallback: no sizzle found → keep the FLM billboard so FLM branding stays in
+            if (!slides.some(s => s.video) && !promoSlides.length) {
+                slides.push({ kind: 'promo', image: 'assets/images/Graphic%202%20Billboard%20FLM%203840x14407-Da%20One.png',
+                    fit: 'contain', eyebrow: 'FLM TV', title: 'FLM TV',
+                    description: 'Fun, Laughter, Movies — Channel 26.5 Las Vegas.', buttonText: 'Watch Live', buttonUrl: '/live' });
+            }
+
+            // ── 3. Random titles from the library ────────────────────────
+            let seen = [];
+            try { seen = JSON.parse(localStorage.getItem('flmHeroSeen') || '[]'); } catch (e) {}
+            const titleSlides = [];
             try {
-                const featured = await jellyfinFetch(`/Users/${JELLYFIN_CONFIG.USER_ID}/Items`, {
-                    Limit: 4,
-                    SortBy: 'DateCreated',
-                    Recursive: true,
-                    IncludeItemTypes: 'Movie,Series',
-                    ImageTypes: 'Backdrop'
+                const res = await jellyfinFetch(`/Users/${J.USER_ID}/Items`, {
+                    Recursive: true, IncludeItemTypes: 'Movie,Series', ImageTypes: 'Backdrop',
+                    SortBy: 'Random', Limit: 50, Fields: 'Overview,Genres',
+                    EnableUserData: false, ImageTypeLimit: 1, EnableImageTypes: 'Backdrop,Logo'
                 });
-                
-                if (featured && featured.Items) {
-                    featured.Items.forEach(item => {
-                        const backdropUrl = item.BackdropImageTags && item.BackdropImageTags[0]
-                            ? getImageUrl(item.Id, item.BackdropImageTags[0], 'Backdrop')
-                            : getImageUrl(item.Id, item.ImageTags.Primary, 'Primary');
-                        
-                        slides.push({
-                            image: backdropUrl,
-                            title: item.Name,
-                            description: item.Overview || 'Stream now on FLM TV.',
-                            link: item.Id
-                        });
+                let pool = (res && res.Items || []).filter(i =>
+                    i.BackdropImageTags && i.BackdropImageTags.length &&
+                    !ratingBlocked(i.OfficialRating) &&
+                    !(i.Genres || []).some(g => S.blockedGenres.some(b => b.toLowerCase() === String(g).toLowerCase())));
+                const withText = pool.filter(i => i.Overview);
+                if (withText.length >= S.randomTitles) pool = withText;
+                const fresh = pool.filter(i => !seen.includes(i.Id));
+                if (fresh.length >= S.randomTitles) pool = fresh;
+                pool.slice(0, S.randomTitles).forEach(item => {
+                    const meta = [];
+                    if (item.ProductionYear) meta.push(String(item.ProductionYear));
+                    if (item.OfficialRating && !/^(NR|Unrated|Approved)$/i.test(item.OfficialRating)) meta.push(item.OfficialRating);
+                    if (item.Type === 'Movie' && item.RunTimeTicks) {
+                        const m = Math.round(item.RunTimeTicks / 600000000);
+                        if (m > 0) meta.push(m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`);
+                    }
+                    (item.Genres || []).slice(0, 2).forEach(g => meta.push(g));
+                    titleSlides.push({
+                        kind: 'title', itemId: item.Id, itemType: item.Type,
+                        rawName: item.Name, year: item.ProductionYear || null,
+                        image: imgUrl(item.Id, 'Backdrop', item.BackdropImageTags[0], isPhone ? 1000 : 1920),
+                        logo: item.ImageTags && item.ImageTags.Logo ? imgUrl(item.Id, 'Logo', item.ImageTags.Logo, 700) : null,
+                        eyebrow: item.Type === 'Series' ? 'NOW STREAMING · SERIES' : 'NOW STREAMING · MOVIE',
+                        title: cleanTitle(item.Name), meta: meta,
+                        description: item.Overview || 'Stream now on FLM TV.'
                     });
-                }
+                });
+                try {
+                    const ids = titleSlides.map(s => s.itemId).concat(seen).slice(0, 60);
+                    localStorage.setItem('flmHeroSeen', JSON.stringify(ids));
+                } catch (e) {}
             } catch (error) {
-                console.error('Error loading featured content:', error);
+                console.error('Hero: random titles not loaded:', error);
             }
-            
-            // Build slides
-            slides.forEach((slide, index) => {
-                const slideDiv = document.createElement('div');
-                slideDiv.className = `hero-slide ${index === 0 ? 'active' : ''} ${slide.fit === 'contain' ? 'fit-contain' : ''}`;
-                slideDiv.style.backgroundImage = `url('${slide.image}')`;
-                
+
+            // Mix: a promo clip after every 2 titles
+            titleSlides.forEach((t, i) => {
+                slides.push(t);
+                if (i % 2 === 1 && promoSlides.length) slides.push(promoSlides.shift());
+            });
+            promoSlides.forEach(p => slides.push(p));
+
+            // ── Build the slides ─────────────────────────────────────────
+            const kbVariants = ['kb-a', 'kb-b', 'kb-c', 'kb-d'];
+            const els = slides.map((slide, index) => {
+                const el = document.createElement('div');
+                el.className = 'hero-slide' + (slide.fit === 'contain' ? ' fit-contain' : '') +
+                               (slide.kind === 'title' ? ' hero-title-slide ' + kbVariants[index % 4] : '');
+
+                if (slide.fit === 'contain') {
+                    const blur = document.createElement('div');
+                    blur.className = 'hero-bg-blur';
+                    el.appendChild(blur);
+                }
+                const bg = document.createElement('div');
+                bg.className = 'hero-bg';
+                el.appendChild(bg);
+
                 const content = document.createElement('div');
                 content.className = 'hero-content';
-                content.innerHTML = `
-                    <div class="hero-eyebrow">FEATURED</div>
-                    <h2 class="hero-title">${slide.title}</h2>
-                    <p class="hero-description">${slide.description}</p>
-                    <div class="hero-buttons">
-                        <button class="btn btn-hero-primary" onclick="${slide.link ? `playJellyfinItem('${slide.link}')` : (slide.customAction || `alert('Coming soon!')`)}">
-                            <i class="fas fa-play"></i> ${slide.link ? 'Watch Now' : 'Learn More'}
-                        </button>
-                    </div>
-                `;
-                
-                if (slide.video) {
-                    slideDiv.classList.add('has-video');
-                    slideDiv.style.backgroundImage = 'none';
-                    const v = document.createElement('video');
-                    v.className = 'hero-video';
-                    v.src = slide.video;
-                    v.muted = true; v.defaultMuted = true;
-                    v.playsInline = true; v.setAttribute('playsinline', '');
-                    v.preload = 'auto';
-                    v.poster = slide.image;
-                    v.addEventListener('error', () => {
-                        v.remove();
-                        slideDiv.classList.remove('has-video');
-                        slideDiv.classList.add('fit-contain');
-                        slideDiv.style.backgroundImage = `url('${slide.image}')`;
-                    });
-                    slideDiv.appendChild(v);
+                const eb = document.createElement('div');
+                eb.className = 'hero-eyebrow';
+                eb.textContent = slide.eyebrow || 'FEATURED';
+                content.appendChild(eb);
 
-                    const sound = document.createElement('button');
-                    sound.className = 'hero-sound-btn';
-                    sound.innerHTML = '<i class="fas fa-volume-xmark"></i> SOUND ON';
-                    sound.addEventListener('click', (ev) => {
-                        ev.stopPropagation();
-                        v.muted = !v.muted;
-                        sound.innerHTML = v.muted
-                            ? '<i class="fas fa-volume-xmark"></i> SOUND ON'
-                            : '<i class="fas fa-volume-high"></i> SOUND OFF';
+                const h = document.createElement('h2');
+                h.className = 'hero-title';
+                if (slide.logo) {
+                    const img = document.createElement('img');
+                    img.className = 'hero-logo';
+                    img.alt = slide.title;
+                    img.loading = 'lazy';
+                    img.onerror = () => { img.remove(); h.textContent = slide.title; };
+                    img.src = slide.logo;
+                    h.appendChild(img);
+                } else {
+                    h.textContent = slide.title;
+                }
+                content.appendChild(h);
+
+                if (slide.meta && slide.meta.length) {
+                    const m = document.createElement('div');
+                    m.className = 'hero-meta';
+                    slide.meta.forEach(txt => {
+                        const s = document.createElement('span');
+                        s.textContent = txt;
+                        m.appendChild(s);
                     });
-                    slideDiv.appendChild(sound);
+                    content.appendChild(m);
                 }
 
-                slideDiv.appendChild(content);
-                heroBanner.appendChild(slideDiv);
+                const p = document.createElement('p');
+                p.className = 'hero-description';
+                p.textContent = slide.description;
+                content.appendChild(p);
+
+                const btns = document.createElement('div');
+                btns.className = 'hero-buttons';
+                const main = document.createElement('button');
+                main.className = 'btn btn-hero-primary';
+                if (slide.kind === 'title') {
+                    main.innerHTML = '<i class="fas fa-play"></i> Watch Now';
+                    main.addEventListener('click', () => playJellyfinItem(slide.itemId, slide.itemType));
+                } else {
+                    main.innerHTML = `<i class="fas fa-play"></i> ${slide.buttonText || 'Learn More'}`;
+                    main.addEventListener('click', () => {
+                        if (slide.buttonUrl) window.location.href = slide.buttonUrl;
+                        else alert('Coming soon!');
+                    });
+                }
+                btns.appendChild(main);
+                if (slide.kind === 'title' && typeof fetchTrailer === 'function') {
+                    const tb = document.createElement('button');
+                    tb.className = 'btn btn-hero-secondary hero-trailer-btn trailer-btn';
+                    tb.innerHTML = '<i class="fas fa-film"></i> Trailer';
+                    tb.addEventListener('click', ev => {
+                        ev.stopPropagation();
+                        stopActiveVideo();
+                        fetchTrailer(slide.rawName, slide.year, slide.itemType, slide.itemId);
+                    });
+                    btns.appendChild(tb);
+                }
+                content.appendChild(btns);
+                el.appendChild(content);
+                heroBanner.appendChild(el);
+                return el;
             });
 
-            // Dot navigation — click any dot to jump straight to that slide.
-            // Dots behave like story progress bars: filled solid = already
-            // shown, animating fill = current, empty = still to come.
+            // ── Dots (story-style progress bars) ─────────────────────────
             const dotsContainer = document.createElement('div');
             dotsContainer.className = 'hero-dots';
-            slides.forEach((slide, index) => {
+            const dots = slides.map((s, index) => {
                 const dot = document.createElement('button');
-                dot.className = `hero-dot-btn ${index === 0 ? 'active' : ''}`;
+                dot.className = 'hero-dot-btn';
                 dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
-                dot.addEventListener('click', () => goToSlide(index));
+                dot.addEventListener('click', () => go(index));
                 dotsContainer.appendChild(dot);
+                return dot;
             });
             heroBanner.appendChild(dotsContainer);
 
-            // Auto-rotate slides every 5 seconds (a sizzle reel plays to the end first)
-            let currentSlide = 0;
-            function syncHeroVideos() {
-                heroBanner.querySelectorAll('.hero-slide').forEach((sl, i) => {
-                    const v = sl.querySelector('.hero-video');
+            // ── Playback / rotation ──────────────────────────────────────
+            let current = -1;
+            let timer = null;
+            const trailerCache = {};   // itemId → stream url | false
+
+            function loadBg(i) {
+                const s = slides[i], el = els[i];
+                if (!s || !el || el.dataset.bgLoaded) return;
+                el.dataset.bgLoaded = '1';
+                el.querySelector('.hero-bg').style.backgroundImage = `url("${s.image}")`;
+                const blur = el.querySelector('.hero-bg-blur');
+                if (blur) blur.style.backgroundImage = `url("${s.image}")`;
+            }
+            function setDot(i, seconds) {
+                dots.forEach((d, k) => {
+                    d.classList.remove('active');
+                    d.classList.toggle('filled', k < i);
+                });
+                const d = dots[i];
+                d.style.setProperty('--fill-time', Math.max(1, seconds) + 's');
+                void d.offsetWidth;
+                d.classList.add('active');
+            }
+            function schedule(seconds) {
+                clearTimeout(timer);
+                setDot(current, seconds);
+                timer = setTimeout(next, seconds * 1000);
+            }
+            function next() {
+                // Never pull the slide out from under a TV remote / keyboard user
+                if (document.hidden || (isTV && heroBanner.contains(document.activeElement))) {
+                    timer = setTimeout(next, 3000);
+                    return;
+                }
+                go((current + 1) % slides.length);
+            }
+            function addSoundButton(el, v) {
+                let sound = el.querySelector('.hero-sound-btn');
+                if (sound) return;
+                sound = document.createElement('button');
+                sound.className = 'hero-sound-btn';
+                sound.innerHTML = '<i class="fas fa-volume-xmark"></i> SOUND ON';
+                sound.addEventListener('click', ev => {
+                    ev.stopPropagation();
+                    v.muted = !v.muted;
+                    sound.innerHTML = v.muted ? '<i class="fas fa-volume-xmark"></i> SOUND ON'
+                                              : '<i class="fas fa-volume-high"></i> SOUND OFF';
+                    // Sound on = let the clip play to its end before moving on
+                    if (!v.muted && isFinite(v.duration)) schedule(Math.max(2, v.duration - v.currentTime + 0.5));
+                });
+                el.appendChild(sound);
+            }
+            function stopActiveVideo() {
+                els.forEach(el => {
+                    const v = el.querySelector('.hero-video');
                     if (!v) return;
-                    if (i === currentSlide) {
-                        try { v.currentTime = 0; } catch (e) {}
-                        v.play().catch(() => {});
+                    v.pause();
+                    v.muted = true;
+                    if (el.classList.contains('hero-title-slide')) {
+                        // trailer previews: drop the stream so it stops downloading
+                        v.removeAttribute('src'); try { v.load(); } catch (e) {}
+                        v.remove();
+                        el.classList.remove('has-video');
+                        const b = el.querySelector('.hero-sound-btn'); if (b) b.remove();
                     } else {
-                        v.pause();
-                        v.muted = true;
-                        const b = sl.querySelector('.hero-sound-btn');
+                        const b = el.querySelector('.hero-sound-btn');
                         if (b) b.innerHTML = '<i class="fas fa-volume-xmark"></i> SOUND ON';
                     }
                 });
             }
-            function heroVideoStillPlaying() {
-                const sl = heroBanner.querySelectorAll('.hero-slide')[currentSlide];
-                const v = sl && sl.querySelector('.hero-video');
-                return !!(v && !v.paused && !v.ended && !v.error);
+            function playVideo(i, src, capSeconds) {
+                const el = els[i];
+                let v = el.querySelector('.hero-video');
+                if (!v) {
+                    v = document.createElement('video');
+                    v.className = 'hero-video';
+                    v.muted = true; v.defaultMuted = true;
+                    v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('muted', '');
+                    v.preload = 'auto';
+                    v.addEventListener('error', () => {
+                        el.classList.remove('has-video');
+                        v.remove();
+                        if (current === i) schedule(S.imageSeconds);
+                    });
+                    v.addEventListener('ended', () => { if (current === i) next(); });
+                    v.src = src;
+                    el.insertBefore(v, el.querySelector('.hero-content'));
+                }
+                v.addEventListener('playing', function onPlay() {
+                    v.removeEventListener('playing', onPlay);
+                    if (current !== i) { v.pause(); return; }
+                    el.classList.add('has-video');
+                    addSoundButton(el, v);
+                    const left = isFinite(v.duration) ? v.duration - v.currentTime : capSeconds || 60;
+                    schedule(Math.max(3, capSeconds ? Math.min(capSeconds, left) : left + 0.3));
+                });
+                try { v.currentTime = 0; } catch (e) {}
+                v.play().catch(() => {});
             }
-            heroBanner.querySelectorAll('.hero-video').forEach(v => {
-                v.addEventListener('ended', () => {
-                    const allSlides = heroBanner.querySelectorAll('.hero-slide');
-                    updateActiveSlide((currentSlide + 1) % allSlides.length);
-                });
-                v.addEventListener('loadedmetadata', () => {
-                    const idx = Array.from(heroBanner.querySelectorAll('.hero-slide')).indexOf(v.closest('.hero-slide'));
-                    const dot = dotsContainer.querySelectorAll('.hero-dot-btn')[idx];
-                    if (dot && isFinite(v.duration)) dot.style.setProperty('--fill-time', v.duration + 's');
-                });
+            async function maybeTrailerPreview(i) {
+                const s = slides[i];
+                if (!allowTrailerPreviews || s.kind !== 'title') return;
+                if (!(s.itemId in trailerCache)) {
+                    trailerCache[s.itemId] = false;
+                    try {
+                        const list = await jellyfinFetch(`/Users/${J.USER_ID}/Items/${s.itemId}/LocalTrailers`, {});
+                        if (Array.isArray(list) && list.length) trailerCache[s.itemId] = streamUrl(list[0].Id);
+                    } catch (e) {}
+                }
+                if (current === i && trailerCache[s.itemId]) playVideo(i, trailerCache[s.itemId], S.trailerPreviewSeconds);
+            }
+            function go(i) {
+                if (!els.length) return;
+                stopActiveVideo();
+                if (current >= 0 && els[current]) els[current].classList.remove('active');
+                current = i;
+                loadBg(i);
+                loadBg((i + 1) % slides.length);   // get the next picture ready
+                const el = els[i];
+                el.classList.remove('active'); void el.offsetWidth;   // restart the zoom
+                el.classList.add('active');
+                // Picture timing first; a video that starts playing takes over the timer
+                schedule(S.imageSeconds);
+                const s = slides[i];
+                if (s.video) playVideo(i, s.video, 0);
+                else maybeTrailerPreview(i);
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                const el = els[current];
+                const v = el && el.querySelector('.hero-video');
+                if (document.hidden) { if (v) v.pause(); }
+                else if (v && el.classList.contains('has-video')) v.play().catch(() => {});
             });
-            function updateActiveSlide(newIndex) {
-                const allSlides = heroBanner.querySelectorAll('.hero-slide');
-                const allDots = dotsContainer.querySelectorAll('.hero-dot-btn');
-                allSlides[currentSlide].classList.remove('active');
-                allDots.forEach((dot, i) => {
-                    dot.classList.remove('active');
-                    dot.classList.toggle('filled', i < newIndex);
-                });
-                currentSlide = newIndex;
-                allSlides[currentSlide].classList.add('active');
-                // Force a reflow so the fill animation restarts cleanly even
-                // when re-selecting a dot that was already 'active' before.
-                void allDots[currentSlide].offsetWidth;
-                allDots[currentSlide].classList.add('active');
-                syncHeroVideos();
-            }
-            function heroTick() {
-                if (heroVideoStillPlaying()) return; // let the sizzle finish
-                const allSlides = heroBanner.querySelectorAll('.hero-slide');
-                updateActiveSlide((currentSlide + 1) % allSlides.length);
-            }
-            syncHeroVideos();
-            let rotateTimer = setInterval(heroTick, 5000);
-            function goToSlide(index) {
-                updateActiveSlide(index);
-                clearInterval(rotateTimer);
-                rotateTimer = setInterval(heroTick, 5000);
-            }
+
+            if (reduceMotion) heroBanner.classList.add('hero-no-motion');
+            go(0);
         }
         
        function openComic(bookId, bookName) {

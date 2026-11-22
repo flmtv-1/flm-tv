@@ -1,550 +1,144 @@
 {
- "2026-11-18": [
+ "2026-11-22": [
   {
-   "startTime": "10:33",
-   "name": "Charlie's Angels",
-   "duration": 3017,
+   "startTime": "01:14",
+   "name": "Hocus Pocus",
+   "duration": 5767,
+   "category": "movie"
+  },
+  {
+   "startTime": "02:51",
+   "name": "3 Ninjas Kick Back",
+   "duration": 5607,
+   "category": "movie"
+  },
+  {
+   "startTime": "04:24",
+   "name": "27 Dresses",
+   "duration": 6648,
+   "category": "movie"
+  },
+  {
+   "startTime": "06:15",
+   "name": "That 70s Show",
+   "duration": 1329,
    "category": "show"
   },
   {
-   "startTime": "11:23",
-   "name": "The Lucy Show",
-   "duration": 1540,
-   "category": "show"
-  },
-  {
-   "startTime": "11:49",
-   "name": "Three Stooges",
-   "duration": 998,
-   "category": "show"
-  },
-  {
-   "startTime": "12:05",
-   "name": "Leave It to Beaver",
-   "duration": 1510,
-   "category": "show"
-  },
-  {
-   "startTime": "12:31",
-   "name": "Little Rascals",
-   "duration": 606,
-   "category": "show"
-  },
-  {
-   "startTime": "12:41",
-   "name": "Little Rascals",
-   "duration": 638,
-   "category": "show"
-  },
-  {
-   "startTime": "12:51",
-   "name": "The Jeffersons",
-   "duration": 1505,
-   "category": "show"
-  },
-  {
-   "startTime": "13:16",
-   "name": "The Sheep Detectives",
-   "duration": 6874,
+   "startTime": "06:37",
+   "name": "3000 Miles to Graceland",
+   "duration": 7481,
    "category": "movie"
   },
   {
-   "startTime": "15:11",
-   "name": "Honey, We Shrunk Ourselves",
-   "duration": 4490,
+   "startTime": "08:42",
+   "name": "2012",
+   "duration": 9469,
    "category": "movie"
   },
   {
-   "startTime": "16:26",
-   "name": "Yours, Mine and Ours",
-   "duration": 5285,
-   "category": "movie"
+   "startTime": "11:19",
+   "name": "Zaina Juliette & Friends",
+   "duration": 1711,
+   "category": ""
   },
   {
-   "startTime": "17:54",
-   "name": "Green Lantern",
-   "duration": 6842,
-   "category": "movie"
+   "startTime": "11:48",
+   "name": "Michael Jackson - The Legacy",
+   "duration": 3234,
+   "category": ""
   },
   {
-   "startTime": "19:48",
-   "name": "Titanic",
-   "duration": 11689,
-   "category": "movie"
-  },
-  {
-   "startTime": "23:03",
-   "name": "Kingdom Come",
-   "duration": 5677,
-   "category": "movie"
-  }
- ],
- "2026-11-19": [
-  {
-   "startTime": "00:37",
-   "name": "The Tigger Movie",
-   "duration": 4627,
-   "category": "movie"
-  },
-  {
-   "startTime": "01:54",
-   "name": "Zathura: A Space Adventure",
-   "duration": 6080,
-   "category": "movie"
-  },
-  {
-   "startTime": "03:36",
-   "name": "Casper",
-   "duration": 6008,
-   "category": "movie"
-  },
-  {
-   "startTime": "05:16",
-   "name": "Pete's Dragon",
-   "duration": 7738,
-   "category": "movie"
-  },
-  {
-   "startTime": "07:25",
-   "name": "Sesame Street",
-   "duration": 1559,
-   "category": "show"
-  },
-  {
-   "startTime": "07:51",
-   "name": "Sesame Street",
-   "duration": 3176,
-   "category": "show"
-  },
-  {
-   "startTime": "08:44",
-   "name": "Tangled",
-   "duration": 6016,
-   "category": "movie"
-  },
-  {
-   "startTime": "10:24",
-   "name": "The Cat in the Hat",
-   "duration": 4910,
-   "category": "movie"
-  },
-  {
-   "startTime": "11:46",
-   "name": "Curious George",
-   "duration": 1418,
-   "category": "show"
-  },
-  {
-   "startTime": "12:09",
+   "startTime": "12:42",
    "name": "Big Hero 6",
    "duration": 6112,
    "category": "movie"
   },
   {
-   "startTime": "13:51",
-   "name": "Merrie Melodies",
-   "duration": 538,
+   "startTime": "14:24",
+   "name": "Porky's Pastry Pirates",
+   "duration": 406,
    "category": "show"
   },
   {
-   "startTime": "14:00",
-   "name": "Merrie Melodies",
-   "duration": 441,
+   "startTime": "14:31",
+   "name": "Who's Who in the Zoo",
+   "duration": 430,
    "category": "show"
   },
   {
-   "startTime": "14:08",
-   "name": "The Munsters",
-   "duration": 1528,
+   "startTime": "14:38",
+   "name": "Wabbit Came to Supper",
+   "duration": 486,
    "category": "show"
   },
   {
-   "startTime": "14:33",
-   "name": "Gilligan's Island",
-   "duration": 1478,
-   "category": "show"
-  },
-  {
-   "startTime": "14:58",
-   "name": "My Three Sons",
-   "duration": 1548,
-   "category": "show"
-  },
-  {
-   "startTime": "15:24",
-   "name": "Benson",
-   "duration": 1509,
-   "category": "show"
-  },
-  {
-   "startTime": "15:49",
-   "name": "Facts of Life",
-   "duration": 1490,
-   "category": "show"
-  },
-  {
-   "startTime": "16:14",
-   "name": "The Lucy Show",
-   "duration": 1550,
-   "category": "show"
-  },
-  {
-   "startTime": "16:39",
-   "name": "Leave It to Beaver",
-   "duration": 1530,
-   "category": "show"
-  },
-  {
-   "startTime": "17:05",
-   "name": "Whats Happening",
-   "duration": 1507,
-   "category": "show"
-  },
-  {
-   "startTime": "17:30",
-   "name": "Good Times",
-   "duration": 1517,
-   "category": "show"
-  },
-  {
-   "startTime": "17:55",
-   "name": "Sanford and Son",
-   "duration": 1509,
-   "category": "show"
-  },
-  {
-   "startTime": "18:20",
-   "name": "The Jeffersons",
-   "duration": 1499,
-   "category": "show"
-  },
-  {
-   "startTime": "18:45",
-   "name": "George Shrinks",
-   "duration": 1585,
-   "category": "show"
-  },
-  {
-   "startTime": "19:12",
-   "name": "Bambi II",
-   "duration": 4341,
+   "startTime": "14:46",
+   "name": "Mary Poppins Returns",
+   "duration": 7829,
    "category": "movie"
-  },
-  {
-   "startTime": "20:24",
-   "name": "E.T.",
-   "duration": 6875,
-   "category": "movie"
-  },
-  {
-   "startTime": "22:19",
-   "name": "Hocus Pocus",
-   "duration": 5767,
-   "category": "movie"
-  },
-  {
-   "startTime": "23:55",
-   "name": "Ghost Rider",
-   "duration": 7405,
-   "category": "movie"
-  }
- ],
- "2026-11-20": [
-  {
-   "startTime": "01:58",
-   "name": "Star Wars: Episode III",
-   "duration": 8406,
-   "category": "movie"
-  },
-  {
-   "startTime": "04:18",
-   "name": "Viva Las Vegas",
-   "duration": 5094,
-   "category": "movie"
-  },
-  {
-   "startTime": "05:43",
-   "name": "Sesame Street",
-   "duration": 3356,
-   "category": "show"
-  },
-  {
-   "startTime": "06:39",
-   "name": "Sesame Street",
-   "duration": 1556,
-   "category": "show"
-  },
-  {
-   "startTime": "07:05",
-   "name": "Super Why!",
-   "duration": 1621,
-   "category": "show"
-  },
-  {
-   "startTime": "07:32",
-   "name": "Molly of Denali",
-   "duration": 1538,
-   "category": "show"
-  },
-  {
-   "startTime": "07:58",
-   "name": "Ready Jet Go!",
-   "duration": 3152,
-   "category": "show"
-  },
-  {
-   "startTime": "08:50",
-   "name": "The Little Rascals",
-   "duration": 4948,
-   "category": "movie"
-  },
-  {
-   "startTime": "10:13",
-   "name": "Abbott and Costello",
-   "duration": 1523,
-   "category": "show"
-  },
-  {
-   "startTime": "10:38",
-   "name": "Gilligan's Island",
-   "duration": 1516,
-   "category": "show"
-  },
-  {
-   "startTime": "11:03",
-   "name": "Zaina Juliette",
-   "duration": 108,
-   "category": ""
-  },
-  {
-   "startTime": "11:05",
-   "name": "Lucy Makes a Pinch",
-   "duration": 1540,
-   "category": "show"
-  },
-  {
-   "startTime": "11:31",
-   "name": "Lucy Becomes a Father",
-   "duration": 1539,
-   "category": "show"
-  },
-  {
-   "startTime": "11:57",
-   "name": "Leave It to Beaver",
-   "duration": 1558,
-   "category": "show"
-  },
-  {
-   "startTime": "12:23",
-   "name": "Charlie's Angels",
-   "duration": 3017,
-   "category": "show"
-  },
-  {
-   "startTime": "13:13",
-   "name": "Facts of Life",
-   "duration": 1490,
-   "category": "show"
-  },
-  {
-   "startTime": "13:38",
-   "name": "ZAINA JULIETTE",
-   "duration": 37,
-   "category": ""
-  },
-  {
-   "startTime": "13:38",
-   "name": "Andy Griffith",
-   "duration": 1554,
-   "category": "show"
-  },
-  {
-   "startTime": "14:04",
-   "name": "Andy Griffith",
-   "duration": 1550,
-   "category": "show"
-  },
-  {
-   "startTime": "14:30",
-   "name": "227",
-   "duration": 1438,
-   "category": "show"
-  },
-  {
-   "startTime": "14:54",
-   "name": "Good Times",
-   "duration": 1495,
-   "category": "show"
-  },
-  {
-   "startTime": "15:19",
-   "name": "Sanford and Son",
-   "duration": 1510,
-   "category": "show"
-  },
-  {
-   "startTime": "15:44",
-   "name": "The Jeffersons",
-   "duration": 1489,
-   "category": "show"
-  },
-  {
-   "startTime": "16:09",
-   "name": "Tom and Jerry",
-   "duration": 435,
-   "category": "show"
-  },
-  {
-   "startTime": "16:16",
-   "name": "Tom and Jerry 2",
-   "duration": 413,
-   "category": "show"
-  },
-  {
-   "startTime": "16:23",
-   "name": "Tom and Jerry 3",
-   "duration": 473,
-   "category": "show"
-  },
-  {
-   "startTime": "16:31",
-   "name": "Tom and Jerry 4",
-   "duration": 410,
-   "category": "show"
-  },
-  {
-   "startTime": "16:38",
-   "name": "Elinor Wonders Why",
-   "duration": 1501,
-   "category": "show"
-  },
-  {
-   "startTime": "17:03",
-   "name": "Up",
-   "duration": 5797,
-   "category": "movie"
-  },
-  {
-   "startTime": "18:39",
-   "name": "Malcolm in the Middle",
-   "duration": 1343,
-   "category": "show"
-  },
-  {
-   "startTime": "19:02",
-   "name": "The Bernie Mac Show",
-   "duration": 1335,
-   "category": "show"
-  },
-  {
-   "startTime": "19:24",
-   "name": "9 to 5",
-   "duration": 6561,
-   "category": "movie"
-  },
-  {
-   "startTime": "21:13",
-   "name": "Bruce Almighty",
-   "duration": 6062,
-   "category": "movie"
-  },
-  {
-   "startTime": "22:54",
-   "name": "War of the Worlds",
-   "duration": 6993,
-   "category": "movie"
-  }
- ],
- "2026-11-21": [
-  {
-   "startTime": "00:51",
-   "name": "The Incredible Shrinking Man",
-   "duration": 4847,
-   "category": "movie"
-  },
-  {
-   "startTime": "02:12",
-   "name": "The Lord of the Rings",
-   "duration": 14132,
-   "category": "movie"
-  },
-  {
-   "startTime": "06:07",
-   "name": "Ace Ventura",
-   "duration": 5643,
-   "category": "movie"
-  },
-  {
-   "startTime": "07:41",
-   "name": "Django Unchained",
-   "duration": 9486,
-   "category": "movie"
-  },
-  {
-   "startTime": "10:19",
-   "name": "Dolores Claiborne",
-   "duration": 7891,
-   "category": "movie"
-  },
-  {
-   "startTime": "12:31",
-   "name": "Michael Jackson's This Is It",
-   "duration": 6677,
-   "category": "movie"
-  },
-  {
-   "startTime": "14:22",
-   "name": "Annie",
-   "duration": 7643,
-   "category": "movie"
-  },
-  {
-   "startTime": "16:30",
-   "name": "Sesame Street",
-   "duration": 1558,
-   "category": "show"
   },
   {
    "startTime": "16:56",
-   "name": "Sesame Street",
-   "duration": 1558,
-   "category": "show"
-  },
-  {
-   "startTime": "17:22",
-   "name": "Let's Go Luna!",
-   "duration": 1498,
-   "category": "show"
-  },
-  {
-   "startTime": "17:46",
-   "name": "Dinosaur Train",
-   "duration": 1696,
-   "category": "show"
-  },
-  {
-   "startTime": "18:15",
-   "name": "Meet the Robinsons",
-   "duration": 5620,
-   "category": "movie"
-  },
-  {
-   "startTime": "19:48",
    "name": "Power Rangers",
    "duration": 1354,
    "category": "show"
   },
   {
-   "startTime": "20:11",
-   "name": "Hocus Pocus",
-   "duration": 5767,
+   "startTime": "17:19",
+   "name": "Finding Forrester",
+   "duration": 8170,
    "category": "movie"
   },
   {
-   "startTime": "21:47",
-   "name": "The Birthday Balloons",
-   "duration": 1447,
+   "startTime": "19:35",
+   "name": "A Series of Unfortunate Events 1",
+   "duration": 2909,
    "category": "show"
+  },
+  {
+   "startTime": "20:24",
+   "name": "A Series of Unfortunate Events 2",
+   "duration": 3775,
+   "category": "show"
+  },
+  {
+   "startTime": "21:26",
+   "name": "Shrek Forever After",
+   "duration": 5587,
+   "category": "movie"
+  },
+  {
+   "startTime": "23:00",
+   "name": "Twister",
+   "duration": 6784,
+   "category": "movie"
+  }
+ ],
+ "2026-11-23": [
+  {
+   "startTime": "00:53",
+   "name": "The X-Files",
+   "duration": 2714,
+   "category": "show"
+  },
+  {
+   "startTime": "01:38",
+   "name": "A Good Day to Die Hard",
+   "duration": 6071,
+   "category": "movie"
+  },
+  {
+   "startTime": "03:19",
+   "name": "Flight of the Phoenix",
+   "duration": 6777,
+   "category": "movie"
+  },
+  {
+   "startTime": "05:12",
+   "name": "Leave the World Behind",
+   "duration": 8502,
+   "category": "movie"
   }
  ]
 }
