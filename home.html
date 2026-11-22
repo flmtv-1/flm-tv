@@ -5886,7 +5886,8 @@ function wtvMatches(ch, catKey) {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 var data = await res.json();
                 return (data.Items || []).filter(function(ch) {
-                    return ch.Name && ch.Name.trim() && ch.Name.toLowerCase() !== 'unknown';
+                    return ch.Name && ch.Name.trim() && ch.Name.toLowerCase() !== 'unknown' &&
+                           !/\[\s*geo[\s-]*blocked\s*\]/i.test(ch.Name);   // region-locked: won't play from the US
                 });
             })();
             _wtvChannelsPromise.catch(function() { _wtvChannelsPromise = null; }); // allow a retry later

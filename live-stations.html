@@ -235,7 +235,8 @@ async function loadChannels() {
     const data = await res.json();
 
     allChannels = (data.Items || []).filter(ch => 
-      ch.Name && ch.Name.toLowerCase() !== 'unknown' && ch.Name.trim() !== ''
+      ch.Name && ch.Name.toLowerCase() !== 'unknown' && ch.Name.trim() !== '' &&
+      !/\[\s*geo[\s-]*blocked\s*\]/i.test(ch.Name)   // region-locked: won't play from the US
     );
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('channelGrid').style.display = 'grid';
