@@ -718,6 +718,23 @@
         }
 
         /* ── HERO v2: trailer-reel look ─────────────────────────────── */
+
+        /* Notice now sits under the search bar */
+        .search-container + .flm-notice, #flmNotice { margin: 0 auto 1.25rem; }
+        @media (max-width: 767px) { #flmNotice { margin: 0 0.75rem 1rem; } }
+        .is-firestick #flmNotice { margin: 0 0.75rem 0.75rem; }
+
+        /* Promo clips (sizzle, Zaina commercial, FLM clips): show the whole picture,
+           sitting on the right with a blurred fill behind, instead of cropping it */
+        .hero-slide.fit-contain .hero-video {
+            object-fit: contain;
+            object-position: right center;
+            background: transparent;
+        }
+        .hero-slide.fit-contain.has-video .hero-bg { opacity: 0; }   /* video replaces the still */
+        @media (min-width: 1200px) {
+            .hero-banner { height: 62vh; max-height: 640px; }
+        }
         .hero-dots .hero-dot-btn {
             min-width: 0 !important; min-height: 0 !important;
             width: 34px !important; height: 3px !important;
@@ -3267,27 +3284,6 @@
         </div>
     </header>
 
-    <!-- ═══ VIEWER NOTICE (dismissible, links to help.html) ═══ -->
-    <div class="flm-notice" id="flmNotice">
-        <i class="fas fa-tools flm-notice-icon"></i>
-        <span class="flm-notice-text"><strong>FLM TV is new and still being built.</strong> If a show freezes, refresh the page. Antenna viewers: Ch&nbsp;26.5 reception depends on the broadcast station, the weather and your antenna.</span>
-        <a href="help.html" class="flm-notice-link">Viewer Help</a>
-        <button class="flm-notice-close" onclick="flmCloseNotice()" title="Hide this message" aria-label="Hide this message">&times;</button>
-    </div>
-    <script>
-    (function(){
-        // Hidden for 7 days after a viewer closes it, then shows again
-        try {
-            var t = parseInt(localStorage.getItem('flmNoticeHidden') || '0', 10);
-            if (t && Date.now() - t < 7*24*60*60*1000) document.getElementById('flmNotice').style.display = 'none';
-        } catch(e) {}
-    })();
-    function flmCloseNotice(){
-        document.getElementById('flmNotice').style.display = 'none';
-        try { localStorage.setItem('flmNoticeHidden', String(Date.now())); } catch(e) {}
-    }
-    </script>
-
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  HERO BANNER                                                    -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -3312,6 +3308,28 @@
             <div class="search-results" id="searchResults"></div>
         </div>
     </div>
+
+    <!-- ═══ VIEWER NOTICE (dismissible, links to help.html) ═══ -->
+    <div class="flm-notice" id="flmNotice">
+        <i class="fas fa-tools flm-notice-icon"></i>
+        <span class="flm-notice-text"><strong>FLM TV is new and still being built.</strong> If a show freezes, refresh the page. Antenna viewers: Ch&nbsp;26.5 reception depends on the broadcast station, the weather and your antenna.</span>
+        <a href="help.html" class="flm-notice-link">Viewer Help</a>
+        <button class="flm-notice-close" onclick="flmCloseNotice()" title="Hide this message" aria-label="Hide this message">&times;</button>
+    </div>
+    <script>
+    (function(){
+        // Hidden for 7 days after a viewer closes it, then shows again
+        try {
+            var t = parseInt(localStorage.getItem('flmNoticeHidden') || '0', 10);
+            if (t && Date.now() - t < 7*24*60*60*1000) document.getElementById('flmNotice').style.display = 'none';
+        } catch(e) {}
+    })();
+    function flmCloseNotice(){
+        document.getElementById('flmNotice').style.display = 'none';
+        try { localStorage.setItem('flmNoticeHidden', String(Date.now())); } catch(e) {}
+    }
+    </script>
+
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!--  LIVE TV SHOWCASE + CATEGORY NAVIGATION                         -->
