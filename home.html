@@ -5230,7 +5230,9 @@
                     messageBubble.style.borderRadius = '1rem';
                     messageBubble.style.lineHeight = '1.4';
                     messageBubble.style.wordWrap = 'break-word';
-                    messageBubble.style.backgroundColor = isOwnMessage ? 'var(--secondary)' : '#333';
+                    // Own messages: deep green with a bright green edge, so white text is easy to read
+                    messageBubble.style.backgroundColor = isOwnMessage ? '#14532d' : '#333';
+                    messageBubble.style.border = isOwnMessage ? '1px solid #22c55e' : '1px solid transparent';
                     messageBubble.style.color = 'white';
                     messageBubble.style.borderBottomRightRadius = isOwnMessage ? '0.25rem' : '1rem';
                     messageBubble.style.borderBottomLeftRadius = isOwnMessage ? '1rem' : '0.25rem';
