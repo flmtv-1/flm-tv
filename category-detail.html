@@ -183,7 +183,33 @@
             transition: opacity 0.2s;
             z-index: 5;
         }
-        .item-card:hover .trailer-btn { opacity: 1; }
+
+/* ── Hover actions: clear WATCH NOW vs TRAILER ── */
+.card-art { position: relative; border-radius: inherit; }
+.card-actions {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+    display: flex; flex-direction: column; gap: 6px; padding: 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
+    border-radius: 0 0 8px 8px; opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+.card-watch-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: #22c55e; color: #04110a; border-radius: 6px; padding: 7px 0;
+    font-family: Arial, sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.card-trailer-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+    background: rgba(0,0,0,0.35); color: #fff; border: 1.5px solid rgba(255,255,255,0.75);
+    border-radius: 6px; padding: 5px 0; cursor: pointer;
+    font-family: Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px;
+}
+.card-trailer-btn:hover { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.12); }
+@media (hover: hover) {
+    .item-card:hover .card-actions, .item-card:focus-within .card-actions { opacity: 1; pointer-events: auto; }
+    .item-card:hover .item-poster { filter: brightness(0.6); transition: filter 0.2s ease; }
+}
+
         
         .item-card:hover {
             transform: translateY(-4px);
@@ -566,16 +592,23 @@ function displayItems(items) {
             : '';
         const safeTitle = (item.Name || '').replace(/'/g, "\\'");
         const isFav = item.UserData && item.UserData.IsFavorite;
+        const mainWord = item.Type === 'Series' ? 'WATCH SHOW' : item.Type === 'Book' ? 'READ NOW'
+                       : item.Type === 'MusicAlbum' ? 'LISTEN' : item.Type === 'Playlist' ? 'PLAY LIST' : 'WATCH NOW';
         card.innerHTML = `
+            <div class="card-art">
             ${posterUrl
                 ? `<img src="${posterUrl}" alt="${item.Name}" class="item-poster" loading="lazy">`
                 : '<div class="item-poster"></div>'}
+            <div class="card-actions">
+                <span class="card-watch-btn"><i class="fas fa-${item.Type === 'Book' ? 'book-open' : item.Type === 'MusicAlbum' ? 'headphones' : 'play'}"></i> ${mainWord}</span>
+                ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="card-trailer-btn" onclick="event.stopPropagation();fetchTrailer('${safeTitle}',${item.ProductionYear||'null'},'${item.Type}')"><i class="fas fa-film"></i> TRAILER</button>` : ''}
+            </div>
+            </div>
             <button class="fav-toggle-btn" data-item-id="${item.Id}" data-fav="${isFav ? '1' : '0'}"
                 onclick="event.stopPropagation();toggleFavorite('${item.Id}', this)"
                 style="position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);color:${isFav ? '#ff4d6d' : '#fff'};font-size:1rem;">
                 <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
             </button>
-            ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${safeTitle}',${item.ProductionYear||'null'},'${item.Type}')">▶ Trailer</button>` : ''}
             <div class="item-info">
                 <div class="item-title">${item.OriginalTitle || item.Name}</div>
                 ${item.ProductionYear ? `<div class="item-year">${item.ProductionYear}</div>` : ''}
@@ -620,6 +653,7 @@ else { buildAlphaBar(); loadCategory(); }
 </script>
 
 
+<script src="/tv-remote.js" defer></script>
 </body>
 </html>
 

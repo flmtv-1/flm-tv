@@ -489,6 +489,33 @@
         .es-badge { position: absolute; top: 10px; right: 10px; background: #ffd700; color: #333; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; }
         @media (max-width: 768px) { .live-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; } .live-name { font-size: 0.95rem; } .live-sub { font-size: 0.9rem; margin-top: -0.5rem; } }
 
+
+/* ── Hover actions: clear WATCH NOW vs TRAILER ── */
+.card-art { position: relative; border-radius: inherit; }
+.card-actions {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+    display: flex; flex-direction: column; gap: 6px; padding: 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
+    border-radius: 0 0 8px 8px; opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+.card-watch-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: #ffd700; color: #333; border-radius: 6px; padding: 7px 0;
+    font-family: Arial, sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.card-trailer-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+    background: rgba(0,0,0,0.35); color: #fff; border: 1.5px solid rgba(255,255,255,0.75);
+    border-radius: 6px; padding: 5px 0; cursor: pointer;
+    font-family: Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px;
+}
+.card-trailer-btn:hover { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.12); }
+@media (hover: hover) {
+    .book-card:hover .card-actions, .book-card:focus-within .card-actions { opacity: 1; pointer-events: auto; }
+    .book-card:hover .book-poster { filter: brightness(0.6); transition: filter 0.2s ease; }
+}
+
         /* Coloring App Styles */
         .color-btn {
             width: 50px;
@@ -787,7 +814,7 @@
                         : null;
                     const jellyfinUrl = `https://flmtv.com/jellyfin/web/index.html?api_key=${JELLYFIN_CONFIG.API_KEY}#/details?id=${book.Id}&serverId=db6bb6388c8c4c70825698639853ede6`;
                     return `<div class="book-card" onclick="openComic('${book.Id}', '${cleanBookName(book.Name)}')">
-                        ${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book"></i></div>'}
+                        <div class="card-art">${imgUrl ? `<img src="${imgUrl}" alt="${book.Name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book"></i></div>'}<div class="card-actions"><span class="card-watch-btn"><i class="fas fa-book-open"></i> READ</span></div></div>
                         <div class="book-title">${cleanBookName(book.Name)}</div>
                         <span class="book-type">📚 COMIC</span>
                     </div>`;
@@ -848,7 +875,7 @@
 
             grid.innerHTML = STORYBOOKS.map((book, index) => `
                 <div class="book-card" onclick="openStoryBook(${index})">
-                    ${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book-open"></i></div>'}
+                    <div class="card-art">${book.imageUrl ? `<img src="${book.imageUrl}" alt="${book.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-book-open"></i></div>'}<div class="card-actions"><span class="card-watch-btn"><i class="fas fa-book-open"></i> READ</span></div></div>
                     <div class="book-title">${book.name}</div>
                     <span class="book-type">${book.type}</span>
                 </div>
@@ -902,7 +929,7 @@
 
             grid.innerHTML = AUDIOBOOKS.map((audio, index) => `
                 <div class="book-card" onclick="openAudiobook(${index})">
-                    ${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-headphones"></i></div>'}
+                    <div class="card-art">${audio.imageUrl ? `<img src="${audio.imageUrl}" alt="${audio.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-headphones"></i></div>'}<div class="card-actions"><span class="card-watch-btn"><i class="fas fa-headphones"></i> LISTEN</span></div></div>
                     <div class="book-title">${audio.name}</div>
                     <span class="book-type">🎧 AUDIO</span>
                 </div>
@@ -965,7 +992,7 @@
 
             grid.innerHTML = CARTOONS.map((show, index) => `
                 <div class="book-card" onclick="openCartoon(${index})">
-                    ${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-tv"></i></div>'}
+                    <div class="card-art">${show.imageUrl ? `<img src="${show.imageUrl}" alt="${show.name}" class="book-poster" loading="lazy">` : '<div class="book-cover"><i class="fas fa-tv"></i></div>'}<div class="card-actions"><span class="card-watch-btn"><i class="fas fa-play"></i> WATCH</span></div></div>
                     <div class="book-title">${show.name}</div>
                     <span class="book-type">📺 TV</span>
                 </div>
@@ -1392,5 +1419,6 @@
     }).observe(document.body, {childList:true, subtree:true});
 })();
 </script>
+<script src="/tv-remote.js" defer></script>
 </body>
 </html>

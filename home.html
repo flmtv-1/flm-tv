@@ -5615,12 +5615,15 @@
                                 <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
                             </button>
                             <div class="content-card-overlay">
+                                <div class="card-actions">
+                                    <span class="card-watch-btn"><i class="fas fa-play"></i> ${item.Type === 'Series' ? 'WATCH SHOW' : 'WATCH NOW'}</span>
+                                    ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn card-trailer-btn" onclick="event.stopPropagation();fetchTrailer('${item.Name.replace(/'/g,"\\'")}', ${item.ProductionYear || 'null'}, '${item.Type}', '${item.Id}')"><i class="fas fa-film"></i> TRAILER</button>` : ''}
+                                </div>
                                 <div class="content-card-title">${item.Name}</div>
                                 <div class="content-card-info">
                                     ${item.ProductionYear || ''} ${item.OfficialRating ? '• ' + item.OfficialRating : ''}
                                 </div>
                             </div>
-                            ${(item.Type === 'Movie' || item.Type === 'Series') ? `<button class="trailer-btn" onclick="event.stopPropagation();fetchTrailer('${item.Name.replace(/'/g,"\\'")}', ${item.ProductionYear || 'null'}, '${item.Type}', '${item.Id}')">▶ Trailer</button>` : ''}
                         `;
                         carousel.appendChild(card);
                     });
@@ -8960,6 +8963,31 @@ document.addEventListener('keydown', function(e) {
     outline: 2px solid #ffd700 !important;
     outline-offset: 2px !important;
 }
+
+/* ── Card hover: clear WATCH NOW vs TRAILER ─────────────────────── */
+.content-card:hover .content-card-image,
+.content-card:focus-within .content-card-image { filter: brightness(0.5); transition: filter 0.25s ease; }
+.content-card:focus-within .content-card-overlay { opacity: 1; }
+.content-card-overlay { padding-top: 2.5rem; }
+.content-card-overlay .card-actions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0.6rem; }
+.card-watch-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: #22c55e; color: #04110a; border-radius: 6px;
+    padding: 8px 0; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(34,197,94,0.45);
+}
+.content-card .content-card-overlay .card-trailer-btn,
+.content-card .content-card-overlay .card-trailer-btn:focus,
+.content-card .content-card-overlay .card-trailer-btn:focus-visible,
+.content-card .content-card-overlay .card-trailer-btn:active {
+    position: static !important; transform: none !important; opacity: 1;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%; padding: 6px 0; border-radius: 6px;
+    background: rgba(0,0,0,0.35); color: #fff; border: 1.5px solid rgba(255,255,255,0.75);
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+}
+.content-card .content-card-overlay .card-trailer-btn:hover { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.12); }
+.content-card-overlay .content-card-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->

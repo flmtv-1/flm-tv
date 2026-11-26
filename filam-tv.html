@@ -278,6 +278,33 @@ img { display: block; max-width: 100%; }
 .flm-tv .row.eps .ep-card:focus { outline: 4px solid var(--sun) !important; outline-offset: 4px !important; transform: scale(1.04); position: relative; z-index: 5; }
 .flm-tv .movie-card:focus { outline: 4px solid var(--sun) !important; outline-offset: 4px !important; transform: scale(1.04); position: relative; z-index: 5; }
 
+
+/* ── Hover actions: clear WATCH NOW vs TRAILER ── */
+.card-art { position: relative; border-radius: inherit; }
+.card-actions {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+    display: flex; flex-direction: column; gap: 6px; padding: 10px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
+    border-radius: 0 0 10px 10px; opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+.card-watch-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    background: #FCD116; color: #070B1F; border-radius: 6px; padding: 7px 0;
+    font-family: Arial, sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.card-trailer-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+    background: rgba(0,0,0,0.35); color: #fff; border: 1.5px solid rgba(255,255,255,0.75);
+    border-radius: 6px; padding: 5px 0; cursor: pointer;
+    font-family: Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px;
+}
+.card-trailer-btn:hover { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.12); }
+@media (hover: hover) {
+    .movie-card:hover .card-actions, .movie-card:focus-within .card-actions { opacity: 1; pointer-events: auto; }
+    .movie-card:hover .movie-poster img { filter: brightness(0.6); transition: filter 0.2s ease; }
+}
+
 /* Footer */
 .foot {
   margin-top: 90px; padding: 40px 0 60px;
@@ -782,8 +809,9 @@ img { display: block; max-width: 100%; }
         a.href = `movie-frame.html?id=${m.Id}`;
         const tag = m.ImageTags && m.ImageTags.Primary;
         a.innerHTML = `
-          <div class="movie-poster"><img src="${tag ? img(m.Id, tag, 360) : LOGO}" alt="" loading="lazy"
-               onerror="this.onerror=null;this.src='${LOGO}'"></div>
+          <div class="movie-poster card-art"><img src="${tag ? img(m.Id, tag, 360) : LOGO}" alt="" loading="lazy"
+               onerror="this.onerror=null;this.src='${LOGO}'">
+            <div class="card-actions"><span class="card-watch-btn"><i class="fas fa-play"></i> ${m.Type === 'Series' ? 'WATCH SHOW' : 'WATCH NOW'}</span></div></div>
           <div class="movie-name">${esc(m.Name)}</div>
           ${m.ProductionYear ? `<div class="movie-year">${m.ProductionYear}</div>` : ''}`;
         track.appendChild(a);
@@ -954,5 +982,6 @@ img { display: block; max-width: 100%; }
 })();
 </script>
 
+<script src="/tv-remote.js" defer></script>
 </body>
 </html>
