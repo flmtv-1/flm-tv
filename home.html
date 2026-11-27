@@ -3459,21 +3459,88 @@
                         </div>
                     </div>
 
-                <!-- MONIQUE WOOLLEY FOUNDATION FEATURED CHANNEL CARD -->
-                    <div onclick="window.location.href='monique-woolley-foundation.html'" class="mu-event-card mwf-event-card" style="text-decoration:none;cursor:pointer;">
-                        <img src="assets/mwf/monique-angel.webp"
-                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 22%;opacity:0.7;pointer-events:none;z-index:1;"
-                             alt="The Monique Woolley Foundation" onerror="this.style.display='none'">
-                        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,40,0.95) 18%,rgba(10,26,92,0.35) 70%,rgba(5,10,40,0.1) 100%);z-index:2;"></div>
-                        <div class="mwf-flutter" aria-hidden="true"><span>🦋</span><span>🦋</span><span>🦋</span></div>
-                        <div class="mwf-countdown" id="mwfCountdown" title="6th Annual WFBTY Gala · Dec 6"><span class="n" id="mwfCdNum">--</span><span class="l" id="mwfCdLbl">DAYS TO<br>THE GALA</span></div>
+                <!-- MICHAEL JACKSON'S MOONWALKER FEATURED CARD (plays a muted preview; click to watch) -->
+                    <div onclick="openMoonwalkerCard()" class="mu-event-card mw-event-card" id="mwCard" role="link" tabindex="0" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 70% 20%, #2a1a05 0%, #07070A 70%);overflow:hidden;">
+                        <img id="mwCardStill" alt="Michael Jackson's Moonwalker"
+                             style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.6;z-index:1;pointer-events:none;"
+                             onerror="this.style.display='none'">
+                        <video id="mwCardVideo" muted defaultmuted playsinline loop
+                            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s;z-index:1;pointer-events:none;"></video>
+                        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,10,0.95) 18%,rgba(5,5,10,0.3) 65%,rgba(5,5,10,0.05) 100%);z-index:2;"></div>
+                        <div class="mw-moon" aria-hidden="true"></div>
                         <div style="position:relative;z-index:5;padding:8px 14px;width:100%;">
-                            <div class="mu-event-badge in-flow" style="background:linear-gradient(90deg,#ffd60a,#f5c542);color:#0a1a5c;border-color:rgba(29,63,216,0.6);"><div class="live-dot" style="background:#1d3fd8;"></div> FEATURED</div>
-                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd60a;line-height:1;text-shadow:0 0 18px rgba(255,214,10,0.6);">THE MONIQUE WOOLLEY FOUNDATION</div>
-                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">WHEN FEELING <span style="color:#8fb0ff;">BLUE</span>, THINK <span style="color:#ffd60a;">YELLOW</span></div>
+                            <div class="mu-event-badge in-flow" style="background:linear-gradient(90deg,#f6c453,#ffe39a);color:#0A0612;border-color:rgba(255,255,255,0.4);"><div class="live-dot" style="background:#0A0612;"></div> NOW STREAMING</div>
+                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffe39a;line-height:1;text-shadow:0 0 18px rgba(246,196,83,0.6);">MICHAEL JACKSON'S MOONWALKER</div>
+                            <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">ON <span style="color:#ff8db9;">ZAINA JULIETTE TV</span></div>
+                        </div>
+                        <div class="mu-watch" style="position:absolute;bottom:10px;right:14px;z-index:6;display:flex;align-items:center;gap:6px;">
+                            <span style="width:8px;height:8px;border-radius:50%;background:#f6c453;box-shadow:0 0 8px #f6c453;animation:tvs-pulse 1.4s infinite;"></span>
+                            <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#f6c453;">WATCH NOW</span>
                         </div>
                     </div>
                 </div>
+
+                <script>
+       // ── Michael Jackson's Moonwalker card ──────────────────────────
+       // Finds Moonwalker by name in the ZJTV library, so the card keeps
+       // working if Jellyfin gives the movie a new id after a rescan.
+       var MOONWALKER = {
+           LIBRARY_ID: 'f0486e44c5d6038d7682e808a4f4f6f1',   // V:\10-ZAINA JULIETTE TV
+           SEARCH: 'Moonwalker',
+           VIDEO_SERVER: 'https://flmtv26.duckdns.org:8920',
+           movieId: null
+       };
+       function openMoonwalkerCard() {
+           window.location.href = MOONWALKER.movieId
+               ? 'movie-frame.html?id=' + MOONWALKER.movieId
+               : 'zjtv.html#mj';
+       }
+       window.addEventListener('DOMContentLoaded', function moonwalkerCard() {
+           const card = document.getElementById('mwCard');
+           if (!card) return;
+           card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMoonwalkerCard(); } });
+           const S = 'https://flmtv.com/jellyfin', K = '62131ee22c0141c6b651be75a7444350';
+           const q = new URLSearchParams({ api_key: K, ParentId: MOONWALKER.LIBRARY_ID, Recursive: 'true',
+               IncludeItemTypes: 'Movie,Video', SearchTerm: MOONWALKER.SEARCH, Fields: 'Path,RunTimeTicks', EnableImages: 'true' });
+           fetch(S + '/Items?' + q, { mode: 'cors', credentials: 'omit' })
+               .then(r => r.ok ? r.json() : null)
+               .then(res => {
+                   const items = (res && res.Items) || [];
+                   const isTrailer = i => /trailer/i.test((i.Name || '') + ' ' + (i.Path || ''));
+                   const isPart = i => /\((a|b|part\s*\d)\)\s*$/i.test(i.Name || '');
+                   // the movie: the 1080p copy if there is one, otherwise the longest full copy
+                   const movies = items.filter(i => !isTrailer(i) && !isPart(i))
+                       .sort((a, b) => (/1080p/i.test(b.Path || '') - /1080p/i.test(a.Path || '')) || ((b.RunTimeTicks || 0) - (a.RunTimeTicks || 0)));
+                   const movie = movies[0];
+                   if (movie) MOONWALKER.movieId = movie.Id;
+                   // the picture: the movie's own art, else the library's backdrop
+                   const still = document.getElementById('mwCardStill');
+                   const own = items.find(i => i.BackdropImageTags && i.BackdropImageTags.length);
+                   const parent = items.find(i => i.ParentBackdropItemId && i.ParentBackdropImageTags && i.ParentBackdropImageTags.length);
+                   const artId = own ? own.Id : (parent ? parent.ParentBackdropItemId : MOONWALKER.LIBRARY_ID);
+                   if (still) {
+                       still.src = S + '/Items/' + artId + '/Images/Backdrop/0?api_key=' + K + '&fillWidth=900&quality=80&format=webp';
+                       still.style.display = 'block';
+                   }
+                   // the moving preview: the trailer if there is one, otherwise the movie itself
+                   const trailer = items.find(isTrailer);
+                   const clip = trailer || movie;
+                   const vid = document.getElementById('mwCardVideo');
+                   if (!clip || !vid || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                   vid.muted = true; vid.defaultMuted = true;
+                   vid.src = MOONWALKER.VIDEO_SERVER + '/Videos/' + clip.Id + '/stream?static=true&api_key=' + K;
+                   vid.addEventListener('loadedmetadata', () => {
+                       // a full movie: start somewhere in the middle of the action
+                       if (!trailer && isFinite(vid.duration) && vid.duration > 600) vid.currentTime = vid.duration * 0.3;
+                   }, { once: true });
+                   vid.addEventListener('playing', () => vid.classList.add('on'), { once: true });
+                   vid.addEventListener('error', () => { vid.removeAttribute('src'); vid.style.display = 'none'; }, { once: true });
+                   vid.addEventListener('volumechange', function () { if (!this.muted) this.muted = true; }, true);
+                   vid.play().catch(() => {});
+               })
+               .catch(() => {});
+       });
+                </script>
 
                 <!-- DOLLY PARTON TRIBUTE CHANNEL CARD -->
                 <div onclick="openDollyPartonCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
@@ -3661,6 +3728,17 @@
         .ec-pair .mwf-countdown { top: 9px; right: 12px; }
         .event-cards-col { flex: none !important; width: 100% !important; max-width: 100% !important; }
     }
+    /* Michael Jackson's Moonwalker card (top showcase) */
+    .mw-event-card {
+        border-color: rgba(246,196,83,0.75) !important;
+        box-shadow: 0 0 26px rgba(246,196,83,0.28), 0 0 34px rgba(255,61,139,0.22), 0 8px 32px rgba(0,0,0,0.6) !important;
+    }
+    .mw-event-card:hover, .mw-event-card:focus { box-shadow: 0 0 40px rgba(246,196,83,0.55), 0 0 50px rgba(255,61,139,0.4) !important; outline: none; }
+    .mw-event-card video.on { opacity: 0.75 !important; }
+    .mw-moon { position:absolute; top:10px; right:12px; z-index:3; width:26px; height:26px; border-radius:50%; pointer-events:none;
+        background: radial-gradient(circle at 35% 35%, #fff8e1 0%, #ffe39a 45%, #f6c453 100%);
+        box-shadow: 0 0 14px rgba(255,227,154,0.9), 0 0 30px rgba(246,196,83,0.5); }
+    .mw-moon::after { content:''; position:absolute; top:-3px; left:8px; width:24px; height:24px; border-radius:50%; background:#0b0710; opacity:0.85; }
     .mwf-event-card {
         background: radial-gradient(circle at 25% 30%, #1d3fd8 0%, #0a1a5c 45%, #050a1f 100%);
         border-color: rgba(255,214,10,0.75) !important;
@@ -6204,7 +6282,7 @@ function wtvMatches(ch, catKey) {
             var GALA = new Date('2026-12-06T18:00:00-08:00').getTime();
             function tick() {
                 var num = document.getElementById('mwfCdNum'), lbl = document.getElementById('mwfCdLbl');
-                if (!num || !lbl) { setTimeout(tick, 1000); return; }
+                if (!num || !lbl) { if ((tick.n = (tick.n || 0) + 1) < 10) setTimeout(tick, 1000); return; }
                 var ms = GALA - Date.now();
                 if (ms <= -6 * 3600000) { var box = document.getElementById('mwfCountdown'); if (box) box.style.display = 'none'; return; }
                 if (ms <= 0) { num.textContent = '★'; lbl.innerHTML = 'GALA<br>TONIGHT'; return; }
@@ -6233,6 +6311,16 @@ function wtvMatches(ch, catKey) {
                     <h3 class="category-title">Featured Channels</h3>
                 </div>
                 <div class="content-carousel">
+                    <div class="content-card fc-zjtv" onclick="window.location.href='zjtv.html'">
+                        <div class="fc-zjtv-bg"></div>
+                        <img src="https://flmtv.com/jellyfin/Items/f0486e44c5d6038d7682e808a4f4f6f1/Images/Backdrop/0?api_key=62131ee22c0141c6b651be75a7444350&fillWidth=600&quality=80&format=webp"
+                             alt="" class="content-card-image fc-zjtv-img" loading="lazy" onerror="this.style.display='none'">
+                        <div class="fc-zjtv-mark"><span>Zaina</span><em>Juliette</em><b>TV</b></div>
+                        <div class="content-card-overlay">
+                            <div class="content-card-title">Zaina Juliette TV</div>
+                            <div class="content-card-info">Lights. Camera. Zaina.</div>
+                        </div>
+                    </div>
                     <div class="content-card fc-filam" onclick="window.location.href='filam-tv.html'">
                         <div class="fc-filam-fill"><div></div></div>
                         <img src="assets/images/FilAm.png" alt="FilAm TV" class="content-card-image fc-filam-img" loading="lazy">
@@ -6284,6 +6372,15 @@ function wtvMatches(ch, catKey) {
                 </div>
                 <style>
                     @keyframes liveDot{0%,100%{opacity:1}50%{opacity:0.2}}
+                    /* Zaina Juliette TV: backdrop with the gold-and-rose wordmark on top */
+                    #section-featured-channels .fc-zjtv { position: relative; min-height: 300px; box-shadow: 0 0 18px rgba(246,196,83,0.35), 0 0 22px rgba(255,61,139,0.25); }
+                    #section-featured-channels .fc-zjtv-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(circle at 70% 20%, #3a1f4f 0%, #160D22 55%, #0A0612 100%); }
+                    #section-featured-channels .fc-zjtv-img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; opacity: 0.55; }
+                    #section-featured-channels .fc-zjtv-mark { position: absolute; left: 0; right: 0; top: 30%; z-index: 2; text-align: center; line-height: 0.9; text-shadow: 0 2px 14px rgba(0,0,0,0.8); pointer-events: none; }
+                    #section-featured-channels .fc-zjtv-mark span { display: block; font-family: Didot, 'Bodoni MT', Georgia, serif; font-weight: 900; font-size: 2rem; color: #fff; }
+                    #section-featured-channels .fc-zjtv-mark em { display: block; font-family: Didot, 'Bodoni MT', Georgia, serif; font-weight: 700; font-size: 1.9rem; color: #ffe39a; }
+                    #section-featured-channels .fc-zjtv-mark b { display: inline-block; margin-top: 8px; font-family: 'Bebas Neue','Rajdhani',sans-serif; font-weight: 400; font-size: 1.1rem; letter-spacing: 4px; color: #0A0612; background: #f6c453; padding: 3px 8px 1px 12px; border-radius: 5px; }
+                    @media (max-width: 767px) { #section-featured-channels .fc-zjtv { min-height: 0; aspect-ratio: 2 / 3; } #section-featured-channels .fc-zjtv-mark span { font-size: 1.4rem; } #section-featured-channels .fc-zjtv-mark em { font-size: 1.3rem; } }
                     /* FilAm TV: same blurred-fill method as eZWay so the full logo shows */
                     #section-featured-channels .fc-filam { position: relative; background: #000; }
                     #section-featured-channels .fc-filam-fill { position: absolute; inset: 0; z-index: 0; border-radius: 8px; overflow: hidden; pointer-events: none; }
@@ -7442,6 +7539,7 @@ function wtvMatches(ch, catKey) {
        function openDaleCard() {
            window.location.href = "dr-dale-christian-tv.html";
        }
+
 
        async function playJellyfinItem(itemId, itemType) {
     console.log('🎬 Opening detail page for:', itemId, itemType);

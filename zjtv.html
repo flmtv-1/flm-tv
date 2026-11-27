@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<!-- Zaina Juliette TV (ZJTV) · zjtv.html · VERSION 2026-11-27c -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" id="flmViewportMeta">
+<script>
+  if (/AFT|FireTV|Silk/i.test(navigator.userAgent)) {
+    var flmVp = document.getElementById('flmViewportMeta');
+    if (flmVp) flmVp.setAttribute('content', 'width=960, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+  }
+</script>
+<title>Zaina Juliette TV (ZJTV) · FLM TV Network</title>
+<meta name="description" content="Zaina Juliette TV (ZJTV), Zaina Juliette's channel on FLM TV Network: Zaina Juliette & Friends, music videos, concerts, the Michael Jackson collection and FLM TV live.">
+<meta property="og:title" content="Zaina Juliette TV · ZJTV">
+<meta property="og:description" content="Lights. Camera. Zaina. Her shows, her music, her heroes and FLM TV live, all on one channel.">
+<link rel="icon" type="image/png" href="assets/logos/flm-logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,700;0,6..96,900;1,6..96,700&family=Bebas+Neue&family=Figtree:wght@400;500;700;800&display=swap">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --stage:   #0A0612;   /* the dark stage: page background */
+  --stage-2: #160D22;   /* raised surfaces */
+  --stage-3: #24163A;   /* hover / borders */
+  --gold:    #F6C453;   /* spotlight gold */
+  --gold-hi: #FFE39A;
+  --rose:    #FF3D8B;   /* star magenta */
+  --violet:  #8B5CF6;
+  --paper:   #F8F3EC;   /* text */
+  --mist:    #B3A7C6;   /* secondary text */
+  --display: 'Bodoni Moda', 'Didot', Georgia, serif;
+  --label:   'Bebas Neue', 'Arial Narrow', sans-serif;
+  --body:    'Figtree', Arial, sans-serif;
+}
+
+html, body { background: var(--stage); color: var(--paper); font-family: var(--body); }
+body { min-height: 100vh; overflow-x: hidden; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+button { font-family: inherit; }
+
+/* ── NAV ── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 24px;
+  background: rgba(10,6,18,0.92);
+  backdrop-filter: blur(8px);
+}
+.topnav::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--rose) 50%, var(--gold) 80%, transparent);
+}
+.nav-left { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: 999px;
+  border: 1px solid rgba(246,196,83,0.55);
+  color: var(--gold); text-decoration: none;
+  font-weight: 700; font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+.back-btn:hover { background: var(--gold); color: var(--stage); }
+.nav-mark { font-family: var(--display); font-weight: 900; font-size: 20px; letter-spacing: 0.5px; white-space: nowrap; }
+.nav-mark b { font-family: var(--label); font-weight: 400; font-size: 18px; letter-spacing: 2px; color: var(--stage); background: var(--gold); padding: 1px 6px 0; border-radius: 4px; margin-left: 6px; vertical-align: 2px; }
+.nav-right { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--mist); white-space: nowrap; }
+.nav-live {
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+  padding: 7px 14px; border-radius: 999px; background: rgba(255,61,139,0.14);
+  color: #FF8DB9; font-weight: 800; font-size: 13px; letter-spacing: 0.5px;
+  box-shadow: inset 0 0 0 1px rgba(255,61,139,0.5);
+}
+.nav-live:hover { background: var(--rose); color: #fff; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rose); box-shadow: 0 0 10px var(--rose); animation: blink 1.3s infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: min(88vh, 860px);
+  display: flex; align-items: flex-end;
+  overflow: hidden; isolation: isolate;
+}
+.hero-media { position: absolute; inset: 0; z-index: -4; background: var(--stage); }
+.hero-media video, .hero-media .still {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0;
+  transition: opacity 1.3s ease;
+}
+.hero-media .on { opacity: 1; }
+.hero-media .still { background-size: cover; background-position: center 25%; }
+.hero-media .still.on { animation: drift 9s ease-out forwards; }
+@keyframes drift { from { transform: scale(1.03); } to { transform: scale(1.12); } }
+
+.hero-shade {
+  position: absolute; inset: 0; z-index: -3;
+  background:
+    linear-gradient(90deg, rgba(10,6,18,0.95) 0%, rgba(10,6,18,0.7) 36%, rgba(10,6,18,0.05) 72%),
+    linear-gradient(0deg, var(--stage) 0%, rgba(10,6,18,0) 40%),
+    linear-gradient(180deg, rgba(10,6,18,0.55) 0%, rgba(10,6,18,0) 22%);
+}
+
+/* The signature: two stage spotlights sweeping across the hero */
+.beams { position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; mix-blend-mode: screen; }
+.beam {
+  position: absolute; top: -30%; width: 46vw; height: 170%;
+  background: conic-gradient(from 180deg at 50% 0%, transparent 168deg, rgba(255,227,154,0.22) 176deg, rgba(255,240,200,0.32) 180deg, rgba(255,227,154,0.22) 184deg, transparent 192deg);
+  filter: blur(6px);
+  transform-origin: 50% 0%;
+}
+.beam.l { left: -6vw;  animation: sweepL 11s ease-in-out infinite alternate; }
+.beam.r { right: -6vw; animation: sweepR 13s ease-in-out infinite alternate; background: conic-gradient(from 180deg at 50% 0%, transparent 168deg, rgba(255,61,139,0.16) 176deg, rgba(255,170,210,0.26) 180deg, rgba(255,61,139,0.16) 184deg, transparent 192deg); }
+@keyframes sweepL { from { transform: rotate(-24deg); } to { transform: rotate(10deg); } }
+@keyframes sweepR { from { transform: rotate(22deg); } to { transform: rotate(-12deg); } }
+
+.sparkles { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.sparkles i {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 8px 2px rgba(255,227,154,0.8);
+  opacity: 0; animation: twinkle 4s ease-in-out infinite;
+}
+@keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.4); } 50% { opacity: 0.9; transform: scale(1); } }
+
+.hero-inner {
+  width: 100%; max-width: 1360px; margin: 0 auto;
+  padding: 120px 44px 60px;
+}
+.kicker {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--label); font-size: 20px; letter-spacing: 4px; color: var(--gold);
+  margin-bottom: 14px;
+}
+.kicker::before { content: ''; width: 34px; height: 2px; background: var(--gold); }
+.wordmark {
+  font-family: var(--display); font-weight: 900;
+  font-size: clamp(54px, 9.4vw, 140px);
+  line-height: 0.86; letter-spacing: -1px;
+  text-shadow: 0 4px 40px rgba(10,6,18,0.7);
+}
+.wordmark .first { display: block; }
+.wordmark .last {
+  display: block; font-style: italic; font-weight: 700;
+  background: linear-gradient(100deg, var(--gold-hi) 0%, var(--gold) 35%, #FF9BC4 70%, var(--rose) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  padding-right: 0.1em;
+}
+.wordmark .tv {
+  display: inline-block; font-family: var(--label); font-style: normal; font-weight: 400;
+  font-size: 0.34em; letter-spacing: 6px; line-height: 1;
+  color: var(--stage); background: var(--gold); -webkit-text-fill-color: var(--stage);
+  padding: 8px 12px 4px 16px; border-radius: 8px; vertical-align: 0.9em; margin-left: 0.15em;
+  box-shadow: 0 0 30px rgba(246,196,83,0.55);
+}
+.slogan {
+  margin-top: 22px; font-family: var(--display); font-style: italic; font-weight: 700;
+  font-size: clamp(24px, 2.6vw, 36px); color: #fff;
+  text-shadow: 0 2px 18px rgba(10,6,18,0.8);
+}
+.tagline { margin-top: 10px; font-size: 18px; color: #E9E1F2; max-width: 46ch; line-height: 1.55; text-shadow: 0 1px 12px rgba(10,6,18,0.9); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 26px; border-radius: 999px;
+  font-family: var(--body); font-weight: 800; font-size: 17px;
+  text-decoration: none; cursor: pointer; border: 0;
+  transition: transform 0.15s, background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.btn-gold { background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: var(--stage); box-shadow: 0 8px 30px rgba(246,196,83,0.35); }
+.btn-gold:hover { box-shadow: 0 8px 40px rgba(246,196,83,0.6); }
+.btn-rose { background: var(--rose); color: #fff; box-shadow: 0 8px 30px rgba(255,61,139,0.35); }
+.btn-rose:hover { background: #ff5a9d; }
+.btn-ghost { background: rgba(255,255,255,0.08); color: var(--paper); box-shadow: inset 0 0 0 1.5px rgba(248,243,236,0.45); }
+.btn-ghost:hover { background: rgba(255,255,255,0.16); }
+.btn:active { transform: scale(0.97); }
+.now-showing {
+  margin-top: 24px; min-height: 22px; font-size: 15px; color: #D7CCE6;
+  text-shadow: 0 1px 10px rgba(10,6,18,0.95);
+  display: flex; align-items: center; gap: 10px;
+}
+.now-showing:empty { visibility: hidden; }
+.now-showing .lbl { font-family: var(--label); letter-spacing: 2px; font-size: 15px; color: var(--gold); }
+.hero-dots { position: absolute; right: 44px; bottom: 64px; display: flex; gap: 6px; z-index: 2; }
+.hero-dots span { width: 22px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.25); overflow: hidden; }
+.hero-dots span.on { background: var(--gold); }
+
+/* ── SECTIONS ── */
+.wrap { max-width: 1360px; margin: 0 auto; padding: 0 44px; }
+.block { padding-top: 70px; scroll-margin-top: 70px; }
+.sec-kicker { font-family: var(--label); letter-spacing: 3px; font-size: 17px; color: var(--rose); }
+.block h2 {
+  font-family: var(--display); font-weight: 900;
+  font-size: clamp(32px, 3.6vw, 50px); letter-spacing: -0.5px; line-height: 1.02; margin-top: 4px;
+}
+.block h2 em { font-weight: 700; color: var(--gold); }
+.block .lede { color: var(--mist); margin-top: 10px; font-size: 17px; max-width: 62ch; line-height: 1.55; }
+
+/* Live player */
+.live {
+  margin-top: 26px; display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(260px, 1fr); gap: 28px; align-items: stretch;
+}
+.live-screen {
+  position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #000;
+  box-shadow: 0 0 0 1px rgba(246,196,83,0.35), 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(255,61,139,0.12);
+}
+.live-screen video { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
+.live-badge {
+  position: absolute; top: 14px; left: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,0.65);
+  font-family: var(--label); font-size: 17px; letter-spacing: 2px; color: #fff;
+}
+.live-sound {
+  position: absolute; right: 14px; bottom: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 999px; border: 0; cursor: pointer;
+  background: rgba(0,0,0,0.7); color: #fff; font-weight: 800; font-size: 15px;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.5);
+}
+.live-sound:hover { background: var(--gold); color: var(--stage); }
+.live-off {
+  position: absolute; inset: 0; z-index: 3; display: none;
+  flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px;
+  background: radial-gradient(circle at 50% 40%, #2a1640 0%, #0A0612 75%);
+}
+.live-off.show { display: flex; }
+.live-off p { color: var(--mist); max-width: 34ch; line-height: 1.5; }
+.live-off strong { font-family: var(--display); font-size: 26px; color: #fff; }
+.live-side {
+  border-radius: 18px; padding: 26px;
+  background: linear-gradient(160deg, var(--stage-2), #120A1D);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.07);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.live-side h3 { font-family: var(--display); font-size: 26px; line-height: 1.1; }
+.live-side p { color: var(--mist); line-height: 1.55; font-size: 16px; }
+.live-side .btn { align-self: flex-start; }
+.live-facts { list-style: none; display: grid; gap: 10px; margin-top: auto; }
+.live-facts li { display: flex; gap: 12px; align-items: center; font-size: 15px; }
+.live-facts i { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: rgba(246,196,83,0.12); color: var(--gold); }
+
+/* Rows */
+.row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 34px; }
+.row-head h3 { font-family: var(--display); font-weight: 700; font-size: 25px; letter-spacing: -0.2px; }
+.row-head h3 small { font-family: var(--body); font-size: 14px; font-weight: 500; color: var(--mist); margin-left: 10px; letter-spacing: 0; }
+.row-head a { color: var(--gold); font-weight: 700; font-size: 15px; text-decoration: none; white-space: nowrap; }
+.row-head a:hover { text-decoration: underline; }
+.row-wrap { position: relative; }
+.row {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 300px; gap: 18px;
+  overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
+  padding: 16px 4px 18px; margin: 0 -4px;
+  scrollbar-width: thin; scrollbar-color: var(--stage-3) transparent;
+}
+.row.posters { grid-auto-columns: 184px; }
+.row-arrow {
+  position: absolute; top: calc(16px + 84px - 22px); z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(10,6,18,0.88); color: var(--gold); font-size: 16px;
+  box-shadow: inset 0 0 0 1.5px rgba(246,196,83,0.5);
+}
+.posters-wrap .row-arrow { top: calc(16px + 138px - 22px); }
+.row-arrow:hover { background: var(--gold); color: var(--stage); }
+.row-arrow.prev { left: -18px; } .row-arrow.next { right: -18px; }
+
+/* 16:9 episode / clip cards */
+.ep-card { display: block; text-decoration: none; color: inherit; border-radius: 12px; outline-offset: 4px; scroll-snap-align: start; }
+.ep-thumb { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: var(--stage-2); }
+.ep-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+.ep-card:hover .ep-thumb img { transform: scale(1.05); }
+.ep-card:hover .ep-thumb { box-shadow: 0 0 0 2px var(--gold), 0 16px 34px rgba(0,0,0,0.5); }
+.ep-play {
+  position: absolute; right: 12px; bottom: 12px;
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--gold); color: var(--stage); font-size: 15px;
+  opacity: 0; transform: translateY(6px); transition: opacity 0.2s, transform 0.2s;
+}
+.ep-card:hover .ep-play, .ep-card:focus .ep-play { opacity: 1; transform: none; }
+.ep-len { position: absolute; left: 10px; bottom: 10px; background: rgba(10,6,18,0.85); font-size: 13px; padding: 3px 8px; border-radius: 6px; }
+.ep-title { margin-top: 11px; font-weight: 700; font-size: 16px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ep-sub { margin-top: 3px; color: var(--mist); font-size: 14px; }
+
+/* Poster cards (movies, music videos, concerts) */
+.movie-card { display: block; text-decoration: none; color: inherit; scroll-snap-align: start; border-radius: 12px; outline-offset: 4px; }
+.movie-poster { position: relative; aspect-ratio: 2 / 3; border-radius: 12px; overflow: hidden; background: var(--stage-2); transition: transform 0.25s, box-shadow 0.25s; }
+.movie-poster img { width: 100%; height: 100%; object-fit: cover; }
+.movie-card:hover .movie-poster { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--gold), 0 16px 34px rgba(0,0,0,0.5); }
+.movie-name { margin-top: 10px; font-weight: 700; font-size: 15px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.movie-year { margin-top: 2px; color: var(--mist); font-size: 13px; }
+/* When a title has no picture yet: a marquee-style title card instead of a blank box */
+.text-tile {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px;
+  padding: 16px; text-align: left;
+  background: radial-gradient(circle at 70% 18%, rgba(246,196,83,0.35), transparent 45%), linear-gradient(160deg, #2a1640, #0A0612);
+}
+.text-tile .t { font-family: var(--display); font-weight: 900; font-size: 20px; line-height: 1.05; }
+.text-tile .s { font-family: var(--label); letter-spacing: 2px; color: var(--gold); font-size: 14px; }
+.ep-thumb .text-tile .t { font-size: 18px; }
+
+.card-actions {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; padding: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.55) 70%, transparent 100%);
+  opacity: 0; transition: opacity 0.2s ease; pointer-events: none;
+}
+.card-watch-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  background: var(--gold); color: var(--stage); border-radius: 6px; padding: 7px 0;
+  font-weight: 800; font-size: 0.8rem; letter-spacing: 1px;
+}
+@media (hover: hover) {
+  .movie-card:hover .card-actions, .movie-card:focus-within .card-actions { opacity: 1; }
+  .movie-card:hover .movie-poster img { filter: brightness(0.65); }
+}
+
+.status { padding: 34px 0; color: var(--mist); font-size: 17px; }
+.status .spin { display: inline-block; width: 20px; height: 20px; margin-right: 12px; vertical-align: -4px; border: 3px solid rgba(246,196,83,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.status .btn { margin-top: 14px; }
+
+/* Footer */
+.foot { margin-top: 100px; padding: 44px 0 64px; border-top: 1px solid rgba(255,255,255,0.08); }
+.foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; align-items: center; }
+.foot p { color: var(--mist); font-size: 15px; line-height: 1.6; }
+.foot strong { color: var(--paper); }
+.foot-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Focus: visible everywhere, big for TV remotes */
+.back-btn:focus-visible, .nav-live:focus-visible, .btn:focus-visible, .ep-card:focus-visible, .movie-card:focus-visible, .live-sound:focus-visible, .row-head a:focus-visible {
+  outline: 4px solid var(--gold); outline-offset: 4px;
+}
+.flm-tv :is(.back-btn, .nav-live, .btn, .ep-card, .movie-card, .live-sound):focus { outline: 4px solid var(--gold) !important; outline-offset: 4px !important; }
+.flm-tv :is(.ep-card, .movie-card):focus { transform: scale(1.04); position: relative; z-index: 5; }
+.flm-tv .row-arrow { display: none; }
+/* Firestick: lighter effects, and the whole hero fits one TV screen */
+.flm-tv .beams, .flm-tv .sparkles { display: none; }
+.flm-tv .hero { min-height: 0; }
+.flm-tv .hero-inner { padding: 70px 40px 34px; }
+.flm-tv .wordmark { font-size: 84px; }
+.flm-tv .slogan { font-size: 26px; margin-top: 14px; }
+.flm-tv .tagline { font-size: 16px; }
+.flm-tv .hero-actions { margin-top: 20px; }
+.flm-tv .hero-media .still.on { animation: none; }
+
+/* Tablet & phone */
+@media (max-width: 980px) {
+  .live { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .topnav { padding: 10px 14px; }
+  .nav-right .where { display: none; }
+  .nav-mark { font-size: 17px; }
+  .hero { min-height: 86vh; }
+  .hero-inner { padding: 100px 18px 44px; }
+  .hero-shade { background: linear-gradient(0deg, var(--stage) 10%, rgba(10,6,18,0.72) 55%, rgba(10,6,18,0.35) 100%); }
+  .beam { width: 80vw; }
+  .hero-dots { display: none; }
+  .wordmark .tv { padding: 6px 8px 3px 11px; letter-spacing: 4px; }
+  .tagline { font-size: 16px; }
+  .btn { padding: 13px 20px; font-size: 16px; }
+  .wrap { padding: 0 16px; }
+  .block { padding-top: 52px; }
+  .row { grid-auto-columns: 240px; gap: 12px; }
+  .row.posters { grid-auto-columns: 136px; }
+  .row-arrow { display: none; }
+  .row-head h3 { font-size: 21px; }
+  .row-head h3 small { display: block; margin: 2px 0 0; }
+  .live-side { padding: 20px; }
+}
+@media (max-width: 420px) {
+  .nav-mark { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .beams, .sparkles { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-left">
+    <a href="home.html" class="back-btn"><i class="fas fa-arrow-left"></i> Home</a>
+    <span class="nav-mark">Zaina Juliette<b>TV</b></span>
+  </div>
+  <div class="nav-right">
+    <span class="where">On FLM TV Network</span>
+    <a class="nav-live" href="#live"><span class="dot"></span> FLM TV LIVE</a>
+  </div>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="hero-media" id="heroMedia"></div>
+  <div class="hero-shade"></div>
+  <div class="beams" aria-hidden="true"><div class="beam l"></div><div class="beam r"></div></div>
+  <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="kicker">ZJ Spotlight Productions presents</div>
+    <h1 class="wordmark">
+      <span class="first">Zaina</span>
+      <span class="last">Juliette<span class="tv">TV</span></span>
+    </h1>
+    <p class="slogan">Lights. Camera. Zaina.</p>
+    <p class="tagline">Her shows, her songs, her heroes and her network, all on one channel. Don't just tune in. Shine in.</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" id="watchNewest" href="#show"><i class="fas fa-play"></i> Watch Zaina Juliette &amp; Friends</a>
+      <a class="btn btn-rose" href="#live"><span class="dot" style="background:#fff;box-shadow:0 0 8px #fff"></span> FLM TV Live</a>
+    </div>
+    <div class="now-showing" id="nowShowing"></div>
+  </div>
+  <div class="hero-dots" id="heroDots" aria-hidden="true"></div>
+</header>
+
+<main>
+  <section class="block wrap" id="live">
+    <div class="sec-kicker">On the air</div>
+    <h2>FLM TV, <em>live</em> right now</h2>
+    <p class="lede">The whole network, streaming as it airs on Channel 26.5 in Las Vegas.</p>
+    <div class="live">
+      <div class="live-screen">
+        <video id="liveVideo" muted playsinline autoplay></video>
+        <div class="live-badge"><span class="dot"></span> LIVE</div>
+        <button type="button" class="live-sound" id="liveSound"><i class="fas fa-volume-xmark"></i> <span>Tap for sound</span></button>
+        <div class="live-off" id="liveOff">
+          <strong>Be right back</strong>
+          <p>The live stream isn't answering right now. Everything below plays on demand anytime.</p>
+          <button type="button" class="btn btn-ghost" id="liveRetry"><i class="fas fa-rotate-right"></i> Try again</button>
+        </div>
+      </div>
+      <div class="live-side">
+        <h3>The network Zaina built</h3>
+        <p>FLM TV is Zaina Juliette's own network: local shows, classic favorites, movies and music, free for everyone.</p>
+        <a class="btn btn-ghost" href="home.html"><i class="fas fa-tv"></i> Explore FLM TV</a>
+        <ul class="live-facts">
+          <li><i class="fas fa-tower-broadcast"></i> Over the air on Channel 26.5 Las Vegas</li>
+          <li><i class="fas fa-globe"></i> Streaming worldwide at flmtv.com</li>
+          <li><i class="fas fa-heart"></i> Free. No sign-up. No subscription.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block wrap" id="show">
+    <div class="sec-kicker">The show</div>
+    <h2>Zaina Juliette <em>&amp;</em> Friends</h2>
+    <p class="lede">Every season of the show that puts Las Vegas talent, legends and friends in the spotlight.</p>
+    <div id="seasonRows"><div class="status"><span class="spin"></span>Loading episodes…</div></div>
+  </section>
+
+  <section class="block wrap" id="mj" hidden>
+    <div class="sec-kicker">The King of Pop</div>
+    <h2>The Michael Jackson <em>Collection</em></h2>
+    <p class="lede">Moonwalker, plus our own episodes celebrating Michael's music, moves and legacy.</p>
+    <div id="mjRows"></div>
+  </section>
+
+  <section class="block wrap" id="concerts" hidden>
+    <div class="sec-kicker">Front row, no ticket</div>
+    <h2>Concerts <em>&amp;</em> live shows</h2>
+    <p class="lede">The stage lights are on. Pull up a seat.</p>
+    <div id="concertRows"></div>
+  </section>
+
+  <section class="block wrap" id="zone">
+    <div class="sec-kicker">The Zaina Zone</div>
+    <h2>Music videos <em>&amp;</em> more</h2>
+    <p class="lede">Songs, specials and moments from Zaina Juliette &amp; The StarChilds.</p>
+    <div id="zoneRows"><div class="status"><span class="spin"></span>Loading…</div></div>
+  </section>
+
+  <section class="block wrap" id="more" hidden>
+    <div class="sec-kicker">Just added</div>
+    <h2>New on <em>ZJTV</em></h2>
+    <div id="moreRows"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>Zaina Juliette TV</strong> (ZJTV), presented by ZJ Spotlight Productions, is part of FLM TV Network. Free on flmtv.com, the FLM TV Roku channel,<br>and over the air on Channel 26.5 in Las Vegas.</p>
+    <div class="foot-btns">
+      <a class="btn btn-ghost" href="https://zainajuliette.tv" target="_blank" rel="noopener"><i class="fas fa-star"></i> zainajuliette.tv</a>
+      <a class="btn btn-ghost" href="home.html"><i class="fas fa-house"></i> Back to FLM TV</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+
+<script>
+  // ════════════════════════════════════════════════════════════════
+  //  ZAINA JULIETTE TV SETTINGS: the only part you should need to edit
+  // ════════════════════════════════════════════════════════════════
+  const JELLYFIN = {
+    SERVER:  'https://flmtv.com/jellyfin',                 // lists + pictures (same as home.html)
+    VIDEO_SERVER: 'https://flmtv26.duckdns.org:8920',     // banner clips stream straight from here
+    API_KEY: '62131ee22c0141c6b651be75a7444350'
+  };
+  const LIVE_STREAM = 'https://flmtv26.duckdns.org/hls/FLMTV.m3u8';
+
+  // Jellyfin ids (the part after "parentId=" in Jellyfin's address bar)
+  const ZJTV_LIBRARY_ID = 'f0486e44c5d6038d7682e808a4f4f6f1';   // V:\10-ZAINA JULIETTE TV
+  const ZAINA_ZONE_ID   = '1ac641863cec9162df01d2c2a751c932';   // ZAINA ZONE library
+  const SHOW_ID         = '84d8f54614de1ef112941c209f542df6';   // Zaina Juliette & Friends (all seasons)
+
+  // Banner clips: short videos that play (muted) in the banner between the pictures.
+  // Any video in these folders plays. Trailers anywhere in Zaina Juliette TV play too.
+  const BANNER_CLIP_FOLDERS = [
+    'a0d63b2790587159e9a70dece0d53453',   // Zaina Juliette & Friends \ SPECIAL CLIPS
+    '28c68518c77e975a9c697cf1a33b8e41'    // Zaina TV Show Clips
+  ];
+  const BANNER_CLIP_MAX_MINUTES = 6;      // longer videos are skipped in the banner
+
+  // Topic sections. Anything in Zaina Juliette TV (and any Zaina Juliette & Friends
+  // episode) whose name or file path matches goes in that section automatically.
+  const TOPICS = [
+    { box: 'mj',       rows: 'mjRows',      title: 'Michael Jackson',
+      match: /michael\s*jackson|moonwalk|\bmjj?\b|king of pop/i },
+    { box: 'concerts', rows: 'concertRows', title: 'Concerts',
+      match: /concert|live at|live in|\btour\b|starchild/i }
+  ];
+
+  // Files to leave out of the rows: movie parts like "Moonwalker (a)" / "(b)"
+  // when the full movie is there too, and trailers (they play in the banner instead).
+  const HIDE_FROM_ROWS = [/\((a|b|part\s*\d)\)\s*$/i, /trailer/i];
+  // ════════════════════════════════════════════════════════════════
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  const norm = t => String(t || '').toLowerCase().replace(/\s+/g, ' ').trim();
+
+  async function jf(endpoint, params = {}, isRetry = false) {
+    const q = new URLSearchParams({ api_key: JELLYFIN.API_KEY });
+    Object.keys(params).forEach(k => { if (params[k] != null) q.append(k, params[k]); });
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 12000);
+    try {
+      const r = await fetch(`${JELLYFIN.SERVER}${endpoint}?${q}`, {
+        mode: 'cors', credentials: 'omit', headers: { 'Accept': 'application/json' }, signal: ctl.signal
+      });
+      clearTimeout(t);
+      return r.ok ? await r.json() : null;
+    } catch (e) {
+      clearTimeout(t);
+      return isRetry ? null : jf(endpoint, params, true);
+    }
+  }
+  const list = r => (r && r.Items) ? r.Items : [];
+
+  const imgUrl = (id, type, tag, w, index) =>
+    `${JELLYFIN.SERVER}/Items/${id}/Images/${type}${index != null ? '/' + index : ''}?api_key=${JELLYFIN.API_KEY}` +
+    `${tag ? `&tag=${tag}` : ''}&fillWidth=${w}&quality=85&format=webp`;
+
+  // Best picture for a card: its own poster or thumbnail, then its show's, then a backdrop.
+  function cardPic(i, w, wide) {
+    const t = i.ImageTags || {};
+    if (wide && t.Thumb) return imgUrl(i.Id, 'Thumb', t.Thumb, w);
+    if (t.Primary) return imgUrl(i.Id, 'Primary', t.Primary, w);
+    if (wide && i.ParentThumbItemId && i.ParentThumbImageTag) return imgUrl(i.ParentThumbItemId, 'Thumb', i.ParentThumbImageTag, w);
+    if (i.BackdropImageTags && i.BackdropImageTags.length) return imgUrl(i.Id, 'Backdrop', i.BackdropImageTags[0], w, 0);
+    if (i.ParentBackdropItemId && i.ParentBackdropImageTags && i.ParentBackdropImageTags.length)
+      return imgUrl(i.ParentBackdropItemId, 'Backdrop', i.ParentBackdropImageTags[0], w, 0);
+    if (i.SeriesId && i.SeriesPrimaryImageTag) return imgUrl(i.SeriesId, 'Primary', i.SeriesPrimaryImageTag, w);
+    return null;
+  }
+  const textTile = (title, sub) =>
+    `<div class="text-tile"><div class="s">${esc(sub || 'ZJTV')}</div><div class="t">${esc(title)}</div></div>`;
+  const picOrTile = (src, title, sub) => src
+    ? `<img src="${src}" alt="" loading="lazy" data-t="${esc(title)}" data-s="${esc(sub || '')}" onerror="zjTile(this)">`
+    : textTile(title, sub);
+  // a picture that fails to load turns into the title card
+  window.zjTile = el => { el.onerror = null; el.outerHTML = textTile(el.dataset.t, el.dataset.s); };
+
+  function minutes(ticks) {
+    if (!ticks) return '';
+    const m = Math.round(ticks / 600000000);
+    return m >= 60 ? `${Math.floor(m / 60)} hr ${m % 60} min` : `${m} min`;
+  }
+  const watchLink = id => `movie-frame.html?id=${id}`;
+  const baseName = p => String(p || '').split(/[\\/]/).pop().replace(/\.[a-z0-9]+$/i, '').toLowerCase().trim();
+  const showFiles = new Set();   // file names of every Zaina Juliette & Friends episode
+  const isShowCopy = i => showFiles.has(baseName(i.Path)) || /zaina juliette show|zaina juliette (&|and) friends/i.test(String(i.Path || '').replace(/[^\\/]+$/, ''));
+  const hidden = i => isShowCopy(i) || HIDE_FROM_ROWS.some(re => re.test(i.Name || '') || re.test(String(i.Path || '').replace(/\.[a-z0-9]+$/i, '')));
+  const haystack = i => `${i.Name || ''} ${i.Path || ''} ${(i.Genres || []).join(' ')} ${(i.Tags || []).join(' ')}`;
+
+  // ── ROW BUILDER ──────────────────────────────────────────────────
+  function addRow(box, title, items, opts = {}) {
+    if (!items.length) return null;
+    const head = document.createElement('div');
+    head.className = 'row-head';
+    if (opts.anchor) { head.id = opts.anchor; head.style.scrollMarginTop = '80px'; }
+    head.innerHTML = `<h3>${esc(title)}${opts.note ? `<small>${esc(opts.note)}</small>` : ''}</h3>` +
+      (opts.seeAll ? `<a href="${opts.seeAll}">See all</a>` : '');
+    const wrap = document.createElement('div');
+    wrap.className = 'row-wrap' + (opts.posters ? ' posters-wrap' : '');
+    const track = document.createElement('div');
+    track.className = 'row' + (opts.posters ? ' posters' : '');
+    items.forEach(i => track.appendChild(opts.posters ? posterCard(i) : wideCard(i, opts)));
+    const prev = document.createElement('button'), next = document.createElement('button');
+    prev.className = 'row-arrow prev'; next.className = 'row-arrow next';
+    prev.type = next.type = 'button';
+    prev.setAttribute('aria-label', `Scroll ${title} left`); next.setAttribute('aria-label', `Scroll ${title} right`);
+    prev.innerHTML = '<i class="fas fa-chevron-left"></i>'; next.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    prev.onclick = () => track.scrollBy({ left: -track.clientWidth * 0.85 });
+    next.onclick = () => track.scrollBy({ left: track.clientWidth * 0.85 });
+    wrap.append(prev, track, next);
+    box.append(head, wrap);
+    // arrows only when the row is wider than the screen
+    const fit = () => { const more = track.scrollWidth > track.clientWidth + 4; prev.hidden = next.hidden = !more; };
+    requestAnimationFrame(fit); window.addEventListener('resize', fit);
+    return track;
+  }
+
+  // Tidy episode names: "ZJF-Classic Ent. 03-MJ-SwingDance_1" -> "Classic Ent. 03 · MJ · SwingDance"
+  function epTitle(ep) {
+    let n = String(ep.Name || '');
+    if (/^zaina juliette (&|and) friends$/i.test(n.trim())) {
+      const f = String(ep.Path || '').split(/[\\/]/).pop().replace(/\.[a-z0-9]+$/i, '');
+      if (f) n = f;
+    }
+    n = n.replace(/^(ZJF|ZJS)\s*[-–]\s*/i, '')
+         .replace(/_\d+$/, '').replace(/_/g, ' ')
+         .replace(/\s*-\s*(FLM|final)\s*$/i, '')
+         .replace(/\s+/g, ' ').trim();
+    return n || 'Episode';
+  }
+
+  function wideCard(ep, opts) {
+    const a = document.createElement('a');
+    a.className = 'ep-card';
+    a.href = watchLink(ep.Id);
+    const title = epTitle(ep);
+    const len = minutes(ep.RunTimeTicks);
+    const sub = opts.subOf ? opts.subOf(ep) : (ep.Type === 'Episode' && ep.IndexNumber != null && ep.ParentIndexNumber ? `Episode ${ep.IndexNumber}` : '');
+    a.innerHTML = `
+      <div class="ep-thumb">${picOrTile(cardPic(ep, 600, true), title, ep.SeriesName)}
+        ${len ? `<span class="ep-len">${len}</span>` : ''}
+        <span class="ep-play"><i class="fas fa-play"></i></span></div>
+      <div class="ep-title">${esc(title)}</div>
+      ${sub ? `<div class="ep-sub">${esc(sub)}</div>` : ''}`;
+    return a;
+  }
+
+  function posterCard(m) {
+    const a = document.createElement('a');
+    a.className = 'movie-card';
+    a.href = watchLink(m.Id);
+    const name = String(m.Name || '').trim();
+    a.innerHTML = `
+      <div class="movie-poster">${picOrTile(cardPic(m, 380, false), name, m.ProductionYear || (m.Type === 'Series' ? 'Series' : ''))}
+        <div class="card-actions"><span class="card-watch-btn"><i class="fas fa-play"></i> ${m.Type === 'Series' ? 'WATCH SHOW' : 'WATCH NOW'}</span></div></div>
+      <div class="movie-name">${esc(name)}</div>
+      ${m.ProductionYear ? `<div class="movie-year">${m.ProductionYear}</div>` : ''}`;
+    return a;
+  }
+
+  // Show each title once, even when the same movie sits there as .mp4 and .mpg,
+  // or Jellyfin lists two copies.
+  function dedupe(items) {
+    const seen = new Set();
+    return items.filter(i => {
+      const k = norm(i.Name).replace(/[^a-z0-9]+/g, ' ').trim() + '|' + (i.ProductionYear || '');
+      if (seen.has(k)) return false;
+      seen.add(k); return true;
+    });
+  }
+
+  // ── DATA ────────────────────────────────────────────────────────
+  const COMMON = { Fields: 'Path,ProductionYear,Genres,Tags,DateCreated,ParentId', EnableImages: 'true', ImageTypeLimit: '1',
+                   EnableImageTypes: 'Primary,Backdrop,Thumb' };
+
+  const data = {};
+  async function loadData() {
+    const [lib, libItems, eps, zone] = await Promise.all([
+      jf('/Items', { Ids: ZJTV_LIBRARY_ID, EnableImages: 'true' }),
+      jf('/Items', Object.assign({ ParentId: ZJTV_LIBRARY_ID, Recursive: 'true',
+        IncludeItemTypes: 'Movie,Series,Video,MusicVideo', SortBy: 'DateCreated,SortName', SortOrder: 'Descending', Limit: '400' }, COMMON)),
+      jf(`/Shows/${SHOW_ID}/Episodes`, Object.assign({ Limit: '600' }, COMMON, { Fields: COMMON.Fields + ',RunTimeTicks' })),
+      jf('/Items', Object.assign({ ParentId: ZAINA_ZONE_ID, SortBy: 'SortName' }, COMMON))
+    ]);
+    data.library  = list(lib)[0] || null;
+    data.items    = list(libItems);
+    data.episodes = list(eps).filter(e => e.LocationType !== 'Virtual');
+    data.episodes.forEach(e => { if (e.Path) showFiles.add(baseName(e.Path)); });
+    data.zone     = list(zone);
+    data.ok = !!(libItems || eps || zone);
+  }
+
+  // ── HERO: pictures + clips, crossfading like a stage show ────────
+  const hero = {
+    media: $('heroMedia'), slides: [], i: 0, cur: null, timer: null, clipFails: 0,
+
+    async start(lib, items, episodes) {
+      const pics = [];
+      const addBackdrops = (it, max) => (it && it.BackdropImageTags || []).slice(0, max).forEach((tag, k) =>
+        pics.push({ type: 'still', src: imgUrl(it.Id, 'Backdrop', tag, 1920, k), label: it.Type === 'CollectionFolder' ? '' : it.Name }));
+      addBackdrops(lib, 30);
+      items.forEach(it => addBackdrops(it, 3));
+      const show = await jf('/Items', { Ids: SHOW_ID, EnableImages: 'true' });
+      addBackdrops(list(show)[0], 8);
+
+      // clips: the banner folders, plus any trailer in Zaina Juliette TV
+      const maxTicks = BANNER_CLIP_MAX_MINUTES * 600000000;
+      const fromFolders = await Promise.all(BANNER_CLIP_FOLDERS.map(id => jf('/Items', {
+        ParentId: id, Recursive: 'true', IncludeItemTypes: 'Episode,Video,Movie,MusicVideo', Fields: 'RunTimeTicks', Limit: '60' })));
+      let clips = fromFolders.flatMap(list)
+        .concat(items.filter(i => /trailer/i.test(i.Name + ' ' + (i.Path || ''))));
+      clips = clips.filter(c => !c.RunTimeTicks || c.RunTimeTicks <= maxTicks)
+                   .map(c => ({ type: 'clip', id: c.Id, label: /trailer/i.test(c.Name) ? c.Name.replace(/\s*trailer\s*/i, ' ').trim() : epTitle(c) }));
+
+      shuffle(pics); shuffle(clips);
+      // alternate: picture, clip, picture, clip… (pictures first so the banner is never empty)
+      const n = Math.max(pics.length, clips.length);
+      for (let k = 0; k < n; k++) { if (pics[k]) this.slides.push(pics[k]); if (clips[k]) this.slides.push(clips[k]); }
+      if (!this.slides.length) this.slides.push({ type: 'still', src: '', label: '' });
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.slides = this.slides.filter(s => s.type === 'still');
+      this.drawDots();
+      this.next();
+    },
+
+    drawDots() {
+      const box = $('heroDots'), n = Math.min(this.slides.length, 12);
+      box.innerHTML = n > 1 ? '<span></span>'.repeat(n) : '';
+    },
+    markDot() {
+      const dots = $('heroDots').children;
+      if (!dots.length) return;
+      Array.from(dots).forEach((d, k) => d.classList.toggle('on', k === (this.i - 1) % dots.length));
+    },
+
+    swapIn(el) {
+      if (this.cur && this.cur !== el) {
+        const old = this.cur;
+        old.classList.remove('on');
+        setTimeout(() => { if (old.tagName === 'VIDEO') { old.pause(); old.removeAttribute('src'); old.load(); } old.remove(); }, 1500);
+      }
+      this.cur = el;
+      requestAnimationFrame(() => el.classList.add('on'));
+    },
+
+    caption(label) {
+      $('nowShowing').innerHTML = label ? `<span class="lbl">Now showing</span> ${esc(label)}` : '';
+    },
+
+    next() {
+      clearTimeout(this.timer);
+      let s = this.slides[this.i % this.slides.length];
+      this.i++;
+      if (s.type === 'clip' && this.clipFails >= 2) {   // video server not answering: pictures only
+        this.slides = this.slides.filter(x => x.type !== 'clip');
+        if (!this.slides.length) return;
+        s = this.slides[this.i % this.slides.length];
+      }
+      this.markDot();
+      if (s.type === 'still') {
+        const d = document.createElement('div');
+        d.className = 'still';
+        if (s.src) d.style.backgroundImage = `url("${s.src}")`;
+        this.media.appendChild(d);
+        this.swapIn(d);
+        this.caption(s.label);
+        if (this.slides.length > 1) this.timer = setTimeout(() => this.next(), 7000);
+        return;
+      }
+      const v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.playsInline = true; v.preload = 'auto';
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.src = `${JELLYFIN.VIDEO_SERVER}/Videos/${s.id}/stream?static=true&api_key=${JELLYFIN.API_KEY}`;
+      this.media.appendChild(v);
+      let done = false;
+      const fail = () => { if (done) return; done = true; this.clipFails++; v.remove(); this.next(); };
+      v.onerror = fail;
+      this.timer = setTimeout(() => { if (v.readyState < 3) fail(); }, 9000);
+      v.addEventListener('loadedmetadata', () => {
+        // long clips: skip the opening seconds so it starts on the action
+        if (isFinite(v.duration) && v.duration > 60) v.currentTime = Math.min(20, v.duration * 0.15);
+      }, { once: true });
+      v.addEventListener('canplay', () => {
+        if (done) return; done = true;
+        clearTimeout(this.timer);
+        this.clipFails = 0;
+        v.play().catch(() => {});
+        this.swapIn(v);
+        this.caption(s.label);
+        const left = isFinite(v.duration) ? v.duration - v.currentTime : 12;
+        this.timer = setTimeout(() => this.next(), Math.max(4, Math.min(left, 12) - 1) * 1000);
+      }, { once: true });
+      v.load();
+    }
+  };
+  function shuffle(a) { for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+
+  // a few twinkling stars over the hero
+  (function () {
+    const box = $('sparkles'); let h = '';
+    for (let k = 0; k < 16; k++) {
+      h += `<i style="left:${(Math.random() * 100).toFixed(1)}%;top:${(Math.random() * 70).toFixed(1)}%;animation-delay:${(Math.random() * 4).toFixed(2)}s"></i>`;
+    }
+    box.innerHTML = h;
+  })();
+
+  // ── LIVE PLAYER ──────────────────────────────────────────────────
+  const live = {
+    v: $('liveVideo'), hls: null,
+    start() {
+      const v = this.v;
+      $('liveOff').classList.remove('show');
+      v.muted = true;
+      if (this.hls) { this.hls.destroy(); this.hls = null; }
+      if (window.Hls && Hls.isSupported()) {
+        this.hls = new Hls({ liveSyncDurationCount: 3 });
+        this.hls.loadSource(LIVE_STREAM);
+        this.hls.attachMedia(v);
+        this.hls.on(Hls.Events.MANIFEST_PARSED, () => v.play().catch(() => {}));
+        this.hls.on(Hls.Events.ERROR, (e, d) => { if (d.fatal) this.off(); });
+      } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
+        v.src = LIVE_STREAM;
+        v.play().catch(() => {});
+        v.onerror = () => this.off();
+      } else {
+        this.off();
+      }
+    },
+    off() {
+      if (this.hls) { this.hls.destroy(); this.hls = null; }
+      $('liveOff').classList.add('show');
+    },
+    toggleSound() {
+      const v = this.v;
+      v.muted = !v.muted;
+      if (!v.muted) { v.volume = 1; v.play().catch(() => {}); }
+      $('liveSound').innerHTML = v.muted
+        ? '<i class="fas fa-volume-xmark"></i> <span>Tap for sound</span>'
+        : '<i class="fas fa-volume-high"></i> <span>Sound on</span>';
+    }
+  };
+  $('liveSound').onclick = () => live.toggleSound();
+  $('liveRetry').onclick = () => live.start();
+  // Only start the live stream when it scrolls near the screen (saves data on phones).
+  (function () {
+    const go = () => { if (!live.started) { live.started = true; live.start(); } };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: '300px' });
+      io.observe($('live'));
+    } else go();
+  })();
+  // Pause the live stream when the viewer leaves for a show (no sound bleeding through).
+  window.addEventListener('pagehide', () => { try { live.v.pause(); } catch (e) {} });
+
+  // ── SECTIONS ─────────────────────────────────────────────────────
+  function buildSeasons(eps) {
+    const box = $('seasonRows');
+    box.innerHTML = '';
+    if (!eps.length) {
+      box.innerHTML = data.ok ? '<div class="status">New episodes are on the way.</div>'
+        : '<div class="status">The episodes are taking longer than usual to load.<br><button type="button" class="btn btn-ghost" onclick="location.reload()">Try again</button></div>';
+      return;
+    }
+    const seasons = new Map();
+    eps.forEach(e => {
+      const k = e.SeasonId || 'other';
+      if (!seasons.has(k)) seasons.set(k, { name: e.SeasonName || 'More episodes', idx: e.ParentIndexNumber, eps: [] });
+      seasons.get(k).eps.push(e);
+    });
+    const order = s => (s.idx == null || s.idx === 0) ? 999 : s.idx;   // seasons in order, clips & specials last
+    Array.from(seasons.entries())
+      .sort((a, b) => order(a[1]) - order(b[1]) || a[1].name.localeCompare(b[1].name))
+      .forEach(([id, s]) => {
+        s.eps.sort((a, b) => (a.IndexNumber ?? 999) - (b.IndexNumber ?? 999) || (a.Name || '').localeCompare(b.Name || '', undefined, { numeric: true }));
+        const nice = /^season unknown$/i.test(s.name) ? 'More episodes' : s.name.replace(/^SPECIAL CLIPS$/i, 'Special Clips');
+        addRow(box, nice, s.eps, { note: `${s.eps.length} ${s.eps.length === 1 ? 'video' : 'videos'}`,
+          seeAll: id !== 'other' ? `category-detail.html?id=${id}&name=${encodeURIComponent('Zaina Juliette & Friends · ' + nice)}` : null });
+      });
+    // hero button: the newest full episode (not a short clip)
+    const full = eps.filter(e => e.ParentIndexNumber > 0 && (!e.RunTimeTicks || e.RunTimeTicks > 6000000000));
+    const newest = (full.length ? full : eps).slice().sort((a, b) => new Date(b.DateCreated || 0) - new Date(a.DateCreated || 0))[0];
+    if (newest) $('watchNewest').href = watchLink(newest.Id);
+  }
+
+  const usedIds = new Set();
+  function buildTopics(items, eps) {
+    TOPICS.forEach(t => {
+      const box = $(t.rows);
+      const lib = dedupe(items.filter(i => !hidden(i) && t.match.test(haystack(i))));
+      const showEps = eps.filter(e => t.match.test(haystack(e)));
+      if (!lib.length && !showEps.length) return;
+      $(t.box).hidden = false;
+      lib.forEach(i => usedIds.add(i.Id));
+      addRow(box, `${t.title} on ZJTV`, lib, { posters: true });
+      addRow(box, `${t.title} on Zaina Juliette & Friends`, showEps, {});
+    });
+  }
+
+  function buildZone(zone) {
+    const box = $('zoneRows');
+    box.innerHTML = '';
+    const showName = norm('Zaina Juliette & Friends');
+    const picks = dedupe(zone.filter(i => ['Series', 'Movie', 'Video', 'MusicVideo', 'Episode'].includes(i.Type) &&
+                                          !i.SeasonId && norm(i.Name) !== showName && !/^kling_/i.test(i.Name || '')));
+    if (!picks.length) { $('zone').hidden = true; return; }
+    addRow(box, 'From the Zaina Zone', picks, { posters: true, seeAll: `category-detail.html?id=${ZAINA_ZONE_ID}&name=${encodeURIComponent('Zaina Zone')}` });
+  }
+
+  function buildMore(items) {
+    const rest = dedupe(items.filter(i => !hidden(i) && !usedIds.has(i.Id)));
+    if (!rest.length) return;
+    $('more').hidden = false;
+    addRow($('moreRows'), 'Fresh in the spotlight', rest, { posters: true,
+      seeAll: `category-detail.html?id=${ZJTV_LIBRARY_ID}&name=${encodeURIComponent('Zaina Juliette TV')}` });
+  }
+
+  (async function init() {
+    await loadData();
+    hero.start(data.library, data.items, data.episodes);
+    buildSeasons(data.episodes);
+    buildTopics(data.items, data.episodes);
+    buildZone(data.zone);
+    buildMore(data.items);
+  })();
+</script>
+
+<script>
+// ── FIRESTICK D-PAD NAVIGATION ──────────────────────────────
+(function() {
+  if (!/AFT|FireTV|Silk/i.test(navigator.userAgent)) return;
+  document.documentElement.classList.add('flm-tv');
+
+  function getFocusable() {
+    return Array.from(document.querySelectorAll('.back-btn, .nav-live, .hero-actions .btn, .live-sound, .live-off.show .btn, .live-side .btn, .ep-card, .movie-card, .foot .btn'))
+      .filter(el => el.offsetParent !== null && el.offsetWidth > 0);
+  }
+  function findBest(cur, all, dir) {
+    const cr = cur.getBoundingClientRect();
+    const cx = cr.left + cr.width / 2, cy = cr.top + cr.height / 2;
+    const cands = all.filter(el => {
+      if (el === cur) return false;
+      const r = el.getBoundingClientRect();
+      const ex = r.left + r.width / 2, ey = r.top + r.height / 2;
+      if (dir === 'right') return ex > cr.right - 10;
+      if (dir === 'left')  return ex < cr.left + 10;
+      if (dir === 'down')  return ey > cr.bottom - 10;
+      if (dir === 'up')    return ey < cr.top + 10;
+    });
+    if (!cands.length) return null;
+    let best = null, bestScore = Infinity;
+    cands.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const dx = (r.left + r.width / 2) - cx, dy = (r.top + r.height / 2) - cy;
+      const primary = (dir === 'right' || dir === 'left') ? Math.abs(dx) : Math.abs(dy);
+      const secondary = (dir === 'right' || dir === 'left') ? Math.abs(dy) : Math.abs(dx);
+      const score = primary + secondary * 0.3;
+      if (score < bestScore) { bestScore = score; best = el; }
+    });
+    return best;
+  }
+
+  document.addEventListener('keydown', function(e) {
+    const all = getFocusable();
+    if (!all.length) return;
+    const focused = document.activeElement;
+    const inList = all.indexOf(focused) >= 0;
+
+    if (!inList) {
+      if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
+        e.preventDefault();
+        const first = document.querySelector('.hero-actions .btn') || all[0];
+        first.focus();
+        first.scrollIntoView({ block: 'center' });
+      }
+      return;
+    }
+
+    const dir = { ArrowRight:'right', ArrowLeft:'left', ArrowDown:'down', ArrowUp:'up' }[e.key];
+    if (dir) {
+      e.preventDefault();
+      const next = findBest(focused, all, dir);
+      if (next) { next.focus(); next.scrollIntoView({ behavior:'smooth', block:'center', inline:'nearest' }); }
+      else if (dir === 'up') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => document.querySelector('.back-btn').focus(), 400);
+      }
+    }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focused.click(); }
+    if (e.key === 'Backspace' || e.key === 'Escape') { e.preventDefault(); window.location.href = 'home.html'; }
+  }, true);
+})();
+</script>
+
+<script src="/tv-remote.js" defer></script>
+</body>
+</html>
