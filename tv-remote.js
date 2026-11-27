@@ -208,6 +208,8 @@
     }
 
     function goBack() {
+        // a page can say exactly where Back goes (movie-frame.html does)
+        if (typeof window.flmGoBack === 'function') { window.flmGoBack(); return; }
         var path = location.pathname.replace(/\/+$/, '');
         var atHome = path === '' || /\/(home|index)(\.html)?$/i.test(path);
         if (!atHome && history.length > 1) { history.back(); return; }

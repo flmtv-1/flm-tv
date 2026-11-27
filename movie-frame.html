@@ -100,7 +100,7 @@
 <body>
 
 <div id="flmBar">
-  <a class="flm-btn btn-front" href="#" onclick="history.back(); return false;" id="backBtn">
+  <a class="flm-btn btn-front" href="#" onclick="flmGoBack(); return false;" id="backBtn">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
     Back
   </a>
@@ -118,6 +118,24 @@
 <iframe id="jellyfinFrame" allowfullscreen="" allow="autoplay; fullscreen; picture-in-picture" title="FLM TV"></iframe>
 
 <script>
+// BACK: go straight to the FLM TV page the viewer came from. history.back()
+// can't be used here: Jellyfin adds its own steps to the history inside the
+// player (including the ENTER FLM sign-in, which forwards right back to the
+// movie), so "back" kept landing on the movie again and looked broken.
+(function () {
+  var ref = document.referrer || '';
+  var fromSite = ref.indexOf(location.origin) === 0 && !/movie-frame/i.test(ref);
+  try {
+    if (fromSite) sessionStorage.setItem('flmReturnTo', ref);
+  } catch (e) {}
+})();
+function flmGoBack() {
+  var to = '';
+  try { to = sessionStorage.getItem('flmReturnTo') || ''; } catch (e) {}
+  window.location.href = to || 'home.html';
+}
+window.flmGoBack = flmGoBack;
+
 // The Vault opens Jellyfin's real native interface — account settings,
 // avatar, everything live there. It must NEVER run as the shared
 // ENTER FLM account, since that's a public login anyone can use.
