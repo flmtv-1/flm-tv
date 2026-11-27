@@ -135,6 +135,12 @@ function flmGoBack() {
   window.location.href = to || 'home.html';
 }
 window.flmGoBack = flmGoBack;
+// Jellyfin (inside the frame) asks for Back when a remote's Back key or a
+// back arrow is pressed there.
+window.addEventListener('message', function (e) {
+  var ok = e.origin === 'https://flmtv26.duckdns.org:8920' || e.origin === location.origin;
+  if (ok && e.data && e.data.flm === 'back') flmGoBack();
+});
 
 // The Vault opens Jellyfin's real native interface — account settings,
 // avatar, everything live there. It must NEVER run as the shared
