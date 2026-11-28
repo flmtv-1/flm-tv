@@ -3459,7 +3459,26 @@
                         </div>
                     </div>
 
-                <!-- MICHAEL JACKSON'S MOONWALKER FEATURED CARD (plays a muted preview; click to watch) -->
+                <!-- DOLLY PARTON TRIBUTE CHANNEL CARD -->
+                    <div onclick="openDollyPartonCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
+                                        <img src="assets/images/dolly-parton-banner.webp"
+                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.55;pointer-events:none;z-index:1;"
+                         alt="Dolly Parton Channel" onerror="this.style.display='none'">
+                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 25%,rgba(5,10,30,0.15) 100%);z-index:2;"></div>
+                    <div style="position:relative;z-index:5;padding:8px 14px;width:100%;">
+                        <div class="mu-event-badge in-flow"><div class="live-dot"></div> TRIBUTE</div>
+                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">DOLLY PARTON</div>
+                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">TRIBUTE CHANNEL</div>
+                    </div>
+                    <div class="mu-watch" style="position:absolute;bottom:10px;right:14px;z-index:6;display:flex;align-items:center;gap:6px;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e,0 0 14px rgba(34,197,94,0.7);animation:tvs-pulse 1.4s infinite;"></span>
+                        <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#22c55e;text-shadow:0 0 4px rgba(34,197,94,0.6);">WATCH CHANNEL</span>
+                    </div>
+                </div>
+
+                </div>
+
+                <!-- MICHAEL JACKSON'S MOONWALKER FEATURED CARD (wide spot) (plays a muted preview; click to watch) -->
                     <div onclick="openMoonwalkerCard()" class="mu-event-card mw-event-card" id="mwCard" role="link" tabindex="0" style="text-decoration:none;cursor:pointer;background:radial-gradient(circle at 70% 20%, #2a1a05 0%, #07070A 70%);overflow:hidden;">
                         <img id="mwCardStill" alt="Michael Jackson's Moonwalker"
                              style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0.6;z-index:1;pointer-events:none;"
@@ -3468,8 +3487,8 @@
                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s;z-index:1;pointer-events:none;"></video>
                         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,10,0.95) 18%,rgba(5,5,10,0.3) 65%,rgba(5,5,10,0.05) 100%);z-index:2;"></div>
                         <div class="mw-moon" aria-hidden="true"></div>
+                        <div class="mu-event-badge" style="background:linear-gradient(90deg,#f6c453,#ffe39a);color:#0A0612;border-color:rgba(255,255,255,0.4);"><div class="live-dot" style="background:#0A0612;"></div> NOW STREAMING</div>
                         <div style="position:relative;z-index:5;padding:8px 14px;width:100%;">
-                            <div class="mu-event-badge in-flow" style="background:linear-gradient(90deg,#f6c453,#ffe39a);color:#0A0612;border-color:rgba(255,255,255,0.4);"><div class="live-dot" style="background:#0A0612;"></div> NOW STREAMING</div>
                             <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffe39a;line-height:1;text-shadow:0 0 18px rgba(246,196,83,0.6);">MICHAEL JACKSON'S MOONWALKER</div>
                             <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">ON <span style="color:#ff8db9;">ZAINA JULIETTE TV</span></div>
                         </div>
@@ -3478,7 +3497,6 @@
                             <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#f6c453;">WATCH NOW</span>
                         </div>
                     </div>
-                </div>
 
                 <script>
        // ── Michael Jackson's Moonwalker card ──────────────────────────
@@ -3487,13 +3505,16 @@
        var MOONWALKER = {
            LIBRARY_ID: 'f0486e44c5d6038d7682e808a4f4f6f1',   // V:\10-ZAINA JULIETTE TV
            SEARCH: 'Moonwalker',
+           // The exact file this card plays (V:\10-ZAINA JULIETTE TV\Moonwalker (1988)-tmdbid-13192\...)
+           FILE: 'Moonwalker (1988)-tmdbid-13192.mkv',
            VIDEO_SERVER: 'https://flmtv26.duckdns.org:8920',
-           movieId: null
+           movieId: 'f00fb976c2f989b889a80d26c377ba46'   // that file's Jellyfin id today; re-checked by file name on every visit
        };
+       // The card opens Moonwalker's page on Zaina Juliette TV (big "Watch Moonwalker" button,
+       // plus the rest of the Michael Jackson Collection), so viewers land on ZJTV
+       // and come back to it when they press Back after the movie.
        function openMoonwalkerCard() {
-           window.location.href = MOONWALKER.movieId
-               ? 'movie-frame.html?id=' + MOONWALKER.movieId
-               : 'zjtv.html#mj';
+           window.location.href = 'zjtv.html?view=mj';
        }
        window.addEventListener('DOMContentLoaded', function moonwalkerCard() {
            const card = document.getElementById('mwCard');
@@ -3507,31 +3528,30 @@
                .then(res => {
                    const items = (res && res.Items) || [];
                    const isTrailer = i => /trailer/i.test((i.Name || '') + ' ' + (i.Path || ''));
-                   const isPart = i => /\((a|b|part\s*\d)\)\s*$/i.test(i.Name || '');
-                   // the movie: the 1080p copy if there is one, otherwise the longest full copy
-                   const movies = items.filter(i => !isTrailer(i) && !isPart(i))
-                       .sort((a, b) => (/1080p/i.test(b.Path || '') - /1080p/i.test(a.Path || '')) || ((b.RunTimeTicks || 0) - (a.RunTimeTicks || 0)));
-                   const movie = movies[0];
+                   // the movie: always the exact file named in MOONWALKER.FILE
+                   const fileOf = i => String(i.Path || '').split(/[\\/]/).pop().toLowerCase();
+                   const movie = items.find(i => fileOf(i) === MOONWALKER.FILE.toLowerCase()) || items.find(i => i.Id === MOONWALKER.movieId);
                    if (movie) MOONWALKER.movieId = movie.Id;
                    // the picture: the movie's own art, else the library's backdrop
                    const still = document.getElementById('mwCardStill');
-                   const own = items.find(i => i.BackdropImageTags && i.BackdropImageTags.length);
+                   const own = (movie && movie.BackdropImageTags && movie.BackdropImageTags.length) ? movie : items.find(i => i.BackdropImageTags && i.BackdropImageTags.length);
                    const parent = items.find(i => i.ParentBackdropItemId && i.ParentBackdropImageTags && i.ParentBackdropImageTags.length);
                    const artId = own ? own.Id : (parent ? parent.ParentBackdropItemId : MOONWALKER.LIBRARY_ID);
                    if (still) {
                        still.src = S + '/Items/' + artId + '/Images/Backdrop/0?api_key=' + K + '&fillWidth=900&quality=80&format=webp';
                        still.style.display = 'block';
                    }
-                   // the moving preview: the trailer if there is one, otherwise the movie itself
+                   // the moving preview: the trailer (an .mp4 every browser can play).
+                   // The movie itself is an .mkv, which most browsers can't play muted in a card.
                    const trailer = items.find(isTrailer);
-                   const clip = trailer || movie;
+                   const clip = trailer;
                    const vid = document.getElementById('mwCardVideo');
                    if (!clip || !vid || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
                    vid.muted = true; vid.defaultMuted = true;
                    vid.src = MOONWALKER.VIDEO_SERVER + '/Videos/' + clip.Id + '/stream?static=true&api_key=' + K;
                    vid.addEventListener('loadedmetadata', () => {
                        // a full movie: start somewhere in the middle of the action
-                       if (!trailer && isFinite(vid.duration) && vid.duration > 600) vid.currentTime = vid.duration * 0.3;
+                       if (isFinite(vid.duration) && vid.duration > 60) vid.currentTime = 8;
                    }, { once: true });
                    vid.addEventListener('playing', () => vid.classList.add('on'), { once: true });
                    vid.addEventListener('error', () => { vid.removeAttribute('src'); vid.style.display = 'none'; }, { once: true });
@@ -3541,23 +3561,6 @@
                .catch(() => {});
        });
                 </script>
-
-                <!-- DOLLY PARTON TRIBUTE CHANNEL CARD -->
-                <div onclick="openDollyPartonCard()" class="mu-event-card" style="text-decoration:none;cursor:pointer;">
-                    <div class="mu-event-badge"><div class="live-dot"></div> TRIBUTE</div>
-                    <img src="assets/images/dolly-parton-banner.webp"
-                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.55;pointer-events:none;z-index:1;"
-                         alt="Dolly Parton Channel" onerror="this.style.display='none'">
-                    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(5,10,30,0.97) 25%,rgba(5,10,30,0.15) 100%);z-index:2;"></div>
-                    <div style="position:relative;z-index:5;padding:8px 14px;width:100%;">
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:1.05rem;letter-spacing:1.5px;color:#ffd700;line-height:1;text-shadow:0 0 20px rgba(255,215,0,0.5);">DOLLY PARTON</div>
-                        <div style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1.2px;color:#fff;line-height:1;margin-top:2px;">TRIBUTE CHANNEL</div>
-                    </div>
-                    <div style="position:absolute;bottom:10px;right:14px;z-index:6;display:flex;align-items:center;gap:6px;">
-                        <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e,0 0 14px rgba(34,197,94,0.7);animation:tvs-pulse 1.4s infinite;"></span>
-                        <span style="font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;color:#22c55e;text-shadow:0 0 4px rgba(34,197,94,0.6);">WATCH CHANNEL</span>
-                    </div>
-                </div>
 
             </div>
 

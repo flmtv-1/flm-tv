@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Zaina Juliette TV (ZJTV) · zjtv.html · VERSION 2026-11-27c -->
+<!-- Zaina Juliette TV (ZJTV) · zjtv.html · VERSION 2026-11-27e · one row per category + "View more" pages -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -21,6 +21,7 @@
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
+[hidden] { display: none !important; }
 
 :root {
   --stage:   #0A0612;   /* the dark stage: page background */
@@ -221,6 +222,14 @@ button { font-family: inherit; }
   box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.5);
 }
 .live-sound:hover { background: var(--gold); color: var(--stage); }
+.live-full {
+  position: absolute; left: 14px; bottom: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  padding: 10px 16px; border-radius: 999px; background: var(--rose); color: #fff; font-weight: 800; font-size: 15px;
+}
+.live-full:hover { background: #ff5a9d; }
+.live-full:focus-visible { outline: 4px solid var(--gold); outline-offset: 4px; }
+.flm-tv .live-full:focus { outline: 4px solid var(--gold) !important; outline-offset: 4px !important; }
 .live-off {
   position: absolute; inset: 0; z-index: 3; display: none;
   flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px;
@@ -282,6 +291,28 @@ button { font-family: inherit; }
 .ep-len { position: absolute; left: 10px; bottom: 10px; background: rgba(10,6,18,0.85); font-size: 13px; padding: 3px 8px; border-radius: 6px; }
 .ep-title { margin-top: 11px; font-weight: 700; font-size: 16px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .ep-sub { margin-top: 3px; color: var(--mist); font-size: 14px; }
+
+/* Live music station cards */
+.row.stations { grid-auto-columns: 220px; }
+.st-card { display: block; text-decoration: none; color: inherit; scroll-snap-align: start; border-radius: 12px; outline-offset: 4px; }
+.st-logo {
+  position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden;
+  display: grid; place-items: center; padding: 16px;
+  background: radial-gradient(circle at 30% 20%, rgba(255,61,139,0.25), transparent 55%), linear-gradient(160deg, #24163A, #120A1D);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.07); transition: transform 0.25s, box-shadow 0.25s;
+}
+.st-logo img { max-width: 80%; max-height: 72%; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
+.st-logo .ab { font-family: var(--display); font-weight: 900; font-size: 30px; color: var(--gold); letter-spacing: 1px; }
+.st-live { position: absolute; top: 8px; left: 8px; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px;
+  background: rgba(0,0,0,0.65); font-family: var(--label); letter-spacing: 1.5px; font-size: 13px; }
+.st-live .dot { width: 6px; height: 6px; }
+.st-card:hover .st-logo { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--rose), 0 16px 34px rgba(0,0,0,0.5); }
+.st-name { margin-top: 10px; font-weight: 700; font-size: 15px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.st-sub { margin-top: 2px; color: var(--mist); font-size: 13px; }
+.stations-wrap .row-arrow { top: calc(16px + 69px - 22px); }
+.flm-tv .st-card:focus { outline: 4px solid var(--gold) !important; outline-offset: 4px !important; transform: scale(1.04); position: relative; z-index: 5; }
+.st-card:focus-visible { outline: 4px solid var(--gold); outline-offset: 4px; }
+@media (max-width: 760px) { .row.stations { grid-auto-columns: 160px; } }
 
 /* Poster cards (movies, music videos, concerts) */
 .movie-card { display: block; text-decoration: none; color: inherit; scroll-snap-align: start; border-radius: 12px; outline-offset: 4px; }
@@ -377,6 +408,39 @@ button { font-family: inherit; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .beams, .sparkles { display: none; }
 }
+
+/* ── Category rows (home) ── */
+.row-head a.more { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px;
+  color: var(--gold); box-shadow: inset 0 0 0 1px rgba(246,196,83,0.45); font-size: 14px; text-decoration: none; }
+.row-head a.more:hover { background: var(--gold); color: var(--stage); text-decoration: none; }
+.row-head a.more:focus-visible { outline: 4px solid var(--gold); outline-offset: 4px; }
+.flm-tv .row-head a.more:focus { outline: 4px solid var(--gold) !important; outline-offset: 4px !important; background: var(--gold); color: var(--stage); }
+.row-head .kick { display: block; font-family: var(--label); letter-spacing: 2.5px; font-size: 14px; color: var(--rose); margin-bottom: 2px; }
+.cat { scroll-margin-top: 80px; }
+.cat + .cat .row-head { margin-top: 40px; }
+
+/* ── "View more" pages ── */
+.view-head { position: relative; overflow: hidden; isolation: isolate; padding: 64px 0 36px; }
+.view-head .bg { position: absolute; inset: 0; z-index: -2; background-size: cover; background-position: center 30%; opacity: 0.35; }
+.view-head::after { content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg, var(--stage) 10%, rgba(10,6,18,0.6) 60%, rgba(10,6,18,0.3)), linear-gradient(0deg, var(--stage), rgba(10,6,18,0) 70%); }
+.view-back { display: inline-flex; align-items: center; gap: 8px; color: var(--gold); text-decoration: none; font-weight: 700; font-size: 15px;
+  padding: 7px 14px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(246,196,83,0.45); margin-bottom: 22px; }
+.view-back:hover { background: var(--gold); color: var(--stage); }
+.view-back:focus-visible { outline: 4px solid var(--gold); outline-offset: 4px; }
+.view-head h1 { font-family: var(--display); font-weight: 900; font-size: clamp(38px, 5.4vw, 76px); line-height: 0.98; letter-spacing: -1px; margin-top: 6px; }
+.view-head h1 em { color: var(--gold); font-weight: 700; }
+.view-head .lede { color: #E1D8EC; margin-top: 12px; font-size: 18px; max-width: 60ch; line-height: 1.55; }
+.view-count { margin-top: 14px; font-family: var(--label); letter-spacing: 2px; color: var(--mist); font-size: 16px; }
+.grid { display: grid; gap: 26px 18px; margin-top: 26px; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.grid.wide { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.load-more { display: flex; justify-content: center; margin-top: 36px; }
+.flm-tv :is(.view-back, .load-more .btn):focus { outline: 4px solid var(--gold) !important; outline-offset: 4px !important; }
+@media (max-width: 760px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 20px 12px; }
+  .grid.wide { grid-template-columns: 1fr; }
+  .view-head { padding: 40px 0 24px; }
+}
 </style>
 </head>
 <body>
@@ -384,15 +448,16 @@ button { font-family: inherit; }
 <nav class="topnav">
   <div class="nav-left">
     <a href="home.html" class="back-btn"><i class="fas fa-arrow-left"></i> Home</a>
-    <span class="nav-mark">Zaina Juliette<b>TV</b></span>
+    <a class="nav-mark" href="zjtv.html" style="text-decoration:none">Zaina Juliette<b>TV</b></a>
   </div>
   <div class="nav-right">
     <span class="where">On FLM TV Network</span>
-    <a class="nav-live" href="#live"><span class="dot"></span> FLM TV LIVE</a>
+    <a class="nav-live" href="live.html"><span class="dot"></span> WATCH 26.5 LIVE</a>
   </div>
 </nav>
 
-<header class="hero" id="hero">
+<!-- ═════ CHANNEL HOME ═════ -->
+<header class="hero home-only" id="hero">
   <div class="hero-media" id="heroMedia"></div>
   <div class="hero-shade"></div>
   <div class="beams" aria-hidden="true"><div class="beam l"></div><div class="beam r"></div></div>
@@ -407,16 +472,31 @@ button { font-family: inherit; }
     <p class="slogan">Lights. Camera. Zaina.</p>
     <p class="tagline">Her shows, her songs, her heroes and her network, all on one channel. Don't just tune in. Shine in.</p>
     <div class="hero-actions">
-      <a class="btn btn-gold" id="watchNewest" href="#show"><i class="fas fa-play"></i> Watch Zaina Juliette &amp; Friends</a>
-      <a class="btn btn-rose" href="#live"><span class="dot" style="background:#fff;box-shadow:0 0 8px #fff"></span> FLM TV Live</a>
+      <a class="btn btn-gold" href="zjtv.html?view=show"><i class="fas fa-play"></i> Watch Zaina Juliette &amp; Friends</a>
+      <a class="btn btn-rose" href="live.html"><span class="dot" style="background:#fff;box-shadow:0 0 8px #fff"></span> Watch Channel 26.5 Live</a>
     </div>
     <div class="now-showing" id="nowShowing"></div>
   </div>
   <div class="hero-dots" id="heroDots" aria-hidden="true"></div>
 </header>
 
+<!-- ═════ "VIEW MORE" PAGE HEADER ═════ -->
+<header class="view-head view-only" id="viewHead" hidden>
+  <div class="bg" id="viewBg"></div>
+  <div class="wrap">
+    <a class="view-back" href="zjtv.html"><i class="fas fa-arrow-left"></i> Zaina Juliette TV</a>
+    <div class="sec-kicker" id="viewKicker"></div>
+    <h1 id="viewTitle"></h1>
+    <p class="lede" id="viewLede"></p>
+    <div class="view-count" id="viewCount"></div>
+    <div class="hero-actions" id="viewActions" style="margin-top:20px">
+      <a class="btn btn-rose" href="live.html"><span class="dot" style="background:#fff;box-shadow:0 0 8px #fff"></span> Watch Channel 26.5 Live</a>
+    </div>
+  </div>
+</header>
+
 <main>
-  <section class="block wrap" id="live">
+  <section class="block wrap home-only" id="live">
     <div class="sec-kicker">On the air</div>
     <h2>FLM TV, <em>live</em> right now</h2>
     <p class="lede">The whole network, streaming as it airs on Channel 26.5 in Las Vegas.</p>
@@ -424,17 +504,21 @@ button { font-family: inherit; }
       <div class="live-screen">
         <video id="liveVideo" muted playsinline autoplay></video>
         <div class="live-badge"><span class="dot"></span> LIVE</div>
+        <a class="live-full" href="live.html"><i class="fas fa-expand"></i> Watch full screen</a>
         <button type="button" class="live-sound" id="liveSound"><i class="fas fa-volume-xmark"></i> <span>Tap for sound</span></button>
         <div class="live-off" id="liveOff">
           <strong>Be right back</strong>
-          <p>The live stream isn't answering right now. Everything below plays on demand anytime.</p>
+          <p>The live stream isn't answering right now. Everything on ZJTV plays on demand anytime.</p>
           <button type="button" class="btn btn-ghost" id="liveRetry"><i class="fas fa-rotate-right"></i> Try again</button>
         </div>
       </div>
       <div class="live-side">
         <h3>The network Zaina built</h3>
         <p>FLM TV is Zaina Juliette's own network: local shows, classic favorites, movies and music, free for everyone.</p>
-        <a class="btn btn-ghost" href="home.html"><i class="fas fa-tv"></i> Explore FLM TV</a>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <a class="btn btn-rose" href="live.html"><i class="fas fa-play"></i> Watch Channel 26.5</a>
+          <a class="btn btn-ghost" href="schedule.html"><i class="fas fa-calendar-day"></i> TV Guide</a>
+        </div>
         <ul class="live-facts">
           <li><i class="fas fa-tower-broadcast"></i> Over the air on Channel 26.5 Las Vegas</li>
           <li><i class="fas fa-globe"></i> Streaming worldwide at flmtv.com</li>
@@ -444,39 +528,13 @@ button { font-family: inherit; }
     </div>
   </section>
 
-  <section class="block wrap" id="show">
-    <div class="sec-kicker">The show</div>
-    <h2>Zaina Juliette <em>&amp;</em> Friends</h2>
-    <p class="lede">Every season of the show that puts Las Vegas talent, legends and friends in the spotlight.</p>
-    <div id="seasonRows"><div class="status"><span class="spin"></span>Loading episodes…</div></div>
+  <section class="block wrap home-only" id="channel">
+    <div class="sec-kicker">Now showing on ZJTV</div>
+    <h2>Pick your <em>spotlight</em></h2>
+    <div id="rows"><div class="status" id="rowsStatus"><span class="spin"></span>Setting the stage…</div></div>
   </section>
 
-  <section class="block wrap" id="mj" hidden>
-    <div class="sec-kicker">The King of Pop</div>
-    <h2>The Michael Jackson <em>Collection</em></h2>
-    <p class="lede">Moonwalker, plus our own episodes celebrating Michael's music, moves and legacy.</p>
-    <div id="mjRows"></div>
-  </section>
-
-  <section class="block wrap" id="concerts" hidden>
-    <div class="sec-kicker">Front row, no ticket</div>
-    <h2>Concerts <em>&amp;</em> live shows</h2>
-    <p class="lede">The stage lights are on. Pull up a seat.</p>
-    <div id="concertRows"></div>
-  </section>
-
-  <section class="block wrap" id="zone">
-    <div class="sec-kicker">The Zaina Zone</div>
-    <h2>Music videos <em>&amp;</em> more</h2>
-    <p class="lede">Songs, specials and moments from Zaina Juliette &amp; The StarChilds.</p>
-    <div id="zoneRows"><div class="status"><span class="spin"></span>Loading…</div></div>
-  </section>
-
-  <section class="block wrap" id="more" hidden>
-    <div class="sec-kicker">Just added</div>
-    <h2>New on <em>ZJTV</em></h2>
-    <div id="moreRows"></div>
-  </section>
+  <section class="wrap view-only" id="viewBody" hidden></section>
 </main>
 
 <footer class="foot">
@@ -505,29 +563,76 @@ button { font-family: inherit; }
   // Jellyfin ids (the part after "parentId=" in Jellyfin's address bar)
   const ZJTV_LIBRARY_ID = 'f0486e44c5d6038d7682e808a4f4f6f1';   // V:\10-ZAINA JULIETTE TV
   const ZAINA_ZONE_ID   = '1ac641863cec9162df01d2c2a751c932';   // ZAINA ZONE library
-  const SHOW_ID         = '84d8f54614de1ef112941c209f542df6';   // Zaina Juliette & Friends (all seasons)
+  // Zaina Juliette & Friends. Both copies are listed; the page uses whichever has more
+  // episodes, so it keeps working if one copy is moved or deleted.
+  const SHOW_IDS = [
+    'f1a028d526873824823afeeebd5882ad',   // V:\10-ZAINA JULIETTE TV\ZAINA JULIETTE SHOW
+    '84d8f54614de1ef112941c209f542df6'    // V:\02-TV SHOWS\ZAINA JULIETTE SHOW
+  ];
+  let SHOW_ID = SHOW_IDS[SHOW_IDS.length - 1];
 
   // Banner clips: short videos that play (muted) in the banner between the pictures.
-  // Any video in these folders plays. Trailers anywhere in Zaina Juliette TV play too.
   const BANNER_CLIP_FOLDERS = [
     'a0d63b2790587159e9a70dece0d53453',   // Zaina Juliette & Friends \ SPECIAL CLIPS
     '28c68518c77e975a9c697cf1a33b8e41'    // Zaina TV Show Clips
   ];
-  const BANNER_CLIP_MAX_MINUTES = 6;      // longer videos are skipped in the banner
+  const BANNER_CLIP_MAX_MINUTES = 6;
 
-  // Topic sections. Anything in Zaina Juliette TV (and any Zaina Juliette & Friends
-  // episode) whose name or file path matches goes in that section automatically.
-  const TOPICS = [
-    { box: 'mj',       rows: 'mjRows',      title: 'Michael Jackson',
-      match: /michael\s*jackson|moonwalk|\bmjj?\b|king of pop/i },
-    { box: 'concerts', rows: 'concertRows', title: 'Concerts',
-      match: /concert|live at|live in|\btour\b|starchild/i }
+  // ── THE ROWS ON THE CHANNEL PAGE, top to bottom ─────────────────
+  // Each one is a row of cards with a "View more" button that opens its own page.
+  //   type 'show'     = Zaina Juliette & Friends (its page has every season)
+  //   type 'topic'    = anything on ZJTV whose name matches (Michael Jackson…)
+  //   type 'folder'   = everything in one of ZJTV's folders on the V: drive. Make the folder,
+  //                     put your picks in it, add it to ZJTV in Jellyfin, and the row appears.
+  //                     A folder row also picks up matching names from anywhere on ZJTV ("match").
+  //   type 'zone'     = the ZAINA ZONE library
+  //   type 'stations' = free live music stations
+  //   type 'new'      = the newest titles not already in a row above
+  // A row with nothing in it stays hidden, so it's fine to list folders before you make them.
+  const CATEGORIES = [
+    { key: 'show', type: 'show', title: 'Zaina Juliette & Friends', kicker: 'The show',
+      lede: 'Every season of the show that puts Las Vegas talent, legends and friends in the spotlight.' },
+    { key: 'mj', type: 'topic', title: 'The Michael Jackson Collection', kicker: 'The King of Pop',
+      lede: "Moonwalker, the music, the moves, plus our own episodes celebrating Michael's legacy.",
+      search: ['Michael Jackson', 'Moonwalker', 'Jackson 5', 'Jacksons'],
+      match: /michael\s*jackson|moonwalk|\bmjj?\b|king of pop|jackson\s*(5|five)|the jacksons/i,
+      // the star of this page: shown first, with its own big button (the Moonwalker card on home.html opens this page)
+      feature: { file: 'Moonwalker (1988)-tmdbid-13192.mkv', label: 'Watch Moonwalker' } },
+    { key: 'concerts', type: 'folder', folder: 'CONCERTS', title: 'Concerts & Live Shows', kicker: 'Front row, no ticket',
+      lede: 'The stage lights are on. Pull up a seat.',
+      search: ['Concert', 'Live at', 'Live in'], match: /concert|live at|live in|\btour\b/i },
+    { key: 'music-videos', type: 'folder', folder: 'MUSIC VIDEOS', title: 'Music Videos', kicker: "Zaina's picks",
+      lede: 'Hand-picked videos worth turning up.' },
+    { key: 'music', type: 'folder', folder: 'MUSIC', title: 'Music', kicker: "Zaina's picks",
+      lede: 'Songs, sessions and soundtracks from the ZJTV collection.' },
+    { key: 'tv-shows', type: 'folder', folder: 'TV SHOWS', title: 'TV Shows', kicker: "Zaina's picks",
+      lede: 'Series to settle in with.' },
+    { key: 'classic-movies', type: 'folder', folder: '05-CLASSIC MOVIES', title: 'Classic Movies', kicker: 'Classic entertainers',
+      lede: 'The legends who lit up the screen, and the films we never stop watching.' },
+    { key: 'movies', type: 'folder', folder: '04-MOVIES', title: 'Movies', kicker: 'Movie night',
+      lede: 'Grab the popcorn.' },
+    { key: 'zone', type: 'zone', title: 'The Zaina Zone', kicker: 'Music videos & more',
+      lede: 'Songs, specials and moments from Zaina Juliette & The StarChilds.' },
+    { key: 'stations', type: 'stations', title: 'Music Stations, Live 24/7', kicker: 'Free & live',
+      lede: 'Hits, soul, gospel, jazz and more, streaming around the clock.', more: 'live-stations.html?cat=music' },
+    { key: 'new', type: 'new', title: 'New on ZJTV', kicker: 'Just added', lede: 'Fresh in the spotlight.' }
   ];
+  const ROW_SIZE  = 20;    // cards in each row on the channel page
+  const PAGE_SIZE = 60;    // cards loaded at a time on a "View more" page
+
+  // Music stations: free live channels whose name or genre has one of these words.
+  // Put a station's exact name in PINNED_STATIONS to show it first.
+  const MUSIC_WORDS = ['music','musica','música','mtv','vevo','hits','jazz','hip hop','hiphop','country','gospel',
+                       'karaoke','rock','pop','r&b','reggae','salsa','soul','motown','oldies','disco','classic hits','concert','radio'];
+  const MUSIC_NOT   = ['movie','film','cinema','cine ','news','sport'];
+  const PINNED_STATIONS = [];
 
   // Files to leave out of the rows: movie parts like "Moonwalker (a)" / "(b)"
-  // when the full movie is there too, and trailers (they play in the banner instead).
+  // and trailers (they play in the banner instead).
   const HIDE_FROM_ROWS = [/\((a|b|part\s*\d)\)\s*$/i, /trailer/i];
   // ════════════════════════════════════════════════════════════════
+
+  const VIEW = new URLSearchParams(location.search).get('view');
 
   const $ = id => document.getElementById(id);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
@@ -584,7 +689,9 @@ button { font-family: inherit; }
   const watchLink = id => `movie-frame.html?id=${id}`;
   const baseName = p => String(p || '').split(/[\\/]/).pop().replace(/\.[a-z0-9]+$/i, '').toLowerCase().trim();
   const showFiles = new Set();   // file names of every Zaina Juliette & Friends episode
-  const isShowCopy = i => showFiles.has(baseName(i.Path)) || /zaina juliette show|zaina juliette (&|and) friends/i.test(String(i.Path || '').replace(/[^\\/]+$/, ''));
+  // the show has its own section, so its files and its series card stay out of the other rows
+  const isShowCopy = i => showFiles.has(baseName(i.Path)) || /zaina juliette show|zaina juliette (&|and) friends/i.test(String(i.Path || '')) ||
+                          (i.Type === 'Series' && /^zaina juliette (&|and) friends$/i.test(String(i.Name || '').trim()));
   const hidden = i => isShowCopy(i) || HIDE_FROM_ROWS.some(re => re.test(i.Name || '') || re.test(String(i.Path || '').replace(/\.[a-z0-9]+$/i, '')));
   const haystack = i => `${i.Name || ''} ${i.Path || ''} ${(i.Genres || []).join(' ')} ${(i.Tags || []).join(' ')}`;
 
@@ -594,13 +701,14 @@ button { font-family: inherit; }
     const head = document.createElement('div');
     head.className = 'row-head';
     if (opts.anchor) { head.id = opts.anchor; head.style.scrollMarginTop = '80px'; }
-    head.innerHTML = `<h3>${esc(title)}${opts.note ? `<small>${esc(opts.note)}</small>` : ''}</h3>` +
+    head.innerHTML = `<h3>${opts.kick ? `<span class="kick">${esc(opts.kick)}</span>` : ''}${esc(title)}${opts.note ? `<small>${esc(opts.note)}</small>` : ''}</h3>` +
+      (opts.more ? `<a class="more" href="${opts.more}">View more <i class="fas fa-chevron-right"></i></a>` : '') +
       (opts.seeAll ? `<a href="${opts.seeAll}">See all</a>` : '');
     const wrap = document.createElement('div');
-    wrap.className = 'row-wrap' + (opts.posters ? ' posters-wrap' : '');
+    wrap.className = 'row-wrap' + (opts.posters ? ' posters-wrap' : '') + (opts.stations ? ' stations-wrap' : '');
     const track = document.createElement('div');
-    track.className = 'row' + (opts.posters ? ' posters' : '');
-    items.forEach(i => track.appendChild(opts.posters ? posterCard(i) : wideCard(i, opts)));
+    track.className = 'row' + (opts.posters ? ' posters' : '') + (opts.stations ? ' stations' : '');
+    items.forEach(i => track.appendChild(opts.stations ? stationCard(i) : opts.posters ? posterCard(i) : wideCard(i, opts)));
     const prev = document.createElement('button'), next = document.createElement('button');
     prev.className = 'row-arrow prev'; next.className = 'row-arrow next';
     prev.type = next.type = 'button';
@@ -671,24 +779,28 @@ button { font-family: inherit; }
   }
 
   // ── DATA ────────────────────────────────────────────────────────
-  const COMMON = { Fields: 'Path,ProductionYear,Genres,Tags,DateCreated,ParentId', EnableImages: 'true', ImageTypeLimit: '1',
+  const COMMON = { Fields: 'Path,ProductionYear,Genres,Tags,DateCreated,ParentId,RunTimeTicks', EnableImages: 'true', ImageTypeLimit: '1',
                    EnableImageTypes: 'Primary,Backdrop,Thumb' };
 
   const data = {};
   async function loadData() {
-    const [lib, libItems, eps, zone] = await Promise.all([
+    const [lib, libItems, eps] = await Promise.all([
       jf('/Items', { Ids: ZJTV_LIBRARY_ID, EnableImages: 'true' }),
       jf('/Items', Object.assign({ ParentId: ZJTV_LIBRARY_ID, Recursive: 'true',
         IncludeItemTypes: 'Movie,Series,Video,MusicVideo', SortBy: 'DateCreated,SortName', SortOrder: 'Descending', Limit: '400' }, COMMON)),
-      jf(`/Shows/${SHOW_ID}/Episodes`, Object.assign({ Limit: '600' }, COMMON, { Fields: COMMON.Fields + ',RunTimeTicks' })),
-      jf('/Items', Object.assign({ ParentId: ZAINA_ZONE_ID, SortBy: 'SortName' }, COMMON))
+      Promise.all(SHOW_IDS.map(id => jf(`/Shows/${id}/Episodes`, Object.assign({ Limit: '800' }, COMMON))
+        .then(r => ({ id, r })))).then(all => {
+          const real = x => list(x.r).filter(e => e.LocationType !== 'Virtual').length;
+          const best = all.slice().sort((a, b) => real(b) - real(a))[0];
+          if (best && real(best)) SHOW_ID = best.id;
+          return best ? best.r : null;
+        })
     ]);
     data.library  = list(lib)[0] || null;
     data.items    = list(libItems);
     data.episodes = list(eps).filter(e => e.LocationType !== 'Virtual');
     data.episodes.forEach(e => { if (e.Path) showFiles.add(baseName(e.Path)); });
-    data.zone     = list(zone);
-    data.ok = !!(libItems || eps || zone);
+    data.ok = !!(libItems || eps);
   }
 
   // ── HERO: pictures + clips, crossfading like a stage show ────────
@@ -852,15 +964,95 @@ button { font-family: inherit; }
   // Pause the live stream when the viewer leaves for a show (no sound bleeding through).
   window.addEventListener('pagehide', () => { try { live.v.pause(); } catch (e) {} });
 
-  // ── SECTIONS ─────────────────────────────────────────────────────
-  function buildSeasons(eps) {
-    const box = $('seasonRows');
-    box.innerHTML = '';
-    if (!eps.length) {
-      box.innerHTML = data.ok ? '<div class="status">New episodes are on the way.</div>'
-        : '<div class="status">The episodes are taking longer than usual to load.<br><button type="button" class="btn btn-ghost" onclick="location.reload()">Try again</button></div>';
-      return;
+
+  // ── FOLDERS ──────────────────────────────────────────────────────
+  // Find one of ZJTV's folders by its name on the drive (e.g. "04-MOVIES" or "CONCERTS").
+  const nameOf = f => norm(String(f.Path || '').replace(/[\\/]+$/, '').split(/[\\/]/).pop());
+  let topFolders = null;
+  const folderCache = {};
+  async function findFolder(name) {
+    if (name in folderCache) return folderCache[name];
+    const want = norm(name);
+    const q = extra => jf('/Items', Object.assign({ ParentId: ZJTV_LIBRARY_ID, Recursive: 'true', IncludeItemTypes: 'Folder',
+      Fields: 'Path', Limit: '20' }, extra)).then(r => list(r).find(f => nameOf(f) === want));
+    let hit = await q({ SearchTerm: name }) || await q({ NameStartsWith: name });
+    if (!hit) {
+      // still not found: look at the top two levels
+      if (!topFolders) topFolders = list(await jf('/Items', { ParentId: ZJTV_LIBRARY_ID, Fields: 'Path' })).filter(f => f.IsFolder);
+      hit = topFolders.find(f => nameOf(f) === want);
+      for (const f of hit ? [] : topFolders.filter(f => f.Type === 'Folder')) {
+        hit = list(await jf('/Items', { ParentId: f.Id, Fields: 'Path', IncludeItemTypes: 'Folder' })).find(k => nameOf(k) === want);
+        if (hit) break;
+      }
     }
+    return (folderCache[name] = hit || null);
+  }
+  const bigFolderPaths = [];   // folders with their own rows: their titles stay out of "New on ZJTV"
+  const inBigFolder = i => { const p = norm(i.Path).replace(/\\/g, '/'); return bigFolderPaths.some(f => p.startsWith(f + '/')); };
+
+  async function folderItems(folder, start, limit) {
+    const r = await jf('/Items', Object.assign({ ParentId: folder.Id, Recursive: 'true', IncludeItemTypes: 'Movie,Series,Video,MusicVideo',
+      SortBy: 'DateCreated,SortName', SortOrder: 'Descending', StartIndex: String(start), Limit: String(limit) }, COMMON));
+    return { items: list(r).filter(i => !hidden(i)), total: r ? r.TotalRecordCount || 0 : 0, raw: list(r).length };
+  }
+  async function searchMatches(cat) {
+    if (!cat.search) return [];
+    const found = await Promise.all(cat.search.map(q => jf('/Items', Object.assign({ ParentId: ZJTV_LIBRARY_ID, Recursive: 'true',
+      IncludeItemTypes: 'Movie,Series,Video,MusicVideo', SearchTerm: q, Limit: '80' }, COMMON))));
+    return data.items.concat(found.flatMap(list)).filter(i => !hidden(i) && cat.match.test(haystack(i)));
+  }
+
+  // ── MUSIC STATIONS ───────────────────────────────────────────────
+  const abbr = n => String(n || '?').split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 4);
+  const cleanStation = n => String(n || '').replace(/\s*\(\d{3,4}[pi]\)/gi, '').replace(/\s*\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
+  function isMusicStation(ch) {
+    const name = (ch.Name || '').toLowerCase();
+    if (MUSIC_NOT.some(w => name.includes(w))) return false;
+    const text = ' ' + `${ch.Name || ''} ${(ch.Genres || []).join(' ')} ${(ch.Tags || []).join(' ')}`.toLowerCase() + ' ';
+    return MUSIC_WORDS.some(w => w.length <= 3
+      ? new RegExp('[^a-z0-9]' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[^a-z0-9]').test(text)
+      : text.includes(w));
+  }
+  function stationCard(ch) {
+    const a = document.createElement('a');
+    a.className = 'st-card';
+    a.href = watchLink(ch.Id);
+    const name = cleanStation(ch.Name) || 'Live station';
+    const tag = ch.ImageTags && ch.ImageTags.Primary;
+    a.innerHTML = `
+      <div class="st-logo">
+        ${tag ? `<img src="${JELLYFIN.SERVER}/Items/${ch.Id}/Images/Primary?api_key=${JELLYFIN.API_KEY}&tag=${tag}&maxHeight=200&quality=85" alt="" loading="lazy"
+                 onerror="this.outerHTML='<span class=ab>${esc(abbr(name)).replace(/'/g, '')}</span>'">` : `<span class="ab">${esc(abbr(name))}</span>`}
+        <span class="st-live"><span class="dot"></span> LIVE</span>
+      </div>
+      <div class="st-name">${esc(name)}</div>
+      <div class="st-sub">${ch.ChannelNumber ? 'Channel ' + esc(ch.ChannelNumber) : 'Free live station'}</div>`;
+    return a;
+  }
+  async function musicStations(max) {
+    const res = await jf('/LiveTv/Channels', { UserId: '2562494c1df24f8789cd0ad8a38a7bf4', Limit: '5000',
+      EnableImages: 'true', ImageTypeLimit: '1', Fields: 'Genres,Tags', EnableUserData: 'false' });
+    const pinned = PINNED_STATIONS.map(norm);
+    const seen = new Set();
+    return list(res)
+      .filter(ch => ch.Name && !/\[\s*geo[\s-]*blocked\s*\]/i.test(ch.Name) && (pinned.includes(norm(cleanStation(ch.Name))) || isMusicStation(ch)))
+      .filter(ch => { const k = norm(cleanStation(ch.Name)); if (seen.has(k)) return false; seen.add(k); return true; })
+      .sort((a, b) => {
+        const pa = pinned.indexOf(norm(cleanStation(a.Name))), pb = pinned.indexOf(norm(cleanStation(b.Name)));
+        if (pa !== pb) return (pa < 0 ? 999 : pa) - (pb < 0 ? 999 : pb);
+        return (b.ImageTags && b.ImageTags.Primary ? 1 : 0) - (a.ImageTags && a.ImageTags.Primary ? 1 : 0);   // logos first
+      })
+      .slice(0, max);
+  }
+
+  // ── THE SHOW ─────────────────────────────────────────────────────
+  const isFullEpisode = e => e.ParentIndexNumber > 0 && (!e.RunTimeTicks || e.RunTimeTicks > 6000000000);
+  function newestEpisodes(n) {
+    const full = data.episodes.filter(isFullEpisode);
+    return (full.length ? full : data.episodes).slice()
+      .sort((a, b) => new Date(b.DateCreated || 0) - new Date(a.DateCreated || 0)).slice(0, n);
+  }
+  function buildSeasons(box, eps) {
     const seasons = new Map();
     eps.forEach(e => {
       const k = e.SeasonId || 'other';
@@ -868,59 +1060,187 @@ button { font-family: inherit; }
       seasons.get(k).eps.push(e);
     });
     const order = s => (s.idx == null || s.idx === 0) ? 999 : s.idx;   // seasons in order, clips & specials last
-    Array.from(seasons.entries())
-      .sort((a, b) => order(a[1]) - order(b[1]) || a[1].name.localeCompare(b[1].name))
-      .forEach(([id, s]) => {
+    Array.from(seasons.values())
+      .sort((a, b) => order(a) - order(b) || a.name.localeCompare(b.name))
+      .forEach(s => {
         s.eps.sort((a, b) => (a.IndexNumber ?? 999) - (b.IndexNumber ?? 999) || (a.Name || '').localeCompare(b.Name || '', undefined, { numeric: true }));
         const nice = /^season unknown$/i.test(s.name) ? 'More episodes' : s.name.replace(/^SPECIAL CLIPS$/i, 'Special Clips');
-        addRow(box, nice, s.eps, { note: `${s.eps.length} ${s.eps.length === 1 ? 'video' : 'videos'}`,
-          seeAll: id !== 'other' ? `category-detail.html?id=${id}&name=${encodeURIComponent('Zaina Juliette & Friends · ' + nice)}` : null });
+        addRow(box, nice, s.eps, { note: `${s.eps.length} ${s.eps.length === 1 ? 'video' : 'videos'}` });
       });
-    // hero button: the newest full episode (not a short clip)
-    const full = eps.filter(e => e.ParentIndexNumber > 0 && (!e.RunTimeTicks || e.RunTimeTicks > 6000000000));
-    const newest = (full.length ? full : eps).slice().sort((a, b) => new Date(b.DateCreated || 0) - new Date(a.DateCreated || 0))[0];
-    if (newest) $('watchNewest').href = watchLink(newest.Id);
   }
 
-  const usedIds = new Set();
-  function buildTopics(items, eps) {
-    TOPICS.forEach(t => {
-      const box = $(t.rows);
-      const lib = dedupe(items.filter(i => !hidden(i) && t.match.test(haystack(i))));
-      const showEps = eps.filter(e => t.match.test(haystack(e)));
-      if (!lib.length && !showEps.length) return;
-      $(t.box).hidden = false;
-      lib.forEach(i => usedIds.add(i.Id));
-      addRow(box, `${t.title} on ZJTV`, lib, { posters: true });
-      addRow(box, `${t.title} on Zaina Juliette & Friends`, showEps, {});
+  // ── WHAT EACH CATEGORY SHOWS ─────────────────────────────────────
+  // Returns { items, kind } for the channel page row: kind = 'wide' | 'posters' | 'stations'
+  const used = new Set();
+  async function rowFor(cat) {
+    if (cat.type === 'show') return { items: newestEpisodes(ROW_SIZE), kind: 'wide' };
+    if (cat.type === 'topic') {
+      const lib = dedupe(await searchMatches(cat));
+      if (lib.length) return { items: lib.slice(0, ROW_SIZE), kind: 'posters' };
+      return { items: data.episodes.filter(e => cat.match.test(haystack(e))).slice(0, ROW_SIZE), kind: 'wide' };
+    }
+    if (cat.type === 'folder') {
+      const folder = await findFolder(cat.folder);
+      let items = [];
+      if (folder) {
+        bigFolderPaths.push(norm(folder.Path).replace(/\\/g, '/'));
+        items = (await folderItems(folder, 0, ROW_SIZE * 2)).items;
+      }
+      if (cat.match) items = items.concat(await searchMatches(cat));
+      return { items: dedupe(items).slice(0, ROW_SIZE), kind: 'posters' };
+    }
+    if (cat.type === 'zone') {
+      const r = await jf('/Items', Object.assign({ ParentId: ZAINA_ZONE_ID, SortBy: 'SortName' }, COMMON));
+      return { items: zonePicks(list(r)).slice(0, ROW_SIZE), kind: 'posters' };
+    }
+    if (cat.type === 'stations') return { items: await musicStations(ROW_SIZE * 2), kind: 'stations' };
+    if (cat.type === 'new') {
+      const items = dedupe(data.items.filter(i => !hidden(i) && !used.has(i.Id) && !inBigFolder(i)));
+      return { items: items.slice(0, ROW_SIZE), kind: 'posters' };
+    }
+    return { items: [], kind: 'posters' };
+  }
+  const zonePicks = zone => dedupe(zone.filter(i => ['Series', 'Movie', 'Video', 'MusicVideo', 'Episode'].includes(i.Type) &&
+    !i.SeasonId && !/^zaina juliette (&|and) friends$/i.test(String(i.Name || '').trim()) && !/^kling_/i.test(i.Name || '')));
+  const moreLink = cat => cat.more || `zjtv.html?view=${cat.key}`;
+
+  // ── CHANNEL PAGE: one row per category ───────────────────────────
+  async function buildHome() {
+    const rows = $('rows');
+    // a slot per category, in order, so rows land in the right place whenever they finish loading
+    const slots = CATEGORIES.map(cat => {
+      const d = document.createElement('div');
+      d.className = 'cat'; d.id = 'cat-' + cat.key; d.hidden = true;
+      rows.appendChild(d);
+      return d;
     });
+    const fill = async (cat, k) => {
+      const { items, kind } = await rowFor(cat);
+      if (!items.length) return;
+      if (kind !== 'stations') items.forEach(i => used.add(i.Id));
+      const slot = slots[k];
+      addRow(slot, cat.title, items, { posters: kind === 'posters', stations: kind === 'stations',
+        kick: cat.kicker, more: moreLink(cat) });
+      slot.hidden = false;
+      $('rowsStatus').style.display = 'none';
+    };
+    // the stations list is big, so it loads last; "New on ZJTV" waits for the others so it doesn't repeat them
+    const firsts = CATEGORIES.map((c, k) => [c, k]).filter(([c]) => c.type !== 'new' && c.type !== 'stations');
+    await Promise.all(firsts.map(([c, k]) => fill(c, k)));
+    await Promise.all(CATEGORIES.map((c, k) => [c, k]).filter(([c]) => c.type === 'new').map(([c, k]) => fill(c, k)));
+    if ($('rowsStatus').style.display !== 'none')
+      $('rowsStatus').innerHTML = data.ok ? 'New shows are on the way.' :
+        'ZJTV is taking longer than usual to load.<br><button type="button" class="btn btn-ghost" onclick="location.reload()">Try again</button>';
+    CATEGORIES.forEach((c, k) => { if (c.type === 'stations') fill(c, k); });
   }
 
-  function buildZone(zone) {
-    const box = $('zoneRows');
-    box.innerHTML = '';
-    const showName = norm('Zaina Juliette & Friends');
-    const picks = dedupe(zone.filter(i => ['Series', 'Movie', 'Video', 'MusicVideo', 'Episode'].includes(i.Type) &&
-                                          !i.SeasonId && norm(i.Name) !== showName && !/^kling_/i.test(i.Name || '')));
-    if (!picks.length) { $('zone').hidden = true; return; }
-    addRow(box, 'From the Zaina Zone', picks, { posters: true, seeAll: `category-detail.html?id=${ZAINA_ZONE_ID}&name=${encodeURIComponent('Zaina Zone')}` });
+  // ── "VIEW MORE" PAGES ────────────────────────────────────────────
+  function gridOf(box, items, wide) {
+    let g = box.querySelector('.grid');
+    if (!g) { g = document.createElement('div'); g.className = 'grid' + (wide ? ' wide' : ''); box.appendChild(g); }
+    items.forEach(i => g.appendChild(wide ? wideCard(i, {}) : posterCard(i)));
+    return g;
   }
+  async function buildView(cat) {
+    document.body.classList.add('in-view');
+    document.querySelectorAll('.home-only').forEach(e => e.hidden = true);
+    document.querySelectorAll('.view-only').forEach(e => e.hidden = false);
+    document.title = `${cat.title} · Zaina Juliette TV`;
+    $('viewKicker').textContent = cat.kicker || '';
+    $('viewTitle').innerHTML = esc(cat.title).replace(/ &amp; /, ' <em>&amp;</em> ');
+    $('viewLede').textContent = cat.lede || '';
+    const box = $('viewBody');
+    box.innerHTML = '<div class="status"><span class="spin"></span>Loading…</div>';
+    const count = n => { $('viewCount').textContent = n ? `${n} ${n === 1 ? 'title' : 'titles'}` : ''; };
+    const lib = data.library;
+    if (lib && lib.BackdropImageTags && lib.BackdropImageTags.length) {
+      const k = Math.floor(Math.random() * lib.BackdropImageTags.length);
+      $('viewBg').style.backgroundImage = `url("${imgUrl(lib.Id, 'Backdrop', lib.BackdropImageTags[k], 1600, k)}")`;
+    }
+    const empty = () => { box.innerHTML = `<div class="status">Nothing here yet. New titles are on the way.</div>`; };
 
-  function buildMore(items) {
-    const rest = dedupe(items.filter(i => !hidden(i) && !usedIds.has(i.Id)));
-    if (!rest.length) return;
-    $('more').hidden = false;
-    addRow($('moreRows'), 'Fresh in the spotlight', rest, { posters: true,
-      seeAll: `category-detail.html?id=${ZJTV_LIBRARY_ID}&name=${encodeURIComponent('Zaina Juliette TV')}` });
+    if (cat.type === 'show') {
+      box.innerHTML = '';
+      if (!data.episodes.length) return empty();
+      count(data.episodes.length);
+      $('viewCount').textContent = `${data.episodes.length} videos`;
+      buildSeasons(box, data.episodes);
+      return;
+    }
+    if (cat.type === 'topic') {
+      let lib = dedupe(await searchMatches(cat));
+      const eps = data.episodes.filter(e => cat.match.test(haystack(e)));
+      // a featured title goes first, gets a big button, and its picture fills the header
+      const star = cat.feature && lib.concat(data.items).find(i => String(i.Path || '').split(/[\\/]/).pop().toLowerCase() === cat.feature.file.toLowerCase());
+      if (star) {
+        lib = [star].concat(lib.filter(i => i.Id !== star.Id && norm(i.Name) !== norm(star.Name)));
+        const a = document.createElement('a');
+        a.className = 'btn btn-gold'; a.href = watchLink(star.Id);
+        a.innerHTML = `<i class="fas fa-play"></i> ${esc(cat.feature.label)}`;
+        $('viewActions').prepend(a);
+        if (star.BackdropImageTags && star.BackdropImageTags.length)
+          $('viewBg').style.backgroundImage = `url("${imgUrl(star.Id, 'Backdrop', star.BackdropImageTags[0], 1600, 0)}")`;
+      }
+      box.innerHTML = '';
+      if (!lib.length && !eps.length) return empty();
+      count(lib.length + eps.length);
+      if (lib.length) gridOf(box, lib, false);
+      if (eps.length) addRow(box, 'On Zaina Juliette & Friends', eps, {});
+      return;
+    }
+    if (cat.type === 'zone') {
+      const r = await jf('/Items', Object.assign({ ParentId: ZAINA_ZONE_ID, SortBy: 'SortName' }, COMMON));
+      const items = zonePicks(list(r));
+      box.innerHTML = '';
+      if (!items.length) return empty();
+      count(items.length); gridOf(box, items, false);
+      return;
+    }
+    if (cat.type === 'new') {
+      const items = dedupe(data.items.filter(i => !hidden(i))).slice(0, 200);
+      box.innerHTML = '';
+      if (!items.length) return empty();
+      count(items.length); gridOf(box, items, false);
+      return;
+    }
+    if (cat.type === 'folder') {
+      const folder = await findFolder(cat.folder);
+      const extra = cat.match ? dedupe(await searchMatches(cat)) : [];
+      box.innerHTML = '';
+      if (!folder && !extra.length) return empty();
+      const shown = new Set();
+      const add = items => { const fresh = dedupe(items).filter(i => !shown.has(i.Id)); fresh.forEach(i => shown.add(i.Id)); gridOf(box, fresh, false); };
+      let start = 0, total = 0;
+      const more = document.createElement('div');
+      more.className = 'load-more';
+      more.innerHTML = '<button type="button" class="btn btn-ghost">Load more</button>';
+      const loadPage = async () => {
+        const btn = more.querySelector('button');
+        btn.disabled = true; btn.textContent = 'Loading…';
+        const r = await folderItems(folder, start, PAGE_SIZE);
+        start += PAGE_SIZE; total = r.total || (start - PAGE_SIZE + r.raw);
+        add(r.items);
+        btn.disabled = false; btn.textContent = 'Load more';
+        more.hidden = r.raw < PAGE_SIZE || start >= total;
+        box.appendChild(more);   // keep the button under the grid
+      };
+      if (folder) {
+        await loadPage();
+        more.querySelector('button').onclick = loadPage;
+      }
+      if (extra.length) add(extra);
+      count((total || 0) + extra.filter(i => !inFolder(i, folder)).length);
+      return;
+    }
   }
+  const inFolder = (i, folder) => folder && norm(i.Path).replace(/\\/g, '/').startsWith(norm(folder.Path).replace(/\\/g, '/') + '/');
 
   (async function init() {
     await loadData();
+    const cat = VIEW && CATEGORIES.find(c => c.key === VIEW && !c.more);
+    if (cat) { buildView(cat); return; }
     hero.start(data.library, data.items, data.episodes);
-    buildSeasons(data.episodes);
-    buildTopics(data.items, data.episodes);
-    buildZone(data.zone);
-    buildMore(data.items);
+    buildHome();
   })();
 </script>
 
@@ -931,7 +1251,7 @@ button { font-family: inherit; }
   document.documentElement.classList.add('flm-tv');
 
   function getFocusable() {
-    return Array.from(document.querySelectorAll('.back-btn, .nav-live, .hero-actions .btn, .live-sound, .live-off.show .btn, .live-side .btn, .ep-card, .movie-card, .foot .btn'))
+    return Array.from(document.querySelectorAll('.back-btn, .nav-live, .hero-actions .btn, .live-sound, .live-off.show .btn, .live-side .btn, .live-full, .view-head .btn, .row-head a.more, .view-back, .ep-card, .movie-card, .st-card, .load-more .btn, .foot .btn'))
       .filter(el => el.offsetParent !== null && el.offsetWidth > 0);
   }
   function findBest(cur, all, dir) {
@@ -968,7 +1288,7 @@ button { font-family: inherit; }
     if (!inList) {
       if (['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Enter'].includes(e.key)) {
         e.preventDefault();
-        const first = document.querySelector('.hero-actions .btn') || all[0];
+        const first = document.querySelector(document.body.classList.contains('in-view') ? '.view-body-first, #viewBody .ep-card, #viewBody .movie-card, .view-back' : '.hero-actions .btn') || all[0];
         first.focus();
         first.scrollIntoView({ block: 'center' });
       }
@@ -986,7 +1306,7 @@ button { font-family: inherit; }
       }
     }
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focused.click(); }
-    if (e.key === 'Backspace' || e.key === 'Escape') { e.preventDefault(); window.location.href = 'home.html'; }
+    if (e.key === 'Backspace' || e.key === 'Escape') { e.preventDefault(); window.location.href = document.body.classList.contains('in-view') ? 'zjtv.html' : 'home.html'; }
   }, true);
 })();
 </script>
