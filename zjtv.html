@@ -562,9 +562,8 @@ button { font-family: inherit; }
 
   // Jellyfin ids (the part after "parentId=" in Jellyfin's address bar)
   const ZJTV_LIBRARY_ID = 'f0486e44c5d6038d7682e808a4f4f6f1';   // V:\10-ZAINA JULIETTE TV
-  const ZAINA_ZONE_ID   = '1ac641863cec9162df01d2c2a751c932';   // ZAINA ZONE library
-  // Zaina Juliette & Friends. Both copies are listed; the page uses whichever has more
-  // episodes, so it keeps working if one copy is moved or deleted.
+  // Zaina Juliette & Friends. The page uses the first copy in this list that has episodes,
+  // so the public ZJTV copy comes first; the other is only a backup.
   const SHOW_IDS = [
     'f1a028d526873824823afeeebd5882ad',   // V:\10-ZAINA JULIETTE TV\ZAINA JULIETTE SHOW
     '84d8f54614de1ef112941c209f542df6'    // V:\02-TV SHOWS\ZAINA JULIETTE SHOW
@@ -573,8 +572,7 @@ button { font-family: inherit; }
 
   // Banner clips: short videos that play (muted) in the banner between the pictures.
   const BANNER_CLIP_FOLDERS = [
-    'a0d63b2790587159e9a70dece0d53453',   // Zaina Juliette & Friends \ SPECIAL CLIPS
-    '28c68518c77e975a9c697cf1a33b8e41'    // Zaina TV Show Clips
+    'a0d63b2790587159e9a70dece0d53453'    // Zaina Juliette & Friends \ SPECIAL CLIPS
   ];
   const BANNER_CLIP_MAX_MINUTES = 6;
 
@@ -585,7 +583,6 @@ button { font-family: inherit; }
   //   type 'folder'   = everything in one of ZJTV's folders on the V: drive. Make the folder,
   //                     put your picks in it, add it to ZJTV in Jellyfin, and the row appears.
   //                     A folder row also picks up matching names from anywhere on ZJTV ("match").
-  //   type 'zone'     = the ZAINA ZONE library
   //   type 'stations' = free live music stations
   //   type 'new'      = the newest titles not already in a row above
   // A row with nothing in it stays hidden, so it's fine to list folders before you make them.
@@ -598,21 +595,19 @@ button { font-family: inherit; }
       match: /michael\s*jackson|moonwalk|\bmjj?\b|king of pop|jackson\s*(5|five)|the jacksons/i,
       // the star of this page: shown first, with its own big button (the Moonwalker card on home.html opens this page)
       feature: { file: 'Moonwalker (1988)-tmdbid-13192.mkv', label: 'Watch Moonwalker' } },
-    { key: 'concerts', type: 'folder', folder: 'CONCERTS', title: 'Concerts & Live Shows', kicker: 'Front row, no ticket',
-      lede: 'The stage lights are on. Pull up a seat.',
+    { key: 'songs', type: 'folder', folder: 'Zaina Juliette Songs', title: 'Zaina Juliette Songs', kicker: 'Straight from the Empress',
+      lede: 'Songs from Zaina Juliette & The StarChilds.' },
+    { key: 'music-videos', type: 'folder', folder: 'Zaina Music Videos', title: 'Music Videos', kicker: 'Lights, camera, music',
+      lede: "Zaina Juliette's music videos." },
+    { key: 'concerts', type: 'folder', folder: ['LEGENDARY CONCERTS', 'CONCERTS'], title: 'Legendary Concerts', kicker: 'Front row, no ticket',
+      lede: 'The greatest stages, the greatest performers. Pull up a seat.',
       search: ['Concert', 'Live at', 'Live in'], match: /concert|live at|live in|\btour\b/i },
-    { key: 'music-videos', type: 'folder', folder: 'MUSIC VIDEOS', title: 'Music Videos', kicker: "Zaina's picks",
-      lede: 'Hand-picked videos worth turning up.' },
-    { key: 'music', type: 'folder', folder: 'MUSIC', title: 'Music', kicker: "Zaina's picks",
-      lede: 'Songs, sessions and soundtracks from the ZJTV collection.' },
-    { key: 'tv-shows', type: 'folder', folder: 'TV SHOWS', title: 'TV Shows', kicker: "Zaina's picks",
-      lede: 'Series to settle in with.' },
+    { key: 'noir', type: 'folder', folder: ['NOIR-CLASSICS', 'NOIR CLASSICS', '01.The_Best_of_Noir_Canon_AFS_Cinema'], title: 'Noir Classics',
+      kicker: 'Shadows & smoke', lede: 'Hard-boiled detectives, femmes fatales and the golden age of film noir.' },
     { key: 'classic-movies', type: 'folder', folder: '05-CLASSIC MOVIES', title: 'Classic Movies', kicker: 'Classic entertainers',
       lede: 'The legends who lit up the screen, and the films we never stop watching.' },
-    { key: 'movies', type: 'folder', folder: '04-MOVIES', title: 'Movies', kicker: 'Movie night',
+    { key: 'movies', type: 'folder', folder: ['Z MOVIES', '04-MOVIES'], title: 'Movies', kicker: 'Movie night',
       lede: 'Grab the popcorn.' },
-    { key: 'zone', type: 'zone', title: 'The Zaina Zone', kicker: 'Music videos & more',
-      lede: 'Songs, specials and moments from Zaina Juliette & The StarChilds.' },
     { key: 'stations', type: 'stations', title: 'Music Stations, Live 24/7', kicker: 'Free & live',
       lede: 'Hits, soul, gospel, jazz and more, streaming around the clock.', more: 'live-stations.html?cat=music' },
     { key: 'new', type: 'new', title: 'New on ZJTV', kicker: 'Just added', lede: 'Fresh in the spotlight.' }
@@ -791,7 +786,7 @@ button { font-family: inherit; }
       Promise.all(SHOW_IDS.map(id => jf(`/Shows/${id}/Episodes`, Object.assign({ Limit: '800' }, COMMON))
         .then(r => ({ id, r })))).then(all => {
           const real = x => list(x.r).filter(e => e.LocationType !== 'Virtual').length;
-          const best = all.slice().sort((a, b) => real(b) - real(a))[0];
+          const best = all.find(x => real(x)) || all[0];
           if (best && real(best)) SHOW_ID = best.id;
           return best ? best.r : null;
         })
@@ -970,8 +965,20 @@ button { font-family: inherit; }
   const nameOf = f => norm(String(f.Path || '').replace(/[\\/]+$/, '').split(/[\\/]/).pop());
   let topFolders = null;
   const folderCache = {};
+  // "name" can be one folder name or a list of names to try in order. Folders inside ZJTV are
+  // found first; if not there, any folder on the server with that exact name is used
+  // (so 04-MOVIES and 05-CLASSIC MOVIES work without adding them to ZJTV).
   async function findFolder(name) {
+    if (Array.isArray(name)) {
+      for (const n of name) { const f = await findFolder(n); if (f) return f; }
+      return null;
+    }
     if (name in folderCache) return folderCache[name];
+    const anywhere = await findFolderInZjtv(name) || list(await jf('/Items', { Recursive: 'true', IncludeItemTypes: 'Folder',
+      SearchTerm: name, Fields: 'Path', Limit: '30' })).find(f => nameOf(f) === norm(name));
+    return (folderCache[name] = anywhere || null);
+  }
+  async function findFolderInZjtv(name) {
     const want = norm(name);
     const q = extra => jf('/Items', Object.assign({ ParentId: ZJTV_LIBRARY_ID, Recursive: 'true', IncludeItemTypes: 'Folder',
       Fields: 'Path', Limit: '20' }, extra)).then(r => list(r).find(f => nameOf(f) === want));
@@ -985,7 +992,7 @@ button { font-family: inherit; }
         if (hit) break;
       }
     }
-    return (folderCache[name] = hit || null);
+    return hit || null;
   }
   const bigFolderPaths = [];   // folders with their own rows: their titles stay out of "New on ZJTV"
   const inBigFolder = i => { const p = norm(i.Path).replace(/\\/g, '/'); return bigFolderPaths.some(f => p.startsWith(f + '/')); };
@@ -1089,10 +1096,6 @@ button { font-family: inherit; }
       if (cat.match) items = items.concat(await searchMatches(cat));
       return { items: dedupe(items).slice(0, ROW_SIZE), kind: 'posters' };
     }
-    if (cat.type === 'zone') {
-      const r = await jf('/Items', Object.assign({ ParentId: ZAINA_ZONE_ID, SortBy: 'SortName' }, COMMON));
-      return { items: zonePicks(list(r)).slice(0, ROW_SIZE), kind: 'posters' };
-    }
     if (cat.type === 'stations') return { items: await musicStations(ROW_SIZE * 2), kind: 'stations' };
     if (cat.type === 'new') {
       const items = dedupe(data.items.filter(i => !hidden(i) && !used.has(i.Id) && !inBigFolder(i)));
@@ -1100,8 +1103,6 @@ button { font-family: inherit; }
     }
     return { items: [], kind: 'posters' };
   }
-  const zonePicks = zone => dedupe(zone.filter(i => ['Series', 'Movie', 'Video', 'MusicVideo', 'Episode'].includes(i.Type) &&
-    !i.SeasonId && !/^zaina juliette (&|and) friends$/i.test(String(i.Name || '').trim()) && !/^kling_/i.test(i.Name || '')));
   const moreLink = cat => cat.more || `zjtv.html?view=${cat.key}`;
 
   // ── CHANNEL PAGE: one row per category ───────────────────────────
@@ -1186,14 +1187,6 @@ button { font-family: inherit; }
       count(lib.length + eps.length);
       if (lib.length) gridOf(box, lib, false);
       if (eps.length) addRow(box, 'On Zaina Juliette & Friends', eps, {});
-      return;
-    }
-    if (cat.type === 'zone') {
-      const r = await jf('/Items', Object.assign({ ParentId: ZAINA_ZONE_ID, SortBy: 'SortName' }, COMMON));
-      const items = zonePicks(list(r));
-      box.innerHTML = '';
-      if (!items.length) return empty();
-      count(items.length); gridOf(box, items, false);
       return;
     }
     if (cat.type === 'new') {
