@@ -3590,6 +3590,20 @@
                         </div>
                     </a>
                 </div>
+                <!-- ZAINA JULIETTE TV (featured) + TV STATIONS, side by side -->
+                <div class="zj-tvs-row">
+                <a href="zjtv.html" class="zj-home-card" title="Zaina Juliette TV">
+                    <div class="zj-home-bg"></div>
+                    <img src="assets/images/zjtv-card.webp" class="zj-home-img" alt="Zaina Juliette TV"
+                         onerror="this.onerror=null;this.src='https://flmtv.com/jellyfin/Items/f0486e44c5d6038d7682e808a4f4f6f1/Images/Backdrop/0?api_key=62131ee22c0141c6b651be75a7444350&fillWidth=700&quality=80&format=webp';this.classList.add('fallback')">
+                    <div class="zj-home-shade"></div>
+                    <div class="zj-home-text">
+                        <div class="zj-home-kick">NEW CHANNEL</div>
+                        <div class="zj-home-name">Zaina<em>Juliette</em></div>
+                        <div class="zj-home-tv">TV</div>
+                        <div class="zj-home-cta">Watch <i class="fas fa-play"></i></div>
+                    </div>
+                </a>
                 <!-- TV STATIONS PROMO CARD -->
                 <a href="live-stations.html" class="flm-tv-stations-card">
                     <img src="assets/images/tv-stations.png" class="flm-tvs-bg" alt="">
@@ -3601,6 +3615,7 @@
                         <div class="flm-tvs-cta">Watch Free <i class="fas fa-play"></i></div>
                     </div>
                 </a>
+                </div>
             </div>
             <style>
             /* FilAm TV + Kids Corner cards (replaced the SheBoujay sponsor box) */
@@ -3901,6 +3916,39 @@
         .flm-ad-header { display: none; }
         .flm-ad-slideshow { aspect-ratio: 16/5; }
     }
+    /* ── ZAINA JULIETTE TV card, next to TV Stations ─────────────────── */
+    .zj-tvs-row { display: grid; grid-template-columns: 1.25fr 1fr; gap: 0.45rem; }
+    .zj-tvs-row .flm-tv-stations-card { min-height: 0; padding: 10px; flex-direction: column; justify-content: flex-end; align-items: stretch; }
+    .zj-tvs-row .flm-tvs-title { font-size: 1.05rem; letter-spacing: 2px; }
+    .zj-tvs-row .flm-tvs-title .fas { font-size: 0.9rem; }
+    .zj-tvs-row .flm-tvs-sub { font-size: 10px; letter-spacing: 1px; }
+    .zj-home-card {
+        position: relative; display: block; min-height: 150px; border-radius: 10px; overflow: hidden; text-decoration: none;
+        border: 2px solid rgba(246,196,83,0.75);
+        box-shadow: 0 0 20px rgba(246,196,83,0.3), 0 0 26px rgba(255,61,139,0.25), 0 8px 24px rgba(0,0,0,0.6);
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .zj-home-card:hover, .zj-home-card:focus { transform: scale(1.03); outline: none;
+        box-shadow: 0 0 34px rgba(246,196,83,0.55), 0 0 40px rgba(255,61,139,0.45), 0 10px 30px rgba(0,0,0,0.7); }
+    .zj-home-bg { position: absolute; inset: 0; background: radial-gradient(circle at 75% 20%, #3a1f4f 0%, #160D22 55%, #0A0612 100%); }
+    .zj-home-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% top; }
+    .zj-home-img.fallback { object-position: center 25%; opacity: 0.6; }
+    .zj-home-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,6,18,0.92) 0%, rgba(10,6,18,0.55) 45%, rgba(10,6,18,0) 75%), linear-gradient(0deg, rgba(10,6,18,0.7), rgba(10,6,18,0) 45%); }
+    .zj-home-text { position: absolute; left: 10px; bottom: 9px; z-index: 2; line-height: 0.9; }
+    .zj-home-kick { font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 10px; letter-spacing: 2px; color: #ff8db9; margin-bottom: 4px; }
+    .zj-home-name { font-family: Didot, 'Bodoni MT', Georgia, serif; font-weight: 900; font-size: 1.25rem; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+    .zj-home-name em { display: block; font-weight: 700; color: #ffe39a; }
+    .zj-home-tv { display: inline-block; margin-top: 5px; font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 12px; letter-spacing: 3px; color: #0A0612;
+        background: #f6c453; padding: 2px 6px 0 9px; border-radius: 4px; box-shadow: 0 0 12px rgba(246,196,83,0.6); }
+    .zj-home-cta { display: flex; align-items: center; gap: 5px; margin-top: 7px; font-family: 'Bebas Neue','Rajdhani',sans-serif; font-size: 11px;
+        letter-spacing: 1.5px; color: #fff; background: #FF3D8B; border-radius: 20px; padding: 3px 10px; width: max-content; }
+    .zj-home-cta .fas { font-size: 8px; }
+    @media (max-width: 768px) {
+        .zj-tvs-row { flex: 1; }
+        .zj-home-card { min-height: 120px; }
+    }
+    .is-firestick .zj-tvs-row { grid-column: 1 / -1; }
+
     /* ── TV STATIONS PROMO CARD ────────────────────────────────────── */
     .flm-tv-stations-card {
         display: flex;
@@ -9504,6 +9552,7 @@ document.addEventListener('keydown', function(e) {
             '.fp-card',
             '#flmKidsCornerCard',
             '.flm-tv-stations-card',
+            '.zj-home-card',
             '.wtv-chip',
             '.wtv-card',
             '.flm-ad-slideshow a',
@@ -9607,6 +9656,7 @@ document.addEventListener('keydown', function(e) {
             '.floating-btn-kids, ' +
             '#flmKidsCornerCard, ' +
             '.flm-tv-stations-card, ' +
+            '.zj-home-card, ' +
             '.wtv-chip, ' +
             '.wtv-card, ' +
             '.flm-ad-slideshow a, ' +
